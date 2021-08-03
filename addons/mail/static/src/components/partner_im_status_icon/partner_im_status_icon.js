@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 
 const { Component } = owl;
 
@@ -13,14 +13,7 @@ export class PartnerImStatusIcon extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const partner = this.env.models['mail.partner'].get(props.partnerLocalId);
-            return {
-                partner,
-                partnerImStatus: partner && partner.im_status,
-                partnerRoot: this.env.messaging.partnerRoot,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------

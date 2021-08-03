@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { NotificationGroup } from '@mail/components/notification_group/notification_group';
 import { NotificationRequest } from '@mail/components/notification_request/notification_request';
 import { ThreadNeedactionPreview } from '@mail/components/thread_needaction_preview/thread_needaction_preview';
@@ -23,13 +23,8 @@ export class NotificationList extends Component {
      */
     constructor(...args) {
         super(...args);
+        useModels();
         useShouldUpdateBasedOnProps();
-        this.storeProps = useStore((...args) => this._useStoreSelector(...args), {
-            compareDepth: {
-                // list + notification object created in useStore
-                notifications: 2,
-            },
-        });
     }
 
     mounted() {
@@ -44,35 +39,9 @@ export class NotificationList extends Component {
      * @returns {Object[]}
      */
     get notifications() {
-        const { notifications } = this.storeProps;
-        return notifications;
-    }
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Load previews of given thread. Basically consists of fetching all missing
-     * last messages of each thread.
-     *
-     * @private
-     */
-    async _loadPreviews() {
-        const threads = this.notifications
-            .filter(notification => notification.thread && notification.thread.exists())
-            .map(notification => notification.thread);
-        this.env.models['mail.thread'].loadPreviews(threads);
-    }
-
-    /**
-     * @private
-     * @param {Object} props
-     */
-    _useStoreSelector(props) {
-        const threads = this._useStoreSelectorThreads(props);
+        const threads = this._getThreads(this.props);
         let threadNeedactionNotifications = [];
-        if (props.filter === 'all') {
+        if (this.props.filter === 'all') {
             // threads with needactions
             threadNeedactionNotifications = this.env.models['mail.thread']
                 .all(t => t.model !== 'mail.box' && t.needactionMessagesAsOriginThread.length > 0)
@@ -130,7 +99,7 @@ export class NotificationList extends Component {
                 };
             });
         let notifications = threadNeedactionNotifications.concat(threadNotifications);
-        if (props.filter === 'all') {
+        if (this.props.filter === 'all') {
             const notificationGroups = this.env.messaging.notificationGroupManager.groups;
             notifications = Object.values(notificationGroups)
                 .sort((group1, group2) => group1.sequence - group2.sequence)
@@ -142,16 +111,30 @@ export class NotificationList extends Component {
                 }).concat(notifications);
         }
         // native notification request
-        if (props.filter === 'all' && this.env.messaging.isNotificationPermissionDefault) {
+        if (this.props.filter === 'all' && this.env.messaging.isNotificationPermissionDefault) {
             notifications.unshift({
                 type: 'odoobotRequest',
                 uniqueId: 'odoobotRequest',
             });
         }
-        return {
-            isDeviceMobile: this.env.messaging.device.isMobile,
-            notifications,
-        };
+        return notifications;
+    }
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Load previews of given thread. Basically consists of fetching all missing
+     * last messages of each thread.
+     *
+     * @private
+     */
+    async _loadPreviews() {
+        const threads = this.notifications
+            .filter(notification => notification.thread && notification.thread.exists())
+            .map(notification => notification.thread);
+        this.env.models['mail.thread'].loadPreviews(threads);
     }
 
     /**
@@ -160,7 +143,7 @@ export class NotificationList extends Component {
      * @throws {Error} in case `props.filter` is not supported
      * @returns {mail.thread[]}
      */
-    _useStoreSelectorThreads(props) {
+    _getThreads(props) {
         if (props.filter === 'mailbox') {
             return this.env.models['mail.thread']
                 .all(thread => thread.isPinned && thread.model === 'mail.box')

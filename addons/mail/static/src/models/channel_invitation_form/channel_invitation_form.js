@@ -154,13 +154,6 @@ function factory(dependencies) {
             return this.env._t("Invite to Channel");
         }
 
-        /**
-         * @private
-         * @returns {mail.messaging}
-         */
-        _computeMessaging() {
-            return link(this.threadView.messaging);
-        }
     }
 
     ChannelInvitationForm.fields = {
@@ -191,13 +184,6 @@ function factory(dependencies) {
          */
         inviteButtonText: attr({
             compute: '_computeInviteButtonText',
-            dependencies: ['thread', 'threadChannelType'],
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        messaging: many2one('mail.messaging', {
-            compute: '_computeMessaging',
         }),
         /**
          * States the OWL ref of the "search" input of this channel invitation
@@ -236,12 +222,6 @@ function factory(dependencies) {
          */
         threadView: one2one('mail.thread_view', {
             inverse: 'channelInvitationForm',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        threadChannelType: attr({
-            related: 'thread.channel_type',
         }),
     };
 

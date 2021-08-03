@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
-import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { Chatter } from '@mail/components/chatter/chatter';
 import { clear } from '@mail/model/model_field_command';
 
@@ -26,29 +25,16 @@ export class ChatterContainer extends Component {
     constructor(...args) {
         super(...args);
         this.chatter = undefined;
-        this._wasMessagingInitialized = false;
+        useModels();
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const isMessagingInitialized = this.env.isMessagingInitialized();
-            // Delay creation of chatter record until messaging is initialized.
-            // Ideally should observe models directly to detect change instead
-            // of using `useStore`.
-            if (!this._wasMessagingInitialized && isMessagingInitialized) {
-                this._wasMessagingInitialized = true;
-                this._insertFromProps(props);
-            }
-            return { chatter: this.chatter };
-        });
-        useUpdate({ func: () => this._update() });
+        this._insertFromProps(this.props);
     }
 
     /**
      * @override
      */
     willUpdateProps(nextProps) {
-        if (this.env.isMessagingInitialized()) {
-            this._insertFromProps(nextProps);
-        }
+        this._insertFromProps(nextProps);
         return super.willUpdateProps(...arguments);
     }
 
@@ -69,7 +55,12 @@ export class ChatterContainer extends Component {
     /**
      * @private
      */
-    _insertFromProps(props) {
+    async _insertFromProps(props) {
+        await this.env.messagingCreatedPromise;
+        await this.env.messaging.initializedPromise;
+        if (this.__owl__.status === 5 /* destroyed */) {
+            return;
+        }
         const values = Object.assign({}, props);
         if (values.threadId === undefined) {
             values.threadId = clear();
@@ -79,15 +70,8 @@ export class ChatterContainer extends Component {
         } else {
             this.chatter.update(values);
         }
-    }
-
-    /**
-     * @private
-     */
-    _update() {
-        if (this.chatter) {
-            this.chatter.refresh();
-        }
+        this.chatter.refresh();
+        this.render();
     }
 
 }

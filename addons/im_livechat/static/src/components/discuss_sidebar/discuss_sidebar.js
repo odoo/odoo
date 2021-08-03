@@ -48,28 +48,4 @@ patch(components.DiscussSidebar.prototype, 'im_livechat/static/src/components/di
             return nameVal.includes(qsVal);
         });
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _useStoreCompareDepth() {
-        return Object.assign(this._super(...arguments), {
-            allOrderedAndPinnedLivechats: 1,
-        });
-    },
-    /**
-     * Override to include livechat channels on the sidebar.
-     *
-     * @override
-     */
-    _useStoreSelector(props) {
-        return Object.assign(this._super(...arguments), {
-            allOrderedAndPinnedLivechats: this.quickSearchOrderedAndPinnedLivechatList(),
-        });
-    },
-
 });

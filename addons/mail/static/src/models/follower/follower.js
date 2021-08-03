@@ -159,9 +159,6 @@ function factory(dependencies) {
     }
 
     Follower.fields = {
-        displayName: attr({
-            related: 'partner.display_name'
-        }),
         followedThread: many2one('mail.thread', {
             inverse: 'followers',
         }),
@@ -174,14 +171,8 @@ function factory(dependencies) {
         isEditable: attr({
             default: false,
         }),
-        name: attr({
-            related: 'partner.name',
-        }),
         partner: many2one('mail.partner', {
             required: true,
-        }),
-        partnerId: attr({
-            related: 'partner.id',
         }),
         selectedSubtypes: many2many('mail.follower_subtype'),
         subtypes: many2many('mail.follower_subtype'),

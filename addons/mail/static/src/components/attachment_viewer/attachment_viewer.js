@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useRefs } from '@mail/component_hooks/use_refs/use_refs';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { link } from '@mail/model/model_field_command';
 
 import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
@@ -23,21 +23,7 @@ export class AttachmentViewer extends Component {
         super(...args);
         this.MIN_SCALE = MIN_SCALE;
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const attachmentViewer = this.env.models['mail.attachment_viewer'].get(props.localId);
-            const device = this.env.messaging && this.env.messaging.device;
-            return {
-                attachment: attachmentViewer && attachmentViewer.attachment
-                    ? attachmentViewer.attachment.__state
-                    : undefined,
-                attachments: attachmentViewer
-                    ? attachmentViewer.attachments.map(attachment => attachment.__state)
-                    : [],
-                attachmentViewer: attachmentViewer ? attachmentViewer.__state : undefined,
-                deviceIsMobile: device && device.isMobile,
-                deviceSizeClass: device && device.sizeClass,
-            };
-        });
+        useModels();
         /**
          * Used to ensure that the ref is always up to date, which seems to be needed if the element
          * has a t-key, which was added to force the rendering of a new element when the src of the image changes.
@@ -61,7 +47,7 @@ export class AttachmentViewer extends Component {
         this._iframeViewerPdfRef = useRef('iframeViewerPdf');
         /**
          * Tracked translate transformations on image visualisation. This is
-         * not observed with `useStore` because they are used to compute zoomer
+         * not observed for re-rendering because they are used to compute zoomer
          * style, and this is changed directly on zoomer for performance
          * reasons (overhead of making vdom is too significant for each mouse
          * position changes while dragging)

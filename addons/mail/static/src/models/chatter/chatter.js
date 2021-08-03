@@ -3,6 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
 import { create, insert, link, unlink, update } from '@mail/model/model_field_command';
+import { OnChange } from '@mail/model/model_onchange';
 
 function factory(dependencies) {
 
@@ -234,10 +235,6 @@ function factory(dependencies) {
          */
         hasThreadView: attr({
             compute: '_computeHasThreadView',
-            dependencies: [
-                'hasMessageList',
-                'thread',
-            ],
         }),
         hasTopbarCloseButton: attr({
             default: false,
@@ -263,9 +260,6 @@ function factory(dependencies) {
         isDisabled: attr({
             compute: '_computeIsDisabled',
             default: false,
-            dependencies: [
-                'threadIsTemporary',
-            ],
         }),
         /**
          * Determine whether this chatter should be focused at next render.
@@ -277,29 +271,6 @@ function factory(dependencies) {
             default: false,
         }),
         /**
-         * Not a real field, used to trigger its compute method when one of the
-         * dependencies changes.
-         */
-        onThreadIdOrThreadModelChanged: attr({
-            compute: '_onThreadIdOrThreadModelChanged',
-            dependencies: [
-                'threadId',
-                'threadModel',
-            ],
-            isOnChange: true,
-        }),
-        /**
-         * Not a real field, used to trigger its compute method when one of the
-         * dependencies changes.
-         */
-        onThreadIsLoadingAttachmentsChanged: attr({
-            compute: '_onThreadIsLoadingAttachmentsChanged',
-            dependencies: [
-                'threadIsLoadingAttachments',
-            ],
-            isOnChange: true,
-        }),
-        /**
          * Determines the `mail.thread` that should be displayed by `this`.
          */
         thread: many2one('mail.thread'),
@@ -307,18 +278,6 @@ function factory(dependencies) {
          * Determines the id of the thread that will be displayed by `this`.
          */
         threadId: attr(),
-        /**
-         * Serves as compute dependency.
-         */
-        threadIsLoadingAttachments: attr({
-            related: 'thread.isLoadingAttachments',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        threadIsTemporary: attr({
-            related: 'thread.isTemporary',
-        }),
         /**
          * Determines the model of the thread that will be displayed by `this`.
          */
@@ -334,15 +293,21 @@ function factory(dependencies) {
          */
         threadViewer: one2one('mail.thread_viewer', {
             compute: '_computeThreadViewer',
-            dependencies: [
-                'hasThreadView',
-                'thread',
-            ],
             isCausal: true,
             readonly: true,
             required: true,
         }),
     };
+    Chatter.onChanges = [
+        new OnChange({
+            dependencies: ['threadId', 'threadModel'],
+            methodName: '_onThreadIdOrThreadModelChanged',
+        }),
+        new OnChange({
+            dependencies: ['thread.isLoadingAttachments'],
+            methodName: '_onThreadIsLoadingAttachmentsChanged',
+        }),
+    ];
 
     Chatter.modelName = 'mail.chatter';
 

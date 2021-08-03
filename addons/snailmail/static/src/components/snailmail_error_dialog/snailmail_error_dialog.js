@@ -1,7 +1,8 @@
 odoo.define('snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.js', function (require) {
 'use strict';
 
-const { useStore } = require('@mail/component_hooks/use_store/use_store');
+const { useModels } = require('@mail/component_hooks/use_models/use_models');
+const { useShouldUpdateBasedOnProps } = require('@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props');
 
 const Dialog = require('web.OwlDialog');
 
@@ -15,22 +16,8 @@ class SnailmailErrorDialog extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const message = this.env.models['mail.message'].get(props.messageLocalId);
-            const notifications = message ? message.notifications : [];
-            return {
-                message: message ? message.__state : undefined,
-                notifications: notifications.map(notification =>
-                    notification ? notification.__state : undefined
-                ),
-                snailmail_credits_url: this.env.messaging.snailmail_credits_url,
-                snailmail_credits_url_trial: this.env.messaging.snailmail_credits_url_trial,
-            };
-        }, {
-            compareDepth: {
-                notifications: 1,
-            },
-        });
+        useModels();
+        useShouldUpdateBasedOnProps();
         // to manually trigger the dialog close event
         this._dialogRef = useRef('dialog');
     }

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 
 const { Component } = owl;
 
@@ -13,19 +13,7 @@ export class MessageSeenIndicator extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const message = this.env.models['mail.message'].get(props.messageLocalId);
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            const messageSeenIndicator = thread && thread.model === 'mail.channel'
-                ? this.env.models['mail.message_seen_indicator'].findFromIdentifyingData({
-                    channelId: thread.id,
-                    messageId: message.id,
-                })
-                : undefined;
-            return {
-                messageSeenIndicator: messageSeenIndicator ? messageSeenIndicator.__state : undefined,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------

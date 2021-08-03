@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { FollowerSubtype } from '@mail/components/follower_subtype/follower_subtype';
 
 const { Component, QWeb } = owl;
@@ -16,24 +16,7 @@ export class FollowerSubtypeList extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const followerSubtypeList = this.env.models['mail.follower_subtype_list'].get(props.localId);
-            const follower = followerSubtypeList
-                ? followerSubtypeList.follower
-                : undefined;
-            const followerSubtypes = follower ? follower.subtypes : [];
-            return {
-                follower: follower ? follower.__state : undefined,
-                followerSubtypeList: followerSubtypeList
-                    ? followerSubtypeList.__state
-                    : undefined,
-                followerSubtypes: followerSubtypes.map(subtype => subtype.__state),
-            };
-        }, {
-            compareDepth: {
-                followerSubtypes: 1,
-            },
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------

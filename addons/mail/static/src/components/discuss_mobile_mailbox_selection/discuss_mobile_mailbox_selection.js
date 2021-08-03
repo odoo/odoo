@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 
 const { Component } = owl;
 
@@ -13,18 +13,7 @@ export class DiscussMobileMailboxSelection extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            return {
-                allOrderedAndPinnedMailboxes: this.orderedMailboxes.map(mailbox => mailbox.__state),
-                discussThread: this.env.messaging.discuss.thread
-                    ? this.env.messaging.discuss.thread.__state
-                    : undefined,
-            };
-        }, {
-            compareDepth: {
-                allOrderedAndPinnedMailboxes: 1,
-            },
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------

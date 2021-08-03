@@ -163,7 +163,7 @@ export class FileUploader extends Component {
      * @param {jQuery.Event} ev
      * @param {...Object} filesData
      */
-    async _onAttachmentUploaded(ev, ...filesData) {
+    _onAttachmentUploaded(ev, ...filesData) {
         for (const fileData of filesData) {
             const { error, filename, id, mimetype, name, size } = fileData;
             if (error || !id) {
@@ -181,10 +181,6 @@ export class FileUploader extends Component {
                 }
                 return;
             }
-            // FIXME : needed to avoid problems on uploading
-            // Without this the useStore selector of component could be not called
-            // E.g. in attachment_box_tests.js
-            await new Promise(resolve => setTimeout(resolve));
             const attachment = this.env.models['mail.attachment'].insert(
                 Object.assign(
                     {

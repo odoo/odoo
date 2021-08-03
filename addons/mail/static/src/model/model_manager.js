@@ -2,15 +2,9 @@
 
 import { registry } from '@mail/model/model_core';
 import { ModelField } from '@mail/model/model_field';
+import { Listener } from '@mail/model/model_listener';
 import { patchClassMethods, patchInstanceMethods } from '@mail/utils/utils';
 import { unlinkAll } from '@mail/model/model_field_command';
-
-/**
- * Inner separator used between bits of information in string that is used to
- * identify a dependent of a field. Useful to determine which record and field
- * to register for compute during this update cycle.
- */
-const DEPENDENT_INNER_SEPARATOR = "--//--//--";
 
 /**
  * Object that manage models and records, notably their update cycle: whenever
@@ -25,11 +19,6 @@ export class ModelManager {
     //--------------------------------------------------------------------------
 
     constructor(env) {
-        /**
-         * Inner separator used inside string to represent dependents.
-         * Set as public attribute so that it can be used by model field.
-         */
-        this.DEPENDENT_INNER_SEPARATOR = DEPENDENT_INNER_SEPARATOR;
         /**
          * The messaging env.
          */
@@ -48,12 +37,6 @@ export class ModelManager {
          */
         this._createdRecords = new Set();
         /**
-         * Tracks whether something has changed during the current update cycle.
-         * Useful to notify components (through the store) that some records
-         * have been changed.
-         */
-        this._hasAnyChangeDuringCycle = false;
-        /**
          * States whether an update cycle is currently in progress. The update
          * cycle is considered in progress while there are computed fields still
          * to compute or required fields for which to verify the existence.
@@ -64,30 +47,47 @@ export class ModelManager {
          */
         this._isInUpdateCycle = false;
         /**
+         * Set of active listeners. Useful to be able to register which records
+         * or fields they accessed to be able to notify them when those change.
+         */
+        this._listeners = new Set();
+        /**
+         * Map between Model and a set of listeners that are using all() on that
+         * model.
+         */
+        this._listenersObservingAllByModel = new Map();
+        /**
+         * Map between localId and a set of listeners that are using it. The
+         * following fields use localId instead of record reference because the
+         * listener might try to use a record that doesn't exist yet.
+         */
+        this._listenersObservingLocalId = new Map();
+        /**
+         * Map between fields of localId and a set of listeners that are
+         * using it.
+         */
+        this._listenersObservingFieldOfLocalId = new Map();
+        /**
+         * Set of listeners that should be notified at the end of the current
+         * update cycle.
+         */
+        this._listenersToNotifyAfterUpdateCycle = new Set();
+        /**
+         * Set of listeners that should be notified as part of the current
+         * update cycle.
+         */
+        this._listenersToNotifyInUpdateCycle = new Set();
+        /**
+         * Map between listeners and a set of localId that they are using.
+         * Useful for easily being able to clean up a listener without having to
+         * iterate all localId to be able to find which are using it.
+         */
+        this._localIdsObservedByListener = new Map();
+        /**
          * Set of records that have been updated during the current update
-         * cycle. Useful to allow observers (typically components) to detect
-         * whether specific records have been changed.
+         * cycle.
          */
         this._updatedRecords = new Set();
-        /**
-         * Fields flagged to call compute during an update cycle.
-         * For instance, when a field with dependents got update, dependent
-         * fields should update themselves by invoking compute at end of
-         * update cycle. Key is of format
-         * <record-local-id><DEPENDENT_INNER_SEPARATOR><fieldName>, and
-         * determine record and field to be computed. Keys are strings because
-         * it must contain only one occurrence of pair record/field, and we want
-         * O(1) reads/writes.
-         */
-        this._toComputeFields = new Map();
-        /**
-         * "on change" methods flagged to call during an update cycle. Similar
-         * to computes but called after all other computes are done, and does
-         * not actually assign any value to its respective field.
-         * This is deprecated but when it is necessary due to other limitations
-         * in code it is better using "on change" than polluting real computes.
-         */
-        this._toCallOnChange = new Map();
     }
 
     /**
@@ -113,6 +113,9 @@ export class ModelManager {
      * @returns {mail.model[]} records matching criteria.
      */
     all(Model, filterFunc) {
+        for (const listener of this._listeners) {
+            this._listenersObservingAllByModel.get(Model).add(listener);
+        }
         const allRecords = Object.values(Model.__records);
         if (filterFunc) {
             return allRecords.filter(filterFunc);
@@ -214,6 +217,13 @@ export class ModelManager {
         if (!localId) {
             return;
         }
+        for (const listener of this._listeners) {
+            this._localIdsObservedByListener.get(listener).add(localId);
+            if (!this._listenersObservingLocalId.has(localId)) {
+                this._listenersObservingLocalId.set(localId, new Set());
+            }
+            this._listenersObservingLocalId.get(localId).add(listener);
+        }
         const record = Model.__records[localId];
         if (record) {
             return record;
@@ -251,6 +261,52 @@ export class ModelManager {
     }
 
     /**
+     * Removes a listener, with the same object reference as given to `startListening`.
+     * Removing the listener effectively makes its `onChange` function no longer
+     * called.
+     *
+     * @param {Listener} listener
+     */
+    removeListener(listener) {
+        this._listenersToNotifyInUpdateCycle.delete(listener);
+        this._listenersToNotifyAfterUpdateCycle.delete(listener);
+        for (const localId of this._localIdsObservedByListener.get(listener) || []) {
+            this._listenersObservingLocalId.get(localId).delete(listener);
+            if (this._listenersObservingFieldOfLocalId.has(localId)) {
+                for (const [, componentsUsingField] of this._listenersObservingFieldOfLocalId.get(localId)) {
+                    componentsUsingField.delete(listener);
+                }
+            }
+        }
+        this._localIdsObservedByListener.delete(listener);
+        for (const [, listeners] of this._listenersObservingAllByModel) {
+            listeners.delete(listener);
+        }
+    }
+
+    /**
+     * Starts a listener. All records or fields accessed between `startListening`
+     * and `stopListening` will be saved. When their value later changes,
+     * `listener.onChange` will be called.
+     *
+     * @param {Listener} listener
+     */
+    startListening(listener) {
+        this.removeListener(listener);
+        this._listeners.add(listener);
+        this._localIdsObservedByListener.set(listener, new Set());
+    }
+
+    /**
+     * Stops a listener, with the same object reference as given to `startListening`.
+     *
+     * @param {Listener} listener
+     */
+    stopListening(listener) {
+        this._listeners.delete(listener);
+    }
+
+    /**
      * Process an update on provided record with provided data. Updating
      * a record consists of applying direct updates first (i.e. explicit
      * ones from `data`) and then indirect ones (i.e. compute/related fields
@@ -277,11 +333,7 @@ export class ModelManager {
      */
     _applyModelPatchFields(Model, patch) {
         for (const [fieldName, field] of Object.entries(patch)) {
-            if (!Model.fields[fieldName]) {
-                Model.fields[fieldName] = field;
-            } else {
-                Object.assign(Model.fields[fieldName].dependencies, field.dependencies);
-            }
+            Model.fields[fieldName] = field;
         }
     }
 
@@ -294,18 +346,6 @@ export class ModelManager {
         for (const Model of Object.values(Models)) {
             for (const fieldName in Model.fields) {
                 const field = Model.fields[fieldName];
-                // 0. Get parented declared fields
-                const parentedMatchingFields = [];
-                let TargetModel = Model.__proto__;
-                while (Models[TargetModel.modelName]) {
-                    if (TargetModel.fields) {
-                        const matchingField = TargetModel.fields[fieldName];
-                        if (matchingField) {
-                            parentedMatchingFields.push(matchingField);
-                        }
-                    }
-                    TargetModel = TargetModel.__proto__;
-                }
                 // 1. Field type is required.
                 if (!(['attribute', 'relation'].includes(field.fieldType))) {
                     throw new Error(`Field "${Model.modelName}/${fieldName}" has unsupported type ${field.fieldType}.`);
@@ -318,7 +358,6 @@ export class ModelManager {
                             'default',
                             'dependencies',
                             'fieldType',
-                            'isOnChange',
                             'readonly',
                             'related',
                             'required',
@@ -337,7 +376,6 @@ export class ModelManager {
                             'fieldType',
                             'inverse',
                             'isCausal',
-                            'isOnChange',
                             'readonly',
                             'related',
                             'relationType',
@@ -364,27 +402,6 @@ export class ModelManager {
                 }
                 if (field.compute && !(Model.prototype[field.compute])) {
                     throw new Error(`Field "${Model.modelName}/${fieldName}" property "compute" does not refer to an instance method of this Model.`);
-                }
-                if (
-                    field.dependencies &&
-                    (!field.compute && !parentedMatchingFields.some(field => field.compute))
-                ) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName} contains dependendencies but no compute method in itself or parented matching fields (dependencies only make sense for compute fields)."`);
-                }
-                if (
-                    (field.compute || parentedMatchingFields.some(field => field.compute)) &&
-                    (field.dependencies || parentedMatchingFields.some(field => field.dependencies))
-                ) {
-                    if (!(field.dependencies instanceof Array)) {
-                        throw new Error(`Compute field "${Model.modelName}/${fieldName}" dependencies must be an array of field names.`);
-                    }
-                    const unknownDependencies = field.dependencies.every(dependency => !(Model.fields[dependency]));
-                    if (unknownDependencies.length > 0) {
-                        throw new Error(`Compute field "${Model.modelName}/${fieldName}" contains some unknown dependencies: "${unknownDependencies.join(", ")}".`);
-                    }
-                }
-                if (field.isOnChange && !field.compute) {
-                    throw Error(`isOnChange field "${Model.modelName}/${fieldName}" must be a computed field.`);
                 }
                 // 4. Related field.
                 if (field.compute && field.related) {
@@ -593,10 +610,11 @@ export class ModelManager {
                 env: this.env,
                 // The unique record identifier.
                 localId,
+                // Listeners that are bound to this record, to be notified of
+                // change in dependencies of compute, related and "on change".
+                __listeners: [],
                 // Field values of record.
                 __values: {},
-                // revNumber of record for detecting changes in useStore.
-                __state: 0,
             });
             // Ensure X2many relations are Set initially (other fields can stay undefined).
             for (const field of Model.__fieldList) {
@@ -606,6 +624,13 @@ export class ModelManager {
                         record.__values[field.fieldName] = new Set();
                     }
                 }
+            }
+            if (!this._listenersObservingLocalId.has(localId)) {
+                this._listenersObservingLocalId.set(localId, new Set());
+            }
+            this._listenersObservingFieldOfLocalId.set(localId, new Map());
+            for (const field of Model.__fieldList) {
+                this._listenersObservingFieldOfLocalId.get(localId).set(field, new Set());
             }
             /**
              * 3. Register record and invoke the life-cycle hook `_willCreate.`
@@ -625,19 +650,47 @@ export class ModelManager {
                 } else {
                     data2[field.fieldName] = field.default;
                 }
-                if (field.compute || field.related) {
-                    // new record should always invoke computed fields.
-                    this._registerToComputeField(record, field);
-                }
             }
             this._update(record, data2, { allowWriteReadonly: true });
+            for (const field of Model.__fieldList) {
+                if (field.compute) {
+                    const listener = new Listener({
+                        isPartOfUpdateCycle: true,
+                        onChange: () => {
+                            this.startListening(listener);
+                            const res = record[field.compute]();
+                            this.stopListening(listener);
+                            this._update(record, { [field.fieldName]: res }, { allowWriteReadonly: true });
+                        },
+                    });
+                    record.__listeners.push(listener);
+                    listener.onChange();
+                }
+                if (field.related) {
+                    const listener = new Listener({
+                        isPartOfUpdateCycle: true,
+                        onChange: () => {
+                            this.startListening(listener);
+                            const res = field.computeRelated(record);
+                            this.stopListening(listener);
+                            this._update(record, { [field.fieldName]: res }, { allowWriteReadonly: true });
+                        },
+                    });
+                    record.__listeners.push(listener);
+                    listener.onChange();
+                }
+            }
             /**
              * 5. Register post processing operation that are to be delayed at
              * the end of the update cycle.
              */
             this._createdRecords.add(record);
-            this._hasAnyChangeDuringCycle = true;
-
+            for (const listener of this._listenersObservingAllByModel.get(Model)) {
+                this._markListenerToNotify(listener);
+            }
+            for (const listener of this._listenersObservingLocalId.get(localId)) {
+                this._markListenerToNotify(listener);
+            }
             records.push(record);
         }
         return isMulti ? records : records[0];
@@ -653,20 +706,23 @@ export class ModelManager {
             throw Error(`Cannot delete already deleted record ${record.localId}.`);
         }
         record._willDelete();
+        for (const listener of record.__listeners) {
+            this.removeListener(listener);
+        }
         for (const field of Model.__fieldList) {
             if (field.fieldType === 'relation') {
                 // ensure inverses are properly unlinked
                 field.parseAndExecuteCommands(record, unlinkAll(), { allowWriteReadonly: true });
             }
         }
-        this._hasAnyChangeDuringCycle = true;
-        // TODO ideally deleting the record should be done at the top of the
-        // method, and it shouldn't be needed to manually remove
-        // _toComputeFields, but it is not possible until related are also
-        // properly unlinked during `set`.
         this._createdRecords.delete(record);
-        this._toComputeFields.delete(record);
-        this._toCallOnChange.delete(record);
+        for (const listener of this._listenersObservingLocalId.get(record.localId)) {
+            this._markListenerToNotify(listener);
+            this._localIdsObservedByListener.get(listener).delete(record.localId);
+        }
+        for (const listener of this._listenersObservingAllByModel.get(Model)) {
+            this._markListenerToNotify(listener);
+        }
         delete Model.__records[record.localId];
     }
 
@@ -681,33 +737,7 @@ export class ModelManager {
             throw Error('Already in update cycle. You are probably trying to manually create/update/delete a record from inside a compute method, which is not supported.');
         }
         this._isInUpdateCycle = true;
-        // Execution of computes
-        while (this._toComputeFields.size > 0) {
-            for (const [record, fields] of this._toComputeFields) {
-                // Delete at every step to detect if the change due to compute
-                // registered extra fields to compute.
-                this._toComputeFields.delete(record);
-                if (!record.exists()) {
-                    throw Error(`Cannot execute computes for already deleted record ${record.localId}.`);
-                }
-                while (fields.size > 0) {
-                    for (const field of fields) {
-                        // Delete at every step to detect if the change due to
-                        // compute registered extra fields to compute.
-                        fields.delete(field);
-                        if (field.compute) {
-                            this._update(record, { [field.fieldName]: record[field.compute]() }, { allowWriteReadonly: true });
-                            continue;
-                        }
-                        if (field.related) {
-                            this._update(record, { [field.fieldName]: field.computeRelated(record) }, { allowWriteReadonly: true });
-                            continue;
-                        }
-                        throw new Error("No compute method defined on this field definition");
-                    }
-                }
-            }
-        }
+        this._notifyListenersInUpdateCycle();
         // Verify the existence of value for required fields (of non-deleted records).
         for (const record of this._updatedRecords) {
             if (!record.exists()) {
@@ -719,13 +749,9 @@ export class ModelManager {
                 }
             }
         }
-        // Increment record rev number (for useStore comparison)
-        for (const record of this._updatedRecords) {
-            record.__state++;
-        }
         this._updatedRecords.clear();
         this._isInUpdateCycle = false;
-        // Execution of _created
+        // Execution of `_created` and "on change" (after the update cycle itself).
         while (this._createdRecords.size > 0) {
             for (const record of this._createdRecords) {
                 // Delete at every step to avoid recursion, indeed _created
@@ -735,39 +761,29 @@ export class ModelManager {
                     throw Error(`Cannot call _created for already deleted record ${record.localId}.`);
                 }
                 record._created();
-            }
-        }
-        // Execution of "on change".
-        while (this._toCallOnChange.size > 0) {
-            for (const [record, fields] of this._toCallOnChange) {
-                // Delete at every step to detect if the change due to "on change"
-                // registered extra fields for which to call "on change".
-                this._toCallOnChange.delete(record);
-                if (!record.exists()) {
-                    throw Error(`Cannot execute 'on change' for already deleted record ${record.localId}.`);
-                }
-                while (fields.size > 0) {
-                    for (const field of fields) {
-                        // Delete at every step to detect if the change due to "on change"
-                        // registered extra fields for which to call "on change".
-                        fields.delete(field);
-                        if (field.compute) {
-                            const res = record[field.compute]();
-                            if (res !== undefined) {
-                                throw new Error("'on change' compute method is not supposed to return any value.");
+                for (const onChange of record.constructor.onChanges || []) {
+                    const listener = new Listener({
+                        onChange: () => {
+                            this.startListening(listener);
+                            for (const dependency of onChange.dependencies) {
+                                let target = record;
+                                for (const field of dependency.split('.')) {
+                                    target = target[field];
+                                    if (!target) {
+                                        break;
+                                    }
+                                }
                             }
-                            continue;
-                        }
-                        throw new Error("No compute method defined on this field definition");
-                    }
+                            this.stopListening(listener);
+                            record[onChange.methodName]();
+                        },
+                    });
+                    listener.onChange();
+                    record.__listeners.push(listener);
                 }
             }
         }
-        // Trigger at most one useStore call per update cycle
-        if (this._hasAnyChangeDuringCycle) {
-            this.env.store.state.messagingRevNumber++;
-            this._hasAnyChangeDuringCycle = false;
-        }
+        this._notifyListenersAfterUpdateCycle();
     }
 
     /**
@@ -822,6 +838,7 @@ export class ModelManager {
             Models[Model.modelName] = Model;
             generatedNames.push(Model.modelName);
             toGenerateNames = toGenerateNames.filter(name => name !== Model.modelName);
+            this._listenersObservingAllByModel.set(Model, new Set());
         }
         /**
          * Check that declared model fields are correct.
@@ -830,8 +847,7 @@ export class ModelManager {
         /**
          * Process declared model fields definitions, so that these field
          * definitions are much easier to use in the system. For instance, all
-         * relational field definitions have an inverse, or fields track all their
-         * dependents.
+         * relational field definitions have an inverse.
          */
         this._processDeclaredFieldsOnModels(Models);
         /**
@@ -893,6 +909,58 @@ export class ModelManager {
     }
 
     /**
+     * Marks the given listener to be notified. This function should be called
+     * when the dependencies of a listener have changed, in order to inform the
+     * listener of the change at the proper time during the update cycle
+     * (according to its configuration).
+     *
+     * @private
+     * @param {Object} listener
+     */
+    _markListenerToNotify(listener) {
+        if (listener.isPartOfUpdateCycle) {
+            this._listenersToNotifyInUpdateCycle.add(listener);
+        }
+        if (!listener.isPartOfUpdateCycle) {
+            this._listenersToNotifyAfterUpdateCycle.add(listener);
+        }
+    }
+
+    /**
+     * Notifies the listeners that have been flagged to be notified and for
+     * which the `onChange` function was defined to be called after the update
+     * cycle.
+     *
+     * In particular this is the case of components using models that need to
+     * re-render and for records with "on change".
+     */
+    _notifyListenersAfterUpdateCycle() {
+        for (const listener of this._listenersToNotifyAfterUpdateCycle) {
+            this._listenersToNotifyAfterUpdateCycle.delete(listener);
+            listener.onChange();
+        }
+    }
+
+    /**
+     * Notifies the listeners that have been flagged to be notified and for
+     * which the `onChange` function was defined to be called while still in the
+     * update cycle.
+     *
+     * In particular this is the case of records with compute or related fields.
+     *
+     * Note: A double loop is used because calling the `onChange` function might
+     * lead to more listeners being flagged to be notified.
+     */
+    _notifyListenersInUpdateCycle() {
+        while (this._listenersToNotifyInUpdateCycle.size > 0) {
+            for (const listener of this._listenersToNotifyInUpdateCycle) {
+                this._listenersToNotifyInUpdateCycle.delete(listener);
+                listener.onChange();
+            }
+        }
+    }
+
+    /**
      * This function processes definition of declared fields in provided models.
      * Basically, models have fields declared in static prop `fields`, and this
      * function processes and modifies them in place so that they are fully
@@ -939,68 +1007,8 @@ export class ModelManager {
             }
         }
         /**
-         * 3. Generate dependents and inverse-relates on fields.
-         * Field definitions are not yet combined, so registration of `dependents`
-         * may have to walk structural hierarchy of models in order to find
-         * the appropriate field. Also, while dependencies are defined just with
-         * field names, dependents require an additional data called a "hash"
-         * (= field id), which is a way to identify dependents in an inverse
-         * relation. This is necessary because dependents are a subset of an inverse
-         * relation.
-         */
-        for (const Model of Object.values(Models)) {
-            for (const field of Object.values(Model.fields)) {
-                for (const dependencyFieldName of field.dependencies) {
-                    let TargetModel = Model;
-                    let dependencyField = TargetModel.fields[dependencyFieldName];
-                    while (!dependencyField) {
-                        TargetModel = TargetModel.__proto__;
-                        dependencyField = TargetModel.fields[dependencyFieldName];
-                    }
-                    const dependent = [field.id, field.fieldName].join(DEPENDENT_INNER_SEPARATOR);
-                    dependencyField.dependents = [
-                        ...new Set(dependencyField.dependents.concat([dependent]))
-                    ];
-                }
-                if (field.related) {
-                    const [relationName, relatedFieldName] = field.related.split('.');
-                    let TargetModel = Model;
-                    let relationField = TargetModel.fields[relationName];
-                    while (!relationField) {
-                        TargetModel = TargetModel.__proto__;
-                        relationField = TargetModel.fields[relationName];
-                    }
-                    const relationFieldDependent = [
-                        field.id,
-                        field.fieldName,
-                    ].join(DEPENDENT_INNER_SEPARATOR);
-                    relationField.dependents = [
-                        ...new Set(relationField.dependents.concat([relationFieldDependent]))
-                    ];
-                    const OtherModel = Models[relationField.to];
-                    let OtherTargetModel = OtherModel;
-                    let relatedField = OtherTargetModel.fields[relatedFieldName];
-                    while (!relatedField) {
-                        OtherTargetModel = OtherTargetModel.__proto__;
-                        relatedField = OtherTargetModel.fields[relatedFieldName];
-                    }
-                    const relatedFieldDependent = [
-                        field.id,
-                        relationField.inverse,
-                        field.fieldName,
-                    ].join(DEPENDENT_INNER_SEPARATOR);
-                    relatedField.dependents = [
-                        ...new Set(
-                            relatedField.dependents.concat([relatedFieldDependent])
-                        )
-                    ];
-                }
-            }
-        }
-        /**
-         * 4. Extend definition of fields of a model with the definition of
-         * fields of its parents. Field definitions on self has precedence over
-         * parented fields.
+         * 3. Extend definition of fields of a model with the definition of
+         * fields of its parents.
          */
         for (const Model of Object.values(Models)) {
             Model.__combinedFields = {};
@@ -1011,9 +1019,7 @@ export class ModelManager {
             while (TargetModel && TargetModel.fields) {
                 for (const targetField of Object.values(TargetModel.fields)) {
                     const field = Model.__combinedFields[targetField.fieldName];
-                    if (field) {
-                        Model.__combinedFields[targetField.fieldName] = field.combine(targetField);
-                    } else {
+                    if (!field) {
                         Model.__combinedFields[targetField.fieldName] = targetField;
                     }
                 }
@@ -1021,10 +1027,11 @@ export class ModelManager {
             }
         }
         /**
-         * 5. Register final fields and make field accessors, to redirects field
+         * 4. Register final fields and make field accessors, to redirects field
          * access to field getter and to prevent field from being written
          * without calling update (which is necessary to process update cycle).
          */
+        const modelManager = this;
         for (const Model of Object.values(Models)) {
             // Object with fieldName/field as key/value pair, for quick access.
             Model.__fieldMap = Model.__combinedFields;
@@ -1036,92 +1043,18 @@ export class ModelManager {
             // Add field accessors.
             for (const field of Model.__fieldList) {
                 Object.defineProperty(Model.prototype, field.fieldName, {
-                    get() {
-                        return field.get(this); // this is bound to record
+                    get() { // this is bound to record
+                        for (const listener of modelManager._listeners) {
+                            modelManager._localIdsObservedByListener.get(listener).add(this.localId);
+                            modelManager._listenersObservingLocalId.get(this.localId).add(listener);
+                            modelManager._listenersObservingFieldOfLocalId.get(this.localId).get(field).add(listener);
+                        }
+                        return field.get(this);
                     },
                 });
             }
             delete Model.__combinedFields;
         }
-    }
-
-    /**
-     * Registers compute of dependents for the given field, if applicable.
-     *
-     * @private
-     * @param {mail.model} record
-     * @param {ModelField} field
-     */
-    _registerComputeOfDependents(record, field) {
-        const Model = record.constructor;
-        for (const dependent of field.dependents) {
-            const [hash, fieldName1, fieldName2] = dependent.split(
-                this.DEPENDENT_INNER_SEPARATOR
-            );
-            const field1 = Model.__fieldMap[fieldName1];
-            if (fieldName2) {
-                // "fieldName1.fieldName2" -> dependent is on another record
-                if (['one2many', 'many2many'].includes(field1.relationType)) {
-                    for (const otherRecord of record[fieldName1]) {
-                        const OtherModel = otherRecord.constructor;
-                        const field2 = OtherModel.__fieldMap[fieldName2];
-                        if (field2 && field2.hashes.includes(hash)) {
-                            this._registerToComputeField(otherRecord, field2);
-                        }
-                    }
-                } else {
-                    const otherRecord = record[fieldName1];
-                    if (!otherRecord) {
-                        continue;
-                    }
-                    const OtherModel = otherRecord.constructor;
-                    const field2 = OtherModel.__fieldMap[fieldName2];
-                    if (field2 && field2.hashes.includes(hash)) {
-                        this._registerToComputeField(otherRecord, field2);
-                    }
-                }
-            } else {
-                // "fieldName1" only -> dependent is on current record
-                if (field1 && field1.hashes.includes(hash)) {
-                    this._registerToComputeField(record, field1);
-                }
-            }
-        }
-    }
-
-    /**
-     * Register a pair record/field for the on change step of the update cycle
-     * in progress.
-     *
-     * @private
-     * @param {mail.model} record
-     * @param {ModelField} field
-     */
-    _registerToCallOnChange(record, field) {
-        if (!this._toCallOnChange.has(record)) {
-            this._toCallOnChange.set(record, new Set());
-        }
-        this._toCallOnChange.get(record).add(field);
-    }
-
-    /**
-     * Register a pair record/field for the compute step of the update cycle in
-     * progress.
-     *
-     * @private
-     * @param {mail.model} record
-     * @param {ModelField} field
-     */
-    _registerToComputeField(record, field) {
-        if (field.isOnChange) {
-            // Separate "on change" computes from real ones.
-            this._registerToCallOnChange(record, field);
-            return;
-        }
-        if (!this._toComputeFields.has(record)) {
-            this._toComputeFields.set(record, new Set());
-        }
-        this._toComputeFields.get(record).add(field);
     }
 
     /**
@@ -1156,12 +1089,12 @@ export class ModelManager {
                 continue;
             }
             hasChanged = true;
-            // flag all dependent fields for compute
-            this._registerComputeOfDependents(record, field);
+            for (const listener of this._listenersObservingFieldOfLocalId.get(record.localId).get(field)) {
+                this._markListenerToNotify(listener);
+            }
         }
         if (hasChanged) {
             this._updatedRecords.add(record);
-            this._hasAnyChangeDuringCycle = true;
         }
         return hasChanged;
     }

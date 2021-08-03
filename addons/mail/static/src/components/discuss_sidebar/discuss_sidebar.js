@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { AutocompleteInput } from '@mail/components/autocomplete_input/autocomplete_input';
 import { DiscussSidebarItem } from '@mail/components/discuss_sidebar_item/discuss_sidebar_item';
@@ -19,10 +19,7 @@ export class DiscussSidebar extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore(
-            (...args) => this._useStoreSelector(...args),
-            { compareDepth: this._useStoreCompareDepth() }
-        );
+        useModels();
         useUpdate({ func: () => this._update() });
         /**
          * Reference of the quick search input. Useful to filter channels and
@@ -150,41 +147,6 @@ export class DiscussSidebar extends Component {
         if (this._quickSearchInputRef.el) {
             this._quickSearchInputRef.el.value = this.discuss.sidebarQuickSearchValue;
         }
-    }
-
-    /**
-     * @private
-     * @returns {Object}
-     */
-    _useStoreCompareDepth() {
-        return {
-            allOrderedAndPinnedChats: 1,
-            allOrderedAndPinnedMailboxes: 1,
-            allOrderedAndPinnedMultiUserChannels: 1,
-        };
-    }
-
-    /**
-     * @private
-     * @param {Object} props
-     * @returns {Object}
-     */
-    _useStoreSelector(props) {
-        const discuss = this.env.messaging.discuss;
-        return {
-            allOrderedAndPinnedChats: this.quickSearchPinnedAndOrderedChats,
-            allOrderedAndPinnedMailboxes: this.orderedMailboxes,
-            allOrderedAndPinnedMultiUserChannels: this.quickSearchOrderedAndPinnedMultiUserChannels,
-            allPinnedChannelAmount:
-                this.env.models['mail.thread']
-                .all(thread =>
-                    thread.isPinned &&
-                    thread.model === 'mail.channel'
-                ).length,
-            discussIsAddingChannel: discuss && discuss.isAddingChannel,
-            discussIsAddingChat: discuss && discuss.isAddingChat,
-            discussSidebarQuickSearchValue: discuss && discuss.sidebarQuickSearchValue,
-        };
     }
 
     //--------------------------------------------------------------------------

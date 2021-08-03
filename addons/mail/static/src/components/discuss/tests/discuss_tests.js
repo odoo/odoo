@@ -1502,7 +1502,33 @@ QUnit.test('inbox messages are never squashed', async function (assert) {
             res_id: 20, // id of related channel
         }
     );
-    await this.start();
+    this.data['mail.notification'].records.push(
+        {
+            mail_message_id: 100,
+            notification_status: 'sent',
+            notification_type: 'inbox',
+            res_partner_id: this.data.currentPartnerId,
+        }, {
+            mail_message_id: 101,
+            notification_status: 'sent',
+            notification_type: 'inbox',
+            res_partner_id: this.data.currentPartnerId,
+        },
+    );
+    await this.start({
+        waitUntilEvent: {
+            eventName: 'o-thread-view-hint-processed',
+            message: "should wait until inbox displayed its messages",
+            predicate: ({ hint, threadViewer }) => {
+                return (
+                    hint.type === 'messages-loaded' &&
+                    threadViewer.thread.model === 'mail.box' &&
+                    threadViewer.thread.id === 'inbox'
+                );
+            },
+        },
+    });
+
     assert.strictEqual(
         document.querySelectorAll(`
             .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
@@ -1975,14 +2001,14 @@ QUnit.test('restore thread scroll position', async function (assert) {
         "should have scrolled to bottom of channel 11 initially"
     );
 
-    await this.afterEvent({
+    await afterNextRender(() => this.afterEvent({
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop = 0,
         message: "should wait until channel 11 changed its scroll position to top",
         predicate: ({ thread }) => {
             return thread && thread.model === 'mail.channel' && thread.id === 11;
         },
-    });
+    }));
     assert.strictEqual(
         document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop,
         0,
@@ -2941,13 +2967,32 @@ QUnit.test('rendering of inbox message', async function (assert) {
 
     this.data['mail.message'].records.push({
         body: "not empty",
+        id: 100,
         model: 'res.partner', // random existing model
         needaction: true, // for message_fetch domain
         needaction_partner_ids: [this.data.currentPartnerId], // for consistency
         record_name: 'Refactoring', // random name, will be asserted in the test
         res_id: 20, // random related id
     });
-    await this.start();
+    this.data['mail.notification'].records.push({
+        mail_message_id: 100,
+        notification_status: 'sent',
+        notification_type: 'inbox',
+        res_partner_id: this.data.currentPartnerId,
+    });
+    await this.start({
+        waitUntilEvent: {
+            eventName: 'o-thread-view-hint-processed',
+            message: "should wait until inbox displayed its messages",
+            predicate: ({ hint, threadViewer }) => {
+                return (
+                    hint.type === 'messages-loaded' &&
+                    threadViewer.thread.model === 'mail.box' &&
+                    threadViewer.thread.id === 'inbox'
+                );
+            },
+        },
+    });
     assert.strictEqual(
         document.querySelectorAll('.o_Message').length,
         1,
@@ -3307,104 +3352,6 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
     assert.notOk(
         document.querySelector('.o_Message').classList.contains('o-selected'),
         "message should not longer be selected after posting reply"
-    );
-});
-
-QUnit.test('load recent messages from thread (already loaded some old messages)', async function (assert) {
-    assert.expect(6);
-
-    // channel expected to be found in the sidebar,
-    // with a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20 });
-    for (let i = 0; i < 50; i++) {
-        this.data['mail.message'].records.push({
-            body: "not empty",
-            id: 100 + i, // random unique id, will be referenced in the test
-            model: 'mail.channel', // expected value to link message to channel
-            // needaction needs to be set here for message_fetch domain, because
-            // mocked models don't have computed fields
-            needaction: i === 0,
-            // the goal is to have only the first (oldest) message in Inbox
-            needaction_partner_ids: i === 0 ? [this.data.currentPartnerId] : [],
-            res_id: 20, // id of related channel
-        });
-    }
-    await this.start();
-    assert.strictEqual(
-        document.querySelectorAll('.o_Message').length,
-        1,
-        "Inbox should have a single message initially"
-    );
-    assert.strictEqual(
-        document.querySelector('.o_Message').dataset.messageLocalId,
-        this.env.models['mail.message'].findFromIdentifyingData({ id: 100 }).localId,
-        "the only message initially should be the one marked as 'needaction'"
-    );
-
-    await this.afterEvent({
-        eventName: 'o-component-message-list-scrolled',
-        func: () => {
-            document.querySelector(`
-                .o_DiscussSidebar_item[data-thread-local-id="${
-                    this.env.models['mail.thread'].findFromIdentifyingData({
-                        id: 20,
-                        model: 'mail.channel',
-                    }).localId
-                }"]
-            `).click();
-        },
-        message: "should wait until channel scrolled to bottom after opening it from the discuss sidebar",
-        predicate: ({ scrollTop, thread }) => {
-            const messageList = document.querySelector('.o_ThreadView_messageList');
-            return (
-                thread &&
-                thread.model === 'mail.channel' &&
-                thread.id === 20 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
-            );
-        },
-    });
-    assert.strictEqual(
-        document.querySelectorAll('.o_Message').length,
-        31,
-        `should display 31 messages inside the channel after clicking on it (the previously known
-        message from Inbox and the 30 most recent messages that have been fetched)`
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`
-            .o_Message[data-message-local-id="${
-                this.env.models['mail.message'].findFromIdentifyingData({ id: 100 }).localId
-            }"]
-        `).length,
-        1,
-        "should display the message from Inbox inside the channel too"
-    );
-
-    await this.afterEvent({
-        eventName: 'o-thread-view-hint-processed',
-        func: () => document.querySelector('.o_Discuss_thread .o_ThreadView_messageList').scrollTop = 0,
-        message: "should wait until channel 20 loaded more messages after scrolling to top",
-        predicate: ({ hint, threadViewer }) => {
-            return (
-                hint.type === 'more-messages-loaded' &&
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 20
-            );
-        },
-    });
-    assert.strictEqual(
-        document.querySelectorAll('.o_Message').length,
-        50,
-        "should display 50 messages inside the channel after scrolling to load more (all messages fetched)"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`
-            .o_Message[data-message-local-id="${
-                this.env.models['mail.message'].findFromIdentifyingData({ id: 100 }).localId
-            }"]
-        `).length,
-        1,
-        "should still display the message from Inbox inside the channel too"
     );
 });
 

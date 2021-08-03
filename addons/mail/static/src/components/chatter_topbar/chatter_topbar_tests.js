@@ -6,6 +6,7 @@ import {
     afterNextRender,
     beforeEach,
     createRootComponent,
+    nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
 
@@ -409,9 +410,8 @@ QUnit.test('composer state conserved when clicking on another topbar button', as
         "send message button should not be active"
     );
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_ChatterTopbar_buttonAttachments`).click();
-    });
+    document.querySelector(`.o_ChatterTopbar_buttonAttachments`).click();
+    await nextAnimationFrame();
     assert.containsOnce(
         document.body,
         `.o_ChatterTopbar_buttonLogNote.o-active`,

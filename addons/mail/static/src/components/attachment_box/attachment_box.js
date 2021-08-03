@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { AttachmentList } from '@mail/components/attachment_list/attachment_list';
 import { DropZone } from '@mail/components/drop_zone/drop_zone';
 import { FileUploader } from '@mail/components/file_uploader/file_uploader';
@@ -22,19 +22,7 @@ export class AttachmentBox extends Component {
         super(...args);
         this.isDropZoneVisible = useDragVisibleDropZone();
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            return {
-                thread,
-                threadAllAttachments: thread ? thread.allAttachments : [],
-                threadId: thread && thread.id,
-                threadModel: thread && thread.model,
-            };
-        }, {
-            compareDepth: {
-                threadAllAttachments: 1,
-            },
-        });
+        useModels();
         /**
          * Reference of the file uploader.
          * Useful to programmatically prompts the browser file uploader.

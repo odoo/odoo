@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { Follower } from '@mail/components/follower/follower';
 
 const { Component } = owl;
@@ -22,18 +22,7 @@ export class FollowerListMenu extends Component {
              */
             isDropdownOpen: false,
         });
-        useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            const followers = thread ? thread.followers : [];
-            return {
-                followers,
-                threadChannelType: thread && thread.channel_type,
-            };
-        }, {
-            compareDepth: {
-                followers: 1,
-            },
-        });
+        useModels();
         this._dropdownRef = useRef('dropdown');
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
     }

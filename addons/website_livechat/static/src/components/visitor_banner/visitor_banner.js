@@ -1,7 +1,8 @@
 odoo.define('website_livechat/static/src/components/visitor_banner/visitor_banner.js', function (require) {
 'use strict';
 
-const { useStore } = require('@mail/component_hooks/use_store/use_store');
+const { useModels } = require('@mail/component_hooks/use_models/use_models');
+const { useShouldUpdateBasedOnProps } = require('@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props');
 
 const { Component } = owl;
 
@@ -12,14 +13,8 @@ class VisitorBanner extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const visitor = this.env.models['website_livechat.visitor'].get(props.visitorLocalId);
-            const country = visitor && visitor.country;
-            return {
-                country: country && country.__state,
-                visitor: visitor ? visitor.__state : undefined,
-            };
-        });
+        useModels();
+        useShouldUpdateBasedOnProps();
     }
 
     //--------------------------------------------------------------------------

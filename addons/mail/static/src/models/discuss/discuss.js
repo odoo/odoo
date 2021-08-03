@@ -395,11 +395,6 @@ function factory(dependencies) {
     Discuss.fields = {
         activeId: attr({
             compute: '_computeActiveId',
-            dependencies: [
-                'thread',
-                'threadId',
-                'threadModel',
-            ],
         }),
         /**
          * Active mobile navbar tab, either 'mailbox', 'chat', or 'channel'.
@@ -413,32 +408,12 @@ function factory(dependencies) {
         addingChannelValue: attr({
             compute: '_computeAddingChannelValue',
             default: "",
-            dependencies: ['isOpen'],
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        device: one2one('mail.device', {
-            related: 'messaging.device',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        deviceIsMobile: attr({
-            related: 'device.isMobile',
         }),
         /**
          * Determines whether `this.thread` should be displayed.
          */
         hasThreadView: attr({
             compute: '_computeHasThreadView',
-            dependencies: [
-                'activeMobileNavbarTabId',
-                'deviceIsMobile',
-                'isOpen',
-                'thread',
-                'threadModel',
-            ],
         }),
         /**
          * Formatted init thread on opening discuss for the first time,
@@ -458,7 +433,6 @@ function factory(dependencies) {
         isAddingChannel: attr({
             compute: '_computeIsAddingChannel',
             default: false,
-            dependencies: ['isOpen'],
         }),
         /**
          * Determine whether current user is currently adding a chat from
@@ -467,7 +441,6 @@ function factory(dependencies) {
         isAddingChat: attr({
             compute: '_computeIsAddingChat',
             default: false,
-            dependencies: ['isOpen'],
         }),
         /**
          * Determine whether this discuss should be focused at next render.
@@ -485,10 +458,6 @@ function factory(dependencies) {
         isReplyingToMessage: attr({
             compute: '_computeIsReplyingToMessage',
             default: false,
-            dependencies: ['replyingToMessage'],
-        }),
-        isThreadPinned: attr({
-            related: 'thread.isPinned',
         }),
         /**
          * The menu_id of discuss app, received on mail/init_messaging and
@@ -500,9 +469,6 @@ function factory(dependencies) {
         messaging: one2one('mail.messaging', {
             inverse: 'discuss',
         }),
-        messagingInbox: many2one('mail.thread', {
-            related: 'messaging.inbox',
-        }),
         renamingThreads: one2many('mail.thread'),
         /**
          * The message that is currently selected as being replied to in Inbox.
@@ -511,10 +477,6 @@ function factory(dependencies) {
          */
         replyingToMessage: many2one('mail.message', {
             compute: '_computeReplyingToMessage',
-            dependencies: [
-                'isOpen',
-                'replyingToMessage',
-            ],
         }),
         /**
          * The thread concerned by the reply feature in Inbox. It depends on the
@@ -544,21 +506,6 @@ function factory(dependencies) {
          */
         thread: many2one('mail.thread', {
             compute: '_computeThread',
-            dependencies: [
-                'activeMobileNavbarTabId',
-                'deviceIsMobile',
-                'isThreadPinned',
-                'messaging',
-                'messagingInbox',
-                'thread',
-                'threadModel',
-            ],
-        }),
-        threadId: attr({
-            related: 'thread.id',
-        }),
-        threadModel: attr({
-            related: 'thread.model',
         }),
         /**
          * States the `mail.thread_view` displaying `this.thread`.
@@ -571,11 +518,6 @@ function factory(dependencies) {
          */
         threadViewer: one2one('mail.thread_viewer', {
             compute: '_computeThreadViewer',
-            dependencies: [
-                'hasThreadView',
-                'replyingToMessage',
-                'thread',
-            ],
             isCausal: true,
             readonly: true,
             required: true,

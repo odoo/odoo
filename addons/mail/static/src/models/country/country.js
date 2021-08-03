@@ -36,9 +36,6 @@ function factory(dependencies) {
         code: attr(),
         flagUrl: attr({
             compute: '_computeFlagUrl',
-            dependencies: [
-                'code',
-            ],
         }),
         id: attr({
             required: true,

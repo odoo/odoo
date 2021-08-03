@@ -207,7 +207,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasThreadView() {
-            return this.isVisible && !this.isFolded && this.thread;
+            return this.isVisible && !this.isFolded && !!this.thread;
         }
 
         /**
@@ -366,20 +366,13 @@ function factory(dependencies) {
          */
         hasNewMessageForm: attr({
             compute: '_computeHasNewMessageForm',
-            dependencies: [
-                'isFolded',
-                'isVisible',
-                'thread',
-            ],
         }),
         hasShiftPrev: attr({
             compute: '_computeHasShiftPrev',
-            dependencies: ['managerAllOrderedVisible'],
             default: false,
         }),
         hasShiftNext: attr({
             compute: '_computeHasShiftNext',
-            dependencies: ['managerAllOrderedVisible'],
             default: false,
         }),
         /**
@@ -387,11 +380,6 @@ function factory(dependencies) {
          */
         hasThreadView: attr({
             compute: '_computeHasThreadView',
-            dependencies: [
-                'isFolded',
-                'isVisible',
-                'thread',
-            ],
         }),
         /**
          * Determine whether the chat window should be programmatically
@@ -421,25 +409,12 @@ function factory(dependencies) {
          */
         isVisible: attr({
             compute: '_computeIsVisible',
-            dependencies: [
-                'managerAllOrderedVisible',
-            ],
         }),
         manager: many2one('mail.chat_window_manager', {
             inverse: 'chatWindows',
         }),
-        managerAllOrderedVisible: one2many('mail.chat_window', {
-            related: 'manager.allOrderedVisible',
-        }),
-        managerVisual: attr({
-            related: 'manager.visual',
-        }),
         name: attr({
             compute: '_computeName',
-            dependencies: [
-                'thread',
-                'threadDisplayName',
-            ],
         }),
         /**
          * Determines the `mail.thread` that should be displayed by `this`.
@@ -447,9 +422,6 @@ function factory(dependencies) {
          */
         thread: one2one('mail.thread', {
             inverse: 'chatWindow',
-        }),
-        threadDisplayName: attr({
-            related: 'thread.displayName',
         }),
         /**
          * States the `mail.thread_view` displaying `this.thread`.
@@ -462,10 +434,6 @@ function factory(dependencies) {
          */
         threadViewer: one2one('mail.thread_viewer', {
             compute: '_computeThreadViewer',
-            dependencies: [
-                'hasThreadView',
-                'thread',
-            ],
             isCausal: true,
             readonly: true,
             required: true,
@@ -478,14 +446,9 @@ function factory(dependencies) {
          */
         visibleIndex: attr({
             compute: '_computeVisibleIndex',
-            dependencies: [
-                'manager',
-                'managerVisual',
-            ],
         }),
         visibleOffset: attr({
             compute: '_computeVisibleOffset',
-            dependencies: ['managerVisual'],
         }),
     };
 

@@ -6,7 +6,6 @@ import MessagingService from '@mail/services/messaging/messaging';
 import env from 'web.commonEnv';
 import { serviceRegistry } from 'web.core';
 
-const { Store } = owl;
 const { EventBus } = owl.core;
 
 async function createMessaging() {
@@ -39,16 +38,6 @@ async function createMessaging() {
      */
     env.messaging = env.models['mail.messaging'].create();
 }
-
-/**
- * Messaging store
- */
-const store = new Store({
-    env,
-    state: {
-        messagingRevNumber: 0,
-    },
-});
 
 /**
  * Registry of models.
@@ -90,7 +79,6 @@ Object.assign(env, {
      */
     messagingCreatedPromise: createMessaging(),
     modelManager: new ModelManager(env),
-    store,
 });
 
 /**

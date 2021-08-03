@@ -2,8 +2,8 @@
 
 import * as mailUtils from '@mail/js/utils';
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { MessageAuthorPrefix } from '@mail/components/message_author_prefix/message_author_prefix';
 import { PartnerImStatusIcon } from '@mail/components/partner_im_status_icon/partner_im_status_icon';
 
@@ -20,30 +20,7 @@ export class ThreadNeedactionPreview extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            let lastNeedactionMessageAsOriginThreadAuthor;
-            let lastNeedactionMessageAsOriginThread;
-            let threadCorrespondent;
-            if (thread) {
-                lastNeedactionMessageAsOriginThread = thread.lastNeedactionMessageAsOriginThread;
-                threadCorrespondent = thread.correspondent;
-            }
-            if (lastNeedactionMessageAsOriginThread) {
-                lastNeedactionMessageAsOriginThreadAuthor = lastNeedactionMessageAsOriginThread.author;
-            }
-            return {
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                lastNeedactionMessageAsOriginThread: lastNeedactionMessageAsOriginThread ? lastNeedactionMessageAsOriginThread.__state : undefined,
-                lastNeedactionMessageAsOriginThreadAuthor: lastNeedactionMessageAsOriginThreadAuthor
-                    ? lastNeedactionMessageAsOriginThreadAuthor.__state
-                    : undefined,
-                thread: thread ? thread.__state : undefined,
-                threadCorrespondent: threadCorrespondent
-                    ? threadCorrespondent.__state
-                    : undefined,
-            };
-        });
+        useModels();
         /**
          * Reference of the "mark as read" button. Useful to disable the
          * top-level click handler when clicking on this specific button.

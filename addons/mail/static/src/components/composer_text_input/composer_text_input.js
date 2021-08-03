@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { ComposerSuggestionList } from '@mail/components/composer_suggestion_list/composer_suggestion_list';
 import { markEventHandled } from '@mail/utils/utils';
@@ -23,26 +23,7 @@ export class ComposerTextInput extends Component {
                 sendShortcuts: 1,
             },
         });
-        useStore(props => {
-            const composer = this.env.models['mail.composer'].get(props.composerLocalId);
-            const thread = composer && composer.thread;
-            const correspondent = thread ? thread.correspondent : undefined;
-            return {
-                composerHasFocus: composer && composer.hasFocus,
-                composerHasSuggestions: composer && composer.hasSuggestions,
-                composerIsLastStateChangeProgrammatic: composer && composer.isLastStateChangeProgrammatic,
-                composerIsLog: composer && composer.isLog,
-                composerTextInputContent: composer && composer.textInputContent,
-                composerTextInputCursorEnd: composer && composer.textInputCursorEnd,
-                composerTextInputCursorStart: composer && composer.textInputCursorStart,
-                composerTextInputSelectionDirection: composer && composer.textInputSelectionDirection,
-                correspondent,
-                correspondentNameOrDisplayName: correspondent && correspondent.nameOrDisplayName,
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                threadDisplayName: thread && thread.displayName,
-                threadModel: thread && thread.model,
-            };
-        });
+        useModels();
         /**
          * Updates the composer text input content when composer is mounted
          * as textarea content can't be changed from the DOM.

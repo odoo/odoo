@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { FollowerSubtypeList } from '@mail/components/follower_subtype_list/follower_subtype_list';
 
 const { Component } = owl;
@@ -15,11 +15,8 @@ export class Follower extends Component {
      */
     constructor(...args) {
         super(...args);
+        useModels();
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const follower = this.env.models['mail.follower'].get(props.followerLocalId);
-            return [follower ? follower.__state : undefined];
-        });
     }
 
     //--------------------------------------------------------------------------

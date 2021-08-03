@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { PartnerImStatusIcon } from '@mail/components/partner_im_status_icon/partner_im_status_icon';
 import { link } from '@mail/model/model_field_command';
@@ -18,14 +18,7 @@ export class ComposerSuggestion extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const composer = this.env.models['mail.composer'].get(this.props.composerLocalId);
-            const record = this.env.models[props.modelName].get(props.recordLocalId);
-            return {
-                composerHasToScrollToActiveSuggestion: composer && composer.hasToScrollToActiveSuggestion,
-                record: record ? record.__state : undefined,
-            };
-        });
+        useModels();
         useUpdate({ func: () => this._update() });
     }
 

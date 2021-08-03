@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { AttachmentList } from '@mail/components/attachment_list/attachment_list';
 import { MessageSeenIndicator } from '@mail/components/message_seen_indicator/message_seen_indicator';
@@ -40,42 +40,7 @@ export class Message extends Component {
             isClicked: false,
         });
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const message = this.env.models['mail.message'].get(props.messageLocalId);
-            const author = message ? message.author : undefined;
-            const partnerRoot = this.env.messaging.partnerRoot;
-            const originThread = message ? message.originThread : undefined;
-            const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
-            const thread = threadView ? threadView.thread : undefined;
-            return {
-                attachments: message
-                    ? message.attachments.map(attachment => attachment.__state)
-                    : [],
-                author,
-                authorAvatarUrl: author && author.avatarUrl,
-                authorImStatus: author && author.im_status,
-                authorNameOrDisplayName: author && author.nameOrDisplayName,
-                correspondent: thread && thread.correspondent,
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                isMessageSelected: message && threadView && threadView.threadViewer
-                    ? threadView.threadViewer.selectedMessage === message
-                    : false,
-                message: message ? message.__state : undefined,
-                notifications: message ? message.notifications.map(notif => notif.__state) : [],
-                originThread,
-                originThreadModel: originThread && originThread.model,
-                originThreadDisplayName: originThread && originThread.displayName,
-                originThreadUrl: originThread && originThread.url,
-                partnerRoot,
-                thread,
-                threadHasSeenIndicators: thread && thread.hasSeenIndicators,
-            };
-        }, {
-            compareDepth: {
-                attachments: 1,
-                notifications: 1,
-            },
-        });
+        useModels();
         useUpdate({ func: () => this._update() });
         /**
          * The intent of the reply button depends on the last rendered state.

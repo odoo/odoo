@@ -214,35 +214,15 @@ function factory(dependencies) {
         isInternalUser: attr(),
         display_name: attr({
             compute: '_computeDisplayName',
-            dependencies: [
-                'display_name',
-                'partnerDisplayName',
-            ],
         }),
         model: attr({
             default: 'res.user',
         }),
         nameOrDisplayName: attr({
             compute: '_computeNameOrDisplayName',
-            dependencies: [
-                'display_name',
-                'partnerNameOrDisplayName',
-            ]
         }),
         partner: one2one('mail.partner', {
             inverse: 'user',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        partnerDisplayName: attr({
-            related: 'partner.display_name',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        partnerNameOrDisplayName: attr({
-            related: 'partner.nameOrDisplayName',
         }),
     };
 

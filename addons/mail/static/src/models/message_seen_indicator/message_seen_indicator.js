@@ -268,31 +268,23 @@ function factory(dependencies) {
         hasEveryoneFetched: attr({
             compute: '_computeHasEveryoneFetched',
             default: false,
-            dependencies: ['messageAuthor', 'messageId', 'threadPartnerSeenInfos'],
         }),
         hasEveryoneSeen: attr({
             compute: '_computeHasEveryoneSeen',
             default: false,
-            dependencies: ['messageAuthor', 'messageId', 'threadPartnerSeenInfos'],
         }),
         hasSomeoneFetched: attr({
             compute: '_computeHasSomeoneFetched',
             default: false,
-            dependencies: ['messageAuthor', 'messageId', 'threadPartnerSeenInfos'],
         }),
         hasSomeoneSeen: attr({
             compute: '_computeHasSomeoneSeen',
             default: false,
-            dependencies: ['messageAuthor', 'messageId', 'threadPartnerSeenInfos'],
         }),
         id: attr(),
         isMessagePreviousToLastCurrentPartnerMessageSeenByEveryone: attr({
             compute: '_computeIsMessagePreviousToLastCurrentPartnerMessageSeenByEveryone',
             default: false,
-            dependencies: [
-                'messageId',
-                'threadLastCurrentPartnerMessageSeenByEveryone',
-            ],
         }),
         /**
          * The message concerned by this seen indicator.
@@ -301,12 +293,6 @@ function factory(dependencies) {
          */
         message: many2one('mail.message', {
             compute: '_computeMessage',
-            dependencies: [
-                'messageId',
-            ],
-        }),
-        messageAuthor: many2one('mail.partner', {
-            related: 'message.author',
         }),
         /**
          * The id of the message this seen indicator is related to.
@@ -328,11 +314,9 @@ function factory(dependencies) {
         }),
         partnersThatHaveFetched: many2many('mail.partner', {
             compute: '_computePartnersThatHaveFetched',
-            dependencies: ['messageAuthor', 'messageId', 'threadPartnerSeenInfos'],
         }),
         partnersThatHaveSeen: many2many('mail.partner', {
             compute: '_computePartnersThatHaveSeen',
-            dependencies: ['messageAuthor', 'messageId', 'threadPartnerSeenInfos'],
         }),
         /**
          * The thread concerned by this seen indicator.
@@ -341,16 +325,7 @@ function factory(dependencies) {
          */
         thread: many2one('mail.thread', {
             compute: '_computeThread',
-            dependencies: [
-                'channelId',
-            ],
             inverse: 'messageSeenIndicators'
-        }),
-        threadPartnerSeenInfos: one2many('mail.thread_partner_seen_info', {
-            related: 'thread.partnerSeenInfos',
-        }),
-        threadLastCurrentPartnerMessageSeenByEveryone: many2one('mail.message', {
-            related: 'thread.lastCurrentPartnerMessageSeenByEveryone',
         }),
     };
 

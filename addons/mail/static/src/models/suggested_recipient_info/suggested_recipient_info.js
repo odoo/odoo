@@ -47,10 +47,6 @@ function factory(dependencies) {
          */
         email: attr({
             compute: '_computeEmail',
-            dependencies: [
-                'email',
-                'partnerEmail',
-            ],
         }),
         /**
          * Determines whether `this` will be added to recipients when posting a
@@ -59,10 +55,6 @@ function factory(dependencies) {
         isSelected: attr({
             compute: '_computeIsSelected',
             default: true,
-            dependencies: [
-                'isSelected',
-                'partner',
-            ],
         }),
         /**
          * Determines the name of `this`. It serves as visual clue when
@@ -71,27 +63,11 @@ function factory(dependencies) {
          */
         name: attr({
             compute: '_computeName',
-            dependencies: [
-                'name',
-                'partnerNameOrDisplayName',
-            ],
         }),
         /**
          * Determines the optional `mail.partner` associated to `this`.
          */
         partner: many2one('mail.partner'),
-        /**
-         * Serves as compute dependency.
-         */
-        partnerEmail: attr({
-            related: 'partner.email'
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        partnerNameOrDisplayName: attr({
-            related: 'partner.nameOrDisplayName'
-        }),
         /**
          * Determines why `this` is a suggestion for `this.thread`. It serves as
          * visual clue when displaying `this`.

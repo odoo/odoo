@@ -16,27 +16,22 @@ export class ModelField {
     constructor({
         compute,
         default: def,
-        dependencies = [],
-        dependents = [],
         env,
         fieldName,
         fieldType,
-        hashes: extraHashes = [],
         inverse,
         isCausal = false,
-        isOnChange,
         readonly = false,
         related,
         relationType,
         required = false,
         to,
     } = {}) {
-        const id = _.uniqueId('field_');
         /**
          * If set, this field acts as a computed field, and this prop
          * contains the name of the instance method that computes the value
          * for this field. This compute method is called on creation of record
-         * and whenever some of its dependencies change. @see dependencies
+         * and whenever some of its dependencies change.
          */
         this.compute = compute;
         /**
@@ -44,21 +39,6 @@ export class ModelField {
          * set a value by default.
          */
         this.default = def;
-        /**
-         * List of field on current record that this field depends on for its
-         * `compute` method. Useful to determine whether this field should be
-         * registered for recomputation when some record fields have changed.
-         * This list must be declared in model definition, or compute method
-         * is only computed once.
-         */
-        this.dependencies = dependencies;
-        /**
-         * List of fields that are dependent of this field. They should never
-         * be declared, and are automatically generated while processing
-         * declared fields. This is populated by compute `dependencies` and
-         * `related`.
-         */
-        this.dependents = dependents;
         /**
          * The messaging env.
          */
@@ -77,49 +57,6 @@ export class ModelField {
          */
         this.fieldType = fieldType;
         /**
-         * List of hashes registered on this field definition. Technical
-         * prop that is specifically used in processing of dependent
-         * fields, useful to clearly identify which fields of a relation are
-         * dependents and must be registered for computed. Indeed, not all
-         * related records may have a field that depends on changed field,
-         * especially when dependency is defined on sub-model on a relation in
-         * a super-model.
-         *
-         * To illustrate the purpose of this hash, suppose following definition
-         * of models and fields:
-         *
-         * - 3 models (A, B, C) and 3 fields (x, y, z)
-         * - A.fields: { x: one2one(C, inverse: x') }
-         * - B extends A
-         * - B.fields: { z: related(x.y) }
-         * - C.fields: { y: attribute }
-         *
-         * Visually:
-         *               x'
-         *          <-----------
-         *        A -----------> C { y }
-         *        ^      x
-         *        |
-         *        | (extends)
-         *        |
-         *        B { z = x.y }
-         *
-         * If z has a dependency on x.y, it means y has a dependent on x'.z.
-         * Note that field z exists on B but not on all A. To determine which
-         * kinds of records in relation x' are dependent on y, y is aware of an
-         * hash on this dependent, and any dependents who has this hash in list
-         * of hashes are actual dependents.
-         */
-        this.hashes = extraHashes.concat([id]);
-        /**
-         * Identification for this field definition. Useful to map a dependent
-         * from a dependency. Indeed, declared field definitions use
-         * 'dependencies' but technical process need inverse as 'dependents'.
-         * Dependencies just need name of fields, but dependents cannot just
-         * rely on inverse field names because these dependents are a subset.
-         */
-        this.id = id;
-        /**
          * This prop only makes sense in a relational field. This contains
          * the name of the field name in the inverse relation. This may not
          * be defined in declared field definitions, but processed relational
@@ -131,16 +68,6 @@ export class ModelField {
          * relation is removed, the related record is automatically deleted.
          */
         this.isCausal = isCausal;
-        /**
-         * Determines whether this field is an "on change" field. Only applies
-         * to computed fields. An "on change" is a fake compute designed to be
-         * called when one of its dependencies change. It is called after all
-         * other computes are done, and it does not actually assign any value to
-         * its respective field.
-         * This is deprecated but when it is necessary due to other limitations
-         * in code it is better using "on change" than polluting real computes.
-         */
-        this.isOnChange = isOnChange;
         /**
          * Determines whether the field is read only. Read only field
          * can't be updated once the record is created.
@@ -159,9 +86,6 @@ export class ModelField {
          * related to current record from this relation. When there are more
          * than one record in the relation, it maps all related fields per
          * record in relation.
-         *
-         * FIXME: currently flatten map due to bug, improvement is planned
-         * see Task-id 2261221
          */
         this.related = related;
         /**
@@ -269,22 +193,6 @@ export class ModelField {
     }
 
     /**
-     * Combine current field definition with provided field definition and
-     * return the combined field definition. Useful to track list of hashes of
-     * a given field, which is necessary for the working of dependent fields
-     * (computed and related fields).
-     *
-     * @param {ModelField} field
-     * @returns {ModelField}
-     */
-    combine(field) {
-        return new ModelField(Object.assign({}, this, {
-            dependencies: this.dependencies.concat(field.dependencies),
-            hashes: this.hashes.concat(field.hashes),
-        }));
-    }
-
-    /**
      * Compute method when this field is related.
      *
      * @private
@@ -297,13 +205,9 @@ export class ModelField {
         if (['one2many', 'many2many'].includes(relationField.relationType)) {
             const newVal = [];
             for (const otherRecord of record[relationName]) {
-                const OtherModel = otherRecord.constructor;
-                const otherField = OtherModel.__fieldMap[relatedFieldName];
-                const otherValue = otherField.get(otherRecord);
+                const otherValue = otherRecord[relatedFieldName];
                 if (otherValue) {
                     if (otherValue instanceof Array) {
-                        // avoid nested array if otherField is x2many too
-                        // TODO IMP task-2261221
                         for (const v of otherValue) {
                             newVal.push(v);
                         }
@@ -319,9 +223,7 @@ export class ModelField {
         }
         const otherRecord = record[relationName];
         if (otherRecord) {
-            const OtherModel = otherRecord.constructor;
-            const otherField = OtherModel.__fieldMap[relatedFieldName];
-            const newVal = otherField.get(otherRecord);
+            const newVal = otherRecord[relatedFieldName];
             if (newVal === undefined) {
                 return clear();
             }

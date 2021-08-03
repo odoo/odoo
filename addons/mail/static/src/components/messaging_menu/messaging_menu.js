@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { AutocompleteInput } from '@mail/components/autocomplete_input/autocomplete_input';
 import { MobileMessagingNavbar } from '@mail/components/mobile_messaging_navbar/mobile_messaging_navbar';
 import { NotificationList } from '@mail/components/notification_list/notification_list';
@@ -27,15 +27,8 @@ export class MessagingMenu extends Component {
          * item is not considered as a click away from messaging menu in mobile.
          */
         this.id = _.uniqueId('o_messagingMenu_');
+        useModels();
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            return {
-                isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,
-                isDiscussOpen: this.env.messaging && this.env.messaging.discuss.isOpen,
-                isMessagingInitialized: this.env.isMessagingInitialized(),
-                messagingMenu: this.env.messaging && this.env.messaging.messagingMenu.__state,
-            };
-        });
 
         // bind since passed as props
         this._onMobileNewMessageInputSelect = this._onMobileNewMessageInputSelect.bind(this);

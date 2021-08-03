@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { ThreadTypingIcon } from '@mail/components/thread_typing_icon/thread_typing_icon';
 
 const { Component } = owl;
@@ -16,13 +16,7 @@ export class ThreadTextualTypingStatus extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            return {
-                threadOrderedOtherTypingMembersLength: thread && thread.orderedOtherTypingMembersLength,
-                threadTypingStatusText: thread && thread.typingStatusText,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------
