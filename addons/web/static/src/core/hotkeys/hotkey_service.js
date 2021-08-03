@@ -145,9 +145,12 @@ export const hotkeyService = {
                 }
             }
 
-            // Prevent default on event if it has been handheld.
+            // Only if event has been handheld.
             if (dispatched) {
+                // Purpose: prevent browser defaults
                 event.preventDefault();
+                // Purpose: stop other window keydown listeners (e.g. home menu)
+                event.stopImmediatePropagation();
             }
         }
 
