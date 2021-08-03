@@ -26,7 +26,7 @@
 
     <t t-name="web.FieldX2Many" owl="1" >
         <div>
-            <t t-if="Renderer" t-component="Renderer" model="model" info="archInfo" fields="fields" record="record"/>
+            <t t-if="Renderer" t-component="Renderer" model="model" info="archInfo" fields="fields" record="record" openRecord="openRecord"/>
             <t t-else="">
                 One2Many
             </t>

@@ -227,7 +227,8 @@ class DataList extends DataPoint {
         }
         const fields = params.fields || Object.keys(this.fields);
 
-        if (!this.hasData) {
+        if (!this.hasData && params.domain) {
+            // LPE FIXME
             this.domain = params.domain;
             const rawRecords = params.resIds
                 ? params.resIds.map((id) => ({ id }))
@@ -241,8 +242,10 @@ class DataList extends DataPoint {
                     return record;
                 })
             );
-        } else {
+        } else if (this.hasData) {
             await Promise.all(this.data.map((dp) => dp.load({ fields })));
+        } else {
+            this.data = [];
         }
     }
 }
