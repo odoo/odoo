@@ -788,7 +788,7 @@ class Meeting(models.Model):
 
         my_attendee = self.attendee_ids.filtered(lambda att: att.partner_id == self.env.user.partner_id)
         if my_attendee:
-            return my_attendee
+            return my_attendee[:1]
 
         event_checked_attendees = self.env['calendar.contacts'].search([
             ('user_id', '=', self.env.user.id),
@@ -796,10 +796,10 @@ class Meeting(models.Model):
             ('partner_checked', '=', True)
         ]).mapped('partner_id')
         if self.partner_id in event_checked_attendees and self.partner_id in self.attendee_ids.partner_id:
-            return self.attendee_ids.filtered(lambda attendee: attendee.partner_id == self.partner_id)
+            return self.attendee_ids.filtered(lambda attendee: attendee.partner_id == self.partner_id)[:1]
 
         attendee = self.attendee_ids.filtered(lambda att: att.partner_id in event_checked_attendees and att.state != "needsAction")
-        return attendee
+        return attendee[:1]
 
     def _get_start_date(self):
         """Return the event starting date in the event's timezone.
