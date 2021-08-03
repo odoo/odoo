@@ -58,6 +58,11 @@ export class FieldX2Many extends Component {
             return this.record.load();
         }
     }
+
+    openRecord(record) {
+        console.log("FieldX2M openRecord", record);
+    }
 }
 
 registry.category("fields").add("one2many", FieldX2Many);
+registry.category("fields").add("many2many", FieldX2Many);
