@@ -684,6 +684,102 @@ class Task(models.Model):
         stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
         return stages.browse(stage_ids)
 
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        # Check for the presence of the content filter.
+        content_domain = ['|', '|', ['name', 'ilike', 'self'], ['description', 'ilike', 'self'], ['message_ids.body', 'ilike', 'self']]
+        content_search_vals = []
+        new_domain = []
+        last_found = False
+        i = 0
+        using_new_domain = False
+        while i < len(domain):
+            for j, leaf_2 in enumerate(content_domain):
+                leaf = domain[i + j]
+                # Leafs sometimes are array and not tuples when coming from RPC calls.
+                if leaf[:2] != leaf_2[:2]:
+                    break
+                if leaf[0] == 'message_ids.body':
+                    #Here we know that we have a search on `content`.
+                    content_search_vals.append(leaf[2])
+                    new_domain.append(['id', '!=', False])
+                    last_found = True
+                    using_new_domain = True
+            if not last_found:
+                new_domain.append(domain[i])
+            i += 1
+            if last_found:
+                i += 4
+            last_found = False
+        res = super().read_group(new_domain, fields, groupby, offset, None if using_new_domain else limit, orderby, lazy)
+        # Restore the domain using the content_domain but this time lookup only the ones we care about
+        if using_new_domain:
+
+            def get_new_content_search_domain(val):
+                return ['|', '|', ['name', 'ilike', val], ['description', 'ilike', val], ['message_ids.body', 'ilike', val]]
+
+            for group in res:
+                content_search_vals_counter = 0
+                domain = []
+                for leaf in group.get('__domain', []):
+                    if leaf == ('id', '!=', False):
+                        domain.extend(get_new_content_search_domain(content_search_vals[content_search_vals_counter]))
+                        content_search_vals_counter += 1
+                    else:
+                        domain.append(leaf)
+                group['__domain'] = domain
+        return res
+
+
+    @api.model
+    def search(self, domain, offset=0, limit=None, order=None, count=False):
+        # Check for the presence of the content filter.
+        content_domain = ['|', '|', ['name', 'ilike', 'self'], ['description', 'ilike', 'self'], ['message_ids.body', 'ilike', 'self']]
+        content_search_vals = []
+        new_domain = []
+        last_found = False
+        i = 0
+        using_new_domain = False
+        while i < len(domain):
+            for j, leaf_2 in enumerate(content_domain):
+                leaf = domain[i + j]
+                # Leafs sometimes are array and not tuples when coming from RPC calls.
+                if leaf[:2] != leaf_2[:2]:
+                    break
+                if leaf[0] == 'message_ids.body':
+                    #Here we know that we have a search on `content`.
+                    content_search_vals.append(leaf[2])
+                    new_domain.append(['id', '!=', False])
+                    last_found = True
+                    using_new_domain = True
+            if not last_found:
+                new_domain.append(domain[i])
+            i += 1
+            if last_found:
+                i += 4
+            last_found = False
+        res = super().search(new_domain, offset, None if using_new_domain else limit, order, count)
+        # Restore the domain using the content_domain but this time lookup only the ones we care about
+        if using_new_domain:
+
+            def get_new_content_search_domain(self, res, val):
+                # The orm is unable to convert ['&', ('message_ids.id', 'in', ids), ('message_ids.body', 'ilike', val)]
+                # into a single select (it will literally do id in (select message.res_id where in ..) AND id in (select message.res_id where ..))
+                # Query the ids of messages separately
+                message_ids = self.env['mail.message'].search_read([('model', '=', 'project.task'), ('res_id', 'in', res.ids), ('body', 'ilike', val)], ['res_id'])
+                return ['|', '|', ['name', 'ilike', val], ['description', 'ilike', val], ['id', 'in', tuple(read['res_id'] for read in message_ids)]]
+
+            content_search_vals_counter = 0
+            domain = []
+            for leaf in new_domain:
+                if leaf == ['id', '!=', False] and content_search_vals_counter < len(content_search_vals):
+                    domain.extend(get_new_content_search_domain(self, res, content_search_vals[content_search_vals_counter]))
+                    content_search_vals_counter += 1
+                else:
+                    domain.append(leaf)
+            res = super().search(domain, offset, limit, order, count)
+        return res
+
     active = fields.Boolean(default=True)
     name = fields.Char(string='Title', tracking=True, required=True, index=True)
     description = fields.Html(string='Description')

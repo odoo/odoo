@@ -23,6 +23,8 @@
                     <field name="stage_id"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="parent_id"/>
+                    <field name="description" string="Content"
+                        filter_domain="['|', '|', ('name', 'ilike', self), ('description', 'ilike', self), ('message_ids.body', 'ilike', self)]"/>
                     <filter string="My Tasks" name="my_tasks" domain="[('user_id', '=', uid)]"/>
                     <filter string="Followed Tasks" name="my_followed_tasks" domain="[('message_is_follower', '=', True)]" />
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
