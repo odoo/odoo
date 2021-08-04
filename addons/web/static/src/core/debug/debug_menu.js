@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { useCurrentDebugContext } from "./debug_context";
+import { useEnvDebugContext } from "./debug_context";
 
 const { Component } = owl;
 
 export class DebugMenu extends Component {
     setup() {
-        const debugContext = useCurrentDebugContext();
+        const debugContext = useEnvDebugContext();
         // Needs to be bound to this for use in template
         this.getElements = async () => {
             this.elements = await debugContext.getItems(this.env);
