@@ -1,11 +1,25 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import models, fields
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _inherit = "sale.order.line"
+
+    purchase_line_ids = fields.One2many('purchase.order.line', 'sale_line_id')
+
+    def _get_qty_procurement(self, previous_product_uom_qty):
+        # People without purchase rights should be able to do this operation
+        purchase_lines_sudo = self.sudo().purchase_line_ids
+        if purchase_lines_sudo.filtered(lambda r: r.state != 'cancel'):
+            qty = 0.0
+            for po_line in purchase_lines_sudo.filtered(lambda r: r.state != 'cancel'):
+                amount = fields.float_round(po_line.product_qty, precision_rounding=po_line.product_uom.rounding, rounding_method='HALF-UP')
+                qty += amount
+            return qty
+        else:
+            return super(SaleOrderLine, self)._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)
 
     def _compute_is_mto(self):
         super(SaleOrderLine, self)._compute_is_mto()
