@@ -13,10 +13,6 @@ tour.register('newsletter_popup_edition', {
         name: 'Newsletter Popup',
     }),
     {
-        content: "Confirm newsletter choice",
-        trigger: '.modal-footer .btn-primary',
-    },
-    {
         content: "Check the modal is opened for edition",
         trigger: '.o_newsletter_popup .modal:visible',
         in_modal: false,
