@@ -850,7 +850,7 @@ class AccountJournal(models.Model):
                     bank_account = self.env['res.partner.bank'].browse(vals['bank_account_id'])
                     if bank_account.partner_id != company.partner_id:
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
-            if 'alias_name' in vals:
+            if 'alias_name' in vals or 'type' in vals:
                 journal._update_mail_alias(vals)
         result = super(AccountJournal, self).write(vals)
 
@@ -974,7 +974,7 @@ class AccountJournal(models.Model):
         if vals.get('type') in ('sale', 'purchase') and vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
             vals.update({'refund_sequence_id': self.sudo()._create_sequence(vals, refund=True).id})
         journal = super(AccountJournal, self.with_context(mail_create_nolog=True)).create(vals)
-        if 'alias_name' in vals:
+        if 'alias_name' in vals or 'type' in vals:
             journal._update_mail_alias(vals)
 
         # Create the bank_account_id if necessary
