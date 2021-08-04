@@ -335,6 +335,7 @@ class AccountMove(models.Model):
         compute="_compute_display_inactive_currency_warning",
         help="Technical field used for tracking the status of the currency")
     tax_country_id = fields.Many2one(comodel_name='res.country', compute='_compute_tax_country_id', help="Technical field to filter the available taxes depending on the fiscal country and fiscal position.")
+    tax_country_code = fields.Char(compute="_compute_tax_country_code")
     # Technical field to hide Reconciled Entries stat button
     has_reconciled_entries = fields.Boolean(compute="_compute_has_reconciled_entries")
     show_reset_to_draft_button = fields.Boolean(compute='_compute_show_reset_to_draft_button')
@@ -1684,6 +1685,11 @@ class AccountMove(models.Model):
                 record.tax_country_id = record.fiscal_position_id.country_id
             else:
                 record.tax_country_id = record.company_id.account_fiscal_country_id
+
+    @api.depends('tax_country_id.code')
+    def _compute_tax_country_code(self):
+        for record in self:
+            record.tax_country_code = record.tax_country_id.code
 
     # -------------------------------------------------------------------------
     # BUSINESS MODELS SYNCHRONIZATION
