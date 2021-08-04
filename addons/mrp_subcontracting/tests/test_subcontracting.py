@@ -67,7 +67,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.env['procurement.group'].run_scheduler()
         picking = self.env['stock.picking'].search([('group_id', '=', pg1.id)])
         self.assertEqual(len(picking), 1)
-        self.assertEqual(picking.picking_type_id, wh.out_type_id)
+        self.assertEqual(picking.picking_type_id, wh.subcontracting_resupply_type_id)
         picking_receipt.move_lines.quantity_done = 1
         picking_receipt.button_validate()
         self.assertEqual(mo.state, 'done')
@@ -139,7 +139,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         wh = picking.picking_type_id.warehouse_id
 
         # The picking should be a delivery order
-        self.assertEqual(picking.picking_type_id, wh.out_type_id)
+        self.assertEqual(picking.picking_type_id, wh.subcontracting_resupply_type_id)
         # The date planned should be correct
         self.assertEqual(picking_receipt.scheduled_date, picking.scheduled_date + relativedelta(days=self.finished.produce_delay))
 
@@ -209,7 +209,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         # The picking should be a delivery order
         wh = picking_receipt.picking_type_id.warehouse_id
-        self.assertEqual(mo.picking_ids.picking_type_id, wh.out_type_id)
+        self.assertEqual(mo.picking_ids.picking_type_id, wh.subcontracting_resupply_type_id)
 
         self.assertEqual(mo.picking_type_id, wh.subcontracting_type_id)
         self.assertFalse(mo.picking_type_id.active)
@@ -576,7 +576,7 @@ class TestSubcontractingTracking(TransactionCase):
         self.env['procurement.group'].run_scheduler()
         picking = self.env['stock.picking'].search([('group_id', '=', pg1.id)])
         self.assertEqual(len(picking), 1)
-        self.assertEqual(picking.picking_type_id, wh.out_type_id)
+        self.assertEqual(picking.picking_type_id, wh.subcontracting_resupply_type_id)
 
         lot_id = self.env['stock.production.lot'].create({
             'name': 'lot1',
