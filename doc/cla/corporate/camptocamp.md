@@ -43,3 +43,4 @@ Thierry Ducrest thierry.ducrest@camptocamp.com https://github.com/TDu
 Stéphane Mangin stephane.mangin@camptocamp.com https://github.com/StephaneMangin
 Anna Janiszewska anna.janiszewska@camptocamp.com https://github.com/ajaniszewska-dev
 Matthieu Mequignon matthieu.mequignon@camptocamp.com https://github.com/mmequignon
+Silvio Gregorini silvio.gregorini@camptocamp.com https://github.com/SilvioC2C
