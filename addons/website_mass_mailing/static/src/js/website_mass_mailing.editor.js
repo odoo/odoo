@@ -2,65 +2,63 @@ odoo.define('website_mass_mailing.editor', function (require) {
 'use strict';
 
 var core = require('web.core');
-var rpc = require('web.rpc');
+const Dialog = require('web.Dialog');
 var options = require('web_editor.snippets.options');
-var wUtils = require('website.utils');
 
 const qweb = core.qweb;
 var _t = core._t;
 
 
 options.registry.mailing_list_subscribe = options.Class.extend({
-    popup_template_id: "editor_new_mailing_list_subscribe_button",
-    popup_title: _t("Add a Newsletter Subscribe Button"),
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Allows to select mailing list.
-     *
-     * @see this.selectClass for parameters
-     */
-    select_mailing_list: function (previewMode, value) {
-        var self = this;
-        var def = wUtils.prompt({
-            'id': this.popup_template_id,
-            'window_title': this.popup_title,
-            'select': _t("Newsletter"),
-            'init': function (field, dialog) {
-                return rpc.query({
-                    model: 'mailing.list',
-                    method: 'name_search',
-                    args: ['', [['is_public', '=', true]]],
-                    context: self.options.recordInfo.context,
-                }).then(function (data) {
-                    $(dialog).find('.btn-primary').prop('disabled', !data.length);
-                    var list_id = self.$target.attr("data-list-id");
-                    $(dialog).on('show.bs.modal', function () {
-                        if (list_id !== "0"){
-                            $(dialog).find('select').val(list_id);
-                        };
-                    });
-                    return data;
-                });
-            },
-        });
-        def.then(function (result) {
-            self.$target.attr("data-list-id", result.val);
-        });
-        return def;
-    },
     /**
      * @override
      */
-    onBuilt: function () {
-        var self = this;
-        this._super();
-        this.select_mailing_list('click').guardedCatch(function () {
-            self.getParent()._onRemoveClick($.Event( "click" ));
+    onBuilt() {
+        this._super(...arguments);
+        if (this.mailingLists.length) {
+            this.$target.attr("data-list-id", this.mailingLists[0][0]);
+        } else {
+            Dialog.confirm(this, _t("No mailing list found, do you want to create a new one? This will save all your changes, are you sure you want to proceed?"), {
+                confirm_callback: () => {
+                    this.trigger_up('request_save', {
+                        reload: false,
+                        onSuccess: () => {
+                            window.location.href = '/web#action=mass_mailing.action_view_mass_mailing_lists';
+                        },
+                    });
+                },
+                cancel_callback: () => {
+                    this.trigger_up('remove_snippet', {
+                        $snippet: this.$target,
+                    });
+                },
+            });
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _renderCustomXML(uiFragment) {
+        this.mailingLists = await this._rpc({
+            model: 'mailing.list',
+            method: 'name_search',
+            args: ['', [['is_public', '=', true]]],
+            context: this.options.recordInfo.context,
         });
+        if (this.mailingLists.length) {
+            const selectEl = uiFragment.querySelector('we-select[data-attribute-name="listId"]');
+            for (const mailingList of this.mailingLists) {
+                const button = document.createElement('we-button');
+                button.dataset.selectDataAttribute = mailingList[0];
+                button.textContent = mailingList[1];
+                selectEl.appendChild(button);
+            }
+        }
     },
 });
 
