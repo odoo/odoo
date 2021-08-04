@@ -18,6 +18,12 @@ class TestXMLRPC(common.HttpCase):
         super(TestXMLRPC, self).setUp()
         self.admin_uid = self.env.ref('base.user_admin').id
 
+    def xmlrpc(self, model, method, *args, **kwargs):
+        return self.xmlrpc_object.execute_kw(
+            common.get_db_name(), self.admin_uid, 'admin',
+            model, method, args, kwargs
+        )
+
     def test_01_xmlrpc_login(self):
         """ Try to login on the common service. """
         db_name = common.get_db_name()
@@ -44,6 +50,11 @@ class TestXMLRPC(common.HttpCase):
             common.get_db_name(), self.admin_uid, 'admin',
             'res.partner', 'name_search', "admin"
         )
+
+    def test_xmlrpc_html_field(self):
+        pid = self.xmlrpc('res.partner', 'create', {'name': 'bob', 'comment': 'sucks'})
+        [p] = self.xmlrpc('res.partner', 'read', pid, ['comment'])
+        self.assertEqual(p['comment'], 'sucks')
 
     def test_jsonrpc_read_group(self):
         self._json_call(
