@@ -1117,7 +1117,11 @@ class WebsiteSlides(WebsiteProfile):
         # determine if it is embedded from external web page
         referrer_url = request.httprequest.headers.get('Referer', '')
         base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        is_embedded = referrer_url and not bool(base_url in referrer_url) or False
+        is_embedded = False
+        if referrer_url:
+            websites = request.env['website'].search([])
+            web_domains = [wb.domain for wb in websites if wb.domain] + [base_url, request.httprequest.host]
+            is_embedded = not any(domain in referrer_url for domain in web_domains)
         # try accessing slide, and display to corresponding template
         try:
             slide = request.env['slide.slide'].browse(slide_id)
