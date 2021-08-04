@@ -2,6 +2,7 @@ from datetime import date, datetime
 from xmlrpc.client import dumps, loads
 import xmlrpc.client
 
+from markupsafe import Markup
 from werkzeug.wrappers import Response
 
 from odoo.http import Controller, dispatch_rpc, request, route
@@ -35,6 +36,7 @@ class OdooMarshaller(xmlrpc.client.Marshaller):
     dispatch[lazy] = dump_lazy
 
     dispatch[Command] = dispatch[int]
+    dispatch[Markup] = dispatch[str]
 
 
 # monkey-patch xmlrpc.client's marshaller
