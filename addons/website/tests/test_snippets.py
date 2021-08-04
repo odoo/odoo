@@ -22,5 +22,8 @@ class TestSnippets(odoo.tests.HttpCase):
             snippets_template = self.env['ir.ui.view'].render_public_asset('website.snippets')
         html_template = html.fromstring(snippets_template)
         data_snippet_els = html_template.xpath("//*[@class='o_panel' and not(contains(@class, 'd-none'))]//*[@data-snippet]")
-        snippets_names = ','.join([el.attrib['data-snippet'] for el in data_snippet_els])
+        blacklist = [
+            's_facebook_page',  # avoid call to external services (facebook.com)
+        ]
+        snippets_names = ','.join([el.attrib['data-snippet'] for el in data_snippet_els if el.attrib['data-snippet'] not in blacklist])
         self.start_tour("/?enable_editor=1&snippets_names=%s" % snippets_names, "snippets_all_drag_and_drop", login='admin', timeout=300)
