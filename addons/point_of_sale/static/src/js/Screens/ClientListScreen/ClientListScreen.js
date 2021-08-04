@@ -97,14 +97,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         // We declare this event handler as a debounce function in
         // order to lower its trigger rate.
         updateClientList(event) {
-            this.state.query = event.target.value;
-            const clients = this.clients;
-            if (event.code === 'Enter' && clients.length === 1) {
-                this.state.selectedClient = clients[0];
-                this.clickNext();
-            } else {
-                this.render();
-            }
+            this.render();
         }
         clickClient(event) {
             let partner = event.detail.client;
