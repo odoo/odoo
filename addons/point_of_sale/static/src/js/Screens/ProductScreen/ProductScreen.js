@@ -171,7 +171,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     });
                     return;
                 }
-                const parsedInput = parse.float(event.detail.buffer) || 0
+                const parsedInput = event.detail.buffer && parse.float(event.detail.buffer) || 0;
                 if(lastId != selectedLine.cid)
                     this._showDecreaseQuantityPopup();
                 else if(currentQuantity < parsedInput)
