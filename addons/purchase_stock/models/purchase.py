@@ -118,23 +118,23 @@ class PurchaseOrder(models.Model):
         return super(PurchaseOrder, self).button_cancel()
 
     def action_view_picking(self):
+        return self._get_action_view_picking(self.picking_ids)
+
+    def _get_action_view_picking(self, pickings):
         """ This function returns an action that display existing picking orders of given purchase order ids. When only one found, show the picking immediately.
         """
+        self.ensure_one()
         result = self.env["ir.actions.actions"]._for_xml_id('stock.action_picking_tree_all')
         # override the context to get rid of the default filtering on operation type
         result['context'] = {'default_partner_id': self.partner_id.id, 'default_origin': self.name, 'default_picking_type_id': self.picking_type_id.id}
-        pick_ids = self.mapped('picking_ids')
         # choose the view_mode accordingly
-        if not pick_ids or len(pick_ids) > 1:
-            result['domain'] = "[('id','in',%s)]" % (pick_ids.ids)
-        elif len(pick_ids) == 1:
+        if not pickings or len(pickings) > 1:
+            result['domain'] = [('id', 'in', pickings.ids)]
+        elif len(pickings) == 1:
             res = self.env.ref('stock.view_picking_form', False)
             form_view = [(res and res.id or False, 'form')]
-            if 'views' in result:
-                result['views'] = form_view + [(state,view) for state,view in result['views'] if view != 'form']
-            else:
-                result['views'] = form_view
-            result['res_id'] = pick_ids.id
+            result['views'] = form_view + [(state, view) for state, view in result.get('views', []) if view != 'form']
+            result['res_id'] = pickings.id
         return result
 
     def _prepare_invoice(self):
