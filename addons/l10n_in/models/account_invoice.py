@@ -59,7 +59,6 @@ class AccountMove(models.Model):
         if tax_line.move_id.journal_id.company_id.country_id.code == 'IN':
             res['product_id'] = tax_line.product_id.id
             res['product_uom_id'] = tax_line.product_uom_id
-            res['quantity'] = tax_line.quantity
         return res
 
     @api.model
@@ -69,8 +68,6 @@ class AccountMove(models.Model):
         if base_line.move_id.journal_id.company_id.country_id.code == 'IN':
             res['product_id'] = base_line.product_id.id
             res['product_uom_id'] = base_line.product_uom_id
-            res['quantity'] = base_line.quantity
-            res['id'] = base_line.id
         return res
 
     @api.model
@@ -81,8 +78,6 @@ class AccountMove(models.Model):
         tax_key += [
             line.product_id.id,
             line.product_uom_id,
-            line.quantity,
-            line.id,
         ]
         return tax_key
 
