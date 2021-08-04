@@ -188,7 +188,6 @@ class ResUsers(models.Model):
         assert template._name == 'mail.template'
 
         email_values = {
-            'email_to': '${object.email|safe}',
             'email_cc': False,
             'auto_delete': True,
             'recipient_ids': [],
@@ -199,6 +198,7 @@ class ResUsers(models.Model):
         for user in self:
             if not user.email:
                 raise UserError(_("Cannot send email: user %s has no email address.", user.name))
+            email_values['email_to'] = user.email
             # TDE FIXME: make this template technical (qweb)
             with self.env.cr.savepoint():
                 force_send = not(self.env.context.get('import_file', False))
