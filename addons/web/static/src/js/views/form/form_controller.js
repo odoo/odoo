@@ -567,8 +567,9 @@ var FormController = BasicController.extend({
      *
      * @private
      */
-    _onDiscard: function () {
+    _onDiscard: async function () {
         this._disableButtons();
+        await this.model.mutex.getUnlockedDef();
         this._discardChanges()
             .then(this._enableButtons.bind(this))
             .guardedCatch(this._enableButtons.bind(this));

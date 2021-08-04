@@ -4372,23 +4372,27 @@ QUnit.module('Views', {
         await testUtils.dom.click(form.$('.o_form_button_update'));
     });
 
-    QUnit.test('onchanges that complete after discarding', async function (assert) {
+    QUnit.test('discarding wait for onchanges to complete', async function (assert) {
         assert.expect(6);
 
-        var def1 = testUtils.makeTestPromise();
+        const def1 = testUtils.makeTestPromise();
 
         this.data.partner.onchanges = {
             foo: function (obj) {
                 obj.int_field = obj.foo.length + 1000;
             },
         };
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
-            arch: '<form>' +
-                    '<group><field name="foo"/><field name="int_field"/></group>' +
-                '</form>',
+            arch:
+                `<form>
+                    <group>
+                        <field name="foo"/>
+                        <field name="int_field"/>
+                    </group>
+                </form>`,
             res_id: 2,
             mockRPC: function (route, args) {
                 var result = this._super.apply(this, arguments);
@@ -4413,7 +4417,7 @@ QUnit.module('Views', {
         // discard changes
         await testUtils.form.clickDiscard(form);
         assert.containsNone(form, '.modal');
-        assert.strictEqual(form.$('span[name="foo"]').text(), "blip",
+        assert.strictEqual(form.$('input[name="foo"]').val(), "1234",
             "field foo should still be displayed to initial value");
 
         // complete the onchange
