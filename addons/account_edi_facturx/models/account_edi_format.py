@@ -112,6 +112,7 @@ class AccountEdiFormat(models.Model):
 
         template_values['tax_details'] = list(aggregated_taxes_details.values())
 
+<<<<<<< HEAD:addons/account_edi_facturx/models/account_edi_format.py
         xml_content = b"<?xml version='1.0' encoding='UTF-8'?>"
         xml_content += self.env.ref('account_edi_facturx.account_invoice_facturx_export')._render(template_values)
         xml_name = '%s_facturx.xml' % (invoice.name.replace('/', '_'))
@@ -143,6 +144,28 @@ class AccountEdiFormat(models.Model):
         :param invoice: the invoice to update or an empty recordset.
         :returns:       the invoice where the factur-x data was imported.
         """
+=======
+        content = self.env.ref('account_facturx.account_invoice_facturx_export').render(template_values)
+        return b"<?xml version='1.0' encoding='UTF-8'?>" + content
+
+    def _import_facturx_invoice(self, tree):
+        ''' Extract invoice values from the Factur-x xml tree passed as parameter.
+
+        :param tree: The tree of the Factur-x xml file.
+        :return: A dictionary containing account.invoice values to create/update it.
+        '''
+        def find_partner(partner_type):
+            elements = tree.xpath('//ram:%s/ram:SpecifiedTaxRegistration/ram:ID' % partner_type, namespaces=tree.nsmap)
+            partner = elements and self.env['res.partner'].search([('vat', '=', elements[0].text)], limit=1)
+            if not partner:
+                elements = tree.xpath('//ram:%s/ram:Name' % partner_type, namespaces=tree.nsmap)
+                partner_name = elements and elements[0].text
+                partner = elements and self.env['res.partner'].search([('name', 'ilike', partner_name)], limit=1)
+            if not partner:
+                elements = tree.xpath('//ram:%s//ram:URIID[@schemeID=\'SMTP\']' % partner_type, namespaces=tree.nsmap)
+                partner = elements and self.env['res.partner'].search([('email', '=', elements[0].text)], limit=1)
+            return partner or self.env["res.partner"]
+>>>>>>> 06073ec52c4... temp:addons/account_facturx/models/account_move.py
 
         amount_total_import = None
 
