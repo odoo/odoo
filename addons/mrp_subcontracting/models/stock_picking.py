@@ -5,6 +5,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.tools.float_utils import float_compare
+from dateutil.relativedelta import relativedelta
 
 
 class StockPicking(models.Model):
@@ -112,7 +113,7 @@ class StockPicking(models.Model):
             'location_dest_id': subcontract_move.picking_id.partner_id.with_company(subcontract_move.company_id).property_stock_subcontractor.id,
             'product_qty': subcontract_move.product_uom_qty,
             'picking_type_id': warehouse.subcontracting_type_id.id,
-            'date_planned_start': subcontract_move.date
+            'date_planned_start': subcontract_move.date - relativedelta(days=product.produce_delay)
         }
         return vals
 
