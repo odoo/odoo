@@ -22,6 +22,7 @@ class StockReplenishmentInfo(models.TransientModel):
 
     @api.depends('orderpoint_id')
     def _compute_json_lead_days(self):
+        self.json_lead_days = False
         for replenishment_report in self:
             if not replenishment_report.orderpoint_id.product_id or not replenishment_report.orderpoint_id.location_id:
                 continue
@@ -31,9 +32,9 @@ class StockReplenishmentInfo(models.TransientModel):
                 orderpoint.product_id, **orderpoints_values)
             replenishment_report.json_lead_days = dumps({
                 'template': 'stock.leadDaysPopOver',
-                'lead_days_date': format_date(replenishment_report.orderpoint_id.lead_days_date),
+                'lead_days_date': format_date(self.env, replenishment_report.orderpoint_id.lead_days_date),
                 'lead_days_description': lead_days_description,
-                'today': format_date(fields.Date.today()),
+                'today': format_date(self.env, fields.Date.today()),
                 'trigger': orderpoint.trigger,
                 'qty_forecast': self.env['ir.qweb.field.float'].value_to_html(orderpoint.qty_forecast, {'decimal_precision': 'Product Unit of Measure'}),
                 'qty_to_order': self.env['ir.qweb.field.float'].value_to_html(orderpoint.qty_to_order, {'decimal_precision': 'Product Unit of Measure'}),
