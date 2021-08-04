@@ -1103,3 +1103,67 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
 
         self.assertEqual(order.amount_total, 500.0, 'The price must be 500.0 since two conference chairs are free and the user only bought one')
         self.assertEqual(order.order_line[2].price_total, -100.0, 'The last order line should apply a reduction of 100.0 since there is one conference chair that cost 100.0')
+
+    def test_program_free_product_different_than_rule_product_with_multiple_application(self):
+        order = self.empty_order
+
+        self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'product_uom_qty': 2.0,
+            'order_id': order.id,
+        })
+        sol_B = self.env['sale.order.line'].create({
+            'product_id': self.largeMeetingTable.id,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+
+        order.recompute_coupon_lines()
+
+        self.assertEqual(len(order.order_line), 3, 'The order must contain 3 order lines: 1x for Black Drawer, 1x for Large Meeting Table and 1x for free Large Meeting Table')
+        self.assertEqual(order.amount_total, self.drawerBlack.list_price * 2, 'The price must be 50.0 since the Large Meeting Table is free: 2*25.00 (Black Drawer) + 1*40000.00 (Large Meeting Table) - 1*40000.00 (free Large Meeting Table)')
+        self.assertEqual(order.order_line.filtered(lambda x: x.is_reward_line).product_uom_qty, 1, "Only one free Large Meeting Table should be offered, as only one paid Large Meeting Table is in cart. You can't have more free product than paid product.")
+
+        sol_B.product_uom_qty = 2
+
+        order.recompute_coupon_lines()
+
+        self.assertEqual(len(order.order_line), 3, 'The order must contain 3 order lines: 1x for Black Drawer, 1x for Large Meeting Table and 1x for free Large Meeting Table')
+        self.assertEqual(order.amount_total, self.drawerBlack.list_price * 2, 'The price must be 50.0 since the 2 Large Meeting Table are free: 2*25.00 (Black Drawer) + 2*40000.00 (Large Meeting Table) - 2*40000.00 (free Large Meeting Table)')
+        self.assertEqual(order.order_line.filtered(lambda x: x.is_reward_line).product_uom_qty, 2, 'The 2 Large Meeting Table should be offered, as the promotion says 1 Black Drawer = 1 free Large Meeting Table and there are 2 Black Drawer')
+
+    def test_program_modify_reward_line_qty(self):
+        order = self.empty_order
+        product_F = self.env['product.product'].create({
+            'name': 'Product F',
+            'list_price': 100,
+            'sale_ok': True,
+            'taxes_id': [(6, 0, [])],
+        })
+        self.env['coupon.program'].create({
+            'name': '1 Product F = 5$ discount',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'discount',
+            'discount_type': 'fixed_amount',
+            'discount_fixed_amount': 5,
+            'rule_products_domain': "[('id', 'in', [%s])]" % (product_F.id),
+            'active': True,
+        })
+
+        self.env['sale.order.line'].create({
+            'product_id': product_F.id,
+            'product_uom_qty': 2.0,
+            'order_id': order.id,
+        })
+
+        order.recompute_coupon_lines()
+
+        self.assertEqual(len(order.order_line), 2, 'The order must contain 2 order lines: 1x Product F and 1x 5$ discount')
+        self.assertEqual(order.amount_total, 195.0, 'The price must be 195.0 since there is a 5$ discount and 2x Product F')
+        self.assertEqual(order.order_line.filtered(lambda x: x.is_reward_line).product_uom_qty, 1, 'The reward line should have a quantity of 1 since Fixed Amount discounts apply only once per Sale Order')
+
+        order.order_line[1].product_uom_qty = 2
+
+        self.assertEqual(len(order.order_line), 2, 'The order must contain 2 order lines: 1x Product F and 1x 5$ discount')
+        self.assertEqual(order.amount_total, 190.0, 'The price must be 190.0 since there is now 2x 5$ discount and 2x Product F')
+        self.assertEqual(order.order_line.filtered(lambda x: x.is_reward_line).price_unit, -5, 'The discount unit price should still be -5 after the quantity was manually changed')
