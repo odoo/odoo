@@ -17,7 +17,7 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
     def setUpClass(cls, chart_template_ref='l10n_ar.l10nar_ri_chart_template'):
         super(TestAr, cls).setUpClass(chart_template_ref=chart_template_ref)
 
-        print(" ------ Common.TestAr setUpClass()")
+        print("------ Common.TestAr setUpClass()")
         # ==== Company ====
         cls.company_data['company'].write({
             'parent_id': cls.env.ref('base.main_company').id,
@@ -292,321 +292,318 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
             'refund_sequence': False,
         })
 
+        # ==== Invoices ====
+        cls.demo_invoices = {}
+        # cls._create_test_invoices_like_demo(cls)
+
     def _create_test_invoices_like_demo(self):
         """ Create in the unit tests the same invoices created in demo data """
-        demo_invoices = self.env['account.move']
-
         payment_term_id = self.env.ref("account.account_payment_term_end_following_month")
-        invoice_user_id = self.env.ref("base.user_demo")
+        invoice_user_id = self.env.user
         incoterm = self.env.ref("account.incoterm_EXW")
         today = fields.Date.today()
 
-        invoices_to_create = [{
-            "ref": "demo_invoice_1: Invoice to gritti support service, vat 21",
-            "partner_id": self.res_partner_gritti_mono.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": "out_invoice",
-            "invoice_date": fields.Date.start_of(today),
-            "company_id":  self.company_ri,
-            "invoice_line_ids":  [(0, 0, {
-                'product_id': self.service_iva_21.id,
-                # 'price_unit': 642.0,
-                # 'quantity': 1
-            })],
-        }, {
-            "ref": "demo_invoice_2: Invoice to CMR with vat 21, 27 and 10,5",
-            "partner_id": self.res_partner_cmr,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": "out_invoice",
-            "invoice_date": today + relativedelta(day=5),
-            "company_id": self.company_ri,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.product_iva_105.id, 'price_unit': 642.0, 'quantity': 5}),
-                (0, 0, {'product_id': self.service_iva_27.id, 'price_unit': 250.0, 'quantity': 1}),
-                (0, 0, {'product_id': self.product_iva_105_perc.id, 'price_unit': 3245.0, 'quantity': 2}),
-            ],
-        }, {
-            "ref": "demo_invoice_3: Invoice to ADHOC with vat cero and 21",
+        invoices_to_create = {
+            'demo_invoice_1': {
+                "ref": "demo_invoice_1: Invoice to gritti support service, vat 21",
+                "partner_id": self.res_partner_gritti_mono,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": "out_invoice",
+                # "invoice_date": fields.Date.start_of(today),
+                "invoice_date": today,
+                "company_id": self.company_ri,
+                "invoice_line_ids": [
+                    {'product_id': self.service_iva_21}
+                ],
+            },
+            'demo_invoice_2': {
+                "ref": "demo_invoice_2: Invoice to CMR with vat 21, 27 and 10,5",
+                "partner_id": self.res_partner_cmr,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": "out_invoice",
+                "invoice_date": today + relativedelta(day=5),
+                "company_id": self.company_ri,
+                "invoice_line_ids": [
+                    {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
+                    {'product_id': self.service_iva_27, 'price_unit': 250.0, 'quantity': 1},
+                    {'product_id': self.product_iva_105_perc, 'price_unit': 3245.0, 'quantity': 2}
+                ],
+            },
+            'demo_invoice_3': {
+                "ref": "demo_invoice_3: Invoice to ADHOC with vat cero and 21",
+                "partner_id": self.res_partner_adhoc,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": 'out_invoice',
+                # "invoice_date": fields.Date.start_of(today),
+                "invoice_date": today,
+                "company_id": self.company_ri,
+                "invoice_line_ids": [
+                    {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
+                    {'product_id': self.product_iva_cero, 'price_unit': 200.0, 'quantity': 1}
+                ],
+            },
+            'demo_invoice_4': {
+                'ref': 'demo_invoice_4: Invoice to ADHOC with vat exempt and 21',
+                "partner_id": self.res_partner_adhoc,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": 'out_invoice',
+                # "invoice_date": fields.Date.start_of(today, "month"),
+                "invoice_date": today,
+                "company_id": self.company_ri,
+                "invoice_line_ids": [
+                    {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
+                    {'product_id': self.product_iva_exento, 'price_unit': 100.0, 'quantity': 1},
+                ],
+            },
+            'demo_invoice_5': {
+                'ref': 'demo_invoice_5: Invoice to ADHOC with all type of taxes',
+                "partner_id": self.res_partner_adhoc,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": 'out_invoice',
+                "invoice_date": today + relativedelta(day=13),
+                "company_id": self.company_ri,
+                "invoice_line_ids": [
+                    {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
+                    {'product_id': self.service_iva_27, 'price_unit': 250.0, 'quantity': 1},
+                    {'product_id': self.product_iva_105_perc, 'price_unit': 3245.0, 'quantity': 2},
+                    {'product_id': self.product_no_gravado, 'price_unit': 50.0, 'quantity': 10},
+                    {'product_id': self.product_iva_cero, 'price_unit': 200.0, 'quantity': 1},
+                    {'product_id': self.product_iva_exento, 'price_unit': 100.0, 'quantity': 1}
+                ],
+            },
+            'demo_invoice_6': {
+                'ref': 'demo_invoice_6: Invoice to cerro castor, fiscal position changes taxes to exempt',
+                "partner_id": self.res_partner_cerrocastor,
+                "journal_id": self.sale_expo_journal_ri,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": 'out_invoice',
+                "invoice_date": today + relativedelta(day=3),
+                "company_id": self.company_ri,
+                "invoice_incoterm_id": incoterm,
+                "invoice_line_ids": [
+                    {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
+                    {'product_id': self.service_iva_27, 'price_unit': 250.0, 'quantity': 1},
+                    {'product_id': self.product_iva_105_perc, 'price_unit': 3245.0, 'quantity': 2},
+                    {'product_id': self.product_no_gravado, 'price_unit': 50.0, 'quantity': 10},
+                    {'product_id': self.product_iva_cero, 'price_unit': 200.0, 'quantity': 1},
+                    {'product_id': self.product_iva_exento, 'price_unit': 100.0, 'quantity': 1},
+                ],
+            },
+            'demo_invoice_7': {
+                'ref': 'demo_invoice_7: Export invoice to expresso, fiscal position changes tax to exempt (type 4 because it have services)',
+                "partner_id": self.res_partner_expresso,
+                "journal_id": self.sale_expo_journal_ri,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": 'out_invoice',
+                "invoice_date": today + relativedelta(day=3),
+                "company_id": self.company_ri,
+                "invoice_incoterm_id": incoterm,
+                "invoice_line_ids": [
+                    {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
+                    {'product_id': self.service_iva_27, 'price_unit': 250.0, 'quantity': 1},
+                    {'product_id': self.product_iva_105_perc, 'price_unit': 3245.0, 'quantity': 2},
+                    {'product_id': self.product_no_gravado, 'price_unit': 50.0, 'quantity': 10},
+                    {'product_id': self.product_iva_cero, 'price_unit': 200.0, 'quantity': 1},
+                    {'product_id': self.product_iva_exento, 'price_unit': 100.0, 'quantity': 1},
+                ],
+            },
+            'demo_invoice_8': {
+                'ref': 'demo_invoice_8: Invoice to consumidor final',
+                "partner_id": self.partner_cf,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": 'out_invoice',
+                "invoice_date": today + relativedelta(day=13),
+                "company_id": self.company_ri,
+                "invoice_line_ids": [
+                    {'product_id': self.service_iva_21, 'price_unit': 642.0, 'quantity': 1},
+                ],
+            },
+            'demo_invoice_10': {
+                'ref': 'demo_invoice_10; Invoice to ADHOC in USD and vat 21',
+                "partner_id": self.res_partner_adhoc,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": 'out_invoice',
+                "invoice_date": today + relativedelta(day=13),
+                "company_id": self.company_ri,
+                "invoice_line_ids": [
+                    {'product_id': self.product_iva_105, 'price_unit': 1000.0, 'quantity': 5},
+                ],
+                "currency_id": self.env.ref("base.USD"),
+            },
+            'demo_invoice_11': {
+                'ref': 'demo_invoice_11: Invoice to ADHOC with many lines in order to prove rounding error, with 4 decimals of precision for the currency and 2 decimals for the product the error apperar',
+                "partner_id": self.res_partner_adhoc,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": 'out_invoice',
+                "invoice_date": today + relativedelta(day=13),
+                "company_id": self.company_ri,
+                "invoice_line_ids": [
+                    {'product_id': self.service_iva_21, 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 1'},
+                    {'product_id': self.service_iva_21, 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 2'},
+                    {'product_id': self.service_iva_21, 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 3'},
+                    {'product_id': self.service_iva_21, 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 4'},
+                ],
+            },
+            'demo_invoice_12': {
+                'ref': 'demo_invoice_12: Invoice to ADHOC with many lines in order to test rounding error, it is required to use a 4 decimal precision in prodct in order to the error occur',
+                "partner_id": self.res_partner_adhoc,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": 'out_invoice',
+                "invoice_date": today + relativedelta(day=13),
+                "company_id": self.company_ri,
+                "invoice_line_ids": [
+                    {'product_id': self.service_iva_21, 'price_unit': 15.7076, 'quantity': 1, 'name': 'Support Services 1'},
+                    {'product_id': self.service_iva_21, 'price_unit': 5.3076, 'quantity': 2, 'name': 'Support Services 2'},
+                    {'product_id': self.service_iva_21, 'price_unit': 3.5384, 'quantity': 2, 'name': 'Support Services 3'},
+                    {'product_id': self.service_iva_21, 'price_unit': 1.6376, 'quantity': 2, 'name': 'Support Services 4'},
+                ],
+            },
+            'demo_invoice_13': {
+                'ref': 'demo_invoice_13: Invoice to ADHOC with many lines in order to test zero amount invoices y rounding error. it is required to set the product decimal precision to 4 and change 260.59 for 260.60 in order to reproduce the error',
+                "partner_id": self.res_partner_adhoc,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": 'out_invoice',
+                "invoice_date": today + relativedelta(day=13),
+                "company_id": self.company_ri,
+                "invoice_line_ids": [
+                    {'product_id': self.service_iva_21, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 1'},
+                    {'product_id': self.service_iva_21, 'price_unit': 260.59, 'quantity': -1, 'name': 'Support Services 2'},
+                    {'product_id': self.service_iva_21, 'price_unit': 48.72, 'quantity': 1, 'name': 'Support Services 3'},
+                    {'product_id': self.service_iva_21, 'price_unit': 13.666, 'quantity': 1, 'name': 'Support Services 4'},
+                    {'product_id': self.service_iva_21, 'price_unit': 11.329, 'quantity': 2, 'name': 'Support Services 5'},
+                    {'product_id': self.service_iva_21, 'price_unit': 68.9408, 'quantity': 1, 'name': 'Support Services 6'},
+                    {'product_id': self.service_iva_21, 'price_unit': 4.7881, 'quantity': 2, 'name': 'Support Services 7'},
+                    {'product_id': self.service_iva_21, 'price_unit': 12.0625, 'quantity': 2, 'name': 'Support Services 8'},
+                ],
+            },
+            'demo_invoice_14': {
+                'ref': 'demo_invoice_14: Export invoice to expresso, fiscal position changes tax to exempt (type 1 because only products)',
+                "partner_id": self.res_partner_expresso,
+                "journal_id": self.sale_expo_journal_ri,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": 'out_invoice',
+                "invoice_date": today + relativedelta(day=20),
+                "company_id": self.company_ri,
+                "invoice_incoterm_id": incoterm,
+                "invoice_line_ids": [
+                    {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
+                ],
+            },
+            'demo_invoice_15': {
+                'ref': 'demo_invoice_15: Export invoice to expresso, fiscal position changes tax to exempt (type 2 because only service)',
+                "partner_id": self.res_partner_expresso,
+                "journal_id": self.sale_expo_journal_ri,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": 'out_invoice',
+                "invoice_date": today + relativedelta(day=20),
+                "company_id": self.company_ri,
+                "invoice_incoterm_id": incoterm,
+                "invoice_line_ids": [
+                    {'product_id': self.service_iva_27, 'price_unit': 250.0, 'quantity': 1},
+                ],
+            },
+            'demo_invoice_16': {
+                'ref': 'demo_invoice_16: Export invoice to expresso, fiscal position changes tax to exempt (type 1 because it have products only, used to test refund of expo)',
+                "partner_id": self.res_partner_expresso,
+                "journal_id": self.sale_expo_journal_ri,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": 'out_invoice',
+                "invoice_date": today + relativedelta(day=22),
+                "company_id": self.company_ri,
+                "invoice_incoterm_id": incoterm,
+                "invoice_line_ids": [
+                    {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
+                ],
+            },
+            'demo_invoice_17': {
+                'ref': 'demo_invoice_17: Invoice to ADHOC with 100% of discount',
+                "partner_id": self.res_partner_adhoc,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": 'out_invoice',
+                "invoice_date": today + relativedelta(day=13),
+                "company_id": self.company_ri,
+                "invoice_line_ids": [
+                    {'product_id': self.service_iva_21, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8', 'discount': 100},
+                ],
+            },
+            'demo_invoice_18': {
+                'ref': 'demo_invoice_18: Invoice to ADHOC with 100% of discount and with different VAT aliquots',
+                "partner_id": self.res_partner_adhoc,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": 'out_invoice',
+                "invoice_date": today + relativedelta(day=13),
+                "company_id": self.company_ri,
+                "invoice_line_ids": [
+                    {'product_id': self.service_iva_21, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8', 'discount': 100},
+                    {'product_id': self.service_iva_27, 'price_unit': 250.0, 'quantity': 1, 'discount': 100},
+                    {'product_id': self.product_iva_105_perc, 'price_unit': 3245.0, 'quantity': 1},
+                ],
+            },
+            'demo_invoice_19': {
+                'ref': 'demo_invoice_19: Invoice to ADHOC with multiple taxes and perceptions',
+                "partner_id": self.res_partner_adhoc,
+                "invoice_user_id": invoice_user_id,
+                "invoice_payment_term_id": payment_term_id,
+                "move_type": 'out_invoice',
+                "invoice_date": today + relativedelta(day=13),
+                "company_id": self.company_ri,
+                "invoice_line_ids": [
+                    {'product_id': self.service_iva_21, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8'},
+                    {'product_id': self.service_iva_27, 'price_unit': 250.0, 'quantity': 1},
+                    {'product_id': self.product_iva_105_perc, 'price_unit': 3245.0, 'quantity': 1},
+                ],
+            }
+        }
 
-            "partner_id": self.res_partner_adhoc.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": 'out_invoice',
-            "invoice_date": fields.Date.start_of(today),
-            "company_id": self.company_ri,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.product_iva_105.id, 'price_unit': 642.0, 'quantity': 5}),
-                (0, 0, {'product_id': self.product_iva_cero.id, 'price_unit': 200.0, 'quantity': 1}),
-            ],
-        }, {
-            'ref': 'demo_invoice_4: Invoice to ADHOC with vat exempt and 21',
-            "partner_id": self.res_partner_adhoc.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": 'out_invoice',
-            "invoice_date": fields.Date.start_of(today),
-            "company_id": self.company_ri,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.product_iva_105.id, 'price_unit': 642.0, 'quantity': 5}),
-                (0, 0, {'product_id': self.product_iva_exento.id, 'price_unit': 100.0, 'quantity': 1}),
-            ],
-
-        }, {
-            'ref': 'demo_invoice_5: Invoice to ADHOC with all type of taxes',
-            "partner_id": self.res_partner_adhoc.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": 'out_invoice',
-            "invoice_date": today + relativedelta(day=13),
-            "company_id": self.company_ri,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.product_iva_105.id, 'price_unit': 642.0, 'quantity': 5}),
-                (0, 0, {'product_id': self.service_iva_27.id, 'price_unit': 250.0, 'quantity': 1}),
-                (0, 0, {'product_id': self.product_iva_105_perc.id, 'price_unit': 3245.0, 'quantity': 2}),
-                (0, 0, {'product_id': self.product_no_gravado.id, 'price_unit': 50.0, 'quantity': 10}),
-                (0, 0, {'product_id': self.product_iva_cero.id, 'price_unit': 200.0, 'quantity': 1}),
-                (0, 0, {'product_id': self.product_iva_exento.id, 'price_unit': 100.0, 'quantity': 1}),
-            ],
-        }, {
-            'ref': 'demo_invoice_6: Invoice to cerro castor, fiscal position changes taxes to exempt',
-            "partner_id": self.res_partner_cerrocastor.id,
-            "journal_id": self.sale_expo_journal_ri.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": 'out_invoice',
-            "invoice_date": today + relativedelta(day=3),
-            "company_id": self.company_ri,
-            "invoice_incoterm_id": incoterm.id,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.product_iva_105.id, 'price_unit': 642.0, 'quantity': 5}),
-                (0, 0, {'product_id': self.service_iva_27.id, 'price_unit': 250.0, 'quantity': 1}),
-                (0, 0, {'product_id': self.product_iva_105_perc.id, 'price_unit': 3245.0, 'quantity': 2}),
-                (0, 0, {'product_id': self.product_no_gravado.id, 'price_unit': 50.0, 'quantity': 10}),
-                (0, 0, {'product_id': self.product_iva_cero.id, 'price_unit': 200.0, 'quantity': 1}),
-                (0, 0, {'product_id': self.product_iva_exento.id, 'price_unit': 100.0, 'quantity': 1}),
-            ],
-        }, {
-            'ref': 'demo_invoice_7: Export invoice to expresso, fiscal position changes tax to exempt (type 4 because it have services)',
-            "partner_id": self.res_partner_expresso,
-            "journal_id": self.sale_expo_journal_ri.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": 'out_invoice',
-            "invoice_date": today + relativedelta(day=3),
-            "company_id": self.company_ri,
-            "invoice_incoterm_id": incoterm.id,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.product_iva_105.id, 'price_unit': 642.0, 'quantity': 5}),
-                (0, 0, {'product_id': self.service_iva_27.id, 'price_unit': 250.0, 'quantity': 1}),
-                (0, 0, {'product_id': self.product_iva_105_perc.id, 'price_unit': 3245.0, 'quantity': 2}),
-                (0, 0, {'product_id': self.product_no_gravado.id, 'price_unit': 50.0, 'quantity': 10}),
-                (0, 0, {'product_id': self.product_iva_cero.id, 'price_unit': 200.0, 'quantity': 1}),
-                (0, 0, {'product_id': self.product_iva_exento.id, 'price_unit': 100.0, 'quantity': 1}),
-            ],
-        }, {
-            'ref': 'demo_invoice_8: Invoice to consumidor final',
-            "partner_id": self.partner_cf.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": 'out_invoice',
-            "invoice_date": today + relativedelta(day=13),
-            "company_id": self.company_ri,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 642.0, 'quantity': 1}),
-            ],
-        }, {
-            'ref': 'demo_invoice_10; Invoice to ADHOC in USD and vat 21',
-            "partner_id": self.res_partner_adhoc.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": 'out_invoice',
-            "invoice_date": today + relativedelta(day=13),
-            "company_id": self.company_ri,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.product_iva_105.id, 'price_unit': 1000.0, 'quantity': 5}),
-            ],
-            "currency_id": self.env.ref("base.USD"),
-        }, {
-            'ref': 'demo_invoice_11: Invoice to ADHOC with many lines in order to prove rounding error, with 4 decimals of precision for the currency and 2 decimals for the product the error apperar',
-            "partner_id": self.res_partner_adhoc.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": 'out_invoice',
-            "invoice_date": today + relativedelta(day=13),
-            "company_id": self.company_ri,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 1'}),
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 2'}),
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 3'}),
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 4'}),
-            ],
-        }, {
-            'ref': 'demo_invoice_12: Invoice to ADHOC with many lines in order to test rounding error, it is required to use a 4 decimal precision in prodct in order to the error occur',
-            "partner_id": self.res_partner_adhoc.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": 'out_invoice',
-            "invoice_date": today + relativedelta(day=13),
-            "company_id": self.company_ri,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 15.7076, 'quantity': 1, 'name': 'Support Services 1'}),
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 5.3076, 'quantity': 2, 'name': 'Support Services 2'}),
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 3.5384, 'quantity': 2, 'name': 'Support Services 3'}),
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 1.6376, 'quantity': 2, 'name': 'Support Services 4'}),
-            ],
-        }, {
-            'ref': 'demo_invoice_13: Invoice to ADHOC with many lines in order to test zero amount invoices y rounding error. it is required to set the product decimal precision to 4 and change 260.59 for 260.60 in order to reproduce the error',
-            "partner_id": self.res_partner_adhoc.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": 'out_invoice',
-            "invoice_date": today + relativedelta(day=13),
-            "company_id": self.company_ri,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 1'}),
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 260.59, 'quantity': -1, 'name': 'Support Services 2'}),
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 48.72, 'quantity': 1, 'name': 'Support Services 3'}),
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 13.666, 'quantity': 1, 'name': 'Support Services 4'}),
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 11.329, 'quantity': 2, 'name': 'Support Services 5'}),
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 68.9408, 'quantity': 1, 'name': 'Support Services 6'}),
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 4.7881, 'quantity': 2, 'name': 'Support Services 7'}),
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 12.0625, 'quantity': 2, 'name': 'Support Services 8'}),
-            ],
-        }, {
-            'ref': 'demo_invoice_14: Export invoice to expresso, fiscal position changes tax to exempt (type 1 because only products)',
-            "partner_id": self.res_partner_expresso,
-            "journal_id": self.sale_expo_journal_ri.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": 'out_invoice',
-            "invoice_date": today + relativedelta(day=20),
-            "company_id": self.company_ri,
-            "invoice_incoterm_id": incoterm.id,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.product_iva_105.id, 'price_unit': 642.0, 'quantity': 5}),
-            ],
-
-        }, {
-            'ref': 'demo_invoice_15: Export invoice to expresso, fiscal position changes tax to exempt (type 2 because only service)',
-            "partner_id": self.res_partner_expresso,
-            "journal_id": self.sale_expo_journal_ri.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": 'out_invoice',
-            "invoice_date": today + relativedelta(day=20),
-            "company_id": self.company_ri,
-            "invoice_incoterm_id": incoterm.id,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.service_iva_27.id, 'price_unit': 250.0, 'quantity': 1}),
-            ],
-        }, {
-            'ref': 'demo_invoice_16: Export invoice to expresso, fiscal position changes tax to exempt (type 1 because it have products only, used to test refund of expo)',
-            "partner_id": self.res_partner_expresso,
-            "journal_id": self.sale_expo_journal_ri.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": 'out_invoice',
-            "invoice_date": today + relativedelta(day=22),
-            "company_id": self.company_ri,
-            "invoice_incoterm_id": incoterm.id,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.product_iva_105.id, 'price_unit': 642.0, 'quantity': 5}),
-            ],
-        }, {
-            'ref': 'demo_invoice_17: Invoice to ADHOC with 100% of discount',
-            "partner_id": self.res_partner_adhoc.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": 'out_invoice',
-            "invoice_date": today + relativedelta(day=13),
-            "company_id": self.company_ri,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8', 'discount': 100}),
-            ],
-        }, {
-            'ref': 'demo_invoice_18: Invoice to ADHOC with 100% of discount and with different VAT aliquots',
-            "partner_id": self.res_partner_adhoc.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": 'out_invoice',
-            "invoice_date": today + relativedelta(day=13),
-            "company_id": self.company_ri,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8', 'discount': 100}),
-                (0, 0, {'product_id': self.service_iva_27.id, 'price_unit': 250.0, 'quantity': 1, 'discount': 100}),
-                (0, 0, {'product_id': self.product_iva_105_perc.id, 'price_unit': 3245.0, 'quantity': 1}),
-            ],
-        }, {
-            'ref': 'demo_invoice_19: Invoice to ADHOC with multiple taxes and perceptions',
-            "partner_id": self.res_partner_adhoc.id,
-            "invoice_user_id": invoice_user_id.id,
-            "invoice_payment_term_id": payment_term_id.id,
-            "move_type": 'out_invoice',
-            "invoice_date": today + relativedelta(day=13),
-            "company_id": self.company_ri,
-            "invoice_line_ids": [
-                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8'}),
-                (0, 0, {'product_id': self.service_iva_27.id, 'price_unit': 250.0, 'quantity': 1}),
-                (0, 0, {'product_id': self.product_iva_105_perc.id, 'price_unit': 3245.0, 'quantity': 1}),
-            ],
-        }]
-
-        # <function model="account.move.line" name="_onchange_product_id" context="{'check_move_validity': False}">
-        #     <value model="account.move.line" eval="obj().search([('move_id', 'in', [ref('demo_invoice_1'), ref('demo_invoice_2'), ref('demo_invoice_3'), ref('demo_invoice_4'), ref('demo_invoice_5'), ref('demo_invoice_6'), ref('demo_invoice_7'), ref('demo_invoice_8'), ref('demo_invoice_10'), ref('demo_invoice_11'), ref('demo_invoice_12'), ref('demo_invoice_13'), ref('demo_invoice_14'), ref('demo_invoice_15'), ref('demo_invoice_16'), ref('demo_invoice_17'), ref('demo_invoice_18'), ref('demo_invoice_19')])]).ids"/>
-        # </function>
-
-        # <function model="account.move" name="_onchange_partner_id" context="{'check_move_validity': False}">
-        #     <value[ref('demo_invoice_6')],
-        #     <value[ref('demo_invoice_7')],
-        #     <value[ref('demo_invoice_14')],
-        #     <value[ref('demo_invoice_15')],
-        #     <value[ref('demo_invoice_16')],
-        # </function>
-
-        # <function model="account.move.line" name="write" context="{'check_move_validity': False, 'active_test': False}">
-        #     <value model="account.move.line" search="[('move_id', '=', ref('demo_invoice_19')), ('product_id', '=', self.service_iva_21.id)],
-        #     <value model="account.tax" eval="{'tax_ids': [(4, obj().search([('company_id', '=', ref('company_ri')), ('type_tax_use', '=', 'sale'), ('tax_group_id.l10n_ar_tribute_afip_code', '=', '06')], limit=1).id)]}"/>
-        # </function>
-
-        # <function model="account.move.line" name="write" context="{'check_move_validity': False, 'active_test': False}">
-        #     <value model="account.move.line" search="[('move_id', '=', ref('demo_invoice_19')), ('product_id', '=', self.service_iva_27.id)],
-        #     <value model="account.tax" eval="{'tax_ids': [(4, obj().search([('company_id', '=', ref('company_ri')), ('type_tax_use', '=', 'sale'), ('tax_group_id.l10n_ar_tribute_afip_code', '=', '07')], limit=1).id)]}"/>
-        # </function>
-
-        # <function model="account.move.line" name="write" context="{'check_move_validity': False, 'active_test': False}">
-        #     <value model="account.move.line" search="[('move_id', '=', ref('demo_invoice_19')), ('product_id', '=', self.product_iva_105_perc.id)],
-        #     <value model="account.tax" eval="{'tax_ids': [(4, obj().search([('company_id', '=', ref('company_ri')), ('type_tax_use', '=', 'sale'), ('tax_group_id.l10n_ar_tribute_afip_code', '=', '99')], limit=1).id)]}"/>
-        # </function>
-
-        # <function model="account.move" name="_recompute_dynamic_lines" context="{'check_move_validity': False}">
-        #     <value[ref('demo_invoice_1'), ref('demo_invoice_2'), ref('demo_invoice_3'), ref('demo_invoice_4'), ref('demo_invoice_5'), ref('demo_invoice_6'), ref('demo_invoice_7'), ref('demo_invoice_8'), ref('demo_invoice_10'), ref('demo_invoice_11'), ref('demo_invoice_12'), ref('demo_invoice_13'), ref('demo_invoice_14'), ref('demo_invoice_15'), ref('demo_invoice_16'), ref('demo_invoice_17'), ref('demo_invoice_18'), ref('demo_invoice_19')],
-        #     <value eval="True"/>
-        # </function>
-
-        for values in invoices_to_create:
-            temp = demo_invoices.create(values)
-            temp.action_post()
-            demo_invoices += temp
-
-        self.demo_invoices = demo_invoices
+        for key, values in invoices_to_create.items():
+            print("----- New invoice Form: %s" % key)
+            with Form(self.env['account.move'].with_context(default_move_type=values['move_type'])) as invoice_form:
+                invoice_form.ref = values['ref']
+                invoice_form.partner_id = values['partner_id']
+                invoice_form.journal_id = self.journal
+                invoice_form.invoice_user_id = values['invoice_user_id']
+                invoice_form.invoice_payment_term_id = values['invoice_payment_term_id']
+                invoice_form.invoice_date = values['invoice_date']
+                invoice_form.company_id = values['company_id']
+                if values.get('invoice_incoterm_id'):
+                    invoice_form.invoice_incoterm_id = values['invoice_incoterm_id']
+                for line in values['invoice_line_ids']:
+                    with invoice_form.invoice_line_ids.new() as line_form:
+                        line_form.product_id = line.get('product_id')
+                        line_form.price_unit = line.get('price_unit')
+                        line_form.quantity = line.get('quantity')
+                        # TODO: check this lines, should not be necessary to add
+                        line_form.name = 'xxxx'
+                        line_form.account_id = self.company_data['default_account_revenue']
+            invoice = invoice_form.save()
+            # invoice.action_post()
+            self.demo_invoices[key] = invoice
 
     # Re used unit tests methods
 
     # TODO improve used to set the values easier
     def _test_demo_cases(self, cases):
-        for xml_id, test_case in cases.items():
-            _logger.info('  * running test %s: %s' % (xml_id, test_case))
-            invoice = self._duplicate_demo_invoice(xml_id)
+        for inv, test_case in cases.items():
+            _logger.info('  * running test %s: %s' % (inv, test_case))
+            invoice = self.demo_invoices[inv]
             self._edi_validate_and_review(invoice, error_msg=test_case)
-
-    def _duplicate_demo_invoice(self, xml_id):
-        demo_invoice = self.env.ref('l10n_ar.' + xml_id)
-        invoice = demo_invoice.copy({'journal_id': self.journal.id})
-        invoice._onchange_partner_journal()
-        invoice._onchange_partner_id()
-        return invoice
 
     # Helpers
 
