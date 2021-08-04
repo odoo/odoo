@@ -629,10 +629,11 @@ var dom = {
         core.bus.on('resize', null, debouncedAdapt);
         _adapt();
 
+        $el.data('dom:autoMoreMenu:adapt', _adapt);
         $el.data('dom:autoMoreMenu:destroy', function () {
             _restore();
             core.bus.off('resize', null, debouncedAdapt);
-            $el.removeData('dom:autoMoreMenu:destroy');
+            $el.removeData(['dom:autoMoreMenu:destroy', 'dom:autoMoreMenu:adapt']);
         });
 
         function _restore() {
