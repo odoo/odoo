@@ -1148,6 +1148,51 @@
         </we-select>
     </div>
 
+    <!-- Website Animate -->
+    <div data-js="WebsiteAnimate"
+         data-selector=".o_animable, section, img, .fa, [class^='col-md'], .btn"
+         data-exclude=".o_not-animable">
+        <we-select string="Animate" data-is-animation-type-selection="true">
+            <we-button data-select-class="" data-name="no_animation_opt">Disable animation</we-button>
+            <we-divider/>
+            <we-button data-select-class="o_anim_fade_in">Fade In</we-button>
+            <we-button data-select-class="o_anim_fade_in_down">Fade In-Down</we-button>
+            <we-button data-select-class="o_anim_fade_in_left">Fade In-Left</we-button>
+            <we-button data-select-class="o_anim_fade_in_right">Fade In-Right</we-button>
+            <we-button data-select-class="o_anim_fade_in_up">Fade In-Up</we-button>
+            <we-divider/>
+            <we-button data-select-class="o_anim_bounce_in">Bounce In</we-button>
+            <we-button data-select-class="o_anim_bounce_in_down">Bounce In-Down</we-button>
+            <we-button data-select-class="o_anim_bounce_in_left">Bounce In-Left</we-button>
+            <we-button data-select-class="o_anim_bounce_in_right">Bounce In-Right</we-button>
+            <we-divider/>
+            <we-button data-select-class="o_anim_rotate_in">Rotate In</we-button>
+            <we-button data-select-class="o_anim_rotate_in_down_left">Rotate In-Down-Left</we-button>
+            <we-button data-select-class="o_anim_rotate_in_down_right">Rotate In-Down-Right</we-button>
+            <we-divider/>
+            <we-button data-select-class="o_anim_zoom_in">Zoom In</we-button>
+            <we-button data-select-class="o_anim_zoom_in_down">Zoom In-Down</we-button>
+            <we-button data-select-class="o_anim_zoom_in_left">Zoom In-Left</we-button>
+            <we-button data-select-class="o_anim_zoom_in_right">Zoom In-Right</we-button>
+            <we-divider/>
+            <we-button data-select-class="o_anim_flash">Flash</we-button>
+            <we-button data-select-class="o_anim_pulse">Pulse</we-button>
+            <we-button data-select-class="o_anim_shake">Shake</we-button>
+            <we-button data-select-class="o_anim_tada">Tada</we-button>
+            <we-divider/>
+            <we-button data-select-class="o_anim_flip_in_x">Flip-In-X</we-button>
+            <we-button data-select-class="o_anim_flip_in_y">Flip-In-Y</we-button>
+        </we-select>
+        <we-select string="Animation Launch" data-dependencies="!no_animation_opt">
+            <we-button data-select-class="">First Time Only</we-button>
+            <we-button data-select-class="o_animate_both_scroll">Every Time</we-button>
+        </we-select>
+        <we-input string="Animation Duration" data-dependencies="!no_animation_opt"
+            data-select-style="0.4s" data-css-property="animation-duration" data-unit="s"/>
+        <we-input string="Animation Delay" data-dependencies="!no_animation_opt"
+            data-select-style="0s" data-css-property="animation-delay" data-unit="s"/>
+    </div>
+
     <!-- Theme options -->
     <div data-js="ThemeColors" data-selector="theme-colors" data-no-check="true">
         <we-alert class="o_old_color_system_warning d-none">

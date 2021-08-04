@@ -19,7 +19,7 @@ DEFAULT_EXCLUDE = [
     "migrations/**/*",
 ]
 
-STANDARD_MODULES = ['web', 'web_enterprise', 'website_animate', 'base']
+STANDARD_MODULES = ['web', 'web_enterprise', 'base']
 MAX_FILE_SIZE = 25 * 2**20 # 25 MB
 
 class Cloc(object):
