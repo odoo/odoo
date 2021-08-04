@@ -52,7 +52,6 @@ export class CommandPalette extends Component {
 
         useAutofocus();
 
-        this.mouseSelectionActive = false;
         useHotkey("Enter", () => this.executeSelectedCommand());
         useHotkey("ArrowUp", () => this.selectCommandAndScrollTo("PREV"), { allowRepeat: true });
         useHotkey("ArrowDown", () => this.selectCommandAndScrollTo("NEXT"), { allowRepeat: true });
@@ -141,6 +140,7 @@ export class CommandPalette extends Component {
             keyId: this.keyId++,
         }));
         this.selectCommand(this.state.commands.length ? 0 : -1);
+        this.mouseSelectionActive = false;
     }
 
     selectCommand(index) {
@@ -166,7 +166,7 @@ export class CommandPalette extends Component {
 
         const listbox = this.el.querySelector(".o_command_palette_listbox");
         const command = listbox.querySelector(`#o_command_${nextIndex}`);
-        scrollTo(command, listbox);
+        scrollTo(command.children[0], listbox);
     }
 
     onCommandClicked(index) {
@@ -174,9 +174,9 @@ export class CommandPalette extends Component {
         this.executeSelectedCommand();
     }
 
-    executeSelectedCommand() {
+    async executeSelectedCommand() {
         if (this.state.selectedCommand) {
-            const result = this.state.selectedCommand.action();
+            const result = await this.state.selectedCommand.action();
             if (result) {
                 const { placeHolder, provide } = result;
                 this.providerStack.push({ __default__: [{ provide }] });

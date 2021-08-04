@@ -5,7 +5,7 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { registry } from "@web/core/registry";
 import { capitalize } from "@web/core/utils/strings";
 import { getVisibleElements } from "@web/core/utils/ui";
-import { DefaultCommandItem } from "./command_service";
+import { DefaultCommandItem } from "./command_palette";
 
 const { Component } = owl;
 
