@@ -114,7 +114,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         origin = picking_delivery.origin
         self.assertEqual(len(picking_delivery), 1)
         self.assertEqual(len(picking_delivery.move_ids_without_package), 1)
-        self.assertEqual(picking_delivery.picking_type_id, wh.out_type_id)
+        self.assertEqual(picking_delivery.picking_type_id, wh.subcontracting_resupply_type_id)
         self.assertEqual(picking_delivery.partner_id, self.subcontractor_partner1)
 
         # Change the purchased quantity to 2
@@ -122,11 +122,11 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         # Check that two deliveries with 1 component for the subcontractor have been created
         picking_deliveries = self.env['stock.picking'].search([('origin', '=', origin)])
         self.assertEqual(len(picking_deliveries), 2)
-        self.assertEqual(picking_deliveries[0].picking_type_id, wh.out_type_id)
+        self.assertEqual(picking_deliveries[0].picking_type_id, wh.subcontracting_resupply_type_id)
         self.assertEqual(picking_deliveries[0].partner_id, self.subcontractor_partner1)
         self.assertTrue(picking_deliveries[0].state != 'cancel')
         move1 = picking_deliveries[0].move_ids_without_package
-        self.assertEqual(picking_deliveries[1].picking_type_id, wh.out_type_id)
+        self.assertEqual(picking_deliveries[1].picking_type_id, wh.subcontracting_resupply_type_id)
         self.assertEqual(picking_deliveries[1].partner_id, self.subcontractor_partner1)
         self.assertTrue(picking_deliveries[1].state != 'cancel')
         move2 = picking_deliveries[1].move_ids_without_package

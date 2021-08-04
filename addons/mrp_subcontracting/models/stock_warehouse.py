@@ -22,6 +22,9 @@ class StockWarehouse(models.Model):
     subcontracting_type_id = fields.Many2one(
         'stock.picking.type', 'Subcontracting Operation Type',
         domain=[('code', '=', 'mrp_operation')])
+    subcontracting_resupply_type_id = fields.Many2one(
+        'stock.picking.type', 'Subcontracting Resupply Operation Type',
+        domain=[('code', '=', 'outgoing')])
 
     def get_rules_dict(self):
         result = super(StockWarehouse, self).get_rules_dict()
@@ -29,7 +32,7 @@ class StockWarehouse(models.Model):
         for warehouse in self:
             result[warehouse.id].update({
                 'subcontract': [
-                    self.Routing(warehouse.lot_stock_id, subcontract_location_id, warehouse.out_type_id, 'pull'),
+                    self.Routing(warehouse.lot_stock_id, subcontract_location_id, warehouse.subcontracting_resupply_type_id, 'pull'),
                 ]
             })
         return result
@@ -74,7 +77,7 @@ class StockWarehouse(models.Model):
                     'name': self._format_rulename(self.lot_stock_id, subcontract_location_id, 'MTO'),
                     'location_id': subcontract_location_id.id,
                     'location_src_id': self.lot_stock_id.id,
-                    'picking_type_id': self.out_type_id.id
+                    'picking_type_id': self.subcontracting_resupply_type_id.id
                 },
                 'update_values': {
                     'active': self.subcontracting_to_resupply
@@ -92,7 +95,7 @@ class StockWarehouse(models.Model):
                     'name': self._format_rulename(self.lot_stock_id, subcontract_location_id, False),
                     'location_id': production_location_id.id,
                     'location_src_id': subcontract_location_id.id,
-                    'picking_type_id': self.out_type_id.id
+                    'picking_type_id': self.subcontracting_resupply_type_id.id
                 },
                 'update_values': {
                     'active': self.subcontracting_to_resupply
@@ -112,13 +115,35 @@ class StockWarehouse(models.Model):
                 'sequence_code': 'SBC',
                 'company_id': self.company_id.id,
             },
+            'subcontracting_resupply_type_id': {
+                'name': _('Resupply Subcontractor'),
+                'code': 'outgoing',
+                'use_create_lots': False,
+                'use_existing_lots': True,
+                'default_location_dest_id': self._get_subcontracting_location().id,
+                'sequence': next_sequence + 3,
+                'sequence_code': 'RES',
+                'print_label': True,
+                'company_id': self.company_id.id,
+            }
         })
         return data, max_sequence + 4
 
     def _get_sequence_values(self):
         values = super(StockWarehouse, self)._get_sequence_values()
         values.update({
-            'subcontracting_type_id': {'name': self.name + ' ' + _('Sequence subcontracting'), 'prefix': self.code + '/SBC/', 'padding': 5, 'company_id': self.company_id.id},
+            'subcontracting_type_id': {
+                'name': self.name + ' ' + _('Sequence subcontracting'),
+                'prefix': self.code + '/SBC/',
+                'padding': 5,
+                'company_id': self.company_id.id
+            },
+            'subcontracting_resupply_type_id': {
+                'name': self.name + ' ' + _('Sequence Resupply Subcontractor'),
+                'prefix': self.code + '/RES/',
+                'padding': 5,
+                'company_id': self.company_id.id
+            },
         })
         return values
 
@@ -131,6 +156,11 @@ class StockWarehouse(models.Model):
                 'active': False,
                 'default_location_src_id': subcontract_location_id.id,
                 'default_location_dest_id': production_location_id.id,
+            },
+            'subcontracting_resupply_type_id': {
+                'default_location_src_id': production_location_id.id,
+                'default_location_dest_id': subcontract_location_id.id,
+                'barcode': self.code.replace(" ", "").upper() + "-RESUPPLY",
             },
         })
         return data
