@@ -7,7 +7,10 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header/button[@name='action_rfq_send']" position="after">
-                <button name="action_view_picking" string="Receive Products" class="oe_highlight" type="object" attrs="{'invisible': ['|', '|' , ('is_shipped', '=', True), ('state','not in', ('purchase','done')), ('picking_count', '=', 0)]}" data-hotkey="y"/>
+                <button name="action_view_picking" 
+                    string="Receive Products" class="oe_highlight" type="object" 
+                    attrs="{'invisible': ['|', '|' , ('is_shipped', '=', True), ('state','not in', ('purchase','done')), ('picking_count', '=', 0)]}" 
+                    data-hotkey="y" groups="stock.group_stock_user"/>
             </xpath>
             <xpath expr="//header/button[@name='confirm_reminder_mail']" position="attributes">
                 <attribute name="attrs">{'invisible': ['|', '|', '|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True), ('date_planned', '=', False), ('effective_date', '!=', False)]}</attribute>
@@ -16,9 +19,8 @@
                 <button type="object"
                     name="action_view_picking"
                     class="oe_stat_button"
-                    icon="fa-truck" attrs="{'invisible':[('picking_ids','=',[])]}">
+                    icon="fa-truck" attrs="{'invisible':[('picking_count','=', 0)]}" groups="stock.group_stock_user">
                     <field name="picking_count" widget="statinfo" string="Receipt" help="Incoming Shipments"/>
-                    <field name="picking_ids" invisible="1"/>
                 </button>
             </xpath>
             <xpath expr="//field[@name='currency_id']" position="after">
