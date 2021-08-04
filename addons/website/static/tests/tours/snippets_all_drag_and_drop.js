@@ -33,22 +33,11 @@ for (const snippet of snippetsNames) {
             content: 'Close API Key popup',
             trigger: ".modal-footer .btn-secondary",
         });
-    } else if (snippet === 's_popup') {
+    } else if (['s_popup', 's_newsletter_subscribe_popup'].includes(snippet)) {
         snippetSteps[2]['in_modal'] = false;
         snippetSteps.splice(3, 2, {
             content: `Hide the ${snippet} popup`,
             trigger: ".s_popup_close",
-        });
-    } else if (['s_newsletter_block', 's_newsletter_subscribe_form', 's_newsletter_subscribe_popup'].includes(snippet)) {
-        snippetSteps.splice(1, 0, {
-            content: `Confirm the ${snippet} popup`,
-            trigger: `.modal-footer button.btn-primary`,
-        });
-    }
-    if (snippet === 's_newsletter_subscribe_popup') {
-        snippetSteps.splice(3, 2, {
-            content: `Hide the ${snippet} popup`,
-            trigger: "button.close",
         });
     }
     steps = steps.concat(snippetSteps);

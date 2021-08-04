@@ -25,7 +25,7 @@
 </template>
 
 <template id="s_newsletter_subscribe_form" name="Newsletter">
-    <div class="s_newsletter_subscribe_form js_subscribe" data-vxml="001" data-list-id="0">
+    <div class="s_newsletter_subscribe_form js_subscribe" data-vxml="001" data-list-id="0" data-name="Newsletter Form">
         <div class="input-group">
             <input type="email" name="email" class="js_subscribe_email form-control" placeholder="your email..."/>
             <span class="input-group-append">
@@ -87,7 +87,7 @@
         <t t-set="selector" t-value="'.js_subscribe'"/>
         <div data-js="mailing_list_subscribe"
             t-att-data-selector="selector">
-            <we-button data-select_mailing_list="" data-no-preview="true">Change Newsletter</we-button>
+            <we-select string="Newsletter" data-attribute-name="listId"></we-select>
         </div>
         <div data-js="recaptchaSubscribe"
             t-att-data-selector="selector">
