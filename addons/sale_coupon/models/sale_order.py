@@ -95,7 +95,8 @@ class SaleOrder(models.Model):
                 order_total = sum(order_lines.mapped('price_total')) - (program.reward_product_quantity * program.reward_product_id.lst_price)
                 reward_product_qty = min(reward_product_qty, order_total // program.rule_minimum_amount)
         else:
-            reward_product_qty = min(program.reward_product_quantity, total_qty)
+            program_in_order = max_product_qty // program.rule_min_quantity
+            reward_product_qty = min(program.reward_product_quantity * program_in_order, total_qty)
 
         reward_qty = min(int(int(max_product_qty / program.rule_min_quantity) * program.reward_product_quantity), reward_product_qty)
         # Take the default taxes on the reward product, mapped with the fiscal position
@@ -509,6 +510,13 @@ class SaleOrderLine(models.Model):
             # If company_id is set, always filter taxes by the company
             taxes = line.tax_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
             line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id)
+
+    def _get_display_price(self, product):
+        # A product created from a promotion does not have a list_price.
+        # The price_unit of a reward order line is computed by the promotion, so it can be used directly
+        if self.is_reward_line:
+            return self.price_unit
+        return super()._get_display_price(product)
 
     # Invalidation of `coupon.program.order_count`
     # `test_program_rules_validity_dates_and_uses`,
