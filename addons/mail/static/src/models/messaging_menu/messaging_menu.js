@@ -52,8 +52,8 @@ function factory(dependencies) {
             }
             const inboxCounter = this.messaging.inbox ? this.messaging.inbox.counter : 0;
             const unreadChannelsCounter = this.env.models['mail.thread'].all(channel => (
-                channel.model === 'mail.channel',
-                channel.isPinned,
+                channel.model === 'mail.channel' &&
+                channel.isPinned &&
                 channel.localMessageUnreadCounter > 0
             )).length;
             const notificationGroupsCounter = this.messaging.notificationGroupManager
