@@ -7,6 +7,7 @@ from odoo.http import request, route
 from odoo.tools import consteq
 
 from odoo.addons.portal.controllers.mail import PortalChatter
+from .portal import ProjectCustomerPortal
 
 
 class ProjectSharingChatter(PortalChatter):
@@ -21,8 +22,8 @@ class ProjectSharingChatter(PortalChatter):
             If we do not have any token, then we need to check if the portal user is a follower of the project shared.
             If it is the case, then we give the access token of the task.
         """
-        project_sudo = request.env['project.project'].browse(project_id).sudo()
-        can_access = project_sudo and res_model == 'project.task' and res_id in project_sudo.tasks.ids
+        project_sudo = ProjectCustomerPortal._document_check_access(self, 'project.project', project_id, token)
+        can_access = project_sudo and res_model == 'project.task' and project_sudo.with_user(request.env.user)._check_project_sharing_access('comment')
         if token:
             can_access &= consteq(project_sudo.access_token, token)
         else:
