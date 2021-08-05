@@ -201,13 +201,20 @@ class AccountEdiFormat(models.Model):
                 to_return[invoice] = {'error': _('You are not allowed to check the status of this invoice.'), 'blocking_level': 'error'}
                 continue
 
-            xml = proxy_user._decrypt_data(response['file'], response['key'])
-            response_tree = etree.fromstring(xml)
+            if 'file' in response:
+                xml = proxy_user._decrypt_data(response['file'], response['key'])
+                response_tree = etree.fromstring(xml)
+            else:
+                document = invoice._get_edi_document(self)
             if state == 'ricevutaConsegna':
                 to_return[invoice] = {'error': _('The invoice has been succesfully transmitted. The addressee has 15 days to accept or reject it.')}
             elif state == 'notificaScarto':
-                errors = [element.find('Descrizione').text for element in response_tree.xpath('//Errore')]
-                to_return[invoice] = {'error': self._format_error_message(_('The invoice has been refused by the Exchange System'), errors), 'blocking_level': 'error'}
+                if 'file' in response:
+                    errors = [element.find('Descrizione').text for element in response_tree.xpath('//Errore')]
+                    to_return[invoice] = {'error': self._format_error_message(_('The invoice has been refused by the Exchange System'), errors), 'blocking_level': 'error'}
+                elif not document.error:
+                    # should not happen since if there's no file in response, that means that the state was already previously fetched.
+                    to_return[invoice] = {'error': _('The invoice has been refused by the Exchange System'), 'blocking_level': 'error'}
             elif state == 'notificaMancataConsegna':
                 to_return[invoice] = {
                     'error': _('The E-invoice is not delivered to the addressee. The Exchange System is\
@@ -217,11 +224,15 @@ class AccountEdiFormat(models.Model):
                     file to the Administration in question again.'),
                 }
             elif state == 'notificaEsito':
-                outcome = response_tree.find('Esito').text
-                if outcome == 'EC01':
-                    to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id}
-                else:  # ECO2
-                    to_return[invoice] = {'error': _('The invoice was refused by the addressee.'), 'blocking_level': 'error'}
+                if 'file' in response:
+                    outcome = response_tree.find('Esito').text
+                    if outcome == 'EC01':
+                        to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id}
+                    else:  # ECO2
+                        to_return[invoice] = {'error': _('The invoice was refused by the addressee.'), 'blocking_level': 'error'}
+                elif not document.state == 'sent' or document.error:
+                    # This should not happen. If it happens, we don't know if the invoice was sucessfully sent or if it was refused.
+                    raise Exception("The state is 'notificaEsito' but no file where attached. The state was probably already fetched and the attachment is no longer available in the proxy.")
             elif state == 'NotificaDecorrenzaTermini':
                 to_return[invoice] = {'error': _('Expiration of the maximum term for communication of acceptance/refusal'), 'blocking_level': 'error'}
             proxy_acks.append(id_transaction)
