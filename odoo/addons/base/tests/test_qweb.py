@@ -989,6 +989,43 @@ class TestQWebBasic(TransactionCase):
         self.assertEqual(html, """<root><span data-oe-type="text" data-oe-expression="text">a<br>
         b &lt;b&gt;c&lt;/b&gt;</span></root>""")
 
+    def test_out_markup(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="esc-markup">
+                <t t-set="content"><span>toto</span></t>
+                <div t-out="content"/>
+            </t>'''
+        })
+        result = """
+                <div><span>toto</span></div>
+        """
+        rendered = self.env['ir.qweb']._render(t.id, {})
+        self.assertEqual(rendered.strip(), result.strip())
+
+    def test_esc_markup(self):
+        # t-esc is equal to t-out
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="esc-markup">
+                <t t-set="content"><span>toto</span></t>
+                <div t-esc="content"/>
+            </t>'''
+        })
+        ref = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="esc-markup">
+                <t t-set="content"><span>toto</span></t>
+                <div t-out="content"/>
+            </t>'''
+        })
+        rendered = self.env['ir.qweb']._render(t.id, {})
+        result = self.env['ir.qweb']._render(ref.id, {})
+        self.assertEqual(rendered.strip(), result.strip())
+
     def test_if_from_body(self):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
