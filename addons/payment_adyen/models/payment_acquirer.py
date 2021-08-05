@@ -23,8 +23,11 @@ class PaymentAcquirer(models.Model):
         help="The code of the merchant account to use with this acquirer",
         required_if_provider='adyen', groups='base.group_system')
     adyen_api_key = fields.Char(
-        string="API Key", help="The API key of the user account", required_if_provider='adyen',
+        string="API Key", help="The API key of the webservice user", required_if_provider='adyen',
         groups='base.group_system')
+    adyen_client_key = fields.Char(
+        string="Client Key", help="The client key of the webservice user",
+        required_if_provider='adyen')
     adyen_hmac_key = fields.Char(
         string="HMAC Key", help="The HMAC key of the webhook", required_if_provider='adyen',
         groups='base.group_system')
@@ -107,8 +110,10 @@ class PaymentAcquirer(models.Model):
         except requests.exceptions.ConnectionError:
             _logger.exception("unable to reach endpoint at %s", url)
             raise ValidationError("Adyen: " + _("Could not establish the connection to the API."))
-        except requests.exceptions.HTTPError:
-            _logger.exception("invalid API request at %s with data %s", url, payload)
+        except requests.exceptions.HTTPError as error:
+            _logger.exception(
+                "invalid API request at %s with data %s: %s", url, payload, error.response.text
+            )
             raise ValidationError("Adyen: " + _("The communication with the API failed."))
         return response.json()
 

@@ -15,11 +15,6 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
-    adyen_payment_data = fields.Char(
-        string="Saved Payment Data",
-        help="Data that must be passed back to Adyen when returning from redirect", readonly=True,
-        groups='base.group_system')
-
     #=== BUSINESS METHODS ===#
 
     def _get_specific_processing_values(self, processing_values):
@@ -74,9 +69,8 @@ class PaymentTransaction(models.Model):
             },
             'reference': self.reference,
             'paymentMethod': {
-                'recurringDetailReference': self.token_id.acquirer_ref
-            },  # Required by Adyen although it is also provided with 'storedPaymentMethodId'
-            'storedPaymentMethodId': self.token_id.acquirer_ref,
+                'recurringDetailReference': self.token_id.acquirer_ref,
+            },
             'shopperReference': self.token_id.adyen_shopper_reference,
             'recurringProcessingModel': 'Subscription',
             'shopperIP': payment_utils.get_customer_ip_address(),
@@ -237,7 +231,7 @@ class PaymentTransaction(models.Model):
             _logger.warning("An error occurred on transaction with reference %s (reason: %s)",
                             self.reference, refusal_reason)
             self._set_error(
-                _("An error occured during processing of your payment. Please try again.")
+                _("An error occurred during the processing of your payment. Please try again.")
             )
         elif payment_state in RESULT_CODES_MAPPING['refused']:
             _logger.warning("The transaction with reference %s was refused (reason: %s)",
