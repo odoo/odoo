@@ -54,6 +54,7 @@ const LinkPopoverWidget = Widget.extend({
             content: this.$el,
             placement: 'bottom',
             trigger: 'click',
+            boundary: 'viewport',
         })
         .on('show.bs.popover.link_popover', () => {
             this._loadAsyncLinkPreview();
