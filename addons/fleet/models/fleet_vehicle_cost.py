@@ -181,7 +181,8 @@ class FleetVehicleLogContract(models.Model):
     def _onchange_vehicle(self):
         if self.vehicle_id:
             self.odometer_unit = self.vehicle_id.odometer_unit
-
+    
+    @api.model
     def create(self, vals):
         res = super(FleetVehicleLogContract, self).create(vals)
         res.cost_id.write({'contract_id': res.id})
