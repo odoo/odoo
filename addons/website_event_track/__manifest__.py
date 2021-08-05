@@ -55,6 +55,9 @@
             'website_event_track/static/src/js/website_event_pwa_widget.js',
             'website_event_track/static/lib/idb-keyval/idb-keyval.js',
         ],
+        'web.assets_qweb': [
+            'website_event_track/static/src/xml/event_track_proposal_templates.xml',
+        ],
     },
     'license': 'LGPL-3',
 }

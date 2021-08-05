@@ -9,6 +9,7 @@ from werkzeug.exceptions import Forbidden, NotFound
 import babel
 import babel.dates
 import base64
+import json
 import pytz
 
 from odoo import exceptions, http, fields, tools, _
@@ -400,7 +401,7 @@ class EventTrackController(http.Controller):
     @http.route(['''/event/<model("event.event"):event>/track_proposal/post'''], type='http', auth="public", methods=['POST'], website=True)
     def event_track_proposal_post(self, event, **post):
         if not event.can_access_from_current_website():
-            raise NotFound()
+            return json.dumps({'error': 'forbidden'})
 
         # Only accept existing tag indices. Use search instead of browse + exists:
         # this prevents users to register colorless tags if not allowed to (ACL).
@@ -428,7 +429,7 @@ class EventTrackController(http.Controller):
                         'phone': post.get('contact_phone'),
                     })
             else:
-                raise exceptions.ValidationError(_("Format Error : please enter a valid contact phone or contact email."))
+                return json.dumps({'error': 'invalidFormInputs'})
         # If the speaker email is the same as logged user's, then also uses its partner on track, same as above.
         else:
             valid_speaker_email = tools.email_normalize(post['partner_email'])
@@ -455,19 +456,7 @@ class EventTrackController(http.Controller):
         if request.env.user != request.website.user_id:
             track.sudo().message_subscribe(partner_ids=request.env.user.partner_id.ids)
 
-        return request.redirect('/event/%s/track_proposal/success/%s' % (event.id, track.id))
-
-    @http.route(['/event/<model("event.event"):event>/track_proposal/success/<int:track_id>'], type='http', auth="public", methods=['GET'], website=True, sitemap=False)
-    def event_track_proposal_success(self, event, track_id):
-        track = request.env['event.track'].sudo().search([
-            ('id', '=', track_id),
-            ('partner_id', '=', request.env['website.visitor']._get_visitor_from_request().partner_id.id),
-            ('event_id', '=', event.id),
-        ])
-        if not event.can_access_from_current_website() or not track:
-            raise NotFound()
-
-        return request.render("website_event_track.event_track_proposal", {'track': track, 'event': event})
+        return json.dumps({'success': True})
 
     # ACL : This route is necessary since rpc search_read method in js is not accessible to all users (e.g. public user).
     @http.route(['''/event/track_tag/search_read'''], type='json', auth="public", website=True)
