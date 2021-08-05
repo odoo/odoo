@@ -83,13 +83,6 @@ class Meeting(models.Model):
                 partners |= self.env['res.partner'].browse(active_id)
         return partners
 
-    @api.model
-    def _default_attendee_ids(self):
-        """ Automatically add the current partner when creating an event if there is none
-        (happens when we quickcreate an event)"""
-        return self._attendees_values([(4, self.env.user.partner_id.id)])
-
-
     # description
     name = fields.Char('Meeting Subject', required=True)
     description = fields.Html('Description')
@@ -152,7 +145,7 @@ class Meeting(models.Model):
     activity_ids = fields.One2many('mail.activity', 'calendar_event_id', string='Activities')
     # attendees
     attendee_ids = fields.One2many(
-        'calendar.attendee', 'event_id', 'Participant', default=_default_attendee_ids)
+        'calendar.attendee', 'event_id', 'Participant')
     attendee_status = fields.Selection(
         Attendee.STATE_SELECTION, string='Attendee Status', compute='_compute_attendee')
     partner_ids = fields.Many2many(
@@ -363,7 +356,7 @@ class Meeting(models.Model):
             for vals in vals_list
         ]
 
-        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'res_model'])
+        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'res_model', 'partner_ids'])
         meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
         # get list of models ids and filter out None values directly
         model_ids = list(filter(bool, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
@@ -390,8 +383,10 @@ class Meeting(models.Model):
                     activity_vals['user_id'] = user_id
                 values['activity_ids'] = [(0, 0, activity_vals)]
 
+        # Automatically add the current partner when creating an event if there is none (happens when we quickcreate an event)
+        default_partners_ids = defaults.get('partner_ids') or ([(4, self.env.user.partner_id.id)])
         vals_list = [
-            dict(vals, attendee_ids=self._attendees_values(vals['partner_ids'])) if 'partner_ids' in vals else vals
+            dict(vals, attendee_ids=self._attendees_values(vals.get('partner_ids', default_partners_ids))) if not vals.get('attendee_ids') else vals
             for vals in vals_list
         ]
         recurrence_fields = self._get_recurrent_fields()
