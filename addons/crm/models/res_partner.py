@@ -99,6 +99,7 @@ class Partner(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
         action['context'] = {
             'default_partner_ids': partner_ids,
+            'default_attendee_ids': [(0, 0, {'partner_id': pid}) for pid in partner_ids],
         }
         action['domain'] = ['|', ('id', 'in', self._compute_meeting()[self.id]), ('partner_ids', 'in', self.ids)]
         return action
