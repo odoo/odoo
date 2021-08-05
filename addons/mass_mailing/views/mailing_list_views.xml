@@ -105,6 +105,7 @@
     <record id="mailing_list_view_form_simplified" model="ir.ui.view">
         <field name="name">mailing.list.form.simplified</field>
         <field name="model">mailing.list</field>
+        <field name="priority" eval="25"/>
         <field name="arch" type="xml">
             <form string="Contact List">
                 <group>
@@ -120,11 +121,23 @@
                 <group>
                     <field name="is_public"/>
                 </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="mailing_list_view_form_simplified_footer" model="ir.ui.view">
+        <field name="name">mailing.list.form.simplified.footer</field>
+        <field name="model">mailing.list</field>
+        <field name="inherit_id" ref="mailing_list_view_form_simplified"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
                 <footer>
                     <button string="Create" name="close_dialog" type="object" class="btn-primary" data-hotkey="q"/>
                     <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
                 </footer>
-            </form>
+            </xpath>
         </field>
     </record>
 
@@ -132,7 +145,7 @@
         <field name="name">Create a Mailing List</field>
         <field name="res_model">mailing.list</field>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="mailing_list_view_form_simplified"/>
+        <field name="view_id" ref="mailing_list_view_form_simplified_footer"/>
         <field name="target">new</field>
     </record>
 
