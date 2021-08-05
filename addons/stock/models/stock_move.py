@@ -1675,7 +1675,7 @@ class StockMove(models.Model):
         return new_move_vals
 
     def _recompute_state(self):
-        moves_state_to_write = defaultdict(OrderedSet)
+        moves_state_to_write = defaultdict(set)
         for move in self:
             if move.state in ('cancel', 'done', 'draft'):
                 continue
@@ -1690,8 +1690,7 @@ class StockMove(models.Model):
             else:
                 moves_state_to_write['confirmed'].add(move.id)
         for state, moves_ids in moves_state_to_write.items():
-            moves = self.env['stock.move'].browse(moves_ids)
-            moves.write({'state': state})
+            self.browse(moves_ids).write({'state': state})
 
     @api.model
     def _consuming_picking_types(self):
