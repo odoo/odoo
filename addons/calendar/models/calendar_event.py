@@ -87,6 +87,12 @@ class Meeting(models.Model):
         return partners
 
     @api.model
+    def _default_attendee_ids(self):
+        """ Automatically add the current partner when creating an event if there is none
+        (happens when we quickcreate an event)"""
+        return self._attendees_values([(4, self.env.user.partner_id.id)])
+
+    @api.model
     def _default_videocall_location(self):
         if self.env.context.get('calendar_no_videocall'):
             return False
@@ -159,7 +165,7 @@ class Meeting(models.Model):
     message_ids = fields.One2many(auto_join=False)
     # attendees
     attendee_ids = fields.One2many(
-        'calendar.attendee', 'event_id', 'Participant')
+        'calendar.attendee', 'event_id', 'Participant', default=_default_attendee_ids)
     attendee_status = fields.Selection(
         Attendee.STATE_SELECTION, string='Attendee Status', compute='_compute_attendee')
     partner_ids = fields.Many2many(
@@ -385,10 +391,8 @@ class Meeting(models.Model):
                     activity_vals['user_id'] = user_id
                 values['activity_ids'] = [(0, 0, activity_vals)]
 
-        # Automatically add the current partner when creating an event if there is none (happens when we quickcreate an event)
-        self_partner_id = [(4, self.env.user.partner_id.id)]
         vals_list = [
-            dict(vals, attendee_ids=self._attendees_values(vals.get('partner_ids', self_partner_id)))
+            dict(vals, attendee_ids=self._attendees_values(vals['partner_ids'])) if 'partner_ids' in vals else vals
             for vals in vals_list
         ]
         recurrence_fields = self._get_recurrent_fields()
