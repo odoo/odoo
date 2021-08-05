@@ -1105,13 +1105,7 @@ class QWeb(object):
         else:
             code.append(self._indent("force_display = None", indent))
 
-            if ttype == 't-esc':
-                # deprecated use.
-                code.append(self._indent(dedent("""
-                    if content is not None and content is not False:
-                        content = str(content)
-                """), indent))
-            elif ttype == 't-raw':
+            if ttype == 't-raw':
                 # deprecated use.
                 code.append(self._indent(dedent("""
                     if content is not None and content is not False:
@@ -1125,9 +1119,7 @@ class QWeb(object):
         # deprecated use.
         if options.get('dev_mode'):
             _logger.warning(
-                "Found deprecated directive @t-esc=%r in template %r. Replace by "
-                "@t-out, and explicitely wrap content in `str` if "
-                "necessary (which likely is not the case)",
+                "Found deprecated directive @t-esc=%r in template %r. Replace by @t-out",
                 el.get('t-esc'),
                 options.get('ref', '<unknown>'),
             )
