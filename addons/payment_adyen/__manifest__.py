@@ -17,9 +17,10 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
-            'https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/3.9.4/adyen.css',
-            'https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/3.9.4/adyen.js',
+            'https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/4.7.3/adyen.css',
+            'https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/4.7.3/adyen.js',
             'payment_adyen/static/src/js/payment_form.js',
+            'payment_adyen/static/src/scss/dropin.scss',
         ],
     },
     'license': 'LGPL-3',

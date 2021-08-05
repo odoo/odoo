@@ -24,16 +24,19 @@ _logger = logging.getLogger(__name__)
 
 class AdyenController(http.Controller):
 
-    @http.route('/payment/adyen/acquirer_state', type='json', auth='public')
-    def adyen_acquirer_state(self, acquirer_id):
-        """ Return the state of the acquirer.
+    @http.route('/payment/adyen/acquirer_info', type='json', auth='public')
+    def adyen_acquirer_info(self, acquirer_id):
+        """ Return public information on the acquirer.
 
         :param int acquirer_id: The acquirer handling the transaction, as a `payment.acquirer` id
-        :return: The state of the acquirer: 'enabled' or 'test'
+        :return: Public information on the acquirer, namely: the state and client key
         :rtype: str
         """
         acquirer_sudo = request.env['payment.acquirer'].sudo().browse(acquirer_id).exists()
-        return acquirer_sudo.state
+        return {
+            'state': acquirer_sudo.state,
+            'client_key': acquirer_sudo.adyen_client_key,
+        }
 
     @http.route('/payment/adyen/payment_methods', type='json', auth='public')
     def adyen_payment_methods(self, acquirer_id, amount=None, currency_id=None, partner_id=None):
@@ -77,34 +80,12 @@ class AdyenController(http.Controller):
         _logger.info("paymentMethods request response:\n%s", pprint.pformat(response_content))
         return response_content
 
-    @http.route('/payment/adyen/origin_key', type='json', auth='public')
-    def adyen_origin_key(self, acquirer_id):
-        """ Request an origin key based on the current domain.
-
-        :param int acquirer_id: The acquirer handling the transaction, as a `payment.acquirer` id
-        :return: The JSON-formatted content of the response
-        :rtype: dict
-        """
-        acquirer_sudo = request.env['payment.acquirer'].browse(acquirer_id).sudo()
-        domain = acquirer_sudo.get_base_url()
-        data = {
-            'originDomains': [domain],
-        }
-        response_content = acquirer_sudo._adyen_make_request(
-            url_field_name='adyen_checkout_api_url',
-            endpoint='/originKeys',
-            payload=data,
-            method='POST'
-        )
-        _logger.info("originKeys request response:\n%s", pprint.pformat(response_content))
-        return response_content
-
     @http.route('/payment/adyen/payments', type='json', auth='public')
     def adyen_payments(
         self, acquirer_id, reference, converted_amount, currency_id, partner_id, payment_method,
         access_token, browser_info=None
     ):
-        """ Make a payment request and handle the response.
+        """ Make a payment request and process the feedback data.
 
         :param int acquirer_id: The acquirer handling the transaction, as a `payment.acquirer` id
         :param str reference: The reference of the transaction
@@ -149,7 +130,7 @@ class AdyenController(http.Controller):
             'returnUrl': urls.url_join(
                 acquirer_sudo.get_base_url(),
                 # Include the reference in the return url to be able to match it after redirection.
-                # The key 'merchantReference' is chosen on purpose to be the same than that returned
+                # The key 'merchantReference' is chosen on purpose to be the same as that returned
                 # by the /payments endpoint of Adyen.
                 f'/payment/adyen/return?merchantReference={reference}'
             ),
@@ -166,35 +147,27 @@ class AdyenController(http.Controller):
         request.env['payment.transaction'].sudo()._handle_feedback_data(
             'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
         )
-        if 'action' in response_content and response_content['action']['type'] == 'redirect':
-            tx_sudo.adyen_payment_data = response_content['paymentData']
-
         return response_content
 
     @http.route('/payment/adyen/payment_details', type='json', auth='public')
-    def adyen_payment_details(self, acquirer_id, reference, details, payment_data):
-        """ Query the status of a transaction that required additional actions and process it.
+    def adyen_payment_details(self, acquirer_id, reference, payment_details):
+        """ Submit the details of the additional actions and process the feedback data.
 
          The additional actions can have been performed both from the inline form or during a
          redirection.
 
         :param int acquirer_id: The acquirer handling the transaction, as a `payment.acquirer` id
         :param str reference: The reference of the transaction
-        :param dict details: The specification of the additional actions
-        :param str payment_data: The encrypted payment data of the transaction
+        :param dict payment_details: The details of the additional actions performed for the payment
         :return: The JSON-formatted content of the response
         :rtype: dict
         """
         # Make the payment details request to Adyen
         acquirer_sudo = request.env['payment.acquirer'].browse(acquirer_id).sudo()
-        data = {
-            'details': details,
-            'paymentData': payment_data,
-        }
         response_content = acquirer_sudo._adyen_make_request(
             url_field_name='adyen_checkout_api_url',
             endpoint='/payments/details',
-            payload=data,
+            payload=payment_details,
             method='POST'
         )
 
@@ -237,8 +210,11 @@ class AdyenController(http.Controller):
         self.adyen_payment_details(
             tx_sudo.acquirer_id.id,
             data['merchantReference'],
-            {detail: value for detail, value in data.items() if detail != 'merchantReference'},
-            tx_sudo.adyen_payment_data,
+            {
+                'details': {
+                    'redirectResult': data['redirectResult'],
+                },
+            },
         )
 
         # Redirect the user to the status page

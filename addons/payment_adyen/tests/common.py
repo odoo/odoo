@@ -11,6 +11,7 @@ class AdyenCommon(PaymentCommon):
         cls.adyen = cls._prepare_acquirer('adyen', update_values={
             'adyen_merchant_account': 'dummy',
             'adyen_api_key': 'dummy',
+            'adyen_client_key': 'dummy',
             'adyen_hmac_key': 'dummy',
             'adyen_checkout_api_url': 'https://this.is.an.url',
             'adyen_recurring_api_url': 'https://this.is.an.url',
