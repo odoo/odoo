@@ -467,7 +467,9 @@ export class OdooEditor extends EventTarget {
                 }
             }
         }
-        this.dispatchEvent(new Event('observerApply'));
+        if (records.length) {
+            this.dispatchEvent(new Event('observerApply'));
+        }
     }
     filterMutationRecords(records) {
         // Save the first attribute in a cache to compare only the first
