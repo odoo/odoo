@@ -103,7 +103,7 @@ class AccountPaymentMethodLine(models.Model):
                             "'|', ('user_type_id', '=', %s), ('id', '=', parent.default_account_id)]"
                             % self.env.ref('account.data_account_type_current_assets').id
     )
-    journal_id = fields.Many2one(comodel_name='account.journal', ondelete="set null")
+    journal_id = fields.Many2one(comodel_name='account.journal', ondelete="cascade")
 
     # == Display purpose fields ==
     code = fields.Char(related='payment_method_id.code')
@@ -124,6 +124,7 @@ class AccountPaymentMethodLine(models.Model):
             SELECT apml.name, apm.payment_type
             FROM account_payment_method_line apml
             JOIN account_payment_method apm ON apml.payment_method_id = apm.id
+            WHERE apml.journal_id IS NOT NULL
             GROUP BY apml.name, journal_id, apm.payment_type
             HAVING count(apml.id) > 1
         ''')
