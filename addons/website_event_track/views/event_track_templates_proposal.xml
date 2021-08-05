@@ -33,9 +33,9 @@
                     </section>
                 </div>
                 <div class="col-lg-9">
-                    <div t-if="not track">
+                    <div>
                         <section id="forms" t-if="event.website_track_proposal">
-                            <form class="mt32 js_website_submit_form o_website_event_track_proposal_form" t-attf-action="/event/#{event.id}/track_proposal/post" method="post" enctype="multipart/form-data">
+                            <form class="mt32 js_website_submit_form o_website_event_track_proposal_form" t-att-data-event-id="event.id" enctype="multipart/form-data">
                                 <input name="csrf_token" type="hidden" t-att-value="request.csrf_token()"/>
                                 <div id="track_intro">
                                     <h4 class="mt32"><b>Talk Intro</b></h4>
@@ -108,9 +108,6 @@
                             </form>
                         </section>
                     </div>
-                    <div t-else="">
-                        <t t-call="website_event_track.event_track_proposal_success"/>
-                    </div>
                     <div class="oe_structure" id="oe_structure_website_event_track_proposal_2"/>
                 </div>
                 <div class="col-lg-3">
@@ -180,18 +177,6 @@
             </div>
         </div> 
     </div>
-</template>
-
-<template id="event_track_proposal_success">
-    <section class="my-5">
-        <h3 class="o_page_header">Application</h3>
-        <p>
-            Thank you for your proposal.
-        </p>
-        <p>
-            We will evaluate your proposition and get back to you shortly.
-        </p>
-    </section>
 </template>
 
 </odoo>

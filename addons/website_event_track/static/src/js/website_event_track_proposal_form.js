@@ -4,10 +4,14 @@ odoo.define('website_event_track.website_event_track_proposal_form', function (r
 var core = require('web.core');
 var publicWidget = require('web.public.widget');
 
+var QWeb = core.qweb;
 var _t = core._t;
 
 publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend({
     selector: '.o_website_event_track_proposal_form',
+    xmlDependencies: [
+        '/website_event_track/static/src/xml/event_track_proposal_templates.xml',
+    ],
     events: {
         'click .o_wetrack_add_contact_information_checkbox': '_onAdvancedContactToggle',
         'input input[name="partner_name"]': '_onPartnerNameInput',
@@ -84,13 +88,22 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
 
         this.$('.o_wetrack_proposal_error_section').toggleClass('d-none', !errors.length);
 
-        var errorMessage = '';
+        var errorMessages = [];
         var $errorElement = this.$('.o_wetrack_proposal_error_message');
 
-        if (errors.includes('invalidFormInputs')) { errorMessage += _t(' Please fill out the form correctly.'); }
-        if (errors.includes('noContactMean')) { errorMessage += _t(' Please enter either a contact email address or a contact phone number.'); }
+        if (errors.includes('invalidFormInputs')) {
+            errorMessages.push(_t('Please fill out the form correctly.'));
+        }
 
-        $errorElement.text(errorMessage).change();
+        if (errors.includes('noContactMean')) {
+            errorMessages.push(_t('Please enter either a contact email address or a contact phone number.'));
+        }
+
+        if (errors.includes('forbidden')) {
+            errorMessages.push(_t('You cannot access this page.'));
+        }
+
+        $errorElement.text(errorMessages.join(' ')).change();
     },
 
     //--------------------------------------------------------------------------
@@ -138,10 +151,17 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
     /**
      * Submits the form if no errors are present in the form after validation.
      *
+     * If the submission succeeds, we replace the form with a template containing a small success
+     * message.
+     *
+     * Then we scroll to the position of the success message so that the user can see it.
+     * To do that we have to compute the position of the beginning of the element, relatively to its
+     * position and the amount already scrolled, then subtract the floating header menu.
+     *
      * @private
      * @param {Event} ev
      */
-    _onProposalFormSubmit: function (ev) {
+    _onProposalFormSubmit: async function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
 
@@ -152,8 +172,26 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
 
         // Submission of the form if no errors remain
         if (this._isFormValid()) {
-            this.$el.submit();
-            this.$target[0].reset();
+            const formData = new FormData(this.$el[0]);
+
+            const response = await $.ajax({
+                url: `/event/${this.$el.data('eventId')}/track_proposal/post`,
+                data: formData,
+                processData: false,
+                contentType: false,
+                type: 'POST'
+            });
+
+            const jsonResponse = response && JSON.parse(response);
+            if (jsonResponse.success) {
+                const offsetTop = ($("#wrapwrap").scrollTop() || 0) + this.$el.offset().top;
+                const floatingMenuHeight = ($('.o_header_standard').height() || 0) +
+                    ($('#oe_main_menu_navbar').height() || 0);
+                this.$el.replaceWith($(QWeb.render('event_track_proposal_success')));
+                $('#wrapwrap').scrollTop(offsetTop - floatingMenuHeight);
+            } else if (jsonResponse.error) {
+                this._updateErrorDisplay([jsonResponse.error]);
+            }
         }
 
         // Restore button
