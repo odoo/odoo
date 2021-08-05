@@ -239,14 +239,19 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                 )
 
         else:
-            attrs = ''.join([
-                ' %s="%s"' % (attr, html_escape(spec.get(attr)))
-                for attr in spec.attrib
-                if attr != 'position'
-            ])
-            tag = "<%s%s>" % (spec.tag, attrs)
+            def element_repr(elem):
+                attrs = ''.join([
+                    ' %s="%s"' % (attr, elem.get(attr))
+                    for attr in elem.attrib
+                    if attr != 'position'
+                ])
+                if elem.tag == 'xpath':
+                    return "<%s%s />" % (elem.tag, attrs)
+                else:
+                    children = '\n'.join(element_repr(c) for c in elem.getchildren())
+                    return "<%s%s>%s</%s>" % (elem.tag, attrs, children, elem.tag)
             raise ValueError(
-                _("Element '%s' cannot be located in parent view", tag)
+                _("Element '%s' cannot be located in parent view:\n%s") % (element_repr(spec), element_repr(source))
             )
 
     return source
