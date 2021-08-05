@@ -24,7 +24,11 @@ class AccountPaymentRegister(models.TransientModel):
         help="The payment's currency.")
     journal_id = fields.Many2one('account.journal', store=True, readonly=False,
         compute='_compute_journal_id',
-        domain="[('company_id', '=', company_id), ('type', 'in', ('bank', 'cash'))]")
+        domain="[('id', 'in', available_journal_ids)]")
+    available_journal_ids = fields.Many2many(
+        comodel_name='account.journal',
+        compute='_compute_available_journal_ids'
+    )
     partner_bank_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account",
         readonly=False, store=True,
         compute='_compute_partner_bank_id',
@@ -81,9 +85,6 @@ class AccountPaymentRegister(models.TransientModel):
         "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
         "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n")
     available_payment_method_line_ids = fields.Many2many('account.payment.method.line', compute='_compute_payment_method_line_fields')
-    hide_payment_method_line = fields.Boolean(
-        compute='_compute_payment_method_line_fields',
-        help="Technical field used to hide the payment method if the selected journal has only one available which is 'manual'")
 
     # == Payment difference fields ==
     payment_difference = fields.Monetary(
@@ -303,7 +304,7 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 partner_bank_id = wizard.line_ids.move_id.mapped('partner_bank_id')
 
-                company_domain = [('company_id', '=', wizard.company_id.id)]
+                company_domain = [('company_id', '=', wizard.company_id.id), ('id', 'in', wizard.available_journal_ids.ids)]
                 bank_domain = [('bank_account_id', '=', partner_bank_id.id), ('type', '=', 'bank')] if len(partner_bank_id) == 1 else None
                 no_bank_domain = [('type', 'in', ('bank', 'cash'))]
 
@@ -320,6 +321,24 @@ class AccountPaymentRegister(models.TransientModel):
                     journal = self.env['account.journal'].search(company_domain + no_bank_domain, limit=1)
 
                 wizard.journal_id = journal
+
+    @api.depends('payment_type')
+    def _compute_available_journal_ids(self):
+        """
+        Get all journals having at least one payment method for inbound/outbound depending on the payment_type.
+        """
+        journals = self.env['account.journal'].search([
+            ('company_id', 'in', self.company_id.ids), ('type', 'in', ('bank', 'cash'))
+        ])
+        for pay in self:
+            if pay.payment_type == 'inbound':
+                pay.available_journal_ids = journals.filtered(
+                    lambda j: j.company_id == pay.company_id and j.inbound_payment_method_line_ids.ids != []
+                )
+            else:
+                pay.available_journal_ids = journals.filtered(
+                    lambda j: j.company_id == pay.company_id and j.outbound_payment_method_line_ids.ids != []
+                )
 
     @api.depends('journal_id')
     def _compute_currency_id(self):
@@ -339,19 +358,18 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('payment_type', 'journal_id')
     def _compute_payment_method_line_fields(self):
         for wizard in self:
-            wizard.available_payment_method_line_ids = wizard.journal_id._get_available_payment_method_lines(wizard.payment_type)
-            if wizard.payment_method_line_id.id not in wizard.available_payment_method_line_ids.ids:
-                # In some cases, we could be linked to a payment method line that has been unlinked from the journal.
-                # In such cases, we want to show it on the payment.
-                wizard.hide_payment_method_line = False
+            if wizard.journal_id:
+                wizard.available_payment_method_line_ids = wizard.journal_id._get_available_payment_method_lines(wizard.payment_type)
             else:
-                wizard.hide_payment_method_line = len(wizard.available_payment_method_line_ids) == 1 \
-                                                  and wizard.available_payment_method_line_ids.code == 'manual'
+                wizard.available_payment_method_line_ids = False
 
     @api.depends('payment_type', 'journal_id')
     def _compute_payment_method_line_id(self):
         for wizard in self:
-            available_payment_method_lines = wizard.journal_id._get_available_payment_method_lines(wizard.payment_type)
+            if wizard.journal_id:
+                available_payment_method_lines = wizard.journal_id._get_available_payment_method_lines(wizard.payment_type)
+            else:
+                available_payment_method_lines = False
 
             # Select the first available one by default.
             if available_payment_method_lines:
