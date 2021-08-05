@@ -61,14 +61,15 @@ class AccountPayment(models.Model):
         "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n")
     available_payment_method_line_ids = fields.Many2many('account.payment.method.line',
         compute='_compute_payment_method_line_fields')
-    hide_payment_method_line = fields.Boolean(
-        compute='_compute_payment_method_line_fields',
-        help="Technical field used to hide the payment method if the selected journal has only one available which is 'manual'")
     payment_method_id = fields.Many2one(
         related='payment_method_line_id.payment_method_id',
         string="Method",
         tracking=True,
         store=True
+    )
+    available_journal_ids = fields.Many2many(
+        comodel_name='account.journal',
+        compute='_compute_available_journal_ids'
     )
 
     # == Synchronized fields with the account.move.lines ==
@@ -406,12 +407,24 @@ class AccountPayment(models.Model):
             to_exclude = self._get_payment_method_codes_to_exclude()
             if to_exclude:
                 pay.available_payment_method_line_ids = pay.available_payment_method_line_ids.filtered(lambda x: x.code not in to_exclude)
-            if pay.payment_method_line_id.id not in pay.available_payment_method_line_ids.ids:
-                # In some cases, we could be linked to a payment method line that has been unlinked from the journal.
-                # In such cases, we want to show it on the payment.
-                pay.hide_payment_method_line = False
+
+    @api.depends('payment_type')
+    def _compute_available_journal_ids(self):
+        """
+        Get all journals having at least one payment method for inbound/outbound depending on the payment_type.
+        """
+        journals = self.env['account.journal'].search([
+            ('company_id', 'in', self.company_id.ids), ('type', 'in', ('bank', 'cash'))
+        ])
+        for pay in self:
+            if pay.payment_type == 'inbound':
+                pay.available_journal_ids = journals.filtered(
+                    lambda j: j.company_id == pay.company_id and j.inbound_payment_method_line_ids.ids != []
+                )
             else:
-                pay.hide_payment_method_line = len(pay.available_payment_method_line_ids) == 1 and pay.available_payment_method_line_ids.code == 'manual'
+                pay.available_journal_ids = journals.filtered(
+                    lambda j: j.company_id == pay.company_id and j.outbound_payment_method_line_ids.ids != []
+                )
 
     def _get_payment_method_codes_to_exclude(self):
         # can be overriden to exclude payment methods based on the payment characteristics

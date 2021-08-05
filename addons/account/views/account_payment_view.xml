@@ -177,7 +177,6 @@
                         <field name="payment_method_code" invisible="1"/>
                         <field name="show_partner_bank_account" invisible="1"/>
                         <field name="require_partner_bank_account" invisible="1"/>
-                        <field name="hide_payment_method_line" invisible="1"/>
                         <field name="available_payment_method_line_ids" invisible="1"/>
                         <field name="suitable_journal_ids" invisible="1"/>
                         <field name="country_code" invisible="1"/>
@@ -186,6 +185,7 @@
                         <field name="reconciled_invoices_type" invisible="1"/>
                         <field name="company_id" invisible="1"/>
                         <field name="paired_internal_transfer_payment_id" invisible="1"/>
+                        <field name="available_journal_ids" invisible="1"/>
 
                         <div class="oe_button_box" name="button_box">
                             <!-- Invoice stat button -->
@@ -263,10 +263,10 @@
                             </group>
                             <group name="group2">
                                 <field name="journal_id"
-                                       domain="[('type', 'in', ('bank', 'cash'))]"
+                                       domain="[('id', 'in', available_journal_ids)]"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="payment_method_line_id" required="1" options="{'no_create': True, 'no_open': True}"
-                                       attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('hide_payment_method_line', '=', True)]}"/>
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 
                                 <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Customer Bank Account"
                                         attrs="{
