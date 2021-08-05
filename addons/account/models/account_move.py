@@ -420,7 +420,6 @@ class AccountMove(models.Model):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
-        print("----- _onchange_partner_id: %s" % self.partner_id.name)
         self = self.with_company(self.journal_id.company_id)
 
         warning = {}
@@ -1053,7 +1052,6 @@ class AccountMove(models.Model):
         :param recompute_all_taxes: Force the computation of taxes. If set to False, the computation will be done
                                     or not depending of the field 'recompute_tax_line' in lines.
         '''
-        print("----- _recompute_dynamic_lines: %s" % self.name)
         for invoice in self:
             # Dispatch lines and pre-compute some aggregated values like taxes.
             for line in invoice.line_ids:
@@ -3567,7 +3565,6 @@ class AccountMoveLine(models.Model):
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
-        print("----- _onchange_product_id: %s" % self.product_id.name)
         for line in self:
             if not line.product_id or line.display_type in ('line_section', 'line_note'):
                 continue
