@@ -6,13 +6,13 @@
                     <thead>
                         <tr>
                             <th class="align-middle"><span>Date</span></th>
-                            <th class="align-middle"><span>Responsible</span></th>
-                            <th class="align-middle"><span>Description</span></th>
+                            <th class="align-middle"><span>Employee</span></th>
                             <th class="align-middle" t-if="show_project"><span>Project</span></th>
                             <th class="align-middle" t-if="show_task"><span>Task</span></th>
+                            <th class="align-middle"><span>Description</span></th>
                             <th class="text-right">
-                                <span t-if="is_uom_day">Time Spent (Days)</span>
-                                <span t-else="">Time Spent (Hours)</span>
+                                <span t-if="is_uom_day">Days Spent</span>
+                                <span t-else="">Hours Spent</span>
                             </th>
                         </tr>
                    </thead>
@@ -25,14 +25,14 @@
                                <span t-field="line.user_id.partner_id.name"/>
                                <span t-if="not line.user_id.partner_id.name" t-field="line.employee_id"/>
                             </td>
-                            <td >
-                                <span t-field="line.name" t-options="{'widget': 'text'}"/>
-                            </td>
                             <td t-if="show_project">
                                 <span t-field="line.project_id.sudo().name"/>
                             </td>
                             <td t-if="show_task">
                                 <t t-if="line.task_id"><span t-field="line.task_id.sudo().name"/></t>
+                            </td>
+                            <td >
+                                <span t-field="line.name" t-options="{'widget': 'text'}"/>
                             </td>
                             <td class="text-right">
                                 <span t-if="is_uom_day" t-esc="line._get_timesheet_time_day()" t-options="{'widget': 'timesheet_uom'}"/>
