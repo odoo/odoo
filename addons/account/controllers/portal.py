@@ -86,12 +86,18 @@ class PortalAccount(CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
 
-        if report_type in ('html', 'pdf', 'text'):
-            return self._show_report(model=invoice_sudo, report_type=report_type, report_ref='account.account_invoices', download=download)
+        preserve_company = invoice_sudo.env.user.company_id
+        invoice_sudo.env.user.company_id = invoice_sudo.company_id
 
-        values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kw)
-        PaymentProcessing.remove_payment_transaction(invoice_sudo.transaction_ids)
-        return request.render("account.portal_invoice_page", values)
+        if report_type in ('html', 'pdf', 'text'):
+            report = self._show_report(model=invoice_sudo, report_type=report_type, report_ref='account.account_invoices', download=download)
+        else:
+            values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kw)
+            PaymentProcessing.remove_payment_transaction(invoice_sudo.transaction_ids)
+            report = request.render("account.portal_invoice_page", values)
+
+        invoice_sudo.env.user.company_id = preserve_company
+        return report
 
     # ------------------------------------------------------------
     # My Home
