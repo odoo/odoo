@@ -1685,12 +1685,11 @@ export class OdooEditor extends EventTarget {
                 if (
                     ev.data.includes(' ') &&
                     selection &&
-                    selection.anchorNode &&
-                    !this.commandBar._active
+                    selection.anchorNode
+                    && (!this.commandBar._active ||
+                        this.commandBar._currentOpenOptions.closeOnSpace !== true)
                 ) {
-                    ev.preventDefault();
                     this._convertUrlInElement(closestElement(selection.anchorNode));
-                    this.execCommand('insertText', ev.data);
                 }
                 this.sanitize();
                 this.historyStep();
@@ -2093,14 +2092,16 @@ export class OdooEditor extends EventTarget {
      * @param {int} length
      */
     _createLinkWithUrlInTextNode(textNode, url, index, length) {
-        setCursor(textNode, index, textNode, index + length);
-        this.document.execCommand('createLink', false, url);
-        const sel = this.document.getSelection();
-        const link = closestElement(sel.anchorNode, 'a');
+        const link = this.document.createElement('a')
+        link.setAttribute('href', url)
         for (const [param, value] of Object.entries(this.options.defaultLinkAttributes)) {
             link.setAttribute(param, `${value}`);
         }
-        sel.collapseToEnd();
+        const range = this.document.createRange()
+        range.setStart(textNode, index)
+        range.setEnd(textNode, index+length)
+        link.appendChild(range.extractContents())
+        range.insertNode(link)
     }
 
     /**
