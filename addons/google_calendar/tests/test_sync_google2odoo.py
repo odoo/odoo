@@ -474,6 +474,11 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'start': {'date': '2020-01-08'},
             'end': {'date': '2020-01-09'},
             'reminders': {'useDefault': True},
+            "attendees": [
+                {
+                    "email": "odoobot@example.com", "state": "accepted",
+                },
+            ],
             'updated': self.now,
         }
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
@@ -512,6 +517,11 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'start': {'date': '2020-01-06'},
             'end': {'date': '2020-01-07'},
             'reminders': {'useDefault': True},
+            "attendees": [
+                {
+                    "email": "odoobot@example.com", "state": "accepted",
+                },
+            ],
             'updated': self.now,
         }
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
@@ -560,6 +570,11 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'start': {'dateTime': '2021-02-15T09:00:00+01:00'}, # 8:00 UTC
             'end': {'dateTime': '2021-02-15-T11:00:00+01:00'},
             'reminders': {'useDefault': True},
+            "attendees": [
+                {
+                    "email": "odoobot@example.com", "state": "accepted",
+                },
+            ],
             'updated': self.now,
         }
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
@@ -605,6 +620,11 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'start': {'dateTime': '2021-02-15T12:00:00+01:00'},  # 11:00 UTC
             'end': {'dateTime': '2021-02-15-T15:00:00+01:00'},
             'reminders': {'useDefault': True},
+            "attendees": [
+                {
+                    "email": "odoobot@example.com", "state": "accepted",
+                },
+            ],
             'updated': self.now,
         }
 
@@ -850,3 +870,64 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'overrides': [], 'useDefault': False},
             'visibility': 'public',
         }, timeout=3)
+
+    @patch_api
+    def test_attendee_recurrence_answer(self):
+        """ Write on a recurrence to update all attendee answers """
+        other_user = new_test_user(self.env, login='calendar-user')
+        google_id = "aaaaaaaaaaa"
+        base_event = self.env['calendar.event'].create({
+            'name': 'coucou',
+            'start': datetime(2021, 2, 15, 7, 0, 0),
+            'stop': datetime(2021, 2, 15, 9, 0, 0),
+            'event_tz': 'Europe/Brussels',
+            'need_sync': False,
+            'partner_ids': [(6, 0, [other_user.partner_id.id])]
+        })
+        recurrence = self.env['calendar.recurrence'].create({
+            'google_id': google_id,
+            'rrule': 'FREQ=WEEKLY;COUNT=3;BYDAY=MO',
+            'need_sync': False,
+            'base_event_id': base_event.id,
+            'calendar_event_ids': [(4, base_event.id)],
+        })
+        recurrence._apply_recurrence()
+        recurrence.calendar_event_ids.attendee_ids.state = 'accepted'
+        values = {
+            'id': google_id,
+            "updated": self.now,
+            'description': '',
+            'attendees': [{'email': 'c.c@example.com', 'responseStatus': 'declined'}],
+            'summary': 'coucou',
+            # 'visibility': 'public',
+            'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=MO'],
+            'reminders': {'useDefault': True},
+            'start': {'dateTime': '2021-02-15T8:00:00+01:00', 'timeZone': 'Europe/Brussels'},
+            'end': {'dateTime': '2021-02-15T10:00:00+01:00', 'timeZone': 'Europe/Brussels'},
+        }
+        self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
+        attendee = recurrence.calendar_event_ids.attendee_ids.mapped('state')
+        self.assertEqual(attendee, ['declined', 'declined', 'declined'], "All events should be declined")
+        self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_recurrence_creation_with_attendee_answer(self):
+        """ Create a recurrence with predefined attendee answers """
+        google_id = "aaaaaaaaaaa"
+        values = {
+            'id': google_id,
+            "updated": self.now,
+            'description': '',
+            'attendees': [{'email': 'c.c@example.com', 'responseStatus': 'declined'}],
+            'summary': 'coucou',
+            # 'visibility': 'public',
+            'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=MO'],
+            'reminders': {'useDefault': True},
+            'start': {'dateTime': '2021-02-15T8:00:00+01:00', 'timeZone': 'Europe/Brussels'},
+            'end': {'dateTime': '2021-02-15T10:00:00+01:00', 'timeZone': 'Europe/Brussels'},
+        }
+        self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
+        recurrence = self.env['calendar.recurrence'].search([('google_id', '=', google_id)])
+        attendee = recurrence.calendar_event_ids.attendee_ids.mapped('state')
+        self.assertEqual(attendee, ['declined', 'declined', 'declined'], "All events should be declined")
+        self.assertGoogleAPINotCalled()

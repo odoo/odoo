@@ -357,5 +357,5 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'stop': datetime(2020, 12, 13, 22),
         })
         self.assertEqual(len(event.attendee_ids), 2)
-        self.assertEqual(event.attendee_ids[0].partner_id, self.partner_demo)
-        self.assertEqual(event.attendee_ids[1].partner_id, self.env.user.partner_id)
+        self.assertTrue(self.partner_demo in event.attendee_ids.mapped('partner_id'))
+        self.assertTrue(self.env.user.partner_id in event.attendee_ids.mapped('partner_id'))

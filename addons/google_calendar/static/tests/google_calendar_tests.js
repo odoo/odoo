@@ -5,22 +5,13 @@ var GoogleCalendarView = require('@calendar/js/calendar_view')[Symbol.for("defau
 var testUtils = require('web.test_utils');
 const session = require('web.session');
 
-const { patchWithCleanup } = require("@web/../tests/helpers/utils");
-
 var createCalendarView = testUtils.createCalendarView;
 
 var initialDate = new Date("2016-12-12T08:00:00Z");
 
-function _preventScroll(ev) {
-    ev.stopImmediatePropagation();
-}
 
 QUnit.module('Google Calendar', {
     beforeEach: function () {
-    window.addEventListener('scroll', _preventScroll, true);
-    patchWithCleanup(session, {
-            uid: -1
-        });
         this.data = {
             'calendar.event': {
                 fields: {

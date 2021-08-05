@@ -198,7 +198,7 @@ class RecurrenceRule(models.Model):
         ranges_to_create = (event_range for event_range in ranges if event_range not in existing_ranges)
         return synced_events, ranges_to_create
 
-    def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False):
+    def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):
         """Create missing events in the recurrence and detach events which no longer
         follow the recurrence rules.
         :return: detached events
@@ -225,6 +225,8 @@ class RecurrenceRule(models.Model):
                 value = dict(base_values, start=start, stop=stop, recurrence_id=recurrence.id, follow_recurrence=True)
                 if (recurrence.id, start, stop) in specific_values_creation:
                     value.update(specific_values_creation[(recurrence.id, start, stop)])
+                if generic_values_creation and recurrence.id in generic_values_creation:
+                    value.update(generic_values_creation[recurrence.id])
                 values += [value]
             event_vals += values
 

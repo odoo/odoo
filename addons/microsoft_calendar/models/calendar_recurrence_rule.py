@@ -28,9 +28,9 @@ class RecurrenceRule(models.Model):
             values.update({'need_sync_m': False})
             recurrence.write(values)
 
-    def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False):
+    def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):
         events = self.filtered('need_sync_m').calendar_event_ids
-        detached_events = super()._apply_recurrence(specific_values_creation, no_send_edit)
+        detached_events = super()._apply_recurrence(specific_values_creation, no_send_edit, generic_values_creation)
 
         microsoft_service = MicrosoftCalendarService(self.env['microsoft.service'])
 

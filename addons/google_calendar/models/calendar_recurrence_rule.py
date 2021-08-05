@@ -3,6 +3,7 @@
 
 import re
 from odoo import api, models
+from odoo.tools import email_normalize
 
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 
@@ -12,9 +13,10 @@ class RecurrenceRule(models.Model):
     _inherit = ['calendar.recurrence', 'google.calendar.sync']
 
 
-    def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False):
+    def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):
         events = self.filtered('need_sync').calendar_event_ids
-        detached_events = super()._apply_recurrence(specific_values_creation, no_send_edit)
+        detached_events = super()._apply_recurrence(specific_values_creation, no_send_edit,
+                                                    generic_values_creation)
 
         google_service = GoogleCalendarService(self.env['google.service'])
 
@@ -84,6 +86,36 @@ class RecurrenceRule(models.Model):
 
         base_event_time_fields = ['start', 'stop', 'allday']
         new_event_values = self.env["calendar.event"]._odoo_values(gevent)
+        # We update the attendee status for all events in the recurrence
+        google_attendees = gevent.attendees or []
+        emails = [a.get('email') for a in google_attendees]
+        partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True)
+        existing_attendees = self.calendar_event_ids.attendee_ids
+        for attendee in zip(emails, partners, google_attendees):
+            email = attendee[0]
+            if email in existing_attendees.mapped('email'):
+                # Update existing attendees
+                existing_attendees.filtered(lambda att: att.email == email).write({'state': attendee[2].get('responseStatus')})
+            else:
+                # Create new attendees
+                if attendee[2].get('self'):
+                    partner = self.env.user.partner_id
+                else:
+                    partner = attendee[1]
+                self.calendar_event_ids.write({'attendee_ids': [(0, 0, {'state': attendee[2].get('responseStatus'), 'partner_id': partner.id})]})
+                if attendee[2].get('displayName') and not partner.name:
+                    partner.name = attendee[2].get('displayName')
+
+        unlinked_attendee = self.env['calendar.attendee']
+        for odoo_attendee_email in existing_attendees.mapped('email'):
+            # Remove old attendees
+            if email_normalize(odoo_attendee_email) not in emails:
+                attendee = existing_attendees.filtered(lambda att: att.email == email_normalize(odoo_attendee_email))
+                unlinked_attendee |= attendee
+                self.calendar_event_ids.write({'partner_ids': [(3, attendee.partner_id.id)]})
+        unlinked_attendee.unlink()
+
+        # Update the recurrence values
         old_event_values = self.base_event_id and self.base_event_id.read(base_event_time_fields)[0]
         if old_event_values and any(new_event_values[key] != old_event_values[key] for key in base_event_time_fields):
             # we need to recreate the recurrence, time_fields were modified.
@@ -118,6 +150,7 @@ class RecurrenceRule(models.Model):
             detached_events.unlink()
 
     def _create_from_google(self, gevents, vals_list):
+        attendee_values = {}
         for gevent, vals in zip(gevents, vals_list):
             base_values = dict(
                 self.env['calendar.event']._odoo_values(gevent),  # FIXME default reminders
@@ -136,8 +169,14 @@ class RecurrenceRule(models.Model):
             vals['calendar_event_ids'] = [(4, base_event.id)]
             # event_tz is written on event in Google but on recurrence in Odoo
             vals['event_tz'] = gevent.start.get('timeZone')
+            attendee_values[base_event.id] = {'attendee_ids': base_values.get('attendee_ids')}
+
         recurrence = super(RecurrenceRule, self.with_context(dont_notify=True))._create_from_google(gevents, vals_list)
-        recurrence.with_context(dont_notify=True)._apply_recurrence()
+        generic_values_creation = {
+            rec.id: attendee_values[rec.base_event_id.id]
+            for rec in recurrence if attendee_values.get(rec.base_event_id.id)
+        }
+        recurrence.with_context(dont_notify=True)._apply_recurrence(generic_values_creation=generic_values_creation)
         return recurrence
 
     def _get_sync_domain(self):
