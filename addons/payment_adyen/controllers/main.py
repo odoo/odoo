@@ -252,33 +252,32 @@ class AdyenController(http.Controller):
 
             # Check the source and integrity of the notification
             received_signature = notification_data.get('additionalData', {}).get('hmacSignature')
-            acquirer_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
-                'adyen', notification_data
-            ).acquirer_id  # Find the acquirer based on the transaction
-            if not self._verify_notification_signature(
-                received_signature, notification_data, acquirer_sudo.adyen_hmac_key
-            ):
-                continue
-
-            # Check whether the event of the notification succeeded
-            _logger.info("notification received:\n%s", pprint.pformat(notification_data))
-            if notification_data['success'] != 'true':
-                continue  # Don't handle failed events
-
-            # Reshape the notification data for parsing
-            event_code = notification_data['eventCode']
-            if event_code == 'AUTHORISATION':
-                notification_data['resultCode'] = 'Authorised'
-            elif event_code == 'CANCELLATION':
-                notification_data['resultCode'] = 'Cancelled'
-            else:
-                continue  # Don't handle unsupported event codes
-
-            # Handle the notification data as a regular feedback
+            PaymentTransaction = request.env['payment.transaction']
             try:
-                request.env['payment.transaction'].sudo()._handle_feedback_data(
+                acquirer_sudo = PaymentTransaction.sudo()._get_tx_from_feedback_data(
                     'adyen', notification_data
-                )
+                ).acquirer_id  # Find the acquirer based on the transaction
+                if not self._verify_notification_signature(
+                    received_signature, notification_data, acquirer_sudo.adyen_hmac_key
+                ):
+                    continue
+
+                # Check whether the event of the notification succeeded
+                _logger.info("notification received:\n%s", pprint.pformat(notification_data))
+                if notification_data['success'] != 'true':
+                    continue  # Don't handle failed events
+
+                # Reshape the notification data for parsing
+                event_code = notification_data['eventCode']
+                if event_code == 'AUTHORISATION':
+                    notification_data['resultCode'] = 'Authorised'
+                elif event_code == 'CANCELLATION':
+                    notification_data['resultCode'] = 'Cancelled'
+                else:
+                    continue  # Don't handle unsupported event codes
+
+                # Handle the notification data as a regular feedback
+                PaymentTransaction._handle_feedback_data('adyen', notification_data)
             except ValidationError:  # Acknowledge the notification to avoid getting spammed
                 _logger.exception("unable to handle the notification data; skipping to acknowledge")
 
