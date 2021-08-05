@@ -57,7 +57,7 @@ class Attendee(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
-            if values.get('partner_id') == self.env.user.partner_id.id:
+            if not values.get('state') and values.get('partner_id') == self.env.user.partner_id.id:
                 values['state'] = 'accepted'
             if not values.get("email") and values.get("common_name"):
                 common_nameval = values.get("common_name").split(':')
