@@ -32,33 +32,39 @@ class MailPluginController(http.Controller):
         it will try to find a company using IAP, if a company is found
         the enriched company will then be created in the database
         """
-        response = {}
 
-        partner = request.env['res.partner'].browse(partner_id)
+        partner = request.env['res.partner'].browse(partner_id).exists()
+
+        if not partner:
+            return {'error': _("This partner does not exist")}
 
         if partner.parent_id:
             return {'error': _("The partner already has a company related to him")}
 
         normalized_email = partner.email_normalized
         if not normalized_email:
-            response = {'error': _('Contact has no valid email')}
-            return response
+            return {'error': _('Contact has no valid email')}
 
         company, enrichment_info = self._create_company_from_iap(normalized_email)
 
-        response['enrichment_info'] = enrichment_info
-        response['company'] = self._get_company_data(company)
         if company:
             partner.write({'parent_id': company})
 
-        return response
+        return {
+            'enrichment_info': enrichment_info,
+            'company': self._get_company_data(company),
+        }
 
     @http.route('/mail_plugin/partner/enrich_and_update_company', type='json', auth='outlook', cors='*')
     def res_partner_enrich_and_update_company(self, partner_id):
         """
         Enriches an existing company using IAP
         """
-        partner = request.env['res.partner'].browse(partner_id)
+        partner = request.env['res.partner'].browse(partner_id).exists()
+
+        if not partner:
+            return {'error': _("This partner does not exist")}
+
         if not partner.is_company:
             return {'error': 'Contact must be a company'}
 
