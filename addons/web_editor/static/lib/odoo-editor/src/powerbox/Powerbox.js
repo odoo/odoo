@@ -170,7 +170,7 @@ export class Powerbox {
             this.show();
             openOnKeyupTarget.removeEventListener('keyup', showOnceOnKeyup, true);
             initialTarget = openOnKeyupTarget;
-            this._initialValue = openOnKeyupTarget.innerText;
+            this._initialValue = openOnKeyupTarget.textContent;
         };
         openOnKeyupTarget.addEventListener('keyup', showOnceOnKeyup, true);
 
@@ -188,7 +188,7 @@ export class Powerbox {
             if (!initialTarget) return;
             const diff = patienceDiff(
                 this._initialValue.split(''),
-                initialTarget.innerText.split(''),
+                initialTarget.textContent.split(''),
                 true,
             );
             this._lastText = diff.bMove.join('');
@@ -284,7 +284,7 @@ export class Powerbox {
         this._currentOpenOptions = openOptions;
         this._initialValue = (
             this._currentOpenOptions.openOnKeyupTarget || this.options.editable
-        ).innerText;
+        ).textContent;
         this._currentFilteredCommands = this._currentOpenOptions.commands;
         this.render(this._currentOpenOptions.commands);
     }
