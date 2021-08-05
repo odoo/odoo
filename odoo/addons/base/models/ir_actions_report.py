@@ -825,9 +825,9 @@ class IrActionsReport(models.Model):
                 "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname.") %  self.name)
 
         pdf_content = self._run_wkhtmltopdf(
-            bodies,
-            header=header,
-            footer=footer,
+            map(lambda b: b.encode(), bodies),
+            header=header.encode(),
+            footer=footer.encode(),
             landscape=context.get('landscape'),
             specific_paperformat_args=specific_paperformat_args,
             set_viewport_size=context.get('set_viewport_size'),
