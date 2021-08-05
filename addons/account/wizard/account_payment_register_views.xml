@@ -22,7 +22,7 @@
 
                     <field name="show_partner_bank_account" invisible="1"/>
                     <field name="require_partner_bank_account" invisible="1"/>
-                    <field name="hide_payment_method_line" invisible="1"/>
+                    <field name="available_journal_ids" invisible="1"/>
                     <field name="available_payment_method_line_ids" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
 
@@ -30,8 +30,7 @@
                         <group name="group1">
                             <field name="journal_id" options="{'no_open': True, 'no_create': True}" required="1"/>
                             <field name="payment_method_line_id"
-                                   required="1"  options="{'no_create': True, 'no_open': True}"
-                                   attrs="{'invisible': [('hide_payment_method_line', '=', True)]}"/>
+                                   required="1"  options="{'no_create': True, 'no_open': True}"/>
                             <field name="partner_bank_id"
                                    attrs="{'invisible': ['|', ('show_partner_bank_account', '=', False), '|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)],
                                            'required': [('require_partner_bank_account', '=', True), ('can_edit_wizard', '=', True), '|', ('can_group_payments', '=', False), ('group_payment', '=', False)]}"/>
