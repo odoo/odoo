@@ -280,14 +280,16 @@
             var require = makeRequire(job);
 
             var jobExec;
+            function onError(e) {
+                job.error = e;
+                console.error(`Error while loading ${job.name}: ${e.message}`, e);
+            }
             var def = new Promise(function (resolve) {
                 try {
                     jobExec = job.factory.call(null, require);
                     jobs.splice(jobs.indexOf(job), 1);
                 } catch (e) {
-                    job.error = e;
-                    console.error(e);
-                    console.error(`Error while loading ${job.name}: ${e.message}`);
+                    onError(e);
                 }
                 if (!job.error) {
                     Promise.resolve(jobExec)
@@ -299,6 +301,11 @@
                         .guardedCatch(function (e) {
                             job.rejected = e || true;
                             jobs.push(job);
+                        })
+                        .catch(function (e) {
+                            if (e instanceof Error) {
+                                onError(e);
+                            }
                             resolve();
                         });
                 } else {
