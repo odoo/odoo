@@ -219,7 +219,7 @@ class AccountEdiFormat(models.Model):
             elif state == 'notificaEsito':
                 outcome = response_tree.find('Esito').text
                 if outcome == 'EC01':
-                    to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id}
+                    to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
                 else:  # ECO2
                     to_return[invoice] = {'error': _('The invoice was refused by the addressee.'), 'blocking_level': 'error'}
             elif state == 'NotificaDecorrenzaTermini':
