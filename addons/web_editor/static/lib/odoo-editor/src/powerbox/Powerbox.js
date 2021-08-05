@@ -144,7 +144,7 @@ export class Powerbox {
                 this.show();
                 event.target.removeEventListener('keyup', showOnceOnKeyup, true);
                 initialTarget = event.target;
-                oldValue = event.target.innerText;
+                oldValue = event.target.textContent;
             };
             event.target.addEventListener('keyup', showOnceOnKeyup, true);
             this._active = true;
@@ -162,7 +162,7 @@ export class Powerbox {
                 if (!initialTarget) return;
                 const diff = patienceDiff(
                     oldValue.split(''),
-                    initialTarget.innerText.split(''),
+                    initialTarget.textContent.split(''),
                     true,
                 );
                 this._lastText = diff.bMove.join('').trim();
