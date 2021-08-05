@@ -338,6 +338,7 @@
             'mail/static/src/models/attachment/attachment_tests.js',
             'mail/static/src/models/message/message_tests.js',
             'mail/static/src/models/messaging/messaging_tests.js',
+            'mail/static/src/models/messaging_menu/tests/messaging_menu_tests.js',
             'mail/static/src/models/thread/thread_tests.js',
             'mail/static/src/utils/throttle/throttle_tests.js',
             'mail/static/src/utils/timer/timer_tests.js',
