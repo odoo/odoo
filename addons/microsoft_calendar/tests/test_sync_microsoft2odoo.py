@@ -24,6 +24,25 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
             {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"DwAAABYAAABlLa4RUBXJToExnebpwea2AAALKrjF"', 'seriesMasterId': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA', 'type': 'occurrence', 'id': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoBUQAICADX774WtQAAAEYAAAJAcu19N72jSr9Rp1mE2xWABwBlLa4RUBXJToExnebpwea2AAACAQ0AAABlLa4RUBXJToExnebpwea2AAAACyy0xAAAABA=', 'start': {'dateTime': '2020-05-04T14:30:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2020-05-04T16:00:00.0000000', 'timeZone': 'UTC'}},
             {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"DwAAABYAAABlLa4RUBXJToExnebpwea2AAALKrjF"', 'seriesMasterId': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA', 'type': 'occurrence', 'id': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoBUQAICADX8IdBHsAARgAAAkBy7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAAEA==', 'start': {'dateTime': '2020-05-05T14:30:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2020-05-05T16:00:00.0000000', 'timeZone': 'UTC'}}
         ]
+        self.single_event = [
+            {
+                '@odata.type': '#microsoft.graph.event',
+                '@odata.etag': 'W/"AAAAA"',
+                'type': 'singleInstance',
+                'id': "CCCCC",
+                'start': {
+                    'dateTime': '2020-05-05T14:30:00.0000000',
+                    'timeZone': 'UTC'
+                },
+                'end': {
+                    'dateTime': '2020-05-05T16:00:00.0000000',
+                    'timeZone': 'UTC'
+                },
+                'location': {
+                    'displayName': "a meeting room at Odoo"
+                }
+            }
+        ]
 
         self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(values))
 
@@ -275,3 +294,46 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
         self.assertEqual(recurrent_event.calendar_event_ids[0].stop, datetime(2021, 7, 15, 15, 30))
         self.assertEqual(recurrent_event.calendar_event_ids[1].start, datetime(2021, 7, 17, 15, 00))
         self.assertEqual(recurrent_event.calendar_event_ids[1].stop, datetime(2021, 7, 17, 15, 30))
+
+    def test_use_classic_location(self):
+        ms_event = self.single_event
+
+        self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(ms_event))
+
+        event = self.env['calendar.event'].search([("microsoft_id", "=", ms_event[0]["id"])])
+        self.assertEqual(event.location, ms_event[0]["location"]["displayName"])
+
+    def test_use_url_location(self):
+        ms_event = self.single_event
+        ms_event[0]["location"]["displayName"] = "https://mylocation.com/meeting-room"
+
+        self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(ms_event))
+
+        event = self.env['calendar.event'].search([("microsoft_id", "=", ms_event[0]["id"])])
+        self.assertEqual(event.location, ms_event[0]["location"]["displayName"])
+
+    def test_use_specific_virtual_location(self):
+        """
+        If the location of the Outlook event is a specific virtual location (such as a video Teams meeting),
+        use it as videocall location.
+        """
+        ms_event = self.single_event
+        ms_event[0]["location"]["displayName"] = "https://teams.microsoft.com/l/meeting/1234"
+
+        self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(ms_event))
+
+        event = self.env['calendar.event'].search([("microsoft_id", "=", ms_event[0]["id"])])
+        self.assertEqual(event.location, False)
+        self.assertEqual(event.videocall_location, ms_event[0]["location"]["displayName"])
+
+    def test_outlook_event_has_online_meeting_url(self):
+        ms_event = self.single_event
+        ms_event[0].update({
+            'isOnlineMeeting': True,
+            'onlineMeeting': {'joinUrl': 'https://video-meeting.com/1234'}
+        })
+
+        self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(ms_event))
+
+        event = self.env['calendar.event'].search([("microsoft_id", "=", ms_event[0]["id"])])
+        self.assertEqual(event.videocall_location, ms_event[0]["onlineMeeting"]["joinUrl"])
