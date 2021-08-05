@@ -346,3 +346,16 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'start': fields.Datetime.to_string(now + timedelta(hours=5)),
             'stop': fields.Datetime.to_string(now + timedelta(hours=6)),
         })
+
+    def test_meeting_creation_from_partner_form(self):
+        """ When going from a partner to the Calendar and adding a meeting, both current user and partner
+         should be attendees of the event """
+        calendar_action = self.partner_demo.schedule_meeting()
+        event = self.env['calendar.event'].with_context(calendar_action['context']).create({
+            'name': 'Super Meeting',
+            'start': datetime(2020, 12, 13, 17),
+            'stop': datetime(2020, 12, 13, 22),
+        })
+        self.assertEqual(len(event.attendee_ids), 2)
+        self.assertEqual(event.attendee_ids[0].partner_id, self.partner_demo)
+        self.assertEqual(event.attendee_ids[1].partner_id, self.env.user.partner_id)
