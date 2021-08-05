@@ -61,7 +61,7 @@ class ResCompany(models.Model):
         for company in self:
             company = company.with_company(company)
             results += [{
-                'name': _('Internal'),
+                'name': _('Internal - %s', company.name),
                 'allow_timesheets': True,
                 'company_id': company.id,
                 'type_ids': type_ids,
