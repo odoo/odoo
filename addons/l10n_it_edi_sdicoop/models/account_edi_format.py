@@ -196,6 +196,9 @@ class AccountEdiFormat(models.Model):
                 proxy_acks.append(id_transaction)
                 continue
             elif state == 'not_found':
+                # state was previously fetched.
+                if invoice._get_edi_document(self).error:
+                    continue
                 # Invoice does not exist on proxy. Either it does not belong to this proxy_user or it was not created correctly when
                 # it was sent to the proxy.
                 to_return[invoice] = {'error': _('You are not allowed to check the status of this invoice.'), 'blocking_level': 'error'}
