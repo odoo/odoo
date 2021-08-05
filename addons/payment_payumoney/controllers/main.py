@@ -12,14 +12,22 @@ _logger = logging.getLogger(__name__)
 class PayUMoneyController(http.Controller):
     _return_url = '/payment/payumoney/return'
 
-    @http.route(_return_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False, save_session=False)
+    @http.route(
+        _return_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False,
+        save_session=False
+    )
     def payumoney_return(self, **data):
-        """ PayUmoney.
-        The session cookie created by Odoo has not the attribute SameSite. Most of browsers will force this attribute
-        with the value 'Lax'. After the payment, PayUMoney will perform a POST request on this route. For all these reasons,
-        the cookie won't be added to the request. As a result, if we want to save the session, the server will create
-        a new session cookie. Therefore, the previous session and all related information will be lost, so it will lead
-        to undesirable behaviors. This is the reason why `save_session=False` is needed.
+        """ Process the data returned by PayUmoney after redirection.
+
+        The route is flagged with `save_session=False` to prevent Odoo from assigning a new session
+        to the user if they are redirected to this route with a POST request. Indeed, as the session
+        cookie is created without a `SameSite` attribute, some browsers that don't implement the
+        recommended default `SameSite=Lax` behavior will not include the cookie in the redirection
+        request from the payment provider to Odoo. As the redirection to the '/payment/status' page
+        will satisfy any specification of the `SameSite` attribute, the session of the user will be
+        retrieved and with it the transaction which will be immediately post-processed.
+
+        :param dict data: The feedback data to process
         """
         _logger.info("entering handle_feedback_data with data:\n%s", pprint.pformat(data))
         request.env['payment.transaction'].sudo()._handle_feedback_data('payumoney', data)
