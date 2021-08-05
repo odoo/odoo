@@ -2164,6 +2164,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     value = value[0]
                 elif ftype in ('date', 'datetime'):
                     locale = get_lang(self.env).code
+
+                    # For ISO 8601 week numbering, we select a locale with monday as the first day of the week
+                    # https://en.wikipedia.org/wiki/ISO_8601#Week_dates
+                    # https://en.wikipedia.org/wiki/ISO_week_date
+                    if gb['groupby'] == 'date:week':
+                        locale = 'fr_BE'
+
                     fmt = DEFAULT_SERVER_DATETIME_FORMAT if ftype == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
                     tzinfo = None
                     range_start = value
