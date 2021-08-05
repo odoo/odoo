@@ -211,7 +211,7 @@
             'mail/static/src/utils/throttle/throttle.js',
             'mail/static/src/utils/timer/timer.js',
             'mail/static/src/utils/utils.js',
-            'mail/static/src/webclient/commands/command_category.js',
+            'mail/static/src/webclient/commands/*.js',
             'mail/static/src/widgets/discuss/discuss.js',
             'mail/static/src/widgets/form_renderer/form_renderer.js',
             'mail/static/src/widgets/messaging_menu/messaging_menu.js',

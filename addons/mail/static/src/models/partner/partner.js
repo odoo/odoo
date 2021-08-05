@@ -5,8 +5,6 @@ import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_
 import { insert, link, unlinkAll } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
-import utils from 'web.utils';
-
 function factory(dependencies) {
 
     class Partner extends dependencies['mail.model'] {
@@ -117,38 +115,32 @@ function factory(dependencies) {
          * @param {string} param0.keyword
          * @param {integer} [param0.limit=10]
          */
-        static async imSearch({ callback, keyword, limit = 10 }) {
+        static searchChatsToOpen(searchTerm, limit = 10) {
             // prefetched partners
-            let partners = [];
-            const cleanedSearchTerm = cleanSearchTerm(keyword);
+            const cleanedSearchTerm = cleanSearchTerm(owl.utils.escape(searchTerm));
             const currentPartner = this.env.messaging.currentPartner;
-            for (const partner of this.all(partner => partner.active)) {
-                if (partners.length < limit) {
-                    if (
-                        partner !== currentPartner &&
-                        partner.name &&
-                        partner.user &&
-                        cleanSearchTerm(partner.name).includes(cleanedSearchTerm)
-                    ) {
-                        partners.push(partner);
-                    }
-                }
-            }
-            if (!partners.length) {
-                const partnersData = await this.env.services.rpc(
-                    {
-                        model: 'res.partner',
-                        method: 'im_search',
-                        args: [keyword, limit]
-                    },
-                    { shadow: true }
+            const partners = this.all(partner => partner.active)
+                .filter(partner =>
+                    partner !== currentPartner &&
+                    partner.name &&
+                    partner.user &&
+                    cleanSearchTerm(partner.name).includes(cleanedSearchTerm)
                 );
-                const newPartners = this.insert(partnersData.map(
-                    partnerData => this.convertData(partnerData)
-                ));
-                partners.push(...newPartners);
-            }
-            callback(partners);
+            return partners.slice(0, limit);
+        }
+
+        static async fetchChatsToOpen(searchTerm, limit = 10) {
+            const partnersData = await this.env.services.rpc(
+                {
+                    model: 'res.partner',
+                    method: 'im_search',
+                    args: [searchTerm, limit]
+                },
+                { shadow: true }
+            );
+            this.insert(partnersData.map(
+                partnerData => this.convertData(partnerData)
+            ));
         }
 
         /**

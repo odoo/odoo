@@ -187,21 +187,19 @@ export class MessagingMenu extends Component {
      * @param {function} res
      */
     _onMobileNewMessageInputSource(req, res) {
-        const value = _.escape(req.term);
-        this.env.models['mail.partner'].imSearch({
-            callback: partners => {
-                const suggestions = partners.map(partner => {
-                    return {
-                        id: partner.id,
-                        value: partner.nameOrDisplayName,
-                        label: partner.nameOrDisplayName,
-                    };
-                });
-                res(_.sortBy(suggestions, 'label'));
-            },
-            keyword: value,
-            limit: 10,
-        });
+        const searchTerm = req.term;
+        let partners = this.env.models['mail.partner'].searchChatsToOpen(searchTerm, 10)
+        if (!partners.length) {
+            await env.models["mail.partner"].fetchChatsToOpen(options.searchValue, 10);
+            partners = env.models["mail.partner"].searchChatsToOpen(options.searchValue, 10);
+        }
+        res(partners.map(partner => {
+            return {
+                id: partner.id,
+                value: partner.nameOrDisplayName,
+                label: partner.nameOrDisplayName,
+            };
+        }));
     }
 
     /**

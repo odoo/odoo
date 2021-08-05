@@ -20,6 +20,10 @@ function match(pattern, str) {
     pattern = pattern.toLowerCase();
     str = str.toLowerCase();
 
+    // if (pattern === "") {
+    //     return 1;
+    // }
+
     for (let i = 0; i < len; i++) {
         if (str[i] === pattern[patternIndex]) {
             patternIndex++;

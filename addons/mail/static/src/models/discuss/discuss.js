@@ -78,27 +78,13 @@ function factory(dependencies) {
          * @param {function} res
          */
         async handleAddChannelAutocompleteSource(req, res) {
-            const value = req.term;
-            const escapedValue = owl.utils.escape(value);
-            this.update({ addingChannelValue: value });
-            const domain = [
-                ['channel_type', '=', 'channel'],
-                ['name', 'ilike', value],
-            ];
-            const fields = ['channel_type', 'name', 'public', 'uuid'];
-            const result = await this.async(() => this.env.services.rpc({
-                model: "mail.channel",
-                method: "search_read",
-                kwargs: {
-                    domain,
-                    fields,
-                },
-            }));
-            const items = result.map(data => {
-                let escapedName = owl.utils.escape(data.name);
-                return Object.assign(data, {
+            const searchTerm = owl.utils.escape(req.term);
+            const threads = this.env.models["mail.thread"].searchChatsToOpen(searchTerm, 10)
+            const items = threads.map((thread) => {
+                let escapedName = owl.utils.escape(thread.name);
+                return Object.assign(thread, {
                     label: escapedName,
-                    value: escapedName
+                    value: escapedName,
                 });
             });
             // XDU FIXME could use a component but be careful with owl's
@@ -106,16 +92,16 @@ function factory(dependencies) {
             items.push({
                 label: _.str.sprintf(
                     `<strong>${this.env._t('Create %s')}</strong>`,
-                    `<em><span class="fa fa-hashtag"/>${escapedValue}</em>`,
+                    `<em><span class="fa fa-hashtag"/>${searchTerm}</em>`,
                 ),
-                escapedValue,
+                searchTerm,
                 special: 'public'
             }, {
                 label: _.str.sprintf(
                     `<strong>${this.env._t('Create %s')}</strong>`,
-                    `<em><span class="fa fa-lock"/>${escapedValue}</em>`,
+                    `<em><span class="fa fa-lock"/>${searchTerm}</em>`,
                 ),
-                escapedValue,
+                searchTerm,
                 special: 'private'
             });
             res(items);
@@ -138,21 +124,15 @@ function factory(dependencies) {
          * @param {function} res
          */
         handleAddChatAutocompleteSource(req, res) {
-            const value = owl.utils.escape(req.term);
-            this.env.models['mail.partner'].imSearch({
-                callback: partners => {
-                    const suggestions = partners.map(partner => {
-                        return {
-                            id: partner.id,
-                            value: partner.nameOrDisplayName,
-                            label: partner.nameOrDisplayName,
-                        };
-                    });
-                    res(_.sortBy(suggestions, 'label'));
-                },
-                keyword: value,
-                limit: 10,
-            });
+            const searchTerm = owl.utils.escape(req.term);
+            const partners = this.env.models['mail.partner'].searchChatsToOpen(searchTerm, 10)
+            res(partners.map(partner => {
+                return {
+                    id: partner.id,
+                    value: partner.nameOrDisplayName,
+                    label: partner.nameOrDisplayName,
+                };
+            }));
         }
 
         /**

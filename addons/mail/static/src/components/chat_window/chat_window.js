@@ -197,21 +197,20 @@ export class ChatWindow extends Component {
      * @param {string} req.term
      * @param {function} res
      */
-    _onAutocompleteSource(req, res) {
-        this.env.models['mail.partner'].imSearch({
-            callback: (partners) => {
-                const suggestions = partners.map(partner => {
-                    return {
-                        id: partner.id,
-                        value: partner.nameOrDisplayName,
-                        label: partner.nameOrDisplayName,
-                    };
-                });
-                res(_.sortBy(suggestions, 'label'));
-            },
-            keyword: _.escape(req.term),
-            limit: 10,
-        });
+    async _onAutocompleteSource(req, res) {
+        const searchTerm = req.term;
+        let partners = this.env.models['mail.partner'].searchChatsToOpen(searchTerm, 10)
+        if (!partners.length) {
+                await this.env.models['mail.partner'].fetchChatsToOpen(searchTerm, 10)
+            partners = this.env.models['mail.partner'].searchChatsToOpen(searchTerm, 10)
+        }
+        res(partners.map(partner => {
+            return {
+                id: partner.id,
+                value: partner.nameOrDisplayName,
+                label: partner.nameOrDisplayName,
+            };
+        }));
     }
 
     /**

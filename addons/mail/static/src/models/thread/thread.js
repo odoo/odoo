@@ -596,7 +596,7 @@ function factory(dependencies) {
          *  result in the context of given thread
          * @returns {[mail.threads[], mail.threads[]]}
          */
-        static searchSuggestions(searchTerm, { thread } = {}) {
+        static searchSuggestions(searchTerm, { limit = 10 , thread }) {
             let threads;
             if (thread && thread.model === 'mail.channel' && thread.public !== 'public') {
                 // Only return the current channel when in the context of a
@@ -608,14 +608,36 @@ function factory(dependencies) {
             } else {
                 threads = this.env.models['mail.thread'].all();
             }
-            const cleanedSearchTerm = cleanSearchTerm(searchTerm);
-            return [threads.filter(thread =>
+            const cleanedSearchTerm = cleanSearchTerm(owl.utils.escape(searchTerm));
+            threads = threads.filter(thread =>
                 !thread.isTemporary &&
                 thread.model === 'mail.channel' &&
                 thread.channel_type === 'channel' &&
                 thread.displayName &&
                 cleanSearchTerm(thread.displayName).includes(cleanedSearchTerm)
-            )];
+            );
+
+            return [threads.slice(0,limit)];
+        }
+
+        static async fetchChannelsToOpen(searchTerm, limit = 10) {
+            const domain = [
+                ['channel_type', '=', 'channel'],
+                ['name', 'ilike', searchTerm],
+            ];
+            const fields = ['channel_type', 'name'];
+            let channelsData = await this.env.services.rpc({
+                model: "mail.channel",
+                method: "search_read",
+                kwargs: {
+                    domain,
+                    fields,
+                    limit,
+                },
+            });
+            this.insert(channelsData.map(
+                channelData => this.convertData(channelData)
+            ));
         }
 
         /**
