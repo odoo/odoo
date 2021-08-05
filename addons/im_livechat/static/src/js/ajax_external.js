@@ -8,5 +8,5 @@ import ajax from 'web.ajax';
   * As we're not in an Odoo website context, the calls will not work, and we avoid a 404 request.
   */
 ajax.loadJS = function (url) {
-    console.warn('Tried to load the following script on an external website: ' + url);
+    console.log('Tried to load the following script on an external website: ' + url);
 };
