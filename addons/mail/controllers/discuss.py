@@ -49,12 +49,12 @@ class DiscussController(http.Controller):
         follower = request.env['mail.followers'].sudo().browse(follower_id)
         follower.ensure_one()
         request.env[follower.res_model].check_access_rights("read")
-        request.env[follower.res_model].browse(follower.res_id).check_access_rule("read")
+        record = request.env[follower.res_model].browse(follower.res_id)
+        record.check_access_rule("read")
 
         # find current model subtypes, add them to a dictionary
-        subtypes = request.env['mail.message.subtype'].search([
-            '&', ('hidden', '=', False),
-            '|', ('res_model', '=', follower.res_model), ('res_model', '=', False)])
+        subtypes = record._mail_get_message_subtypes()
+
         followed_subtypes_ids = set(follower.subtype_ids.ids)
         subtypes_list = [{
             'name': subtype.name,
