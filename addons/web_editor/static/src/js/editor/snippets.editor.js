@@ -3096,7 +3096,7 @@ var SnippetsMenu = Widget.extend({
     },
     /**
      * Enable loading effects
-     * 
+     *
      * @private
      */
     _onEnableLoadingEffect: function () {
@@ -3104,7 +3104,7 @@ var SnippetsMenu = Widget.extend({
     },
     /**
      * Disable loading effects and cancel the one displayed
-     * 
+     *
      * @private
      */
     _onDisableLoadingEffect: function () {
