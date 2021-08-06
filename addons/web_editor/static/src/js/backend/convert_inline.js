@@ -24,7 +24,7 @@ function getMatchedCSSRules(a) {
             try {
                 rules = sheets[i].rules || sheets[i].cssRules;
             } catch (e) {
-                console.warn("Can't read the css rules of: " + sheets[i].href, e);
+                console.log("Can't read the css rules of: " + sheets[i].href, e);
                 continue;
             }
             if (rules) {
