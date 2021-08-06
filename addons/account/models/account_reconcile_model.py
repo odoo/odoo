@@ -346,8 +346,11 @@ class AccountReconcileModel(models.Model):
                 match = re.search(line.amount_string, st_line.payment_ref)
                 if match:
                     sign = 1 if residual_balance > 0.0 else -1
-                    extracted_balance = float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.'))
-                    balance = copysign(extracted_balance * sign, residual_balance)
+                    try:
+                        extracted_balance = float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.'))
+                        balance = copysign(extracted_balance * sign, residual_balance)
+                    except ValueError:
+                        balance = 0
                 else:
                     balance = 0
             else:
