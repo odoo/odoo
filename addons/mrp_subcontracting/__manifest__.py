@@ -21,6 +21,7 @@
         'views/product_views.xml',
         'views/mrp_production_views.xml',
         'wizard/stock_picking_return_views.xml',
+        'report/mrp_report_bom_structure.xml',
     ],
     'demo': [
         'data/mrp_subcontracting_demo.xml',
