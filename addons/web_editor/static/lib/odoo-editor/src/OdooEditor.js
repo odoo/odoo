@@ -496,6 +496,11 @@ export class OdooEditor extends EventTarget {
                 if (!attributeCache.get(record.target)[record.attributeName]) {
                     continue;
                 }
+                // Skip the attributes changes based on the dropzones
+                // Dropzones sould not make the dom element Dirty
+                if (record.oldValue && record.oldValue.includes('oe_drop_zone')) {
+                    continue;
+                }
             }
             filteredRecords.push(record);
         }

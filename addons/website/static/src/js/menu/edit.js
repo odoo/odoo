@@ -285,6 +285,11 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 if (record.attributeName === 'contenteditable') {
                     continue;
                 }
+                // skip the dropzones mutation changes because it makes editable elements dirty
+                // even not drag and drop the snippet at proper editable element
+                if (this._skipDropZoneMutation(record)) {
+                    continue;
+                }
                 $savable.not('.o_dirty').each(function () {
                     const $el = $(this);
                     if (!$el.closest('[data-oe-readonly]').length) {
@@ -538,6 +543,40 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         ev.stopPropagation();
         this.cancel();
     },
+
+    /**
+     * Skips the mutations which observe Dropzone changes
+     * TODO: this filter also carried out at filterMutationRecords method of OdooEditor
+     * but it will not manage the history properly if we already filterd out mutations for Dropzones
+     *
+     * @private
+     * @param {Object} record - mutation object
+     * @returns {boolean}
+     */
+    _skipDropZoneMutation(record) {
+        var isSkipped = false;
+        for (const added of record.addedNodes) {
+            if ((added.classList && (added.className.includes('oe_drop_zone'))) || added.localName == 'we-hook') {
+                isSkipped = true;
+                break;
+            }
+        }
+        if (!isSkipped) {
+            for (const removed of record.removedNodes) {
+                if ((removed.classList && (removed.className.includes('oe_drop_zone'))) || removed.localName == 'we-hook') {
+                    isSkipped = true;
+                    break;
+                }
+            }
+        }
+        if (!isSkipped) {
+            if (record.previousSibling && record.previousSibling.classList && record.previousSibling.className.includes('oe_drop_zone')) {
+                isSkipped = true;
+            }
+        }
+        return isSkipped;
+    },
+
 });
 
 websiteNavbarData.websiteNavbarRegistry.add(EditPageMenu, '#edit-page-menu');
