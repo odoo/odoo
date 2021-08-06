@@ -47,7 +47,7 @@ class UtmCampaign(models.Model):
     def _compute_mailing_mail_count(self):
         if self.ids:
             mailing_data = self.env['mailing.mailing'].read_group(
-                [('campaign_id', 'in', self.ids)],
+                [('campaign_id', 'in', self.ids), ('mailing_type', '=', 'mail')],
                 ['campaign_id', 'ab_testing_enabled'],
                 ['campaign_id', 'ab_testing_enabled'],
                 lazy=False,
