@@ -2336,6 +2336,8 @@ class BaseModel(metaclass=MetaModel):
             if value:
                 if ftype == 'many2one':
                     value = value[0]
+                elif ftype == 'many2many':
+                    d = [(gb['field'], 'in', [value[0]])]
                 elif ftype in ('date', 'datetime'):
                     locale = get_lang(self.env).code
                     fmt = DEFAULT_SERVER_DATETIME_FORMAT if ftype == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
@@ -2571,6 +2573,7 @@ class BaseModel(metaclass=MetaModel):
             return fetched_data
 
         self._read_group_resolve_many2one_fields(fetched_data, annotated_groupbys)
+        self._read_group_resolve_many2many_fields(fetched_data, annotated_groupbys)
 
         data = [{k: self._read_group_prepare_data(k, v, groupby_dict) for k, v in r.items()} for r in fetched_data]
 
@@ -2600,6 +2603,16 @@ class BaseModel(metaclass=MetaModel):
     def _read_group_resolve_many2one_fields(self, data, fields):
         many2onefields = {field['field'] for field in fields if field['type'] == 'many2one'}
         for field in many2onefields:
+            ids_set = {d[field] for d in data if d[field]}
+            m2o_records = self.env[self._fields[field].comodel_name].browse(ids_set)
+            data_dict = dict(lazy_name_get(m2o_records.sudo()))
+            for d in data:
+                d[field] = (d[field], data_dict[d[field]]) if d[field] else False
+
+    # TODO: MSH: method is same as above so just support many2many field and keep name generic to avoid duplicate code
+    def _read_group_resolve_many2many_fields(self, data, fields):
+        many2manyfields = {field['field'] for field in fields if field['type'] == 'many2many'}
+        for field in many2manyfields:
             ids_set = {d[field] for d in data if d[field]}
             m2o_records = self.env[self._fields[field].comodel_name].browse(ids_set)
             data_dict = dict(lazy_name_get(m2o_records.sudo()))
