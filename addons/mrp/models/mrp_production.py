@@ -637,24 +637,16 @@ class MrpProduction(models.Model):
         else:
             self.move_raw_ids = [(2, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
 
-    @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
+    @api.onchange('product_id')
+    def _onchange_move_finished_product(self):
+        self.move_finished_ids = [(5,)]
+        if self.product_id:
+            self._create_update_move_finished()
+
+    @api.onchange('bom_id', 'product_qty', 'product_uom_id')
     def _onchange_move_finished(self):
         if self.product_id and self.product_qty > 0:
-            list_move_finished = []
-            moves_finished_values = self._get_moves_finished_values()
-            moves_byproduct_dict = {move.byproduct_id.id: move for move in self.move_finished_ids.filtered(lambda m: m.byproduct_id)}
-            move_finished = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id)
-            for move_finished_values in moves_finished_values:
-                if move_finished_values.get('byproduct_id') in moves_byproduct_dict:
-                    # update existing entries
-                    list_move_finished += [(1, moves_byproduct_dict[move_finished_values['byproduct_id']].id, move_finished_values)]
-                elif move_finished_values.get('product_id') == self.product_id.id and move_finished:
-                    list_move_finished += [(1, move_finished.id, move_finished_values)]
-                else:
-                    # add new entries
-                    list_move_finished += [(0, 0, move_finished_values)]
-            self.move_finished_ids = [(5, 0, 0)]
-            self.move_finished_ids = list_move_finished
+            self._create_update_move_finished()
         else:
             self.move_finished_ids = [(2, move.id) for move in self.move_finished_ids.filtered(lambda m: m.bom_line_id)]
 
@@ -886,6 +878,29 @@ class MrpProduction(models.Model):
                     byproduct.product_id.id, qty, byproduct.product_uom_id.id,
                     byproduct.operation_id.id, byproduct.id))
         return moves
+
+    def _create_update_move_finished(self):
+        """ This is a helper function to support complexity of onchange logic for MOs.
+        It is important that the special *2Many commands used here remain as long as function
+        is used within onchanges.
+        """
+        # keep manual entries
+        list_move_finished = [(4, move.id) for move in self.move_finished_ids.filtered(
+            lambda m: not m.byproduct_id and m.product_id != self.product_id)]
+        list_move_finished = []
+        moves_finished_values = self._get_moves_finished_values()
+        moves_byproduct_dict = {move.byproduct_id.id: move for move in self.move_finished_ids.filtered(lambda m: m.byproduct_id)}
+        move_finished = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id)
+        for move_finished_values in moves_finished_values:
+            if move_finished_values.get('byproduct_id') in moves_byproduct_dict:
+                # update existing entries
+                list_move_finished += [(1, moves_byproduct_dict[move_finished_values['byproduct_id']].id, move_finished_values)]
+            elif move_finished_values.get('product_id') == self.product_id.id and move_finished:
+                list_move_finished += [(1, move_finished.id, move_finished_values)]
+            else:
+                # add new entries
+                list_move_finished += [(0, 0, move_finished_values)]
+        self.move_finished_ids = list_move_finished
 
     def _get_moves_raw_values(self):
         moves = []
