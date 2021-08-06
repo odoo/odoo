@@ -686,6 +686,7 @@ class Survey(models.Model):
         """ The session start is sudo'ed to allow survey user to manage sessions of surveys
         they do not own.
 
+<<<<<<< HEAD
         We flush after writing to make sure it's updated before bus takes over. """
 
         if self.env.user.has_group('survey.group_survey_user'):
@@ -694,6 +695,24 @@ class Survey(models.Model):
 
     def _get_session_next_question(self):
         self.ensure_one()
+=======
+    @api.model
+    def get_input_summary(self, question, current_filters=None):
+        """ Returns overall summary of question e.g. answered, skipped, total_inputs on basis of filter """
+        domain = [
+            ('user_input_id.test_entry', '=', False),
+            ('user_input_id.state', '!=', 'new'),
+            ('question_id', '=', question.id)
+        ]
+        if current_filters:
+            domain = expression.AND([[('id', 'in', current_filters)], domain])
+
+        line_ids = self.env["survey.user_input_line"].search(domain)
+        return {
+            'answered': len(line_ids.filtered(lambda line: not line.skipped).mapped('user_input_id')),
+            'skipped': len(line_ids.filtered(lambda line: line.skipped).mapped('user_input_id'))
+        }
+>>>>>>> ddeb5c6e29c... temp
 
         if not self.question_ids or not self.env.user.has_group('survey.group_survey_user'):
             return

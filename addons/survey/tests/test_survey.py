@@ -113,3 +113,150 @@ class TestSurveyInternals(common.TestSurveyCommon):
             question.validate_question('valid'),
             {}
         )
+<<<<<<< HEAD
+=======
+
+    @users('survey_manager')
+    def test_result_data_simple_multiple_choice(self):
+        question = self._add_question(
+            self.page_0, 'Q0', 'simple_choice',
+            labels=[{'value': 'Choice0'}, {'value': 'Choice1'}]
+        )
+        for i in range(3):
+            answer = self._add_answer(self.survey, False, email='public@example.com')
+            self._add_answer_line(
+                question, answer, random.choice(question.labels_ids.ids),
+                answer_type='suggestion', answer_fname='value_suggested')
+        lines = [line.value_suggested.id for line in question.user_input_line_ids]
+        answers = [{'text': label.value, 'count': lines.count(label.id), 'answer_id': label.id, 'answer_score': label.answer_score} for label in question.labels_ids]
+        prp_result = self.env['survey.survey'].prepare_result(question)['answers']
+        self.assertItemsEqual(prp_result, answers)
+
+    @users('survey_manager')
+    def test_result_data_matrix(self):
+        question = self._add_question(
+            self.page_0, 'Q0', 'matrix', matrix_subtype='simple',
+            labels=[{'value': 'Column0'}, {'value': 'Column1'}],
+            labels_2=[{'value': 'Row0'}, {'value': 'Row1'}]
+        )
+        for i in range(3):
+            answer = self._add_answer(self.survey, False, email='public@example.com')
+            self._add_answer_line(
+                question, answer, random.choice(question.labels_ids.ids),
+                answer_type='suggestion', answer_fname='value_suggested', value_suggested_row=random.choice(question.labels_ids_2.ids)
+            )
+        lines = [(line.value_suggested_row.id, line.value_suggested.id) for line in question.user_input_line_ids]
+        res = {}
+        for i in product(question.labels_ids_2.ids, question.labels_ids.ids):
+            res[i] = lines.count((i))
+        self.assertEqual(self.env['survey.survey'].prepare_result(question)['result'], res)
+
+    @users('survey_manager')
+    def test_result_data_numeric_box(self):
+        question = self._add_question(self.page_0, 'Q0', 'numerical_box')
+        num = [float(n) for n in random.sample(range(1, 100), 3)]
+        nsum = sum(num)
+        for i in range(3):
+            answer = self._add_answer(self.survey, False, email='public@example.com')
+            self._add_answer_line(question, answer, num[i])
+        exresult = {
+            'average': round((nsum / len(num)), 2), 'max': round(max(num), 2),
+            'min': round(min(num), 2), 'sum': nsum, 'most_common': Counter(num).most_common(5)}
+        result = self.env['survey.survey'].prepare_result(question)
+        for key in exresult:
+            self.assertEqual(result[key], exresult[key])
+
+    def test_get_input_summary_no_answer(self):
+        question = self._add_question(self.page_0, 'Q1', 'numerical_box')
+        result = self.env['survey.survey'].get_input_summary(question)
+        self.assertDictEqual(result, {"answered": 0, "skipped": 0})
+
+    def test_get_input_summary_simple_choice(self):
+        question = self._add_question(
+            self.page_0, 'Q0', 'simple_choice',
+            labels=[{'value': 'Choice0'}, {'value': 'Choice1'}]
+        )
+
+        # 2 answered + 1 skipped
+        answers = [self._add_answer(self.survey, False) for i in range(3)]
+
+        self._add_answer_line(question, answers[0], random.choice(question.labels_ids.ids))
+        self._add_answer_line(question, answers[1], random.choice(question.labels_ids.ids))
+        self._add_answer_line(question, answers[2], None, answer_type=False, skipped=True)
+
+        # no result if not validated
+        result = self.env['survey.survey'].get_input_summary(question)
+        self.assertDictEqual(result, {"answered": 0, "skipped": 0})
+
+        # expected results if validated
+        for answer in answers:
+            answer.state = "done"
+
+        result = self.env['survey.survey'].get_input_summary(question)
+        self.assertDictEqual(result, {"answered": 2, "skipped": 1})
+
+    def test_get_input_summary_multiple_choice(self):
+        question = self._add_question(
+            self.page_0, 'Q0', 'multiple_choice',
+            labels=[{'value': 'Choice0'}, {'value': 'Choice1'}]
+        )
+
+        # 1 answer with one choice + 1 answer with 2 choices + 1 skipped
+        answers = [self._add_answer(self.survey, False) for i in range(3)]
+
+        self._add_answer_line(question, answers[0], random.choice(question.labels_ids.ids))
+        self._add_answer_line(question, answers[1], question.labels_ids[0].id)
+        self._add_answer_line(question, answers[1], question.labels_ids[1].id)
+        self._add_answer_line(question, answers[2], None, answer_type=False, skipped=True)
+
+        # no result if not validated
+        result = self.env['survey.survey'].get_input_summary(question)
+        self.assertDictEqual(result, {"answered": 0, "skipped": 0})
+
+        # expected results if validated
+        for answer in answers:
+            answer.state = "done"
+
+        result = self.env['survey.survey'].get_input_summary(question)
+        self.assertDictEqual(result, {"answered": 2, "skipped": 1})
+
+    def test_get_input_summary_with_filters(self):
+        question = self._add_question(
+            self.page_0, 'Q0', 'multiple_choice',
+            labels=[{'value': 'Choice0'}, {'value': 'Choice1'}]
+        )
+
+        # 1 answer with one choice + 1 answer with 2 choices + 1 skipped
+        answers = [self._add_answer(self.survey, False) for i in range(3)]
+
+        one_choice_line = self._add_answer_line(question, answers[0], random.choice(question.labels_ids.ids))
+        mul_choice_line_1 = self._add_answer_line(question, answers[1], question.labels_ids[0].id)
+        mul_choice_line_2 = self._add_answer_line(question, answers[1], question.labels_ids[1].id)
+        skipped_line = self._add_answer_line(question, answers[2], None, answer_type=False, skipped=True)
+
+        # without validated answers
+        result = self.env['survey.survey'].get_input_summary(
+            question,
+            (one_choice_line | skipped_line | mul_choice_line_1).ids
+        )
+        self.assertDictEqual(result, {"answered": 0, "skipped": 0})
+
+        for answer in answers:
+            answer.state = "done"
+
+        # filter = 1 answer with one choice
+        result = self.env['survey.survey'].get_input_summary(question, one_choice_line.ids)
+        self.assertDictEqual(result, {"answered": 1, "skipped": 0})
+
+        # filter = 1 answer with one choice + 1 skipped
+        result = self.env['survey.survey'].get_input_summary(question, (one_choice_line | skipped_line).ids)
+        self.assertDictEqual(result, {"answered": 1, "skipped": 1})
+
+        # filter = 1 line from multiple choice answer
+        result = self.env['survey.survey'].get_input_summary(question, mul_choice_line_1.ids)
+        self.assertDictEqual(result, {"answered": 1, "skipped": 0})
+
+        # filter = 2 lines from multiple choice answer -> should only count ONE answered question
+        result = self.env['survey.survey'].get_input_summary(question, (mul_choice_line_1 | mul_choice_line_2).ids)
+        self.assertDictEqual(result, {"answered": 1, "skipped": 0})
+>>>>>>> ddeb5c6e29c... temp
