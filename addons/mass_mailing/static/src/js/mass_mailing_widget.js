@@ -65,6 +65,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         }
         return this.wysiwyg.saveModifiedImages(this.$content).then(function () {
             self._isDirty = self.wysiwyg.isDirty();
+            self._doAction();
 
             convertInline.attachmentThumbnailToLinkImg($editable);
             convertInline.fontToImg($editable);
@@ -84,6 +85,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
                 changes: _.object([fieldName], [self._unWrap($editable.html())])
             });
 
+            $editable.html(self.value);
             if (self._isDirty && self.mode === 'edit') {
                 return self._doAction();
             }
