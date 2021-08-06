@@ -149,8 +149,9 @@ class Meeting(models.Model):
                 if attendee[2].get('displayName') and not partner.name:
                     partner.name = attendee[2].get('displayName')
         for odoo_attendee in attendees_by_emails.values():
-            # Remove old attendees
-            if tools.email_normalize(odoo_attendee.email) not in emails:
+            # Remove old attendees but only if it does not correspond to the current user.
+            email = tools.email_normalize(odoo_attendee.email)
+            if email not in emails and email != self.env.user.email:
                 attendee_commands += [(2, odoo_attendee.id)]
                 partner_commands += [(3, odoo_attendee.partner_id.id)]
         return attendee_commands, partner_commands
