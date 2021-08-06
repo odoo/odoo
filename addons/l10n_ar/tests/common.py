@@ -46,6 +46,34 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
         })
         cls.partner_ri = cls.company_ri.partner_id
 
+        # TODO: move to TestMono class?
+        # ==== Company MONO ====
+        cls.company_data_2['company'].write({
+            'parent_id': cls.env.ref('base.main_company').id,
+            'currency_id': cls.env.ref('base.ARS').id,
+            'name': '(AR) Monotributista (Unit Tests)',
+            "l10n_ar_afip_start_date": time.strftime('%Y-01-01'),
+            'l10n_ar_gross_income_type': 'exempt',
+            'l10n_ar_afip_ws_environment': 'testing',
+        })
+        cls.company_mono = cls.company_data_2['company']
+
+        cls.company_mono.partner_id.write({
+            'name': '(AR) Monotributista (Unit Tests)',
+            'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_RM").id,
+            'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
+            'vat': '20222222223',
+            "street": 'Calle Falsa 123',
+            "city": 'Rosario',
+            "country_id": cls.env.ref("base.ar").id,
+            "state_id": cls.env.ref("base.state_ar_s").id,
+            "zip": '2000',
+            "phone": '+1 555 123 8069',
+            "email": 'info@example.com',
+            "website": 'www.example.com',
+        })
+        cls.partner_mono = cls.company_mono.partner_id
+
         # ==== Bank Account ====
         cls.bank_account_ri = cls.env['res.partner.bank'].create({
             'acc_number': '7982898111100056688080',
