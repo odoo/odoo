@@ -59,6 +59,16 @@ const AttendeeCalendarPopover = CalendarPopover.extend({
     isEventEditable() {
         return this._isEventPrivate() ? this.isCurrentPartnerAttendee() : this._super();
     },
+     /**
+     * @return {boolean}
+     */
+    displayAttendeeAnswerChoice() {
+        // check if we are a partner and if we are the only attendee.
+        // This avoid to display attendee anwser dropdown for single user attendees
+        const isCurrentpartner = (currentValue) => currentValue === session.partner_id;
+        const onlyAttendee = this.event.extendedProps.record.partner_ids.every(isCurrentpartner);
+        return this.isCurrentPartnerAttendee() && ! onlyAttendee;
+    },
 
     //--------------------------------------------------------------------------
     // Private

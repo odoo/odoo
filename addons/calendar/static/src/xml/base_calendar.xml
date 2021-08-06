@@ -42,7 +42,7 @@
 
     <t t-name="Calendar.attendee.status.popover" t-extend="CalendarView.event.popover">
         <t t-jquery=".o_cw_popover_delete" t-operation="after">
-            <div t-if="widget.isCurrentPartnerAttendee()" class="btn-group o-calendar-attendee-status ml-2">
+            <div t-if="widget.displayAttendeeAnswerChoice()" class="btn-group o-calendar-attendee-status ml-2">
                 <a href="#" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i t-attf-class="fa fa-circle o-calendar-attendee-status-icon #{widget.selectedStatusInfo.color}"/> <span class="o-calendar-attendee-status-text" t-esc="widget.selectedStatusInfo.text"></span>
                 </a>

@@ -474,10 +474,10 @@ class Meeting(models.Model):
             if op in (2, 3):  # Remove partner
                 removed_partner_ids += [command[1]]
             elif op == 6:  # Replace all
-                removed_partner_ids += set(self.partner_ids.ids) - set(command[2])  # Don't recreate attendee if partner already attend the event
-                added_partner_ids += set(command[2]) - set(self.partner_ids.ids)
+                removed_partner_ids += set(self.attendee_ids.mapped('partner_id').ids) - set(command[2])  # Don't recreate attendee if partner already attend the event
+                added_partner_ids += set(command[2]) - set(self.attendee_ids.mapped('partner_id').ids)
             elif op == 4:
-                added_partner_ids += [command[1]] if command[1] not in self.partner_ids.ids else []
+                added_partner_ids += [command[1]] if command[1] not in self.attendee_ids.mapped('partner_id').ids else []
             # commands 0 and 1 not supported
 
         attendees_to_unlink = self.env['calendar.attendee'].search([
