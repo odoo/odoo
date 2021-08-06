@@ -6,7 +6,7 @@ from odoo.tests import common, Form
 from odoo.tools.float_utils import float_round, float_compare
 
 
-class TestBom(common.TransactionCase):
+class TestBomPrice(common.TransactionCase):
 
     def _create_product(self, name, price):
         return self.Product.create({
@@ -16,11 +16,9 @@ class TestBom(common.TransactionCase):
         })
 
     def setUp(self):
-        super(TestBom, self).setUp()
+        super(TestBomPrice, self).setUp()
         self.Product = self.env['product.product']
         self.Bom = self.env['mrp.bom']
-        #self.Routing = self.env['mrp.routing']
-        self.operation = self.env['mrp.routing.workcenter']
 
         # Products.
         self.dining_table = self._create_product('Dining Table', 1000)
