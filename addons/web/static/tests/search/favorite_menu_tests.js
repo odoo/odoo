@@ -142,7 +142,7 @@ QUnit.module("Search", (hooks) => {
             assert.deepEqual(getFacetTexts(webClient), ["My favorite"]);
             assert.hasClass(
                 webClient.el.querySelector(".o_favorite_menu li.o_menu_item"),
-                "active"
+                "selected"
             );
 
             await deleteFavorite(webClient, 0);

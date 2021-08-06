@@ -122,7 +122,6 @@ QUnit.module("Search", (hooks) => {
                     },
                 }
             );
-
             await toggleGroupByMenu(controlPanel);
 
             assert.deepEqual(controlPanel.env.searchModel.groupBy, []);
@@ -202,7 +201,7 @@ QUnit.module("Search", (hooks) => {
             await toggleAddCustomGroup(controlPanel);
             await applyGroup(controlPanel);
 
-            assert.containsOnce(controlPanel, ".o_group_by_menu", "o_menu_item");
+            assert.containsOnce(controlPanel, ".o_group_by_menu .o_menu_item");
             assert.containsOnce(controlPanel, ".o_add_custom_group_menu .o_dropdown_toggler");
             assert.containsNone(controlPanel, ".o_add_custom_group_menu .o_dropdown_menu");
             assert.deepEqual(getFacetTexts(controlPanel), ["Candlelight"]);

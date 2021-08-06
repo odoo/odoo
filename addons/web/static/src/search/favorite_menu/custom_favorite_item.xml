@@ -6,24 +6,26 @@
             <t t-set-slot="toggler">
                 Save current search
             </t>
-            <input type="text"
-                class="o_input"
-                autofocus=""
-                t-ref="description"
-                t-model.trim="state.description"
-                t-on-keydown="onInputKeydown"
-                />
-            <CheckBox value="state.isDefault" t-on-change="onDefaultCheckboxChange">
-                Use by default
-            </CheckBox>
-            <CheckBox value="state.isShared" t-on-change="onShareCheckboxChange">
-                Share with all users
-            </CheckBox>
-            <DropdownItem>
+            <li class="px-3 py-2">
+                <input type="text"
+                    class="o_input"
+                    autofocus=""
+                    t-ref="description"
+                    t-model.trim="state.description"
+                    t-on-keydown="onInputKeydown"
+                    />
+                <CheckBox value="state.isDefault" t-on-change="onDefaultCheckboxChange">
+                    Use by default
+                </CheckBox>
+                <CheckBox value="state.isShared" t-on-change="onShareCheckboxChange">
+                    Share with all users
+                </CheckBox>
+            </li>
+            <li class="px-3 py-2">
                 <button class="o_save_favorite btn btn-primary" t-on-click="saveFavorite">
                     Save
                 </button>
-            </DropdownItem>
+            </li>
         </Dropdown>
     </t>
 

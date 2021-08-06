@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CustomFilterItem" owl="1">
-        <Dropdown class="o_add_custom_filter_menu o_dropdown_inline">
+        <Dropdown class="o_add_custom_filter_menu">
             <t t-set-slot="toggler">
                 Add Custom Filter
             </t>
@@ -92,18 +92,17 @@
                     />
                 </li>
             </t>
-            <DropdownItem>
+            <DropdownItem class="px-3 py-2" t-att-class="{ o_dropdown_item: false }">
                 <button type="button"
-                    class="btn btn-primary o_apply_filter"
-                    t-on-click="onApply">
+                    class="btn btn-primary o_apply_filter mr-2"
+                    t-on-click="onApply"
+                >
                     Apply
                 </button>
-            </DropdownItem>
-            <DropdownItem parentClosingMode="'none'">
                 <button type="button"
                     class="btn btn-secondary o_add_condition"
-                    t-on-click="addNewCondition"
-                    >
+                    t-on-click.stop="addNewCondition"
+                >
                     <i class="fa fa-plus-circle"/>
                     <t>Add a condition</t>
                 </button>

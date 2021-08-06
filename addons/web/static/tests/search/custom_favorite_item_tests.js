@@ -410,7 +410,6 @@ QUnit.module("Search", (hooks) => {
             // second try: should succeed
             await editFavoriteName(controlPanel, "My favorite 2");
             await saveFavorite(controlPanel);
-            await toggleSaveFavorite(controlPanel);
 
             // third try: should fail
             await editFavoriteName(controlPanel, "My favorite 2");

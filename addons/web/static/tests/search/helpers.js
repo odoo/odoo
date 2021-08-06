@@ -68,12 +68,12 @@ export async function toggleMenuItemOption(el, itemFinder, optionFinder) {
 }
 export function isItemSelected(el, itemFinder) {
     const item = findItem(el, `.o_menu_item`, itemFinder);
-    return item.classList.contains("active");
+    return item.classList.contains("selected");
 }
 export function isOptionSelected(el, itemFinder, optionFinder) {
     const item = findItem(el, `.o_menu_item`, itemFinder);
     const option = findItem(item.parentNode, ".o_item_option", optionFinder);
-    return option.classList.contains("active");
+    return option.classList.contains("selected");
 }
 export function getMenuItemTexts(target) {
     const el = getNode(target);
