@@ -17,13 +17,15 @@
                     <field name="date_planned_start" readonly="1" optional="show" widget="remaining_days"/>
                     <field name="date_deadline" widget="remaining_days" attrs="{'invisible': [('state', 'in', ['done', 'cancel'])]}" optional="hide"/>
                     <field name="product_id" readonly="1" optional="show"/>
-                    <field name="product_uom_id" string="Unit of Measure" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
+                    <field name="production_duration_expected" attrs="{'invisible': [('production_duration_expected', '=', 0)]}" widget="float_time" sum="Total expected duration"/>
+                    <field name="production_real_duration" attrs="{'invisible': [('production_real_duration', '=', 0)]}" widget="float_time" sum="Total real duration"/>
                     <field name="lot_producing_id" optional="hide"/>
                     <field name="bom_id" readonly="1" optional="hide"/>
                     <field name="origin" optional="show"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
-                    <field name="reservation_state" optional="show"/>
+                    <field name="reservation_state" optional="show" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
+                    <field name="product_uom_id" string="UoM" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
                     <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
@@ -154,7 +156,7 @@
                             <field name="use_create_components_lots" invisible="1"/>
                             <field name="show_lot_ids" invisible="1"/>
                             <field name="product_tracking" invisible="1"/>
-                            <field name="product_id" context="{'default_type': 'product'}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="product_id" context="{'default_type': 'product'}" attrs="{'readonly': [('state', '!=', 'draft')]}" default_focus="1"/>
                             <field name="product_tmpl_id" invisible="1"/>
                             <field name="forecasted_issue" invisible="1"/>
                             <field name="product_description_variants" attrs="{'invisible': [('product_description_variants', 'in', (False, ''))], 'readonly': [('state', '!=', 'draft')]}"/>
@@ -276,17 +278,20 @@
                                     <field name="state" invisible="1" force_save="1"/>
                                     <field name="should_consume_qty" invisible="1"/>
                                     <field name="product_uom_qty" widget="mrp_should_consume" string="To Consume" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', '&amp;', ('parent.state', 'not in', ('confirmed', 'progress', 'to_close')), ('parent.is_planned', '!=', True), ('parent.is_locked', '=', True)]}" width="1"/>
+                                    <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                                     <field name="product_type" invisible="1"/>
                                     <field name="product_qty" invisible="1" readonly="1"/>
                                     <field name="reserved_availability" invisible="1"/>
                                     <field name="forecast_expected_date" invisible="1"/>
-                                    <field name="forecast_availability" string="Reserved" attrs="{'column_invisible': [('parent.state', 'in', ['draft', 'done'])]}" widget="forecast_widget"/>
+                                    <!-- Button are used in state draft to doesn't have the name of the column "Reserved"-->
+                                    <button type="object" name="action_product_forecast_report" icon="fa-area-chart" attrs="{'column_invisible': [('parent.state', '!=', 'draft')], 'invisible': [('forecast_availability', '&lt;', 0)]}"/>
+                                    <button type="object" name="action_product_forecast_report" icon="fa-area-chart text-danger" attrs="{'column_invisible': [('parent.state', '!=', 'draft')], 'invisible': [('forecast_availability', '&gt;=', 0)]}"/>
+                                    <field name="forecast_availability" string="Reserved" attrs="{'column_invisible': [('parent.state', 'in', ('draft', 'done'))]}" widget="forecast_widget"/>
                                     <field name="is_quantity_done_editable" invisible="1"/>
                                     <field name="quantity_done" string="Consumed"
                                         decoration-success="not is_done and (quantity_done - should_consume_qty == 0)"
                                         decoration-warning="not is_done and (quantity_done - should_consume_qty &gt; 0.0001)"
                                         attrs="{'column_invisible': [('parent.state', '=', 'draft')], 'readonly': [('has_tracking', '!=','none')]}"/>
-                                    <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                                     <field name="show_details_visible" invisible="1"/>
                                     <field name="lot_ids" widget="many2many_tags"
                                         groups="stock.group_production_lot" optional="hide"

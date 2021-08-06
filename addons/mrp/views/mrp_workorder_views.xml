@@ -76,13 +76,14 @@
                 <field name="operation_id" invisible="1" domain="['|', ('bom_id', '=', production_bom_id), ('bom_id', '=', False)]" context="{'default_workcenter_id': workcenter_id, 'default_company_id': company_id}"/>
                 <field name="name" string="Operation"/>
                 <field name="workcenter_id"/>
+                <field name="product_id" optional="show"/>
                 <field name="date_planned_start" optional="show"/>
                 <field name="date_planned_finished" optional="hide"/>
                 <field name="date_start" optional="hide" readonly="1"/>
                 <field name="date_finished" optional="hide" readonly="1"/>
-                <field name="duration_expected" widget="float_time"/>
+                <field name="duration_expected" widget="float_time" sum="expected duration"/>
                 <field name="duration" widget="mrp_time_counter"
-                  attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}"/>
+                  attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}" sum="real duration"/>
                 <field name="state" widget="badge" decoration-warning="state == 'waiting'" decoration-success="state == 'done'" decoration-info="state not in ('waiting', 'done', 'cancel')" 
                   attrs="{'invisible': [('production_state', '=', 'draft')], 'column_invisible': [('parent.state', '=', 'draft')]}"/>
                 <button name="button_start" type="object" string="Start" class="btn-success"
@@ -369,19 +370,19 @@
                         <div class="oe_kanban_global_click">
                             <div class="o_kanban_card_header o_kanban_record_top">
                                 <div class="o_kanban_record_headings o_kanban_card_header_title">
-                                    <strong class="o_primary ml8">
+                                    <strong class="o_primary">
                                         <span><t t-esc="record.production_id.value"/></span> - <span><t t-esc="record.name.value"/></span>
                                     </strong>
                                 </div>
                                 <div class="o_kanban_manage_button_section">
-                                    <h2>
+                                    <h2 class="ml8">
                                         <span t-attf-class="badge #{['pending', 'waiting'].indexOf(record.state.raw_value) > -1 ? 'badge-warning' :['progress'].indexOf(record.state.raw_value) > -1 ? 'badge-secondary' : ['ready'].indexOf(record.state.raw_value) > -1 ? 'badge-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'badge-success' : ['cancel'].indexOf(record.state.raw_value) > -1 ? 'badge-muted' : 'badge-danger'}">
                                             <t t-esc="record.state.value"/>
                                         </span>
                                     </h2>
                                 </div>
                             </div>
-                            <div class="container o_kanban_record_bottom">
+                            <div class="o_kanban_record_bottom">
                                 <h5 class="oe_kanban_bottom_left">
                                     <span><t t-esc="record.product_id.value"/>, </span> <span><t t-esc="record.qty_production.value"/> <t t-esc="record.product_uom_id.value"/></span>
                                 </h5>

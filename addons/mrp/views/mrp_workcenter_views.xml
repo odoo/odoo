@@ -36,15 +36,16 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="alternative_workcenter_ids" widget="many2many_tags" optional="hide"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}" optional="show"/>
+                    <field name="alternative_workcenter_ids" widget="many2many_tags" optional="show"/>
                     <field name="productive_time" optional="hide"/>
                     <field name="costs_hour"/>
                     <field name="capacity"/>
-                    <field name="time_efficiency" optional="hide"/>
-                    <field name="oee_target" optional="hide"/>
+                    <field name="time_efficiency" optional="show"/>
+                    <field name="oee_target" optional="show"/>
                     <field name="time_start" optional="hide"/>
                     <field name="time_stop" optional="hide"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="active" invisible="1"/>
                 </tree>
             </field>
@@ -223,7 +224,7 @@
                                                 <div class="col-6 text-right">
                                                     <span t-att-class="record.oee_target.raw_value and (record.oee.raw_value &lt; record.oee_target.raw_value) and 'text-danger' or (record.oee.raw_value &gt; record.oee_target.raw_value) and 'text-success' or 'text-warning'">
                                                         <strong>
-                                                            <field name="oee"/>%
+                                                            <field name="oee" widget="integer"/>%
                                                         </strong>
                                                     </span>
                                                 </div>
@@ -278,7 +279,7 @@
                                         <div role="menuitem" aria-haspopup="true" class="col-8">
                                             <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
                                         </div>
-                                        <div role="menuitem" class="col-4 text-right">
+                                        <div role="menuitem" class="text-right">
                                             <a type="edit">Settings</a>
                                         </div>
                                     </div>
@@ -333,6 +334,7 @@
                             <group>
                                 <field name="active" invisible="1"/>
                                 <field name="name" string="Work Center Name" required="True"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 <field
                                     name="alternative_workcenter_ids"
                                     widget="many2many_tags"
