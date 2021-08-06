@@ -2415,4 +2415,21 @@ QUnit.module("ActionManager", (hooks) => {
             "Validation Error"
         );
     });
+
+    QUnit.test("action and load_views rpcs are cached", async function (assert) {
+        const mockRPC = async (route, args) => {
+            assert.step(args.method || route);
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        assert.verifySteps(["/web/webclient/load_menus"]);
+
+        await doAction(webClient, 1);
+        assert.containsOnce(webClient, ".o_kanban_view");
+        assert.verifySteps(["/web/action/load", "load_views", "/web/dataset/search_read"]);
+
+        await doAction(webClient, 1);
+        assert.containsOnce(webClient, ".o_kanban_view");
+
+        assert.verifySteps(["/web/dataset/search_read"]);
+    });
 });
