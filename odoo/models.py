@@ -3079,6 +3079,7 @@ class BaseModel(metaclass=MetaModel):
                 continue
 
             description = field.get_description(self.env)
+            description['name'] = fname
             if readonly:
                 description['readonly'] = True
                 description['states'] = {}
