@@ -186,13 +186,14 @@ function makeActionManager(env) {
             action.domain =
                 typeof domain === "string" ? evaluateExpr(domain, action.context) : domain;
         }
-        action = Object.assign({}, action); // manipulate a copy
+        action = { ...action }; // manipulate a copy to keep cached action unmodified
         action._originalAction = JSON.stringify(action);
         action.jsId = `action_${++id}`;
         if (action.type === "ir.actions.act_window" || action.type === "ir.actions.client") {
             action.target = action.target || "current";
         }
         if (action.type === "ir.actions.act_window") {
+            action.views = [...action.views]; // manipulate a copy to keep cached action unmodified
             action.controllers = {};
             const target = action.target;
             if (target !== "inline" && !(target === "new" && action.views[0][1] === "form")) {
