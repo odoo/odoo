@@ -547,7 +547,6 @@ class MailThread(models.AbstractModel):
         # we have to flush() again in case we triggered some recomputations
         self.flush()
 
-    @tools.ormcache('self.env.uid', 'self.env.su')
     def _get_tracked_fields(self):
         """ Return the set of tracked fields names for the current model. """
         fields = {
@@ -556,7 +555,10 @@ class MailThread(models.AbstractModel):
             if getattr(field, 'tracking', None) or getattr(field, 'track_visibility', None)
         }
 
-        return fields and set(self.fields_get(fields))
+        # attributes should be not empty to skip reading translatable
+        # attributes like `string` and `help`, so pass `type` which is always
+        # returned anyway
+        return fields and set(self.fields_get(fields, attributes=['type']))
 
     def _message_track_post_template(self, changes):
         if not changes:

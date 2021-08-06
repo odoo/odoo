@@ -3078,15 +3078,11 @@ class BaseModel(metaclass=MetaModel):
             if field.groups and not self.env.su and not self.user_has_groups(field.groups):
                 continue
 
-            description = field.get_description(self.env)
+            description = field.get_description(self.env, attributes)
             description['name'] = fname
             if readonly:
                 description['readonly'] = True
                 description['states'] = {}
-            if attributes:
-                description = {key: val
-                               for key, val in description.items()
-                               if key in attributes}
             res[fname] = description
 
         return res
