@@ -141,6 +141,15 @@ class MrpBom(models.Model):
             self.operation_ids.bom_product_template_attribute_value_ids = False
             self.byproduct_ids.bom_product_template_attribute_value_ids = False
 
+            domain = [('product_tmpl_id', '=', self.product_tmpl_id.id)]
+            if self.id.origin:
+                domain.append(('id', '!=', self.id.origin))
+            number_of_bom_of_this_product = self.env['mrp.bom'].search_count(domain)
+            if number_of_bom_of_this_product:  # add a reference to the bom if there is already a bom for this product
+                self.code = _("%s (new) %s", self.product_tmpl_id.name, number_of_bom_of_this_product)
+            else:
+                self.code = False
+
     def copy(self, default=None):
         res = super().copy(default)
         for bom_line in res.bom_line_ids:
@@ -446,6 +455,7 @@ class MrpByProduct(models.Model):
     _description = 'Byproduct'
     _rec_name = "product_id"
     _check_company_auto = True
+    _order = 'sequence, id'
 
     product_id = fields.Many2one('product.product', 'By-product', required=True, check_company=True)
     company_id = fields.Many2one(related='bom_id.company_id', store=True, index=True, readonly=True)
@@ -465,6 +475,7 @@ class MrpByProduct(models.Model):
         'product.template.attribute.value', string="Apply on Variants", ondelete='restrict',
         domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
         help="BOM Product Variants needed to apply this line.")
+    sequence = fields.Integer("Sequence")
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

@@ -65,7 +65,7 @@ class MrpProduction(models.Model):
     def _get_default_date_planned_start(self):
         if self.env.context.get('default_date_deadline'):
             return fields.Datetime.to_datetime(self.env.context.get('default_date_deadline'))
-        return datetime.datetime.now()
+        return fields.Datetime.now().replace(minute=0, second=0, microsecond=0) + datetime.timedelta(hours=1)
 
     @api.model
     def _get_default_is_locked(self):
@@ -143,6 +143,10 @@ class MrpProduction(models.Model):
         help="Informative date allowing to define when the manufacturing order should be processed at the latest to fulfill delivery on time.")
     date_start = fields.Datetime('Start Date', copy=False, readonly=True, help="Date of the WO")
     date_finished = fields.Datetime('End Date', copy=False, readonly=True, help="Date when the MO has been close")
+
+    production_duration_expected = fields.Float("Expected Duration", help="Total expected duration (in minutes)", compute='_compute_production_duration_expected')
+    production_real_duration = fields.Float("Real Duration", help="Total real duration (in minutes)", compute='_compute_production_real_duration')
+
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',
         readonly=True, states={'draft': [('readonly', False)]},
@@ -307,6 +311,16 @@ class MrpProduction(models.Model):
     def _set_date_deadline(self):
         for production in self:
             production.move_finished_ids.date_deadline = production.date_deadline
+
+    @api.depends('workorder_ids.duration_expected')
+    def _compute_production_duration_expected(self):
+        for production in self:
+            production.production_duration_expected = sum(production.workorder_ids.mapped('duration_expected'))
+
+    @api.depends('workorder_ids.duration')
+    def _compute_production_real_duration(self):
+        for production in self:
+            production.production_real_duration = sum(production.workorder_ids.mapped('duration'))
 
     @api.depends("workorder_ids.date_planned_start", "workorder_ids.date_planned_finished")
     def _compute_is_planned(self):
