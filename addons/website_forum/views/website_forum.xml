@@ -626,7 +626,7 @@
             </span>
             <a t-else="" class="nav-link rounded-pill text-reset" t-attf-href="/forum/#{slug(forum)}/flagged_queue">
                 <i class="fa fa-flag fa-fw"/> Flagged
-                <span t-attf-class="badge pull-right #{forum.count_flagged_posts > 0 and 'badge-danger' or 'badge-light'}" t-esc="forum.count_flagged_posts"/>
+                <span id="count_flagged_posts" t-attf-class="badge pull-right #{forum.count_flagged_posts > 0 and 'badge-danger' or 'badge-light'}" t-esc="forum.count_flagged_posts"/>
             </a>
         </t>
     </nav>
