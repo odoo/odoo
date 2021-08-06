@@ -4,6 +4,8 @@
     <t t-name="web.DebugMenu" owl="1">
         <Dropdown class="o_debug_manager"
           beforeOpen="getElements"
+          position="'bottom-end'"
+          tag="'li'"
           togglerClass="'btn btn-link'">
             <t t-set-slot="toggler">
                 <span class="fa fa-bug"/>
@@ -15,7 +17,7 @@
                         <span t-else="" t-esc="element.description"/>
                     </DropdownItem>
                 </t>
-                <div t-if="element.type == 'separator'" role="separator" class="dropdown-divider"/>
+                <li t-if="element.type == 'separator'" role="separator" class="dropdown-divider"/>
                 <t t-if="element.type == 'component'" t-component="element.Component" t-props="element.props"/>
             </t>
         </Dropdown>

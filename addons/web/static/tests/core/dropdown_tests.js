@@ -629,7 +629,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         // Navigate with arrows
         assert.containsNone(
             parent.el,
-            ".o_dropdown_menu > .active",
+            ".o_dropdown_menu > .focus",
             "menu should not have any active items"
         );
 
@@ -654,7 +654,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         for (const step of scenarioSteps) {
             triggerHotkey(step.hotkey);
             await nextTick();
-            assert.hasClass(parent.el.querySelector(".o_dropdown_menu > .active"), step.expected);
+            assert.hasClass(parent.el.querySelector(".o_dropdown_menu > .focus"), step.expected);
         }
 
         // Select last one activated in previous scenario (item1)
@@ -717,7 +717,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("multi-level dropdown: keynav", async (assert) => {
-        assert.expect(119);
+        assert.expect(126);
         class Parent extends owl.Component {
             onItemSelected(ev) {
                 const { payload } = ev.detail;
@@ -808,7 +808,9 @@ QUnit.module("Components", ({ beforeEach }) => {
             { hotkey: "home", highlighted: ["second", "third", "third-first"] },
             { hotkey: "end", highlighted: ["second", "third", "third-last"] },
             { hotkey: "end", highlighted: ["second", "third", "third-last"] },
-            { hotkey: "enter", selected: "third-last" },
+            { hotkey: "arrowleft", highlighted: ["second", "third"] },
+            { hotkey: "enter", highlighted: ["second", "third", "third-first"] },
+            { hotkey: "enter", selected: "third-first" },
             { hotkey: "alt+1" },
             { hotkey: "alt+e", selected: false },
             { hotkey: "alt+f", selected: "first-last" },
@@ -826,7 +828,7 @@ QUnit.module("Components", ({ beforeEach }) => {
             await nextTick();
             if (step.highlighted !== undefined) {
                 let index = 0;
-                const activeElements = parent.el.querySelectorAll(".active");
+                const activeElements = parent.el.querySelectorAll(".focus");
                 assert.ok(
                     activeElements.length === step.highlighted.length,
                     `step ${stepIndex}: all active elements to check are found`

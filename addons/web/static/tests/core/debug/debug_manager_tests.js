@@ -99,11 +99,11 @@ QUnit.module("DebugMenu", (hooks) => {
         await click(debugManager.el.querySelector("button.o_dropdown_toggler"));
         debugManagerEl = debugManager.el;
         assert.containsN(debugManagerEl, "ul.o_dropdown_menu li.o_dropdown_item", 3);
-        assert.containsOnce(debugManagerEl, "div.dropdown-divider");
+        assert.containsOnce(debugManagerEl, "li.dropdown-divider");
         const children = [...(debugManagerEl.querySelector("ul.o_dropdown_menu").children || [])];
         assert.deepEqual(
             children.map((el) => el.tagName),
-            ["LI", "LI", "DIV", "LI"]
+            ["LI", "LI", "LI", "LI"]
         );
         const items =
             [...debugManagerEl.querySelectorAll("ul.o_dropdown_menu li.o_dropdown_item span")] ||

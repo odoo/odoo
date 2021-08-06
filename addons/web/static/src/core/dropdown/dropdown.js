@@ -67,13 +67,17 @@ export class Dropdown extends Component {
         this.hasParentDropdown = this.env.inDropdown;
         useSubEnv({ inDropdown: true });
         this.rootTag = this.props.tag || (this.hasParentDropdown ? "li" : "div");
-        const position =
-            this.props.position || (this.hasParentDropdown ? "right-start" : "bottom-start");
 
         // Set up key navigation -----------------------------------------------
         useDropdownNavigation();
 
         // Set up toggler and positioning --------------------------------------
+        const positioningOptions = {
+            popper: "menuRef",
+            position:
+                this.props.position || (this.hasParentDropdown ? "right-start" : "bottom-start"),
+            directionFlipOrder: { right: "rl", bottom: "bt", top: "tb", left: "lr" },
+        };
         if (this.props.toggler === "parent") {
             // Add parent click listener to handle toggling
             useEffect(
@@ -94,11 +98,11 @@ export class Dropdown extends Component {
             );
 
             // Position menu relatively to parent element
-            usePosition(() => this.el.parentElement, { popper: "menuRef", position });
+            usePosition(() => this.el.parentElement, positioningOptions);
         } else {
             // Position menu relatively to inner toggler
             const togglerRef = useRef("togglerRef");
-            usePosition(() => togglerRef.el, { popper: "menuRef", position });
+            usePosition(() => togglerRef.el, positioningOptions);
         }
     }
 

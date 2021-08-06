@@ -5,7 +5,7 @@
     <t
       t-tag="rootTag"
       class="o_dropdown"
-      t-att-class="{ 'o-dropdown--open': state.open, 'o_dropdown_item': hasParentDropdown and rootTag === 'li' }"
+      t-att-class="{ show: state.open, o_dropdown_item: hasParentDropdown and rootTag === 'li' }"
       t-on-dropdown-item-selected="onItemSelected"
     >
       <button

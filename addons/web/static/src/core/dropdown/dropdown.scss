@@ -67,6 +67,7 @@
 
   &_menu {
     @extend .dropdown-menu;
+    position: relative;
 
     &.o_dropdown_menu_right {
       // FIXME: does commenting this break anything?
@@ -74,9 +75,8 @@
     }
 
     & > li.o_dropdown {
-      &.navigated > .o_dropdown_toggler {
-        // FIXME: without this there is no selection feedback
-        // @extend :hover;
+      &.focus > .o_dropdown_toggler {
+        background-color: $dropdown-link-hover-bg;
       }
       & > .o_dropdown_toggler {
         // FIXME: without this there is no selection feedback
@@ -117,11 +117,8 @@
         // FIXME: does commenting this break anything?
         //@extend .disabled;
       }
-      &.active > :first-child {
-        // FIXME: without this there is no selection feedback
-        // @extend :hover;
-        background-color: rgba(0, 0, 0, 0.08);
-        color: #091124;
+      &.focus {
+        background-color: $dropdown-link-hover-bg;
       }
     }
   }
