@@ -1193,8 +1193,9 @@ class ChromeBrowser():
 
     def _wait_ready(self, ready_code, timeout=60):
         self._logger.info('Evaluate ready code "%s"', ready_code)
-        awaited_result = {'result': {'type': 'boolean', 'value': True}}
+        awaited_result = {'type': 'boolean', 'value': True}
         ready_id = self._websocket_send('Runtime.evaluate', params={'expression': ready_code})
+        promise_id = None
         last_bad_res = ''
         start_time = time.time()
         tdiff = time.time() - start_time
@@ -1203,13 +1204,21 @@ class ChromeBrowser():
             res = self._get_message()
 
             if res.get('id') == ready_id:
-                if res.get('result') == awaited_result:
+                result = res.get('result').get('result')
+                if result.get('subtype') == 'promise':
+                    remote_promise_id = result.get('objectId')
+                    promise_id = self._websocket_send('Runtime.awaitPromise', params={'promiseObjectId': remote_promise_id})
+                elif result == awaited_result:
                     if has_exceeded:
                         self._logger.info('The ready code tooks too much time : %s', tdiff)
                     return True
                 else:
                     last_bad_res = res
                     ready_id = self._websocket_send('Runtime.evaluate', params={'expression': ready_code})
+            if promise_id and res.get('id') == promise_id:
+                if has_exceeded:
+                    self._logger.info('The ready promise took too much time: %s', tdiff)
+                return True
             tdiff = time.time() - start_time
             if tdiff >= 2 and not has_exceeded:
                 has_exceeded = True
