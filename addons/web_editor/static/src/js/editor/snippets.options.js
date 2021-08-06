@@ -4194,7 +4194,7 @@ registry.ImageTools = SnippetOptionWidget.extend({
     },
     /**
      * Resets the image cropping
-     * 
+     *
      * @see this.selectClass for parameters
      */
     async resetCrop() {
@@ -4204,7 +4204,7 @@ registry.ImageTools = SnippetOptionWidget.extend({
     },
     /**
      * Resets the image rotation and translation
-     * 
+     *
      * @see this.selectClass for parameters
      */
     async resetTransform() {
@@ -4256,10 +4256,10 @@ registry.ImageTools = SnippetOptionWidget.extend({
     _computeWidgetVisibility(widgetName, params) {
         if (params.optionsPossibleValues.resetTransform) {
             return this._isTransformed();
-        } 
+        }
         if (params.optionsPossibleValues.resetCrop) {
             return this._isCropped();
-        } 
+        }
         return this._super(...arguments);
     },
 });
