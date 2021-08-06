@@ -64,7 +64,7 @@ class StockMove(models.Model):
              "be moved. Lowering this quantity does not generate a "
              "backorder. Changing this quantity on assigned moves affects "
              "the product reservation, and should be done with care.")
-    product_uom = fields.Many2one('uom.uom', 'Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom = fields.Many2one('uom.uom', "UoM", required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     # TDE FIXME: make it stored, otherwise group will not work
     product_tmpl_id = fields.Many2one(
@@ -418,14 +418,19 @@ class StockMove(models.Model):
 
         outgoing_unreserved_moves_per_warehouse = defaultdict(lambda: self.env['stock.move'])
         for move in product_moves:
-            is_unreserved = move.state in ('waiting', 'confirmed', 'partially_available')
-            if move.picking_type_id.code in self._consuming_picking_types() and is_unreserved:
-                outgoing_unreserved_moves_per_warehouse[warehouse_by_location[move.location_id]] |= move
-            elif move.picking_type_id.code in self._consuming_picking_types():
-                move.forecast_availability = move.product_uom._compute_quantity(
-                    move.reserved_availability, move.product_id.uom_id, rounding_method='HALF-UP')
+            if move.picking_type_id.code in self._consuming_picking_types():
+                if move.state == 'assigned':
+                    move.forecast_availability = move.product_uom._compute_quantity(
+                        move.reserved_availability, move.product_id.uom_id, rounding_method='HALF-UP')
+                elif move.state == 'draft':
+                    # for move _consuming_picking_types and in draft -> the forecast_availability > 0 if in stock
+                    warehouse = move.location_id.warehouse_id
+                    next_date = max(move.date, fields.Datetime.now())
+                    move.forecast_availability = move.product_id.with_context(warehouse=warehouse.id, to_date=next_date).virtual_available - move.product_qty
+                elif move.state in ('waiting', 'confirmed', 'partially_available'):
+                    outgoing_unreserved_moves_per_warehouse[warehouse_by_location[move.location_id]] |= move
             elif move.picking_type_id.code == 'incoming':
-                move._get_forecast_availability_incoming()
+                move.forecast_availability = move._get_forecast_availability_incoming()
 
         for warehouse, moves in outgoing_unreserved_moves_per_warehouse.items():
             if not warehouse:  # No prediction possible if no warehouse.
@@ -909,9 +914,10 @@ class StockMove(models.Model):
     def _get_forecast_availability_incoming(self):
         self.ensure_one()
         warehouse = self.location_dest_id.warehouse_id
-        self.forecast_availability = self.product_id.with_context(warehouse=warehouse.id, to_date=self.date).virtual_available
+        forecast_availability = self.product_id.with_context(warehouse=warehouse.id, to_date=self.date).virtual_available
         if self.state == 'draft':
-            self.forecast_availability += self.product_uom_qty
+            forecast_availability += self.product_uom_qty
+        return forecast_availability
 
     @api.onchange('product_id', 'picking_type_id')
     def _onchange_product_id(self):

@@ -6,6 +6,7 @@ from datetime import timedelta
 from functools import partial
 import datetime
 from pytz import timezone
+from random import randint
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import ValidationError
@@ -71,6 +72,7 @@ class MrpWorkcenter(models.Model):
         string="Alternative Workcenters", check_company=True,
         help="Alternative workcenters that can be substituted to this one in order to dispatch production"
     )
+    tag_ids = fields.Many2many('mrp.workcenter.tag')
 
     @api.constrains('alternative_workcenter_ids')
     def _check_alternative_workcenter(self):
@@ -262,6 +264,23 @@ class MrpWorkcenter(models.Model):
                 # Decrease a part of the remaining duration
                 remaining -= interval_minutes
         return False, 'Not available slot 700 days after the planned start'
+
+
+class WorkcenterTag(models.Model):
+    _name = 'mrp.workcenter.tag'
+    _description = 'Add tag for the workcenter'
+    _order = 'name'
+
+    def _get_default_color(self):
+        return randint(1, 11)
+
+    name = fields.Char("Tag Name", required=True)
+    color = fields.Integer("Color Index", default=_get_default_color)
+
+    _sql_constraints = [
+        ('tag_name_unique', 'unique(name)',
+         'The tag name must be unique.'),
+    ]
 
 
 class MrpWorkcenterProductivityLossType(models.Model):
