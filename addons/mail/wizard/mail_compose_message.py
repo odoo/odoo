@@ -401,6 +401,9 @@ class MailComposer(models.TransientModel):
         if values.get('body_html'):
             values['body'] = values.pop('body_html')
 
+        if not values.get("attachment_ids"):
+            values["attachment_ids"] = [(5, 0)]
+
         # This onchange should return command instead of ids for x2many field.
         values = self._convert_to_write(values)
 
