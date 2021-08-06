@@ -9,6 +9,8 @@ import { debounce, throttle } from "../utils/timing";
  *  container?: HTMLElement;
  *  margin?: number;
  *  position?: Position;
+ *  directionFlipOrder?: DirectionFlipOrder;
+ *  variantFlipOrder?: VariantFlipOrder;
  * }} Options
  *
  * @typedef {{
@@ -36,6 +38,14 @@ import { debounce, throttle } from "../utils/timing";
  * }} VariantsData
  *
  * @typedef {"top" | "left" | "bottom" | "right"} Direction
+ * @typedef {"start" | "middle" | "end"} Variant
+ *
+ * @typedef {{[direction in Direction]: string}} DirectionFlipOrder
+ *  values are successive DirectionsDataKey represented as a single string
+ *
+ * @typedef {{[variant in Variant]: string}} VariantFlipOrder
+ *  values are successive VariantsDataKey represented as a single string
+ *
  * @typedef {Direction
  *  | "top-start" | "top-middle" | "top-end"
  *  | "left-start" | "left-middle" | "left-end"
@@ -49,13 +59,13 @@ const { hooks } = owl;
 const { useComponent, useExternalListener, useRef } = hooks;
 
 const POPPER_CLASS = "o-popper-position";
-const DIRECTION_FLIP_ORDER = { top: "tbrl", right: "rltb", bottom: "btrl", left: "lrbt" };
-const VARIANT_FLIP_ORDER = { start: "sme", middle: "mse", end: "ems" };
 
 /** @type {Options} */
 export const DEFAULTS = {
     margin: 0,
     position: "bottom",
+    directionFlipOrder: { top: "tbrl", right: "rltb", bottom: "btrl", left: "lrbt" },
+    variantFlipOrder: { start: "sme", middle: "mse", end: "ems" },
 };
 
 /**
@@ -72,12 +82,12 @@ export const DEFAULTS = {
  *  - a method returning style to apply to the popper for a given direction and variant
  */
 export function computePositioning(reference, popper, options) {
-    const { container, margin, position } = options;
+    const { container, margin, position, directionFlipOrder, variantFlipOrder } = options;
 
     // Retrieve directions and variants
     const [directionKey, variantKey = "middle"] = position.split("-");
-    const directions = DIRECTION_FLIP_ORDER[directionKey];
-    const variants = VARIANT_FLIP_ORDER[variantKey];
+    const directions = directionFlipOrder[directionKey];
+    const variants = variantFlipOrder[variantKey];
 
     // Boxes
     const popBox = popper.getBoundingClientRect();

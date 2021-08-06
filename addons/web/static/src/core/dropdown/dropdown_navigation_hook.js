@@ -19,7 +19,7 @@ import { scrollTo } from "../utils/scrolling";
 const { hooks } = owl;
 const { useComponent, useRef } = hooks;
 
-const ACTIVE_MENU_ELEMENT_CLASS = "active";
+const ACTIVE_MENU_ELEMENT_CLASS = "focus";
 const MENU_ELEMENTS_SELECTORS = [":scope > li.o_dropdown_item", ":scope > li.o_dropdown"];
 const NEXT_ACTIVE_INDEX_FNS = {
     FIRST: () => 0,
@@ -46,108 +46,105 @@ export function useDropdownNavigation() {
     const menuRef = useRef("menuRef");
     /** @type {MenuElement[]} */
     let menuElements = [];
-    useEffect(
-        (open) => {
-            if (!open) {
-                return;
-            }
-            // Prepare MenuElements
-            const addedListeners = [];
-            /** @type {NodeListOf<HTMLElement>} */
-            const queryResult = menuRef.el.querySelectorAll(MENU_ELEMENTS_SELECTORS.join());
-            for (const el of queryResult) {
-                const isSubDropdown = el.classList.contains("o_dropdown");
-                const isSubDropdownOpen = () => el.classList.contains("o-dropdown--open");
-                const togglerClick = () => {
-                    const toggler = el.querySelector(":scope > .o_dropdown_toggler");
-                    if (toggler) {
-                        toggler.dispatchEvent(new MouseEvent("click", { bubbles: false }));
-                    }
-                };
-                let subDropdownTimeout;
-                const closeSubDropdown = () => {
-                    browser.clearTimeout(subDropdownTimeout);
-                    subDropdownTimeout = browser.setTimeout(() => {
-                        if (isSubDropdownOpen()) {
-                            togglerClick();
-                        }
-                    }, 200);
-                };
-                const openSubDropdown = (immediate = false) => {
-                    browser.clearTimeout(subDropdownTimeout);
-                    subDropdownTimeout = browser.setTimeout(
-                        () => {
-                            if (!isSubDropdownOpen()) {
-                                togglerClick();
-                            }
-                        },
-                        immediate ? 0 : 200
-                    );
-                };
-                const makeOnlyActive = () => {
-                    // Make all others inactive
-                    for (const menuElement of menuElements) {
-                        if (menuElement.el === el) {
-                            continue;
-                        }
-                        menuElement.el.classList.remove(ACTIVE_MENU_ELEMENT_CLASS);
-                        if (menuElement.isSubDropdown) {
-                            menuElement.closeSubDropdown();
-                        }
-                    }
-                    // Make myself active
-                    el.classList.add(ACTIVE_MENU_ELEMENT_CLASS);
-                };
-
-                /** @type {MenuElement} */
-                const menuElement = {
-                    el,
-                    get isActive() {
-                        return el.classList.contains(ACTIVE_MENU_ELEMENT_CLASS);
-                    },
-                    makeOnlyActive,
-                    get isSubDropdownOpen() {
-                        return isSubDropdownOpen();
-                    },
-                    isSubDropdown,
-                    closeSubDropdown,
-                    openSubDropdown,
-                };
-                menuElements.push(menuElement);
-
-                // Set up selection listeners
-                const elementListeners = {
-                    click: makeOnlyActive,
-                    mouseenter: () => {
-                        if (!mouseSelectionActive) {
-                            mouseSelectionActive = true;
-                        } else {
-                            menuElement.makeOnlyActive();
-                            if (isSubDropdown) {
-                                openSubDropdown();
-                            }
-                        }
-                    },
-                };
-                for (const [eventType, listener] of Object.entries(elementListeners)) {
-                    menuElement.el.addEventListener(eventType, listener);
-                }
-                addedListeners.push([menuElement, elementListeners]);
-            }
-            return () => {
-                menuElements = [];
-                mouseSelectionActive = true;
-
-                // Clear mouse selection listeners
-                for (const [menuElement, listeners] of addedListeners) {
-                    for (const [eventType, listener] of Object.entries(listeners)) {
-                        menuElement.el.removeEventListener(eventType, listener);
-                    }
+    useEffect(() => {
+        if (!comp.state.open) {
+            return;
+        }
+        // Prepare MenuElements
+        const addedListeners = [];
+        /** @type {NodeListOf<HTMLElement>} */
+        const queryResult = menuRef.el.querySelectorAll(MENU_ELEMENTS_SELECTORS.join());
+        for (const el of queryResult) {
+            const isSubDropdown = el.classList.contains("o_dropdown");
+            const isSubDropdownOpen = () => el.classList.contains("show");
+            const togglerClick = () => {
+                const toggler = el.querySelector(":scope > .o_dropdown_toggler");
+                if (toggler) {
+                    toggler.dispatchEvent(new MouseEvent("click", { bubbles: false }));
                 }
             };
-        },
-        () => [comp.state.open]
-    );
+            let subDropdownTimeout;
+            const closeSubDropdown = () => {
+                browser.clearTimeout(subDropdownTimeout);
+                subDropdownTimeout = browser.setTimeout(() => {
+                    if (isSubDropdownOpen()) {
+                        togglerClick();
+                    }
+                }, 200);
+            };
+            const openSubDropdown = (immediate = false) => {
+                browser.clearTimeout(subDropdownTimeout);
+                subDropdownTimeout = browser.setTimeout(
+                    () => {
+                        if (!isSubDropdownOpen()) {
+                            togglerClick();
+                        }
+                    },
+                    immediate ? 0 : 200
+                );
+            };
+            const makeOnlyActive = () => {
+                // Make all others inactive
+                for (const menuElement of menuElements) {
+                    if (menuElement.el === el) {
+                        continue;
+                    }
+                    menuElement.el.classList.remove(ACTIVE_MENU_ELEMENT_CLASS);
+                    if (menuElement.isSubDropdown) {
+                        menuElement.closeSubDropdown();
+                    }
+                }
+                // Make myself active
+                el.classList.add(ACTIVE_MENU_ELEMENT_CLASS);
+            };
+
+            /** @type {MenuElement} */
+            const menuElement = {
+                el,
+                get isActive() {
+                    return el.classList.contains(ACTIVE_MENU_ELEMENT_CLASS);
+                },
+                makeOnlyActive,
+                get isSubDropdownOpen() {
+                    return isSubDropdownOpen();
+                },
+                isSubDropdown,
+                closeSubDropdown,
+                openSubDropdown,
+            };
+            menuElements.push(menuElement);
+
+            // Set up selection listeners
+            const elementListeners = {
+                click: makeOnlyActive,
+                mouseenter: () => {
+                    if (!mouseSelectionActive) {
+                        mouseSelectionActive = true;
+                    } else {
+                        menuElement.makeOnlyActive();
+                        if (isSubDropdown) {
+                            openSubDropdown();
+                        }
+                    }
+                },
+            };
+            for (const [eventType, listener] of Object.entries(elementListeners)) {
+                menuElement.el.addEventListener(eventType, listener);
+            }
+            addedListeners.push([menuElement, elementListeners]);
+        }
+        return () => {
+            menuElements = [];
+            mouseSelectionActive = true;
+
+            // Clear mouse selection listeners
+            for (const [menuElement, listeners] of addedListeners) {
+                for (const [eventType, listener] of Object.entries(listeners)) {
+                    menuElement.el.removeEventListener(eventType, listener);
+                }
+            }
+        };
+    });
 
     // Set up active menu element helpers --------------------------------------
     /**
@@ -208,7 +205,11 @@ export function useDropdownNavigation() {
         enter: () => {
             const menuElement = getActiveMenuElement();
             if (menuElement) {
-                menuElement.el.click();
+                if (menuElement.isSubDropdown) {
+                    menuElement.openSubDropdown(true);
+                } else {
+                    menuElement.el.click();
+                }
             }
         },
         escape: comp.close,
