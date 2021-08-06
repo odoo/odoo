@@ -468,7 +468,6 @@ class AccountBankStatement(models.Model):
             'type': 'ir.actions.act_window',
             'domain': [('move_id', 'in', self.line_ids.move_id.ids)],
             'context': {
-                'search_default_account_id': self.journal_id.default_account_id.id,
                 'journal_id': self.journal_id.id,
                 'group_by': 'move_id',
                 'expand': True
