@@ -7,7 +7,7 @@
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2020
 # Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2020
 # 城谷 龍弥 <tatsuya.shirotani@pro-spire.co.jp>, 2020
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2020
+# Shigekazu N. <shigekazu.noka@gmail.com>, 2020
 # kent_ocean <ke.tanabe@gmail.com>, 2020
 # Tim Siu Lai <tl@roomsfor.hk>, 2020
 # Manami Hashi <manami@roomsfor.hk>, 2020
@@ -16,7 +16,7 @@
 # NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2020
 # Hau Dao <hau@quartile.co>, 2020
 # Martin Trigaux, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2020
 # Takuya Sawada <takuya@tuntunkun.com>, 2020
 # Noma Yuki, 2020
 # 
@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 15:34+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
 "Last-Translator: Noma Yuki, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
@@ -86,11 +86,6 @@ msgstr "%s 資格合格"
 #, python-format
 msgid "%s challenge certification"
 msgstr "%s 資格を検証"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
-msgid "&amp;times;"
-msgstr "&amp;times;"
 
 #. module: survey
 #: model:ir.actions.report,print_report_name:survey.certification_report
@@ -703,8 +698,8 @@ msgstr "問題が発生しました"
 #. module: survey
 #: code:addons/survey/models/survey_user.py:0
 #, python-format
-msgid "A question is either skipped or answered, not both."
-msgstr "質問がスキップされたか回答されていません。"
+msgid "A question can either be skipped or answered, not both."
+msgstr ""
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2
@@ -4490,6 +4485,22 @@ msgstr "スコアリングメカニズムを持っているアンケートのた
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr "何の設問もないアンケートのための招待状を送信することはできません。"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"You cannot send an invitation for a \"One page per section\" survey if the "
+"survey has no sections."
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"You cannot send an invitation for a \"One page per section\" survey if the "
+"survey only contains empty sections."
+msgstr ""
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
