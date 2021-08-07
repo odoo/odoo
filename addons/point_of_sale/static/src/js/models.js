@@ -1940,6 +1940,7 @@ exports.Orderline = Backbone.Model.extend({
             is_in_unit:         this.get_unit().id == this.pos.uom_unit_id,
             price:              this.get_unit_display_price(),
             discount:           this.get_discount(),
+            default_code:       this.get_product().default_code,
             product_name:       this.get_product().display_name,
             product_name_wrapped: this.generate_wrapped_product_name(),
             price_lst:          this.get_lst_price(),
