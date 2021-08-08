@@ -12,6 +12,7 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2020
+# Simon Strömberg <simon.stromberg@vertel.se>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2020\n"
+"Last-Translator: Simon Strömberg <simon.stromberg@vertel.se>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +49,7 @@ msgstr ""
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Payroll Rules</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Regler för lönelista</span>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
@@ -191,7 +192,7 @@ msgstr "Alla underordnade Regler"
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.ALW
 msgid "Allowance"
-msgstr ""
+msgstr "Bidrag"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
@@ -244,7 +245,7 @@ msgstr "Basal"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_basic
 msgid "Basic Salary"
-msgstr ""
+msgstr "Grundlön"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_l10n_be_hr_payroll
@@ -314,7 +315,7 @@ msgstr "Underliggande definitioner"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Choose a Payroll Localization"
-msgstr ""
+msgstr "Välj en lokalisering för lönelista "
 
 #. module: hr_payroll
 #: selection:hr.payslip.run,state:0
@@ -340,7 +341,7 @@ msgstr "Kod"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payroll_structure_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_view_kanban
 msgid "Code:"
-msgstr ""
+msgstr "Kod:"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -442,7 +443,7 @@ msgstr "Medarbetarregister"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_convanceallowance1
 msgid "Conveyance Allowance"
-msgstr ""
+msgstr "Transportbidrag"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_ca_gravie
@@ -506,7 +507,7 @@ msgstr "Datum till"
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.DED
 msgid "Deduction"
-msgstr ""
+msgstr "Avdrag"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__default_value
@@ -516,7 +517,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract__schedule_pay
 msgid "Defines the frequency of the wage payment."
-msgstr ""
+msgstr "Definierar lönebetalningens frekvens."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip__struct_id
@@ -643,7 +644,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract__resource_calendar_id
 msgid "Employee's working schedule."
-msgstr ""
+msgstr "Anställds arbetsschema."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees__employee_ids
@@ -658,6 +659,7 @@ msgstr "Anställda"
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
 msgstr ""
+"Error! Du kan inte skapa en rekursiv hierarki för kategorin Löneregler."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:179
@@ -732,7 +734,7 @@ msgstr ""
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
 #: model:hr.salary.rule.category,name:hr_payroll.GROSS
 msgid "Gross"
-msgstr ""
+msgstr "Brutto"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -744,7 +746,7 @@ msgstr "Gruppera efter"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
 msgid "House Rent Allowance"
-msgstr ""
+msgstr "Hyresbidrag"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__id
@@ -930,7 +932,7 @@ msgstr "Maximalt omfång"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_meal_voucher
 msgid "Meal Voucher"
-msgstr ""
+msgstr "Matkupong"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_range_min
@@ -965,12 +967,12 @@ msgstr "Namn"
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.NET
 msgid "Net"
-msgstr ""
+msgstr "Netto"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_net
 msgid "Net Salary"
-msgstr ""
+msgstr "Nettolön"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:201
@@ -1085,7 +1087,7 @@ msgstr "Lönestrukturer"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll rules that apply to your country"
-msgstr ""
+msgstr "Löneregler som gäller för ditt land"
 
 #. module: hr_payroll
 #: model:ir.actions.report,name:hr_payroll.action_report_payslip
@@ -1116,7 +1118,7 @@ msgstr "Lönespecifikation Computation Detaljer"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_employee__payslip_count
 msgid "Payslip Count"
-msgstr ""
+msgstr "Antal lönebesked"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
@@ -1337,7 +1339,7 @@ msgstr "Löneuträkning"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule
 msgid "Salary Rule"
-msgstr ""
+msgstr "Löneregel"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
