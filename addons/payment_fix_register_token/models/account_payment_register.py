@@ -69,3 +69,12 @@ class AccountPaymentRegister(models.TransientModel):
         payment_vals = super()._create_payment_vals_from_wizard()
         payment_vals['payment_token_id'] = self.payment_token_id.id
         return payment_vals
+
+    def _create_payments(self):
+        payments = super()._create_payments()
+        batches = self._get_batches()
+        # On register payment wizard, it only allow selecting payment token
+        # if processing single invoice and grouping invoices
+        if self.group_payment or len(batches[0]["lines"]) == 1:
+            payments.payment_transaction_id.write({"invoice_ids": [(6, 0, batches[0]["lines"].move_id.ids)]})
+        return payments
