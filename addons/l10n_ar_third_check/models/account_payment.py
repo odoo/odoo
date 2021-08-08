@@ -11,7 +11,7 @@ class AccountPayment(models.Model):
     _order = "date desc, id desc, name desc"
 
     check_id = fields.Many2one('account.payment', string='Check', readonly=True, states={'draft': [('readonly', False)]}, copy=False,)
-    amount = fields.Monetary(compute='_compute_amount', store=True)
+    amount = fields.Monetary(compute='_compute_amount', store=True, recursive=True)
     third_check_last_journal_id = fields.Many2one('account.journal', compute='_compute_third_check_last_journal', store=True)
     third_check_operation_ids = fields.One2many('account.payment', 'check_id', readonly=True)
     third_check_from_state = fields.Char(compute='_compute_third_check_from_state')
