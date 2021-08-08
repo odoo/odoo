@@ -27,8 +27,8 @@
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Pieter Van de Wygaert <pieter.va.de.wygaert@telenet.be>, 2020
 # Martin Trigaux, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2021\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7237,7 +7237,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "It was previously '%(previous)s' and it is now '%(now)s'."
-msgstr ""
+msgstr "Het was eerder '%(previous)s' en het is nu '%(now)s'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -8380,7 +8380,7 @@ msgstr "Multi-valuta"
 #: model:ir.model.fields,field_description:account.field_account_move__my_activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_payment__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Mijn activiteit deadline"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -13625,7 +13625,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The sequence format has changed."
-msgstr ""
+msgstr "Het reeksformaat is gewijzigd."
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -13644,6 +13644,8 @@ msgid ""
 "The sequence will never restart.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"De reeks zal nooit opnieuw beginnen.\n"
+"Het oplopende getal is in dit geval '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13653,6 +13655,9 @@ msgid ""
 "The year detected here is '%(year)s' and the month is '%(month)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"De reeks begint aan het begin van elke maand weer bij 1.\n"
+"Het hier gedetecteerde jaar is '%(year)s' en de maand is '%(month)s'.\n"
+"Het oplopend getal is in dit geval '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13662,6 +13667,9 @@ msgid ""
 "The year detected here is '%(year)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"De reeks start aan het begin van elk jaar weer op 1.\n"
+"Het hier gedetecteerde jaar is ''%(year)s.\n"
+"Het oplopende getal is in dit geval '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -15056,6 +15064,24 @@ msgid ""
 msgstr ""
 "U kunt verschillende modellen kiezen voor elk type referentie. De standaard "
 "is de Odoo-referentie."
+
+#. module: account
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"You can not archive a journal containing draft journal entries.\n"
+"\n"
+"To proceed:\n"
+"1/ click on the top-right button 'Journal Entries' from this journal form\n"
+"2/ then filter on 'Draft' entries\n"
+"3/ select them all and post or delete them through the action menu"
+msgstr ""
+"U kunt een dagboek met concept journaalboekingen niet archiveren.\n"
+"\n"
+"Verder gaan:\n"
+"1/ klik op de knop rechtsboven 'Boekingen' van dit dagboekscherm\n"
+"2/ filter vervolgens op regels in 'Concept'\n"
+"3/ selecteer ze allemaal en post of verwijder ze via het actiemenu"
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0

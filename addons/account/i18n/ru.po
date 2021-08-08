@@ -1703,7 +1703,7 @@ msgstr "Деятельность"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Оформление исключения активности"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_state
@@ -1716,7 +1716,7 @@ msgstr "Этап действия"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sale_activity_note
 msgid "Activity Summary"
-msgstr ""
+msgstr "Сводная информация о деятельности"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_type_icon
@@ -1729,7 +1729,7 @@ msgstr "Иконка типа действия"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sale_activity_user_id
 msgid "Activity User"
-msgstr ""
+msgstr "Пользователь активности"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sale_activity_type_id
@@ -1737,6 +1737,8 @@ msgid ""
 "Activity will be automatically scheduled on payment due date, improving "
 "collection process."
 msgstr ""
+"Действия будут автоматически запланированы на дату платежа, что улучшит "
+"процесс сбора."
 
 #. module: account
 #. openerp-web
@@ -2023,12 +2025,12 @@ msgstr "Разрешенные журналы"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__type_control_ids
 msgid "Allowed account types"
-msgstr ""
+msgstr "Разрешенные типы учетных записей"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__account_control_ids
 msgid "Allowed accounts"
-msgstr ""
+msgstr "Разрешенные счета"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2766,6 +2768,8 @@ msgid ""
 "Bank statements transactions will be posted on the suspense account until "
 "the final reconciliation allowing finding the right account."
 msgstr ""
+"Операции по банковским выпискам будут размещаться на промежуточном счете до "
+"окончательной сверки, позволяющей найти нужный счет."
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -4674,12 +4678,12 @@ msgstr "Назначенная нумерация для кредитных об
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
 msgid "Default Account"
-msgstr ""
+msgstr "Счет по умолчанию "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_type
 msgid "Default Account Type"
-msgstr ""
+msgstr "Тип счета по умолчанию"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6051,7 +6055,7 @@ msgstr "Имеет бухгалтерские записи"
 #: model:ir.model.fields,field_description:account.field_account_move__has_message
 #: model:ir.model.fields,field_description:account.field_account_payment__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Есть сообщение"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_reconciled_entries
@@ -6191,7 +6195,7 @@ msgstr "Иконка"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_icon
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Значок, обозначающий действие исключения."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_needaction
@@ -6486,7 +6490,7 @@ msgstr "Входящие"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__inbound_payment_method_line_ids
 msgid "Inbound Payment Methods"
-msgstr ""
+msgstr "Способы входящих платежей"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
@@ -7345,7 +7349,7 @@ msgstr "аудит журналов"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__json_activity_data
 msgid "Json Activity Data"
-msgstr ""
+msgstr "Данные об активности Json"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__7
@@ -7694,7 +7698,7 @@ msgstr "макет"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sale_activity_user_id
 msgid "Leave empty to assign the Salesperson of the invoice."
-msgstr ""
+msgstr "Оставьте поле пустым, чтобы назначить продавца счета."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_ledgers
@@ -8210,7 +8214,7 @@ msgstr "Мультивалютность"
 #: model:ir.model.fields,field_description:account.field_account_move__my_activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_payment__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Крайний срок моей активности "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8301,7 +8305,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Календарное событие для следующего действия"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -8996,7 +9000,7 @@ msgstr "Исходящий"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__outbound_payment_method_line_ids
 msgid "Outbound Payment Methods"
-msgstr ""
+msgstr "Способы исходящей оплаты"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -10604,7 +10608,7 @@ msgstr "Прямой дебет SEPA (SDD)"
 #: model:ir.model.fields,field_description:account.field_account_move__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Ошибка доставки SMS"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -10811,7 +10815,7 @@ msgstr "Раздел"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__secure_sequence_id
 msgid "Secure Sequence"
-msgstr ""
+msgstr "Безопасная последовательность"
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -10933,7 +10937,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__selected_payment_method_codes
 msgid "Selected Payment Method Codes"
-msgstr ""
+msgstr "Коды выбранных способов оплаты"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__invoice_warn
@@ -11009,6 +11013,11 @@ msgid ""
 "\n"
 "Only PDF and XML files will be interpreted by Odoo"
 msgstr ""
+"Отправляйте одно отдельное электронное письмо для каждого счета. \n"
+"\n"
+"Допускается любое расширение файла. \n"
+"\n"
+"Odoo будет интерпретировать только файлы PDF и XML."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
@@ -11083,7 +11092,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sequence_override_regex
 msgid "Sequence Override Regex"
-msgstr ""
+msgstr "Регулярное выражение переопределения последовательности"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__sequence_prefix
@@ -11105,7 +11114,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__secure_sequence_id
 msgid "Sequence to use to ensure the securisation of data"
-msgstr ""
+msgstr "Используемая последовательность для обеспечения защиты данных"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__tax_scope__service
@@ -11219,6 +11228,8 @@ msgid ""
 "Shorter name used for display. The journal entries of this journal will also"
 " be named using this prefix by default."
 msgstr ""
+"Для отображения используется более короткое имя. Записи этого журнала также "
+"будут по умолчанию именоваться с использованием этого префикса."
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
@@ -11631,7 +11642,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_id
 msgid "Suspense Account"
-msgstr ""
+msgstr "Промежуточный счет"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
@@ -12223,6 +12234,10 @@ msgid ""
 "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"
 "e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 msgstr ""
+"Техническое поле, используемое для обеспечения сложной композиции последовательности, которую система обычно трактует неверно. \n"
+"Это регулярное выражение, которое может включать все следующие группы: префикс1, год, префикс2, месяц, префикс3, последовательность, суффикс. \n"
+"Группы префикса* являются разделителями между годом, месяцем и фактическим возрастающим порядковым номером (seq). \n"
+"например, ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__exclude_from_invoice_tab
@@ -12251,6 +12266,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_journal__selected_payment_method_codes
 msgid "Technical field used to hide or show payment method options if needed."
 msgstr ""
+"Техническое поле, используемое для скрытия или отображения вариантов способа"
+" оплаты, если это необходимо."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__hide_payment_method
@@ -13975,7 +13992,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Тип активности исключения в записи."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
@@ -14604,6 +14621,18 @@ msgid ""
 msgstr ""
 "Вы можете выбрать различные модели для каждого типа референса. Референс Odoo"
 " устанавливается по умолчанию."
+
+#. module: account
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"You can not archive a journal containing draft journal entries.\n"
+"\n"
+"To proceed:\n"
+"1/ click on the top-right button 'Journal Entries' from this journal form\n"
+"2/ then filter on 'Draft' entries\n"
+"3/ select them all and post or delete them through the action menu"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0

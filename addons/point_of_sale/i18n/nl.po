@@ -15,8 +15,8 @@
 # Antoine Gilard <ang@odoo.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Martin Trigaux, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
@@ -914,6 +914,13 @@ msgstr "Wisselgeld"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
+#, python-format
+msgid "Change Customer"
+msgstr "Wijzig Klant"
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Change Tip"
@@ -1117,6 +1124,13 @@ msgstr "Configureer minstens één kassa."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.closing_balance_confirm
 msgid "Confirm"
 msgstr "Bevestigen"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/NumberPopup.js:0
+#, python-format
+msgid "Confirm ?"
+msgstr "Bevestig?"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1489,6 +1503,13 @@ msgid "Delete Unpaid Orders ?"
 msgstr "Verwijderd onbetaalde orders?"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
+#, python-format
+msgid "Deselect Customer"
+msgstr "Deselecteer Klant"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__account_id
 msgid "Destination account"
 msgstr ""
@@ -1716,7 +1737,7 @@ msgstr "Ontvangstbewijs per e-mail"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Email sent."
-msgstr ""
+msgstr "Email verzonden."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1858,7 +1879,7 @@ msgstr "Fiscale posities"
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Fiscal data module error"
-msgstr ""
+msgstr "Afrondingsfout in betalingsregels"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_follower_ids
@@ -2190,7 +2211,7 @@ msgstr "Ongeldige actie"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Invalid email."
-msgstr ""
+msgstr "Ongeldig e-mail."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2565,7 +2586,7 @@ msgstr "Module pos HR"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Mijn activiteit deadline"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -4045,7 +4066,7 @@ msgstr "Afrondingsmethode"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Rounding error in payment lines"
-msgstr ""
+msgstr "Afrondingsfout in betalingsregels"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4247,7 +4268,7 @@ msgstr "Verzenden via e-mail"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Sending email failed. Please try again."
-msgstr ""
+msgstr "Het verzenden van e-mail is mislukt. Probeer het opnieuw."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -4335,6 +4356,13 @@ msgstr "Sessies"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Set Closing Cash"
 msgstr "Afsluitbedrag ingeven"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
+#, python-format
+msgid "Set Customer"
+msgstr "Klant instellen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_bnk_stmt_cashbox_footer
@@ -4791,6 +4819,8 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
 msgstr ""
+"Het bedrag van uw betalingsregels moet worden afgerond om de transactie te "
+"valideren."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4813,6 +4843,8 @@ msgstr ""
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
 msgstr ""
+"Er is een fout opgetreden in de fiscale gegevensmodule bij het ontvangen van"
+" uw order."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -5737,7 +5769,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
-msgstr ""
+msgstr "U kunt de kassa niet sluiten als bestellingen nog in concept zijn"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
