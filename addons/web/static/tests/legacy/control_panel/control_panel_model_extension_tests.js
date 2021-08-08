@@ -369,5 +369,52 @@ odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.
 
         });
 
+        QUnit.test('search defaults on X2M fields', async function (assert) {
+            assert.expect(1);
+
+            const context = {
+                search_default_otom: [1, 2],
+                search_default_mtom: [1, 2]
+            };
+            const fields = this.fields;
+            fields.otom = { string: "O2M", type: "one2many", relation: 'partner' };
+            fields.mtom = { string: "M2M", type: "many2many", relation: 'partner' };
+            const arch = `
+                <search>
+                    <field name="otom"/>
+                    <field name="mtom"/>
+                </search>`;
+            const model = createModel({ arch, fields, context });
+            assert.deepEqual(sanitizeFilters(model), [
+                {
+                    "defaultAutocompleteValue": {
+                      "label": [1, 2],
+                      "operator": "ilike",
+                      "value": [1, 2]
+                    },
+                    "defaultRank": -10,
+                    "description": "O2M",
+                    "fieldName": "otom",
+                    "fieldType": "one2many",
+                    "isDefault": true,
+                    "type": "field"
+                },
+                {
+                    "defaultAutocompleteValue": {
+                      "label": [1, 2],
+                      "operator": "ilike",
+                      "value": [1, 2]
+                    },
+                    "defaultRank": -10,
+                    "description": "M2M",
+                    "fieldName": "mtom",
+                    "fieldType": "many2many",
+                    "isDefault": true,
+                    "type": "field"
+                }
+            ]);
+
+        });
+
     });
 });
