@@ -2,6 +2,11 @@
 
     .o_project_kanban_main {
         max-width: 300px;
+
+        // Prevents the kanban settings menu from overflowing and creating a scrollbar.
+        .o_kanban_card_manage_pane .o_kanban_card_manage_section a {
+            @extend .text-wrap;
+        }
     }
 
     .o_project_kanban_boxes {
