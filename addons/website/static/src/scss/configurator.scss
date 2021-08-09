@@ -171,6 +171,15 @@
                         font-family: $font-family-base;
                         text-decoration: none;
                         line-height: 1.2;
+
+                        &.o_no_result, &.o_no_result:hover {
+                            background-color: transparent !important;
+                            color: gray('600') !important;
+                            cursor: default;
+                            padding: $dropdown-item-padding-y*4 $dropdown-item-padding-x;
+                            font-style: italic;
+                            font-size: .5em;
+                        }
                     }
                 }
             }

@@ -91,6 +91,7 @@ class DescriptionScreen extends Component {
         this.labelToId = {};
         this.getters = useGetters();
         this.dispatch = useDispatch();
+        this.autocompleteHasResults = true;
     }
 
     mounted() {
@@ -99,8 +100,10 @@ class DescriptionScreen extends Component {
             appendTo: '.o_configurator_industry_wrapper',
             delay: 400,
             minLength: 1,
-            source: this.autocompleteSearch.bind(this),
-            select: this.selectIndustry.bind(this),
+            source: this._autocompleteSearch.bind(this),
+            select: this._selectIndustry.bind(this),
+            open: this._customizeNoResultMenuStyle.bind(this),
+            focus: this._disableKeyboardNav.bind(this),
             classes: {
                 'ui-autocomplete': 'custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast',
             }
@@ -112,7 +115,66 @@ class DescriptionScreen extends Component {
         }
     }
 
-    autocompleteSearch(request, response) {
+    /**
+     * Clear the input and its parent label and set the selected industry to undefined.
+     *
+     * @private
+     */
+    _clearIndustrySelection() {
+        this.industrySelection.el.value = '';
+        this.industrySelection.el.parentNode.dataset.value = '';
+        this.dispatch('selectIndustry', undefined, undefined);
+    }
+
+    /**
+     * Set the input's parent label value to automatically adapt input size
+     * and update the selected industry.
+     *
+     * @private
+     * @param {String} label an industry label
+     */
+    _setSelectedIndustry(label) {
+        this.industrySelection.el.parentNode.dataset.value = label;
+        const id = this.labelToId[label];
+        this.dispatch('selectIndustry', label, id);
+        this.checkDescriptionCompletion();
+    }
+
+    /**
+     * Called each time the suggestion menu is opened or updated. If there are no
+     * results to display the style of the "No result found" message is customized.
+     *
+     * @private
+     */
+    _customizeNoResultMenuStyle() {
+        if (!this.autocompleteHasResults) {
+            const noResultLinkEl = this.industrySelection.el.parentElement.getElementsByTagName('a')[0];
+            noResultLinkEl.classList.add('o_no_result');
+        }
+    }
+
+    /**
+     * Disables keyboard navigation when there are no results to avoid selecting the
+     * "No result found" message by pressing the down arrow key.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _disableKeyboardNav(ev) {
+        if (!this.autocompleteHasResults) {
+            ev.preventDefault();
+        }
+    }
+
+    /**
+     * Called each time the autocomplete input's value changes. Only industries containing
+     * the input value are kept. Industries starting with the input value are put in first
+     * position then the order is the alphabetical one. The result size is limited to 15.
+     *
+     * @param {Object} request object with a single 'term' property which is the input current value
+     * @param {function} response callback which takes the data to suggest as argument
+     */
+    _autocompleteSearch(request, response) {
         const lcTerm = request.term.toLowerCase();
         const limit = 15;
         const matches = this.state.industries.filter((val) => {
@@ -127,33 +189,50 @@ class DescriptionScreen extends Component {
             });
             relaxedMatches = relaxedMatches.slice(0, limit - labels.length);
             results = results.concat(relaxedMatches);
-            labels = results.map((val) => val.label);
         }
-        results.forEach((r) => {
-            this.labelToId[r.label] = r.id;
-        });
+        this.autocompleteHasResults = !!results.length;
+        if (this.autocompleteHasResults) {
+            labels = results.map((val) => val.label);
+            results.forEach((r) => {
+                this.labelToId[r.label] = r.id;
+            });
+        } else {
+            labels = [_t("No result found, broaden your search.")];
+        }
         response(labels);
     }
 
-    selectIndustry(_, ui) {
-        this.industrySelection.el.parentNode.dataset.value = ui.item.label;
-        this.dispatch('selectIndustry', ui.item.label, this.labelToId[ui.item.label]);
-        this.checkDescriptionCompletion();
-    }
-
-    blurIndustrySelection(ev) {
-        const id = this.labelToId[ev.target.value];
-        this.dispatch('selectIndustry', ev.target.value, id);
-        if (id === undefined) {
-            this.industrySelection.el.value = '';
-            this.industrySelection.el.parentNode.dataset.value = '';
+    /**
+     * Called when a menu option is selected. Update the selected industry or
+     * clear the input if the option is the "No result found" message.
+     *
+     * @private
+     * @param {Event} ev
+     * @param {Object} ui an object with label and value properties for
+     *      the selected option.
+     */
+    _selectIndustry(ev, ui) {
+        if (this.autocompleteHasResults) {
+            this._setSelectedIndustry(ui.item.label);
         } else {
-            this.checkDescriptionCompletion();
+            this._clearIndustrySelection();
+            ev.preventDefault();
         }
     }
 
-    inputIndustrySelection(ev) {
-        this.industrySelection.el.parentNode.dataset.value = ev.target.value;
+    /**
+     * Called on industrySelection input blur. Updates the selected industry or
+     * clears the input if its current value is not a valid industry.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _blurIndustrySelection(ev) {
+        if (this.labelToId[ev.target.value] !== undefined) {
+            this._setSelectedIndustry(ev.target.value);
+        } else {
+            this._clearIndustrySelection();
+        }
     }
 
     selectWebsiteType(ev) {
