@@ -455,7 +455,7 @@ class Event(models.Model):
                 0]
 
         return [
-            ['all', _('Upcoming Events'), [("date_end", ">", sd(today))], 0],
+            ['upcoming', _('Upcoming Events'), [("date_end", ">", sd(today))], 0],
             ['today', _('Today'), [
                 ("date_end", ">", sd(today)),
                 ("date_begin", "<", sdn(today))],
@@ -464,6 +464,7 @@ class Event(models.Model):
             ['old', _('Past Events'), [
                 ("date_end", "<", sd(today))],
                 0],
+            ['all', _('All Events'), [], 0]
         ]
 
     @api.model
@@ -512,7 +513,7 @@ class Event(models.Model):
             if date == date_details[0]:
                 domain.append(date_details[2])
                 no_country_domain.append(date_details[2])
-                if date_details[0] != 'all':
+                if date_details[0] != 'upcoming':
                     current_date = date_details[1]
 
         search_fields = ['name']
