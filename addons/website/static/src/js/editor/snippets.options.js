@@ -2686,11 +2686,7 @@ options.registry.CoverProperties = options.Class.extend({
         this.$target[0].dataset.coverClass = coverClass;
         this.$target[0].dataset.textAlignClass = this.$el.find('[data-cover-opt-name="text_align"] we-button.active').data('selectClass') || '';
         this.$target[0].dataset.filterValue = this.$filterValueOpts.filter('.active').data('filterValue') || 0.0;
-        let colorPickerWidget = null;
-        this.trigger_up('user_value_widget_request', {
-            name: 'bg_color_opt',
-            onSuccess: _widget => colorPickerWidget = _widget,
-        });
+        const colorPickerWidget = this._requestUserValueWidgets('bg_color_opt')[0];
         // TODO there is probably a better way and this should be refactored to
         // use more standard colorpicker+imagepicker structure
         const ccValue = colorPickerWidget._ccValue;
