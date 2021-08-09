@@ -14,7 +14,7 @@ from werkzeug import urls
 from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, tools, http
 from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
@@ -329,9 +329,10 @@ class Website(models.Model):
     def configurator_recommended_themes(self, industry_id, palette):
         domain = [('name', '=like', 'theme%'), ('name', 'not in', ['theme_default', 'theme_common'])]
         client_themes = request.env['ir.module.module'].search(domain).mapped('name')
+        client_themes_img = dict([(t, http.addons_manifest[t].get('images_preview_theme', {})) for t in client_themes])
         params = {
             'palette': palette,
-            'client_themes': client_themes,
+            'client_themes': client_themes_img,
         }
         return self._website_api_rpc('/api/website/1/configurator/recommended_themes/%s' % industry_id, params)
 
