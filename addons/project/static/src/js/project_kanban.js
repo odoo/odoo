@@ -1,30 +1,61 @@
 /** @odoo-module **/
 
 import KanbanController from 'web.KanbanController';
+import KanbanRenderer from 'web.KanbanRenderer';
 import KanbanView from 'web.KanbanView';
 import KanbanColumn from 'web.KanbanColumn';
 import viewRegistry from 'web.view_registry';
 import KanbanRecord from 'web.KanbanRecord';
 import { ProjectControlPanel } from '@project/js/project_control_panel';
 
-KanbanRecord.include({
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+// PROJECTS
 
+const ProjectProjectKanbanRecord = KanbanRecord.extend({
     /**
      * @override
      * @private
      */
-     // YTI TODO: Should be transformed into a extend and specific to project
     _openRecord: function () {
-        if (this.selectionMode !== true && this.modelName === 'project.project' &&
-            this.$(".o_project_kanban_boxes a").length) {
-            this.$('.o_project_kanban_boxes a').first().click();
+        const kanbanBoxesElement = this.el.querySelectorAll('.o_project_kanban_boxes a');
+        if (this.selectionMode !== true && kanbanBoxesElement.length) {
+            kanbanBoxesElement[0].click();
         } else {
             this._super.apply(this, arguments);
         }
     },
+});
+
+const ProjectProjectKanbanRenderer = KanbanRenderer.extend({
+    config: _.extend({}, KanbanRenderer.prototype.config, {
+        KanbanRecord: ProjectProjectKanbanRecord,
+    }),
+});
+
+const ProjectProjectKanbanView = KanbanView.extend({
+    config: Object.assign({}, KanbanView.prototype.config, {
+        Renderer: ProjectProjectKanbanRenderer,
+    })
+});
+
+viewRegistry.add('project_project_kanban', ProjectProjectKanbanView);
+
+// TASKS
+
+const ProjectTaskKanbanColumn = KanbanColumn.extend({
+    /**
+     * @override
+     * @private
+     */
+    _onDeleteColumn: function (event) {
+        event.preventDefault();
+        this.trigger_up('kanban_column_delete_wizard');
+    },
+});
+
+const ProjectTaskKanbanRenderer = KanbanRenderer.extend({
+    config: Object.assign({}, KanbanRenderer.prototype.config, {
+        KanbanColumn: ProjectTaskKanbanColumn,
+    }),
 });
 
 export const ProjectKanbanController = KanbanController.extend({
@@ -45,25 +76,15 @@ export const ProjectKanbanController = KanbanController.extend({
         }).then(function (res) {
             self.do_action(res);
         });
-    }
+    },
 });
 
 const ProjectKanbanView = KanbanView.extend({
-    config: Object.assign({}, KanbanView.prototype.config, {
+    config: _.extend({}, KanbanView.prototype.config, {
         Controller: ProjectKanbanController,
+        Renderer: ProjectTaskKanbanRenderer,
         ControlPanel: ProjectControlPanel,
     }),
 });
 
-KanbanColumn.include({
-    _onDeleteColumn: function (event) {
-        event.preventDefault();
-        if (this.modelName === 'project.task') {
-            this.trigger_up('kanban_column_delete_wizard');
-            return;
-        }
-        this._super.apply(this, arguments);
-    }
-});
-
-viewRegistry.add('project_kanban', ProjectKanbanView);
+viewRegistry.add('project_task_kanban', ProjectKanbanView);
