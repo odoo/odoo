@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, models, fields
 
 
 class StockRule(models.Model):
@@ -28,3 +28,13 @@ class ProcurementGroup(models.Model):
             return [('location_id', '=', location.id), ('action', '!=', 'push'), ('company_id', '=', values['company_id'].id)]
         else:
             return super(ProcurementGroup, self)._get_rule_domain(location, values)
+
+class StockPicking(models.Model):
+    _inherit = 'stock.picking'
+
+    is_dropship = fields.Boolean("Is a Dropship", compute='_compute_is_dropship')
+
+    @api.depends('location_dest_id.usage', 'location_id.usage')
+    def _compute_is_dropship(self):
+        for picking in self:
+            picking.is_dropship = picking.location_dest_id.usage == 'customer' and picking.location_id.usage == 'supplier'

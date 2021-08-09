@@ -19,8 +19,8 @@ class PurchaseOrder(models.Model):
 
     incoterm_id = fields.Many2one('account.incoterms', 'Incoterm', states={'done': [('readonly', True)]}, help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
 
-    picking_count = fields.Integer(compute='_compute_picking', string='Picking count', default=0, store=True)
-    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking', string='Receptions', copy=False, store=True)
+    incoming_picking_count = fields.Integer("Incoming Shipment count", compute='_compute_incoming_picking_count')
+    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Receptions', copy=False, store=True)
 
     picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=Purchase.READONLY_STATES, required=True, default=_default_picking_type, domain="['|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]",
         help="This will determine operation type of incoming shipment")
@@ -33,11 +33,14 @@ class PurchaseOrder(models.Model):
     on_time_rate = fields.Float(related='partner_id.on_time_rate', compute_sudo=False)
 
     @api.depends('order_line.move_ids.picking_id')
-    def _compute_picking(self):
+    def _compute_picking_ids(self):
         for order in self:
-            pickings = order.order_line.move_ids.picking_id
-            order.picking_ids = pickings
-            order.picking_count = len(pickings)
+            order.picking_ids = order.order_line.move_ids.picking_id
+
+    @api.depends('picking_ids')
+    def _compute_incoming_picking_count(self):
+        for order in self:
+            order.incoming_picking_count = len(order.picking_ids)
 
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):
