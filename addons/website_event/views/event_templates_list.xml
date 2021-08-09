@@ -99,7 +99,7 @@
             </a>
             <div class="dropdown-menu">
                 <t t-foreach="dates" t-as="date">
-                    <t t-if="date[3] or (date[0] in ('old','all'))">
+                    <t t-if="date[3] or (date[0] in ('old','upcoming','all'))">
                         <a t-att-href="keep('/event', date=date[0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{searches.get('date') == date[0] and 'active'}">
                             <t t-esc="date[1]"/>
                             <span t-if="date[3]" t-esc="date[3]" class="badge badge-pill badge-primary ml-3"/>
