@@ -1753,18 +1753,20 @@ var SnippetsMenu = Widget.extend({
                     return editorToEnable;
                 }
 
-                const editorToEnableHierarchy = [];
-                let current = editorToEnable;
-                while (current && current.$target) {
-                    editorToEnableHierarchy.push(current);
-                    current = current.getParent();
+                if (!previewMode) {
+                    this._enabledEditorHierarchy = [];
+                    let current = editorToEnable;
+                    while (current && current.$target) {
+                        this._enabledEditorHierarchy.push(current);
+                        current = current.getParent();
+                    }
                 }
 
                 // First disable all editors...
                 for (let i = this.snippetEditors.length; i--;) {
                     const editor = this.snippetEditors[i];
                     editor.toggleOverlay(false, previewMode);
-                    if (!previewMode && !editorToEnableHierarchy.includes(editor)) {
+                    if (!previewMode && !this._enabledEditorHierarchy.includes(editor)) {
                         editor.toggleOptions(false);
                     }
                 }
@@ -1773,7 +1775,7 @@ var SnippetsMenu = Widget.extend({
                 if (editorToEnable) {
                     editorToEnable.toggleOverlay(true, previewMode);
                     if (!previewMode && !editorToEnable.displayOverlayOptions) {
-                        const parentEditor = editorToEnableHierarchy.find(ed => ed.displayOverlayOptions);
+                        const parentEditor = this._enabledEditorHierarchy.find(ed => ed.displayOverlayOptions);
                         if (parentEditor) {
                             parentEditor.toggleOverlay(true, previewMode);
                         }
@@ -1788,7 +1790,6 @@ var SnippetsMenu = Widget.extend({
                     });
                 }
 
-                this._enabledEditorHierarchy = editorToEnableHierarchy;
                 return editorToEnable;
             });
         });
