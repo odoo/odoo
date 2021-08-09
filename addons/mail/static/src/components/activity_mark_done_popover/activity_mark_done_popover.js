@@ -93,15 +93,6 @@ export class ActivityMarkDonePopover extends Component {
         });
     }
 
-    /**
-     * @private
-     */
-    _onKeydown(ev) {
-        if (ev.key === 'Escape') {
-            this._close();
-        }
-    }
-
 }
 
 Object.assign(ActivityMarkDonePopover, {

@@ -129,14 +129,6 @@ export class Activity extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickActivity(ev) {
-        this.activity.onClickActivity(ev);
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     async _onClickCancel(ev) {
         ev.preventDefault();
         await this.activity.deleteServerRecord();

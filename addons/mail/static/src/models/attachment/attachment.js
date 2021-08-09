@@ -68,6 +68,15 @@ function factory(dependencies) {
         }
 
         /**
+         * Handle click on download icon.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickDownload() {
+            this.download();
+        }
+
+        /**
          * View provided attachment(s), with given attachment initially. Prompts
          * the attachment viewer.
          *
