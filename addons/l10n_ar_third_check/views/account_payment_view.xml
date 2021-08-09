@@ -1,5 +1,17 @@
 <odoo>
 
+    <record model="ir.ui.view" id="view_account_payment_tree">
+        <field name="name">account.check.tree</field>
+        <field name="model">account.payment</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="attributes">
+                <attribute name="name">display_name</attribute>
+            </field>
+        </field>
+    </record>
+
     <record id="view_account_payment_form_inherited" model="ir.ui.view">
         <field name="name">account.payment.form.inherited</field>
         <field name="model">account.payment</field>
