@@ -55,7 +55,7 @@ class TestMrpOrder(TestMrpCommon):
         }).action_apply_inventory()
 
         test_date_planned = Dt.now() - timedelta(days=1)
-        test_quantity = 2.0
+        test_quantity = 3.0
         man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
         man_order_form.product_id = self.product_4
         man_order_form.bom_id = self.bom_1
@@ -89,7 +89,7 @@ class TestMrpOrder(TestMrpCommon):
 
         # produce product
         mo_form = Form(man_order)
-        mo_form.qty_producing = 1.0
+        mo_form.qty_producing = 2.0
         man_order = mo_form.save()
 
         action = man_order.button_mark_done()
@@ -100,6 +100,14 @@ class TestMrpOrder(TestMrpCommon):
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
         backorder.save().action_close_mo()
         self.assertEqual(man_order.state, 'done', "Production order should be done.")
+
+        # check that copy handles moves correctly
+        mo_copy = man_order.copy()
+        self.assertEqual(mo_copy.state, 'draft', "Copied production order should be draft.")
+        self.assertEqual(len(mo_copy.move_raw_ids), 4,
+                         "Incorrect number of component moves [i.e. all non-0 (even cancelled) moves should be copied].")
+        self.assertEqual(len(mo_copy.move_finished_ids), 1, "Incorrect number of moves for products to produce [i.e. cancelled moves should not be copied")
+        self.assertEqual(mo_copy.move_finished_ids.product_uom_qty, 2, "Incorrect qty of products to produce")
 
     def test_production_availability(self):
         """ Checks the availability of a production order through mutliple calls to `action_assign`.
