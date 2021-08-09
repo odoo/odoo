@@ -23,11 +23,6 @@ class WebsiteConfiguratorFeature(models.Model):
     menu_sequence = fields.Integer(help='If set, a website menu will be created for the feature.')
     menu_company = fields.Boolean(help='If set, add the menu as a second level menu, as a child of "Company" menu.')
 
-    @api.depends('page_view_id')
-    def _compute_type(self):
-        for record in self:
-            record.type = 'page' if record.page_view_id else 'app'
-
     @api.constrains('module_id', 'page_view_id')
     def _check_module_xor_page_view(self):
         if bool(self.module_id) == bool(self.page_view_id):
