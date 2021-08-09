@@ -555,6 +555,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                 if tax['tax_repartition_line_id']:
                     rep_ln = self.env['account.tax.repartition.line'].browse(tax['tax_repartition_line_id'])
                     base_amount = self.env['account.move']._get_base_amount_to_display(tax['base'], rep_ln)
+                    base_amount = expense.currency_id._convert(base_amount, company_currency, expense.company_id, account_date)
                 else:
                     base_amount = None
 
