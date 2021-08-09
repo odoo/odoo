@@ -56,7 +56,7 @@
                 </div>
                 <div t-attf-class="o_configurator_typing_text d-inline d-md-flex align-items-center o_configurator_industry mb-md-2 mb-lg-4 {{!state.selectedType ? 'o_configurator_hide' : 'o_configurator_show'}}">
                     <label class="o_configurator_industry_wrapper mr-2">
-                        <input t-on-blur="blurIndustrySelection" t-on-input="inputIndustrySelection" t-ref="industrySelection"/>
+                        <input t-on-blur="_blurIndustrySelection" t-ref="industrySelection"/>
                     </label>
                     <span> business</span>
                     <span t-att-class="!state.selectedIndustry ? 'o_configurator_hide' : 'o_configurator_show'">,</span>
