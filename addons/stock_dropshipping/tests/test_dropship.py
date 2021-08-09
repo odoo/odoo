@@ -41,6 +41,10 @@ class TestDropship(common.TransactionCase):
         po = self.env['purchase.order'].search([('group_id', '=', so.procurement_group_id.id)])
         po_line = po.order_line
 
+        # Check dropship count on SO and PO
+        self.assertEqual(po.incoming_picking_count, 0)
+        self.assertEqual(so.delivery_count, 0)
+
         # Check the qty on the P0
         self.assertAlmostEqual(po_line.product_qty, 1.00)
 
@@ -110,7 +114,12 @@ class TestDropship(common.TransactionCase):
         self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
         purchase.button_confirm()
         self.assertEqual(purchase.state, 'purchase', 'Purchase order should be in the approved state')
-        self.assertEqual(len(purchase.ids), 1, 'There should be one picking')
+
+        # Check dropship count on SO and PO
+        self.assertEqual(purchase.incoming_picking_count, 0)
+        self.assertEqual(sale_order_drp_shpng.delivery_count, 0)
+        self.assertEqual(sale_order_drp_shpng.dropship_picking_count, 1)
+        self.assertEqual(purchase.dropship_picking_count, 1)
 
         # Send the 200 pieces
         purchase.picking_ids.move_lines.quantity_done = purchase.picking_ids.move_lines.product_qty

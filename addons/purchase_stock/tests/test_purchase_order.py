@@ -67,7 +67,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             price_unit = seller.currency_id._convert(price_unit, self.po.currency_id, self.po.company_id, self.po.date_order)
         self.assertEqual(price_unit, 250.0, 'Purchase: the price of the product for the supplier should be 250.0.')
 
-        self.assertEqual(self.po.picking_count, 1, 'Purchase: one picking should be created"')
+        self.assertEqual(self.po.incoming_picking_count, 1, 'Purchase: one picking should be created"')
         self.picking = self.po.picking_ids[0]
         self.picking.move_line_ids.write({'qty_done': 5.0})
         self.picking.button_validate()
@@ -98,7 +98,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         # Confirm the purchase order
         self.po.button_confirm()
         self.assertEqual(self.po.state, 'purchase', 'Purchase: PO state should be "Purchase')
-        self.assertEqual(self.po.picking_count, 1, 'Purchase: one picking should be created"')
+        self.assertEqual(self.po.incoming_picking_count, 1, 'Purchase: one picking should be created"')
         self.picking = self.po.picking_ids[0]
         self.picking.move_line_ids.write({'qty_done': 5.0})
         self.picking.button_validate()
