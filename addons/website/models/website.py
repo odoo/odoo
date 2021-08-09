@@ -1616,69 +1616,94 @@ class Website(models.Model):
             model = self.env[model_name]
             if search_detail.get('requires_sudo'):
                 model = model.sudo()
-            fields = ['arch_db' if field == 'view_id.arch_db' else field for field in fields if field in model or field == 'view_id.arch_db']
-            if model_name == 'website.page':
-                fields.remove('name') # TODO handle ?
+            domain = search_detail['base_domain'].copy()
+            fields = set(fields).intersection(model._fields)
 
             unaccent = get_unaccent_sql_wrapper(self.env.cr)
             similarities = [sql.SQL("word_similarity({search}, {field})").format(
                 search=unaccent(sql.Placeholder('search')),
-                field=sql.SQL("{table}.{field}").format(
-                    table=sql.Identifier((self.env['ir.ui.view'] if field == 'arch_db' else model)._table),
-                    field=unaccent(sql.Identifier(field))
-                )
+                # Specific handling for website.page that inherits its arch_db and name fields
+                # TODO make more generic
+                field=unaccent(sql.SQL("{table}.{field}").format(
+                    table=sql.Identifier((self.env['ir.ui.view'] if field == 'arch_db' or (field == 'name' and 'arch_db' in fields) else model)._table),
+                    field=sql.Identifier(field)
+                ))
             ) for field in fields]
             best_similarity = sql.SQL('GREATEST({similarities})').format(
                 similarities=sql.SQL(', ').join(similarities)
             )
 
             from_clause = sql.SQL("FROM {table}").format(table=sql.Identifier(model._table))
+            # Specific handling for website.page that inherits its arch_db and name fields
+            # TODO make more generic
             if 'arch_db' in fields:
                 from_clause = sql.SQL("""
                     {from_clause}
-                    LEFT JOIN {view_table} ON {table}.{view_id} = {view_table}.{id}
+                    LEFT JOIN {view_table} ON {table}.view_id = {view_table}.id
                 """).format(
                     from_clause=from_clause,
                     table=sql.Identifier(model._table),
-                    view_id=sql.Identifier('view_id'),
                     view_table=sql.Identifier(self.env['ir.ui.view']._table),
-                    id=sql.Identifier('id'),
                 )
             query = sql.SQL("""
-                SELECT {table}.{id}, {best_similarity} AS _best_similarity
+                SELECT {table}.id, {best_similarity} AS _best_similarity
                 {from_clause}
                 ORDER BY _best_similarity desc
                 LIMIT 1000
             """).format(
                 table=sql.Identifier(model._table),
-                id=sql.Identifier('id'),
                 best_similarity=best_similarity,
                 from_clause=from_clause,
             )
             self.env.cr.execute(query, {'search': search})
             ids = {row[0] for row in self.env.cr.fetchall() if row[1] >= similarity_threshold}
             if self.env.lang:
-                similarity = sql.SQL("word_similarity({search}, {field})").format(
-                    search=unaccent(sql.Placeholder('search')),
-                    field=unaccent(sql.Identifier('value'))
-                )
-                names = ['%s,%s' % ((self.env['ir.ui.view'] if field == 'arch_db' else model)._name, field) for field in fields]
-                query = sql.SQL("""
-                    SELECT res_id, {similarity} AS _similarity
-                    FROM ir_translation
-                    WHERE lang = {lang}
-                    AND name = ANY({names})
-                    AND type = 'model'
-                    ORDER BY _similarity desc
-                    LIMIT 1000
-                """).format(
-                    similarity=similarity,
-                    lang=sql.Placeholder('lang'),
-                    names=sql.Placeholder('names'),
-                )
-                self.env.cr.execute(query, {'lang': self.env.lang, 'names' :names, 'search': search})
+                # Specific handling for website.page that inherits its arch_db and name fields
+                # TODO make more generic
+                if 'arch_db' in fields:
+                    # Look for partial translations
+                    similarity = sql.SQL("word_similarity({search}, {field})").format(
+                        search=unaccent(sql.Placeholder('search')),
+                        field=unaccent(sql.SQL('t.value'))
+                    )
+                    names = ['%s,%s' % (self.env['ir.ui.view']._name, field) for field in fields]
+                    query = sql.SQL("""
+                        SELECT {table}.id, {similarity} AS _similarity
+                        FROM {table}
+                        LEFT JOIN ir_ui_view v ON {table}.view_id = v.id
+                        LEFT JOIN ir_translation t ON v.id = t.res_id
+                        WHERE t.lang = {lang}
+                        AND t.name = ANY({names})
+                        AND t.type = 'model_terms'
+                        ORDER BY _similarity desc
+                        LIMIT 1000
+                    """).format(
+                        table=sql.Identifier(model._table),
+                        similarity=similarity,
+                        lang=sql.Placeholder('lang'),
+                        names=sql.Placeholder('names'),
+                    )
+                else:
+                    similarity = sql.SQL("word_similarity({search}, {field})").format(
+                        search=unaccent(sql.Placeholder('search')),
+                        field=unaccent(sql.SQL('value'))
+                    )
+                    names = ['%s,%s' % (model._name, field) for field in fields]
+                    query = sql.SQL("""
+                        SELECT res_id, {similarity} AS _similarity
+                        FROM ir_translation
+                        WHERE lang = {lang}
+                        AND name = ANY({names})
+                        AND type = 'model'
+                        ORDER BY _similarity desc
+                        LIMIT 1000
+                    """).format(
+                        similarity=similarity,
+                        lang=sql.Placeholder('lang'),
+                        names=sql.Placeholder('names'),
+                    )
+                self.env.cr.execute(query, {'lang': self.env.lang, 'names': names, 'search': search})
                 ids.update(row[0] for row in self.env.cr.fetchall() if row[1] >= similarity_threshold)
-            domain = search_detail['base_domain'].copy()
             domain.append([('id', 'in', list(ids))])
             domain = AND(domain)
             records = model.search_read(domain, fields, limit=limit)
@@ -1686,8 +1711,6 @@ class Website(models.Model):
                 for field, value in record.items():
                     if isinstance(value, str):
                         value = value.lower()
-                        if field == 'arch_db':
-                            value = text_from_html(value)
                         yield from re.findall(match_pattern, value)
 
     def _basic_enumerate_words(self, search_details, search, limit):
@@ -1709,7 +1732,7 @@ class Website(models.Model):
                 model = model.sudo()
             domain = search_detail['base_domain'].copy()
             fields_domain = []
-            fields = ['arch_db' if field == 'view_id.arch_db' else field for field in fields if field in model or field == 'view_id.arch_db']
+            fields = set(fields).intersection(model._fields)
             for field in fields:
                 fields_domain.append([(field, '=ilike', '%s%%' % first)])
                 fields_domain.append([(field, '=ilike', '%% %s%%' % first)])
