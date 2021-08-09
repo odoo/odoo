@@ -241,5 +241,15 @@ weSnippetEditor.SnippetEditor.include({
         '.s_parallax_bg',
         '.o_bg_video_container',
     ].join(','),
+
+    /**
+     * @override
+     */
+    getName() {
+        if (this.$target[0].closest('[data-oe-field=logo]')) {
+            return _t("Logo");
+        }
+        return this._super(...arguments);
+    },
 });
 });
