@@ -12,7 +12,7 @@ class AccountPayment(models.Model):
     _order = "date desc, id desc, name desc"
 
     check_id = fields.Many2one('account.payment', string='Check', readonly=True, states={'draft': [('readonly', False)]}, copy=False,)
-    amount = fields.Monetary(compute='_compute_amount', store=True, recursive=True)
+    amount = fields.Monetary(compute='_compute_amount', store=True, recursive=True, copy=True,)
     third_check_last_journal_id = fields.Many2one('account.journal', compute='_compute_third_check_last_journal', store=True)
     third_check_operation_ids = fields.One2many('account.payment', 'check_id', readonly=True)
     third_check_from_state = fields.Char(compute='_compute_third_check_from_state')
@@ -304,13 +304,18 @@ class AccountPayment(models.Model):
         return action
 
     def _create_paired_internal_transfer_payment(self):
-        """ If we're making a transfer between third checks journal, select third check method and journal on destination transfer """
-        for rec in self:
+        for rec in self.filtered(lambda x: x.payment_method_line_id.code in ['in_third_checks', 'out_third_checks']):
             destionation_payment_method_code = 'in_third_checks' if rec.payment_type == 'outbound' else 'out_third_checks'
             destination_payment_method = rec.destination_journal_id.inbound_payment_method_line_ids.filtered(lambda x: x.code == destionation_payment_method_code)
-            if not destination_payment_method:
-                continue
-            super(AccountPayment, rec.with_context(
-                default_check_id=rec.check_id, default_payment_method_line_id=destination_payment_method.id))._create_paired_internal_transfer_payment()
+            if destination_payment_method:
+                # If we're making a transfer between third checks journal, select third check method and journal on destination transfer
+                super(AccountPayment, rec.with_context(
+                    default_check_id=rec.check_id, default_payment_method_line_id=destination_payment_method.id))._create_paired_internal_transfer_payment()
+            else:
+                # if it's check move we add a reference on ref field for statements and also to make it more understandable
+                super(AccountPayment, rec)._create_paired_internal_transfer_payment()
+                rec.paired_internal_transfer_payment_id.ref = '%s%s' % (
+                    rec.ref + ' - ' or '',
+                    _('Check %s') % rec.check_id.check_number)
             self -= rec
         super(AccountPayment, self)._create_paired_internal_transfer_payment()
