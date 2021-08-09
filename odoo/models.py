@@ -2614,8 +2614,8 @@ class BaseModel(metaclass=MetaModel):
         many2manyfields = {field['field'] for field in fields if field['type'] == 'many2many'}
         for field in many2manyfields:
             ids_set = {d[field] for d in data if d[field]}
-            m2o_records = self.env[self._fields[field].comodel_name].browse(ids_set)
-            data_dict = dict(lazy_name_get(m2o_records.sudo()))
+            m2m_records = self.env[self._fields[field].comodel_name].browse(ids_set)
+            data_dict = dict(lazy_name_get(m2m_records.sudo()))
             for d in data:
                 d[field] = (d[field], data_dict[d[field]]) if d[field] else False
 

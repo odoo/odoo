@@ -1030,9 +1030,9 @@ class MailActivityMixin(models.AbstractModel):
             JOIN (
                 SELECT res_id,
                 CASE
-                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) > 0 THEN 'planned'
-                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) < 0 THEN 'overdue'
-                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) = 0 THEN 'today'
+                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, '{tz1}'))::date) > 0 THEN 'planned'
+                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, '{tz2}'))::date) < 0 THEN 'overdue'
+                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, '{tz3}'))::date) = 0 THEN 'today'
                     ELSE null
                 END AS activity_state
                 FROM mail_activity
@@ -1046,14 +1046,18 @@ class MailActivityMixin(models.AbstractModel):
         """.format(
             fields=', '.join(select_terms),
             from_clause=from_clause,
+            tz1=tz,
+            tz2=tz,
+            tz3=tz,
             model=self._name,
             table=self._table,
             where_clause=where_clause or '1=1',
             group_by=', '.join(groupby_terms),
         )
-        self.env.cr.execute(select_query, [tz] * 3 + where_params)
+        self.env.cr.execute(select_query, where_params)
         fetched_data = self.env.cr.dictfetchall()
         self._read_group_resolve_many2one_fields(fetched_data, annotated_groupbys)
+        self._read_group_resolve_many2many_fields(fetched_data, annotated_groupbys)
         data = [
             {key: self._read_group_prepare_data(key, val, groupby_dict)
              for key, val in row.items()}
