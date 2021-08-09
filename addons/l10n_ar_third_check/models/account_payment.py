@@ -1,5 +1,6 @@
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv import expression
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -261,11 +262,30 @@ class AccountPayment(models.Model):
         return res
 
     # @api.depends('move_id.name', 'payment_method_line_id', 'check_number')
+    # def name_get(self):
+    #     if self._context.get('show_check_number'):
+    #         return [(payment.id, payment.check_number) for payment in self]
+    #     return super().name_get()
+
     @api.depends_context('show_check_number')
     def name_get(self):
-        if self._context.get('show_check_number'):
-            return [(payment.id, payment.check_number) for payment in self]
-        return super().name_get()
+        """ We add check number to display_name for check_id m2o field """
+        res_names = super().name_get()
+        for i, (res_name, rec) in enumerate(zip(res_names, self)):
+            if rec.check_number:
+                res_names[i] = (res_name[0], "%s %s" % (res_name[1], _("(Check %s)" % rec.check_number)))
+        return res_names
+
+    @api.model
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        """ Allow to search by check_number """
+        args = args or []
+        if operator == 'ilike' and not (name or '').strip():
+            domain = []
+        else:
+            connector = '&' if operator in expression.NEGATIVE_TERM_OPERATORS else '|'
+            domain = [connector, ('check_number', operator, name), ('name', operator, name)]
+        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     def button_open_check_operations(self):
         ''' Redirect the user to the invoice(s) paid by this payment.
