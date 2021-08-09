@@ -102,7 +102,7 @@
                           <span class='d-none d-md-inline' t-field="order.date_approve" t-options="{'time_only': True}"/>
                       </td>
                       <td class="text-center">
-                          <span t-if="order.invoice_status == 'to_invoice'" class="badge badge-pill badge-info">
+                          <span t-if="order.invoice_status == 'to invoice'" class="badge badge-pill badge-info">
                               <i class="fa fa-fw fa-file-text" role="img" aria-label="Waiting for Bill" title="Waiting for Bill"></i><span class="d-none d-md-inline"> Waiting for Bill</span>
                           </span>
                           <span t-if="order.state == 'cancel'" class="badge badge-pill badge-secondary">
