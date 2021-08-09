@@ -290,6 +290,7 @@ function factory(dependencies) {
                 return;
             }
             this.clearReplyingToMessage();
+            this.update({ activeMobileNavbarTabId: ev.detail.tabId });
             if (
                 this.activeMobileNavbarTabId === 'mailbox' &&
                 (!this.thread || this.thread.model !== 'mailbox')
@@ -305,7 +306,6 @@ function factory(dependencies) {
             if (this.activeMobileNavbarTabId !== 'channel') {
                 this.update({ isAddingChannel: false });
             }
-            this.update({ activeMobileNavbarTabId: ev.detail.tabId });
         }
 
         /**
