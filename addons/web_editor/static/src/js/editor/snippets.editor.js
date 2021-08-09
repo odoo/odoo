@@ -549,6 +549,7 @@ var SnippetEditor = Widget.extend({
         // Show/hide overlay in preview mode or not
         this.$el.toggleClass('oe_active', show);
         this.cover();
+        this.toggleOverlayVisibility(show);
     },
     /**
      * Updates the UI of the editor (+ parent) options and call onFocus/onBlur
@@ -1524,6 +1525,16 @@ var SnippetsMenu = Widget.extend({
     },
     activateCustomTab: function (content) {
         this._updateRightPanelContent({content: content, tab: this.tabs.CUSTOM});
+    },
+    /**
+     * Public method to activate a snippet.
+     *
+     * @see this._activateSnippet
+     * @param {jQuery} $snippet
+     * @returns {Promise}
+     */
+    activateSnippet: async function ($snippet) {
+        return this._activateSnippet($snippet);
     },
 
     //--------------------------------------------------------------------------

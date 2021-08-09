@@ -96,10 +96,7 @@ Wysiwyg.include({
             // Then toggle the clicked one
             toggleDropdown($toggle)
                 .then(dispose)
-                .then($el => {
-                    var isShown = $el.parent().hasClass('show');
-                    this.snippetsMenu.toggleMegaMenuSnippets(isShown);
-                });
+                .then(() => this._toggleMegaMenu($toggle[0]));
         });
 
         // Ensure :blank oe_structure elements are in fact empty as ':blank'
@@ -110,12 +107,7 @@ Wysiwyg.include({
             }
         }
 
-        return this._super.apply(this, arguments).then(() => {
-            // Showing Mega Menu snippets if one dropdown is already opened
-            if (this.$('.o_mega_menu').hasClass('show')) {
-                this.snippetsMenu.toggleMegaMenuSnippets(true);
-            }
-        });
+        return this._super.apply(this, arguments);
     },
     /**
      * @override
@@ -233,32 +225,34 @@ Wysiwyg.include({
             .dropdown({});
         return toggleDropdown($megaMenuToggles, false);
     },
+    /**
+     * Toggles the mega menu.
+     *
+     * @private
+     * @returns {Promise}
+     */
+    _toggleMegaMenu: function (toggleEl) {
+        const megaMenuEl = toggleEl.parentElement.querySelector('.o_mega_menu');
+        if (!megaMenuEl || !megaMenuEl.classList.contains('show')) {
+            return this.snippetsMenu.activateSnippet(false);
+        }
+        return this.snippetsMenu.activateSnippet($(megaMenuEl));
+    },
 });
 
 snippetsEditor.SnippetsMenu.include({
     /**
-     * @private
-     * @param {boolean} show
+     * @override
      */
-    toggleMegaMenuSnippets: function (show) {
-        setTimeout(() => this._activateSnippet(false));
-        this._showMegaMenuSnippets = show;
-        this._filterSnippets();
+    init: function () {
+        this._super(...arguments);
+        this._notActivableElementsSelector += ', .o_mega_menu_toggle';
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    _filterSnippets(search) {
-        this._super(...arguments);
-        if (!this._showMegaMenuSnippets) {
-            this.el.querySelector('#snippet_mega_menu').classList.add('d-none');
-        }
-    },
     /**
      * @override
      */
