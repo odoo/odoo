@@ -3364,7 +3364,7 @@ const SnippetOptionWidget = Widget.extend({
                         depName = depName.substr(1);
                     }
 
-                    const widget = this._requestUserValueWidgets(depName)[0];
+                    const widget = this._requestUserValueWidgets(depName, true)[0];
                     if (widget) {
                         dependenciesData.push({
                             widget: widget,
@@ -3719,15 +3719,25 @@ const SnippetOptionWidget = Widget.extend({
     /**
      * @private
      * @param {...string} widgetNames
+     * @param {boolean} [allowParentOption=false]
      * @returns {UserValueWidget[]}
      */
-    _requestUserValueWidgets: function (...widgetNames) {
+    _requestUserValueWidgets: function (...args) {
+        const widgetNames = args;
+        let allowParentOption = false;
+        const lastArg = args[args.length - 1];
+        if (typeof lastArg === 'boolean') {
+            widgetNames.pop();
+            allowParentOption = lastArg;
+        }
+
         const widgets = [];
         for (const widgetName of widgetNames) {
             let widget = null;
             this.trigger_up('user_value_widget_request', {
                 name: widgetName,
                 onSuccess: _widget => widget = _widget,
+                allowParentOption: allowParentOption,
             });
             if (widget) {
                 widgets.push(widget);
