@@ -129,7 +129,7 @@
                 </div>
                 <div class="oe_product_image">
                     <a itemprop="url" t-att-href="product_href">
-                        <span t-field="product.image" t-options="{'widget': 'image', 'preview_image': 'image' if product_image_big else 'image_large'}"/>
+                        <span t-field="product.image" t-options="{'widget': 'image', 'preview_image': 'image' if product_image_big else 'image_large', 'itemprop': 'image'}"/>
                     </a>
                 </div>
                 <t t-if="show_publish">
