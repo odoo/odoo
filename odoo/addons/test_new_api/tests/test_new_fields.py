@@ -2350,6 +2350,17 @@ class TestFields(TransactionCaseWithUserDemo):
         with self.assertRaises(AccessError):
             record_user.read(['tags'])
 
+    def test_98_text_pattern(self):
+        with self.assertRaises(ValueError):
+            self.env['test_new_api.emailmessage'].create({
+                'message': 1,
+                'email_to': 'perfectly normal person',
+            })
+        self.env['test_new_api.emailmessage'].create({
+            'message': 1,
+            'email_to': 'perfectly.normal@person',
+        })
+
 
 class TestX2many(common.TransactionCase):
     def test_definition_many2many(self):

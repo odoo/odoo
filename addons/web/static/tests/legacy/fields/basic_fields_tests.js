@@ -1321,6 +1321,32 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('char widget isValid method works with patterns', async function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.foo.pattern = 'azerty';
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                        '<field name="foo"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editInput(form.$('input[type="text"].o_field_widget'), 'this is wrong');
+        await testUtils.form.clickSave(form);
+
+        // Save should fail, editing to something right this time
+        await testUtils.fields.editInput(form.$('input[type="text"].o_field_widget'), 'this contains azerty');
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').text(), 'this contains azerty',
+            'the new value should be displayed');
+        form.destroy();
+    });
+
     QUnit.test('char field in form view', async function (assert) {
         assert.expect(4);
 

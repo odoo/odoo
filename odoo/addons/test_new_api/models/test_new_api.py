@@ -214,7 +214,7 @@ class EmailMessage(models.Model):
 
     message = fields.Many2one('test_new_api.message', 'Message',
                               required=True, ondelete='cascade')
-    email_to = fields.Char('To')
+    email_to = fields.Char('To', pattern='@', help="You need a '@' in here")
 
 
 class Multi(models.Model):

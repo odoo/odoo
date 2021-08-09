@@ -607,6 +607,13 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
         }
         return this._super(value, options);
     },
+
+    isValid: function () {
+        if (this.value && this.field.pattern && !(new RegExp(this.field.pattern)).test(this.value)) {
+            return false;
+        }
+        return this._super(...arguments);
+    },
 });
 
 var LinkButton = AbstractField.extend({

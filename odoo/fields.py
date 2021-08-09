@@ -12,6 +12,7 @@ import binascii
 import enum
 import itertools
 import logging
+import re
 import warnings
 
 from markupsafe import Markup
@@ -1693,9 +1694,12 @@ class Char(_String):
 
     size = None                         # maximum size of values (deprecated)
     trim = True                         # whether value is trimmed (only by web client)
+    pattern = None                      # regex to validate an input
 
     def _setup_attrs(self, model_class, name):
         super()._setup_attrs(model_class, name)
+        if self.pattern and not self.help:
+            _logger.warning("Field %s defined with 'pattern' has no 'help'", self)
         assert self.size is None or isinstance(self.size, int), \
             "Char field %s with non-integer size %r" % (self, self.size)
 
@@ -1714,8 +1718,10 @@ class Char(_String):
 
     _related_size = property(attrgetter('size'))
     _related_trim = property(attrgetter('trim'))
+    _related_pattern = property(attrgetter('pattern'))
     _description_size = property(attrgetter('size'))
     _description_trim = property(attrgetter('trim'))
+    _description_pattern = property(attrgetter('pattern'))
 
     def convert_to_column(self, value, record, values=None, validate=True):
         if value is None or value is False:
@@ -1727,6 +1733,8 @@ class Char(_String):
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
             return None
+        if validate and value and self.pattern and not re.search(self.pattern, value):
+            raise ValueError(f"Wrong value for {self}: {value!r} does not match pattern {self.pattern!r}")
         return pycompat.to_text(value)[:self.size]
 
 
