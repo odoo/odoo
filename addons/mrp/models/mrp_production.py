@@ -190,11 +190,11 @@ class MrpProduction(models.Model):
 
     move_raw_ids = fields.One2many(
         'stock.move', 'raw_material_production_id', 'Components',
-        copy=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain=[('scrapped', '=', False)])
     move_finished_ids = fields.One2many(
         'stock.move', 'production_id', 'Finished Products',
-        copy=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain=[('scrapped', '=', False)])
     move_byproduct_ids = fields.One2many('stock.move', compute='_compute_move_byproduct_ids', inverse='_set_move_byproduct_ids')
     finished_move_line_ids = fields.One2many(
@@ -772,6 +772,16 @@ class MrpProduction(models.Model):
         if workorders_to_delete:
             workorders_to_delete.unlink()
         return super(MrpProduction, self).unlink()
+
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        # covers at least 2 cases: backorders generation (follow default logic for moves copying)
+        # and copying a done MO via the form (i.e. copy only the non-cancelled moves since no backorder = cancelled finished moves)
+        if not default or 'move_finished_ids' not in default:
+            default['move_finished_ids'] = [(0, 0, move.copy_data()[0]) for move in self.move_finished_ids.filtered(lambda m: m.state != 'cancel' and m.product_qty != 0.0)]
+        if not default or 'move_raw_ids' not in default:
+            default['move_raw_ids'] = [(0, 0, move.copy_data()[0]) for move in self.move_raw_ids.filtered(lambda m: m.product_qty != 0.0)]
+        return super(MrpProduction, self).copy_data(default=default)
 
     def action_toggle_is_locked(self):
         self.ensure_one()
