@@ -9,7 +9,7 @@
             <xpath expr="//header/button[@name='action_rfq_send']" position="after">
                 <button name="action_view_picking" 
                     string="Receive Products" class="oe_highlight" type="object" 
-                    attrs="{'invisible': ['|', '|' , ('is_shipped', '=', True), ('state','not in', ('purchase','done')), ('picking_count', '=', 0)]}" 
+                    attrs="{'invisible': ['|', '|' , ('is_shipped', '=', True), ('state','not in', ('purchase','done')), ('incoming_picking_count', '=', 0)]}" 
                     data-hotkey="y" groups="stock.group_stock_user"/>
             </xpath>
             <xpath expr="//header/button[@name='confirm_reminder_mail']" position="attributes">
@@ -19,8 +19,8 @@
                 <button type="object"
                     name="action_view_picking"
                     class="oe_stat_button"
-                    icon="fa-truck" attrs="{'invisible':[('picking_count','=', 0)]}" groups="stock.group_stock_user">
-                    <field name="picking_count" widget="statinfo" string="Receipt" help="Incoming Shipments"/>
+                    icon="fa-truck" attrs="{'invisible':[('incoming_picking_count','=', 0)]}" groups="stock.group_stock_user">
+                    <field name="incoming_picking_count" widget="statinfo" string="Receipt" help="Incoming Shipments"/>
                 </button>
             </xpath>
             <xpath expr="//field[@name='currency_id']" position="after">

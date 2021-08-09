@@ -178,31 +178,7 @@ class SaleOrder(models.Model):
         return res
 
     def action_view_delivery(self):
-        '''
-        This function returns an action that display existing delivery orders
-        of given sales order ids. It can either be a in a list or in a form
-        view, if there is only one delivery order to show.
-        '''
-        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
-
-        pickings = self.mapped('picking_ids')
-        if len(pickings) > 1:
-            action['domain'] = [('id', 'in', pickings.ids)]
-        elif pickings:
-            form_view = [(self.env.ref('stock.view_picking_form').id, 'form')]
-            if 'views' in action:
-                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
-            else:
-                action['views'] = form_view
-            action['res_id'] = pickings.id
-        # Prepare the context.
-        picking_id = pickings.filtered(lambda l: l.picking_type_id.code == 'outgoing')
-        if picking_id:
-            picking_id = picking_id[0]
-        else:
-            picking_id = pickings[0]
-        action['context'] = dict(self._context, default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id)
-        return action
+        return self._get_action_view_picking(self.picking_ids)
 
     def action_cancel(self):
         documents = None
@@ -220,6 +196,32 @@ class SaleOrder(models.Model):
                 filtered_documents[(parent, responsible)] = rendering_context
             self._log_decrease_ordered_quantity(filtered_documents, cancel=True)
         return super(SaleOrder, self).action_cancel()
+
+    def _get_action_view_picking(self, pickings):
+        '''
+        This function returns an action that display existing delivery orders
+        of given sales order ids. It can either be a in a list or in a form
+        view, if there is only one delivery order to show.
+        '''
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
+
+        if len(pickings) > 1:
+            action['domain'] = [('id', 'in', pickings.ids)]
+        elif pickings:
+            form_view = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
+            action['res_id'] = pickings.id
+        # Prepare the context.
+        picking_id = pickings.filtered(lambda l: l.picking_type_id.code == 'outgoing')
+        if picking_id:
+            picking_id = picking_id[0]
+        else:
+            picking_id = pickings[0]
+        action['context'] = dict(self._context, default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id)
+        return action
 
     def _prepare_invoice(self):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
