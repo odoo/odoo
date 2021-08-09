@@ -2,14 +2,14 @@
 
 import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registry } from "@web/core/registry";
 import { uiService, useActiveElement } from "@web/core/ui/ui_service";
 import { useCommand } from "@web/webclient/commands/command_hook";
 import { commandService } from "@web/webclient/commands/command_service";
-import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
-import { makeTestEnv } from "../../helpers/mock_env";
+import { HotkeyCommandItem } from "@web/webclient/commands/default_providers";
+import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { click, getFixture, nextTick, patchWithCleanup, triggerHotkey } from "../../helpers/utils";
-import { clearRegistryWithCleanup } from "../../helpers/mock_env";
 
 const { Component, mount, tags } = owl;
 const { xml } = tags;
@@ -358,8 +358,8 @@ QUnit.test("defined multiple providers with the same nameSpace", async (assert) 
         nameSpace: "__default__",
         provide: () =>
             defaultNames.map((name) => ({
-                name,
                 action,
+                name,
             })),
     });
 
@@ -367,8 +367,8 @@ QUnit.test("defined multiple providers with the same nameSpace", async (assert) 
     commandProviderRegistry.add("other", {
         provide: () =>
             otherNames.map((name) => ({
-                name,
                 action,
+                name,
             })),
     });
 
@@ -408,8 +408,8 @@ QUnit.test("can switch between command providers", async (assert) => {
     commandProviderRegistry.add("default", {
         provide: () =>
             defaultNames.map((name) => ({
-                name,
                 action,
+                name,
             })),
     });
 
@@ -418,8 +418,8 @@ QUnit.test("can switch between command providers", async (assert) => {
         nameSpace: "@",
         provide: () =>
             otherNames.map((name) => ({
-                name,
                 action,
+                name,
             })),
     });
 
@@ -483,16 +483,16 @@ QUnit.test("multi level commands", async (assert) => {
         placeHolder: "Who is the next King ?",
         provide: () =>
             otherNames.map((name) => ({
-                name,
                 action: () => {},
+                name,
             })),
     });
 
     commandProviderRegistry.add("default", {
         provide: () =>
             defaultNames.map((name) => ({
-                name,
                 action,
+                name,
             })),
     });
 
@@ -521,6 +521,83 @@ QUnit.test("multi level commands", async (assert) => {
     );
 
     await click(target, ".o_command.focused");
+    await nextTick();
+
+    assert.deepEqual(
+        target.querySelector(".o_command_palette_search input").placeholder,
+        "Who is the next King ?",
+        "the new placeholder is correctly displayed"
+    );
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        otherNames,
+        "all default commands are present"
+    );
+});
+
+QUnit.test("multi level commands with hotkey", async (assert) => {
+    assert.expect(5);
+
+    patchWithCleanup(browser, {
+        clearTimeout: () => {},
+        setTimeout: (later, wait) => {
+            later();
+        },
+    });
+
+    clearRegistryWithCleanup(commandProviderRegistry);
+
+    const otherNames = ["Cersei", "Lannister"];
+    const action = () => ({
+        placeHolder: "Who is the next King ?",
+        provide: () =>
+            otherNames.map((name) => ({
+                action: () => {},
+                name,
+            })),
+    });
+
+    const hotkey = "a";
+    const name = "John";
+    commandProviderRegistry.add("default", {
+        provide: () => [
+            {
+                Component: HotkeyCommandItem,
+                action,
+                name,
+                props: {
+                    hotkey,
+                },
+            },
+        ],
+    });
+
+    testComponent = await mount(TestComponent, { env, target });
+
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+
+    assert.deepEqual(
+        target.querySelector(".o_command_palette_search input").value,
+        "",
+        "search input is empty"
+    );
+
+    assert.deepEqual(
+        target.querySelector(".o_command_palette_search input").placeholder,
+        "Search for an action...",
+        "the default placeholder is correctly displayed"
+    );
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent.toLowerCase()),
+        [(name + hotkey).toLowerCase()],
+        "all default commands are present"
+    );
+
+    triggerHotkey("a");
     await nextTick();
 
     assert.deepEqual(

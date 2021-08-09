@@ -19,7 +19,7 @@
               <t t-foreach="category.commands" t-as="command">
                 <t t-set="commandIndex" t-value="state.commands.indexOf(command)" />
                 <span t-attf-id="o_command_{{commandIndex}}" class="o_command" t-att-class="{ focused: state.selectedCommand === command }" t-on-click="onCommandClicked(commandIndex)" t-on-mouseenter="onCommandMouseEnter(commandIndex)" t-key="command.keyId">
-                  <t t-component="command.Component || DefaultCommandItem" t-props="command" t-on-close="props.closeMe()"/>
+                  <t t-component="command.Component || DefaultCommandItem" name="command.name" t-props="command.props" t-on-close="props.closeMe()" t-on-execute-command="executeCommand(command)"/>
                 </span>
               </t>
 
@@ -29,30 +29,22 @@
 
           </t>
         </t>
-        <div t-else="" class="o_command_category">
-          <t t-foreach="state.commands" t-as="command">
-            <t t-set="commandIndex" t-value="state.commands.indexOf(command)" />
-            <span t-attf-id="o_command_{{commandIndex}}" class="o_command" t-att-class="{ focused: state.selectedCommand === command }" t-on-click="onCommandClicked(commandIndex)" t-on-mouseenter="onCommandMouseEnter(commandIndex)" t-key="command.keyId">
-              <t t-component="command.Component || DefaultCommandItem" t-props="command" t-on-close="props.closeMe()"/>
-            </span>
-          </t>
-        </div>
 
       </div>
 
     </div>
   </t>
 
-  <t t-name="web.defaultCommandItem" owl="1">
+  <t t-name="web.DefaultCommandItem" owl="1">
     <div class="o_command_default">
       <span t-esc="props.name" />
     </div>
   </t>
 
-  <t t-name="web.hotkeyCommandItem" owl="1">
+  <t t-name="web.HotkeyCommandItem" owl="1">
     <div class="o_command_hotkey">
       <span t-esc="props.name" />
-      <span t-if="props.hotkey">
+      <span>
         <t t-foreach="getKeysToPress(props)" t-as="key">
           <kbd t-esc="key" />
           <span t-if="!key_last"> + </span>

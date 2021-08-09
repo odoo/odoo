@@ -13,18 +13,16 @@ commandProviderRegistry.add("debug", {
         if (env.services.user.isAdmin) {
             if (env.debug) {
                 result.push({
-                    name: "Deactivate debug mode",
-                    category: "debug",
-                    action: () => {
+                    action() {
                         const route = env.services.router.current;
                         route.search.debug = "";
                         browser.location.href = browser.location.origin + routeToUrl(route);
                     },
+                    category: "debug",
+                    name: "Deactivate debug mode",
                 });
                 result.push({
-                    name: "Debug menu",
-                    category: "debug",
-                    action: () => {
+                    action() {
                         return {
                             placeHolder: "Choose a debug action...",
                             provide: async (env) => {
@@ -33,20 +31,22 @@ commandProviderRegistry.add("debug", {
                                 return items
                                     .filter((item) => item.type === "item")
                                     .map((item) => ({
-                                        name: item.description,
                                         action: item.callback,
+                                        name: item.description,
                                     }));
                             },
                         };
                     },
+                    category: "debug",
+                    name: "Debug menu",
                 });
             } else {
                 result.push({
-                    name: "Activate debug mode",
-                    category: "debug",
-                    action: () => {
+                    action() {
                         browser.location.search = "?debug=assets";
                     },
+                    category: "debug",
+                    name: "Activate debug mode",
                 });
             }
         }

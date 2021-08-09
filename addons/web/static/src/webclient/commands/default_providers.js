@@ -9,14 +9,11 @@ import { DefaultCommandItem } from "./command_palette";
 
 const { Component } = owl;
 
-class HotkeyCommandItem extends Component {
+export class HotkeyCommandItem extends Component {
     setup() {
-        if (this.props.hotkey) {
-            useHotkey(this.props.hotkey, () => {
-                this.props.action();
-                this.trigger("close");
-            });
-        }
+        useHotkey(this.props.hotkey, () => {
+            this.trigger("execute-command");
+        });
     }
 
     getKeysToPress(command) {
@@ -30,15 +27,21 @@ class HotkeyCommandItem extends Component {
         return result.map((key) => key.toUpperCase());
     }
 }
-HotkeyCommandItem.template = "web.hotkeyCommandItem";
+HotkeyCommandItem.template = "web.HotkeyCommandItem";
 
 const commandProviderRegistry = registry.category("command_provider");
 commandProviderRegistry.add("command", {
     provide: (env, options = {}) => {
         const commands = env.services.command.getCommands(options.activeElement);
         return commands.map((command) => ({
-            ...command,
             Component: command.hotkey ? HotkeyCommandItem : DefaultCommandItem,
+            action: command.action,
+            category: command.category,
+            name: command.name,
+            props: {
+                hotkey: command.hotkey,
+                hotkeyOptions: command.hotkeyOptions,
+            },
         }));
     },
 });
@@ -63,19 +66,19 @@ commandProviderRegistry.add("data-hotkeys", {
                     `${el.innerText.slice(0, 50)}${el.innerText.length > 50 ? "..." : ""}`) ||
                 "no description provided";
             commands.push({
-                name: capitalize(description.trim().toLowerCase()),
-                hotkey: `${overlayModifier}+${el.dataset.hotkey}`,
+                Component: HotkeyCommandItem,
                 action: () => {
                     // AAB: not sure it is enough, we might need to trigger all events that occur when you actually click
                     el.focus();
                     el.click();
                 },
                 category,
+                name: capitalize(description.trim().toLowerCase()),
+                props: {
+                    hotkey: `${overlayModifier}+${el.dataset.hotkey}`,
+                },
             });
         }
-        return commands.map((command) => ({
-            ...command,
-            Component: HotkeyCommandItem,
-        }));
+        return commands;
     },
 });

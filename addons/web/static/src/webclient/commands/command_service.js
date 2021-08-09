@@ -4,9 +4,13 @@ import { registry } from "@web/core/registry";
 import { CommandPaletteDialog } from "./command_palette_dialog";
 
 /**
+ * @typedef {import("./command_palette").NextProvider} NextProvider
+ */
+
+/**
  * @typedef {{
  *  name: string,
- *  action: ()=>void,
+ *  action: ()=>(void | NextProvider),
  *  category?: string,
  *  hotkey?: string,
  *  hotkeyOptions?: any,
@@ -114,6 +118,10 @@ export const commandService = {
                     unregisterCommand(token);
                 };
             },
+            /**
+             * @param {HTMLElement} activeElement
+             * @returns {Command[]}
+             */
             getCommands(activeElement) {
                 return [...registeredCommands.values()].filter(
                     (command) => command.activeElement === activeElement
