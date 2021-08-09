@@ -2021,6 +2021,39 @@ options.registry.HeaderNavbar = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUIVisibility() {
+        await this._super(...arguments);
+
+        // TODO improve this: this is a big hack so that the "no mobile
+        // hamburger" option is disabled if it is ever hidden (because of the
+        // selection of an hamburger template which is a foreign option). This
+        // should be done another way in another place somehow...
+        const noHamburgerWidget = this.findWidget('no_hamburger_opt');
+        const noHamburgerHidden = noHamburgerWidget.$el.hasClass('d-none');
+        if (noHamburgerHidden && noHamburgerWidget.isActive()) {
+            this.findWidget('default_hamburger_opt').enable();
+        }
+
+        // TODO improve this: this is a big hack so that the label of the
+        // hamburger option changes if the 'no_hamburger_opt' one is available
+        // (= in that case the option controls only the *mobile* hamburger).
+        const hamburgerTypeWidget = this.findWidget('header_hamburger_type_opt');
+        const labelEl = hamburgerTypeWidget.el.querySelector('we-title');
+        if (!this._originalHamburgerTypeLabel) {
+            this._originalHamburgerTypeLabel = labelEl.textContent;
+        }
+        labelEl.textContent = noHamburgerHidden
+            ? this._originalHamburgerTypeLabel
+            : _t("Mobile menu");
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -2032,8 +2065,13 @@ options.registry.HeaderNavbar = options.Class.extend({
      * @override
      */
     async _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === 'option_logo_height_scrolled') {
-            return !this.$('.navbar-brand').hasClass('d-none');
+        switch (widgetName) {
+            case 'option_logo_height_scrolled': {
+                return !this.$('.navbar-brand').hasClass('d-none');
+            }
+            case 'no_hamburger_opt': {
+                return !weUtils.getCSSVariableValue('header-template').includes('hamburger');
+            }
         }
         return this._super(...arguments);
     },

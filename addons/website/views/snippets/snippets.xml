@@ -769,11 +769,15 @@
                    data-name="header_hamburger_type_opt"
                    data-variable="hamburger-type"
                    data-reload="/">
-            <we-button data-customize-website-variable="'default'"
+            <we-button data-name="default_hamburger_opt"
+                       data-customize-website-variable="'default'"
                        data-customize-website-views="">Default</we-button>
             <we-button data-name="off_canvas_menu_opt"
                        data-customize-website-variable="'off-canvas'"
                        data-customize-website-views="website.option_header_off_canvas, website.option_header_off_canvas_template_header_hamburger, website.option_header_off_canvas_template_header_sidebar, website.option_header_off_canvas_template_header_hamburger_full">Off-Canvas</we-button>
+            <we-button data-name="no_hamburger_opt"
+                       data-customize-website-variable="'no-hamburger'"
+                       data-customize-website-views="website.option_header_no_mobile_hamburger">Same as desktop</we-button>
         </we-select>
 
         <we-select string="⌙ Off-Canvas Logo" data-dependencies="off_canvas_menu_opt" data-reload="/">
