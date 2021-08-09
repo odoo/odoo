@@ -163,6 +163,10 @@ class TestFiscalPosition(common.SavepointCase):
         """
         self.george.vat = False
         self.assertEqual(
+<<<<<<< HEAD
             self.fp.get_fiscal_position(self.ben.id, self.george.id).id,
+=======
+            self.fp.get_fiscal_position(self.ben.id, self.george.id),
+>>>>>>> 79ab27fc79c... temp
             self.fr_b2c.id,
             "FR B2C should be set")
