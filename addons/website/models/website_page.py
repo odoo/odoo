@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from psycopg2 import sql
 import re
 
 from odoo.addons.http_routing.models.ir_http import slugify
 from odoo.addons.website.tools import text_from_html
 from odoo import api, fields, models
+from odoo.osv import expression
+from odoo.tools import escape_psql
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -254,7 +257,7 @@ class Page(models.Model):
             'website_url': {'name': 'url', 'type': 'text'},
         }
         if with_description:
-            search_fields.append('view_id.arch_db')
+            search_fields.append('arch_db')
             fetch_fields.append('arch')
             mapping['description'] = {'name': 'arch', 'type': 'text', 'html': True, 'match': True}
         return {
@@ -271,6 +274,48 @@ class Page(models.Model):
     def _search_fetch(self, search_detail, search, limit, order):
         with_description = 'description' in search_detail['mapping']
         results, count = super()._search_fetch(search_detail, search, limit, order)
+        if with_description and search:
+            # Perform search in translations
+            # TODO Remove when domains will support xml_translate fields
+            query = sql.SQL("""
+                SELECT {table}.{id}
+                FROM {table}
+                LEFT JOIN ir_ui_view v ON {table}.{view_id} = v.{id}
+                LEFT JOIN ir_translation t ON v.{id} = t.{res_id}
+                WHERE t.lang = {lang}
+                AND t.name = ANY({names})
+                AND t.type = 'model_terms'
+                AND t.value ilike {search}
+                LIMIT {limit}
+            """).format(
+                table=sql.Identifier(self._table),
+                id=sql.Identifier('id'),
+                view_id=sql.Identifier('view_id'),
+                res_id=sql.Identifier('res_id'),
+                lang=sql.Placeholder('lang'),
+                names=sql.Placeholder('names'),
+                search=sql.Placeholder('search'),
+                limit=sql.Placeholder('limit'),
+            )
+            self.env.cr.execute(query, {
+                'lang': self.env.lang,
+                'names': ['ir.ui.view,arch_db', 'ir.ui.view,name'],
+                'search': '%%%s%%' % escape_psql(search),
+                'limit': limit,
+            })
+            ids = {row[0] for row in self.env.cr.fetchall()}
+            ids.update(results.ids)
+            domains = search_detail['base_domain'].copy()
+            domains.append([('id', 'in', list(ids))])
+            domain = expression.AND(domains)
+            model = self.sudo() if search_detail.get('requires_sudo') else self
+            results = model.search(
+                domain,
+                limit=limit,
+                order=search_detail.get('order', order)
+            )
+            count = max(count, len(results))
+
         def filter_page(search, page, all_pages):
             # Search might have matched words in the xml tags and parameters therefore we make
             # sure the terms actually appear inside the text.
