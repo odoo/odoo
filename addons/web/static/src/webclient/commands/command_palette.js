@@ -18,7 +18,20 @@ const commandCategoryRegistry = registry.category("command_categories");
 const commandProviderRegistry = registry.category("command_provider");
 
 /**
- * @typedef {import("./command_service").Command} Command
+ * @typedef {{
+ *  Component?: Component,
+ *  action: ()=>(void | NextProvider),
+ *  category?: string,
+ *  name: string,
+ *  props?: Object,
+ * }} CommandItem
+ */
+
+/**
+ * @typedef {{
+ *  placeHolder?: string,
+ *  provide: ()=>CommandItem[],
+ * }} NextProvider
  */
 
 /**
@@ -38,7 +51,7 @@ function commandsWithinCategory(categoryName) {
 }
 
 export class DefaultCommandItem extends Component {}
-DefaultCommandItem.template = "web.defaultCommandItem";
+DefaultCommandItem.template = "web.DefaultCommandItem";
 
 export class CommandPalette extends Component {
     setup() {
@@ -57,7 +70,7 @@ export class CommandPalette extends Component {
         useHotkey("ArrowDown", () => this.selectCommandAndScrollTo("NEXT"), { allowRepeat: true });
 
         /**
-         * @type {{commands: Command[], selectedCommand: Command, placeHolder: String}}
+         * @type {{commands: CommandItem[], selectedCommand: CommandItem, placeHolder: String}}
          */
         this.state = useState({
             commands: [],
@@ -174,20 +187,24 @@ export class CommandPalette extends Component {
         this.executeSelectedCommand();
     }
 
-    async executeSelectedCommand() {
+    async executeCommand(command) {
+        const result = await command.action();
+        if (result) {
+            const { placeHolder, provide } = result;
+            this.providerStack.push({ __default__: [{ provide }] });
+            this.setCommands("__default__", {
+                activeElement: this.activeElement,
+            });
+            this.state.placeHolder = placeHolder || DEFAULT_PLACEHOLDER;
+            this.searchBar.el.value = "";
+        } else {
+            this.props.closeMe();
+        }
+    }
+
+    executeSelectedCommand() {
         if (this.state.selectedCommand) {
-            const result = await this.state.selectedCommand.action();
-            if (result) {
-                const { placeHolder, provide } = result;
-                this.providerStack.push({ __default__: [{ provide }] });
-                this.setCommands("__default__", {
-                    activeElement: this.activeElement,
-                });
-                this.state.placeHolder = placeHolder || DEFAULT_PLACEHOLDER;
-                this.searchBar.el.value = "";
-            } else {
-                this.props.closeMe();
-            }
+            this.executeCommand(this.state.selectedCommand);
         }
     }
 
