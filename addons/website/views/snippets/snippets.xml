@@ -13,20 +13,6 @@
         <t id="default_snippets">
             <t t-set="cta_btn_text" t-value="False"/>
             <t t-set="cta_btn_href">/contactus</t>
-            <div id="snippet_mega_menu" class="o_panel d-none">
-                <div class="o_panel_header">Mega Menu</div>
-                <div class="o_panel_body">
-                    <t t-snippet="website.s_mega_menu_multi_menus" t-thumbnail="/website/static/src/img/snippets_thumbs/s_mega_menu_multi_menus.svg"/>
-                    <t t-snippet="website.s_mega_menu_menu_image_menu" t-thumbnail="/website/static/src/img/snippets_thumbs/s_mega_menu_menu_image_menu.svg"/>
-                    <t t-snippet="website.s_mega_menu_odoo_menu" t-thumbnail="/website/static/src/img/snippets_thumbs/s_mega_menu_odoo_menu.svg"/>
-                    <t t-snippet="website.s_mega_menu_little_icons" t-thumbnail="/website/static/src/img/snippets_thumbs/s_mega_menu_little_icons.svg"/>
-                    <t t-snippet="website.s_mega_menu_big_icons_subtitles" t-thumbnail="/website/static/src/img/snippets_thumbs/s_mega_menu_big_icons_subtitles.svg"/>
-                    <t t-snippet="website.s_mega_menu_images_subtitles" t-thumbnail="/website/static/src/img/snippets_thumbs/s_mega_menu_images_subtitles.svg"/>
-                    <t t-snippet="website.s_mega_menu_menus_logos" t-thumbnail="/website/static/src/img/snippets_thumbs/s_mega_menu_menus_logos.svg"/>
-                    <t t-snippet="website.s_mega_menu_thumbnails" t-thumbnail="/website/static/src/img/snippets_thumbs/s_mega_menu_thumbnails.svg"/>
-                    <t t-snippet="website.s_mega_menu_cards" t-thumbnail="/website/static/src/img/snippets_thumbs/s_mega_menu_cards.svg"/>
-                </div>
-            </div>
 
             <div id="snippet_structure" class="o_panel">
                 <div class="o_panel_header">Structure</div>
@@ -1000,7 +986,19 @@
     </div>
 
     <!-- Mega Menu settings -->
-    <div data-selector=".o_mega_menu">
+    <div data-js="MegaMenuLayout" data-selector=".o_mega_menu">
+            <we-select string="Template"
+                data-name="mega_menu_template_opt">
+                    <we-button data-select-label="Multi Menus" title="Multi Menus" data-select-template="website.s_mega_menu_multi_menus" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_multi_menus.svg">Multi Menus</we-button>
+                    <we-button data-select-label="Image Menu" title="Image Menu" data-select-template="website.s_mega_menu_menu_image_menu" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_menu_image_menu.svg">Image Menu</we-button>
+                    <we-button data-select-label="Odoo Menu" title="Odoo Menu" data-select-template="website.s_mega_menu_odoo_menu" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_odoo_menu.svg">Odoo Menu</we-button>
+                    <we-button data-select-label="Little Icons" title="Little Icons" data-select-template="website.s_mega_menu_little_icons" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_little_icons.svg">Little Icons</we-button>
+                    <we-button data-select-label="Big Icons Subtitles" title="Big Icons Subtitles" data-select-template="website.s_mega_menu_big_icons_subtitles" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_big_icons_subtitles.svg">Big Icons Subtitles</we-button>
+                    <we-button data-select-label="Images Subtitles" title="Images Subtitles" data-select-template="website.s_mega_menu_images_subtitles" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_images_subtitles.svg">Images Subtitles</we-button>
+                    <we-button data-select-label="Logos" title="Logos" data-select-template="website.s_mega_menu_menus_logos" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_menus_logos.svg">Logos</we-button>
+                    <we-button data-select-label="Thumbnails" title="Thumbnails" data-select-template="website.s_mega_menu_thumbnails" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_thumbnails.svg">Thumbnails</we-button>
+                    <we-button data-select-label="Cards" title="Cards" data-select-template="website.s_mega_menu_cards" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_cards.svg">Cards</we-button>
+            </we-select>
         <we-select string="Size">
             <we-button data-select-class="">Full-Width</we-button>
             <we-button data-select-class="o_mega_menu_container_size">Narrow</we-button>

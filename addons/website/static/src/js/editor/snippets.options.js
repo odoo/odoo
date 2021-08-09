@@ -3148,6 +3148,35 @@ options.registry.WebsiteAnimate = options.Class.extend({
     },
 });
 
+/**
+ * Replaces current target with the specified template layout
+ */
+options.registry.MegaMenuLayout = options.registry.SelectTemplate.extend({
+    /**
+     * @override
+     */
+    init() {
+        this._super(...arguments);
+        this.selectTemplateWidgetName = 'mega_menu_template_opt';
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        if (methodName === 'selectTemplate') {
+            const templateDefiningClass = this.containerEl.querySelector('section')
+                .classList.value.split(' ').filter(cl => cl.startsWith('s_mega_menu'))[0];
+            return `website.${templateDefiningClass}`;
+        }
+        return this._super(...arguments);
+    },
+});
+
 return {
     UrlPickerUserValueWidget: UrlPickerUserValueWidget,
     FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,
