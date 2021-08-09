@@ -46,18 +46,49 @@ class Partner(models.Model):
                  'associate_member')
     def _compute_membership_state(self):
         today = fields.Date.today()
+
+        # field -> partner -> date_value
+        membership_mapping = {}
+
+        groups = self.env['membership.membership_line'].read_group(
+            [('partner', 'in', self.ids)],
+            ['date_cancel:min'],
+            ['partner']
+        )
+        membership_mapping['date_cancel'] = {
+            gr['partner'][0]: gr['date_cancel']
+            for gr in groups
+        }
+        associated_partners = self.filtered('associate_member')
+
+        for field, field_agg in (('date_from', 'date_from:min'), ('date_to', 'date_to:max')):
+            groups = self.env['membership.membership_line'].read_group(
+                [('partner', 'in', associated_partners.ids), ('date_cancel', '=', False)],
+                [field_agg],
+                ['partner']
+            )
+            associated_mapping = {
+                gr['partner'][0]: gr[field]
+                for gr in groups
+            }
+            membership_mapping[field] = {}
+            for partner in associated_partners:
+                membership_mapping[field][partner.id] = associated_mapping.get(partner.associate_member.id)
+
+            groups = self.env['membership.membership_line'].read_group(
+                [('partner', 'in', (self - self.associate_member).ids), ('date_cancel', '=', False)],
+                [field_agg],
+                ['partner']
+            )
+            for gr in groups:
+                membership_mapping[field][gr['partner'][0]] = gr[field]
+
         for partner in self:
             state = 'none'
 
-            partner.membership_start = self.env['membership.membership_line'].search([
-                ('partner', '=', partner.associate_member.id or partner.id), ('date_cancel','=',False)
-            ], limit=1, order='date_from').date_from
-            partner.membership_stop = self.env['membership.membership_line'].search([
-                ('partner', '=', partner.associate_member.id or partner.id),('date_cancel','=',False)
-            ], limit=1, order='date_to desc').date_to
-            partner.membership_cancel = self.env['membership.membership_line'].search([
-                ('partner', '=', partner.id)
-            ], limit=1, order='date_cancel').date_cancel
+            partner.membership_start = membership_mapping['date_from'].get(partner.id)
+            partner.membership_stop = membership_mapping['date_to'].get(partner.id)
+            partner.membership_cancel = membership_mapping['date_cancel'].get(partner.id)
 
             if partner.membership_cancel and today > partner.membership_cancel:
                 partner.membership_state = 'free' if partner.free_member else 'canceled'
