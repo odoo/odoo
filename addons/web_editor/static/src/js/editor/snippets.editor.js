@@ -2136,9 +2136,11 @@ var SnippetsMenu = Widget.extend({
         }
 
         var def;
-        var $parent = globalSelector.closest($snippet.parent());
-        if ($parent.length) {
-            def = this._createSnippetEditor($parent);
+        if (!$snippet[0].classList.contains('o_no_parent_editor')) {
+            var $parent = globalSelector.closest($snippet.parent());
+            if ($parent.length) {
+                def = this._createSnippetEditor($parent);
+            }
         }
 
         return Promise.resolve(def).then(function (parentEditor) {
