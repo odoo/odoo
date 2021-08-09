@@ -23,6 +23,20 @@ const ProjectProjectKanbanRecord = KanbanRecord.extend({
             this._super.apply(this, arguments);
         }
     },
+    /**
+     * @override
+     * @private
+     */
+    _onManageTogglerClicked: function (event) {
+        this._super.apply(this, arguments);
+        const thisSettingToggle = this.el.querySelector('.o_kanban_manage_toggle_button');
+        this.el.parentNode.querySelectorAll('.o_kanban_manage_toggle_button.show').forEach(el => {
+            if (el !== thisSettingToggle) {
+                el.classList.remove('show');
+            }
+        });
+        thisSettingToggle.classList.toggle('show');
+    },
 });
 
 const ProjectProjectKanbanRenderer = KanbanRenderer.extend({
