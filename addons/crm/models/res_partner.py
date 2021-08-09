@@ -88,7 +88,7 @@ class Partner(models.Model):
                     if partner in self:
                         meetings[partner.id] |= meetings[p.id]
                     partner = partner.parent_id
-            return {p.id: list(meetings[p.id]) for p in self}
+            return {p.id: list(meetings[p.id]) for p in self if p.id}
         return {}
 
 
