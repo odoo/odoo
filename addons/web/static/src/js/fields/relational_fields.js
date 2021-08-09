@@ -1976,10 +1976,6 @@ var FieldOne2Many = FieldX2Many.extend({
                     allowWarning: data.allowWarning
                 }).then(function () {
                     self.creatingRecord = false;
-                }).then(function (){
-                    if (data.onSuccess){
-                        data.onSuccess();
-                    }
                 }).guardedCatch(function() {
                     self.creatingRecord = false;
                 })
