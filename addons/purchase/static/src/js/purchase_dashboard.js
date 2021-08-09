@@ -20,6 +20,7 @@ var KanbanRenderer = require('web.KanbanRenderer');
 var KanbanView = require('web.KanbanView');
 var SampleServer = require('web.SampleServer');
 var view_registry = require('web.view_registry');
+const session = require('web.session');
 
 var QWeb = core.qweb;
 
@@ -113,6 +114,7 @@ var PurchaseListDashboardModel = ListModel.extend({
         var dashboard_def = this._rpc({
             model: 'purchase.order',
             method: 'retrieve_dashboard',
+            context: session.user_context,
         });
         return Promise.all([super_def, dashboard_def]).then(function(results) {
             var id = results[0];
@@ -229,6 +231,7 @@ var PurchaseKanbanDashboardModel = KanbanModel.extend({
         var dashboard_def = this._rpc({
             model: 'purchase.order',
             method: 'retrieve_dashboard',
+            context: session.user_context,
         });
         return Promise.all([super_def, dashboard_def]).then(function(results) {
             var id = results[0];
