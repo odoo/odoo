@@ -41,7 +41,7 @@
                                 <i class="text-primary" t-if="state.selectedType">
                                     <t t-esc="getters.getSelectedType(state.selectedType).label" />
                                 </i>
-                                <i class="fa fa-angle-down text-black-50 ml-auto pl-2" title="dropdown_angle_down" role="img"/>
+                                <i class="fa fa-angle-down text-black-50 ml-auto pl-2" role="img"/>
                             </a>
                         </div>
                         <div t-attf-class="dropdown-menu border-0 shadow-lg {{state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}" role="menu">
@@ -69,7 +69,7 @@
                                 <t t-if="state.selectedPurpose">
                                     <t t-esc="getters.getSelectedPurpose(state.selectedPurpose).label" />
                                 </t>
-                                <i class="fa fa-angle-down text-black-50 ml-auto pl-2" title="dropdown_angle_down" role="img"/>
+                                <i class="fa fa-angle-down text-black-50 ml-auto pl-2" role="img"/>
                             </a>
                         </div>
                         <div class="dropdown-menu border-0 shadow-lg" role="menu">
@@ -110,13 +110,15 @@
                             </div>
                         </div>
                         <div t-if="state.recommendedPalette" class="w-75 mx-auto px-2 pt-3" style="max-width: 184px;">
-                            <h6 class="text-center text-success d-block badge mb-0 mt-n2">Detected Colors</h6>
                             <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex {{getters.getSelectedPaletteName() == 'recommendedPalette' ? 'selected' : ''}}"
                                  t-on-click="selectPalette('recommendedPalette')" t-attf-style="background-color: {{state.recommendedPalette.color3}}">
                                 <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color1}}"/>
                                 <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color3}}"/>
                                 <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color2}}"/>
                             </div>
+                            <button class="btn btn-primary text-nowrap mt-3 d-block mx-auto" t-on-click="selectPalette('recommendedPalette')">
+                                Let's go!<i class="fa fa-angle-right text-white-50 pl-2" role="img"/>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -127,7 +129,7 @@
                 </div>
                 <div class="w-100 w-lg-auto flex-grow-1 o_configurator_show_fast">
                     <div class="h4 text-center">
-                        <b>Choose</b> Your Brand Color</div>
+                        <b>Choose</b> a pre-made Palette</div>
                     <div class="d-flex flex-wrap align-items-end">
                         <t t-foreach="getters.getPalettes()" t-as="palette" t-key="palette_index">
                             <div class="w-50 w-md-25 px-2 pt-3">
