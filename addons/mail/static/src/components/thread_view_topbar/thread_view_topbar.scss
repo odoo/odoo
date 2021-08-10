@@ -11,7 +11,7 @@
     height: $font-size-sm;
 }
 
-.o_ThreadViewTopbar_threadName {
+.o_ThreadViewTopbar_threadName, .o_ThreadViewTopbar_threadDescription {
     border: $border-width solid;
 }
 
@@ -63,5 +63,26 @@
     &.o-isMouseOverThreadName {
         background-color: $white;
         border-color: $border-color;
+    }
+}
+
+.o_ThreadViewTopbar_threadDescription {
+
+    &:not(.o-isMouseOverThreadDescription) {
+        border-color: transparent; // presence of border even if invisible to prevent flicker
+    }
+
+    &.o-isMouseOverThreadDescription {
+        background-color: $white;
+        border-color: $border-color;
+    }
+}
+
+.o_ThreadViewTopbar_threadAddDescriptionEmptyLabel {
+    color: gray('400');
+    cursor: pointer;
+
+    &:hover {
+        color: gray('900');
     }
 }

@@ -77,8 +77,12 @@ function factory(dependencies) {
                 }
                 if (typeof message === 'object') {
                     switch (message.type) {
+                        case 'mail.channel_description_change':
+                            return this._handleNotificationChannelDescriptionChanged(message.payload);
                         case 'mail.channel_joined':
                             return this._handleNotificationChannelJoined(message.payload);
+                        case 'mail.channel_rename':
+                            return this._handleNotificationChannelRenamed(message.payload);
                     }
                 }
                 const [, model, id] = channel;
@@ -139,6 +143,20 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @param {Object} payload
+         * @param {integer} payload.id
+         * @param {String} payload.description
+         */
+        _handleNotificationChannelDescriptionChanged({ id, description }) {
+            const channel = this.messaging.models['mail.thread'].insert({
+                id,
+                model: 'mail.channel',
+            });
+            channel.update({ description });
+        }
+
+        /**
+         * @private
          * @param {integer} channelId
          * @param {Object} param1
          * @param {integer} param1.last_message_id
@@ -192,6 +210,20 @@ function factory(dependencies) {
                     type: 'info',
                 });
             }
+        }
+
+        /**
+         * @private
+         * @param {Object} payload
+         * @param {integer} payload.id
+         * @param {String} payload.name
+         */
+        _handleNotificationChannelRenamed({ id, name }) {
+            const channel = this.messaging.models['mail.thread'].insert({
+                id,
+                model: 'mail.channel',
+            });
+            channel.update({ name });
         }
 
         /**
