@@ -22,6 +22,11 @@ function factory(dependencies) {
             this.onMouseEnterTopBarThreadName = this.onMouseEnterTopBarThreadName.bind(this);
             this.onMouseLeaveTopBarThreadName = this.onMouseLeaveTopBarThreadName.bind(this);
             this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
+            this.onClickTopbarThreadDescription = this.onClickTopbarThreadDescription.bind(this);
+            this.onInputThreadDescriptionInput = this.onInputThreadDescriptionInput.bind(this);
+            this.onKeyDownThreadDescriptionInput = this.onKeyDownThreadDescriptionInput.bind(this);
+            this.onMouseEnterTopBarThreadDescription = this.onMouseEnterTopBarThreadDescription.bind(this);
+            this.onMouseLeaveTopBarThreadDescription = this.onMouseLeaveTopBarThreadDescription.bind(this);
             document.addEventListener('click', this._onClickCaptureGlobal, true);
             return super._created();
         }
@@ -82,6 +87,27 @@ function factory(dependencies) {
         }
 
         /**
+         * Handles click on the "thread description" of this top bar.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickTopbarThreadDescription(ev) {
+            if (!this.thread || !this.thread.isChannelDescriptionChangeable) {
+                return;
+            }
+            const selection = window.getSelection();
+            this.update({
+                doFocusOnThreadDescriptionInput: true,
+                doSetSelectionDirectionOnThreadDescriptionInput: selection.anchorOffset < selection.focusOffset ? 'forward' : 'backward',
+                doSetSelectionEndOnThreadDescriptionInput: Math.max(selection.focusOffset, selection.anchorOffset),
+                doSetSelectionStartOnThreadDescriptionInput: Math.min(selection.focusOffset, selection.anchorOffset),
+                isEditingThreadDescription: true,
+                isMouseOverThreadDescription: false,
+                pendingThreadDescription: this.thread.description || "",
+            });
+        }
+
+        /**
          * Handles click on the "unstar all" button of Starred box.
          *
          * @param {MouseEvent} ev
@@ -97,6 +123,10 @@ function factory(dependencies) {
             if (this.doFocusOnThreadNameInput) {
                 this.threadNameInputRef.el.focus();
                 this.update({ doFocusOnThreadNameInput: clear() });
+            }
+            if (this.doFocusOnThreadDescriptionInput) {
+                this.threadDescriptionInputRef.el.focus();
+                this.update({ doFocusOnThreadDescriptionInput: clear() });
             }
             if (
                 this.doSetSelectionStartOnThreadNameInput !== undefined &&
@@ -114,6 +144,22 @@ function factory(dependencies) {
                     doSetSelectionStartOnThreadNameInput: clear(),
                 });
             }
+            if (
+                this.doSetSelectionStartOnThreadDescriptionInput !== undefined &&
+                this.doSetSelectionEndOnThreadDescriptionInput !== undefined &&
+                this.doSetSelectionDirectionOnThreadDescriptionInput !== undefined
+            ) {
+                this.threadDescriptionInputRef.el.setSelectionRange(
+                    this.doSetSelectionStartOnThreadDescriptionInput,
+                    this.doSetSelectionEndOnThreadDescriptionInput,
+                    this.doSetSelectionDirectionOnThreadDescriptionInput
+                );
+                this.update({
+                    doSetSelectionDirectionOnThreadDescriptionInput: clear(),
+                    doSetSelectionEndOnThreadDescriptionInput: clear(),
+                    doSetSelectionStartOnThreadDescriptionInput: clear(),
+                });
+            }
         }
 
         /**
@@ -123,6 +169,15 @@ function factory(dependencies) {
          */
         onInputThreadNameInput(ev) {
             this.update({ pendingThreadName: ev.target.value });
+        }
+
+        /**
+         * Handles input on the "thread description" input of this top bar.
+         *
+         * @param {InputEvent} ev
+         */
+        onInputThreadDescriptionInput(ev) {
+            this.update({ pendingThreadDescription: ev.target.value });
         }
 
         /**
@@ -142,6 +197,22 @@ function factory(dependencies) {
         }
 
         /**
+         * Handles keydown on the "thread description" input of this top bar.
+         *
+         * @param {KeyboardEvent} ev
+         */
+        onKeyDownThreadDescriptionInput(ev) {
+            switch (ev.key) {
+                case 'Enter':
+                    this._applyThreadChangeDescription();
+                    break;
+                case 'Escape':
+                    this._discardThreadChangeDescription();
+                    break;
+            }
+        }
+
+        /**
          * Handles mouseenter on the "thread name" of this top bar.
          *
          * @param {MouseEvent} ev
@@ -154,12 +225,33 @@ function factory(dependencies) {
         }
 
         /**
+         * Handles mouseenter on the "thread description" of this top bar.
+         *
+         * @param {MouseEvent} ev
+         */
+        onMouseEnterTopBarThreadDescription(ev) {
+            if (!this.thread || !this.thread.isChannelDescriptionChangeable) {
+                return;
+            }
+            this.update({ isMouseOverThreadDescription: true });
+        }
+
+        /**
          * Handles mouseleave on the "thread name" of this top bar.
          *
          * @param {MouseEvent} ev
          */
         onMouseLeaveTopBarThreadName(ev) {
             this.update({ isMouseOverThreadName: false });
+        }
+
+        /**
+         * Handles mouseleave on the "thread description" of this top bar.
+         *
+         * @param {MouseEvent} ev
+         */
+        onMouseLeaveTopBarThreadDescription(ev) {
+            this.update({ isMouseOverThreadDescription: false });
         }
 
         //----------------------------------------------------------------------
@@ -186,6 +278,20 @@ function factory(dependencies) {
         /**
          * @private
          */
+        _applyThreadChangeDescription() {
+            const newDescription = this.pendingThreadDescription || "";
+            this.update({
+                isEditingThreadDescription: false,
+                pendingThreadDescription: clear(),
+            });
+            if (this.thread.channel_type === 'channel' && newDescription !== this.thread.description) {
+                this.thread.changeDescription(newDescription);
+            }
+        }
+
+        /**
+         * @private
+         */
         _discardThreadRename() {
             this.update({
                 isEditingThreadName: false,
@@ -195,17 +301,24 @@ function factory(dependencies) {
 
         /**
          * @private
+         */
+        _discardThreadChangeDescription() {
+            this.update({
+                isEditingThreadDescription: false,
+                pendingThreadDescription: clear(),
+            });
+        }
+
+        /**
+         * @private
          * @param {MouseEvent} ev
          */
         _onClickCaptureGlobal(ev) {
-            if (!this.threadNameInputRef) {
-                return;
-            }
-            if (this.threadNameInputRef.el && this.threadNameInputRef.el.contains(ev.target)) {
-                return;
-            }
-            if (this.isEditingThreadName) {
+            if (this.isEditingThreadName && this.threadNameInputRef.el && !this.threadNameInputRef.el.contains(ev.target)) {
                 this._applyThreadRename();
+            }
+            if (this.isEditingThreadDescription && this.threadDescriptionInputRef.el && !this.threadDescriptionInputRef.el.contains(ev.target)) {
+                this._applyThreadChangeDescription();
             }
         }
 
@@ -217,6 +330,10 @@ function factory(dependencies) {
          */
         doFocusOnThreadNameInput: attr(),
         /**
+         * Determines whether this thread description input needs to be focused.
+         */
+        doFocusOnThreadDescriptionInput: attr(),
+         /**
          * Determines the direction to set on the selection of this thread name
          * input. This value is not a representation of current selection, but
          * an instruction to set a new selection. Must be set together with
@@ -224,6 +341,14 @@ function factory(dependencies) {
          * to have an effect.
          */
         doSetSelectionDirectionOnThreadNameInput: attr(),
+        /**
+         * Determines the direction to set on the selection of this thread description
+         * input. This value is not a representation of current selection, but
+         * an instruction to set a new selection. Must be set together with
+         * `doSetSelectionEndOnThreadDescriptionInput` and `doSetSelectionStartOnThreadDescriptionInput`
+         * to have an effect.
+         */ 
+        doSetSelectionDirectionOnThreadDescriptionInput: attr(), 
         /**
          * Determines the ending position where to place the selection on this
          * thread name input (zero-based index). This value is not a
@@ -233,6 +358,14 @@ function factory(dependencies) {
          */
         doSetSelectionEndOnThreadNameInput: attr(),
         /**
+         * Determines the ending position where to place the selection on this
+         * thread description input (zero-based index). This value is not a
+         * representation of current selection, but an instruction to set a new
+         * selection. Must be set together with `doSetSelectionDirectionOnThreadDescriptionInput`
+         * and `doSetSelectionStartOnThreadDescriptionInput` to have an effect.
+         */
+        doSetSelectionEndOnThreadDescriptionInput: attr(),
+        /**
          * Determines the starting position where to place the selection on this
          * thread name input (zero-based index). This value is not a
          * representation of current selection, but an instruction to set a new
@@ -241,9 +374,23 @@ function factory(dependencies) {
          */
         doSetSelectionStartOnThreadNameInput: attr(),
         /**
+         * Determines the starting position where to place the selection on this
+         * thread description input (zero-based index). This value is not a
+         * representation of current selection, but an instruction to set a new
+         * selection. Must be set together with `doSetSelectionDirectionOnThreadDescriptionInput` and
+         * `doSetSelectionEndOnThreadDescriptionInput` to have an effect.
+         */
+        doSetSelectionStartOnThreadDescriptionInput: attr(),
+        /**
          * Determines whether this thread is currently being renamed.
          */
         isEditingThreadName: attr({
+            default: false,
+        }),
+        /**
+         * Determines whether this thread description is currently being changed.
+         */
+        isEditingThreadDescription: attr({
             default: false,
         }),
         /**
@@ -254,12 +401,28 @@ function factory(dependencies) {
             default: false,
         }),
         /**
+         * States whether the cursor is currently over this thread description in
+         * the top bar.
+         */
+        isMouseOverThreadDescription: attr({
+            default: false,
+        }),
+        /**
          * Determines the pending name of this thread, which is the new name of
          * the thread as the current user is currently typing it, with the goal
          * of renaming the thread.
          * This value can either be applied or discarded.
          */
         pendingThreadName: attr({
+            default: "",
+        }),
+        /**
+         * Determines the pending description of this thread, which is the new description of
+         * the thread as the current user is currently typing it, with the goal
+         * of changing the description the thread.
+         * This value can either be applied or discarded.
+         */
+        pendingThreadDescription: attr({
             default: "",
         }),
         /**
@@ -273,6 +436,11 @@ function factory(dependencies) {
          * Useful to focus it, or to know when a click is done outside of it.
          */
         threadNameInputRef: attr(),
+        /**
+         * States the OWL ref of the thread description input of this top bar.
+         * Useful to focus it, or to know when a click is done outside of it.
+         */
+        threadDescriptionInputRef: attr(),
         /**
          * States the thread view managing this top bar.
          */
