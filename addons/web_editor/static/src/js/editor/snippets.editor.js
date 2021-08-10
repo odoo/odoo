@@ -2392,20 +2392,42 @@ var SnippetsMenu = Widget.extend({
                         await self._scrollToSnippet($target, self.$scrollable);
 
                         _.defer(async function () {
-                            self._disableUndroppableSnippets();
-
+                            // Free the mutex now to allow following operations
+                            // (mutexed as well).
                             dragAndDropResolve();
 
+                            // First call the onBuilt of all options of each
+                            // item in the snippet (and so build their editor
+                            // instance first).
                             await self._callForEachChildSnippet($target, function (editor, $snippet) {
                                 return editor.buildSnippet();
                             });
-                            self.trigger_up('snippet_dropped', {$target: $target});
+                            // The snippet is now fully built, notify the
+                            // editor for changed content.
                             $target.trigger('content_changed');
+
+                            // Now notifies that a snippet was dropped (at the
+                            // moment, useful to start public widgets for
+                            // instance (no saved content)).
+                            await self._mutex.exec(() => {
+                                const proms = [];
+                                self.trigger_up('snippet_dropped', {
+                                    $target: $target,
+                                    addPostDropAsync: prom => proms.push(prom),
+                                });
+                                return Promise.all(proms);
+                            });
+
+                            // Lastly, ensure that the snippets or its related
+                            // parts are added to the invisible DOM list if
+                            // needed.
                             await self._updateInvisibleDOM();
 
+                            // Restore editor to its normal edition state, also
+                            // make sure the undroppable snippets are updated.
+                            self._disableUndroppableSnippets();
                             self.options.wysiwyg.odooEditor.unbreakableStepUnactive();
                             self.options.wysiwyg.odooEditor.historyStep();
-
                             self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
                         });
                     } else {
