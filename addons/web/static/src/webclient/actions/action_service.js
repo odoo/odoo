@@ -506,18 +506,6 @@ function makeActionManager(env) {
                     this.__beforeLeave__ = new CallbackRecorder();
                     this.__exportGlobalState__ = new CallbackRecorder();
                     this.__exportLocalState__ = new CallbackRecorder();
-                    controller.getGlobalState = () => {
-                        const exportFns = this.__exportGlobalState__.callbacks;
-                        if (exportFns.length) {
-                            return Object.assign({}, ...exportFns.map((fn) => fn()));
-                        }
-                    };
-                    controller.getLocalState = () => {
-                        const exportFns = this.__exportLocalState__.callbacks;
-                        if (exportFns.length) {
-                            return Object.assign({}, ...exportFns.map((fn) => fn()));
-                        }
-                    };
                     useBus(env.bus, "CLEAR-UNCOMMITTED-CHANGES", (callbacks) => {
                         const beforeLeaveFns = this.__beforeLeave__.callbacks;
                         callbacks.push(...beforeLeaveFns);
@@ -566,6 +554,19 @@ function makeActionManager(env) {
                     });
                     dialog = nextDialog;
                 } else {
+                    controller.getGlobalState = () => {
+                        const exportFns = this.__exportGlobalState__.callbacks;
+                        if (exportFns.length) {
+                            return Object.assign({}, ...exportFns.map((fn) => fn()));
+                        }
+                    };
+                    controller.getLocalState = () => {
+                        const exportFns = this.__exportLocalState__.callbacks;
+                        if (exportFns.length) {
+                            return Object.assign({}, ...exportFns.map((fn) => fn()));
+                        }
+                    };
+
                     // LEGACY CODE COMPATIBILITY: remove when controllers will be written in owl
                     // we determine here which actions no longer occur in the nextStack,
                     // and we manually destroy all their controller's widgets
