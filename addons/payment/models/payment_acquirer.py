@@ -177,22 +177,28 @@ class PaymentAcquirer(models.Model):
 
     def _inverse_journal_id(self):
         for acquirer in self:
-            payment_method = self.env['account.payment.method.line'].search([
+            payment_method_line = self.env['account.payment.method.line'].search([
                 ('journal_id.company_id', '=', acquirer.company_id.id),
                 ('code', '=', acquirer.provider)
             ], limit=1)
             if acquirer.journal_id:
-                if not payment_method:
-                    self.env['account.payment.method.line'].create({
-                        'payment_method_id': acquirer._get_default_payment_method(),
-                        'journal_id': acquirer.journal_id.id,
-                    })
+                if not payment_method_line:
+                    default_payment_method_id = acquirer._get_default_payment_method_id()
+                    existing_payment_method_line = self.env['account.payment.method.line'].search([
+                        ('payment_method_id', '=', default_payment_method_id),
+                        ('journal_id', '=', acquirer.journal_id.id)
+                    ], limit=1)
+                    if not existing_payment_method_line:
+                        self.env['account.payment.method.line'].create({
+                            'payment_method_id': default_payment_method_id,
+                            'journal_id': acquirer.journal_id.id,
+                        })
                 else:
-                    payment_method.journal_id = acquirer.journal_id
-            elif payment_method:
-                payment_method.unlink()
+                    payment_method_line.journal_id = acquirer.journal_id
+            elif payment_method_line:
+                payment_method_line.unlink()
 
-    def _get_default_payment_method(self):
+    def _get_default_payment_method_id(self):
         self.ensure_one()
         return self.env.ref('account.account_payment_method_manual_in').id
 

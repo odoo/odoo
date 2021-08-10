@@ -93,8 +93,8 @@ class PaymentAcquirer(models.Model):
 
         return self.authorize_currency_id
 
-    def _get_default_payment_method(self):
+    def _get_default_payment_method_id(self):
         self.ensure_one()
         if self.provider != 'authorize':
-            return super()._get_default_payment_method()
+            return super()._get_default_payment_method_id()
         return self.env.ref('payment_authorize.payment_method_authorize').id

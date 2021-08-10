@@ -116,8 +116,8 @@ class PaymentAcquirer(models.Model):
             raise ValidationError("Ogone: " + _("The communication with the API failed."))
         return response.content
 
-    def _get_default_payment_method(self):
+    def _get_default_payment_method_id(self):
         self.ensure_one()
         if self.provider != 'ogone':
-            return super()._get_default_payment_method()
+            return super()._get_default_payment_method_id()
         return self.env.ref('payment_ogone.payment_method_ogone').id

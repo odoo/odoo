@@ -73,8 +73,8 @@ class PaymentAcquirer(models.Model):
             raise ValidationError("Stripe: " + _("Could not establish the connection to the API."))
         return response.json()
 
-    def _get_default_payment_method(self):
+    def _get_default_payment_method_id(self):
         self.ensure_one()
         if self.provider != 'stripe':
-            return super()._get_default_payment_method()
+            return super()._get_default_payment_method_id()
         return self.env.ref('payment_stripe.payment_method_stripe').id

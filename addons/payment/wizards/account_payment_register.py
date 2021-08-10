@@ -46,7 +46,7 @@ class AccountPaymentRegister(models.TransientModel):
                     ('company_id', '=', wizard.company_id.id),
                     ('acquirer_id.capture_manually', '=', False),
                     ('partner_id', 'in', related_partner_ids.ids),
-                    ('acquirer_id.journal_id', '=', wizard.journal_id.id),
+                    ('acquirer_id', '=', wizard.payment_method_line_id.payment_acquirer_id.id),
                 ])
             else:
                 wizard.suitable_payment_token_ids = [Command.clear()]
@@ -77,7 +77,7 @@ class AccountPaymentRegister(models.TransientModel):
                     ('company_id', '=', wizard.company_id.id),
                     ('partner_id', 'in', related_partner_ids.ids),
                     ('acquirer_id.capture_manually', '=', False),
-                    ('acquirer_id.journal_id', '=', wizard.journal_id.id),
+                    ('acquirer_id', '=', wizard.payment_method_line_id.payment_acquirer_id.id),
                  ], limit=1)
             else:
                 wizard.payment_token_id = False
