@@ -33,8 +33,8 @@ class PaymentAcquirer(models.Model):
         """
         return f'{self.odoo_adyen_account_id.adyen_uuid}_{partner_id}'
 
-    def _get_default_payment_method(self):
+    def _get_default_payment_method_id(self):
         self.ensure_one()
         if self.provider != 'odoo':
-            return super()._get_default_payment_method()
+            return super()._get_default_payment_method_id()
         return self.env.ref('payment_odoo.payment_method_odoo').id

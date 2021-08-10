@@ -66,8 +66,8 @@ class PaymentAcquirer(models.Model):
             }
             self.env['mail.mail'].sudo().create(mail_values).send()
 
-    def _get_default_payment_method(self):
+    def _get_default_payment_method_id(self):
         self.ensure_one()
         if self.provider != 'paypal':
-            return super()._get_default_payment_method()
+            return super()._get_default_payment_method_id()
         return self.env.ref('payment_paypal.payment_method_paypal').id
