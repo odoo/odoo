@@ -663,6 +663,8 @@ class Module(models.Model):
 
     @assert_log_admin_access
     def button_upgrade(self):
+        if not self:
+            return
         Dependency = self.env['ir.module.module.dependency']
         self.update_list()
 
