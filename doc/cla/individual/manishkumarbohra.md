@@ -1,4 +1,3 @@
-
 India, 2021-08-10
 
 I hereby agree to the terms of the Odoo Individual Contributor License
