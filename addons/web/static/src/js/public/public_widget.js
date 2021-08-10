@@ -309,6 +309,19 @@ var PublicWidget = Widget.extend({
     },
     /**
      * @private
+     */
+    _editDOM(callback) {
+        let result;
+        this.trigger_up('dom_edition_request', {
+            callback: () => callback.call(this),
+            onSuccess: _result => {
+                result = _result;
+            },
+        });
+        return result;
+    },
+    /**
+     * @private
      * @param {boolean} [extra=false]
      * @param {Object} [extraContext]
      * @returns {Object}

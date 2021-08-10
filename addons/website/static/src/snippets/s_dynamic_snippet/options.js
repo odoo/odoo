@@ -178,24 +178,20 @@ const dynamicSnippetOptions = options.Class.extend({
      * Sets default options values.
      * Method to be overridden in child components in order to set additional
      * options default values.
+     *
      * @private
      */
-    _setOptionsDefaultValues: function () {
-        // Unactive the editor observer, otherwise, undo of the editor will undo
-        // the attribute being changed. In some case of undo, a race condition
-        // with the public widget that use following property (eg.
-        // numberOfElements or numberOfElementsSmallDevices) might throw an
-        // exception by not finding the attribute on the element.
-        this.options.wysiwyg.odooEditor.observerUnactive();
-        this._setOptionValue('numberOfElements', 4);
-        this._setOptionValue('numberOfElementsSmallDevices', 1);
-        const filterKeys = this.$el.find("we-select[data-attribute-name='filterId'] we-selection-items we-button");
-        if (filterKeys.length > 0) {
-            this._setOptionValue('numberOfRecords', this.dynamicFilters[Object.keys(this.dynamicFilters)[0]].limit);
-        }
-        const filter = this.dynamicFilters[this.$target.get(0).dataset['filterId']];
-        this._filterUpdated(filter);
-        this.options.wysiwyg.odooEditor.observerActive();
+    _setOptionsDefaultValues() {
+        this._editDOM(() => {
+            this._setOptionValue('numberOfElements', 4);
+            this._setOptionValue('numberOfElementsSmallDevices', 1);
+            const filterKeys = this.$el.find("we-select[data-attribute-name='filterId'] we-selection-items we-button");
+            if (filterKeys.length > 0) {
+                this._setOptionValue('numberOfRecords', this.dynamicFilters[Object.keys(this.dynamicFilters)[0]].limit);
+            }
+            const filter = this.dynamicFilters[this.$target.get(0).dataset['filterId']];
+            this._filterUpdated(filter);
+        });
     },
     /**
      * Take the new filter selection into account

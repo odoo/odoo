@@ -47,26 +47,21 @@ const DynamicSnippet = publicWidget.Widget.extend({
      *
      * @override
      */
-    start: function () {
-        return this._super.apply(this, arguments)
-            .then(() => {
-                this._setupSizeChangedManagement(true);
-                this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
-                this._render();
-                this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
-            });
+    async start() {
+        await this._super(...arguments);
+        this._setupSizeChangedManagement(true);
+        this._editDOM(this._render);
     },
     /**
-     *
      * @override
      */
-    destroy: function () {
-        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
-        this._toggleVisibility(false);
-        this._setupSizeChangedManagement(false);
-        this._clearContent();
-        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
-        this._super.apply(this, arguments);
+    destroy() {
+        this._editDOM(() => {
+            this._toggleVisibility(false);
+            this._setupSizeChangedManagement(false);
+            this._clearContent();
+        });
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------

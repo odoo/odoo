@@ -36,6 +36,7 @@ var PublicRoot = publicWidget.RootWidget.extend({
         main_object_request: '_onMainObjectRequest',
         widgets_start_request: '_onWidgetsStartRequest',
         widgets_stop_request: '_onWidgetsStopRequest',
+        dom_edition_request: '_onDOMEditionRequest',
     }),
 
     /**
@@ -161,10 +162,6 @@ var PublicRoot = publicWidget.RootWidget.extend({
                 $from = this.$el;
             }
         }
-
-        options = Object.assign({}, options, {
-            wysiwyg: $('#wrapwrap').data('wysiwyg'),
-        });
 
         this._stopWidgets($from);
 
@@ -327,6 +324,20 @@ var PublicRoot = publicWidget.RootWidget.extend({
      */
     _onDateTimePickerError: function (ev) {
         return false;
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     * @param {Function} ev.data.callback - callback which updates the DOM once
+     *      called. It cannot contain async parts.
+     */
+    _onDOMEditionRequest(ev) {
+        // Just automatically accept the request by default. This behavior is
+        // meant to be changed by extensions.
+        const result = ev.data.callback();
+        if (ev.data.onSuccess) {
+            ev.data.onSuccess(result);
+        }
     },
 });
 

@@ -48,6 +48,8 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
      * @override
      */
     start: function () {
+        this.wrapwrapEl = this.el.getElementById('wrapwrap');
+
         KeyboardNavigationMixin.start.call(this);
         // Compatibility lang change ?
         if (!this.$('.js_change_lang').length) {
@@ -223,6 +225,20 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
         ev.data.options = _.clone(ev.data.options || {});
         ev.data.options.editableMode = ev.data.editableMode;
         this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    _onDOMEditionRequest(ev) {
+        const wysiwyg = $(this.wrapwrapEl).data('wysiwyg'); // TODO there should be a better way to get this
+        if (!wysiwyg) {
+            this._super(...arguments);
+            return;
+        }
+
+        wysiwyg.odooEditor.observerUnactive();
+        this._super(...arguments);
+        wysiwyg.odooEditor.observerActive();
     },
     /**
      * @todo review
