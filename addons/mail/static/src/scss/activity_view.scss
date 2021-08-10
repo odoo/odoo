@@ -5,6 +5,11 @@
         thead > tr > th:first-of-type {
             min-width: 300px;
         }
+        thead > tr > th {
+            @include o-position-sticky($top: -1px);
+            background-color: white;
+            z-index: 1;
+        }
         tbody > tr > td, tfoot > tr > td {
             cursor: pointer;
         }
