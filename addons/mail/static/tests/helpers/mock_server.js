@@ -1725,10 +1725,11 @@ MockServer.include({
                 return {
                     id: partner.id,
                     im_status: user.im_status || 'offline',
+                    email: partner.email,
                     name: partner.name,
                     user_id: user.id,
                 };
-            });
+            }).sort((a, b) => (a.name === b.name) ? (a.id - b.id) : (a.name > b.name) ? 1 : -1);
         matchingPartners.length = Math.min(matchingPartners.length, limit);
         return matchingPartners;
     },

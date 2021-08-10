@@ -78,29 +78,17 @@ function factory(dependencies) {
          * @param {function} res
          */
         async handleAddChannelAutocompleteSource(req, res) {
-            const value = req.term;
-            const escapedValue = owl.utils.escape(value);
-            this.update({ addingChannelValue: value });
-            const domain = [
-                ['channel_type', '=', 'channel'],
-                ['name', 'ilike', value],
-            ];
-            const fields = ['channel_type', 'name', 'public', 'uuid'];
-            const result = await this.async(() => this.env.services.rpc({
-                model: "mail.channel",
-                method: "search_read",
-                kwargs: {
-                    domain,
-                    fields,
-                },
-            }));
-            const items = result.map(data => {
-                let escapedName = owl.utils.escape(data.name);
-                return Object.assign(data, {
+            this.update({ addingChannelValue: req.term });
+            const threads = await this.env.models['mail.thread'].searchChannelsToOpen({ limit: 10, searchTerm: req.term });
+            const items = threads.map((thread) => {
+                const escapedName = owl.utils.escape(thread.name);
+                return {
+                    id: thread.id,
                     label: escapedName,
-                    value: escapedName
-                });
+                    value: escapedName,
+                };
             });
+            const escapedValue = owl.utils.escape(req.term);
             // XDU FIXME could use a component but be careful with owl's
             // renderToString https://github.com/odoo/owl/issues/708
             items.push({

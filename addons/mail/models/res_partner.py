@@ -183,6 +183,7 @@ class Partner(models.Model):
                     U.id as user_id,
                     P.id as id,
                     P.name as name,
+                    P.email as email,
                     CASE WHEN B.last_poll IS NULL THEN 'offline'
                          WHEN age(now() AT TIME ZONE 'UTC', B.last_poll) > interval %s THEN 'offline'
                          WHEN age(now() AT TIME ZONE 'UTC', B.last_presence) > interval %s THEN 'away'
@@ -194,6 +195,7 @@ class Partner(models.Model):
                 WHERE P.name ILIKE %s
                     AND P.id NOT IN %s
                     AND U.active = 't'
+                ORDER BY P.name ASC, P.id ASC
                 LIMIT %s
             """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, name, tuple(excluded_partner_ids), limit))
             return self.env.cr.dictfetchall()

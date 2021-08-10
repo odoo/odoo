@@ -583,6 +583,34 @@ function factory(dependencies) {
             }
         }
 
+        /**
+         * Search for thread matching `searchTerm`.
+         *
+         * @static
+         * @param {Object} param0
+         * @param {integer} param0.limit
+         * @param {string} param0.searchTerm
+         */
+        static async searchChannelsToOpen({ limit, searchTerm }) {
+            const domain = [
+                ['channel_type', '=', 'channel'],
+                ['name', 'ilike', searchTerm],
+            ];
+            const fields = ['channel_type', 'name'];
+            const channelsData = await this.env.services.rpc({
+                model: "mail.channel",
+                method: "search_read",
+                kwargs: {
+                    domain,
+                    fields,
+                    limit,
+                },
+            });
+            return this.insert(channelsData.map(
+                channelData => this.convertData(channelData)
+            ));
+        }
+
         /*
          * Returns threads that match the given search term. More specially only
          * threads of model 'mail.channel' are suggested, and if the context
