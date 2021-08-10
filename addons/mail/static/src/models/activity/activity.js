@@ -215,7 +215,7 @@ function factory(dependencies) {
              */
             const action = {
                 type: 'ir.actions.act_window',
-                name: this.env._t("Schedule Activity"),
+                name: 'wololo', // this.env._t("Schedule Activity"),
                 res_model: 'mail.activity',
                 view_mode: 'form',
                 views: [[false, 'form']],

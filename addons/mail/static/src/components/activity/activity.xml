@@ -137,7 +137,7 @@
                                     t-ref="fileUploader"
                                 />
                             </t>
-                            <button class="o_Activity_toolButton o_Activity_editButton btn btn-link" t-on-click="activity.onClickEdit">
+                            <button class="o_Activity_toolButton o_Activity_editButton btn btn-link" t-on-click="activity.onClickEdit.bind(activity)">
                                 <i class="fa fa-pencil"/> Edit
                             </button>
                             <button class="o_Activity_toolButton o_Activity_cancelButton btn btn-link" t-on-click="_onClickCancel" >
