@@ -88,7 +88,8 @@ export function useModel(ModelClass, params, options = {}) {
     services.orm = services.orm || useService("orm");
 
     const model = new ModelClass(component.env, params, services);
-    useBus(model, "update", options.onUpdate || component.render);
+    const { processParams = (x) => x, onUpdate } = options;
+    useBus(model, "update", onUpdate || component.render);
 
     const globalState = component.props.globalState || {};
     let useSampleModel = Boolean(
@@ -102,7 +103,7 @@ export function useModel(ModelClass, params, options = {}) {
     const user = useService("user");
     async function load(props) {
         model.orm = orm;
-        const searchParams = getSearchParams(props);
+        const searchParams = processParams(getSearchParams(props));
         await model.load(searchParams);
         if (useSampleModel && !model.hasData()) {
             sampleORM =
