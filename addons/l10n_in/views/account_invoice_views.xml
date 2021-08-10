@@ -9,6 +9,11 @@
                 <field name="country_code" invisible="1"/>
                 <field name="l10n_in_gst_treatment"
                     attrs="{'invisible': ['|', ('country_code', '!=', 'IN'), ('move_type', '=', 'entry')], 'required': [('country_code', '=', 'IN'), ('move_type', '!=', 'entry')]}"/>
+                <field name="l10n_in_state_id" attrs="{
+                    'invisible': ['|', ('country_code', '!=', 'IN'),
+                        ('move_type', 'not in', ['out_invoice', 'out_refund','out_receipt'])],
+                    'required': [('country_code', '=', 'IN'),
+                        ('move_type', 'not in', ['out_invoice', 'out_refund','out_receipt'])]}"/>
             </xpath>
             <xpath expr="//page[@id='other_tab']/group[@id='other_tab_group']" position="after">
                 <group string="Export India" attrs="{'invisible': ['|', ('l10n_in_gst_treatment', 'not in', ['overseas', 'deemed_export']), ('move_type', 'not in', ['out_invoice', 'out_refund'])]}">

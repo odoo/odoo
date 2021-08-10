@@ -280,48 +280,11 @@
         ]"/>
     </record>
 
-    <!-- Demo of atadj(Advance adjustments). When invoice is reconcile against Advance payment.
-    Reconciled invoice consideration for which payment have been received in the past months.-->
-    <record id="demo_invoice_atadj" model="account.move">
-        <field name="move_type">out_invoice</field>
-        <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
-        <field name="invoice_user_id" ref="base.user_demo"/>
-        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
-        <field name="invoice_date" eval="(datetime.now() + relativedelta(months=1)).strftime('%Y-%m-01')"/>
-        <field name="l10n_in_gst_treatment">regular</field>
-        <field name="journal_id" model="account.journal"
-            eval="obj().search([
-                ('type', '=', 'sale'),
-                ('company_id', '=', ref('l10n_in.demo_company_in'))], limit=1).id"/>
-        <field name="invoice_line_ids" model="account.move.line" eval="[
-            (0, 0, {
-                'product_id': ref('product.consu_delivery_01'),
-                'quantity': 3,
-                'price_unit': 2000.0,
-                'tax_ids': [(6, 0, obj().tax_ids.search([
-                    ('company_id', '=', ref('l10n_in.demo_company_in')),
-                    ('type_tax_use', '=', 'sale'),
-                    ('amount','=', 18),
-                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
-            }),
-        ]"/>
-    </record>
-
     <function model="account.move" name="action_post">
         <value eval="[
             ref('demo_invoice_b2b'), ref('demo_invoice_b2cs'), ref('demo_invoice_b2cl'),
             ref('demo_invoice_exp'), ref('demo_invoice_nill'), ref('demo_invoice_cdnr'),
-            ref('demo_invoice_cdnur'), ref('demo_invoice_atadj')]"/>
-    </function>
-
-    <!-- Reconciled demo payment with demo invoice of atadj(Advance adjustments)-->
-    <function model="account.move" name="js_assign_outstanding_line">
-        <value eval="[ref('demo_invoice_atadj')]"/>
-        <value model="account.move.line" eval="obj().search([
-            ('credit', '>', 0),
-            ('debit', '=', 0),
-            ('payment_id','=', obj().env.ref('l10n_in.demo_payment_at').id)
-            ], limit=1).id"/>
+            ref('demo_invoice_cdnur')]"/>
     </function>
 
 </odoo>

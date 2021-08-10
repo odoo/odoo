@@ -41,7 +41,6 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'views/res_company_view.xml',
         'views/res_country_state_view.xml',
         'views/res_partner_views.xml',
-        'views/account_tax_views.xml',
         'views/uom_uom_views.xml',
         'views/report_template.xml',
         'data/account_chart_template_data.xml'
@@ -50,7 +49,6 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'demo/demo_company.xml',
         'demo/res_partner_demo.xml',
         'demo/product_demo.xml',
-        'demo/account_payment_demo.xml',
         'demo/account_invoice_demo.xml',
     ],
     'license': 'LGPL-3',

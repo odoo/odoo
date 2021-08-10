@@ -2,19 +2,10 @@
 <odoo>
     <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
 
-        <xpath expr="//span[@t-field='o.partner_id.vat']" position="attributes">
-            <attribute name="t-if">o.company_id.account_fiscal_country_id.code != 'IN'</attribute>
-        </xpath>
-        <xpath expr="//span[@t-field='o.partner_id.vat']" position="after">
-            <span t-field="o.l10n_in_gstin" t-if="o.company_id.account_fiscal_country_id.code == 'IN'"/>
-        </xpath>
         <xpath expr="//t[@t-set='address']" position="inside">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.l10n_in_state_id" class="mt16">
-                <t t-if="o.move_type in ('in_invoice', 'in_refund')">
-                    Destination of supply: <span t-esc="o.l10n_in_state_id.name"/>
-                </t>
                 <t t-if="o.move_type in ('out_invoice', 'out_refund')">
-                    Place of supply: <span t-esc="o.l10n_in_state_id.name"/>
+                    Place of supply: <span t-field="o.l10n_in_state_id"/>
                 </t>
             </t>
         </xpath>
@@ -23,6 +14,9 @@
                 <p id="total_in_words" class="mb16">
                     <strong>Total (In Words): </strong>
                     <span t-field="o.amount_total_words"/>
+                </p>
+                <p id="is_reverse_charge" t-if="any('(RC)' in tag_name for tag_name in o.mapped('line_ids.tax_tag_ids.name'))" class="mb16">
+                    <strong>Tax is payable on reverse charge basis</strong>
                 </p>
             </t>
         </xpath>
