@@ -3,6 +3,7 @@
 
 import datetime
 import logging
+
 from psycopg2 import OperationalError
 
 from odoo import _, api, fields, models, tools
@@ -19,10 +20,6 @@ class Lead(models.Model):
 
     @api.depends('email_from', 'probability', 'iap_enrich_done', 'reveal_id')
     def _compute_show_enrich_button(self):
-        config = self.env['ir.config_parameter'].sudo().get_param('crm.iap.lead.enrich.setting', 'manual')
-        if not config or config != 'manual':
-            self.show_enrich_button = False
-            return
         for lead in self:
             if not lead.active or not lead.email_from or lead.email_state == 'incorrect' or lead.iap_enrich_done or lead.reveal_id or lead.probability == 100:
                 lead.show_enrich_button = False
@@ -40,6 +37,16 @@ class Lead(models.Model):
             ('create_date', '>', timeDelta)
         ])
         leads.iap_enrich(from_cron=True)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        leads = super(Lead, self).create(vals_list)
+        enrich_mode = self.env['ir.config_parameter'].sudo().get_param('crm.iap.lead.enrich.setting', 'auto')
+        if enrich_mode == 'auto':
+            cron = self.env.ref('crm_iap_enrich.ir_cron_lead_enrichment', raise_if_not_found=False)
+            if cron:
+                cron._trigger()
+        return leads
 
     def iap_enrich(self, from_cron=False):
         # Split self in a list of sub-recordsets or 50 records to prevent timeouts
