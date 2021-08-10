@@ -23,8 +23,8 @@ class PaymentAcquirer(models.Model):
         if self.filtered(lambda a: a.provider == 'test' and a.state not in ('test', 'disabled')):
             raise UserError(_("Test acquirers should never be enabled."))
 
-    def _get_default_payment_method(self):
+    def _get_default_payment_method_id(self):
         self.ensure_one()
         if self.provider != 'test':
-            return super()._get_default_payment_method()
+            return super()._get_default_payment_method_id()
         return self.env.ref('payment_test.payment_method_test').id

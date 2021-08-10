@@ -55,8 +55,8 @@ class PaymentAcquirer(models.Model):
         shasign = sha256((data + key).encode('utf-8'))
         return shasign.hexdigest()
 
-    def _get_default_payment_method(self):
+    def _get_default_payment_method_id(self):
         self.ensure_one()
         if self.provider != 'sips':
-            return super()._get_default_payment_method()
+            return super()._get_default_payment_method_id()
         return self.env.ref('payment_sips.payment_method_sips').id

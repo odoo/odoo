@@ -64,8 +64,8 @@ class PaymentAcquirer(models.Model):
         # Calculate the SHA-1 hash over the signing string
         return sha1(sign_string.encode('utf-8')).hexdigest()
 
-    def _get_default_payment_method(self):
+    def _get_default_payment_method_id(self):
         self.ensure_one()
         if self.provider != 'buckaroo':
-            return super()._get_default_payment_method()
+            return super()._get_default_payment_method_id()
         return self.env.ref('payment_buckaroo.payment_method_buckaroo').id
