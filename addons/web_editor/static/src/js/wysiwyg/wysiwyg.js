@@ -888,8 +888,8 @@ const Wysiwyg = Widget.extend({
      * Handle custom keyboard shortcuts.
      */
     _handleShortcuts: function (e) {
-        // Open the link modal / tool when CTRL+K is pressed.
-        if (e && e.key === 'k' && (e.ctrlKey || e.metaKey)) {
+        // Open the link modal / tool when CTRL+M is pressed.
+        if (e && e.key === 'm' && (e.ctrlKey || e.metaKey)) {
             e.preventDefault();
             this.toggleLinkTools();
         }
