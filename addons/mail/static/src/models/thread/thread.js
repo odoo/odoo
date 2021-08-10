@@ -122,6 +122,22 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
+         * Changes description of the thread to the given new description.
+         * Only makes sense for channels.
+         *
+         * @param {string} description
+         */
+        async changeDescription(description) {
+            this.update({ description });
+            return this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'channel_change_description',
+                args: [[this.id]],
+                kwargs: { description },
+            });
+        }
+
+        /**
          * @static
          * @param {mail.thread} [thread] the concerned thread
          */
@@ -988,14 +1004,15 @@ function factory(dependencies) {
          * Renames this thread to the given new name.
          * Only makes sense for channels.
          *
-         * @param {string} newName
+         * @param {string} name
          */
-        async rename(newName) {
+        async rename(name) {
+            this.update({ name });
             return this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_rename',
-                args: [this.id],
-                kwargs: { name: newName },
+                args: [[this.id]],
+                kwargs: { name },
             });
         }
 
@@ -1187,6 +1204,14 @@ function factory(dependencies) {
                 return false;
             }
             return ['chat', 'livechat'].includes(this.channel_type);
+        }
+
+        /**
+        * @private
+        * @returns {boolean}
+        */
+        _computeIsChannelDescriptionChangeable() {
+            return this.model === 'mail.channel' && this.channel_type === 'channel';
         }
 
         /**
@@ -1749,6 +1774,13 @@ function factory(dependencies) {
         }),
         id: attr({
             required: true,
+        }),
+        /**
+         * Determines whether this description can be changed.
+         * Only makes sense for channels.
+         */
+        isChannelDescriptionChangeable: attr({
+            compute: '_computeIsChannelDescriptionChangeable',
         }),
         /**
          * Determines whether this thread can be renamed.

@@ -768,7 +768,24 @@ class Channel(models.Model):
     def channel_rename(self, name):
         self.ensure_one()
         self.write({'name': name})
-        self._broadcast(self.channel_partner_ids.ids)
+        self.env['bus.bus'].sendone((self._cr.dbname, 'mail.channel', self.id), {
+            'type': 'mail.channel_rename',
+            'payload': {
+                'id': self.id,
+                'name': name
+            },
+        })
+
+    def channel_change_description(self, description):
+        self.ensure_one()
+        self.write({'description': description})
+        self.env['bus.bus'].sendone((self._cr.dbname, 'mail.channel', self.id), {
+            'type': 'mail.channel_description_change',
+            'payload': {
+                'id': self.id,
+                'description': description
+            },
+        })
 
     def notify_typing(self, is_typing):
         """ Broadcast the typing notification to channel members
