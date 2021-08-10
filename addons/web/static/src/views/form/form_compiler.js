@@ -135,13 +135,13 @@ export class FormCompiler {
             combineAttributes(
                 compiled,
                 "t-if",
-                `!evalDomain(record, ${JSON.stringify(invisible)})`,
+                `!evalDomain(record,${JSON.stringify(invisible)})`,
                 " and "
             );
         } else {
             let expr;
             if (Array.isArray(invisible)) {
-                expr = `evalDomain(record, ${JSON.stringify(invisible)})`;
+                expr = `evalDomain(record,${JSON.stringify(invisible)})`;
             } else {
                 expr = invisible;
             }
@@ -451,7 +451,7 @@ export class FormCompiler {
             if (!Array.isArray(readonly)) {
                 readonlyExpr = readonly;
             } else {
-                readonlyExpr = `evalDomain(record, ${JSON.stringify(readonly)})`;
+                readonlyExpr = `evalDomain(record,${JSON.stringify(readonly)})`;
             }
             const tAttClass = `${roClass}: ${readonlyExpr}`;
             appendAttr(compiled, "class", tAttClass);
@@ -471,7 +471,7 @@ export class FormCompiler {
             if (!Array.isArray(required)) {
                 reqExpr = required;
             } else {
-                reqExpr = `evalDomain(record, ${JSON.stringify(required)})`;
+                reqExpr = `evalDomain(record,${JSON.stringify(required)})`;
             }
             const tAttClass = `${reqClass}: ${reqExpr}`;
             appendAttr(compiled, "class", tAttClass);
@@ -487,7 +487,7 @@ export class FormCompiler {
             emptyClass = "o_form_label_empty";
         }
         if (emptyClass) {
-            const tAttClass = `${emptyClass}: isFieldEmpty(record, "${params.fieldName}", "${
+            const tAttClass = `${emptyClass}: isFieldEmpty(record,"${params.fieldName}", "${
                 params.widgetName || null
             }")`;
             appendAttr(compiled, "class", tAttClass);
@@ -617,7 +617,7 @@ export class FormCompiler {
         }
         activePage.setAttribute(
             "t-value",
-            `state.${noteBookId} or getActivePage(${JSON.stringify(invisibleDomains)})`
+            `state.${noteBookId} or getActivePage(record, ${JSON.stringify(invisibleDomains)})`
         );
         return notebook;
     }

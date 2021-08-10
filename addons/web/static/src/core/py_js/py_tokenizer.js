@@ -155,7 +155,8 @@ function decodeStringLiteral(str, unicode) {
     return out.join("");
 }
 
-const constants = new Set(["None", "False", "True"]);
+const isConstant = (term) => /none|false|true/i.test(term);
+const toConstant = (term) => term[0].toUpperCase() + term.slice(1).toLowerCase();
 
 export const comparators = [
     "in",
@@ -296,10 +297,10 @@ export function tokenize(str) {
                 type: 2 /* Symbol */,
                 value: token,
             });
-        } else if (constants.has(token)) {
+        } else if (isConstant(token)) {
             tokens.push({
                 type: 4 /* Constant */,
-                value: token,
+                value: toConstant(token),
             });
         } else if (NamePattern.test(token)) {
             tokens.push({

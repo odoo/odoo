@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-  <t t-name="web.KanbanRenderer" owl="1">
-    <div class="o_kanban_view" t-attf-class="o_kanban_{{ isGrouped() ? '' : 'un' }}grouped {{ props.info.className }}">
-        <t t-foreach="props.model.root.data" t-as="record" t-key="record.id">
-            <t t-call="{{ cardTemplate }}" />
-        </t>
-    </div>
-  </t>
+    <t t-name="web.KanbanRenderer" owl="1">
+        <t t-set="root" t-value="props.model.root" />
+        <div class="o_kanban_view" t-attf-class="o_kanban_{{ root.isGrouped ? '' : 'un' }}grouped {{ props.info.className }}">
+            <t t-foreach="root.data" t-as="groupOrRecord" t-key="groupOrRecord.id">
+                <t t-if="groupOrRecord.groupData">
+                    <t t-set="group" t-value="groupOrRecord" />
+                    <div class="o_kanban_group ui-sortable">
+                        <div class="o_kanban_header">
+                            <div class="o_kanban_header_title">
+                                <t t-set="columnTitle" t-value="getColumnTitle(group)" />
+                                <span class="o_column_title">
+                                    <t t-if="columnTitle" t-esc="columnTitle" />
+                                    <t t-else="">Undefined</t>
+                                </span>
+                            </div>
+                        </div>
+                        <t t-foreach="group.data" t-as="record" t-key="record.id">
+                            <t t-call="{{ cardTemplate }}" />
+                        </t>
+                    </div>
+                </t>
+                <t t-else="">
+                    <t t-set="record" t-value="groupOrRecord" />
+                    <t t-call="{{ cardTemplate }}" />
+                </t>
+            </t>
+        </div>
+    </t>
 </templates>
