@@ -6,6 +6,8 @@ import weUtils from 'web_editor.utils';
 import session from 'web.session';
 import {ColorpickerWidget} from 'web.Colorpicker';
 import {_t, _lt} from 'web.core';
+import {svgToPNG} from 'website.utils';
+import {useService} from "@web/core/utils/hooks";
 
 const {Component, Store, mount, QWeb} = owl;
 const {useDispatch, useStore, useGetters, useRef} = owl.hooks;
@@ -189,6 +191,7 @@ class PaletteSelectionScreen extends Component {
         this.getters = useGetters();
         this.dispatch = useDispatch();
         this.logoInputRef = useRef('logoSelectionInput');
+        this.notification = useService("notification");
     }
 
     mounted() {
@@ -206,13 +209,32 @@ class PaletteSelectionScreen extends Component {
         if (logoSelectInput.files.length === 1) {
             const file = logoSelectInput.files[0];
             const data = await utils.getDataURLFromFile(file);
-            this.dispatch('changeLogo', data);
-            this.updatePalettes();
+            const attachment = await this.rpc({
+                route: '/web_editor/attachment/add_data',
+                params: {
+                    name: 'logo',
+                    data: data.split(',')[1],
+                    is_image: true,
+                }
+            });
+            if (!attachment.error) {
+                this.dispatch('changeLogo', data, attachment.id);
+                this.updatePalettes();
+            } else {
+                this.notification.notify({
+                    title: file.name,
+                    message: attachment.error,
+                });
+            }
         }
     }
 
     async updatePalettes() {
-        let img = this.state.logo.split(',', 2)[1];
+        let img = this.state.logo;
+        if (img.startsWith('data:image/svg+xml')) {
+            img = await svgToPNG(img);
+        }
+        img = img.split(',')[1];
         const [color1, color2] = await rpc.query({
             model: 'base.document.layout',
             method: 'extract_image_primary_secondary_colors',
@@ -376,8 +398,9 @@ const actions = {
             state.selectedIndustry = {id, label};
         }
     },
-    changeLogo({state}, data) {
+    changeLogo({state}, data, attachmentId) {
         state.logo = data;
+        state.logoAttachmentId = attachmentId;
     },
     selectPalette({state}, paletteName) {
         if (paletteName === 'recommendedPalette') {
@@ -472,6 +495,7 @@ async function getInitialState() {
         palettes: palettes,
         features: features,
         themes: [],
+        logoAttachmentId: undefined,
     });
 }
 
@@ -508,12 +532,12 @@ async function applyConfigurator(self, themeName) {
         }
         const data = {
             selected_features: selectedFeatures,
-            logo: self.state.logo,
             industry_id: self.state.selectedIndustry.id,
             selected_palette: selectedPalette,
             theme_name: themeName,
             website_purpose: WEBSITE_PURPOSES[self.state.selectedPurpose].name,
             website_type: WEBSITE_TYPES[self.state.selectedType].name,
+            logo_attachment_id: self.state.logoAttachmentId,
         };
         const resp = await rpc.query({
             model: 'website',
@@ -540,6 +564,7 @@ async function makeEnvironment() {
             recommendedPalette: store.state.recommendedPalette,
             features: store.state.features,
             logo: store.state.logo,
+            logoAttachmentId: store.state.logoAttachmentId,
         };
         window.sessionStorage.setItem(SESSION_STORAGE_ITEM_NAME, JSON.stringify(newState));
     });
@@ -553,7 +578,8 @@ async function makeEnvironment() {
     env.loader = qweb.renderToString('website.ThemePreview.Loader', {
         showTips: true
     });
-    return Object.assign(env, {router, store, qweb});
+    const services = Component.env.services;
+    return Object.assign(env, {router, store, qweb, services});
 }
 
 async function setup() {

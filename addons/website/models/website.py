@@ -307,7 +307,7 @@ class Website(models.Model):
     @api.model
     def configurator_init(self):
         r = dict()
-        company_id = self.get_current_website().company_id
+        company = self.get_current_website().company_id
         configurator_features = self.env['website.configurator.feature'].search([])
         r['features'] = [{
             'id': feature.id,
@@ -319,8 +319,8 @@ class Website(models.Model):
             'module_state': feature.module_id.state,
         } for feature in configurator_features]
         r['logo'] = False
-        if company_id.logo and company_id.logo != company_id._get_logo():
-            r['logo'] = company_id.logo.decode('utf-8')
+        if company.logo and company.logo != company._get_logo():
+            r['logo'] = company.logo.decode('utf-8')
         try:
             result = self._website_api_rpc('/api/website/1/configurator/industries', {'lang': self.env.user.lang})
             r['industries'] = result['industries']
@@ -470,10 +470,18 @@ class Website(models.Model):
         tour_asset_id = self.env.ref('website.configurator_tour')
         tour_asset_id.copy({'key': tour_asset_id.key, 'website_id': website.id, 'active': True})
 
-        # logo was generated as base64 url
-        logo = kwargs.get('logo')
-        if logo:
-            website.logo = logo.split(',', 1)[1]
+        # Set logo from generated attachment or from company's logo
+        logo_attachment_id = kwargs.get('logo_attachment_id')
+        company = website.company_id
+        if logo_attachment_id:
+            attachment = self.env['ir.attachment'].browse(logo_attachment_id)
+            attachment.write({
+                'res_model': 'website',
+                'res_field': 'logo',
+                'res_id': website.id,
+            })
+        elif not logo_attachment_id and company.logo and company.logo != company._get_logo():
+            website.logo = company.logo.decode('utf-8')
 
         # palette
         palette = kwargs.get('selected_palette')
