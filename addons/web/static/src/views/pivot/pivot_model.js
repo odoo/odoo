@@ -684,9 +684,13 @@ export class PivotModel extends Model {
             this._processMeasures(searchParams.context.pivot_measures) || this.meta.activeMeasures;
         const meta = this._buildMeta({ activeMeasures });
         meta.rowGroupBys =
-            searchParams.context.pivot_row_groupby ||
+            (searchParams.context.pivot_row_groupby &&
+                searchParams.context.pivot_row_groupby.slice()) ||
             (searchParams.groupBy.length ? searchParams.groupBy : this.meta.rowGroupBys);
-        meta.colGroupBys = searchParams.context.pivot_column_groupby || this.meta.colGroupBys;
+        meta.colGroupBys =
+            (searchParams.context.pivot_column_groupby &&
+                searchParams.context.pivot_column_groupby.slice()) ||
+            this.meta.colGroupBys;
 
         const { domains, origins } = this._computeDerivedParams(searchParams);
         searchParams.domains = domains;

@@ -2010,6 +2010,106 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "Adding a Favorite at anytime should modify the row/column groupby",
+        async function (assert) {
+            serverData.views = {
+                "partner,false,pivot": `
+                    <pivot>
+                        <field name="customer" type="row"/>
+                        <field name="date" interval="month" type="col" />
+                    </pivot>`,
+                "partner,false,search": "<search/>",
+            };
+            serverData.models["partner"].filters = [
+                {
+                    user_id: [2, "Mitchell Admin"],
+                    name: "My favorite",
+                    id: 5,
+                    context: `{"pivot_row_groupby":["product_id"], "pivot_column_groupby": ["bar"]}`,
+                    sort: "[]",
+                    domain: "",
+                    is_default: false,
+                    model_id: "partner",
+                    action_id: false,
+                },
+            ];
+
+            const webClient = await createWebClient({ serverData });
+
+            await doAction(webClient, {
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "pivot"]],
+            });
+
+            assert.strictEqual(
+                webClient.el.querySelector("tbody .o_pivot_header_cell_closed").textContent,
+                "First"
+            );
+
+            assert.strictEqual(
+                webClient.el.querySelector("thead .o_pivot_header_cell_closed").textContent,
+                "December 2016"
+            );
+
+            // activate the unique existing favorite
+            await toggleFavoriteMenu(webClient);
+            await toggleMenuItem(webClient, 0);
+
+            assert.strictEqual(
+                webClient.el.querySelector("tbody .o_pivot_header_cell_closed").textContent,
+                "xphone"
+            );
+
+            assert.strictEqual(
+                webClient.el.querySelector("thead .o_pivot_header_cell_closed").textContent,
+                "true"
+            );
+
+            // desactivate the unique existing favorite
+            await toggleMenuItem(webClient, 0);
+
+            assert.strictEqual(
+                webClient.el.querySelector("tbody .o_pivot_header_cell_closed").textContent,
+                "xphone"
+            );
+
+            assert.strictEqual(
+                webClient.el.querySelector("thead .o_pivot_header_cell_closed").textContent,
+                "true"
+            );
+
+            // Let's get rid of the rows and columns groupBy
+            await click(webClient.el, "tbody .o_pivot_header_cell_opened");
+            await click(webClient.el, "thead .o_pivot_header_cell_opened");
+
+            assert.strictEqual(
+                webClient.el.querySelector("tbody .o_pivot_header_cell_closed").textContent,
+                "Total"
+            );
+
+            assert.strictEqual(
+                webClient.el.querySelector("thead .o_pivot_header_cell_closed").textContent,
+                "Total"
+            );
+
+            // activate AGAIN the unique existing favorite
+            await toggleFavoriteMenu(webClient);
+            await toggleMenuItem(webClient, 0);
+
+            assert.strictEqual(
+                webClient.el.querySelector("tbody .o_pivot_header_cell_closed").textContent,
+                "xphone"
+            );
+
+            assert.strictEqual(
+                webClient.el.querySelector("thead .o_pivot_header_cell_closed").textContent,
+                "true"
+            );
+        }
+    );
+
     QUnit.test("Unload Filter, reset display, load another filter", async function (assert) {
         assert.expect(18);
 
