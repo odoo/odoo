@@ -195,7 +195,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         activity_id = self.env['mail.activity'].create({
             'summary': 'Meeting with partner',
             'activity_type_id': activty_type.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
             'res_id': self.env['res.partner'].create({'name': 'A Partner'}).id,
         })
 
@@ -228,7 +228,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         activity_id = self.env['mail.activity'].create({
             'summary': 'Meeting with partner',
             'activity_type_id': activty_type.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
             'res_id': self.env['res.partner'].create({'name': 'A Partner'}).id,
         })
 

@@ -94,7 +94,7 @@ class PurchaseOrder(models.Model):
         if purchase.requisition_id:
             purchase.message_post_with_view('mail.message_origin_link',
                     values={'self': purchase, 'origin': purchase.requisition_id},
-                    subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'))
+                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'))
         return purchase
 
     def write(self, vals):
@@ -102,7 +102,7 @@ class PurchaseOrder(models.Model):
         if vals.get('requisition_id'):
             self.message_post_with_view('mail.message_origin_link',
                     values={'self': self, 'origin': self.requisition_id, 'edit': True},
-                    subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'))
+                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'))
         return result
 
 

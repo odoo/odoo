@@ -47,6 +47,6 @@ class ApplicantGetRefuseReason(models.TransientModel):
             applicants = self.applicant_ids.filtered(lambda x: x.email_from or x.partner_id.email)
             applicants.message_post_with_template(self.template_id.id, **{
                 'auto_delete_message': True,
-                'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
+                'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
                 'email_layout_xmlid': 'mail.mail_notification_light'
             })

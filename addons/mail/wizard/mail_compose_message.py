@@ -119,7 +119,7 @@ class MailComposer(models.TransientModel):
              "message, comment for other messages such as user replies")
     subtype_id = fields.Many2one(
         'mail.message.subtype', 'Subtype', ondelete='set null', index=True,
-        default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'))
+        default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'))
     mail_activity_type_id = fields.Many2one(
         'mail.activity.type', 'Mail Activity Type',
         index=True, ondelete='set null')
@@ -249,7 +249,7 @@ class MailComposer(models.TransientModel):
             elif wizard.subtype_id:
                 subtype_id = wizard.subtype_id.id
             else:
-                subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
+                subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
 
             for res_ids in sliced_res_ids:
                 # mass mail mode: mail are sudo-ed, as when going through get_mail_values

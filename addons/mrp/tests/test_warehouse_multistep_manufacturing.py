@@ -10,7 +10,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
     def setUp(self):
         super(TestMultistepManufacturingWarehouse, self).setUp()
         # Create warehouse
-        self.customer_location = self.env['ir.model.data'].xmlid_to_res_id('stock.stock_location_customers')
+        self.customer_location = self.env['ir.model.data']._xmlid_to_res_id('stock.stock_location_customers')
         warehouse_form = Form(self.env['stock.warehouse'])
         warehouse_form.name = 'Test Warehouse'
         warehouse_form.code = 'TWH'
@@ -138,7 +138,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         picking_customer = self.env['stock.picking'].create({
             'location_id': self.warehouse.wh_output_stock_loc_id.id,
             'location_dest_id': self.customer_location,
-            'partner_id': self.env['ir.model.data'].xmlid_to_res_id('base.res_partner_4'),
+            'partner_id': self.env['ir.model.data']._xmlid_to_res_id('base.res_partner_4'),
             'picking_type_id': self.warehouse.out_type_id.id,
         })
         self.env['stock.move'].create({
@@ -218,7 +218,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         picking_customer = self.env['stock.picking'].create({
             'location_id': self.warehouse.lot_stock_id.id,
             'location_dest_id': self.customer_location,
-            'partner_id': self.env['ir.model.data'].xmlid_to_res_id('base.res_partner_4'),
+            'partner_id': self.env['ir.model.data']._xmlid_to_res_id('base.res_partner_4'),
             'picking_type_id': self.warehouse.out_type_id.id,
         })
         self.env['stock.move'].create({

@@ -37,12 +37,6 @@ QUnit.module('LunchKanbanView Mobile', {
                 fields: {},
                 records: [],
             },
-            'ir.model.data': {
-                fields: {},
-                xmlid_to_res_id() {
-                    return Promise.resolve(PORTAL_GROUP_ID);
-                },
-            },
             'lunch.location': {
                 fields: {
                     name: {string: 'Name', type: 'char'},

@@ -33,7 +33,7 @@ class Rating(models.Model):
 
     @api.model
     def _selection_target_model(self):
-        return [(model.model, model.name) for model in self.env['ir.model'].search([])]
+        return [(model.model, model.name) for model in self.env['ir.model'].sudo().search([])]
 
     create_date = fields.Datetime(string="Submitted on")
     res_name = fields.Char(string='Resource name', compute='_compute_res_name', store=True, help="The name of the rated resource.")

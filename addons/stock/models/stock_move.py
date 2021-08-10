@@ -610,7 +610,7 @@ class StockMove(models.Model):
             # Avoids to write the exact same message multiple times.
             if last_message and last_message.subject == msg_subject:
                 continue
-            odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")
+            odoobot_id = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
             doc.message_post(body=msg, author_id=odoobot_id, subject=msg_subject)
 
     def action_show_details(self):
