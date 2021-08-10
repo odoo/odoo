@@ -857,7 +857,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                 child.attrs.isDefault = true;
                 let value = this.searchDefaults[child.attrs.name];
                 if (child.tag === 'field') {
-                    child.attrs.defaultValue = Array.isArray(value) ? value[0] : value;
+                    child.attrs.defaultValue = this.fields[child.attrs.name].type === 'many2one' && Array.isArray(value) ? value[0] : value;
                 } else if (child.tag === 'groupBy') {
                     child.attrs.defaultRank = typeof value === 'number' ? value : 100;
                 }
