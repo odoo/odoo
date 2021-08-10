@@ -40,7 +40,7 @@ class AccountPayment(models.Model):
                     ('company_id', '=', payment.company_id.id),
                     ('acquirer_id.capture_manually', '=', False),
                     ('partner_id', 'in', related_partner_ids.ids),
-                    ('acquirer_id.journal_id', '=', payment.journal_id.id),
+                    ('acquirer_id', '=', payment.payment_method_line_id.payment_acquirer_id.id),
                 ])
             else:
                 payment.suitable_payment_token_ids = [Command.clear()]
@@ -70,7 +70,7 @@ class AccountPayment(models.Model):
             ('company_id', '=', self.company_id.id),
             ('partner_id', 'in', related_partner_ids.ids),
             ('acquirer_id.capture_manually', '=', False),
-            ('acquirer_id.journal_id', '=', self.journal_id.id),
+            ('acquirer_id', '=', self.payment_method_line_id.payment_acquirer_id.id),
          ], limit=1)
 
     def _get_payment_chatter_link(self):
