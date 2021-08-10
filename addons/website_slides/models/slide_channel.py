@@ -204,14 +204,14 @@ class Channel(models.Model):
     publish_template_id = fields.Many2one(
         'mail.template', string='New Content Email',
         help="Email attendees once a new content is published",
-        default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('website_slides.slide_template_published'))
+        default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('website_slides.slide_template_published'))
     share_template_id = fields.Many2one(
         'mail.template', string='Share Template',
         help="Email template used when sharing a slide",
-        default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('website_slides.slide_template_shared'))
+        default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('website_slides.slide_template_shared'))
     completed_template_id = fields.Many2one(
         'mail.template', string='Completion Email', help="Email attendees once they've finished the course",
-        default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('website_slides.mail_template_channel_completed'))
+        default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('website_slides.mail_template_channel_completed'))
     enroll = fields.Selection([
         ('public', 'Public'), ('invite', 'On Invitation')],
         default='public', string='Enroll Policy', required=True,

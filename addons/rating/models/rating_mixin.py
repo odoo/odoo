@@ -160,7 +160,7 @@ class RatingMixin(models.AbstractModel):
         if lang:
             template = template.with_context(lang=lang)
         if subtype_id is False:
-            subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         if force_send:
             self = self.with_context(mail_notify_force_send=True)  # default value is True, should be set to false if not?
         for record in self:

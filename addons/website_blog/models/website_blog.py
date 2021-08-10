@@ -190,7 +190,7 @@ class BlogPost(models.Model):
                     'website_blog.blog_post_template_new_post',
                     subject=post.name,
                     values={'post': post},
-                    subtype_id=self.env['ir.model.data'].xmlid_to_res_id('website_blog.mt_blog_blog_published'))
+                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('website_blog.mt_blog_blog_published'))
             return True
         return False
 

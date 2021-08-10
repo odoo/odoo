@@ -748,7 +748,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'email_from': self.partners[0].email,
             'model': 'mail.test.container',
             'res_id': self.container.id,
-            'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'),
+            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
             'attachment_ids': [
                 (0, 0, {
                     'name': 'test file 0 - %d' % j,
@@ -792,7 +792,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'email_from': self.partners[1].email,
             'model': 'mail.test.container',
             'res_id': self.container.id,
-            'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
+            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             'attachment_ids': [
                 (0, 0, {
                     'name': 'test file 1 - %d' % j,

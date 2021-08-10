@@ -863,8 +863,8 @@ class Message(models.Model):
         """
         vals_list = self._message_format(self._get_message_format_fields())
 
-        com_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
-        note_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
+        com_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+        note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)

@@ -12,12 +12,12 @@ class TestOrmcache(TransactionCase):
         XMLID = 'base.group_no_one'
 
         # retrieve the cache, its key and stat counter
-        cache, key, counter = get_cache_key_counter(IMD.xmlid_lookup, XMLID)
+        cache, key, counter = get_cache_key_counter(IMD._xmlid_lookup, XMLID)
         hit = counter.hit
         miss = counter.miss
 
-        # clear the cache of ir.model.data.xmlid_lookup, retrieve its key and
-        IMD.xmlid_lookup.clear_cache(IMD)
+        # clear the caches of ir.model.data, retrieve its key and
+        IMD.clear_caches()
         self.assertNotIn(key, cache)
 
         # lookup some reference

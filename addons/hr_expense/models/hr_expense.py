@@ -432,7 +432,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         return res
 
     def action_approve_duplicates(self):
-        root = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")
+        root = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
         for expense in self.duplicate_expense_ids:
             expense.message_post(
                 body=_('%(user)s confirms this expense is not a duplicate with similar expense.', user=self.env.user.name),
