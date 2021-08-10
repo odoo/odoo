@@ -452,7 +452,7 @@ class MrpProduction(models.Model):
             'date': self.date_planned_start,
             'date_expected': self.date_planned_start,
         })
-        if not self.routing_id:
+        if self.date_planned_start and not self.routing_id:
             self.date_planned_finished = self.date_planned_start + datetime.timedelta(hours=1)
 
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
@@ -577,7 +577,7 @@ class MrpProduction(models.Model):
             'propagate_cancel': self.propagate_cancel,
             'propagate_date': self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
-            'move_dest_ids': [(4, x.id) for x in self.move_dest_ids],
+            'move_dest_ids': [(4, x.id) for x in self.move_dest_ids if not byproduct_id],
         }
 
     def _generate_finished_moves(self):

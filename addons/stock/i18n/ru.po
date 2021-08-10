@@ -17,11 +17,12 @@
 # Sergey Vilizhanin, 2019
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Pavel Kedrinskiy <pavel.py3@gmail.com>, 2019
-# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
+# Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2020
 # Martin Trigaux, 2020
 # Polina Alexandrova <polinaalexnder@gmail.com>, 2020
 # Ekaterina <nawsikaya@bk.ru>, 2020
 # Denis Baranov <baranov@itlibertas.com>, 2020
+# ILMIR <karamov@it-projects.info>, 2021
 # 
 msgid ""
 msgstr ""
@@ -29,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Denis Baranov <baranov@itlibertas.com>, 2020\n"
+"Last-Translator: ILMIR <karamov@it-projects.info>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -571,7 +572,7 @@ msgstr "Деятельность"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_exception_decoration
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Оформление исключения активности"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_state
@@ -2514,7 +2515,7 @@ msgstr "Иконка"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_icon
 #: model:ir.model.fields,help:stock.field_stock_production_lot__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Значок, обозначающий действие исключения."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction
@@ -5268,7 +5269,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_sms_error
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Ошибка доставки SMS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
@@ -6669,7 +6670,7 @@ msgstr "Тип Операции"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 #: model:ir.model.fields,help:stock.field_stock_production_lot__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Тип активности исключения в записи."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
@@ -6790,6 +6791,13 @@ msgid "Unreserve"
 msgstr "Разрезервировать"
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "UoM"
@@ -6807,6 +6815,7 @@ msgstr "Обновить количество товаров"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button

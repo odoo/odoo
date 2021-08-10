@@ -23,4 +23,5 @@ Provide Templates for Chart of Accounts, Taxes for Uruguay.
         'data/account_tax_data.xml',
         'data/account_chart_template_data.xml',
     ],
+    'license': 'LGPL-3',
 }

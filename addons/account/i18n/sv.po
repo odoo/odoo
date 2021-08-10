@@ -25,6 +25,7 @@
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2020
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2021
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
+# Simon Strömberg <simon.stromberg@vertel.se>, 2021
 # 
 msgid ""
 msgstr ""
@@ -32,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2021\n"
+"Last-Translator: Simon Strömberg <simon.stromberg@vertel.se>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,7 +74,7 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Faktura (Ref ${object.name or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -101,7 +102,7 @@ msgstr "%s (kopia)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%s (rounding)"
-msgstr ""
+msgstr "%s (avrundning)"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -143,12 +144,12 @@ msgstr "2 månader"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
 msgid "21 Days"
-msgstr ""
+msgstr "21 Dagar"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
-msgstr ""
+msgstr "30 Dagar"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
@@ -397,7 +398,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Default Incoterm</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Standard-incoterm</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -524,7 +525,7 @@ msgstr "<span>Beskrivning</span>  "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Disc.%</span>"
-msgstr ""
+msgstr "<span>Rabatt %</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -544,7 +545,7 @@ msgstr "<span>Ny faktura</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>New Entry</span>"
-msgstr ""
+msgstr "<span>Ny post</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -574,7 +575,7 @@ msgstr "<span>Antal</span> "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Reference</span>"
-msgstr ""
+msgstr "<span>Referens</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -604,7 +605,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Upload Invoices</span>"
-msgstr ""
+msgstr "<span>Ladda upp fakturor</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -666,7 +667,7 @@ msgstr "<strong>Förfallodatum:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Ending Balance</strong>"
-msgstr ""
+msgstr "<strong>Utgående balans</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -716,7 +717,7 @@ msgstr "<strong>Källa:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Starting Balance</strong>"
-msgstr ""
+msgstr "<strong>Ingående balans</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -773,11 +774,15 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
 msgstr ""
+"Ett kontoutdrag är en sammanfattning av alla finansiella transaktioner\n"
+"                som sker under en viss period på ett bankkonto. Du\n"
+"                bör få detta regelbundet från din bank."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account"
 msgstr ""
+"En rad i ett kontoutdrag är en finansiell transaktion på ett bankkonto."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -785,6 +790,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
+"Ett verifikat består av flera transaktioner där varje \n"
+"                transaktion antingen är en debet- eller kredittransaktion."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -792,6 +799,8 @@ msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
 msgstr ""
+"En journal används för att dokumentera transaktioner av all redovisningsdata\n"
+"                relaterad till den dagliga verksamheten."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -815,6 +824,9 @@ msgid ""
 "A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotals equals the total with taxes."
 msgstr ""
+"En avrundning per rad är rekommenderad om era priser är inklusive moms. På "
+"så sätt är summan av radernas delsummor lika med hela summan inklusive "
+"skatter."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -834,6 +846,8 @@ msgstr ""
 #, python-format
 msgid "A tag defined to be used on taxes must always have a country set."
 msgstr ""
+"En etikett som skapas för att användas på skatter måste alltid vara kopplad "
+"till ett land."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -849,6 +863,10 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
+"En användare kan inte ha både B2B-skatt och B2C-skatt .\n"
+"Du borde gå in i Inställningar och välja att visa produktpriser\n"
+"antingen 'Inklusive moms' eller 'Exklusive moms' \n"
+"(eller byt mellan de olika alternativen två gånger om du redan har den önskade varianten)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -858,7 +876,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Åtkomstvarning"
 
 #. module: account
 #. openerp-web
@@ -5291,7 +5309,7 @@ msgstr "Ikon"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_icon
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikon för att indikera en undantagsaktivitet."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -6731,7 +6749,7 @@ msgstr "Mail Lista"
 #: model:ir.model.fields,field_description:account.field_account_move__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_payment__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Huvudbilaga"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__currency_id
@@ -6905,7 +6923,7 @@ msgstr "Memo:"
 #: model:ir.model.fields,field_description:account.field_account_move__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Fel vid meddelandeleverans"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__record_name
@@ -7339,7 +7357,7 @@ msgstr "Antal meddelanden som kräver en åtgärd"
 #: model:ir.model.fields,help:account.field_account_move__message_has_error_counter
 #: model:ir.model.fields,help:account.field_account_payment__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Antal meddelanden med leveransfel"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_unread_counter

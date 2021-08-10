@@ -61,4 +61,5 @@
         'static/src/xml/user_menu.xml',
         'static/src/xml/web_kanban_activity.xml',
     ],
+    'license': 'LGPL-3',
 }

@@ -22,4 +22,5 @@
         'data/mrp_subcontracting_demo.xml',
     ],
     'uninstall_hook': 'uninstall_hook',
+    'license': 'LGPL-3',
 }

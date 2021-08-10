@@ -52,4 +52,5 @@ Here is how it works:
     ],
     'post_init_hook': 'post_init',
 
+    'license': 'LGPL-3',
 }

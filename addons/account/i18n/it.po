@@ -32,6 +32,7 @@
 # Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2020
 # Mauro Sacchini <sacchini.sf@gmail.com>, 2020
 # Vortex Storm <vortexstorm@protonmail.com>, 2021
+# BigBlu <paolo.moroni@air-srl.com>, 2021
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
@@ -1734,7 +1735,7 @@ msgid ""
 "All invoices and payments have been matched, your accounts' balances are "
 "clean."
 msgstr ""
-"Tutte le fatture ed i pagamenti sono stati abbinati, i saldi contabili sono "
+"Tutte le fatture e i pagamenti sono stati abbinati, i saldi contabili sono "
 "in ordine."
 
 #. module: account
@@ -4605,12 +4606,12 @@ msgstr "Importo dovuto"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #, python-format
 msgid "Due Date"
-msgstr "Data scadenza"
+msgstr "Scadenza"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "Due Date Computation"
-msgstr "Calcolo data di scadenza"
+msgstr "Calcolo scadenza"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_tree
@@ -4671,7 +4672,7 @@ msgstr "Modifica"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Either pass both debit and credit or none."
-msgstr "Fornire sia «Dare» che «Avere» oppure nessuno dei due."
+msgstr "Fornire sia dare che avere oppure nessuno dei due."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_email
@@ -5832,7 +5833,7 @@ msgstr "Controllo inalterabilità"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
 msgid "Inalteralbility No Gap Sequence #"
-msgstr ""
+msgstr "N. sequenza di inalterabilità senza spazi vuoti"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__inbound
@@ -9673,7 +9674,7 @@ msgstr ""
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "Securisation of %s - %s"
-msgstr ""
+msgstr "Protezione di %s - %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__access_token
@@ -9860,7 +9861,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__secure_sequence_id
 msgid "Sequence to use to ensure the securisation of data"
-msgstr ""
+msgstr "Sequenza da utilizzare per garantire la messa in sicurezza dei dati"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -10706,7 +10707,7 @@ msgid ""
 msgstr ""
 "Campo tecnico che contiene il numero dato alla registrazione, impostato "
 "automaticamente quando la riga di estratto conto viene riconciliata. Se la "
-"riga viene annullata, impostata a «Bozza» e validata di nuovo, mantiene lo "
+"riga viene annullata, impostata a bozza e validata di nuovo, mantiene lo "
 "stesso numero."
 
 #. module: account
@@ -11076,7 +11077,7 @@ msgid ""
 "               don't want to reconcile all the past payments with bank statements."
 msgstr ""
 "Il widget di riconciliazione bancaria non chiederà di riconciliare pagamenti precedenti a questa data.\n"
-"               È utile se viene installata la contabilità dopo aver usato per un periodo la fatturazione,\n"
+"               È utile se viene installata la contabilità dopo aver usato per un periodo la fatturazione\n"
 "               e non si vogliono riconciliare tutti i pagamenti effettuati in passato con gli estratti conto bancari."
 
 #. module: account
@@ -13368,7 +13369,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "have been reconciled automatically."
-msgstr "sono state riconciliate automaticamente"
+msgstr "sono state riconciliate automaticamente."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
@@ -13449,7 +13450,7 @@ msgstr "secondi per operazione."
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "statement lines"
-msgstr "righe estratto conto"
+msgstr "righe di estratto conto"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id

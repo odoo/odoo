@@ -11,8 +11,8 @@
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2019
 # Michal Veselý <michal@veselyberanek.net>, 2019
 # trendspotter, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,13 +126,13 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s on Time Off : %.2f day(s)"
-msgstr "%s na vypnutí : %.2f den (dny)"
+msgstr "%s Volné dny : %.2f dní ()"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s on Time Off : %.2f hour(s)"
-msgstr "%s na vypnutí : %.2f hodina(y)"
+msgstr "%s Volné dny : %.2f hodiny ()"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -483,7 +483,7 @@ msgstr "<span class=\"ml8\">Hodin</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "<span class=\"ml8\">of time off every</span>"
-msgstr "<span class=\"ml8\">volného času každý</span>"
+msgstr "<span class=\"ml8\">Volných dnů každého</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -518,7 +518,7 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                            Volno\n"
+"                            Volné dny\n"
 "                        </span>"
 
 #. module: hr_holidays
@@ -529,7 +529,7 @@ msgstr "<span class=\"o_stat_text\">Přidělené skupinové dny</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Group Time Off</span>"
-msgstr "<span class=\"o_stat_text\">Skupinový čas</span>"
+msgstr "<span class=\"o_stat_text\">Volné dny mé skupiny</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -639,7 +639,7 @@ msgstr "Akruální alokace"
 #: model:ir.cron,cron_name:hr_holidays.hr_leave_allocation_cron_accrual
 #: model:ir.cron,name:hr_holidays.hr_leave_allocation_cron_accrual
 msgid "Accrual Time Off: Updates the number of time off"
-msgstr "Accrual Time Off: aktualizuje počet volných časů"
+msgstr "Rezerva na volné dny: aktualizuje počet volných dnu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction
@@ -735,7 +735,7 @@ msgstr "Všichni schvalovatelé"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_dashboard
 msgid "All Time Off"
-msgstr "Všechno volno"
+msgstr "Všechny volné dny"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__duration_display
@@ -937,7 +937,7 @@ msgstr "Schválené požadavky"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Approved Time Off"
-msgstr "Schválené volno"
+msgstr "Schválené volné dny"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1117,7 +1117,7 @@ msgstr "Vytvořit nové přidělení volna"
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
 msgid "Create a new time off allocation request"
-msgstr "Vytvořte nový požadavek na přidělení volného času"
+msgstr "Vytvořte nový požadavek na přidělení volných dní"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
@@ -1149,14 +1149,14 @@ msgstr "Vytvořeno"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__current_leave_state
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__current_leave_state
 msgid "Current Time Off Status"
-msgstr "Aktuální stav volna"
+msgstr "Aktuální stav volných dní"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__current_leave_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__current_leave_id
 msgid "Current Time Off Type"
-msgstr "Aktuální typ volna"
+msgstr "Aktuální typ volné dny"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -1257,7 +1257,7 @@ msgstr "Zobrazované jméno"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__create_calendar_meeting
 msgid "Display Time Off in Calendar"
-msgstr "Zobrazit volno v kalendáři"
+msgstr "Zobrazit volné dny v kalendáři"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
@@ -1309,7 +1309,7 @@ msgstr "Upravit alokaci"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "Edit Time Off"
-msgstr "Upravit volno"
+msgstr "Upravit volné dny"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__employee_id
@@ -1349,7 +1349,7 @@ msgstr "Konec doby platnosti by měl být větší než začátek doby platnosti
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
 msgid "Everyone"
-msgstr "Kdokoli"
+msgstr "Zaměstnanci"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -1457,7 +1457,7 @@ msgstr "Budoucí činnosti"
 msgid ""
 "Green this button when the time off has been taken into account in the "
 "payslip."
-msgstr "Zelené tlačítko, když je na výplatní páce zohledněno volno."
+msgstr "Zelené tlačítko, když jsou na výplatní pásce zohledné volné dny."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1469,7 +1469,7 @@ msgstr "Seskupit podle"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__group_days_leave
 msgid "Group Time Off"
-msgstr "Skupinové volno"
+msgstr "Skupinové volné dny"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_approval
@@ -1489,7 +1489,7 @@ msgstr "Oddělení lidských zdrojů"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
 msgid "HR Time Off Summary Report By Employee"
-msgstr "Souhrnná zpráva o volném čase podle zaměstnance"
+msgstr "Souhrnná zpráva o volných dnech podle zaměstnance"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_half
@@ -1769,7 +1769,7 @@ msgstr "Max nepřítomnost"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Max Time Off:"
-msgstr "Maximální volno:"
+msgstr "Maximální volné dny:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_leaves
@@ -1779,7 +1779,7 @@ msgstr "Nejvíce povolených"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__remaining_leaves
 msgid "Maximum Time Off Allowed - Time Off Already Taken"
-msgstr "Maximální povolená doba volna - volno již přijato"
+msgstr "Maximální povolená doba volné dny - volné dny již vybrané"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
@@ -1850,7 +1850,7 @@ msgstr "Moje přidělení"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "My Department Time Off"
-msgstr "Volné dny mojho oddělení"
+msgstr "Volné dny mého oddělení"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -1861,13 +1861,13 @@ msgstr "Mé žádosti"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "My Team Time Off"
-msgstr "Můj tým má volno"
+msgstr "Volné dny mého týmu"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "My Time Off"
-msgstr "Můj volno"
+msgstr "Moje volné dny"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1906,7 +1906,7 @@ msgstr "Nová žádost o přidělení vytvořená uživatelem %s: %s dni %s"
 #: code:addons/hr_holidays/static/src/js/time_off_calendar.js:0
 #, python-format
 msgid "New Time Off Request"
-msgstr ""
+msgstr "Nová žádost o volné dny"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_date_deadline
@@ -1975,7 +1975,7 @@ msgid ""
 "Number of days of the time off request according to your working schedule. "
 "Used for interface."
 msgstr ""
-"Počet dnů žádosti o volno podle vašeho pracovního plánu. Používá se pro "
+"Počet dnů žádosti o volné dny podle vašeho pracovního plánu. Používá se pro "
 "rozhraní."
 
 #. module: hr_holidays
@@ -1984,8 +1984,8 @@ msgid ""
 "Number of days of the time off request. Used in the calculation. To manually"
 " correct the duration, use this field."
 msgstr ""
-"Počet dnů žádosti o volno. Používá se při výpočtu. Chcete-li ručně opravit "
-"dobu trvání, použijte toto pole."
+"Počet dnů žádosti o volné dny. Používá se při výpočtu. Chcete-li ručně "
+"opravit dobu trvání, použijte toto pole."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error_counter
@@ -2044,6 +2044,8 @@ msgstr "Vypnuto do"
 msgid ""
 "Once a time off request is posted, your manager is notified for validation."
 msgstr ""
+"Jakmile je odeslán požadavek na volné dny, váš manažer je upozorněn kůly "
+"schvalováním."
 
 #. module: hr_holidays
 #. openerp-web
@@ -2090,13 +2092,13 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Only a time off Manager can approve its own requests."
-msgstr "Pouze manažer volného času může schvalovat své vlastní požadavky."
+msgstr "Pouze manažer může schvalovat požadavky pro volné dny."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Only a time off Manager can reset other people allocation."
-msgstr "Pouze manažer volného času může resetovat přidělení dalších lidí."
+msgstr "Pouze manažer volných dnu může resetovat přidělení dalších lidí."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2128,7 +2130,7 @@ msgstr "Mimo kancelář"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cl
 msgid "Paid Time Off"
-msgstr "Placené volno"
+msgstr "Placené volné dny"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__parent_id
@@ -2139,7 +2141,7 @@ msgstr "Nadřazený"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
 msgid "Parental Time Off"
-msgstr ""
+msgstr "Nadřazené volné dny"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_payroll
@@ -2221,7 +2223,7 @@ msgstr "Zbývající placené volno"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__remaining_leaves
 msgid "Remaining Time Off"
-msgstr "Zbývající volno"
+msgstr "Zbývající volné dny"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
@@ -2263,7 +2265,7 @@ msgstr "Počáteční datum požadavku"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 msgid "Request Time off"
-msgstr "Žádost o volno"
+msgstr "Žádost o volné dny"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__leave_type
@@ -2284,7 +2286,7 @@ msgstr "Nastavit na návrh"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr "Podrobnosti o volném čase zdroje"
+msgstr "Zdroj podrobnosti volných dní"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_id
@@ -2318,12 +2320,12 @@ msgstr "Chyba doručení SMS"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "Search Time Off"
-msgstr "Hledat volno"
+msgstr "Hledat volné dny"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
 msgid "Search Time Off Type"
-msgstr "Hledat typ volna"
+msgstr "Hledat typ volných dnu"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -2342,7 +2344,7 @@ msgstr "Druhé schválení"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__holiday_type
 msgid "Select Time Off Type"
-msgstr "Vyberte typ volna"
+msgstr "Vyberte typ volných dnu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__sequence
@@ -2361,7 +2363,7 @@ msgstr ""
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_sick
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_sick
 msgid "Sick Time Off"
-msgstr "Nemocné volno"
+msgstr "Volné dny z důvodu nevolnosti"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_from
@@ -2410,7 +2412,7 @@ msgstr "Celkem"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__type_request_unit
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__request_unit
 msgid "Take Time Off in"
-msgstr "Udělejte si volno"
+msgstr "Udělejte si volné dny"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__validation_type__manager
@@ -2420,7 +2422,7 @@ msgstr "Vedoucí týmu"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__validation_type__both
 msgid "Team Leader and Time Off Officer"
-msgstr "Vedoucí týmu a schvalovatel volného času"
+msgstr "Vedoucí týmu a schvalovatel volných dnu"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_type_value
@@ -2450,8 +2452,8 @@ msgid ""
 "The number of remaining time off is not sufficient for this time off type.\n"
 "Please also check the time off waiting for validation."
 msgstr ""
-"Počet zbývajícího volna není pro tento typ volného času dostatečný.\n"
-"Ppronájem také zkontroluje volno čekající na ověření."
+"Počet zbývajících volných dnů není pro tento typ volné dny dostatečný.\n"
+"Prosím také zkontrolujte volné dny čekající na schválení. "
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_number_per_interval_check
@@ -2485,7 +2487,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "The time off has been automatically approved"
-msgstr "Volno bylo automaticky schváleno"
+msgstr "Volné dny byli automaticky schváleny"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
@@ -2512,7 +2514,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
 msgid ""
 "This area is automatically filled by the user who validate the time off"
-msgstr "Tato oblast je automaticky vyplněna uživatelem, který ověřuje volno"
+msgstr ""
+"Tato oblast je automaticky vyplněna uživatelem, který ověřuje volné dny"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
@@ -2548,6 +2551,8 @@ msgid ""
 "This user will be responsible for approving this type of times offThis is "
 "only used when validation is 'hr' or 'both'"
 msgstr ""
+"Tento uživatel bude odpovědný za schválení tohoto typu volna. Toto se "
+"používá pouze tehdy, je -li validace „hr“ nebo „obojí“"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -2555,7 +2560,7 @@ msgid ""
 "This value is given by the sum of all time off requests with a negative "
 "value."
 msgstr ""
-"Tato hodnota je dána součtem všech žádostí o volno se zápornou hodnotou."
+"Tato hodnota je dána součtem všech žádostí o volné dny se zápornou hodnotou."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__max_leaves
@@ -2585,7 +2590,7 @@ msgstr "Volné dny"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation
 msgid "Time Off Allocation"
-msgstr "Přidělení volna"
+msgstr "Přidělené volné dny"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/report/hr_leave_report.py:0
@@ -2593,17 +2598,17 @@ msgstr "Přidělení volna"
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_department
 #, python-format
 msgid "Time Off Analysis"
-msgstr "Analýza volného času"
+msgstr "Volné dny analýza"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_approval
 msgid "Time Off Approval"
-msgstr "Schválení volna"
+msgstr "Schválení volných dnů"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_notif_subtype_id
 msgid "Time Off Notification Subtype"
-msgstr "Podtyp oznámení o volném čase"
+msgstr "Podtyp oznámení o volných dnech"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__validation_type__hr
@@ -2618,7 +2623,7 @@ msgid ""
 "Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
-"Pracovníci volného času přidělují zaměstnancům dny volna (např. Placené volno).<br>\n"
+"Pracovníci volného času přidělují zaměstnancům dny volna (např. Placené cc).<br>\n"
 "                Zaměstnanci požadují přidělení volným pracovníkům (např. Dny zotavení)."
 
 #. module: hr_holidays
@@ -2629,7 +2634,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 #: model:mail.message.subtype,description:hr_holidays.mt_leave
 msgid "Time Off Request"
-msgstr "Žádost o volno"
+msgstr "Žádost o volné dny"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my
@@ -2639,12 +2644,12 @@ msgstr "Žádost o volno"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "Time Off Requests"
-msgstr "Žádosti o volno"
+msgstr "Žádosti o volné dny"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_second_approval
 msgid "Time Off Second Approve"
-msgstr "Volno druhý schválit"
+msgstr "Volné dny druhé schválení"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
@@ -2655,17 +2660,17 @@ msgstr "Volno druhý schválit"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_pivot
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_employee
 msgid "Time Off Summary"
-msgstr "Souhrn volna"
+msgstr "Souhrn volných dnu"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_report
 msgid "Time Off Summary / Report"
-msgstr "Shrnutí / zpráva o volném čase"
+msgstr "Shrnutí / zpráva o volných dnech"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Time Off Taken:"
-msgstr "Získané volno:"
+msgstr "Získané volné dny:"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_type
@@ -2683,23 +2688,23 @@ msgstr "Typ volných dní"
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_status_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
 msgid "Time Off Types"
-msgstr "Typy volna"
+msgstr "Typy volných dnu"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Time Off of Your Team Member"
-msgstr "Volno člena týmu"
+msgstr "Volné dny člena týmu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__leave_to_approve_count
 msgid "Time Off to Approve"
-msgstr "Volno ke schválení"
+msgstr "Volné dny ke schválení"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_payroll_to_report
 msgid "Time Off to Report"
-msgstr ""
+msgstr "Volné dny report"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -2709,12 +2714,12 @@ msgstr "Volné dny."
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leaves_taken
 msgid "Time off Already Taken"
-msgstr "Volno je již vyčerpáno"
+msgstr "Volné dny již vyčerpány"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.act_hr_employee_holiday_request
 msgid "Time off Analysis"
-msgstr "Analýza volného času"
+msgstr "Analýza volných dnů"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2728,7 +2733,7 @@ msgstr "Volné dny lidí, jejichž jste manažerem"
 msgid ""
 "Time off request must be confirmed (\"To Approve\") in order to approve it."
 msgstr ""
-"Aby bylo možné žádost o volno schválit, musí být potvrzena („Schválit“)."
+"Aby bylo možné žádost o volné dny schválit, musí být potvrzena („Schválit“)."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2741,7 +2746,8 @@ msgstr "Aby bylo možné žádost o volno schválit, musí být potvrzena."
 #, python-format
 msgid "Time off request must be confirmed or validated in order to refuse it."
 msgstr ""
-"Aby bylo možné žádost o volno odmítnout, musí být potvrzena nebo ověřena."
+"Aby bylo možné žádost o volné dny odmítnout, musí být potvrzena nebo "
+"ověřena."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2749,7 +2755,8 @@ msgstr ""
 msgid ""
 "Time off request must be in Draft state (\"To Submit\") in order to confirm "
 "it."
-msgstr "Pro potvrzení musí být žádost o volno ve stavu Koncept („Odeslat“)."
+msgstr ""
+"Pro potvrzení musí být žádost o volné dny ve stavu koncept („Odeslat“)."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2847,8 +2854,8 @@ msgid ""
 " without overriding limit."
 msgstr ""
 "Celkový počet placeného volna přiděleného tomuto zaměstnanci, změňte tuto "
-"hodnotu a vytvořte požadavek na přidělení / volno. Celkem na základě všech "
-"typů volna bez přepsání limitu."
+"hodnotu a vytvořte požadavek na přidělení / volné dny žádost. Celkem na "
+"základě všech typů volných dní bez přepsání limitu."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2882,7 +2889,7 @@ msgstr "Nezaplacené"
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_unpaid
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_unpaid
 msgid "Unpaid Time Off"
-msgstr "Jednotka času mezi dvěma intervaly"
+msgstr "Neplacené volné dny"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_unread
@@ -2971,7 +2978,7 @@ msgstr "Fialová"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
 msgid "Virtual Remaining Time Off"
-msgstr "Virtuální zbývající volno"
+msgstr "Virtuální zbývající volné dny"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__confirm
@@ -3040,6 +3047,8 @@ msgid ""
 "You can not set 2 times off that overlaps on the same day for the same "
 "employee."
 msgstr ""
+"Nemůžete nastavit 2 volné dny, které se překrývají ve stejný den pro "
+"stejného zaměstnance."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3087,7 +3096,8 @@ msgid ""
 "You must have manager rights to modify/validate a time off that already "
 "begun"
 msgstr ""
-"Abyste mohli upravit / ověřit již započaté volno, musíte mít práva správce"
+"Abyste mohli upravit / ověřit již započaté volné dny, musíte mít práva "
+"správce"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
