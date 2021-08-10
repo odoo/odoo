@@ -92,10 +92,14 @@ class Lead(models.Model):
                                 data = {
                                     'url': self.env['iap.account'].get_credits_url('reveal'),
                                 }
-                                leads[0].message_post_with_view(
-                                    'crm_iap_enrich.mail_message_lead_enrich_no_credit',
-                                    values=data,
-                                    subtype_id=self.env.ref('mail.mt_note').id)
+                                self.env['bus.bus'].sendone(
+                                    (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
+                                    {
+                                        'type': 'simple_notification',
+                                        'message': self.env.ref('crm_iap_enrich.mail_message_lead_enrich_no_credit')._render(data),
+                                        'message_is_html': True,
+                                    }
+                                )
                             # Since there are no credits left, there is no point to process the other batches
                             break
                         except Exception as e:
