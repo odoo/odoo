@@ -486,10 +486,13 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     _onSnippetDropped: function (ev) {
         this._targetForEdition().find('.oe_structure.oe_empty, [data-oe-type="html"]')
             .attr('contenteditable', true);
-        this.trigger_up('widgets_start_request', {
-            editableMode: true,
-            $target: ev.data.$target,
-        });
+        ev.data.addPostDropAsync(new Promise(resolve => {
+            this.trigger_up('widgets_start_request', {
+                editableMode: true,
+                $target: ev.data.$target,
+                onSuccess: () => resolve(),
+            });
+        }));
     },
     /**
      * Called when a snippet is removed from the page. If the wrapper element is
