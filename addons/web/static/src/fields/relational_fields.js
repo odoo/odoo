@@ -1,11 +1,10 @@
 /** @odoo-module **/
 import { registry } from "@web/core/registry";
-import { useModel } from "../views/helpers/model";
-import { RelationalModel } from "../views/relational_model";
 import { ListRenderer } from "../views/list/list_renderer";
 import { ListArchParser } from "../views/list/list_view";
 
 const { Component } = owl;
+const fieldRegistry = registry.category("fields");
 
 export class FieldMany2one extends Component {
     setup() {
@@ -16,7 +15,7 @@ export class FieldMany2one extends Component {
 
 FieldMany2one.template = "web.FieldMany2one";
 
-registry.category("fields").add("many2one", FieldMany2one);
+fieldRegistry.add("many2one", FieldMany2one);
 
 export class FieldMany2ManyTags extends Component {
     setup() {
@@ -26,15 +25,11 @@ export class FieldMany2ManyTags extends Component {
 }
 
 FieldMany2ManyTags.template = "web.FieldMany2ManyTags";
-FieldMany2ManyTags.fieldsToFetch = {
-    display_name: { type: "char" },
-};
+FieldMany2ManyTags.fieldsToFetch = ["display_name"];
 
-registry.category("fields").add("many2many_tags", FieldMany2ManyTags);
+fieldRegistry.add("many2many_tags", FieldMany2ManyTags);
 
 export class FieldX2Many extends Component {
-    static template = "web.FieldX2Many";
-
     setup() {
         const viewMode = this.props.viewMode || ["list"];
         // To remove when we can discriminate between in list view or in formView
@@ -46,7 +41,7 @@ export class FieldX2Many extends Component {
             }
             this.fields = fields;
             this.record = this.props.record.data[this.props.name];
-            this.record.viewType = viewMode[0];
+            this.record.setView(viewMode[0]);
 
             this.archInfo = new ListArchParser().parse(arch, fields);
             this.Renderer = ListRenderer;
@@ -64,5 +59,7 @@ export class FieldX2Many extends Component {
     }
 }
 
-registry.category("fields").add("one2many", FieldX2Many);
-registry.category("fields").add("many2many", FieldX2Many);
+FieldX2Many.template = "web.FieldX2Many";
+
+fieldRegistry.add("one2many", FieldX2Many);
+fieldRegistry.add("many2many", FieldX2Many);

@@ -3,6 +3,7 @@ import { makeView } from "../helpers";
 import { setupControlPanelServiceRegistry } from "../../search/helpers";
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { registry } from "@web/core/registry";
+import { parse } from "../../../src/core/py_js/py_parser";
 
 function compileTemplate(arch) {
     const parser = new DOMParser();
@@ -100,7 +101,7 @@ QUnit.module("Form Compiler", (hooks) => {
 
         const expected = /*xml*/ `
             <div class=\"o_notebook\">
-                <t t-set=\"notebook_0\" t-value=\"state.notebook_0 or getActivePage({&quot;page_1&quot;:false,&quot;page_2&quot;:false})\"/>
+                <t t-set=\"notebook_0\" t-value=\"state.notebook_0 or getActivePage(record,{&quot;page_1&quot;:false,&quot;page_2&quot;:false})\"/>
                 <div class=\"o_notebook_headers\">
                     <ul class=\"nav nav-tabs\">
                         <li class=\"nav-item\">

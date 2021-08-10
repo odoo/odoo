@@ -55,13 +55,28 @@ class KanbanArchParser extends XMLParser {
     parse(arch, fields) {
         const xmlDoc = this.parseXML(arch);
         const className = xmlDoc.getAttribute("class") || null;
+        const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
         const fieldParser = new FieldParser(fields);
+        const tooltips = {};
         let kanbanBoxTemplate = document.createElement("t");
+
+        const lookForTooltip = (field, options) => {
+            const tooltipFields = options.group_by_tooltip;
+            if (tooltipFields) {
+                fieldParser.addRelation(
+                    field.relation,
+                    "display_name",
+                    ...Object.keys(tooltipFields)
+                );
+                Object.assign(tooltips, tooltipFields);
+            }
+        };
 
         // Root level of the template
         this.visitXML(xmlDoc, (node) => {
             if (node.tagName === "field") {
-                fieldParser.addField(node);
+                const { field, options } = fieldParser.addField(node);
+                lookForTooltip(field, options);
             } else if (node.getAttribute("t-name") === KANBAN_BOX_ATTRIBUTE) {
                 kanbanBoxTemplate = node;
             }
@@ -80,7 +95,8 @@ class KanbanArchParser extends XMLParser {
             }
             // Fields
             if (node.tagName === "field") {
-                const { name, widget } = fieldParser.addField(node);
+                const { field, name, widget, options } = fieldParser.addField(node);
+                lookForTooltip(field, options);
                 if (!widget) {
                     // Fields without a specified widget are rendered as simple
                     // spans in kanban records.
@@ -103,8 +119,10 @@ class KanbanArchParser extends XMLParser {
         return {
             arch,
             className,
+            defaultGroupBy,
             xmlDoc: applyDefaultAttributes(kanbanBox),
             fields: fieldParser.getFields(),
+            tooltips,
             relations: fieldParser.getRelations(),
         };
     }
@@ -116,12 +134,22 @@ class KanbanView extends owl.Component {
     setup() {
         useDebugMenu("view", { component: this });
         this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
-        this.model = useModel(RelationalModel, {
-            resModel: this.props.resModel,
-            fields: this.props.fields,
-            relations: this.archInfo.relations,
-            activeFields: this.archInfo.fields,
-        });
+        const { resModel, fields } = this.props;
+        const { fields: activeFields, relations, defaultGroupBy } = this.archInfo;
+        const processParams = (params) => {
+            const groupBy = params.groupBy.slice();
+            if (defaultGroupBy && !this.env.inDialog) {
+                // Applies the default groupBy defined on the arch when not in a dialog
+                groupBy.push(defaultGroupBy);
+            }
+            // Keeps only the first groupBy level in kanban
+            return { ...params, groupBy: groupBy.slice(0, 1) };
+        };
+        this.model = useModel(
+            RelationalModel,
+            { activeFields, fields, relations, resModel },
+            { processParams }
+        );
         useViewButtons(this.model);
     }
 }

@@ -39,11 +39,6 @@ export class KanbanRenderer extends Component {
         useSubEnv({ model: this.props.model });
     }
 
-    // TODO
-    isGrouped() {
-        return false;
-    }
-
     openRecord(record) {
         const resIds = this.props.model.root.data.map((datapoint) => datapoint.resId);
         this.action.switchView("form", { resId: record.resId, resIds });
@@ -68,8 +63,11 @@ export class KanbanRenderer extends Component {
         return toImplement;
     }
 
-    findRecord(id) {
-        return this.props.model.root.data.find((r) => r.data.id === id);
+    getColumnTitle(group) {
+        const { groupData } = group;
+        const [groupByField] = this.props.model.root.groupBy;
+        const value = groupData[groupByField];
+        return Array.isArray(value) ? value[1] : value;
     }
 
     //-------------------------------------------------------------------------
@@ -89,7 +87,7 @@ export class KanbanRenderer extends Component {
      */
     kanban_image(model, field, idOrIds, placeholder) {
         const id = (Array.isArray(idOrIds) ? idOrIds[0] : idOrIds) || null;
-        const record = this.findRecord(id) || { data: {} };
+        const record = this.props.model.get({ resId: id }) || { data: {} };
         const value = record.data[field];
         if (value && !isBinSize(value)) {
             // Use magic-word technique for detecting image type

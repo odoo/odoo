@@ -3,12 +3,24 @@
 import { Field } from "../../fields/field";
 import { evaluateExpr } from "../../core/py_js/py";
 
-const RELATIONAL_TYPES = ["one2many", "many2many"];
-const SPECIAL_FIELDS = {
-    color_field: { type: "integer" },
-};
+const RELATIONAL_TYPES = ["many2one", "one2many", "many2many"];
+const SPECIAL_FIELDS = ["color_field"];
 
 export const isRelational = (field) => field && RELATIONAL_TYPES.includes(field.type);
+
+export const getIds = (idsList) => {
+    if (Array.isArray(idsList)) {
+        if (idsList.length === 2 && typeof idsList[1] === "string") {
+            return [idsList[0]];
+        } else {
+            return idsList;
+        }
+    } else if (idsList) {
+        return [idsList];
+    } else {
+        return [];
+    }
+};
 
 export class FieldParser {
     /**
@@ -30,28 +42,39 @@ export class FieldParser {
         const fieldName = node.getAttribute("name");
         const widget = node.getAttribute("widget");
         const field = this.fields[fieldName];
+        const options = evaluateExpr(node.getAttribute("options") || "{}");
         this.parsedFields[fieldName] = getFieldInfo ? getFieldInfo(fieldName) : fieldName;
         if (isRelational(field)) {
-            const relatedFields = {};
-            const options = evaluateExpr(node.getAttribute("options") || "{}");
+            const relatedFields = [];
             const FieldClass = Field.getTangibleField({ fields: this.fields }, widget, fieldName);
             if (FieldClass.fieldsToFetch) {
-                Object.assign(relatedFields, FieldClass.fieldsToFetch);
+                relatedFields.push(...FieldClass.fieldsToFetch);
             }
-            for (const specialFieldDef in SPECIAL_FIELDS) {
+            for (const specialFieldDef of SPECIAL_FIELDS) {
                 const specialFieldName = options[specialFieldDef];
                 if (specialFieldName) {
-                    relatedFields[specialFieldName] = SPECIAL_FIELDS[specialFieldDef];
+                    relatedFields.push(specialFieldName);
                 }
             }
-            if (Object.keys(relatedFields).length) {
-                if (!(field.relation in this.relations)) {
-                    this.relations[field.relation] = {};
-                }
-                Object.assign(this.relations[field.relation], relatedFields);
-            }
+            this.addRelation(field.relation, ...relatedFields);
         }
-        return { name: fieldName, field, widget };
+        return { name: fieldName, field, widget, options };
+    }
+
+    /**
+     * @param {string} relation
+     * @param  {...string} fields
+     */
+    addRelation(relation, ...fields) {
+        if (!fields.length) {
+            return;
+        }
+        if (!(relation in this.relations)) {
+            this.relations[relation] = new Set();
+        }
+        for (const field of fields) {
+            this.relations[relation].add(field);
+        }
     }
 
     getFields() {
@@ -59,6 +82,10 @@ export class FieldParser {
     }
 
     getRelations() {
-        return this.relations;
+        const relations = {};
+        for (const fieldName in this.relations) {
+            relations[fieldName] = [...this.relations[fieldName]];
+        }
+        return relations;
     }
 }

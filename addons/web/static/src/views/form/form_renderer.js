@@ -40,9 +40,9 @@ export class FormRenderer extends Component {
         return domain.contains(record.data);
     }
 
-    getActivePage(invisibleDomains) {
+    getActivePage(record, invisibleDomains) {
         for (const page in invisibleDomains) {
-            if (!invisibleDomains[page] || !this.evalDomain(invisibleDomains[page])) {
+            if (!invisibleDomains[page] || !this.evalDomain(record, invisibleDomains[page])) {
                 return page;
             }
         }
