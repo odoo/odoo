@@ -3674,6 +3674,34 @@ QUnit.module('relational_fields', {
 
         form.destroy();
     });
+
+    QUnit.test('unselect row with boolean fields', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom">' +
+                                '<field name="turtle_bar"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</form>',
+        });
+        var list = form.renderer.allFieldWidgets[form.handle][0];
+
+        list.trigger_up('add_record', {
+            onSuccess: () => list.renderer.unselectRow(),
+        });
+
+        await testUtils.nextTick();
+
+        assert.notEqual(document.activeElement, document.querySelector('.o_selected_row'), "Row should not be focused");
+
+        form.destroy();
+    });
 });
 });
 });
