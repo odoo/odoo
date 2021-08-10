@@ -314,7 +314,7 @@
         <span class="btn-group" aria-atomic="true">
             <!-- accesskeys not wanted in X2Many widgets -->
             <button type="button"
-                class="fa fa-chevron-left btn btn-secondary o_pager_previous px-2 rounded-left"
+                class="fa fa-chevron-left btn btn-secondary o_pager_previous rounded-left"
                 t-att-disabled="state.disabled || singlePage"
                 t-att-accesskey="props.withAccessKey ? 'p' : false"
                 aria-label="Previous page"
@@ -323,7 +323,7 @@
                 t-on-click="_changeSelection(-1)"
             />
             <button type="button"
-                class="fa fa-chevron-right btn btn-secondary o_pager_next px-2 rounded-right"
+                class="fa fa-chevron-right btn btn-secondary o_pager_next rounded-right"
                 t-att-disabled="state.disabled || singlePage"
                 t-att-accesskey="props.withAccessKey ? 'n' : false"
                 aria-label="Next page"
