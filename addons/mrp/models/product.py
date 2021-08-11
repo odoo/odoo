@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
+from itertools import groupby
+
 from odoo import api, fields, models
 from odoo.tools.float_utils import float_round, float_is_zero
 
@@ -203,3 +205,18 @@ class ProductProduct(models.Model):
             res['context']['single_product'] = False
             res['context'].pop('default_product_tmpl_id', None)
         return res
+
+    def _match_all_variant_values(self, product_template_attribute_value_ids):
+        """ It currently checks that all variant values (`product_template_attribute_value_ids`)
+        are in the product (`self`).
+
+        If multiple values are encoded for the same attribute line, only one of
+        them has to be found on the variant.
+        """
+        self.ensure_one()
+        if not product_template_attribute_value_ids:
+            return True
+        for _, iter_ptav in groupby(product_template_attribute_value_ids.sorted('attribute_line_id'), lambda ptav: ptav.attribute_line_id):
+            if not any(ptav in self.product_template_attribute_value_ids for ptav in iter_ptav):
+                return False
+        return True

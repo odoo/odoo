@@ -126,7 +126,7 @@
         </t>
         <t t-if="data['operations']">
             <t t-set="space_td" t-value="'margin-left: '+ str(data['level'] * 20) + 'px;'"/>
-            <tr class="o_mrp_bom_report_line o_mrp_bom_cost" t-att-data-id="'operation-' + str(data['bom'].id)" t-att-data-bom-id="data['bom'].id" t-att-parent_id="data['bom'].id" t-att-data-qty="data['bom_qty']" t-att-data-level="data['level']">
+            <tr class="o_mrp_bom_report_line o_mrp_bom_cost" t-att-data-product_id="data['product'].id" t-att-data-id="'operation-' + str(data['bom'].id)" t-att-data-bom-id="data['bom'].id" t-att-parent_id="data['bom'].id" t-att-data-qty="data['bom_qty']" t-att-data-level="data['level']">
                 <td name="td_opr">
                     <span t-att-style="space_td"/>
                     <span class="o_mrp_bom_unfoldable fa fa-fw fa-caret-right" t-att-data-function="'get_operations'" role="img" aria-label="Unfold" title="Unfold"/>

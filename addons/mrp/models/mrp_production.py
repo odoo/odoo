@@ -461,7 +461,7 @@ class MrpProduction(models.Model):
             relevant_move_state = production.move_raw_ids._get_relevant_state_among_moves()
             # Compute reservation state according to its component's moves.
             if relevant_move_state == 'partially_available':
-                if production.bom_id.operation_ids and production.bom_id.ready_to_produce == 'asap':
+                if production.workorder_ids.operation_id and production.bom_id.ready_to_produce == 'asap':
                     production.reservation_state = production._get_ready_to_produce_state()
                 else:
                     production.reservation_state = 'confirmed'
@@ -602,7 +602,7 @@ class MrpProduction(models.Model):
         # we need to avoid keeping incorrect lines, so clearing is necessary too.
         if self.product_id != self._origin.product_id:
             self.move_raw_ids = [(5,)]
-        if self.bom_id and self.product_qty > 0:
+        if self.bom_id and self.product_id and self.product_qty > 0:
             # keep manual entries
             list_move_raw = [(4, move.id) for move in self.move_raw_ids.filtered(lambda m: not m.bom_line_id)]
             moves_raw_values = self._get_moves_raw_values()
@@ -671,9 +671,9 @@ class MrpProduction(models.Model):
             if message:
                 return {'warning': {'title': _('Warning'), 'message': message}}
 
-    @api.onchange('bom_id')
+    @api.onchange('bom_id', 'product_id')
     def _onchange_workorder_ids(self):
-        if self.bom_id:
+        if self.bom_id and self.product_id:
             self._create_workorder()
         else:
             self.workorder_ids = False
@@ -719,7 +719,7 @@ class MrpProduction(models.Model):
                 if 'qty_producing' in vals:
                     finished_move_lines.write({'qty_done': vals.get('qty_producing')})
 
-            if not production.bom_id.operation_ids and vals.get('date_planned_start') and not vals.get('date_planned_finished'):
+            if not production.workorder_ids.operation_id and vals.get('date_planned_start') and not vals.get('date_planned_finished'):
                 new_date_planned_start = fields.Datetime.to_datetime(vals.get('date_planned_start'))
                 if not production.date_planned_finished or new_date_planned_start >= production.date_planned_finished:
                     production.date_planned_finished = new_date_planned_start + datetime.timedelta(hours=1)
@@ -803,7 +803,7 @@ class MrpProduction(models.Model):
 
     def _create_workorder(self):
         for production in self:
-            if not production.bom_id:
+            if not production.bom_id or not production.product_id:
                 continue
             workorders_values = []
 
@@ -815,6 +815,8 @@ class MrpProduction(models.Model):
                 if not (bom.operation_ids and (not bom_data['parent_line'] or bom_data['parent_line'].bom_id.operation_ids != bom.operation_ids)):
                     continue
                 for operation in bom.operation_ids:
+                    if operation._skip_operation_line(bom_data['product']):
+                        continue
                     workorders_values += [{
                         'name': operation.name,
                         'production_id': production.id,
@@ -864,6 +866,8 @@ class MrpProduction(models.Model):
                 raise UserError(_("You cannot have %s  as the finished product and in the Byproducts", self.product_id.name))
             moves.append(production._get_move_finished_values(production.product_id.id, production.product_qty, production.product_uom_id.id))
             for byproduct in production.bom_id.byproduct_ids:
+                if byproduct._skip_byproduct_line(production.product_id):
+                    continue
                 product_uom_factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
                 qty = byproduct.product_qty * (product_uom_factor / production.bom_id.product_qty)
                 moves.append(production._get_move_finished_values(
@@ -979,10 +983,11 @@ class MrpProduction(models.Model):
         the first operation of the bom. If not returns 'waiting'
         """
         self.ensure_one()
-        first_operation = self.bom_id.operation_ids[0]
-        if len(self.bom_id.operation_ids) == 1:
+        operations = self.workorder_ids.operation_id
+        if len(operations) == 1:
             moves_in_first_operation = self.move_raw_ids
         else:
+            first_operation = operations[0]
             moves_in_first_operation = self.move_raw_ids.filtered(lambda move: move.operation_id == first_operation)
         moves_in_first_operation = moves_in_first_operation.filtered(
             lambda move: move.bom_line_id and
