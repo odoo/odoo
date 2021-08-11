@@ -3,10 +3,18 @@
 import { Field } from "../../fields/field";
 import { evaluateExpr } from "../../core/py_js/py";
 
-const RELATIONAL_TYPES = ["many2one", "one2many", "many2many"];
+const X2M_TYPES = ["one2many", "many2many"];
+const RELATIONAL_TYPES = ["many2one"].concat(...X2M_TYPES);
 const SPECIAL_FIELDS = ["color_field"];
 
 export const isRelational = (field) => field && RELATIONAL_TYPES.includes(field.type);
+
+function getX2MViewMode(mode) {
+    if (!mode) {
+        return ["list"];
+    }
+    return mode.split(",").map((m) => (m === "tree" ? "list" : m));
+}
 
 export const getIds = (idsList) => {
     if (Array.isArray(idsList)) {
@@ -56,6 +64,9 @@ export class FieldParser {
                 }
             }
             this.addRelation(field.relation, ...relatedFields);
+            if (X2M_TYPES.includes(field.type) && FieldClass.useSubView) {
+                field.viewMode = getX2MViewMode(node.getAttribute("mode"));
+            }
         }
         return { name: fieldName, field, widget, options };
     }
