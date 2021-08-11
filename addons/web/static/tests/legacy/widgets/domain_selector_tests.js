@@ -2,6 +2,7 @@ odoo.define('web.domain_selector_tests', function (require) {
 "use strict";
 
 var DomainSelector = require("web.DomainSelector");
+var Widget = require("web.Widget");
 var testUtils = require("web.test_utils");
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 
@@ -52,7 +53,7 @@ QUnit.module('DomainSelector', {
 }, function () {
 
     QUnit.test("creating a domain from scratch", async function (assert) {
-        assert.expect(13);
+        assert.expect(12);
 
         var $target = $("#qunit-fixture");
 
@@ -98,8 +99,9 @@ QUnit.module('DomainSelector', {
             "field selector popover should contain the 'Bar' field");
 
         // Clicking the "Bar" field should change the internal domain and this
-        // should be displayed in the debug input
+        // should be displayed in the debug textarea
         await testUtils.dom.click($barLi);
+        assert.containsOnce(domainSelector, "textarea.o_domain_debug_input");
         assert.strictEqual(
             domainSelector.$(".o_domain_debug_input").val(),
             '[["bar","=",True]]',
@@ -128,16 +130,6 @@ QUnit.module('DomainSelector', {
             "the domain input should contain a domain with 'bar', 'id' and a subgroup"
         );
 
-        // Changing the domain input to update the subgroup to use the "foo"
-        // field instead of "id" should rerender the widget and adapt the
-        // widget suggestions
-        domainSelector.$(".o_domain_debug_input").val('["&","&",["bar","=",True],"|",["foo","=","hello"],["id","=",1],["id","=",1]]').change();
-        await testUtils.nextTick();
-        assert.strictEqual(domainSelector.$(".o_field_selector").eq(1).find("input.o_field_selector_debug").val(), "foo",
-            "the second field selector should now contain the 'foo' value");
-        assert.ok(domainSelector.$(".o_domain_leaf_operator_select").eq(1).html().indexOf("contains") >= 0,
-            "the second operator selector should now contain the 'contains' operator");
-
         // There should be five "-" buttons to remove domain part; clicking on
         // the two last ones, should leave a domain with only the "bar" and
         // "foo" fields, with the initial "&" operator
@@ -147,8 +139,8 @@ QUnit.module('DomainSelector', {
         await testUtils.dom.click(domainSelector.$(".o_domain_delete_node_button").last());
         assert.strictEqual(
             domainSelector.$(".o_domain_debug_input").val(),
-            '["&",["bar","=",True],["foo","=","hello"]]',
-            "the domain input should contain a domain with 'bar' and 'foo'"
+            '["&",["bar","=",True],["id","=",1]]',
+            "the domain input should contain a domain with 'bar' and 'id'"
         );
         domainSelector.destroy();
     });
@@ -274,6 +266,45 @@ QUnit.module('DomainSelector', {
         await doAction(webClient, 5);
         assert.strictEqual(document.querySelector('div[name="foo"]').closest('.modal-body').style.overflow,
             'visible', "modal should have visible overflow if there is inline domain field widget");
+    });
+
+    QUnit.test("edit a domain with the debug textarea", async function (assert) {
+        assert.expect(5);
+
+        const $target = $("#qunit-fixture");
+
+        // Create the domain selector and its mock environment
+        const Parent = Widget.extend({
+            custom_events: {
+                domain_changed: (e) => {
+                    assert.deepEqual(e.data.domain, [
+                        ["product_id", "ilike", 1],
+                        ["id", "=", 0]
+                    ]);
+                    assert.ok(e.data.debug);
+                },
+            },
+        });
+        const parent = new Parent(null);
+        const domainSelector = new DomainSelector(parent, "partner", [["product_id", "ilike", 1]], {
+            debugMode: true,
+            readonly: false,
+        });
+        await testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
+        await domainSelector.appendTo($target);
+
+        assert.containsOnce(domainSelector, ".o_domain_node", "should have a single domain node");
+        const newValue = `
+[
+    ['product_id', 'ilike', 1],
+    ['id', '=', 0]
+]`;
+        await testUtils.fields.editAndTrigger(domainSelector.$('.o_domain_debug_input'), newValue, ["change"]);
+        assert.strictEqual(domainSelector.$('.o_domain_debug_input').val(), newValue,
+            "the domain should not have been formatted");
+        assert.containsOnce(domainSelector, ".o_domain_node", "should still have a single domain node");
+
+        domainSelector.destroy();
     });
 });
 });

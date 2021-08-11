@@ -3498,16 +3498,11 @@ var JournalDashboardGraph = AbstractField.extend({
  * not allow to).
  */
 var FieldDomain = AbstractField.extend({
-    /**
-     * Fetches the number of records which are matched by the domain (if the
-     * domain is not server-valid, the value is false) and the model the
-     * field must work with.
-     */
-    specialData: "_fetchSpecialDomain",
-
+    resetOnAnyFieldChange: true,
     events: _.extend({}, AbstractField.prototype.events, {
         "click .o_domain_show_selection_button": "_onShowSelectionButtonClick",
         "click .o_field_domain_dialog_button": "_onDialogEditButtonClick",
+        "click .o_refresh_count": "_onRefreshCountClick",
     }),
     custom_events: _.extend({}, AbstractField.prototype.custom_events, {
         domain_changed: "_onDomainSelectorValueChange",
@@ -3533,6 +3528,11 @@ var FieldDomain = AbstractField.extend({
         }
 
         this._setState();
+
+        this._isValidForModel = true;
+        this.nbRecords = null;
+        this.lastCountFetchKey = null; // used to prevent from unnecessary fetching the count
+        this.debugEdition = false; // true iff the domain was edited with the textarea (in debug only)
     },
     /**
      * We use the on_attach_callback hook here when widget is attached to the DOM, so that
@@ -3549,6 +3549,19 @@ var FieldDomain = AbstractField.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * The record is about to be saved, we need to ensure that the current
+     * domain is valid, if we manually edited it with the textarea. To do so,
+     * we perform a search_count with that domain.
+     *
+     * @override
+     * @returns {Promise|undefined}
+     */
+    commitChanges() {
+        if (this.debugEdition) {
+            return this._fetchCount();
+        }
+    },
     /**
      * A domain field is always set since the false value is considered to be
      * equal to "[]" (match all records).
@@ -3579,11 +3592,56 @@ var FieldDomain = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Fetches the number of records matching the current domain.
+     *
+     * @private
+     * @param {boolean} [force=false] if true, performs the rpc, even if the
+     *   domain is the same as before
+     * @returns {Promise}
+     */
+     _fetchCount(force = false) {
+        if (!this._domainModel) {
+            this._isValidForModel = true;
+            this.nbRecords = 0;
+            return Promise.resolve();
+        }
+
+        // do not re-fetch the count if nothing has changed
+        const value = this.value || "[]"; // false stands for the empty domain
+        const key = `${this._domainModel}/${value}`;
+        if (!force && this.lastCountFetchKey === key) {
+            return this.lastCountFetchProm;
+        }
+        this.lastCountFetchKey = key;
+
+        this.nbRecords = null;
+
+        const context = this.record.getContext({ fieldName: this.name });
+        this.lastCountFetchProm = new Promise((resolve) => {
+            this._rpc({
+                model: this._domainModel,
+                method: 'search_count',
+                args: [Domain.prototype.stringToArray(value, this.record.evalContext)],
+                context: context
+            }, { shadow: true }).then((nbRecords) => {
+                this._isValidForModel = true;
+                this.nbRecords = nbRecords;
+                resolve();
+            }).guardedCatch((reason) => {
+                reason.event.preventDefault(); // prevent traceback (the search_count might be intended to break)
+                this._isValidForModel = false;
+                this.nbRecords = 0;
+                resolve();
+            });
+        });
+        return this.lastCountFetchProm;
+    },
+    /**
      * @private
      * @override _render from AbstractField
      * @returns {Promise}
      */
-    _render: function () {
+    _render: async function () {
         // If there is no model, only change the non-domain-selector content
         if (!this._domainModel) {
             this._replaceContent();
@@ -3602,11 +3660,24 @@ var FieldDomain = AbstractField.extend({
                 debugMode: config.isDebug(),
             });
             def = this.domainSelector.prependTo(this.$el);
-        } else {
+        } else if (!this.debugEdition) {
+            // do not update the domainSelector if we edited the domain with the textarea
+            // as we don't want it to format what we just wrote
             def = this.domainSelector.setDomain(value);
         }
+
         // ... then replace the other content (matched records, etc)
-        return def.then(this._replaceContent.bind(this));
+        await Promise.resolve(def);
+        this._replaceContent();
+
+        // Finally, fetch the number of records matching the domain, but do not
+        // wait for it to render the field widget (simply update the number of
+        // records when we know it)
+        if (!this.debugEdition) {
+            // do not automatically recompute the count if we're editing the
+            // domain with the textarea
+            this._fetchCount().then(() => this._replaceContent());
+        }
     },
     /**
      * Render the field DOM except for the domain selector part. The full field
@@ -3622,8 +3693,10 @@ var FieldDomain = AbstractField.extend({
         this._$content = $(qweb.render("FieldDomain.content", {
             hasModel: !!this._domainModel,
             isValid: !!this._isValidForModel,
-            nbRecords: this.record.specialData[this.name].nbRecords || 0,
-            inDialogEdit: this.inDialog && this.mode === "edit",
+            nbRecords: this.nbRecords,
+            inDialog: this.inDialog,
+            editMode: this.mode === "edit",
+            isDebug: config.isDebug(),
         }));
         this._$content.appendTo(this.$el);
     },
@@ -3633,7 +3706,7 @@ var FieldDomain = AbstractField.extend({
      *
      * @private
      */
-    _reset: function () {
+    _reset: function (record, ev) {
         this._super.apply(this, arguments);
         var oldDomainModel = this._domainModel;
         this._setState();
@@ -3641,6 +3714,9 @@ var FieldDomain = AbstractField.extend({
             // If the model has changed, destroy the current domain selector
             this.domainSelector.destroy();
             this.domainSelector = null;
+        }
+        if (ev.target !== this) {
+            this.debugEdition = false;
         }
     },
     /**
@@ -3651,15 +3727,31 @@ var FieldDomain = AbstractField.extend({
      * @private
      */
     _setState: function () {
-        var specialData = this.record.specialData[this.name];
-        this._domainModel = specialData.model;
-        this._isValidForModel = (specialData.nbRecords !== false);
+        let domainModel = this.nodeOptions.model;
+        if (Object.prototype.hasOwnProperty.call(this.record.data, domainModel)) {
+            domainModel = this.record.data[domainModel];
+        }
+        this._domainModel = domainModel;
     },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Recompute the number of records matching the domain when the user clicks
+     * on the refresh button. Useful after manually editing the domain through
+     * the textarea in debug mode, as in this case, the count isn't automatically
+     * recomputed.
+     *
+     * @param {MouseEvent} ev
+     */
+    async _onRefreshCountClick(ev) {
+        ev.stopPropagation();
+        ev.currentTarget.setAttribute("disabled", "disabled");
+        await this._fetchCount(true);
+        this._replaceContent();
+    },
     /**
      * Called when the "Show selection" button is clicked
      * -> Open a modal to see the matched records
@@ -3693,15 +3785,17 @@ var FieldDomain = AbstractField.extend({
         }).open();
     },
     /**
-     * Called when the domain selector value is changed (do nothing if it is the
-     * one which is in a dialog (@see _onDomainSelectorDialogValueChange))
+     * Called when the domain selector value is changed
      * -> Adapt the internal value state
      *
      * @param {OdooEvent} e
+     * @param {Domain} e.data.domain
      */
     _onDomainSelectorValueChange: function (e) {
-        if (this.inDialog) return;
-        this._setValue(Domain.prototype.arrayToString(this.domainSelector.getDomain()));
+        // we don't want to recompute the count if the domain has been edited
+        // from the debug textarea (for performance reasons, as it might be costly)
+        this.debugEdition = !!e.data.debug;
+        this._setValue(Domain.prototype.arrayToString(e.data.domain));
     },
     /**
      * Called when the in-dialog domain selector value is confirmed
@@ -3720,6 +3814,19 @@ var FieldDomain = AbstractField.extend({
      */
     _onOpenRecord: function (event) {
         event.stopPropagation();
+    },
+    /**
+     * Stops the enter navigation in a DomainSelector's textarea.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+     _onKeydown: function (ev) {
+        if (ev.which === $.ui.keyCode.ENTER && ev.target.tagName === "TEXTAREA") {
+            ev.stopPropagation();
+            return;
+        }
+        this._super.apply(this, arguments);
     },
 });
 

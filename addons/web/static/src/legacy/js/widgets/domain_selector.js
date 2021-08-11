@@ -3,8 +3,9 @@ odoo.define("web.DomainSelector", function (require) {
 
 var core = require("web.core");
 var datepicker = require("web.datepicker");
+var dom = require('web.dom');
 var Domain = require("web.Domain");
-var field_utils = require ("web.field_utils");
+var field_utils = require("web.field_utils");
 var ModelFieldSelector = require("web.ModelFieldSelector");
 var Widget = require("web.Widget");
 
@@ -541,6 +542,7 @@ var DomainSelector = DomainTree.extend({
         this.$debugInput = this.$(".o_domain_debug_input");
         if (this.$debugInput.length) {
             this.$debugInput.val(Domain.prototype.arrayToString(this.getDomain()));
+            dom.autoresize(this.$debugInput);
         }
 
         // Warn the user if the domain is not valid after rendering
@@ -577,25 +579,24 @@ var DomainSelector = DomainTree.extend({
         this._addChild(this.options.default || [["id", "=", 1]]);
     },
     /**
-     * Called when the debug input value is changed -> constructs the tree
-     * representation if valid or warn the user if invalid.
+     * Called when the debug input value is changed -> notifies the change if
+     * valid or warn the user if invalid.
      *
      * @param {Event} e
      */
     _onDebugInputChange: function (e) {
         // When the debug input changes, the string prefix domain is read. If it
-        // is syntax-valid the widget is re-rendered and notifies the parents.
-        // If not, a warning is shown to the user and the input is ignored.
+        // is syntax-valid a "domain_changed" event is triggered to notify the
+        // parent, but the widget isn't redrawn.
+        // If the domain is not valid, a warning is shown to the user.
         var domain;
         try {
-            domain = Domain.prototype.stringToArray($(e.currentTarget).val());
+            domain = Domain.prototype.stringToArray(e.currentTarget.value);
         } catch (err) { // If there is a syntax error, just ignore the change
             this.displayNotification({ title: _t("Syntax error"), message: _t("Domain not properly formed"), type: 'danger' });
             return;
         }
-        this._redraw(domain).then((function () {
-            this.trigger_up("domain_changed", {child: this, alreadyRedrawn: true});
-        }).bind(this));
+        this.trigger_up("domain_changed", { child: this, noRedraw: true, domain, debug: true });
     },
     /**
      * Called when a (child's) domain has changed -> redraw the entire tree
@@ -604,9 +605,11 @@ var DomainSelector = DomainTree.extend({
      * @param {OdooEvent} e
      */
     _onDomainChange: function (e) {
+        // Add the current domain to the payload if not already there
+        e.data.domain = e.data.domain || this.getDomain();
         // If a subdomain notifies that it underwent some modifications, the
         // DomainSelector catches the message and performs a full re-rendering.
-        if (!e.data.alreadyRedrawn) {
+        if (!e.data.noRedraw) {
             this._redraw();
         }
     },
