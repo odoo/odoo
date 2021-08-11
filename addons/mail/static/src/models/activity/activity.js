@@ -13,6 +13,7 @@ function factory(dependencies) {
          */
         _created() {
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
+            this.onClickActivity = this.onClickActivity.bind(this);
             this.onClickEdit = this.onClickEdit.bind(this);
             this.onClickCancel = this.onClickCancel.bind(this);
             this.onAttachmentCreated = this.onAttachmentCreated.bind(this);
