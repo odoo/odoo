@@ -577,10 +577,9 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 if self[name] == current_settings[name]:
                     continue
                 if int(self[name]):
-                    groups.write({'implied_ids': [Command.link(implied_group.id)]})
+                    groups._apply_group(implied_group)
                 else:
-                    groups.write({'implied_ids': [Command.unlink(implied_group.id)]})
-                    implied_group.write({'users': [Command.unlink(user.id) for user in groups.users]})
+                    groups._remove_group(implied_group)
 
         # config fields: store ir.config_parameters
         IrConfigParameter = self.env['ir.config_parameter'].sudo()
