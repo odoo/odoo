@@ -47,16 +47,9 @@ export class FieldX2Many extends Component {
             }
             this.fields = fields;
             this.record = this.props.record.data[this.props.name];
-            this.record.setView(viewMode[0]);
 
             this.archInfo = new ListArchParser().parse(arch, fields);
             this.Renderer = ListRenderer;
-        }
-    }
-
-    willStart() {
-        if (this.record) {
-            return this.record.load();
         }
     }
 
@@ -64,6 +57,7 @@ export class FieldX2Many extends Component {
         console.log("FieldX2M openRecord", record);
     }
 }
+FieldX2Many.useSubView = true;
 
 FieldX2Many.template = "web.FieldX2Many";
 
