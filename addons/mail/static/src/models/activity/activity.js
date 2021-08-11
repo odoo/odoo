@@ -17,6 +17,7 @@ function factory(dependencies) {
             this.onClickCancel = this.onClickCancel.bind(this);
             this.onAttachmentCreated = this.onAttachmentCreated.bind(this);
             this.onClickUploadDocument = this.onClickUploadDocument.bind(this);
+            this.onClickDiscard = this.onClickDiscard.bind(this);
             this.onKeydown = this.onKeydown.bind(this);
         }
 
@@ -272,8 +273,12 @@ function factory(dependencies) {
 
         onKeydown(ev) {
             if (ev.key === 'Escape') {
-                this._close();
+                this._closePopOver();
             }
+        }
+
+        onClickDiscard() {
+            this._closePopOver();
         }
 
         //----------------------------------------------------------------------
@@ -285,6 +290,13 @@ function factory(dependencies) {
          */
         static _createRecordLocalId(data) {
             return `${this.modelName}_${data.id}`;
+        }
+
+        /**
+         * @private
+         */
+        _closePopOver() {
+            this.componentPopOver.trigger('o-popover-close');
         }
 
         /**
@@ -325,6 +337,7 @@ function factory(dependencies) {
         category: attr(),
         creator: many2one('mail.user'),
         component: attr(),
+        componentPopOver: attr(),
         dateCreate: attr(),
         dateDeadline: attr(),
         /**

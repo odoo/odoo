@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
 
@@ -15,6 +16,7 @@ export class ActivityMarkDonePopover extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useModels();
+        useComponentToModel({ fieldName: 'componentPopOver', modelName: 'mail.activity', propNameAsRecordLocalId: 'activityLocalId' });
         this._feedbackTextareaRef = useRef('feedbackTextarea');
     }
 
@@ -47,13 +49,6 @@ export class ActivityMarkDonePopover extends Component {
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     */
-    _close() {
-        this.trigger('o-popover-close');
-    }
-
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -65,13 +60,6 @@ export class ActivityMarkDonePopover extends Component {
         this.activity.update({
             feedbackBackup: this._feedbackTextareaRef.el.value,
         });
-    }
-
-    /**
-     * @private
-     */
-    _onClickDiscard() {
-        this._close();
     }
 
     /**
