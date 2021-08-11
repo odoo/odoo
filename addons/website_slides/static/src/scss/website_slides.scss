@@ -133,6 +133,13 @@ $truncate-limits: 2, 3, 10;
         }
     }
 
+    .o_wslides_nav_button.disabled {
+        // show the "not-allowed" cursor while keeping the disabled style
+        cursor: not-allowed;
+        pointer-events: auto !important;
+        box-shadow: none;
+    }
+
     .o_wslides_js_lesson_quiz {
         i.o_wslides_js_quiz_icon {
             cursor: pointer;
@@ -213,6 +220,10 @@ $truncate-limits: 2, 3, 10;
 
 .o_wslides_card_default_background {
     background-color: $o-wslides-color-bg;  // same as body
+}
+
+.o_wslides_channel_completion_completed {
+    font-size: 1rem;
 }
 
 // New home page
@@ -503,10 +514,15 @@ $truncate-limits: 2, 3, 10;
                 &.active {
                     box-shadow:inset 2px 0 theme-color('primary');
                 }
-
-                &:hover .o_wslides_lesson_link_name {
-                    color: $headings-color;
-                }
+            }
+            .o_wslides_button_complete {
+                margin-left: 5px;
+            }
+            button.o_wslides_button_complete i {
+                color: $gray-600;
+            }
+            div.o_wslides_button_complete i {
+                color: $gray-400;
             }
         }
     }
@@ -526,8 +542,20 @@ $truncate-limits: 2, 3, 10;
             }
         }
     }
+
+    .o_wslides_undone_button.disabled,
+    .o_wslides_done_button.disabled {
+        // Show title attribute on disabled link
+        color: white !important;
+        pointer-events: auto;
+    }
 }
 
+// Enforce the height of the lesson header, so the DOM element size do not change
+// when the completion progressbar become visible / hidden
+.o_wslides_lesson_header_container {
+    height: 80px;
+}
 
 // Modals
 // **************************************************
