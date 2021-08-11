@@ -327,7 +327,7 @@ class PurchaseOrderLine(models.Model):
             if line.product_id:
                 virtual_available = line.product_id.with_context(warehouse=warehouse.id, to_date=line.date_planned).virtual_available
                 if line.state == 'draft':
-                    virtual_available += line.product_uom_qty
+                    virtual_available += line.product_qty
                 if virtual_available < 0:
                     line.forecasted_issue = True
 

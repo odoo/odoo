@@ -527,7 +527,7 @@ class MrpProduction(models.Model):
             if order.product_id:
                 virtual_available = order.product_id.with_context(warehouse=warehouse.id, to_date=order.date_planned_start).virtual_available
                 if order.state == 'draft':
-                    virtual_available += order.product_uom_qty
+                    virtual_available += order.product_qty
                 if virtual_available < 0:
                     order.forecasted_issue = True
 
