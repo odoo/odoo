@@ -360,6 +360,8 @@ class Channel(models.Model):
 
         recipients_data = []
         if pids:
+            self.env['res.partner'].flush(fnames=['active', 'email', 'partner_share'])
+            self.env['res.users'].flush(fnames=['notification_type', 'partner_id'])
             sql_query = """
                 SELECT DISTINCT ON (partner.id) partner.id,
                        partner.partner_share,
@@ -585,14 +587,14 @@ class Channel(models.Model):
                 # exclude chat and other small channels from this optimization because they are
                 # assumed to be smaller and it's important to know the member list for them
                 partner_ids = channel_partners.mapped('partner_id').ids
-                info['members'] = [partner_infos[partner] for partner in partner_ids]
+                info['members'] = sorted([partner_infos[partner] for partner in partner_ids], key=lambda p: p['id'])
             if channel.channel_type != 'channel':
-                info['seen_partners_info'] = [{
+                info['seen_partners_info'] = sorted([{
                     'id': cp.id,
                     'partner_id': cp.partner_id.id,
                     'fetched_message_id': cp.fetched_message_id.id,
                     'seen_message_id': cp.seen_message_id.id,
-                } for cp in channel_partners]
+                } for cp in channel_partners], key=lambda p: p['partner_id'])
 
             channel_infos.append(info)
         return channel_infos
