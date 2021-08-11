@@ -119,32 +119,23 @@ class Partner(models.Model):
         return messages._message_notification_format()
 
     def _get_channels_as_member(self):
-        """ Return the channels of the partner grouped by 'slot' (channel, direct_message or private_group), and
-            the mapping between partner_id/channel_id for direct_message channels.
-            :returns dict : the grouped channels and the mapping
-        """
+        """Returns the channels of the partner."""
         self.ensure_one()
-        values = {}
-        pinned_channels = self.env['mail.channel.partner'].search([('partner_id', '=', self.id), ('is_pinned', '=', True)]).mapped('channel_id')
-        # get the group/public channels
-        values['channel_channel'] = self.env['mail.channel'].search([
+        channels = self.env['mail.channel']
+        # get the channels
+        channels |= self.env['mail.channel'].search([
             ('channel_type', '=', 'channel'),
-            ('public', 'in', ['public', 'groups']),
             ('channel_partner_ids', 'in', [self.id]),
-        ]).channel_info()
-        # get the pinned 'direct message' channel
-        direct_message_channels = self.env['mail.channel'].search([
-            ('channel_type', '=', 'chat'),
-            ('id', 'in', pinned_channels.ids),
         ])
-        values['channel_direct_message'] = direct_message_channels.channel_info()
-        # get the private group
-        values['channel_private_group'] = self.env['mail.channel'].search([
-            ('channel_type', '=', 'channel'),
-            ('public', '=', 'private'),
-            ('channel_partner_ids', 'in', [self.id]),
-        ]).channel_info()
-        return values
+        # get the pinned direct messages
+        channels |= self.env['mail.channel'].search([
+            ('channel_type', '=', 'chat'),
+            ('channel_last_seen_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
+                ('partner_id', '=', self.id),
+                ('is_pinned', '=', True),
+            ])),
+        ])
+        return channels
 
     @api.model
     def search_for_channel_invite(self, search_term, channel_id=None, limit=30):
