@@ -626,6 +626,8 @@ class ProductProduct(models.Model):
                 continue
             if not res or res.name == seller.name:
                 res |= seller
+        if res.product_id:
+            res = res.filtered(lambda s: s.product_id)
         return res.sorted('price')[:1]
 
     def price_compute(self, price_type, uom=False, currency=False, company=None):
