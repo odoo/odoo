@@ -83,7 +83,7 @@ class Users(models.Model):
     def _init_messaging(self):
         self.ensure_one()
         values = {
-            'channel_slots': self.partner_id._get_channels_as_member(),
+            'channels': self.partner_id._get_channels_as_member().channel_info(),
             'current_partner': self.partner_id.mail_partner_format(),
             'current_user_id': self.id,
             'mail_failures': self.partner_id._message_fetch_failed(),
