@@ -17,7 +17,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
     def setUpClass(cls, chart_template_ref='l10n_ar.l10nar_ri_chart_template'):
         super(TestAr, cls).setUpClass(chart_template_ref=chart_template_ref)
 
-        print("------ Common.TestAr setUpClass()")
         # ==== Company ====
         cls.company_data['company'].write({
             'parent_id': cls.env.ref('base.main_company').id,
@@ -341,7 +340,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": "out_invoice",
                 # "invoice_date": fields.Date.start_of(today),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_21}
@@ -354,7 +352,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": "out_invoice",
                 # "invoice_date": today + relativedelta(day=5),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
@@ -368,8 +365,7 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
-                # "invoice_date": fields.Date.start_of(today),
-                "invoice_date": today,
+                # "invoice_date": fields.Date.start_of(today, 'month'),
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
@@ -383,7 +379,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 # "invoice_date": fields.Date.start_of(today, "month"),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
@@ -397,7 +392,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 # "invoice_date": today + relativedelta(day=13),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
@@ -416,7 +410,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 # "invoice_date": today + relativedelta(day=3),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_incoterm_id": incoterm,
                 "invoice_line_ids": [
@@ -436,7 +429,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 # "invoice_date": today + relativedelta(day=3),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_incoterm_id": incoterm,
                 "invoice_line_ids": [
@@ -455,7 +447,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 # "invoice_date": today + relativedelta(day=13),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_21, 'price_unit': 642.0, 'quantity': 1},
@@ -468,7 +459,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 # "invoice_date": today + relativedelta(day=13),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.product_iva_105, 'price_unit': 1000.0, 'quantity': 5},
@@ -482,7 +472,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 # "invoice_date": today + relativedelta(day=13),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_21, 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 1'},
@@ -498,7 +487,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 # "invoice_date": today + relativedelta(day=13),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_21, 'price_unit': 15.7076, 'quantity': 1, 'name': 'Support Services 1'},
@@ -514,7 +502,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 # "invoice_date": today + relativedelta(day=13),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_21, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 1'},
@@ -537,7 +524,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 # "invoice_date": today + relativedelta(day=20),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_incoterm_id": incoterm,
                 "invoice_line_ids": [
@@ -552,7 +538,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 # "invoice_date": today + relativedelta(day=20),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_incoterm_id": incoterm,
                 "invoice_line_ids": [
@@ -567,7 +552,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 # "invoice_date": today + relativedelta(day=22),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_incoterm_id": incoterm,
                 "invoice_line_ids": [
@@ -581,7 +565,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 # "invoice_date": today + relativedelta(day=13),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_21, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8', 'discount': 100},
@@ -594,7 +577,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 # "invoice_date": today + relativedelta(day=13),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_21, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8', 'discount': 100},
@@ -609,7 +591,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 # "invoice_date": today + relativedelta(day=13),
-                "invoice_date": today,
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_21, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8'},
@@ -641,8 +622,8 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
             invoice = invoice_form.save()
             self.demo_invoices[key] = invoice
 
-    # TODO: add this move lines
-    #         <function model="account.move.line" name="write" context="{'check_move_validity': False, 'active_test': False}">
+    # TODO: add this move lines to invoice 19
+    # <function model="account.move.line" name="write" context="{'check_move_validity': False, 'active_test': False}">
     #     <value model="account.move.line" search="[('move_id', '=', ref('demo_invoice_19')), ('product_id', '=', ref('product.product_product_2'))]"/>
     #     <value model="account.tax" eval="{'tax_ids': [(4, obj().search([('company_id', '=', ref('company_ri')), ('type_tax_use', '=', 'sale'), ('tax_group_id.l10n_ar_tribute_afip_code', '=', '06')], limit=1).id)]}"/>
     # </function>
@@ -659,6 +640,7 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
 
     # Re used unit tests methods
 
+    # TODO: add credit notes for l10n_ar_report tests
     def _create_test_credit_notes_like_demo(self):
         # TODO test it
         """ Create in the unit tests the same credit notes created in demo data """
