@@ -83,6 +83,7 @@ Featuring
             'website_slides/static/src/js/slides_slide_archive.js',
             'website_slides/static/src/js/slides_slide_toggle_is_preview.js',
             'website_slides/static/src/js/slides_slide_like.js',
+            'website_slides/static/src/js/slides_course_page.js',
             'website_slides/static/src/js/slides_course_slides_list.js',
             'website_slides/static/src/js/slides_course_fullscreen_player.js',
             'website_slides/static/src/js/slides_course_join.js',

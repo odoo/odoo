@@ -54,16 +54,23 @@ class SlidePartnerRelation(models.Model):
         res = super().create(vals_list)
         completed = res.filtered('completed')
         if completed:
-            completed._set_completed_callback()
+            completed._recompute_completion()
         return res
 
     def write(self, values):
+        slides_completion_to_recompute = self.env['slide.slide.partner']
+        if 'completed' in values:
+            slides_completion_to_recompute = self.filtered(
+                lambda slide_partner: slide_partner.completed != values['completed'])
+
         res = super(SlidePartnerRelation, self).write(values)
-        if values.get('completed'):
-            self._set_completed_callback()
+
+        if slides_completion_to_recompute:
+            slides_completion_to_recompute._recompute_completion()
+
         return res
 
-    def _set_completed_callback(self):
+    def _recompute_completion(self):
         self.env['slide.channel.partner'].search([
             ('channel_id', 'in', self.channel_id.ids),
             ('partner_id', 'in', self.partner_id.ids),
@@ -140,6 +147,10 @@ class Slide(models.Model):
     quiz_third_attempt_reward = fields.Integer("Reward: third attempt", default=5,)
     quiz_fourth_attempt_reward = fields.Integer("Reward: every attempt after the third try", default=2)
     # content
+    can_self_mark_completed = fields.Boolean('Can Mark Completed', compute='_compute_mark_complete_actions',
+        help='The slide can be marked as completed even without opening it')
+    can_self_mark_uncompleted = fields.Boolean('Can Mark Uncompleted', compute='_compute_mark_complete_actions',
+        help='The slide can be marked as not completed and the progression')
     slide_category = fields.Selection([
         ('infographic', 'Image'),
         ('article', 'Article'),
@@ -265,6 +276,24 @@ class Slide(models.Model):
                     current_category = slide
                 elif slide.category_id != current_category:
                     slide.category_id = current_category.id
+
+    @api.depends('slide_category', 'question_ids', 'channel_id.is_member')
+    @api.depends_context('uid')
+    def _compute_mark_complete_actions(self):
+        """Determine if the slide can be marked as (un)completed.
+
+        We can't mark a slide with questions as completed manually because we need to
+        complete the quiz first. But we can mark as uncompleted a slide with questions,
+        and the answers will be reset, the karma removed, etc (see mark_uncompleted).
+        """
+        for slide in self:
+            slide.can_self_mark_uncompleted = slide.website_published and slide.channel_id.is_member
+            slide.can_self_mark_completed = (
+                slide.website_published
+                and slide.channel_id.is_member
+                and slide.slide_category != 'quiz'
+                and not slide.question_ids
+            )
 
     @api.depends('question_ids')
     def _compute_questions_count(self):
@@ -637,7 +666,7 @@ class Slide(models.Model):
 
         if 'is_published' in values or 'active' in values:
             # if the slide is published/unpublished, recompute the completion for the partners
-            self.slide_partner_ids._set_completed_callback()
+            self.slide_partner_ids._recompute_completion()
 
         return res
 
@@ -854,22 +883,25 @@ class Slide(models.Model):
             'quiz_attempts_count': 1 if quiz_attempts_inc else 0,
             'vote': 0} for new_slide in new_slides])
 
-    def action_set_completed(self):
-        if any(not slide.channel_id.is_member for slide in self):
+    def action_mark_completed(self):
+        if any(not slide.can_self_mark_completed for slide in self):
             raise UserError(_('You cannot mark a slide as completed if you are not among its members.'))
 
-        return self._action_set_completed(self.env.user.partner_id)
+        return self._action_mark_completed()
 
-    def _action_set_completed(self, target_partner):
-        self_sudo = self.sudo()
+    def _action_mark_completed(self):
+        uncompleted_slides = self.filtered(lambda slide: not slide.user_has_completed)
+
+        target_partner = self.env.user.partner_id
+        uncompleted_slides._action_set_quiz_done()
         SlidePartnerSudo = self.env['slide.slide.partner'].sudo()
         existing_sudo = SlidePartnerSudo.search([
-            ('slide_id', 'in', self.ids),
+            ('slide_id', 'in', uncompleted_slides.ids),
             ('partner_id', '=', target_partner.id)
         ])
         existing_sudo.write({'completed': True})
 
-        new_slides = self_sudo - existing_sudo.mapped('slide_id')
+        new_slides = uncompleted_slides.sudo() - existing_sudo.mapped('slide_id')
         SlidePartnerSudo.create([{
             'slide_id': new_slide.id,
             'channel_id': new_slide.channel_id.id,
@@ -877,16 +909,41 @@ class Slide(models.Model):
             'vote': 0,
             'completed': True} for new_slide in new_slides])
 
-        return True
+    def action_mark_uncompleted(self):
+        if any(not slide.can_self_mark_uncompleted for slide in self):
+            raise UserError(_('You cannot mark a slide as uncompleted if you are not among its members.'))
 
-    def _action_set_quiz_done(self):
-        if any(not slide.channel_id.is_member for slide in self):
-            raise UserError(_('You cannot mark a slide quiz as completed if you are not among its members.'))
+        completed_slides = self.filtered(lambda slide: slide.user_has_completed)
+
+        # Remove the Karma point gained
+        completed_slides._action_set_quiz_done(completed=False)
+
+        self.env['slide.slide.partner'].sudo().search([
+            ('slide_id', 'in', completed_slides.ids),
+            ('partner_id', '=', self.env.user.partner_id.id),
+        ]).completed = False
+
+    def _action_set_quiz_done(self, completed=True):
+        """Add or remove karma point related to the quiz.
+
+        :param completed:
+            True if the quiz will be marked as completed (karma will be increased)
+            If set to False, we will remove the karma instead of increasing it,
+            so that the user can take the quiz multiple times but not gain karma infinitely
+        """
+        if any(not slide.channel_id.is_member or not slide.website_published for slide in self):
+            raise UserError(
+                _('You cannot mark a slide quiz as completed if you are not among its members.') if completed
+                else _('You cannot mark a slide quiz as not completed if you are not among its members.')
+            )
 
         points = 0
         for slide in self:
             user_membership_sudo = slide.user_membership_id.sudo()
-            if not user_membership_sudo or user_membership_sudo.completed or not user_membership_sudo.quiz_attempts_count:
+            if not user_membership_sudo \
+               or user_membership_sudo.completed == completed \
+               or not user_membership_sudo.quiz_attempts_count \
+               or not slide.question_ids:
                 continue
 
             gains = [slide.quiz_first_attempt_reward,
@@ -894,6 +951,9 @@ class Slide(models.Model):
                      slide.quiz_third_attempt_reward,
                      slide.quiz_fourth_attempt_reward]
             points += gains[user_membership_sudo.quiz_attempts_count - 1] if user_membership_sudo.quiz_attempts_count <= len(gains) else gains[-1]
+
+        if not completed:
+            points *= -1
 
         return self.env.user.sudo().add_karma(points)
 
