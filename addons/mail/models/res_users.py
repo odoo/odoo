@@ -82,15 +82,16 @@ class Users(models.Model):
 
     def _init_messaging(self):
         self.ensure_one()
+        partner_root = self.env.ref('base.partner_root')
         values = {
             'channels': self.partner_id._get_channels_as_member().channel_info(),
-            'current_partner': self.partner_id.mail_partner_format(),
+            'current_partner': self.partner_id.mail_partner_format().get(self.partner_id),
             'current_user_id': self.id,
             'mail_failures': self.partner_id._message_fetch_failed(),
             'menu_id': self.env['ir.model.data']._xmlid_to_res_id('mail.menu_root_discuss'),
             'needaction_inbox_counter': self.partner_id._get_needaction_count(),
-            'partner_root': self.env.ref('base.partner_root').sudo().mail_partner_format(),
-            'public_partners': [partner.mail_partner_format() for partner in self.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id],
+            'partner_root': partner_root.sudo().mail_partner_format().get(partner_root),
+            'public_partners': list(self.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id.mail_partner_format().values()),
             'shortcodes': self.env['mail.shortcode'].sudo().search_read([], ['source', 'substitution', 'description']),
             'starred_counter': self.partner_id._get_starred_count(),
         }

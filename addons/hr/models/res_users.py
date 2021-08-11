@@ -216,8 +216,12 @@ class User(models.Model):
     @api.depends('employee_ids')
     @api.depends_context('company')
     def _compute_company_employee(self):
+        employee_per_user = {
+            employee.user_id: employee
+            for employee in self.env['hr.employee'].search([('user_id', 'in', self.ids), ('company_id', '=', self.env.company.id)])
+        }
         for user in self:
-            user.employee_id = self.env['hr.employee'].search([('id', 'in', user.employee_ids.ids), ('company_id', '=', self.env.company.id)], limit=1)
+            user.employee_id = employee_per_user.get(user)
 
     def _search_company_employee(self, operator, value):
         return [('employee_ids', operator, value)]
