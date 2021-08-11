@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="route_subcontracting_dropshipping" model='stock.location.route'>
+            <field name="name">Dropship Subcontractor on Order</field>
+            <field name="sequence">5</field>
+            <field name="company_id"></field>
+            <field name="product_selectable" eval="True"/>
+        </record>
+
+        <function model="res.company" name="create_missing_subcontracting_dropshipping_rules"/>
+
+        <function model="stock.warehouse" name="write">
+            <value model="stock.warehouse" eval="obj().env['stock.warehouse'].search([]).ids"/>
+            <value eval="{'subcontracting_dropshipping_to_resupply': True}"/>
+        </function>
+
+    </data>
+</odoo>

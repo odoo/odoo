@@ -3,4 +3,6 @@
 
 from . import stock_picking
 from . import purchase
+from . import res_company
 from . import stock
+from . import stock_warehouse
