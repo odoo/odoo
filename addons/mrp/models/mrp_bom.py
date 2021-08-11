@@ -6,7 +6,6 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.osv.expression import AND, NEGATIVE_TERM_OPERATORS
 from odoo.tools import float_round
 
-from itertools import groupby
 from collections import defaultdict
 
 
@@ -76,18 +75,31 @@ class MrpBom(models.Model):
         string='Flexible Consumption',
         required=True
     )
+    possible_product_template_attribute_value_ids = fields.Many2many(
+        'product.template.attribute.value',
+        compute='_compute_possible_product_template_attribute_value_ids')
 
     _sql_constraints = [
         ('qty_positive', 'check (product_qty > 0)', 'The quantity to produce must be positive!'),
     ]
 
-    @api.onchange('product_id')
-    def onchange_product_id(self):
-        if self.product_id:
-            for line in self.bom_line_ids:
-                line.bom_product_template_attribute_value_ids = False
+    @api.depends(
+        'product_tmpl_id.attribute_line_ids.value_ids',
+        'product_tmpl_id.attribute_line_ids.attribute_id.create_variant',
+        'product_tmpl_id.attribute_line_ids.product_template_value_ids.ptav_active',
+    )
+    def _compute_possible_product_template_attribute_value_ids(self):
+        for bom in self:
+            bom.possible_product_template_attribute_value_ids = bom.product_tmpl_id.valid_product_template_attribute_line_ids._without_no_variant_attributes().product_template_value_ids._only_active()
 
-    @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids')
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_id:
+            self.bom_line_ids.bom_product_template_attribute_value_ids = False
+            self.operation_ids.bom_product_template_attribute_value_ids = False
+            self.byproduct_ids.bom_product_template_attribute_value_ids = False
+
+    @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids', 'byproduct_ids', 'operation_ids')
     def _check_bom_lines(self):
         for bom in self:
             for bom_line in bom.bom_line_ids:
@@ -97,17 +109,17 @@ class MrpBom(models.Model):
                     same_product = bom.product_tmpl_id == bom_line.product_id.product_tmpl_id
                 if same_product:
                     raise ValidationError(_("BoM line product %s should not be the same as BoM product.") % bom.display_name)
-                if bom.product_id and bom_line.bom_product_template_attribute_value_ids:
-                    raise ValidationError(_("BoM cannot concern product %s and have a line with attributes (%s) at the same time.")
-                        % (bom.product_id.display_name, ", ".join([ptav.display_name for ptav in bom_line.bom_product_template_attribute_value_ids])))
-                for ptav in bom_line.bom_product_template_attribute_value_ids:
-                    if ptav.product_tmpl_id != bom.product_tmpl_id:
-                        raise ValidationError(_(
-                            "The attribute value %(attribute)s set on product %(product)s does not match the BoM product %(bom_product)s.",
-                            attribute=ptav.display_name,
-                            product=ptav.product_tmpl_id.display_name,
-                            bom_product=bom_line.parent_product_tmpl_id.display_name
-                        ))
+            apply_variants = bom.bom_line_ids.bom_product_template_attribute_value_ids | bom.operation_ids.bom_product_template_attribute_value_ids | bom.byproduct_ids.bom_product_template_attribute_value_ids
+            if bom.product_id and apply_variants:
+                raise ValidationError(_("You cannot use the 'Apply on Variant' functionality and simultaneously create a BoM for a specific variant."))
+            for ptav in apply_variants:
+                if ptav.product_tmpl_id != bom.product_tmpl_id:
+                    raise ValidationError(_(
+                        "The attribute value %(attribute)s set on product %(product)s does not match the BoM product %(bom_product)s.",
+                        attribute=ptav.display_name,
+                        product=ptav.product_tmpl_id.display_name,
+                        bom_product=bom_line.parent_product_tmpl_id.display_name
+                    ))
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
@@ -125,8 +137,9 @@ class MrpBom(models.Model):
             self.product_uom_id = self.product_tmpl_id.uom_id.id
             if self.product_id.product_tmpl_id != self.product_tmpl_id:
                 self.product_id = False
-            for line in self.bom_line_ids:
-                line.bom_product_template_attribute_value_ids = False
+            self.bom_line_ids.bom_product_template_attribute_value_ids = False
+            self.operation_ids.bom_product_template_attribute_value_ids = False
+            self.byproduct_ids.bom_product_template_attribute_value_ids = False
 
     def copy(self, default=None):
         res = super().copy(default)
@@ -327,7 +340,7 @@ class MrpBomLine(models.Model):
         'mrp.bom', 'Parent BoM',
         index=True, ondelete='cascade', required=True)
     parent_product_tmpl_id = fields.Many2one('product.template', 'Parent Product Template', related='bom_id.product_tmpl_id')
-    possible_bom_product_template_attribute_value_ids = fields.Many2many('product.template.attribute.value', compute='_compute_possible_bom_product_template_attribute_value_ids')
+    possible_bom_product_template_attribute_value_ids = fields.Many2many(related='bom_id.possible_product_template_attribute_value_ids')
     bom_product_template_attribute_value_ids = fields.Many2many(
         'product.template.attribute.value', string="Apply on Variants", ondelete='restrict',
         domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
@@ -349,15 +362,6 @@ class MrpBomLine(models.Model):
             'Lines with 0 quantities can be used as optional lines. \n'
             'You should install the mrp_byproduct module if you want to manage extra products on BoMs !'),
     ]
-
-    @api.depends(
-        'parent_product_tmpl_id.attribute_line_ids.value_ids',
-        'parent_product_tmpl_id.attribute_line_ids.attribute_id.create_variant',
-        'parent_product_tmpl_id.attribute_line_ids.product_template_value_ids.ptav_active',
-    )
-    def _compute_possible_bom_product_template_attribute_value_ids(self):
-        for line in self:
-            line.possible_bom_product_template_attribute_value_ids = line.parent_product_tmpl_id.valid_product_template_attribute_line_ids._without_no_variant_attributes().product_template_value_ids._only_active()
 
     @api.depends('product_id', 'bom_id')
     def _compute_child_bom_id(self):
@@ -406,20 +410,12 @@ class MrpBomLine(models.Model):
 
     def _skip_bom_line(self, product):
         """ Control if a BoM line should be produced, can be inherited to add
-        custom control. It currently checks that all variant values are in the
-        product.
-
-        If multiple values are encoded for the same attribute line, only one of
-        them has to be found on the variant.
+        custom control.
         """
         self.ensure_one()
         if product._name == 'product.template':
             return False
-        if self.bom_product_template_attribute_value_ids:
-            for ptal, iter_ptav in groupby(self.bom_product_template_attribute_value_ids.sorted('attribute_line_id'), lambda ptav: ptav.attribute_line_id):
-                if not any(ptav in product.product_template_attribute_value_ids for ptav in iter_ptav):
-                    return True
-        return False
+        return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)
 
     def action_see_attachments(self):
         domain = [
@@ -464,9 +460,23 @@ class MrpByProduct(models.Model):
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Produced in Operation', check_company=True,
         domain="[('id', 'in', allowed_operation_ids)]")
+    possible_bom_product_template_attribute_value_ids = fields.Many2many(related='bom_id.possible_product_template_attribute_value_ids')
+    bom_product_template_attribute_value_ids = fields.Many2many(
+        'product.template.attribute.value', string="Apply on Variants", ondelete='restrict',
+        domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
+        help="BOM Product Variants needed to apply this line.")
 
     @api.onchange('product_id')
-    def onchange_product_id(self):
+    def _onchange_product_id(self):
         """ Changes UoM if product_id changes. """
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id.id
+
+    def _skip_byproduct_line(self, product):
+        """ Control if a byproduct line should be produced, can be inherited to add
+        custom control.
+        """
+        self.ensure_one()
+        if product._name == 'product.template':
+            return False
+        return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)

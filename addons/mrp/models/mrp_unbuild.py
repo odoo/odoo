@@ -208,6 +208,8 @@ class MrpUnbuild(models.Model):
                 factor = unbuild.product_uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.product_uom_id) / unbuild.bom_id.product_qty
                 moves += unbuild._generate_move_from_bom_line(self.product_id, self.product_uom_id, unbuild.product_qty)
                 for byproduct in unbuild.bom_id.byproduct_ids:
+                    if byproduct._skip_byproduct_line(unbuild.product_id):
+                        continue
                     quantity = byproduct.product_qty * factor
                     moves += unbuild._generate_move_from_bom_line(byproduct.product_id, byproduct.product_uom_id, quantity, byproduct_id=byproduct.id)
         return moves
