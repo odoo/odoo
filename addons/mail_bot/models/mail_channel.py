@@ -7,8 +7,8 @@ from odoo import api, models, _
 class Channel(models.Model):
     _inherit = 'mail.channel'
 
-    def _execute_command_help(self, **kwargs):
-        super(Channel, self)._execute_command_help(**kwargs)
+    def execute_command_help(self, **kwargs):
+        super().execute_command_help(**kwargs)
         self.env['mail.bot']._apply_logic(self, kwargs, command="help")  # kwargs are not usefull but...
 
     @api.model

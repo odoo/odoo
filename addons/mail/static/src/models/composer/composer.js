@@ -231,11 +231,7 @@ function factory(dependencies) {
                         subtype_xmlid: 'mail.mt_comment',
                     });
                     if (command) {
-                        messageId = await this.async(() => this.env.models['mail.thread'].performRpcExecuteCommand({
-                            channelId: thread.id,
-                            command: command.name,
-                            postData,
-                        }));
+                        command.execute({ channel: thread, postData });
                     } else {
                         messageId = await this.async(() =>
                             this.env.models['mail.thread'].performRpcMessagePost({

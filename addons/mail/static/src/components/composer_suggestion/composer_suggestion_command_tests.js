@@ -47,6 +47,7 @@ QUnit.test('command suggestion displayed', async function (assert) {
         model: 'mail.channel',
     });
     const command = this.env.models['mail.channel_command'].create({
+        methodName: '',
         name: 'whois',
         help: "Displays who it is",
     });
@@ -74,6 +75,7 @@ QUnit.test('command suggestion correct data', async function (assert) {
         model: 'mail.channel',
     });
     const command = this.env.models['mail.channel_command'].create({
+        methodName: '',
         name: 'whois',
         help: "Displays who it is",
     });
@@ -121,6 +123,7 @@ QUnit.test('command suggestion active', async function (assert) {
         model: 'mail.channel',
     });
     const command = this.env.models['mail.channel_command'].create({
+        methodName: '',
         name: 'whois',
         help: "Displays who it is",
     });

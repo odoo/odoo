@@ -3,13 +3,11 @@
 
 import base64
 import logging
-import re
 from uuid import uuid4
 
 from odoo import _, api, fields, models, modules, tools, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import ormcache, formataddr
 
 _logger = logging.getLogger(__name__)
 
@@ -945,26 +943,6 @@ class Channel(models.Model):
     # COMMANDS
     # ------------------------------------------------------------
 
-    @api.model
-    @ormcache()
-    def get_mention_commands(self):
-        """ Returns the allowed commands in channels """
-        commands = []
-        for n in dir(self):
-            match = re.search('^_define_command_(.+?)$', n)
-            if match:
-                command = getattr(self, n)()
-                command['name'] = match.group(1)
-                commands.append(command)
-        return commands
-
-    def execute_command(self, command='', **kwargs):
-        """ Executes a given command """
-        self.ensure_one()
-        command_callback = getattr(self, '_execute_command_' + command, False)
-        if command_callback:
-            command_callback(**kwargs)
-
     def _send_transient_message(self, partner_to, content):
         """ Notifies partner_to that a message (not stored in DB) has been
             written in this channel """
@@ -977,10 +955,7 @@ class Channel(models.Model):
             }
         )
 
-    def _define_command_help(self):
-        return {'help': _("Show a helper message")}
-
-    def _execute_command_help(self, **kwargs):
+    def execute_command_help(self, **kwargs):
         partner = self.env.user.partner_id
         if self.channel_type == 'channel':
             msg = _("You are in channel <b>#%s</b>.", self.name)
@@ -994,9 +969,6 @@ class Channel(models.Model):
 
         self._send_transient_message(partner, msg)
 
-    def _define_command_leave(self):
-        return {'help': _("Leave this channel")}
-
     def _execute_command_help_message_extra(self):
         msg = _("""<br><br>
             Type <b>@username</b> to mention someone, and grab his attention.<br>
@@ -1004,19 +976,13 @@ class Channel(models.Model):
             Type <b>/command</b> to execute a command.<br>""")
         return msg
 
-    def _execute_command_leave(self, **kwargs):
+    def execute_command_leave(self, **kwargs):
         if self.channel_type == 'channel':
             self.action_unfollow()
         else:
             self.channel_pin(self.uuid, False)
 
-    def _define_command_who(self):
-        return {
-            'channel_types': ['channel', 'chat'],
-            'help': _("List users in the current channel")
-        }
-
-    def _execute_command_who(self, **kwargs):
+    def execute_command_who(self, **kwargs):
         partner = self.env.user.partner_id
         members = [
             '<a href="#" data-oe-id='+str(p.id)+' data-oe-model="res.partner">@'+p.name+'</a>'

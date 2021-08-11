@@ -67,8 +67,6 @@ export class MockModels {
             'mail.channel': {
                 fields: {
                     channel_type: { string: "Channel Type", type: "selection", default: 'channel' },
-                    // Equivalent to members but required due to some RPC giving this field in domain.
-                    channel_partner_ids: { string: "Channel Partner Ids", type: 'many2many', relation: 'res.partner' },
                     // In python this belongs to mail.channel.partner. Here for simplicity.
                     custom_channel_name: { string: "Custom channel name", type: 'char' },
                     fetched_message_id: { string: "Last Fetched", type: 'many2one', relation: 'mail.message' },
@@ -88,15 +86,6 @@ export class MockModels {
                     // naive and non RFC-compliant UUID, good enough for the
                     // string comparison that are done with it during tests
                     uuid: { string: "UUID", type: "char", required: true, default() { return _.uniqueId('mail.channel_uuid-'); } },
-                },
-                records: [],
-            },
-            // Fake model to simulate "hardcoded" commands from python
-            'mail.channel_command': {
-                fields: {
-                    channel_types: { type: 'binary' }, // array is expected
-                    help: { type: 'char' },
-                    name: { type: 'char' },
                 },
                 records: [],
             },

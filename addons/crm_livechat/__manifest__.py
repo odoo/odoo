@@ -15,4 +15,9 @@
     'description': 'Create new lead with using /lead command in the channel',
     'auto_install': True,
     'license': 'LGPL-3',
+    'assets': {
+        'web.assets_backend': [
+            'crm_livechat/static/src/models/*/*.js',
+        ],
+    },
 }

@@ -8,14 +8,11 @@ from odoo.tools import html2plaintext, html_escape
 class MailChannel(models.Model):
     _inherit = 'mail.channel'
 
-    def _define_command_lead(self):
-        return {'help': _('Create a new lead (/lead lead title)')}
-
-    def _execute_command_lead(self, **kwargs):
+    def execute_command_lead(self, **kwargs):
         partner = self.env.user.partner_id
         key = kwargs['body']
         if key.strip() == '/lead':
-            msg = self._define_command_lead()['help']
+            msg = _('Create a new lead (/lead lead title)')
         else:
             lead = self._convert_visitor_to_lead(partner, key)
             msg = _('Created a new lead: <a href="#" data-oe-id="%s" data-oe-model="crm.lead">%s</a>') % (lead.id, html_escape(lead.name))
