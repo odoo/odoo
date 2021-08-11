@@ -8,6 +8,8 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
     const { onChangeOrder } = require('point_of_sale.custom_hooks');
+    const { identifyError } = require('point_of_sale.utils');
+    const { ConnectionLostError, ConnectionAbortedError } = require('@web/core/network/rpc_service');
 
     class PaymentScreen extends PosComponent {
         constructor() {
@@ -182,10 +184,27 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             } catch (error) {
                 if (error.code == 700)
                     this.error = true;
-                if (error instanceof Error) {
-                    throw error;
-                } else {
+
+                if ('code' in error) {
+                    // We started putting `code` in the rejected object for invoicing error.
+                    // We can continue with that convention such that when the error has `code`,
+                    // then it is an error when invoicing. Besides, _handlePushOrderError was
+                    // introduce to handle invoicing error logic.
                     await this._handlePushOrderError(error);
+                } else {
+                    // We don't block for connection error. But we rethrow for any other errors.
+                    const errorIdentity = identifyError(error);
+                    if (
+                        errorIdentity instanceof ConnectionLostError ||
+                        errorIdentity instanceof ConnectionAbortedError
+                    ) {
+                        this.showPopup('OfflineErrorPopup', {
+                            title: this.env._t('Connection Error'),
+                            body: this.env._t('Order is not synced. Check your internet connection'),
+                        });
+                    } else {
+                        throw error;
+                    }
                 }
             }
             if (syncedOrderBackendIds.length && this.currentOrder.wait_for_push_order()) {
@@ -195,10 +214,8 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 );
                 if (!result) {
                     await this.showPopup('ErrorPopup', {
-                        title: 'Error: no internet connection.',
-                        // FIXME: the variable 'error' is not declared
-                        // eslint-disable-next-line no-undef
-                        body: error,
+                        title: this.env._t('Error: no internet connection.'),
+                        body: this.env._t('Some, if not all, post-processing after syncing order failed.')
                     });
                 }
             }

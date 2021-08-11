@@ -30,6 +30,17 @@ export class ChromeAdapter extends Component {
         useBus(this.env.qweb, "update", () => this.render());
         const chrome = owl.hooks.useRef("chrome");
         owl.hooks.onMounted(async () => {
+            // Add the pos error handler when the chrome component is available.
+            registry.category('error_handlers').add(
+                'posErrorHandler',
+                (env, ...noEnvArgs) => {
+                    if (chrome.comp) {
+                        return chrome.comp.errorHandler(this.env, ...noEnvArgs);
+                    }
+                    return false;
+                },
+                { sequence: 0 }
+            );
             // Little trick to avoid displaying the block ui during the POS models loading
             const BlockUiFromRegistry = registry.category("main_components").get("BlockUI");
             registry.category("main_components").remove("BlockUI");
