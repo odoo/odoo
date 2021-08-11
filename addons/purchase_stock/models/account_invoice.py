@@ -38,10 +38,10 @@ class AccountMove(models.Model):
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
 
         for move in self:
-            if move.type not in ('in_invoice', 'in_refund', 'in_receipt') or not move.company_id.anglo_saxon_accounting:
+            if not move.is_purchase_document(include_receipts=True) or not move.company_id.anglo_saxon_accounting:
                 continue
 
-            for line in move.invoice_line_ids.filtered(lambda line: line.product_id.type == 'product' and line.product_id.valuation == 'real_time'):
+            for line in move.invoice_line_ids.filtered(lambda l: l._is_eligible_cogs_purchase()):
 
                 # Filter out lines being not eligible for price difference.
                 if line.product_id.type != 'product' or line.product_id.valuation != 'real_time':
