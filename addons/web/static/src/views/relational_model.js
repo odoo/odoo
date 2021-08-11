@@ -401,8 +401,6 @@ export class RelationalModel extends Model {
 
         this.requestBatcher = requestBatcher;
         this.keepLast = new KeepLast();
-
-        console.log(this);
     }
 
     async load(params = {}) {

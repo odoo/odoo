@@ -24,9 +24,20 @@
         </div>
     </t>
 
-    <t t-name="web.FieldX2Many" owl="1" >
+    <t t-name="web.FieldKanbanMany2ManyTags" owl="1">
+        <div class="o_field_widget o_field_many2manytags o_kanban_tags">
+            <t t-foreach="data" t-as="tag" t-key="tag.id">
+                <span class="o_tag" t-attf-class="o_tag_color_{{ tag.data.color }}">
+                    <span />
+                    <t t-esc="tag.data.display_name" />
+                </span>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.FieldX2Many" owl="1">
         <div>
-            <t t-if="Renderer" t-component="Renderer" model="model" info="archInfo" fields="fields" record="record" openRecord="openRecord"/>
+            <t t-if="Renderer" t-component="Renderer" model="model" info="archInfo" fields="fields" record="record" openRecord="openRecord" />
             <t t-else="">
                 One2Many
             </t>

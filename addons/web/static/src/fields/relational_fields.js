@@ -29,6 +29,12 @@ FieldMany2ManyTags.fieldsToFetch = ["display_name"];
 
 fieldRegistry.add("many2many_tags", FieldMany2ManyTags);
 
+export class FieldKanbanMany2ManyTags extends FieldMany2ManyTags {}
+
+FieldKanbanMany2ManyTags.template = "web.FieldKanbanMany2ManyTags";
+
+fieldRegistry.add("kanban.many2many_tags", FieldKanbanMany2ManyTags);
+
 export class FieldX2Many extends Component {
     setup() {
         const viewMode = this.props.viewMode || ["list"];

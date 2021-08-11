@@ -25,7 +25,6 @@ export const getIds = (idsList) => {
 export class FieldParser {
     /**
      * @param {any} fields
-     * @param {string[]} defaultFields
      */
     constructor(fields) {
         this.fields = fields;
