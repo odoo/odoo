@@ -14,6 +14,11 @@ function factory(dependencies) {
     }
     class Attachment extends dependencies['mail.model'] {
 
+        _created() {
+            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
+            this.onClickDownload = this.onClickDownload.bind(this);
+        }
+
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------

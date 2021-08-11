@@ -104,15 +104,6 @@ export class Attachment extends Component {
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * Download the attachment when clicking on donwload icon.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickDownload(ev) {
-        this.attachment.onClickDownload(ev);
-    }
 
     /**
      * Open the attachment viewer when clicking on viewable attachment.

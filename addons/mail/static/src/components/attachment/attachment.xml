@@ -50,7 +50,7 @@
                                 </t>
                                 <!-- Download button -->
                                 <t t-if="props.isDownloadable and !attachment.isUploading" t-key="'download'">
-                                    <div class="o_Attachment_action o_Attachment_actionDownload" t-on-click="_onClickDownload" title="Download">
+                                    <div class="o_Attachment_action o_Attachment_actionDownload" t-on-click="attachment.onClickDownload" title="Download">
                                         <i class="fa fa-download"/>
                                     </div>
                                 </t>
@@ -96,7 +96,7 @@
                         </t>
                         <!-- Download button -->
                         <t t-if="props.isDownloadable and !attachment.isUploading">
-                            <div class="o_Attachment_asideItem o_Attachment_asideItemDownload" t-on-click="_onClickDownload" title="Download">
+                            <div class="o_Attachment_asideItem o_Attachment_asideItemDownload" t-on-click="attachment.onClickDownload" title="Download">
                                 <i class="fa fa-download"/>
                             </div>
                         </t>
