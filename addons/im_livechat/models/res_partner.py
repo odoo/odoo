@@ -35,13 +35,12 @@ class Partners(models.Model):
         return result
 
     def _get_channels_as_member(self):
-        values = super()._get_channels_as_member()
-        livechat_channels = self.env['mail.channel'].search([
+        channels = super()._get_channels_as_member()
+        channels |= self.env['mail.channel'].search([
             ('channel_type', '=', 'livechat'),
             ('channel_last_seen_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
                 ('partner_id', '=', self.id),
                 ('is_pinned', '=', True),
             ])),
         ])
-        values['channel_livechat'] = livechat_channels.channel_info()
-        return values
+        return channels

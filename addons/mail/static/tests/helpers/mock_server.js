@@ -1617,11 +1617,11 @@ MockServer.include({
             ['members', 'in', partner.id],
             ['public', '=', 'private'],
         ]);
-        return {
-            channel_channel: this._mockMailChannelChannelInfo(channels.map(channel => channel.id)),
-            channel_direct_message: this._mockMailChannelChannelInfo(directMessages.map(channel => channel.id)),
-            channel_private_group: this._mockMailChannelChannelInfo(privateGroups.map(channel => channel.id)),
-        };
+        return [
+            ...channels,
+            ...privateGroups,
+            ...directMessages,
+        ];
     },
     /**
      * Simulates `get_mention_suggestions` on `res.partner`.
@@ -1797,7 +1797,7 @@ MockServer.include({
     _mockResUsers_InitMessaging(ids) {
         const user = this._getRecords('res.users', [['id', 'in', ids]])[0];
         return {
-            channel_slots: this._mockResPartner_GetChannelsAsMember(user.partner_id),
+            channels: this._mockMailChannelChannelInfo(this._mockResPartner_GetChannelsAsMember(user.partner_id).map(channel => channel.id)),
             current_partner: this._mockResPartnerMailPartnerFormat(user.partner_id),
             current_user_id: this.currentUserId,
             mail_failures: this._mockResPartner_MessageFetchFailed(user.partner_id),

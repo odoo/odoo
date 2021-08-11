@@ -249,9 +249,9 @@ MockServer.include({
             ['is_pinned', '=', true],
             ['members', 'in', partner.id],
         ]);
-        return {
-            channel_livechat: this._mockMailChannelChannelInfo(livechats.map(channel => channel.id)),
+        return [
             ...this._super(ids),
-        };
+            ...livechats,
+        ];
     },
 });

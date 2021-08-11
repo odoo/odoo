@@ -94,13 +94,13 @@ class TestDiscussFullPerformance(TransactionCase):
 
         self.users[0].flush()
         self.users[0].invalidate_cache()
-        with self.assertQueryCount(emp=69):
+        with self.assertQueryCount(emp=42):
             init_messaging = self.users[0]._init_messaging()
 
         self.assertEqual(init_messaging, {
             'needaction_inbox_counter': 1,
             'starred_counter': 1,
-            'channel_slots': {'channel_channel': [
+            'channels': [
                 {
                     'channel_type': 'channel',
                     'create_uid': user_root.id,
@@ -179,7 +179,6 @@ class TestDiscussFullPerformance(TransactionCase):
                     'state': 'open',
                     'uuid': channel_group_2.uuid,
                 },
-            ], 'channel_private_group': [
                 {
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
@@ -210,7 +209,6 @@ class TestDiscussFullPerformance(TransactionCase):
                     'state': 'open',
                     'uuid': channel_private_2.uuid,
                 },
-            ], 'channel_direct_message': [
                 {
                     'channel_type': 'chat',
                     'create_uid': self.env.user.id,
@@ -391,7 +389,6 @@ class TestDiscussFullPerformance(TransactionCase):
                     'state': 'open',
                     'uuid': channel_dm_4.uuid,
                 },
-            ], 'channel_livechat': [
                 {
                     'channel_type': 'livechat',
                     'create_uid': self.env.user.id,
@@ -410,7 +407,8 @@ class TestDiscussFullPerformance(TransactionCase):
                             'email': 'e.e@example.com',
                             'id': self.users[0].partner_id.id,
                             'name': 'Ernest Employee',
-                            'out_of_office_date_end': False,
+                            'im_status': 'leave_offline',
+                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to,
                         },
                         {
                             'email': 'test1@example.com',
@@ -464,8 +462,9 @@ class TestDiscussFullPerformance(TransactionCase):
                         {
                             'email': 'e.e@example.com',
                             'id': self.users[0].partner_id.id,
+                            'im_status': 'leave_offline',
                             'name': 'Ernest Employee',
-                            'out_of_office_date_end': False,
+                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to,
                         },
                     ],
                     'message_needaction_counter': 0,
@@ -490,7 +489,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'state': 'open',
                     'uuid': channel_livechat_2.uuid,
                 },
-            ]},
+            ],
             'mail_failures': [],
             'shortcodes': [
                 {
