@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import Command
 from odoo.tests.common import users, tagged, TransactionCase, warmup
+from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT
 
 
 @tagged('post_install', '-at_install')
@@ -94,7 +95,7 @@ class TestDiscussFullPerformance(TransactionCase):
 
         self.users[0].flush()
         self.users[0].invalidate_cache()
-        with self.assertQueryCount(emp=42):
+        with self.assertQueryCount(emp=33):
             init_messaging = self.users[0]._init_messaging()
 
         self.assertEqual(init_messaging, {
@@ -219,18 +220,26 @@ class TestDiscussFullPerformance(TransactionCase):
                     'last_message_id': False,
                     'members': [
                         {
+                            'active': True,
+                            'display_name': 'Ernest Employee',
                             'email': 'e.e@example.com',
                             'id': self.users[0].partner_id.id,
                             'im_status': 'leave_offline',
+                            'is_internal_user': True,
                             'name': 'Ernest Employee',
-                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to,
+                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                            'user_id': self.users[0].id,
                         },
                         {
+                            'active': True,
+                            'display_name': 'test14',
                             'email': False,
                             'id': self.users[14].partner_id.id,
                             'im_status': 'leave_offline',
+                            'is_internal_user': True,
                             'name': 'test14',
-                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[14]).date_to,
+                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[14]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                            'user_id': self.users[14].id,
                         },
                     ],
                     'message_needaction_counter': 0,
@@ -264,18 +273,26 @@ class TestDiscussFullPerformance(TransactionCase):
                     'last_message_id': False,
                     'members': [
                         {
+                            'active': True,
+                            'display_name': 'Ernest Employee',
                             'email': 'e.e@example.com',
                             'id': self.users[0].partner_id.id,
                             'im_status': 'leave_offline',
+                            'is_internal_user': True,
                             'name': 'Ernest Employee',
-                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to,
+                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                            'user_id': self.users[0].id,
                         },
                         {
+                            'active': True,
+                            'display_name': 'test15',
                             'email': False,
                             'id': self.users[15].partner_id.id,
                             'im_status': 'leave_offline',
+                            'is_internal_user': True,
                             'name': 'test15',
-                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[15]).date_to,
+                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[15]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                            'user_id': self.users[15].id,
                         },
                     ],
                     'message_needaction_counter': 0,
@@ -309,18 +326,26 @@ class TestDiscussFullPerformance(TransactionCase):
                     'last_message_id': False,
                     'members': [
                         {
+                            'active': True,
+                            'display_name': 'Ernest Employee',
                             'email': 'e.e@example.com',
                             'id': self.users[0].partner_id.id,
                             'im_status': 'leave_offline',
+                            'is_internal_user': True,
                             'name': 'Ernest Employee',
-                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to,
+                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                            'user_id': self.users[0].id,
                         },
                         {
+                            'active': True,
+                            'display_name': 'test2',
                             'email': 'test2@example.com',
                             'id': self.users[2].partner_id.id,
                             'im_status': 'leave_offline',
+                            'is_internal_user': True,
                             'name': 'test2',
-                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[2]).date_to,
+                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[2]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                            'user_id': self.users[2].id,
                         },
                     ],
                     'message_needaction_counter': 0,
@@ -354,18 +379,26 @@ class TestDiscussFullPerformance(TransactionCase):
                     'last_message_id': False,
                     'members': [
                         {
+                            'active': True,
+                            'display_name': 'Ernest Employee',
                             'email': 'e.e@example.com',
                             'id': self.users[0].partner_id.id,
                             'im_status': 'leave_offline',
+                            'is_internal_user': True,
                             'name': 'Ernest Employee',
-                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to,
+                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                            'user_id': self.users[0].id,
                         },
                         {
+                            'active': True,
+                            'display_name': 'test3',
                             'email': False,
                             'id': self.users[3].partner_id.id,
                             'im_status': 'leave_offline',
+                            'is_internal_user': True,
                             'name': 'test3',
-                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[3]).date_to,
+                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[3]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                            'user_id': self.users[3].id,
                         },
                     ],
                     'message_needaction_counter': 0,
@@ -404,17 +437,26 @@ class TestDiscussFullPerformance(TransactionCase):
                     },
                     'members': [
                         {
+                            'active': True,
+                            'display_name': 'Ernest Employee',
                             'email': 'e.e@example.com',
                             'id': self.users[0].partner_id.id,
-                            'name': 'Ernest Employee',
                             'im_status': 'leave_offline',
-                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to,
+                            'is_internal_user': True,
+                            'name': 'Ernest Employee',
+                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                            'user_id': self.users[0].id,
                         },
                         {
+                            'active': True,
+                            'display_name': 'test1',
                             'email': 'test1@example.com',
                             'id': self.users[1].partner_id.id,
+                            'im_status': 'leave_offline',
+                            'is_internal_user': True,
                             'name': 'test1',
-                            'out_of_office_date_end': False,
+                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[1]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                            'user_id': self.users[1].id,
                         },
                     ],
                     'message_needaction_counter': 0,
@@ -454,17 +496,26 @@ class TestDiscussFullPerformance(TransactionCase):
                     },
                     'members': [
                         {
+                            'active': False,
+                            'display_name': 'Public user',
                             'email': False,
                             'id': self.env.ref('base.public_partner').id,
+                            'im_status': 'im_partner',
+                            'is_internal_user': False,
                             'name': 'Public user',
                             'out_of_office_date_end': False,
+                            'user_id': False,
                         },
                         {
+                            'active': True,
+                            'display_name': 'Ernest Employee',
                             'email': 'e.e@example.com',
                             'id': self.users[0].partner_id.id,
                             'im_status': 'leave_offline',
+                            'is_internal_user': True,
                             'name': 'Ernest Employee',
-                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to,
+                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                            'user_id': self.users[0].id,
                         },
                     ],
                     'message_needaction_counter': 0,
@@ -512,7 +563,9 @@ class TestDiscussFullPerformance(TransactionCase):
                 'email': 'odoobot@example.com',
                 'id': user_root.partner_id.id,
                 'im_status': 'bot',
+                'is_internal_user': True,
                 'name': 'OdooBot',
+                'out_of_office_date_end': False,
                 'user_id': False,
             },
             'public_partners': [{
@@ -523,6 +576,7 @@ class TestDiscussFullPerformance(TransactionCase):
                 'im_status': 'im_partner',
                 'is_internal_user': False,
                 'name': 'Public user',
+                'out_of_office_date_end': False,
                 'user_id': self.env.ref('base.public_user').id,
             }],
             'current_partner': {
@@ -533,6 +587,7 @@ class TestDiscussFullPerformance(TransactionCase):
                 'im_status': 'leave_offline',
                 'is_internal_user': True,
                 'name': 'Ernest Employee',
+                'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'user_id': self.users[0].id,
             },
             'current_user_id': self.users[0].id,

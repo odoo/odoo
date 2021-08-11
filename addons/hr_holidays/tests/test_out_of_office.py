@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests.common import tagged, users, warmup
+from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
@@ -54,7 +55,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         partner_info = next(c for c in channel_info['members'] if c['email'] == partner.email)
         partner2_info = next(c for c in channel_info['members'] if c['email'] == partner2.email)
         self.assertFalse(partner2_info['out_of_office_date_end'], "current user should not be out of office")
-        self.assertEqual(partner_info['out_of_office_date_end'], leave_date_end, "correspondent should be out of office")
+        self.assertEqual(partner_info['out_of_office_date_end'], leave_date_end.strftime(DEFAULT_SERVER_DATE_FORMAT), "correspondent should be out of office")
 
 
 @tagged('out_of_office')
