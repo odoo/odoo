@@ -25,7 +25,7 @@ class TestChannelStatistics(common.SlidesCase):
 
         channel_aspublisher = self.channel.with_user(self.user_officer)
         self.assertTrue(channel_aspublisher.partner_has_new_content)
-        (self.slide | self.slide_2).with_user(self.user_officer).action_set_completed()
+        (self.slide | self.slide_2).with_user(self.user_officer).action_mark_completed()
         self.assertFalse(channel_aspublisher.partner_has_new_content)
 
         channel_aspublisher._action_add_members(self.user_portal.partner_id)
@@ -68,14 +68,14 @@ class TestChannelStatistics(common.SlidesCase):
         slides_emp.action_set_viewed()
         self.assertEqual(channel_emp.completion, 0)
 
-        slides_emp.action_set_completed()
+        slides_emp.action_mark_completed()
         channel_emp.invalidate_cache()
         self.assertEqual(
             channel_emp.completion,
             math.ceil(100.0 * len(slides_emp) / len(channel_publisher.slide_content_ids)))
         self.assertFalse(channel_emp.completed)
 
-        self.slide_3.with_user(self.user_emp).action_set_completed()
+        self.slide_3.with_user(self.user_emp)._action_mark_completed()
         self.assertEqual(channel_emp.completion, 100)
         self.assertTrue(channel_emp.completed)
 
@@ -96,7 +96,7 @@ class TestChannelStatistics(common.SlidesCase):
         slides_emp = slides.with_user(self.user_emp)
         slides_emp.read(['name'])
         with self.assertRaises(UserError):
-            slides_emp.action_set_completed()
+            slides_emp.action_mark_completed()
 
     @mute_logger('odoo.models')
     def test_channel_user_statistics_view_check_member(self):

@@ -299,8 +299,7 @@
             t-att-data-channel-id="channel.id"
             t-att-data-channel-enroll="channel.enroll">
             <span class="cta-title text_small_caps">
-                <t t-if="channel.channel_type == 'documentation'">Start Course</t>
-                <t t-else="">Join Course</t>
+                Join Course
             </span>
         </a>
 
@@ -339,17 +338,17 @@
                 <i class="fa fa-times"/>
             </button>
             <div class="d-flex align-items-center pt-3">
-                <t t-if="channel.completed">
-                    <span class="badge badge-pill badge-success py-1 px-2 mx-auto" style="font-size: 1em"><i class="fa fa-check"/> Completed</span>
-                </t>
-                <t t-else="">
+                <span t-attf-class="o_wslides_channel_completion_completed badge badge-pill badge-success py-1 px-2 mx-auto #{'d-none' if not channel.completed else ''}">
+                    <i class="fa fa-check"/> Completed
+                </span>
+                <div t-attf-class="o_wslides_channel_completion_progressbar #{'d-none' if channel.completed else 'd-flex'} w-100 align-items-center">
                     <div class="progress flex-grow-1 bg-black-50" style="height: 6px;">
                         <div class="progress-bar" role="progressbar" t-attf-style="width: #{channel.completion}%" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                     <div class="ml-3 small">
                         <span class="o_wslides_progress_percentage" t-esc="channel.completion"/> %
                     </div>
-                </t>
+                </div>
             </div>
         </t>
     </div>
@@ -539,9 +538,9 @@
         </div>
 
         <div t-if="channel.is_member or channel.can_publish" class="pt-2 pb-2 border-left ml-2 mr-2 pl-2 d-flex flex-row align-items-center o_wslides_slides_list_slide_controls">
-            <t t-if="channel.is_member">
-                <i t-if="not channel_progress[slide.id].get('completed')" class="check-done fa fa-circle-o text-500 px-2"></i>
-                <i t-else="" class="check-done text-success fa fa-check-circle px-2"></i>
+            <t t-call="website_slides.slide_sidebar_done_button">
+                <t t-set="is_member" t-value="channel.is_member"/>
+                <t t-set="slide_completed" t-value="channel_progress[slide.id].get('completed')"/>
             </t>
             <span t-if="channel.can_publish" class="d-none d-md-flex">
                 <a t-if="slide.slide_category == 'article'" class="px-2 o_text_link text-primary" target="_blank" t-attf-href="/slides/slide/#{slug(slide)}?enable_editor=1"><span class="fa fa-pencil"/></a>

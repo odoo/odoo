@@ -53,6 +53,12 @@ class Slide(models.Model):
             if not slide.name and slide.survey_id:
                 slide.name = slide.survey_id.title
 
+    def _compute_mark_complete_actions(self):
+        slides_certification = self.filtered(lambda slide: slide.slide_category == 'certification')
+        slides_certification.can_self_mark_uncompleted = False
+        slides_certification.can_self_mark_completed = False
+        super(Slide, self - slides_certification)._compute_mark_complete_actions()
+
     @api.depends('slide_category')
     def _compute_is_preview(self):
         for slide in self:
