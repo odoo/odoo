@@ -86,11 +86,13 @@ var MrpBomReport = stock_report_generic.extend({
       var $parent = $(event.currentTarget).closest('tr');
       var activeID = $parent.data('bom-id');
       var qty = $parent.data('qty');
+      var productId = $parent.data('product_id');
       var level = $parent.data('level') || 0;
       return this._rpc({
               model: 'report.mrp.report_bom_structure',
               method: 'get_operations',
               args: [
+                  productId,
                   activeID,
                   parseFloat(qty),
                   level + 1

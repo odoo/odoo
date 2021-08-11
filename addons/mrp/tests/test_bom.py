@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import exceptions
+from odoo import exceptions, Command
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tools import float_compare, float_round
@@ -22,35 +22,69 @@ class TestBoM(TestMrpCommon):
 
     def test_10_variants(self):
         test_bom = self.env['mrp.bom'].create({
-            'product_id': self.product_7_3.id,
             'product_tmpl_id': self.product_7_template.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 4.0,
             'type': 'normal',
-        })
-        test_bom.write({
             'operation_ids': [
-                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
-                (0, 0, {'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
+                Command.create({
+                    'name': 'Cutting Machine',
+                    'workcenter_id': self.workcenter_1.id,
+                    'time_cycle': 12,
+                    'sequence': 1
+                }),
+                Command.create({
+                    'name': 'Weld Machine',
+                    'workcenter_id': self.workcenter_1.id,
+                    'time_cycle': 18,
+                    'sequence': 2,
+                    'bom_product_template_attribute_value_ids': [Command.link(self.product_7_attr1_v1.id)]
+                }),
+                Command.create({
+                    'name': 'Taking a coffee',
+                    'workcenter_id': self.workcenter_1.id,
+                    'time_cycle': 5,
+                    'sequence': 3,
+                    'bom_product_template_attribute_value_ids': [Command.link(self.product_7_attr1_v2.id)]
+                })
             ],
+            'byproduct_ids': [
+                Command.create({
+                    'product_id': self.product_1.id,
+                    'product_uom_id': self.product_1.uom_id.id,
+                    'product_qty': 1,
+                }),
+                Command.create({
+                    'product_id': self.product_2.id,
+                    'product_uom_id': self.product_2.uom_id.id,
+                    'product_qty': 1,
+                    'bom_product_template_attribute_value_ids': [Command.link(self.product_7_attr1_v1.id)]
+                }),
+                Command.create({
+                    'product_id': self.product_3.id,
+                    'product_uom_id': self.product_3.uom_id.id,
+                    'product_qty': 1,
+                    'bom_product_template_attribute_value_ids': [Command.link(self.product_7_attr1_v2.id)]
+                }),
+            ],
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.product_2.id,
+                    'product_qty': 2,
+                }),
+                Command.create({
+                    'product_id': self.product_3.id,
+                    'product_qty': 2,
+                    'bom_product_template_attribute_value_ids': [Command.link(self.product_7_attr1_v1.id)],
+                }),
+                Command.create({
+                    'product_id': self.product_4.id,
+                    'product_qty': 2,
+                    'bom_product_template_attribute_value_ids': [Command.link(self.product_7_attr1_v2.id)],
+                }),
+            ]
         })
-        test_bom_l1 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom.id,
-            'product_id': self.product_2.id,
-            'product_qty': 2,
-        })
-        test_bom_l2 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom.id,
-            'product_id': self.product_3.id,
-            'product_qty': 2,
-            'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v1.id)],
-        })
-        test_bom_l3 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom.id,
-            'product_id': self.product_4.id,
-            'product_qty': 2,
-            'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v2.id)],
-        })
+        test_bom_l1, test_bom_l2, test_bom_l3 = test_bom.bom_line_ids
         boms, lines = test_bom.explode(self.product_7_3, 4)
         self.assertIn(test_bom, [b[0]for b in boms])
         self.assertIn(test_bom_l1, [l[0] for l in lines])
@@ -68,6 +102,37 @@ class TestBoM(TestMrpCommon):
         self.assertIn(test_bom_l1, [l[0] for l in lines])
         self.assertNotIn(test_bom_l2, [l[0] for l in lines])
         self.assertIn(test_bom_l3, [l[0] for l in lines])
+
+        mrp_order_form = Form(self.env['mrp.production'])
+        mrp_order_form.product_id = self.product_7_3
+        mrp_order = mrp_order_form.save()
+        self.assertEqual(mrp_order.bom_id, test_bom)
+        self.assertEqual(len(mrp_order.workorder_ids), 1)
+        self.assertEqual(mrp_order.workorder_ids.operation_id, test_bom.operation_ids[0])
+        self.assertEqual(len(mrp_order.move_byproduct_ids), 1)
+        self.assertEqual(mrp_order.move_byproduct_ids.product_id, self.product_1)
+
+        mrp_order_form = Form(self.env['mrp.production'])
+        mrp_order_form.product_id = self.product_7_1
+        mrp_order_form.product_id = self.env['product.product']  # Check form
+        mrp_order_form.product_id = self.product_7_1
+        mrp_order_form.bom_id = self.env['mrp.bom']  # Check form
+        mrp_order_form.bom_id = test_bom
+        mrp_order = mrp_order_form.save()
+        self.assertEqual(mrp_order.bom_id, test_bom)
+        self.assertEqual(len(mrp_order.workorder_ids), 2)
+        self.assertEqual(mrp_order.workorder_ids.operation_id, test_bom.operation_ids[:2])
+        self.assertEqual(len(mrp_order.move_byproduct_ids), 2)
+        self.assertEqual(mrp_order.move_byproduct_ids.product_id, self.product_1 | self.product_2)
+
+        mrp_order_form = Form(self.env['mrp.production'])
+        mrp_order_form.product_id = self.product_7_2
+        mrp_order = mrp_order_form.save()
+        self.assertEqual(mrp_order.bom_id, test_bom)
+        self.assertEqual(len(mrp_order.workorder_ids), 2)
+        self.assertEqual(mrp_order.workorder_ids.operation_id, test_bom.operation_ids[0] | test_bom.operation_ids[2])
+        self.assertEqual(len(mrp_order.move_byproduct_ids), 2)
+        self.assertEqual(mrp_order.move_byproduct_ids.product_id, self.product_1 | self.product_3)
 
     def test_11_multi_level_variants(self):
         tmp_picking_type = self.env['stock.picking.type'].create({

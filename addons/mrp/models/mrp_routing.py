@@ -43,6 +43,11 @@ class MrpRoutingWorkcenter(models.Model):
     time_cycle = fields.Float('Duration', compute="_compute_time_cycle")
     workorder_count = fields.Integer("# Work Orders", compute="_compute_workorder_count")
     workorder_ids = fields.One2many('mrp.workorder', 'operation_id', string="Work Orders")
+    possible_bom_product_template_attribute_value_ids = fields.Many2many(related='bom_id.possible_product_template_attribute_value_ids')
+    bom_product_template_attribute_value_ids = fields.Many2many(
+        'product.template.attribute.value', string="Apply on Variants", ondelete='restrict',
+        domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
+        help="BOM Product Variants needed to apply this line.")
 
     @api.depends('time_mode', 'time_mode_batch')
     def _compute_time_computed_on(self):
@@ -79,3 +84,12 @@ class MrpRoutingWorkcenter(models.Model):
             bom_id = self.env.context.get('bom_id')
             for operation in self:
                 operation.copy({'name': _("%s (copy)", operation.name), 'bom_id': bom_id})
+
+    def _skip_operation_line(self, product):
+        """ Control if a operation should be processed, can be inherited to add
+        custom control.
+        """
+        self.ensure_one()
+        if product._name == 'product.template':
+            return False
+        return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)
