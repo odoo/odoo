@@ -8,6 +8,17 @@ function factory(dependencies) {
 
     class Activity extends dependencies['mail.model'] {
 
+        /**
+         * @override
+         */
+        _created() {
+            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
+            this.onClickEdit = this.onClickEdit.bind(this);
+            this.onClickCancel = this.onClickCancel.bind(this);
+            this.onAttachmentCreated = this.onAttachmentCreated.bind(this);
+            this.onClickUploadDocument = this.onClickUploadDocument.bind(this);
+            this.onKeydown = this.onKeydown.bind(this);
+        }
 
         //----------------------------------------------------------------------
         // Public
@@ -186,6 +197,17 @@ function factory(dependencies) {
         }
 
         /**
+         * Handle event on attachment creation by the file uploader.
+         *
+         * @param {CustomEvent} ev
+         * @param {Object} ev.detail
+         * @param {mail.attachment} ev.detail.attachment
+         */
+        onAttachmentCreated(ev) {
+            this.markAsDone({ attachments: [ev.detail.attachment] });
+        }
+
+        /**
          * Handle {click} on activity component.
          *
          * @param {MouseEvent} ev
@@ -203,6 +225,15 @@ function factory(dependencies) {
                 // avoid following dummy href
                 ev.preventDefault();
             }
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        async onClickCancel(ev) {
+            ev.preventDefault();
+            await this.deleteServerRecord();
+            this.component.trigger('reload', { keepChanges: true });
         }
 
         /**
@@ -230,6 +261,13 @@ function factory(dependencies) {
                 action,
                 options: { on_close: () => this.fetchAndUpdate() },
             });
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickUploadDocument(ev) {
+            this.fileUploaderRef.comp.openBrowserFileUploader();
         }
 
         onKeydown(ev) {
@@ -286,6 +324,7 @@ function factory(dependencies) {
         }),
         category: attr(),
         creator: many2one('mail.user'),
+        component: attr(),
         dateCreate: attr(),
         dateDeadline: attr(),
         /**
@@ -294,6 +333,7 @@ function factory(dependencies) {
          * In all other cases, this field value should not be trusted.
          */
         feedbackBackup: attr(),
+        fileUploaderRef: attr(),
         chaining_type: attr({
             default: 'suggest',
         }),

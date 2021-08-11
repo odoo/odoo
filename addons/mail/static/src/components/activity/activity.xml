@@ -126,21 +126,21 @@
                                 </Popover>
                             </t>
                             <t t-else="">
-                                <button class="o_Activity_toolButton o_Activity_uploadButton btn btn-link" t-on-click="_onClickUploadDocument">
+                                <button class="o_Activity_toolButton o_Activity_uploadButton btn btn-link" t-on-click="activity.onClickUploadDocument">
                                     <i class="fa fa-upload"/> Upload Document
                                 </button>
                                 <FileUploader
                                     attachmentLocalIds="activity.attachments.map(attachment => attachment.localId)"
                                     uploadId="activity.thread.id"
                                     uploadModel="activity.thread.model"
-                                    t-on-o-attachment-created="_onAttachmentCreated"
+                                    t-on-o-attachment-created="activity.onAttachmentCreated"
                                     t-ref="fileUploader"
                                 />
                             </t>
-                            <button class="o_Activity_toolButton o_Activity_editButton btn btn-link" t-on-click="activity.onClickEdit.bind(activity)">
+                            <button class="o_Activity_toolButton o_Activity_editButton btn btn-link" t-on-click="activity.onClickEdit">
                                 <i class="fa fa-pencil"/> Edit
                             </button>
-                            <button class="o_Activity_toolButton o_Activity_cancelButton btn btn-link" t-on-click="_onClickCancel" >
+                            <button class="o_Activity_toolButton o_Activity_cancelButton btn btn-link" t-on-click="activity.onClickCancel" >
                                 <i class="fa fa-times"/> Cancel
                             </button>
                         </div>

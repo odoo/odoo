@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { useModels } from '@mail/component_hooks/use_models/use_models';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
 import { ActivityMarkDonePopover } from '@mail/components/activity_mark_done_popover/activity_mark_done_popover';
 import { FileUploader } from '@mail/components/file_uploader/file_uploader';
@@ -13,7 +15,6 @@ import {
 } from 'web.time';
 
 const { Component, useState } = owl;
-const { useRef } = owl.hooks;
 
 const components = {
     ActivityMarkDonePopover,
@@ -23,21 +24,19 @@ const components = {
 
 export class Activity extends Component {
 
+
     /**
      * @override
      */
     constructor(...args) {
         super(...args);
+        useComponentToModel({ fieldName: 'component', modelName: 'mail.activity', propNameAsRecordLocalId: 'activityLocalId' });
         useShouldUpdateBasedOnProps();
+        useRefToModel({ fieldName: 'fileUploaderRef', modelName: 'mail.activity', propNameAsRecordLocalId: 'activityLocalId', refName: 'fileUploader' });
         this.state = useState({
             areDetailsVisible: false,
         });
         useModels();
-        /**
-         * Reference of the file uploader.
-         * Useful to programmatically prompts the browser file uploader.
-         */
-        this._fileUploaderRef = useRef('fileUploader');
     }
 
     //--------------------------------------------------------------------------
@@ -117,37 +116,9 @@ export class Activity extends Component {
 
     /**
      * @private
-     * @param {CustomEvent} ev
-     * @param {Object} ev.detail
-     * @param {mail.attachment} ev.detail.attachment
-     */
-    _onAttachmentCreated(ev) {
-        this.activity.markAsDone({ attachments: [ev.detail.attachment] });
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    async _onClickCancel(ev) {
-        ev.preventDefault();
-        await this.activity.deleteServerRecord();
-        this.trigger('reload', { keepChanges: true });
-    }
-
-    /**
-     * @private
      */
     _onClickDetailsButton() {
         this.state.areDetailsVisible = !this.state.areDetailsVisible;
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickUploadDocument(ev) {
-        this._fileUploaderRef.comp.openBrowserFileUploader();
     }
 
 }
