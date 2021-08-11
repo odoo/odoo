@@ -2,19 +2,20 @@
 import { registry } from "@web/core/registry";
 import { FieldChar } from "./basic_fields";
 
-const { Component } = owl;
+const { Component, tags } = owl;
 
 const fieldRegistry = registry.category("fields");
 
 export class Field extends Component {
-    static template = owl.tags.xml`
-    <div t-attf-id="{{ props.fieldId }}">
-        <t t-component="FieldComponent" t-props="props" class="o-field" t-key="props.record.id"/>
-    </div>`;
-
     static getTangibleField(record, type, fieldName) {
+        if (record.viewMode) {
+            const specificType = `${record.viewMode}.${type}`;
+            if (fieldRegistry.contains(specificType)) {
+                return fieldRegistry.get(specificType);
+            }
+        }
         if (!fieldRegistry.contains(type)) {
-            let fields = record.fields;
+            const fields = record.fields;
             type = fields[fieldName].type;
         }
         // todo: remove fallback?
@@ -26,3 +27,8 @@ export class Field extends Component {
         this.FieldComponent = Field.getTangibleField(record, type, name);
     }
 }
+
+Field.template = tags.xml/* xml */ `
+    <div t-attf-id="{{ props.fieldId }}">
+        <t t-component="FieldComponent" t-props="props" class="o-field" t-key="props.record.id"/>
+    </div>`;
