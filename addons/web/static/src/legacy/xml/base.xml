@@ -796,14 +796,19 @@
 </t>
 <t t-name="FieldDomain.content">
     <div t-if="hasModel" class="o_field_domain_panel">
-        <i class="fa fa-arrow-right" role="img" aria-label="Domain" title="Domain"/>
+        <t t-if="nbRecords !== null">
+            <i class="fa fa-arrow-right" role="img" aria-label="Domain" title="Domain"/>
+            <button t-if="isValid" class="btn btn-sm btn-secondary o_domain_show_selection_button" type="button">
+                <t t-esc="nbRecords"/> record(s)
+            </button>
+            <span t-else="" class="text-warning" role="alert"><i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> Invalid domain</span>
+            <button t-if="isDebug and editMode" class="btn btn-sm btn-icon fa fa-refresh o_refresh_count" role="img" aria-label="Refresh" title="Refresh"/>
+        </t>
+        <t t-else="">
+            <i class="fa fa-circle-o-notch fa-spin" role="img" aria-label="Loading" title="Loading"/>
+        </t>
 
-        <button t-if="isValid" class="btn btn-sm btn-secondary o_domain_show_selection_button" type="button">
-            <t t-esc="nbRecords"/> record(s)
-        </button>
-        <span t-else="" class="text-warning" role="alert"><i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> Invalid domain</span>
-
-        <button t-if="inDialogEdit" class="btn btn-sm btn-primary o_field_domain_dialog_button">Edit Domain</button>
+        <button t-if="inDialog and editMode" class="btn btn-sm btn-primary o_field_domain_dialog_button">Edit Domain</button>
     </div>
     <div t-else="">Select a model to add a filter.</div>
 </t>
@@ -852,7 +857,7 @@
     </t>
     <label t-if="widget.debug &amp;&amp; !widget.readonly" class="o_domain_debug_container">
         <span class="small"># Code editor</span>
-        <input type="text" class="o_domain_debug_input"/>
+        <textarea type="text" class="o_domain_debug_input"/>
     </label>
 </div>
 <div t-name="DomainTree" class="o_domain_node o_domain_tree">
