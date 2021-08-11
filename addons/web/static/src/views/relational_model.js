@@ -239,7 +239,7 @@ class DataRecord extends DataPoint {
 
     async loadRelationalField(fieldName) {
         const field = this.fields[fieldName];
-        const { relation, views } = field;
+        const { relation, views, viewMode } = field;
         const activeFields = this.model.relations[relation] || [];
 
         if (!isRelational(field) || !(Object.keys(views || {}).length || activeFields.length)) {
@@ -247,10 +247,11 @@ class DataRecord extends DataPoint {
         }
 
         const resIds = getIds(this.data[fieldName]);
-        this.data[fieldName] = this.createList(relation, { activeFields, views, resIds });
+        const listDataPoint = this.createList(relation, { activeFields, views, resIds, viewMode });
+        this.data[fieldName] = listDataPoint;
 
         // Do not load record if created by nested view arch
-        if (activeFields.length) {
+        if (listDataPoint.activeFields.length) {
             await this.data[fieldName].load();
         }
     }
@@ -271,6 +272,10 @@ class DataList extends DataPoint {
         this.resIds = params.resIds || null;
         this.groupData = params.groupData || null;
         this.views = params.views || {};
+
+        if (params.viewMode) {
+            this.setView(params.viewMode[0]);
+        }
 
         this.domain = [];
         this.groupBy = [];
@@ -313,7 +318,7 @@ class DataList extends DataPoint {
             preloadData = await this.searchRecords();
         }
         const loadData = async () => (this.data = await preloadData());
-        return params.defer ? loadData : loadData();
+        return loadData();
     }
 
     async searchRecords() {
