@@ -9,7 +9,13 @@
                 <field name="display_action_record_components" invisible="1" />
                 <button name="action_record_components" class="oe_highlight" attrs="{'invisible': [('display_action_record_components', '=', False)]}" string="Record components" type="object" data-hotkey="shift+x"/>
             </xpath>
-            <xpath expr="//field[@name='move_ids_without_package']//tree//button[@name='action_show_details']" position="after">
+            <xpath expr="//field[@name='move_ids_without_package']//tree//button[@name='action_show_details']" position="replace">
+                <field name="show_serial_mass_receipt" invisible="1"/>
+                <button name="action_show_details" type="object" icon="fa-list" width="0.1"
+                    attrs="{'invisible': ['|', ('show_serial_mass_receipt', '=', True), ('show_details_visible', '=', False)]}" options='{"warn": true}'/>
+                <button name="action_show_details" type="object" icon="fa-list" width="0.1"
+                    string="Mass receipt"
+                    attrs="{'invisible': ['|', ('show_serial_mass_receipt', '=', False), ('show_details_visible', '=', False)]}" options='{"warn": true}'/>
                 <field name="show_subcontracting_details_visible" invisible="1"/>
                 <button name="action_show_subcontract_details" string="Register components for subcontracted product" type="object" icon="fa-sitemap"
                     width="0.1" attrs="{'invisible': [('show_subcontracting_details_visible', '=', False)]}"/>

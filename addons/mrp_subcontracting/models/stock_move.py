@@ -15,6 +15,7 @@ class StockMove(models.Model):
     show_subcontracting_details_visible = fields.Boolean(
         compute='_compute_show_subcontracting_details_visible'
     )
+    show_serial_mass_receipt = fields.Boolean(compute='_compute_show_serial_mass_receipt')
 
     def _compute_show_subcontracting_details_visible(self):
         """ Compute if the action button in order to see moves raw is visible """
@@ -24,6 +25,18 @@ class StockMove(models.Model):
                 move.show_subcontracting_details_visible = True
             else:
                 move.show_subcontracting_details_visible = False
+
+    def _compute_show_serial_mass_receipt(self):
+        """ Compute if the action button for serial mass receipt is visible """
+        self.show_serial_mass_receipt = False
+        for move in self:
+            if move.state not in ('draft', 'cancel', 'done') and move.is_subcontract and move.product_id.tracking == "serial" \
+                    and float_compare(move.product_uom_qty, 1, precision_rounding=move.product_uom.rounding) > 0 \
+                    and not float_is_zero(move.quantity_done - move.product_uom_qty, precision_rounding=move.product_uom.rounding):
+                production = self.move_orig_ids.production_id
+                have_serial_components, dummy, multiple_lot_components = production._check_serial_mass_produce_components()
+                if not have_serial_components and not multiple_lot_components:
+                    move.show_serial_mass_receipt = True
 
     def _compute_show_details_visible(self):
         """ If the move is subcontract and the components are tracked. Then the
@@ -69,10 +82,42 @@ class StockMove(models.Model):
         subcontracted product. Otherwise use standard behavior.
         """
         self.ensure_one()
-        if self._has_components_to_record():
-            return self._action_record_components()
+        serial_mass_produce = False
+        if self.is_subcontract:
+            if self.state not in ('draft', 'cancel', 'done') and self.product_id.tracking == "serial":
+                production = self.move_orig_ids.production_id[-1:]
+                have_serial_components, missing_components, multiple_lot_components = production._check_serial_mass_produce_components()
+                if missing_components:
+                    message = _("Make sure enough quantities of these components are reserved to carry on production:") + "\n"
+                    message += "\n".join(component.name for component in missing_components)
+                    pickings = self.env['stock.picking'].search([
+                        ('group_id', '=', production.procurement_group_id.id),
+                        ('state', 'not in', ('done', 'cancel'))
+                    ])
+                    purchase_orders = self.env['purchase.order'].search([
+                        ('group_id', '=', production.procurement_group_id.id),
+                        ('state', 'not in', ('purchase', 'done', 'cancel'))
+                    ])
+                    if pickings or purchase_orders:
+                        names = []
+                        if purchase_orders:
+                            names += [purchase_order.name for purchase_order in purchase_orders]
+                        purchase_orders = self.env['purchase.order'].search([
+                            ('id', 'in', pickings.move_lines.created_purchase_line_id.order_id.ids),
+                            ('state', 'not in', ('purchase', 'done', 'cancel'))
+                        ])
+                        if purchase_orders:
+                            names += [purchase_order.name for purchase_order in purchase_orders]
+                        names += [picking.name for picking in pickings]
+                        message += "\nYou must Validate %s" % ",".join(sorted(set(names)))
+                    raise UserError(message)
+                elif not have_serial_components and not multiple_lot_components:
+                    serial_mass_produce = True
+            if not serial_mass_produce:
+                if self._has_components_to_record():
+                    return self._action_record_components()
         action = super(StockMove, self).action_show_details()
-        if self.is_subcontract and self._has_tracked_subcontract_components():
+        if self.is_subcontract and self._has_tracked_subcontract_components() and not serial_mass_produce:
             action['views'] = [(self.env.ref('stock.view_stock_move_operations').id, 'form')]
             action['context'].update({
                 'show_lots_m2o': self.has_tracking != 'none',

@@ -92,7 +92,7 @@ class StockWarehouse(models.Model):
                     'name': self._format_rulename(self.lot_stock_id, subcontract_location_id, False),
                     'location_id': production_location_id.id,
                     'location_src_id': subcontract_location_id.id,
-                    'picking_type_id': self.out_type_id.id
+                    'picking_type_id': self.subcontracting_type_id.id
                 },
                 'update_values': {
                     'active': self.subcontracting_to_resupply

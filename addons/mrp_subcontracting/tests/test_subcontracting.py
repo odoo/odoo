@@ -729,3 +729,98 @@ class TestSubcontractingTracking(TransactionCase):
         self.assertEqual(avail_qty_comp1, -todo_nb)
         self.assertEqual(avail_qty_comp2, -todo_nb)
         self.assertEqual(avail_qty_finished, todo_nb)
+
+
+class TestSubcontractingSerialMassProduce(TransactionCase):
+
+    def generate_receipt(self, tracking_subcontracted='none', tracking_component='none', qty_subcontracted=5, qty_component=2):
+        """ This function generate a receipt for a subcontracted product with one component.
+        Arguments allows to choose the tracking mode and quantity for each product.
+        Returns the receipt, subcontractor, subcontracted product, bom, component and MO.
+        """
+        subcontractor = self.env['res.partner'].create({
+            'name': 'Subcontractor',
+            'company_id': self.env.company.id
+        })
+        subcontracted_product = self.env['product.product'].create({
+            'name': 'Subcontracted',
+            'type': 'product',
+            'tracking': tracking_subcontracted,
+        })
+        component = self.env['product.product'].create({
+            'name': 'Component',
+            'type': 'product',
+            'tracking': tracking_component,
+        })
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': component.product_tmpl_id.id,
+            'name': subcontractor.id
+        })
+        route = self.env['stock.location.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        component.write({'route_ids': [(4, route.id, None)]})
+        bom = self.env['mrp.bom'].create({
+            'product_id': subcontracted_product.id,
+            'product_tmpl_id': subcontracted_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'subcontract',
+            'subcontractor_ids': [
+                (4, subcontractor.id, None)
+            ],
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': qty_component})
+            ]
+        })
+        form = Form(self.env['stock.picking'])
+        form.picking_type_id = self.env.ref('stock.picking_type_in')
+        form.partner_id = subcontractor
+        with form.move_ids_without_package.new() as move:
+            move.product_id = subcontracted_product
+            move.product_uom_qty = qty_subcontracted
+        receipt = form.save()
+        receipt.action_confirm()
+        mo = self.env['mrp.production'].search([('bom_id', '=', bom.id)])
+        return receipt, subcontractor, subcontracted_product, bom, component, mo
+
+    def test_smp_serial(self):
+        """Create a receipt for a product not tracked by serial number.
+        The serial mass receipt should not be active.
+        """
+        receipt = self.generate_receipt()[0]
+        self.assertFalse(receipt.move_lines.show_serial_mass_receipt)
+
+    def test_smp_no_serial_component(self):
+        """Create a receipt for a product tracked by serial number with a component also tracked by serial number.
+        The serial mass receipt should not be active.
+        """
+        receipt = self.generate_receipt(tracking_subcontracted='serial', tracking_component='serial')[0]
+        self.assertFalse(receipt.move_lines.show_serial_mass_receipt)
+
+    def test_smp_produce_all(self):
+        """Create a receipt for a product tracked by serial number.
+        Open the smp wizard through picking line, generate all serial numbers to produce all quantitites.
+        """
+        receipt, dummy, dummy, bom, dummy, mo = self.generate_receipt(tracking_subcontracted='serial')
+        count = receipt.move_lines.product_qty
+        # Make some stock and resupply subcontractor
+        delivery = mo.picking_ids[0]
+        for product in bom.bom_line_ids.product_id:
+            self.env['stock.quant'].with_context(inventory_mode=True).create({
+                'product_id': product.id,
+                'inventory_quantity': 100,
+                'location_id': delivery.location_id.id,
+            })._apply_inventory()
+        delivery.action_assign()
+        delivery.action_set_quantities_to_reservation()
+        delivery.button_validate()
+        # Process receipt from subcontractor
+        form = Form(receipt.move_lines[0], view=self.env.ref('stock.view_stock_move_operations'))
+        form.next_serial = "sn#1"
+        form.next_serial_count = count
+        f = form.save()
+        f.action_assign_serial_show_details()
+        receipt.button_validate()
+        # Initial MO should have a backorder-sequenced name and be in done state
+        self.assertTrue("-001" in mo.name)
+        self.assertEqual(mo.state, "done")
+        # Each generated serial number should have its own mo
+        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), count)

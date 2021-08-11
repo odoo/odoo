@@ -35,10 +35,15 @@ class StockPicking(models.Model):
         for move in self.move_lines.filtered(lambda move: move.is_subcontract):
             # Auto set qty_producing/lot_producing_id of MO if there isn't tracked component
             # If there is tracked component, the flow use subcontracting_record_component instead
-            if move._has_tracked_subcontract_components():
-                continue
             production = move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))[-1:]
             if not production:
+                continue
+            serial_mass_produce = False
+            if move.product_id.tracking == 'serial':
+                have_serial_components, missing_components, multiple_lot_components = production._check_serial_mass_produce_components()
+                if not have_serial_components and not missing_components and not multiple_lot_components:
+                    serial_mass_produce = True
+            if not serial_mass_produce and move._has_tracked_subcontract_components():
                 continue
             # Manage additional quantities
             quantity_done_move = move.product_uom._compute_quantity(move.quantity_done, production.product_uom_id)
