@@ -18,6 +18,8 @@ function factory(dependencies) {
             this.onClickActivity = this.onClickActivity.bind(this);
             this.onClickCancel = this.onClickCancel.bind(this);
             this.onClickDiscard = this.onClickDiscard.bind(this);
+            this.onClickDone = this.onClickDone.bind(this);
+            this.onClickDoneAndScheduleNext = this.onClickDoneAndScheduleNext.bind(this);
             this.onClickEdit = this.onClickEdit.bind(this);
             this.onClickUploadDocument = this.onClickUploadDocument.bind(this);
             this.onKeydown = this.onKeydown.bind(this);
@@ -210,6 +212,18 @@ function factory(dependencies) {
             this.markAsDone({ attachments: [ev.detail.attachment] });
         }
 
+        async onClickDone() {
+            await this.markAsDone({
+                feedback: this.feedbackTextareaRef.el.value,
+            });
+            this.component.trigger('reload', { keepChanges: true });
+        }
+
+        onClickDoneAndScheduleNext() {
+            this.markAsDoneAndScheduleNext({
+                feedback: this.feedbackTextareaRef.el.value,
+            });
+        }
         /**
          * @private
          */

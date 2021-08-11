@@ -51,29 +51,6 @@ export class ActivityMarkDonePopover extends Component {
     // Private
     //--------------------------------------------------------------------------
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    async _onClickDone() {
-        await this.activity.markAsDone({
-            feedback: this._feedbackTextareaRef.el.value,
-        });
-        this.trigger('reload', { keepChanges: true });
-    }
-
-    /**
-     * @private
-     */
-    _onClickDoneAndScheduleNext() {
-        this.activity.markAsDoneAndScheduleNext({
-            feedback: this._feedbackTextareaRef.el.value,
-        });
-    }
-
 }
 
 Object.assign(ActivityMarkDonePopover, {
