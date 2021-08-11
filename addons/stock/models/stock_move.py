@@ -422,7 +422,8 @@ class StockMove(models.Model):
             if move.picking_type_id.code in self._consuming_picking_types() and is_unreserved:
                 outgoing_unreserved_moves_per_warehouse[warehouse_by_location[move.location_id]] |= move
             elif move.picking_type_id.code in self._consuming_picking_types():
-                move.forecast_availability = move.reserved_availability
+                move.forecast_availability = move.product_uom._compute_quantity(
+                    move.reserved_availability, move.product_id.uom_id, rounding_method='HALF-UP')
             elif move.picking_type_id.code == 'incoming':
                 move._get_forecast_availability_incoming()
 
