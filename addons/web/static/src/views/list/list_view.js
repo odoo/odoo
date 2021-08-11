@@ -12,7 +12,7 @@ import { useService } from "@web/core/service_hook";
 
 export class ListArchParser extends XMLParser {
     parse(arch, fields) {
-        const fieldParser = new FieldParser(fields);
+        const fieldParser = new FieldParser(fields, "list");
         this.visitXML(arch, (node) => {
             if (node.tagName === "field") {
                 if (
@@ -51,6 +51,7 @@ class ListView extends owl.Component {
             fields: this.props.fields,
             relations: this.archInfo.relations,
             activeFields: this.archInfo.columns.map((col) => col.name),
+            viewMode: "list",
         });
 
         this.openRecord = this.openRecord.bind(this);
