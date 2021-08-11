@@ -111,6 +111,7 @@ export class GraphRenderer extends Component {
         const innerHTML = this.env.qweb.renderToString("web.GraphRenderer.CustomTooltip", {
             maxWidth: getMaxWidth(this.chart.chartArea),
             measure: measures[measure].string,
+            mode: this.model.metaData.mode,
             tooltipItems: this.getTooltipItems(data, metaData, tooltipModel),
         });
         const template = Object.assign(document.createElement("template"), { innerHTML });
@@ -456,6 +457,7 @@ export class GraphRenderer extends Component {
             let label = dataset.trueLabels[id];
             let value = this.formatValue(dataset.data[id], allIntegers);
             let boxColor;
+            let percentage;
             if (mode === "pie") {
                 if (label === NO_DATA) {
                     value = this.formatValue(0, allIntegers);
@@ -464,13 +466,15 @@ export class GraphRenderer extends Component {
                     label = `${dataset.label} / ${label}`;
                 }
                 boxColor = dataset.backgroundColor[id];
+                const totalData = dataset.data.reduce((a, b) => a + b, 0);
+                percentage = totalData && ((dataset.data[item.index] * 100) / totalData).toFixed(2);
             } else {
                 if (groupBy.length > 1 || domains.length > 1) {
                     label = `${label} / ${dataset.label}`;
                 }
                 boxColor = mode === "bar" ? dataset.backgroundColor : dataset.borderColor;
             }
-            items.push({ id, label, value, boxColor });
+            items.push({ id, label, value, boxColor, percentage });
         }
         return items;
     }

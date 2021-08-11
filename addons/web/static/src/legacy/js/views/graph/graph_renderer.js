@@ -263,6 +263,7 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
             const innerHTML = this.env.qweb.renderToString("web.GraphRenderer.CustomTooltip", {
                 maxWidth: getMaxWidth(this.chart.chartArea),
                 measure: this.measureDescription,
+                mode: this.props.mode,
                 tooltipItems: this._getTooltipItems(tooltipModel),
             });
             const template = Object.assign(document.createElement("template"), { innerHTML });
@@ -616,11 +617,14 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
             let label = data.labels[item.index];
             let value;
             let boxColor;
+            let percentage;
             if (this.props.mode === "pie") {
                 if (label === this.noDataLabel) {
                     value = this._formatValue(0);
                 } else {
                     value = this._formatValue(dataset.data[item.index]);
+                    const totalData = dataset.data.reduce((a, b) => a + b, 0);
+                    percentage = totalData && ((dataset.data[item.index] * 100) / totalData).toFixed(2);
                 }
                 label = this._relabelling(label, comparisonFieldIndex, dataset.originIndex);
                 if (this.props.origins.length > 1) {
@@ -640,7 +644,7 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
                     dataset.backgroundColor :
                     dataset.borderColor;
             }
-            return { id, label, value, boxColor };
+            return { id, label, value, boxColor, percentage };
         }
 
         /**
