@@ -13,12 +13,13 @@ function factory(dependencies) {
          */
         _created() {
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
-            this.onClickActivity = this.onClickActivity.bind(this);
-            this.onClickEdit = this.onClickEdit.bind(this);
-            this.onClickCancel = this.onClickCancel.bind(this);
             this.onAttachmentCreated = this.onAttachmentCreated.bind(this);
-            this.onClickUploadDocument = this.onClickUploadDocument.bind(this);
+            this.onBlur = this.onBlur.bind(this);
+            this.onClickActivity = this.onClickActivity.bind(this);
+            this.onClickCancel = this.onClickCancel.bind(this);
             this.onClickDiscard = this.onClickDiscard.bind(this);
+            this.onClickEdit = this.onClickEdit.bind(this);
+            this.onClickUploadDocument = this.onClickUploadDocument.bind(this);
             this.onKeydown = this.onKeydown.bind(this);
         }
 
@@ -210,6 +211,15 @@ function factory(dependencies) {
         }
 
         /**
+         * @private
+         */
+        onBlur() {
+            this.update({
+                feedbackBackup: this.feedbackTextareaRef.el.value,
+            });
+        }
+
+        /**
          * Handle {click} on activity component.
          *
          * @param {MouseEvent} ev
@@ -347,6 +357,7 @@ function factory(dependencies) {
          * In all other cases, this field value should not be trusted.
          */
         feedbackBackup: attr(),
+        feedbackTextareaRef: attr(),
         fileUploaderRef: attr(),
         chaining_type: attr({
             default: 'suggest',
