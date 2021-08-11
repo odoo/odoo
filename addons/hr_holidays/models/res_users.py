@@ -47,6 +47,8 @@ class User(models.Model):
     def _get_on_leave_ids(self, partner=False):
         now = fields.Datetime.now()
         field = 'partner_id' if partner else 'id'
+        self.env['res.users'].flush(fnames=['active'])
+        self.env['hr.leave'].flush(fnames=['user_id', 'state', 'date_from', 'date_to'])
         self.env.cr.execute('''SELECT res_users.%s FROM res_users
                             JOIN hr_leave ON hr_leave.user_id = res_users.id
                             AND state not in ('cancel', 'refuse')
