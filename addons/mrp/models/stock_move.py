@@ -326,7 +326,7 @@ class StockMove(models.Model):
         # Do not update extra product quantities
         if float_is_zero(self.product_uom_qty, precision_rounding=self.product_uom.rounding):
             return True
-        if self.has_tracking != 'none' or self.state == 'done':
+        if self.has_tracking != 'none' and len(self.mapped('move_line_ids.lot_id.id')) != 1:
             return True
         return False
 

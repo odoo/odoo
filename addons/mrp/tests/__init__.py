@@ -13,3 +13,4 @@ from . import test_oee
 from . import test_traceability
 from . import test_multicompany
 from . import test_backorder
+from . import test_smp

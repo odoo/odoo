@@ -7,7 +7,6 @@
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='origin']" position="after">
-                    <field name="picking_type_id"/>
                     <field name="group_id" invisible="1"/>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree//field[@name='price_subtotal']" position="after">
