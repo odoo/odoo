@@ -2,6 +2,7 @@ odoo.define('point_of_sale.utils', function (require) {
     'use strict';
 
     const { EventBus } = owl.core;
+    const { ConnectionAbortedError } = require('@web/core/network/rpc_service');
 
     function getFileAsText(file) {
         return new Promise((resolve, reject) => {
@@ -45,5 +46,24 @@ odoo.define('point_of_sale.utils', function (require) {
         );
     }
 
-    return { getFileAsText, nextFrame, isRpcError, posbus: new EventBus() };
+    function identifyError(error) {
+        if (!error) return error;
+        let errorToHandle;
+        if (error.legacy) {
+            // error.message is either RPCError or ConnectionLostError
+            errorToHandle = error.message;
+        } else if (error.event && error.event.type == 'abort') {
+            // Check if there is event and if the event type is abort.
+            // If so, then it's supposed to be a ConnectionAbortedError,
+            // however, it was stripped in the patch of rpc in `mapLegacyEnvToWowlEnv`.
+            // We recreate the error object here so that in the actual handler,
+            // ConnectionAbortedError and ConnectionLostError are handled properly.
+            errorToHandle = new ConnectionAbortedError(error.message);
+        } else if (error instanceof Error) {
+            errorToHandle = error;
+        }
+        return errorToHandle || error;
+    }
+
+    return { getFileAsText, nextFrame, isRpcError, posbus: new EventBus(), identifyError };
 });
