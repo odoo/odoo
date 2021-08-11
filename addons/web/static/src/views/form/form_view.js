@@ -16,7 +16,7 @@ import { useViewButtons } from "@web/views/view_button/hook";
 class FormArchParser extends XMLParser {
     parse(arch, fields) {
         const xmlDoc = this.parseXML(arch);
-        const fieldParser = new FieldParser(fields);
+        const fieldParser = new FieldParser(fields, "form");
         this.visitXML(xmlDoc, (node) => {
             if (node.tagName === "field") {
                 fieldParser.addField(node);
@@ -44,6 +44,7 @@ class FormView extends owl.Component {
             fields: this.props.fields,
             relations: this.archInfo.relations,
             activeFields: this.archInfo.fields,
+            viewMode: "form",
         });
         this.pagerProps = usePager(this.model, this.props.resId, this.props.resIds);
 

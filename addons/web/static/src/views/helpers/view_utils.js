@@ -4,18 +4,37 @@ import { Field } from "../../fields/field";
 import { evaluateExpr } from "../../core/py_js/py";
 
 const X2M_TYPES = ["one2many", "many2many"];
-const RELATIONAL_TYPES = ["many2one"].concat(...X2M_TYPES);
+const RELATIONAL_TYPES = [...X2M_TYPES, "many2one"];
 const SPECIAL_FIELDS = ["color_field"];
 
+/**
+ * @param {any} field
+ * @returns {boolean}
+ */
 export const isRelational = (field) => field && RELATIONAL_TYPES.includes(field.type);
 
-function getX2MViewMode(mode) {
+/**
+ * @param {any} field
+ * @returns {boolean}
+ */
+export const isX2Many = (field) => field && X2M_TYPES.includes(field.type);
+
+/**
+ * @param {string | string[]} [mode]
+ * @returns {string[]}
+ */
+export const getX2MViewModes = (mode) => {
     if (!mode) {
         return ["list"];
     }
-    return mode.split(",").map((m) => (m === "tree" ? "list" : m));
-}
+    const modes = Array.isArray(mode) ? mode : mode.split(",");
+    return modes.map((m) => (m === "tree" ? "list" : m));
+};
 
+/**
+ * @param {number | number[]} idsList
+ * @returns {number[]}
+ */
 export const getIds = (idsList) => {
     if (Array.isArray(idsList)) {
         if (idsList.length === 2 && typeof idsList[1] === "string") {
@@ -33,11 +52,20 @@ export const getIds = (idsList) => {
 export class FieldParser {
     /**
      * @param {any} fields
+     * @param {string} viewType
      */
-    constructor(fields) {
+    constructor(fields, viewType) {
         this.fields = fields;
+        this.viewType = viewType;
         this.parsedFields = Object.create(null);
         this.relations = {};
+    }
+
+    get record() {
+        return {
+            fields: this.fields,
+            viewType: this.viewType,
+        };
     }
 
     /**
@@ -53,7 +81,7 @@ export class FieldParser {
         this.parsedFields[fieldName] = getFieldInfo ? getFieldInfo(fieldName) : fieldName;
         if (isRelational(field)) {
             const relatedFields = [];
-            const FieldClass = Field.getTangibleField({ fields: this.fields }, widget, fieldName);
+            const FieldClass = Field.getTangibleField(this.record, widget, fieldName);
             if (FieldClass.fieldsToFetch) {
                 relatedFields.push(...FieldClass.fieldsToFetch);
             }
@@ -65,7 +93,8 @@ export class FieldParser {
             }
             this.addRelation(field.relation, ...relatedFields);
             if (X2M_TYPES.includes(field.type) && FieldClass.useSubView) {
-                field.viewMode = getX2MViewMode(node.getAttribute("mode"));
+                // TODO: is it a good idea to modify the field in place?
+                field.viewMode = getX2MViewModes(node.getAttribute("mode"))[0];
             }
         }
         return { name: fieldName, field, widget, options };

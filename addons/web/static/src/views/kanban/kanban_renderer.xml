@@ -2,9 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanRenderer" owl="1">
-        <t t-set="root" t-value="props.model.root" />
-        <div class="o_kanban_view" t-attf-class="o_kanban_{{ root.isGrouped ? '' : 'un' }}grouped {{ props.info.className }}">
-            <t t-foreach="root.data" t-as="groupOrRecord" t-key="groupOrRecord.id">
+        <div class="o_kanban_view" t-attf-class="o_kanban_{{ record.isGrouped ? '' : 'un' }}grouped {{ props.info.className }}">
+            <t t-foreach="record.data" t-as="groupOrRecord" t-key="groupOrRecord.id">
                 <t t-if="groupOrRecord.groupData">
                     <t t-set="group" t-value="groupOrRecord" />
                     <div class="o_kanban_group ui-sortable">

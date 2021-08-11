@@ -51,12 +51,12 @@ const applyDefaultAttributes = (kanbanBox) => {
     return kanbanBox;
 };
 
-class KanbanArchParser extends XMLParser {
+export class KanbanArchParser extends XMLParser {
     parse(arch, fields) {
         const xmlDoc = this.parseXML(arch);
         const className = xmlDoc.getAttribute("class") || null;
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
-        const fieldParser = new FieldParser(fields);
+        const fieldParser = new FieldParser(fields, "kanban");
         const tooltips = {};
         let kanbanBoxTemplate = document.createElement("t");
 
@@ -147,7 +147,7 @@ class KanbanView extends owl.Component {
         };
         this.model = useModel(
             RelationalModel,
-            { activeFields, fields, relations, resModel },
+            { activeFields, fields, relations, resModel, viewMode: "kanban" },
             { processParams }
         );
         useViewButtons(this.model);

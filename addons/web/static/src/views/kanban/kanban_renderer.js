@@ -31,6 +31,7 @@ export class KanbanRenderer extends Component {
             this.env.qweb.addTemplate(templateId, xmldoc.outerHTML);
             templateIds[this.props.info.arch] = templateId;
         }
+        this.record = this.props.record || this.props.model.root;
         this.cardTemplate = templateId;
         this.cards = this.props.info.cards;
         this.className = this.props.info.className;

@@ -3,7 +3,7 @@
 import { registry } from "../core/registry";
 import { KeepLast } from "../core/utils/concurrency";
 import { Model } from "../views/helpers/model";
-import { getIds, isRelational } from "./helpers/view_utils";
+import { getIds, getX2MViewModes, isRelational } from "./helpers/view_utils";
 
 /**
  * @returns {{
@@ -128,6 +128,7 @@ class BenedictRequestbatch {
      * Starts flushing the current batches, if not already started.
      * A resolved promise is awaited to batch all methodes comprised in the same
      * microtask.
+     * @returns {Promise<void>}
      */
     async _startSchedule() {
         if (this.scheduled) {
@@ -161,9 +162,7 @@ registry.category("services").add("requestBatcher", requestBatcherService);
 class DataPoint {
     /**
      * @param {RelationalModel} model
-     * @param {any} params
-     * @param {any} params.fields
-     * @param {string[]} params.activeFields
+     * @param {{ fields: any, activeFields: string[] }} params
      */
     constructor(model, resModel, params) {
         this.model = model;
@@ -173,28 +172,57 @@ class DataPoint {
 
         this.fields = params.fields;
         this.activeFields = params.activeFields;
+        this.viewMode = params.viewMode || null;
 
         this.requestBatcher = this.model.requestBatcher;
 
         this.model.db[this.id] = this;
     }
 
+    /**
+     * @returns {boolean}
+     */
     get hasData() {
         return Boolean(this.data);
     }
 
-    createRecord(resModel, resId, rawParams = {}) {
+    /**
+     * Transmits the current informations to a child datapoint
+     * @private
+     * @returns {any}
+     */
+    get dataPointContext() {
+        return {
+            activeFields: this.activeFields,
+            fields: this.fields,
+            viewMode: this.viewMode,
+        };
+    }
+
+    /**
+     * Returns the existing record with the samel resModel and resId if any, or
+     * creates and returns a new one.
+     * @param {string} resModel
+     * @param {number} resId
+     * @param {any} params
+     * @returns {DataRecord}
+     */
+    createRecord(resModel, resId, params = {}) {
         const existingRecord = this.model.get({ resModel, resId });
         if (existingRecord) {
             return existingRecord;
         }
-        const params = { activeFields: this.activeFields, fields: this.fields, ...rawParams };
-        return new DataRecord(this.model, resModel, resId, params);
+        return new DataRecord(this.model, resModel, resId, { ...this.dataPointContext, ...params });
     }
 
-    createList(resModel, rawParams = {}) {
-        const params = { activeFields: this.activeFields, fields: this.fields, ...rawParams };
-        return new DataList(this.model, resModel, params);
+    /**
+     * Creates and returns a new data list with the given parameters.
+     * @param {string} resModel
+     * @param {any} params
+     * @returns {DataList}
+     */
+    createList(resModel, params = {}) {
+        return new DataList(this.model, resModel, { ...this.dataPointContext, ...params });
     }
 }
 
@@ -205,6 +233,7 @@ class DataRecord extends DataPoint {
      * @param {RelationalModel} model
      * @param {string} resModel
      * @param {number} resId
+     * @param {any} params
      */
     constructor(model, resModel, resId, params) {
         super(model, resModel, params);
@@ -213,10 +242,8 @@ class DataRecord extends DataPoint {
     }
 
     /**
-     * @param {any} [params={}]
-     * @param {string[]} [params.fields]
-     * @param {any} [params.data] preloaded record data
-     * @returns {Promise<DataRecord>}
+     * @param {{ fields?: string[], data?: any }} [params={}]
+     * @returns {Promise<void>}
      */
     async load(params = {}) {
         // Record data
@@ -229,14 +256,16 @@ class DataRecord extends DataPoint {
             const recordsData = await this.requestBatcher.read(this.resModel, [this.resId], fields);
             data = recordsData[0];
         }
-        this.data = { ...data };
+        this.data = Object.freeze(data);
 
         // Relational data
         await Promise.all(Object.keys(this.fields).map((fname) => this.loadRelationalField(fname)));
-
-        return this;
     }
 
+    /**
+     * @param {string} fieldName
+     * @returns {Promise<void>}
+     */
     async loadRelationalField(fieldName) {
         const field = this.fields[fieldName];
         const { relation, views, viewMode } = field;
@@ -247,13 +276,12 @@ class DataRecord extends DataPoint {
         }
 
         const resIds = getIds(this.data[fieldName]);
-        const listDataPoint = this.createList(relation, { activeFields, views, resIds, viewMode });
-        this.data[fieldName] = listDataPoint;
+        const dataList = this.createList(relation, { activeFields, resIds, views, viewMode });
+        const alteredData = { ...this.data, [fieldName]: dataList };
 
-        // Do not load record if created by nested view arch
-        if (listDataPoint.activeFields.length) {
-            await this.data[fieldName].load();
-        }
+        this.data = Object.freeze(alteredData);
+
+        await this.data[fieldName].load();
     }
 }
 
@@ -261,45 +289,55 @@ class DataList extends DataPoint {
     /**
      * @param {RelationalModel} model
      * @param {string} resModel
-     * @param {any} [params={}]
-     * @param {number[]} [params.resIds]
-     * @param {any} [params.views]
-     * @param {any} [params.groupData]
+     * @param {{
+     *  resIds?: number[],
+     *  groupData?: any,
+     *  views?: any,
+     * }} [params={}]
      */
     constructor(model, resModel, params = {}) {
         super(model, resModel, params);
 
         this.resIds = params.resIds || null;
         this.groupData = params.groupData || null;
-        this.views = params.views || {};
-
-        if (params.viewMode) {
-            this.setView(params.viewMode[0]);
-        }
 
         this.domain = [];
         this.groupBy = [];
         this.data = [];
+        this.views = {};
 
         if (this.groupData) {
             this.domain = params.groupData.__domain;
         }
+
+        for (const type in params.views || {}) {
+            const [mode] = getX2MViewModes(type);
+            this.views[mode] = Object.freeze(params.views[type]);
+        }
+
+        if (this.viewMode && this.views[this.viewMode]) {
+            this.fields = this.views[this.viewMode].fields;
+            this.activeFields = Object.keys(this.fields);
+        }
     }
 
+    /**
+     * @override
+     */
     get hasData() {
         return Boolean(super.hasData && this.data.length);
     }
 
+    /**
+     * @returns {boolean}
+     */
     get isGrouped() {
         return Boolean(this.groupBy.length);
     }
 
     /**
-     * @param {any} [params={}]
-     * @param {any[]} [params.domain]
-     * @param {any[]} [params.groupBy]
-     * @param {boolean} [params.defer]
-     * @returns {Promise<any> | () => Promise<any>}
+     * @param {{ domain?: any[], groupBy?: string[], defer?: boolean }} [params={}]
+     * @returns {Promise<void> | () => Promise<void>}
      */
     async load(params = {}) {
         if (params.domain && !this.groupData) {
@@ -309,18 +347,26 @@ class DataList extends DataPoint {
             this.groupBy = params.groupBy;
         }
 
-        let preloadData;
+        let fetchData;
         if (this.resIds) {
-            preloadData = await this.loadRecords();
+            fetchData = await this.loadRecords();
         } else if (this.groupBy.length) {
-            preloadData = await this.loadGroups();
+            fetchData = await this.loadGroups();
         } else {
-            preloadData = await this.searchRecords();
+            fetchData = await this.searchRecords();
         }
-        const loadData = async () => (this.data = await preloadData());
-        return loadData();
+
+        const loadData = async () => {
+            this.data = await fetchData();
+        };
+
+        return params.defer ? loadData : loadData();
     }
 
+    /**
+     * @private
+     * @returns {Promise<() => Promise<DataRecord>>}
+     */
     async searchRecords() {
         const recordsData = await this.requestBatcher.searchRead(
             this.resModel,
@@ -341,6 +387,10 @@ class DataList extends DataPoint {
             );
     }
 
+    /**
+     * @private
+     * @returns {Promise<() => Promise<DataRecord>>}
+     */
     async loadRecords() {
         if (!this.resIds.length) {
             return () => [];
@@ -355,6 +405,10 @@ class DataList extends DataPoint {
             );
     }
 
+    /**
+     * @private
+     * @returns {Promise<() => Promise<DataRecord>>}
+     */
     async loadGroups() {
         const { groups } = await this.requestBatcher.webReadGroup(
             this.resModel,
@@ -384,11 +438,6 @@ class DataList extends DataPoint {
             );
         };
     }
-
-    setView(viewType) {
-        this.fields = this.views[viewType === "list" ? "tree" : viewType].fields;
-        this.activeFields = Object.keys(this.fields);
-    }
 }
 
 export class RelationalModel extends Model {
@@ -403,11 +452,16 @@ export class RelationalModel extends Model {
         this.relations = params.relations || {};
         this.fields = params.fields || {};
         this.activeFields = params.activeFields || [];
+        this.viewMode = params.viewMode || null;
 
         this.requestBatcher = requestBatcher;
         this.keepLast = new KeepLast();
     }
 
+    /**
+     * @param {{ resId?: number }} params
+     * @returns {Promise<void>}
+     */
     async load(params = {}) {
         if (params.resId) {
             this.resId = params.resId;
@@ -415,6 +469,7 @@ export class RelationalModel extends Model {
         const dataPointParams = {
             activeFields: this.activeFields,
             fields: this.fields,
+            viewMode: this.viewMode,
         };
         if (this.resIds.length) {
             dataPointParams.resIds = this.resIds;
@@ -429,10 +484,18 @@ export class RelationalModel extends Model {
         this.notify();
     }
 
+    /**
+     * @param  {...any} args
+     * @returns {DataPoint | null}
+     */
     get(...args) {
         return this.getAll(...args)[0] || null;
     }
 
+    /**
+     * @param  {any} properties
+     * @returns {DataPoint[]}
+     */
     getAll(properties) {
         return Object.values(this.db).filter((record) => {
             for (const prop in properties) {
