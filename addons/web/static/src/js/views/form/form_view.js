@@ -47,7 +47,7 @@ var FormView = BasicView.extend({
         this.controllerParams.mode = mode;
 
         this.rendererParams.mode = mode;
-        this.rendererParams.isFromFormViewDialog = params.isFromFormViewDialog;
+        this.rendererParams.isFromFormViewDialog = params.isFromFormViewDialog || params.isInDialog;
         this.rendererParams.fieldIdsToNames = this.fieldsView.fieldIdsToNames;
     },
 
@@ -79,6 +79,7 @@ var FormView = BasicView.extend({
         params.hasSearchView = inDialog ? false : params.hasSearchView;
         params.hasActionMenus = !inDialog && !inline;
         params.searchMenuTypes = inDialog ? [] : params.searchMenuTypes;
+        params.isInDialog = inDialog;
         if (inDialog || inline || fullscreen) {
             params.mode = 'edit';
         } else if (action.context && action.context.form_view_initial_mode) {

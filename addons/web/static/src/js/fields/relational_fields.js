@@ -1093,6 +1093,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
         this.isReadonly = this.mode === 'readonly';
         this.view = this.attrs.views[this.attrs.mode];
         this.isMany2Many = this.field.type === 'many2many' || this.attrs.widget === 'many2many';
+        this.isInDialog = options.isInDialog;
         this.activeActions = {};
         this.recordParams = {fieldName: this.name, viewType: this.viewType};
         // The limit is fixed so it cannot be changed by adding/removing lines in
@@ -1464,6 +1465,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                 no_open: (this.isReadonly && !this.hasReadonlyModifier) &&
                     (this._canQuickEdit || toBoolElse(arch.attrs.no_open || '', false)),
                 columnInvisibleFields: this.currentColInvisibleFields,
+                isInDialog: this.isInDialog,
             });
         }
 

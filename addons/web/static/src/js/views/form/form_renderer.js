@@ -51,6 +51,8 @@ var FormRenderer = BasicRenderer.extend({
         // display them (e.g. in Studio, in "show invisible" mode). This flag
         // allows to disable this optimization.
         this.renderInvisible = false;
+        // whether form is rendered in dialogs, some widgets are not rendered in dialog e.g. Chatter
+        this._isFromFormViewDialog = params.isFromFormViewDialog;
     },
     /**
      * @override
@@ -707,7 +709,7 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderInnerGroupField: function (node) {
-        var $el = this._renderFieldWidget(node, this.state);
+        var $el = this._renderFieldWidget(node, this.state, { isInDialog: this._isFromFormViewDialog });
         var $tds = $('<td/>').append($el);
 
         if (node.attrs.nolabel !== '1') {
@@ -870,7 +872,7 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderTagField: function (node) {
-        return this._renderFieldWidget(node, this.state);
+        return this._renderFieldWidget(node, this.state, { isInDialog: this._isFromFormViewDialog });
     },
     /**
      * @private

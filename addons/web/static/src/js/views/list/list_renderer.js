@@ -78,6 +78,7 @@ var ListRenderer = BasicRenderer.extend({
         this.isGrouped = this.state.groupedBy.length > 0;
         this.groupbys = params.groupbys;
         this.no_open = params.no_open;
+        this.isInDialog = params.isInDialog;
     },
     /**
      * Compute columns visilibity. This can't be done earlier as we need the

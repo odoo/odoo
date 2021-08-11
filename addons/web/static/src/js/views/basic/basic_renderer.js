@@ -738,6 +738,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
             hasReadonlyModifier: modifiers.readonly,
             mode: modifiers.readonly ? 'readonly' : mode,
             viewType: this.viewType,
+            isInDialog: options.isInDialog,
         };
         let widget;
         if (legacy) {

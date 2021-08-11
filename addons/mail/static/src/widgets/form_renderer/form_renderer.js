@@ -28,8 +28,6 @@ FormRenderer.include({
          * This is set when arch contains `div.oe_chatter`.
          */
         this._chatterContainerTarget = undefined;
-        // Do not load chatter in form view dialogs
-        this._isFromFormViewDialog = params.isFromFormViewDialog;
     },
     /**
      * @override

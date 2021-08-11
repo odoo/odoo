@@ -76,6 +76,7 @@ var ListView = BasicView.extend({
         this.rendererParams.addCreateLine = false;
         this.rendererParams.addCreateLineInGroups = editable && this.controllerParams.activeActions.create;
         this.rendererParams.isMultiEditable = this.arch.attrs.multi_edit && !!JSON.parse(this.arch.attrs.multi_edit);
+        this.rendererParams.isInDialog = params.isInDialog;
 
         this.modelParams.groupbys = this.groupbys;
 
