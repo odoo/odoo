@@ -507,24 +507,6 @@ class Channel(models.Model):
     #   - when a message is posted on a channel (to the channel, using _notify() method)
     # ------------------------------------------------------------
 
-    @api.model
-    def _get_channel_partner_info(self, all_partners, direct_partners):
-        """
-        Return the information needed by channel to display channel members
-            :param all_partners: list of res.parner():
-            :param direct_partners: list of res.parner():
-            :returns: a list of {'id', 'name', 'email'} for each partner and adds {im_status} for direct_partners.
-            :rtype : list(dict)
-        """
-        partner_infos = {partner['id']: partner for partner in all_partners.sudo().read(['id', 'name', 'email'])}
-        # add im _status for direct_partners
-        direct_partners_im_status = {partner['id']: partner for partner in direct_partners.sudo().read(['im_status'])}
-
-        for i in direct_partners_im_status.keys():
-            partner_infos[i].update(direct_partners_im_status[i])
-
-        return partner_infos
-
     def channel_info(self, extra_info=False):
         """ Get the informations header for the current channels
             :returns a list of channels values
@@ -533,17 +515,7 @@ class Channel(models.Model):
         if not self:
             return []
         channel_infos = []
-        # all relations partner_channel on those channels
-        all_partner_channel = self.env['mail.channel.partner'].sudo().search([('channel_id', 'in', self.ids)]).sudo(False)
-
-        # all partner infos on those channels
-        channel_dict = {channel.id: channel for channel in self}
-        all_partners = all_partner_channel.mapped('partner_id')
-        direct_channel_partners = all_partner_channel.filtered(lambda pc: channel_dict[pc.channel_id.id].channel_type == 'chat')
-        direct_partners = direct_channel_partners.mapped('partner_id')
-        partner_infos = self._get_channel_partner_info(all_partners, direct_partners)
         channel_last_message_ids = dict((r['id'], r['message_id']) for r in self._channel_last_message_ids())
-
         for channel in self:
             info = {
                 'id': channel.id,
@@ -563,16 +535,13 @@ class Channel(models.Model):
             # add last message preview (only used in mobile)
             info['last_message_id'] = channel_last_message_ids.get(channel.id, False)
             # listeners of the channel
-            channel_partners = all_partner_channel.filtered(lambda pc: channel.id == pc.channel_id.id)
+            channel_partners = channel.channel_last_seen_partner_ids
 
             # find the channel partner state, if logged user
             if self.env.user and self.env.user.partner_id:
-                # add needaction and unread counter, since the user is logged
                 info['message_needaction_counter'] = channel.message_needaction_counter
                 info['message_unread_counter'] = channel.message_unread_counter
-
-                # add user session state, if available and if user is logged
-                partner_channel = channel_partners.filtered(lambda pc: pc.partner_id.id == self.env.user.partner_id.id)
+                partner_channel = channel_partners.filtered(lambda pc: pc.partner_id == self.env.user.partner_id)
                 if partner_channel:
                     partner_channel = partner_channel[0]
                     info['state'] = partner_channel.fold_state or 'open'
@@ -580,15 +549,12 @@ class Channel(models.Model):
                     info['seen_message_id'] = partner_channel.seen_message_id.id
                     info['custom_channel_name'] = partner_channel.custom_channel_name
                     info['is_pinned'] = partner_channel.is_pinned
-
             # add members infos
             if channel.channel_type != 'channel':
                 # avoid sending potentially a lot of members for big channels
                 # exclude chat and other small channels from this optimization because they are
                 # assumed to be smaller and it's important to know the member list for them
-                partner_ids = channel_partners.mapped('partner_id').ids
-                info['members'] = sorted([partner_infos[partner] for partner in partner_ids], key=lambda p: p['id'])
-            if channel.channel_type != 'channel':
+                info['members'] = sorted(list(channel_partners.partner_id.mail_partner_format().values()), key=lambda p: p['id'])
                 info['seen_partners_info'] = sorted([{
                     'id': cp.id,
                     'partner_id': cp.partner_id.id,

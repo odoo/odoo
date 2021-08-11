@@ -70,21 +70,21 @@ class Partner(models.Model):
         return self.create(create_values)
 
     def mail_partner_format(self):
-        self.ensure_one()
-        internal_users = self.user_ids - self.user_ids.filtered('share')
-        main_user = internal_users[0] if len(internal_users) > 0 else self.user_ids[0] if len(self.user_ids) > 0 else self.env['res.users']
-        res = {
-            "id": self.id,
-            "display_name": self.display_name,
-            "name": self.name,
-            "email": self.email,
-            "active": self.active,
-            "im_status": self.im_status,
-            "user_id": main_user.id,
-        }
-        if main_user:
-            res["is_internal_user"] = not main_user.share
-        return res
+        partners_format = dict()
+        for partner in self:
+            internal_users = partner.user_ids - partner.user_ids.filtered('share')
+            main_user = internal_users[0] if len(internal_users) > 0 else partner.user_ids[0] if len(partner.user_ids) > 0 else self.env['res.users']
+            partners_format[partner] = {
+                "id": partner.id,
+                "display_name": partner.display_name,
+                "name": partner.name,
+                "email": partner.email,
+                "active": partner.active,
+                "im_status": partner.im_status,
+                "user_id": main_user.id,
+                "is_internal_user": not partner.partner_share,
+            }
+        return partners_format
 
     def _get_needaction_count(self):
         """ compute the number of needaction of the current partner """
@@ -188,7 +188,7 @@ class Partner(models.Model):
         if remaining_limit > 0:
             partners |= self.search(expression.AND([[('id', 'not in', partners.ids)], search_dom]), limit=remaining_limit)
 
-        return [partner.mail_partner_format() for partner in partners]
+        return list(partners.mail_partner_format().values())
 
     @api.model
     def im_search(self, name, limit=20):

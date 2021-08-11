@@ -52,7 +52,7 @@ QUnit.test('out of office message on direct chat with out of office partner', as
     this.data['res.partner'].records.push({
         id: 11,
         name: "Foreigner partner",
-        out_of_office_date_end: returningDate.format("YYYY-MM-DD HH:mm:ss"),
+        out_of_office_date_end: returningDate.format("YYYY-MM-DD"),
     });
     this.data['mail.channel'].records = [{
         channel_type: 'chat',

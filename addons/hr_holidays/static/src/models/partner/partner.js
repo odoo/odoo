@@ -6,10 +6,10 @@ const {
     registerFieldPatchModel,
     registerInstancePatchModel,
 } = require('@mail/model/model_core');
-const { attr, one2one } = require('@mail/model/model_field');
+const { attr } = require('@mail/model/model_field');
 const { clear } = require('@mail/model/model_field_command');
 
-const { str_to_datetime } = require('web.time');
+const { str_to_date } = require('web.time');
 
 registerClassPatchModel('mail.partner', 'hr_holidays/static/src/models/partner/partner.js', {
     /**
@@ -36,7 +36,7 @@ registerInstancePatchModel('mail.partner', 'hr_holidays/static/src/models/partne
             return clear();
         }
         const currentDate = new Date();
-        const date = str_to_datetime(this.outOfOfficeDateEnd);
+        const date = str_to_date(this.outOfOfficeDateEnd);
         const options = { day: 'numeric', month: 'short' };
         if (currentDate.getFullYear() !== date.getFullYear()) {
             options.year = 'numeric';
@@ -51,8 +51,8 @@ registerInstancePatchModel('mail.partner', 'hr_holidays/static/src/models/partne
 registerFieldPatchModel('mail.partner', 'hr/static/src/models/partner/partner.js', {
     /**
      * Date of end of the out of office period of the partner as string.
-     * String is expected to use Odoo's datetime string format
-     * (examples: '2011-12-01 15:12:35.832' or '2011-12-01 15:12:35').
+     * String is expected to use Odoo's date string format
+     * (examples: '2011-12-01' or '2011-12-01').
      */
     outOfOfficeDateEnd: attr(),
     /**

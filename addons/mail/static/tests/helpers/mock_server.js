@@ -1645,21 +1645,24 @@ MockServer.include({
          * @returns {Object[]}
          */
         const mentionSuggestionsFilter = (partners, search, limit) => {
-            const matchingPartners = partners
-                .filter(partner => {
-                    // no search term is considered as return all
-                    if (!search) {
-                        return true;
-                    }
-                    // otherwise name or email must match search term
-                    if (partner.name && partner.name.toLowerCase().includes(search)) {
-                        return true;
-                    }
-                    if (partner.email && partner.email.toLowerCase().includes(search)) {
-                        return true;
-                    }
-                    return false;
-                }).map(partner => this._mockResPartnerMailPartnerFormat(partner.id));
+            const matchingPartners = [...this._mockResPartnerMailPartnerFormat(
+                partners
+                    .filter(partner => {
+                        // no search term is considered as return all
+                        if (!search) {
+                            return true;
+                        }
+                        // otherwise name or email must match search term
+                        if (partner.name && partner.name.toLowerCase().includes(search)) {
+                            return true;
+                        }
+                        if (partner.email && partner.email.toLowerCase().includes(search)) {
+                            return true;
+                        }
+                        return false;
+                    })
+                    .map(partner => partner.id)
+            ).values()];
             // reduce results to max limit
             matchingPartners.length = Math.min(matchingPartners.length, limit);
             return matchingPartners;
@@ -1741,25 +1744,28 @@ MockServer.include({
      * Simulates `mail_partner_format` on `res.partner`.
      *
      * @private
-     * @returns {integer} id
-     * @returns {Object}
+     * @returns {integer[]} ids
+     * @returns {Map}
      */
-    _mockResPartnerMailPartnerFormat(id) {
-        const partner = this._getRecords(
+    _mockResPartnerMailPartnerFormat(ids) {
+        const partners = this._getRecords(
             'res.partner',
-            [['id', '=', id]],
+            [['id', 'in', ids]],
             { active_test: false }
-        )[0];
+        );
         // Servers is also returning `user_id` and `is_internal_user` but not
         // done here for simplification.
-        return {
-            "active": partner.active,
-            "display_name": partner.display_name,
-            "email": partner.email,
-            "id": partner.id,
-            "im_status": partner.im_status,
-            "name": partner.name,
-        };
+        return new Map(partners.map(partner => [
+            partner.id,
+            {
+                "active": partner.active,
+                "display_name": partner.display_name,
+                "email": partner.email,
+                "id": partner.id,
+                "im_status": partner.im_status,
+                "name": partner.name,
+            }
+        ]));
     },
     /**
      * Simulates `_message_fetch_failed` on `res.partner`.
@@ -1798,13 +1804,13 @@ MockServer.include({
         const user = this._getRecords('res.users', [['id', 'in', ids]])[0];
         return {
             channels: this._mockMailChannelChannelInfo(this._mockResPartner_GetChannelsAsMember(user.partner_id).map(channel => channel.id)),
-            current_partner: this._mockResPartnerMailPartnerFormat(user.partner_id),
+            current_partner: this._mockResPartnerMailPartnerFormat(user.partner_id).get(user.partner_id),
             current_user_id: this.currentUserId,
             mail_failures: this._mockResPartner_MessageFetchFailed(user.partner_id),
             menu_id: false, // not useful in QUnit tests
             needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
-            partner_root: this._mockResPartnerMailPartnerFormat(this.partnerRootId),
-            public_partners: [this._mockResPartnerMailPartnerFormat(this.publicPartnerId)],
+            partner_root: this._mockResPartnerMailPartnerFormat(this.partnerRootId).get(this.partnerRootId),
+            public_partners: [...this._mockResPartnerMailPartnerFormat(this.publicPartnerId).values()],
             shortcodes: this._getRecords('mail.shortcode', []),
             starred_counter: this._getRecords('mail.message', [['starred_partner_ids', 'in', user.partner_id]]).length,
         };
