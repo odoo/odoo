@@ -50,7 +50,7 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
-    product_type = fields.Selection(related='product_id.type', readonly=True)
+    product_type = fields.Selection(related='product_id.detailed_type', readonly=True)
     is_landed_costs_line = fields.Boolean()
 
     @api.onchange('is_landed_costs_line')

@@ -44,12 +44,22 @@ class ProductTemplate(models.Model):
         'Sales Description', translate=True,
         help="A description of the Product that you want to communicate to your customers. "
              "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note")
-    type = fields.Selection([
+    detailed_type = fields.Selection([
         ('consu', 'Consumable'),
         ('service', 'Service')], string='Product Type', default='consu', required=True,
         help='A storable product is a product for which you manage stock. The Inventory app has to be installed.\n'
              'A consumable product is a product for which stock is not managed.\n'
              'A service is a non-material product you provide.')
+    type = fields.Selection(
+        selection=[
+            ('consu', 'Consumable'),
+            ('service', 'Service')
+        ],
+        default='consu',
+        compute='_compute_type',
+        store=True,
+        readonly=False,
+    )
     categ_id = fields.Many2one(
         'product.category', 'Product Category',
         change_default=True, default=_get_default_category_id, group_expand='_read_group_categ_id',
@@ -69,11 +79,8 @@ class ProductTemplate(models.Model):
     list_price = fields.Float(
         'Sales Price', default=1.0,
         digits='Product Price',
-        help="Price at which the product is sold to customers.")
-    # lst_price: catalog price for template, but including extra for variants
-    lst_price = fields.Float(
-        'Public Price', related='list_price', readonly=False,
-        digits='Product Price')
+        help="Price at which the product is sold to customers.",
+    )
     standard_price = fields.Float(
         'Cost', compute='_compute_standard_price',
         inverse='_set_standard_price', search='_search_standard_price',
@@ -102,7 +109,7 @@ class ProductTemplate(models.Model):
         help="Default unit of measure used for all stock operations.")
     uom_name = fields.Char(string='Unit of Measure Name', related='uom_id.name', readonly=True)
     uom_po_id = fields.Many2one(
-        'uom.uom', 'Purchase Unit of Measure',
+        'uom.uom', 'Purchase UoM',
         default=_get_default_uom_id, required=True,
         help="Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure.")
     company_id = fields.Many2one(
@@ -139,6 +146,8 @@ class ProductTemplate(models.Model):
 
     can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed', store=True)
     has_configurable_attributes = fields.Boolean("Is a configurable product", compute='_compute_has_configurable_attributes', store=True)
+
+    product_tooltip = fields.Char(compute='_compute_product_tooltip')
 
     priority = fields.Selection([
         ('0', 'Normal'),
@@ -388,6 +397,33 @@ class ProductTemplate(models.Model):
             if len(p.product_variant_ids) == 1:
                 p.product_variant_ids.packaging_ids = p.packaging_ids
 
+    @api.depends('type')
+    def _compute_product_tooltip(self):
+        for record in self:
+            if record.type == 'consu':
+                record.product_tooltip = _(
+                    "Consumables are physical products for which you don't manage the inventory "
+                    "level: they are always available."
+                )
+            else:
+                record.product_tooltip = ""
+
+    def _detailed_type_mapping(self):
+        return {}
+
+    @api.depends('detailed_type')
+    def _compute_type(self):
+        type_mapping = self._detailed_type_mapping()
+        for record in self:
+            record.type = type_mapping.get(record.detailed_type, record.detailed_type)
+
+    # @api.constrains('type', 'detailed_type')
+    # def _constrains_detailed_type(self):
+    #     type_mapping = self._detailed_type_mapping()
+    #     for record in self:
+    #         if record.type != type_mapping.get(record.detailed_type, record.detailed_type):
+    #             raise ValidationError(_("The Type of this product doesn't match the Detailed Type"))
+
     @api.constrains('uom_id', 'uom_po_id')
     def _check_uom(self):
         if any(template.uom_id and template.uom_po_id and template.uom_id.category_id != template.uom_po_id.category_id for template in self):
@@ -408,9 +444,19 @@ class ProductTemplate(models.Model):
         # Do nothing but needed for inheritance
         return {}
 
+    def _sanitize_vals(self, vals):
+        if 'type' in vals and 'detailed_type' not in vals:
+            if vals['type'] not in self.mapped('type'):
+                vals['detailed_type'] = vals['type']
+        if 'detailed_type' in vals and 'type' not in vals:
+            type_mapping = self._detailed_type_mapping()
+            vals['type'] = type_mapping.get(vals['detailed_type'], vals['detailed_type'])
+
     @api.model_create_multi
     def create(self, vals_list):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
+        for vals in vals_list:
+            self._sanitize_vals(vals)
         templates = super(ProductTemplate, self).create(vals_list)
         if "create_product_product" not in self._context:
             templates._create_variant_ids()
@@ -437,6 +483,7 @@ class ProductTemplate(models.Model):
         return templates
 
     def write(self, vals):
+        self._sanitize_vals(vals)
         if 'uom_id' in vals or 'uom_po_id' in vals:
             uom_id = self.env['uom.uom'].browse(vals.get('uom_id')) or self.uom_id
             uom_po_id = self.env['uom.uom'].browse(vals.get('uom_po_id')) or self.uom_po_id

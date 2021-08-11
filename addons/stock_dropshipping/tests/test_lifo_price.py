@@ -25,9 +25,9 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
         product_form = Form(self.env['product.product'])
         product_form.default_code = 'LIFO'
         product_form.name = 'LIFO Ice Cream'
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.categ_id = product_category_001
-        product_form.lst_price = 100.0
+        product_form.list_price = 100.0
         product_form.uom_id = self.env.ref('uom.product_uom_kgm')
         product_form.uom_po_id = self.env.ref('uom.product_uom_kgm')
         # these are not available (visible) in either product or variant

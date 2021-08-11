@@ -15,6 +15,11 @@ class ProductTemplate(models.Model):
             self.type = 'service'
             self.invoice_policy = 'order'
 
+    def _compute_show_service_fields(self):
+        super()._compute_show_service_fields()
+        for record in self:
+            record.show_service_fields |= record.type == 'event'
+
 
 class Product(models.Model):
     _inherit = 'product.product'

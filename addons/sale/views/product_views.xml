@@ -9,9 +9,16 @@
             <xpath expr="//group[@name='sale']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
-            <xpath expr="//group[@name='invoicing']" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </xpath>
+            <field name="product_tooltip" position="after">
+                <label for="product_tooltip" string="" attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'order')]}"/>
+                <div attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'order')]}" class="font-italic text-muted">
+                    You can invoice them before they are delivered.
+                </div>
+                <label for="product_tooltip" string="" attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'delivery')]}"/>
+                <div attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'delivery')]}" class="font-italic text-muted">
+                    Invoice after delivery, based on quantities delivered, not ordered.
+                </div>
+            </field>
         </field>
     </record>
 </odoo>
