@@ -4,7 +4,7 @@
 
 {
     "name": "Vietnam - Accounting",
-    "version": "2.0",
+    "version": "2.0.1",
     "author": "General Solutions",
     'website': 'http://gscom.vn',
     'category': 'Accounting/Localizations/Account Charts',
