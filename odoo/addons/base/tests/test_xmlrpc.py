@@ -52,9 +52,15 @@ class TestXMLRPC(common.HttpCase):
         )
 
     def test_xmlrpc_html_field(self):
-        pid = self.xmlrpc('res.partner', 'create', {'name': 'bob', 'comment': 'sucks'})
-        [p] = self.xmlrpc('res.partner', 'read', pid, ['comment'])
-        self.assertEqual(p['comment'], 'sucks')
+        sig = '<p>bork bork bork <span style="font-weight: bork">bork</span><br></p>'
+        r = self.env['res.users'].create({
+            'name': 'bob',
+            'login': 'bob',
+            'signature': sig
+        })
+        self.assertEqual(str(r.signature), sig)
+        [x] = self.xmlrpc('res.users', 'read', r.id, ['signature'])
+        self.assertEqual(x['signature'], sig)
 
     def test_jsonrpc_read_group(self):
         self._json_call(

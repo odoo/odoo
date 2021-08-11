@@ -36,7 +36,7 @@ class OdooMarshaller(xmlrpc.client.Marshaller):
     dispatch[lazy] = dump_lazy
 
     dispatch[Command] = dispatch[int]
-    dispatch[Markup] = dispatch[str]
+    dispatch[Markup] = lambda self, value, write: self.dispatch[str](self, str(value), write)
 
 
 # monkey-patch xmlrpc.client's marshaller
