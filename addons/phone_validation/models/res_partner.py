@@ -6,7 +6,7 @@ from odoo.addons.phone_validation.tools import phone_validation
 
 class Partner(models.Model):
     _name = 'res.partner'
-    _inherit = ['res.partner']
+    _inherit = ['res.partner', 'mail.thread.phone']
 
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):
