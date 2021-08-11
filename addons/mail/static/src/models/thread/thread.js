@@ -370,7 +370,6 @@ function factory(dependencies) {
             ));
         }
 
-
         /**
          * Performs the `channel_fold` RPC on `mail.channel`.
          *
@@ -509,24 +508,6 @@ function factory(dependencies) {
             return this.env.models['mail.thread'].insert(
                 this.env.models['mail.thread'].convertData(data)
             );
-        }
-
-        /**
-         * Performs the `execute_command` RPC on `mail.channel`.
-         *
-         * @static
-         * @param {Object} param0
-         * @param {integer} param0.channelId
-         * @param {string} param0.command
-         * @param {Object} [param0.postData={}]
-         */
-        static async performRpcExecuteCommand({ channelId, command, postData = {} }) {
-            return this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'execute_command',
-                args: [[channelId]],
-                kwargs: Object.assign({ command }, postData),
-            });
         }
 
         /**
@@ -708,7 +689,7 @@ function factory(dependencies) {
         }
 
         /**
-         * Joins this thread. Only makes sense on channels.
+         * Joins this thread. Only makes sense on channels of type channel.
          */
         async join() {
             await this.env.services.rpc({
@@ -716,6 +697,17 @@ function factory(dependencies) {
                 method: 'add_members',
                 args: [[this.id]],
                 kwargs: { partner_ids: [this.env.messaging.currentPartner.id] }
+            });
+        }
+
+        /**
+         * Leaves this thread. Only makes sense on channels of type channel.
+         */
+        async leave() {
+            await this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'action_unfollow',
+                args: [[this.id]],
             });
         }
 
@@ -795,17 +787,14 @@ function factory(dependencies) {
          * Only makes sense if isPendingPinned is set to the desired value.
          */
         async notifyPinStateToServer() {
-            if (this.isPendingPinned) {
-                await this.env.models['mail.thread'].performRpcChannelPin({
-                    pinned: true,
-                    uuid: this.uuid,
-                });
-            } else {
-                this.env.models['mail.thread'].performRpcExecuteCommand({
-                    channelId: this.id,
-                    command: 'leave',
-                });
+            if (this.channel_type === 'channel') {
+                await this.leave();
+                return;
             }
+            await this.env.models['mail.thread'].performRpcChannelPin({
+                pinned: this.isPendingPinned,
+                uuid: this.uuid,
+            });
         }
 
         /**

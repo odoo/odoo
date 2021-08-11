@@ -730,13 +730,6 @@ QUnit.test('display command suggestions on typing "/"', async function (assert) 
     assert.expect(2);
 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
-    this.data['mail.channel_command'].records.push(
-        {
-            channel_types: ['channel'],
-            help: "List users in the current channel",
-            name: "who",
-        },
-    );
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 20,
@@ -768,11 +761,6 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
     assert.expect(1);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    this.data['mail.channel_command'].records.push({
-        channel_types: ['channel'],
-        help: "List users in the current channel",
-        name: "who",
-    });
     await this.start({
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
@@ -802,11 +790,6 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
     assert.expect(1);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    this.data['mail.channel_command'].records.push({
-        channel_types: ['channel'],
-        help: "List users in the current channel",
-        name: "who",
-    });
     await this.start({
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
@@ -844,16 +827,9 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
 });
 
 QUnit.test('use a command for a specific channel type', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
-    this.data['mail.channel_command'].records.push(
-        {
-            channel_types: ['channel'],
-            help: "List users in the current channel",
-            name: "who",
-        },
-    );
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 20,
@@ -879,11 +855,6 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "should have a command suggestion"
-    );
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
@@ -894,48 +865,10 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
     );
 });
 
-QUnit.test("channel with no commands should not prompt any command suggestions on typing /", async function (assert) {
-    assert.expect(1);
-
-    this.data['mail.channel'].records.push({ channel_type: 'chat', id: 20 });
-    this.data['mail.channel_command'].records.push(
-        {
-            channel_types: ['channel'],
-            help: "bla bla bla",
-            name: "who",
-        },
-    );
-    await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
-    });
-    await this.createComposerComponent(thread.composer);
-    await afterNextRender(() => {
-        document.querySelector('.o_ComposerTextInput_textarea').focus();
-        document.execCommand('insertText', false, "/");
-        const composer_text_input = document.querySelector('.o_ComposerTextInput_textarea');
-        composer_text_input.dispatchEvent(new window.KeyboardEvent('keydown'));
-        composer_text_input.dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
-    assert.containsNone(
-        document.body,
-        '.o_ComposerSuggestion',
-        "should not prompt (command) suggestion after typing / (reason: no channel commands in chat channels)"
-    );
-});
-
 QUnit.test('command suggestion should only open if command is the first character', async function (assert) {
     assert.expect(4);
 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
-    this.data['mail.channel_command'].records.push(
-        {
-            channel_types: ['channel'],
-            help: "List users in the current channel",
-            name: "who",
-        },
-    );
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 20,
@@ -976,16 +909,9 @@ QUnit.test('command suggestion should only open if command is the first characte
 });
 
 QUnit.test('add an emoji after a command', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
-    this.data['mail.channel_command'].records.push(
-        {
-            channel_types: ['channel'],
-            help: "List users in the current channel",
-            name: "who",
-        },
-    );
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 20,
@@ -1011,11 +937,6 @@ QUnit.test('add an emoji after a command', async function (assert) {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "should have a command suggestion"
-    );
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );

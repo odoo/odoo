@@ -138,6 +138,10 @@ MockServer.include({
             return this._mockMailActivityGetActivityData(res_model, domain);
         }
         // mail.channel methods
+        if (args.model === 'mail.channel' && args.method === 'action_unfollow') {
+            const ids = args.args[0];
+            return this._mockMailChannelActionUnfollow(ids);
+        }
         if (args.model === 'mail.channel' && args.method === 'channel_fetched') {
             const ids = args.args[0];
             return this._mockMailChannelChannelFetched(ids);
@@ -175,6 +179,11 @@ MockServer.include({
         if (args.model === 'mail.channel' && args.method === 'channel_minimize') {
             return;
         }
+        if (args.model === 'mail.channel' && args.method === 'channel_pin') {
+            const uuid = args.args[0] || args.kwargs.uuid;
+            const pinned = args.args[1] || args.kwargs.pinned;
+            return this._mockMailChannelChannelPin(uuid, pinned);
+        }
         if (args.model === 'mail.channel' && args.method === 'channel_rename') {
             const ids = args.args[0];
             const name = args.args[1] || args.kwargs.name;
@@ -190,8 +199,11 @@ MockServer.include({
             const name = args.args[1] || args.kwargs.name;
             return this._mockMailChannelChannelSetCustomName(ids, name);
         }
-        if (args.model === 'mail.channel' && args.method === 'execute_command') {
-            return this._mockMailChannelExecuteCommand(args);
+        if (args.model === 'mail.channel' && args.method === 'execute_command_leave') {
+            return this._mockMailChannelExecuteCommandLeave(args);
+        }
+        if (args.model === 'mail.channel' && args.method === 'execute_command_who') {
+            return this._mockMailChannelExecuteCommandWho(args);
         }
         if (args.model === 'mail.channel' && args.method === 'message_post') {
             const id = args.args[0];
@@ -388,8 +400,6 @@ MockServer.include({
 
         const shortcodes = this._getRecords('mail.shortcode', []);
 
-        const commands = this._getRecords('mail.channel_command', []);
-
         const starredCounter = this._getRecords('mail.message', [
             ['starred_partner_ids', 'in', this.currentPartnerId],
         ]).length;
@@ -400,7 +410,6 @@ MockServer.include({
                 channel_direct_message: directMessageInfos,
                 channel_private_group: privateGroupInfos,
             },
-            commands,
             current_partner: currentPartnerFormat,
             current_user_id: this.currentUserId,
             mail_failures: mailFailures,
@@ -543,6 +552,43 @@ MockServer.include({
         };
     },
     /**
+     * Simulates `action_unfollow` on `mail.channel`.
+     *
+     * @private
+     * @param {integer[]} ids
+     */
+    _mockMailChannelActionUnfollow(ids) {
+        const channel = this._getRecords('mail.channel', [['id', 'in', ids]])[0];
+        if (!channel.members.includes(this.currentPartnerId)) {
+            return true;
+        }
+        this._mockWrite('mail.channel', [
+            [channel.id],
+            {
+                is_pinned: false,
+                members: [[3, this.currentPartnerId]],
+            },
+        ]);
+        const notifConfirmUnpin = [
+            ["dbName", 'res.partner', this.currentPartnerId],
+            this._mockMailChannelChannelInfo([channel.id], 'unsubscribe')[0],
+        ];
+        this._widget.call('bus_service', 'trigger', 'notification', [notifConfirmUnpin]);
+        /**
+         * Leave message not posted here because it would send the new message
+         * notification on a separate bus notification list from the unsubscribe
+         * itself which would lead to the channel being pinned again (handler
+         * for unsubscribe is weak and is relying on both of them to be sent
+         * together on the bus).
+         */
+        // this._mockMailChannelMessagePost(channel.id, {
+        //     author_id: this.currentPartnerId,
+        //     body: '<div class="o_mail_notification">left the channel</div>',
+        //     subtype_xmlid: "mail.mt_comment",
+        // });
+        return true;
+    },
+    /**
      * Simulates `add_members` on `mail.channel`.
      * For simplicity only handles the current partner joining himself.
      *
@@ -563,7 +609,6 @@ MockServer.include({
             const message_type = "notification";
             const subtype_xmlid = "mail.mt_comment";
             this._mockMailChannelMessagePost(
-                'mail.channel',
                 [channel.id],
                 { body, message_type, subtype_xmlid },
             );
@@ -791,6 +836,25 @@ MockServer.include({
         });
     },
     /**
+     * Simulates the `channel_pin` method of `mail.channel`.
+     *
+     * @private
+     * @param {string} uuid
+     * @param {boolean} [pinned=false]
+     */
+    async _mockMailChannelChannelPin(uuid, pinned = false) {
+        const channel = this._getRecords('mail.channel', [['uuid', '=', uuid]])[0];
+        this._mockWrite('mail.channel', [
+            [channel.id],
+            { is_pinned: false },
+        ]);
+        const notification = [
+            ["dbName", 'res.partner', this.currentPartnerId],
+            this._mockMailChannelChannelInfo([channel.id], pinned ? undefined : 'unsubscribe')[0],
+        ];
+        this._widget.call('bus_service', 'trigger', 'notification', [notification]);
+    },
+    /**
      * Simulates the `channel_seen` method of `mail.channel`.
      *
      * @private
@@ -864,49 +928,43 @@ MockServer.include({
         this._mockMailChannel_broadcast([channel.id], [this.currentPartnerId]);
     },
     /**
-     * Simulates `execute_command` on `mail.channel`.
-     * In particular sends a notification on the bus.
+     * Simulates `execute_command_leave` on `mail.channel`.
      *
      * @private
      */
-    _mockMailChannelExecuteCommand(args) {
-        const ids = args.args[0];
-        const commandName = args.kwargs.command || args.args[1];
-        const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
-        if (commandName === 'leave') {
-            for (const channel of channels) {
-                this._mockWrite('mail.channel', [
-                    [channel.id],
-                    { is_pinned: false },
-                ]);
-                const notifConfirmUnpin = [
-                    ["dbName", 'res.partner', this.currentPartnerId],
-                    Object.assign({}, channel, { info: 'unsubscribe' })
-                ];
-                this._widget.call('bus_service', 'trigger', 'notification', [notifConfirmUnpin]);
-            }
-            return;
-        } else if (commandName === 'who') {
-            for (const channel of channels) {
-                const members = channel.members.map(memberId => this._getRecords('res.partner', [['id', '=', memberId]])[0].name);
-                let message = "You are alone in this channel.";
-                if (members.length > 0) {
-                    message = `Users in this channel: ${members.join(', ')} and you`;
-                }
-                const notification = [
-                    ["dbName", 'res.partner', this.currentPartnerId],
-                    {
-                        'body': `<span class="o_mail_notification">${message}</span>`,
-                        'info': 'transient_message',
-                        'model': 'mail.channel',
-                        'res_id': channel.id,
-                    }
-                ];
-                this._widget.call('bus_service', 'trigger', 'notification', [notification]);
-            }
-            return;
+    _mockMailChannelExecuteCommandLeave(args) {
+        const channel = this._getRecords('mail.channel', [['id', 'in', args.args[0]]])[0];
+        if (channel.channel_type === 'channel') {
+            this._mockMailChannelActionUnfollow([channel.id]);
+        } else {
+            this._mockMailChannelChannelPin(channel.uuid, false);
         }
-        throw new Error(`mail/mock_server: the route execute_command doesn't implement the command "${commandName}"`);
+    },
+    /**
+     * Simulates `execute_command_who` on `mail.channel`.
+     *
+     * @private
+     */
+    _mockMailChannelExecuteCommandWho(args) {
+        const ids = args.args[0];
+        const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
+        for (const channel of channels) {
+            const members = channel.members.map(memberId => this._getRecords('res.partner', [['id', '=', memberId]])[0].name);
+            let message = "You are alone in this channel.";
+            if (members.length > 0) {
+                message = `Users in this channel: ${members.join(', ')} and you`;
+            }
+            const notification = [
+                ["dbName", 'res.partner', this.currentPartnerId],
+                {
+                    'body': `<span class="o_mail_notification">${message}</span>`,
+                    'info': 'transient_message',
+                    'model': 'mail.channel',
+                    'res_id': channel.id,
+                }
+            ];
+            this._widget.call('bus_service', 'trigger', 'notification', [notification]);
+        }
     },
     /**
      * Simulates `get_mention_suggestions` on `mail.channel`.

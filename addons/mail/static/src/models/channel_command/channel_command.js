@@ -91,6 +91,23 @@ function factory(dependencies) {
         }
 
         /**
+         * Executes this command on the given `mail.channel`.
+         *
+         * @static
+         * @param {Object} param0
+         * @param {mail.thread} param0.channel
+         * @param {Object} [param0.postData={}]
+         */
+        async execute({ channel, postData = {} }) {
+            return this.env.services.rpc({
+                model: 'mail.channel',
+                method: this.methodName,
+                args: [[channel.id]],
+                kwargs: postData,
+            });
+        }
+
+        /**
          * Returns the text that identifies this channel command in a mention.
          *
          * @returns {string}
@@ -112,11 +129,22 @@ function factory(dependencies) {
         /**
          *  The command that will be executed.
          */
-        help: attr(),
+        help: attr({
+            required: true,
+        }),
+        /**
+         * Name of the method of `mail.channel` to call on the server when
+         * executing this command.
+         */
+        methodName: attr({
+            required: true,
+        }),
         /**
          *  The keyword to use a specific command.
          */
-        name: attr(),
+        name: attr({
+            required: true,
+        }),
     };
 
     ChannelCommand.modelName = 'mail.channel_command';
