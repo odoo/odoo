@@ -264,7 +264,7 @@ odoo.define('pos_coupon.pos', function (require) {
                         this.rewardsContainer = rewardsContainer;
                         // Send a signal that the rewardsContainer are updated.
                         this.trigger('rewards-updated');
-                    });
+                    }).catch(() => { /* catch the reject of dp when calling `add` to avoid unhandledrejection */ });
                 },
                 res
             );
