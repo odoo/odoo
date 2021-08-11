@@ -308,6 +308,7 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
         }
 
         # ==== Journals ====
+        # TODO: this should be an electronic journal
         cls.sale_expo_journal_ri = cls.env["account.journal"].create({
             'name': "Expo Sales Journal",
             'company_id': cls.company_ri.id,
@@ -607,7 +608,7 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
                 invoice_form.partner_id = values['partner_id']
                 invoice_form.invoice_user_id = values['invoice_user_id']
                 invoice_form.invoice_payment_term_id = values['invoice_payment_term_id']
-                invoice_form.invoice_date = values['invoice_date']
+                # invoice_form.invoice_date = values['invoice_date']
                 invoice_form.company_id = values['company_id']
                 if values.get('invoice_incoterm_id'):
                     invoice_form.invoice_incoterm_id = values['invoice_incoterm_id']
