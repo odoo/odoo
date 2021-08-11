@@ -557,9 +557,9 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         wiz_act = pick.button_validate()
         wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
         wiz.process()
-        self.assertEqual(so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "no" after partial delivery of a kit')
+        self.assertEqual(so.invoice_status, 'to invoice', 'Sale MRP: so invoice_status should be "to invoice" since 0.25 kit is delivered')
         del_qty = sum(sol.qty_delivered for sol in so.order_line)
-        self.assertEqual(del_qty, 0.0, 'Sale MRP: delivered quantity should be zero after partial delivery of a kit')
+        self.assertEqual(del_qty, 0.25)
         # deliver remaining products, check the so's invoice_status and delivered quantities
         self.assertEqual(len(so.picking_ids), 2, 'Sale MRP: number of pickings should be 2')
         pick_2 = so.picking_ids.filtered('backorder_id')
@@ -886,9 +886,8 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         backorder_1 = so.picking_ids - picking_original
         self.assertEqual(backorder_1.backorder_id.id, picking_original.id)
 
-        # Even if some components are delivered completely,
-        # no KitParent should be delivered
-        self.assertEqual(order_line.qty_delivered, 0)
+        # Check that a partial qty of the kit is delivered
+        self.assertEqual(order_line.qty_delivered, 0.58)
 
         # Process just enough components to make 1 kit_parent
         qty_to_process = {
@@ -1007,8 +1006,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         wiz_act = return_of_return_pick.button_validate()
         Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save().process()
 
-        # As one of each component is missing, only 6 kit_parents should be delivered
-        self.assertEqual(order_line.qty_delivered, 6)
+        self.assertEqual(order_line.qty_delivered, 6.5)
 
         # Check that the 4th backorder is created.
         self.assertEqual(len(so.picking_ids), 7)
@@ -1642,3 +1640,33 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         mos = self.env['mrp.production'].search([('product_id', '=', finished_product.id)])
         self.assertEqual(len(mos), 1)
         self.assertEqual(mos.state, 'cancel')
+
+    def test_sale_decimal_kit_quantity(self):
+        """ When selling a decimal quantity of a kit, this test ensure that the delivered quantity
+        on the sale order is correct """
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
+        self.env['stock.quant']._update_available_quantity(self.component_a, stock_location, 20)
+        self.env['stock.quant']._update_available_quantity(self.component_b, stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(self.component_c, stock_location, 30)
+
+        f = Form(self.env['sale.order'])
+        f.partner_id = self.partner_a
+        with f.order_line.new() as line:
+            line.product_id = self.kit_1
+            line.product_uom_qty = 8.25
+        so = f.save()
+        so.action_confirm()
+
+        picking = so.picking_ids[0]
+        move_lines = picking.move_lines
+        expected_quantities = {
+            self.component_a: 16.50,
+            self.component_b: 8.25,
+            self.component_c: 24.75,
+        }
+        self._assert_quantities(move_lines, expected_quantities)
+
+        wiz_act = picking.button_validate()
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save().process()
+
+        self.assertEqual(so.order_line.qty_delivered, 8.25)

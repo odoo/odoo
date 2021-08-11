@@ -275,9 +275,8 @@ class TestSaleMrpFlow(TransactionCase):
         backorder_1 = po.picking_ids - picking_original
         self.assertEqual(backorder_1.backorder_id.id, picking_original.id)
 
-        # Even if some components are received completely,
-        # no KitParent should be received
-        self.assertEqual(order_line.qty_received, 0)
+        # Check that a partial qty of the kit is received
+        self.assertEqual(order_line.qty_received, 0.58)
 
         # Process just enough components to make 1 kit_parent
         qty_to_process = {
@@ -397,8 +396,7 @@ class TestSaleMrpFlow(TransactionCase):
         wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
         wiz.process()
 
-        # As one of each component is missing, only 6 kit_parents should be received
-        self.assertEqual(order_line.qty_received, 6)
+        self.assertEqual(order_line.qty_received, 6.5)
 
         # Check that the 4th backorder is created.
         self.assertEqual(len(po.picking_ids), 7)

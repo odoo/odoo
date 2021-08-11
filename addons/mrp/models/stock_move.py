@@ -407,9 +407,8 @@ class StockMove(models.Model):
                 return 0.0
         if qty_ratios:
             # Now that we have every ratio by components, we keep the lowest one to know how many kits we can produce
-            # with the quantities delivered of each component. We use the floor division here because a 'partial kit'
-            # doesn't make sense.
-            return min(qty_ratios) // 1
+            # with the quantities delivered of each component.
+            return min(qty_ratios)
         else:
             return 0.0
 
