@@ -21,7 +21,8 @@
                 <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id'}" optional="show" decoration-muted="not sale_ok"/>
                 <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}" optional="show" readonly="1"/>
                 <field name="categ_id" optional="hide"/>
-                <field name="type" optional="hide" readonly="1"/>
+                <field name="detailed_type" optional="hide" readonly="1"/>
+                <field name="type" invisible="1"/>
                 <field name="uom_id" readonly="1" optional="show" groups="uom.group_uom"/>
                 <field name="active" invisible="1"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
@@ -60,6 +61,9 @@
                             <field name="value_count" invisible="1"/>
                             <field name="attribute_id" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True, 'color_field': 'color'}" context="{'default_attribute_id': attribute_id, 'show_attribute': False}"/>
+                            <button string="Configure" class="float-right btn-secondary"
+                                type="object" name="action_open_attribute_values"
+                                groups="product.group_product_variant"/>
                         </tree>
                     </field>
                         <p class="oe_grey oe_edit_only">
@@ -104,7 +108,7 @@
                                     </strong>
                                 </div>
                                 <div name="product_lst_price" class="mt-1">
-                                    Price: <field name="lst_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"></field>
+                                    Price: <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"></field>
                                 </div>
                             </div>
                         </div>

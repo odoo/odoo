@@ -90,7 +90,7 @@ class ProductProduct(models.Model):
         help="This is the sum of the extra price of all attributes")
     # lst_price: catalog value + extra, context dependent (uom)
     lst_price = fields.Float(
-        'Public Price', compute='_compute_product_lst_price',
+        'Sales Price', compute='_compute_product_lst_price',
         digits='Product Price', inverse='_set_product_lst_price',
         help="The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
 
@@ -274,6 +274,7 @@ class ProductProduct(models.Model):
             value -= product.price_extra
             product.write({'list_price': value})
 
+    @api.onchange('lst_price')
     def _set_product_lst_price(self):
         for product in self:
             if self._context.get('uom'):
@@ -356,12 +357,15 @@ class ProductProduct(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            self.product_tmpl_id._sanitize_vals(vals)
         products = super(ProductProduct, self.with_context(create_product_product=True)).create(vals_list)
         # `_get_variant_id_for_combination` depends on existing variants
         self.clear_caches()
         return products
 
     def write(self, values):
+        self.product_tmpl_id._sanitize_vals(values)
         res = super(ProductProduct, self).write(values)
         if 'product_template_attribute_value_ids' in values:
             # `_get_variant_id_for_combination` depends on `product_template_attribute_value_ids`

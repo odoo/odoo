@@ -754,7 +754,7 @@ class PosConfig(models.Model):
             WHERE     p.active
             AND       t.available_in_pos
             ORDER BY  t.priority DESC,
-                      t.type DESC,
+                      t.detailed_type DESC,
                       COALESCE(pm.date,p.write_date) DESC limit %s
         """, [str(self.limited_products_amount)])
         return self.env.cr.fetchall()

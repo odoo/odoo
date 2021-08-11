@@ -78,7 +78,6 @@ class SaleOrder(models.Model):
             These SOLs should contain a product which has:
                 - type="service",
                 - service_policy="ordered_timesheet",
-                - service_upsell_warning=True.
         """
         self.ensure_one()
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
@@ -86,7 +85,6 @@ class SaleOrder(models.Model):
             sol.is_service
             and not sol.has_displayed_warning_upsell  # we don't want to display many times the warning each time we timesheet on the SOL
             and sol.product_id.service_policy == 'ordered_timesheet'
-            and sol.product_id.service_upsell_warning
             and float_compare(
                 sol.qty_delivered,
                 sol.product_uom_qty * (sol.product_id.service_upsell_threshold or 1.0),

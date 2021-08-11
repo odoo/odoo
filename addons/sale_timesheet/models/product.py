@@ -6,14 +6,21 @@ import threading
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
+SERVICE_POLICY = [
+    # (service_policy, (invoice_policy, service_type), string)
+    ('ordered_timesheet', ('order', 'timesheet'), 'Prepaid/Fixed Price'),
+    ('delivered_timesheet', ('delivery', 'timesheet'), 'Based on Timesheets'),
+    ('delivered_manual', ('delivery', 'manual'), 'Based on Milestones'),
+]
+SERVICE_TO_GENERAL = {policy[0]: policy[1] for policy in SERVICE_POLICY}
+GENERAL_TO_SERVICE = {policy[1]: policy[0] for policy in SERVICE_POLICY}
+
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     service_policy = fields.Selection([
-        ('ordered_timesheet', 'Prepaid'),
-        ('delivered_timesheet', 'Timesheets on tasks'),
-        ('delivered_manual', 'Milestones (manually set quantities on order)')
+        (policy[0], policy[2]) for policy in SERVICE_POLICY
     ], string="Service Invoicing Policy", compute='_compute_service_policy', inverse='_inverse_service_policy')
     service_type = fields.Selection(selection_add=[
         ('timesheet', 'Timesheets on project (one fare per SO/Project)'),
@@ -21,12 +28,14 @@ class ProductTemplate(models.Model):
     # override domain
     project_id = fields.Many2one(domain="[('company_id', '=', current_company_id), ('allow_billable', '=', True), ('pricing_type', '=', 'task_rate'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet', True])]")
     project_template_id = fields.Many2one(domain="[('company_id', '=', current_company_id), ('allow_billable', '=', True), ('pricing_type', '!=', 'task_rate'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet', True])]")
-    service_upsell_warning = fields.Boolean('Upsell Warning', help="The salesperson in charge will be assigned an activity informing him of an upselling opportunity once the selected threshold is reached.")
-    service_upsell_threshold = fields.Float('Threshold', help="Percentage of time delivered compared to the prepaid amount that must be reached for the upselling opportunity activity to be triggered.")
+    service_upsell_threshold = fields.Float('Threshold', default=1, help="Percentage of time delivered compared to the prepaid amount that must be reached for the upselling opportunity activity to be triggered.")
+    service_upsell_threshold_ratio = fields.Char(compute='_compute_service_upsell_threshold_ratio')
 
-    def _default_visible_expense_policy(self):
-        visibility = self.user_has_groups('project.group_project_user')
-        return visibility or super(ProductTemplate, self)._default_visible_expense_policy()
+    @api.depends('uom_id')
+    def _compute_service_upsell_threshold_ratio(self):
+        product_uom_hour = self.env.ref('uom.product_uom_hour')
+        for record in self:
+            record.service_upsell_threshold_ratio = f"1 {record.uom_id.name} = {product_uom_hour.factor / record.uom_id.factor:.2f} Hours"
 
     def _compute_visible_expense_policy(self):
         visibility = self.user_has_groups('project.group_project_user')
@@ -35,40 +44,71 @@ class ProductTemplate(models.Model):
                 product_template.visible_expense_policy = visibility
         return super(ProductTemplate, self)._compute_visible_expense_policy()
 
-    @api.depends('invoice_policy', 'service_type')
+    @api.depends('invoice_policy', 'service_type', 'type')
     def _compute_service_policy(self):
         for product in self:
-            policy = None
-            if product.invoice_policy == 'delivery':
-                policy = 'delivered_manual' if product.service_type == 'manual' else 'delivered_timesheet'
-            elif product.invoice_policy == 'order' and (product.service_type == 'timesheet' or product.type == 'service'):
-                policy = 'ordered_timesheet'
-            product.service_policy = policy
+            product.service_policy = GENERAL_TO_SERVICE.get((product.invoice_policy, product.service_type), False)
+            if not product.service_policy and product.type == 'service':
+                product.service_policy = 'ordered_timesheet'
 
+    @api.onchange('service_policy')
     def _inverse_service_policy(self):
         for product in self:
-            policy = product.service_policy
-            if not policy and not product.invoice_policy =='delivery':
-                product.invoice_policy = 'order'
-                product.service_type = 'manual'
-            elif policy == 'ordered_timesheet':
-                product.invoice_policy = 'order'
-                product.service_type = 'timesheet'
-            else:
-                product.invoice_policy = 'delivery'
-                product.service_type = 'manual' if policy == 'delivered_manual' else 'timesheet'
+            if product.service_policy:
+                product.invoice_policy, product.service_type = SERVICE_TO_GENERAL.get(product.service_policy, (False, False))
 
-    @api.onchange('type')
-    def _onchange_type(self):
-        res = super(ProductTemplate, self)._onchange_type()
-        if self.type == 'service' and not self.invoice_policy:
-            self.invoice_policy = 'order'
-            self.service_type = 'timesheet'
-        elif self.type == 'service' and self.invoice_policy == 'order':
-            self.service_policy = 'ordered_timesheet'
-        elif self.type == 'consu' and not self.invoice_policy and self.service_policy == 'ordered_timesheet':
-            self.invoice_policy = 'order'
-        return res
+    @api.depends('service_tracking', 'service_policy')
+    def _compute_product_tooltip(self):
+        super()._compute_product_tooltip()
+        for record in self.filtered(lambda record: record.type == 'service'):
+            if record.service_policy == 'ordered_timesheet':
+                pass
+            elif record.service_policy == 'delivered_timesheet':
+                if record.service_tracking == 'no':
+                    record.product_tooltip = _(
+                        "Invoice based on timesheets (delivered quantity) on projects or tasks "
+                        "you'll create later on."
+                    )
+                elif record.service_tracking == 'task_global_project':
+                    record.product_tooltip = _(
+                        "Invoice based on timesheets (delivered quantity), and create a task in "
+                        "an existing project to track the time spent."
+                    )
+                elif record.service_tracking == 'task_in_project':
+                    record.product_tooltip = _(
+                        "Invoice based on timesheets (delivered quantity), and create a project "
+                        "for the order with a task for each sales order line to track the time "
+                        "spent."
+                    )
+                elif record.service_tracking == 'project_only':
+                    record.product_tooltip = _(
+                        "Invoice based on timesheets (delivered quantity), and create an empty "
+                        "project for the order to track the time spent."
+                    )
+            elif record.service_policy == 'delivered_manual':
+                if record.service_tracking == 'no':
+                    record.product_tooltip = _(
+                        "Sales order lines define milestones of the project to invoice by setting "
+                        "the delivered quantity."
+                    )
+                elif record.service_tracking == 'task_global_project':
+                    record.product_tooltip = _(
+                        "Sales order lines define milestones of the project to invoice by setting "
+                        "the delivered quantity. Create a task in an existing project to track the"
+                        " time spent."
+                    )
+                elif record.service_tracking == 'task_in_project':
+                    record.product_tooltip = _(
+                        "Sales order lines define milestones of the project to invoice by setting "
+                        "the delivered quantity. Create an empty project for the order to track "
+                        "the time spent."
+                    )
+                elif record.service_tracking == 'project_only':
+                    record.product_tooltip = _(
+                        "Sales order lines define milestones of the project to invoice by setting "
+                        "the delivered quantity. Create a project for the order with a task for "
+                        "each sales order line to track the time spent."
+                    )
 
     @api.model
     def _get_onchange_service_policy_updates(self, service_tracking, service_policy, project_id, project_template_id):
@@ -82,6 +122,7 @@ class ProductTemplate(models.Model):
 
     @api.onchange('service_policy')
     def _onchange_service_policy(self):
+        self._inverse_service_policy()
         vals = self._get_onchange_service_policy_updates(self.service_tracking,
                                                         self.service_policy,
                                                         self.project_id,
@@ -115,6 +156,7 @@ class ProductProduct(models.Model):
 
     @api.onchange('service_policy')
     def _onchange_service_policy(self):
+        self.product_tmpl_id._inverse_service_policy()
         vals = self.product_tmpl_id._get_onchange_service_policy_updates(self.service_tracking,
                                                                         self.service_policy,
                                                                         self.project_id,

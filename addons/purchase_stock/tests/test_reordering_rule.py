@@ -5,11 +5,12 @@ from datetime import datetime as dt
 from datetime import timedelta as td
 
 from odoo import SUPERUSER_ID
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
 
 
+@tagged('post_install', '-at_install')
 class TestReorderingRule(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -21,7 +22,7 @@ class TestReorderingRule(TransactionCase):
         # create product and set the vendor
         product_form = Form(cls.env['product.product'])
         product_form.name = 'Product A'
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.description = 'Internal Notes'
         with product_form.seller_ids.new() as seller:
             seller.name = cls.partner
@@ -179,14 +180,14 @@ class TestReorderingRule(TransactionCase):
 
         product_form = Form(self.env['product.product'])
         product_form.name = 'Simple Product'
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         with product_form.seller_ids.new() as s:
             s.name = partner
         product = product_form.save()
 
         product_form = Form(self.env['product.product'])
         product_form.name = 'Product BUY + MTO'
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.route_ids.add(route_buy)
         product_form.route_ids.add(route_mto)
         with product_form.seller_ids.new() as s:
@@ -277,14 +278,14 @@ class TestReorderingRule(TransactionCase):
 
         product_form = Form(self.env['product.product'])
         product_form.name = 'Simple Product'
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         with product_form.seller_ids.new() as s:
             s.name = partner
         product = product_form.save()
 
         product_form = Form(self.env['product.product'])
         product_form.name = 'Product BUY + MTO'
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.route_ids.add(route_buy)
         product_form.route_ids.add(route_mto)
         with product_form.seller_ids.new() as s:

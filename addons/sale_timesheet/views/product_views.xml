@@ -7,13 +7,19 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='invoice_policy']" position="attributes">
                 <attribute name="invisible">False</attribute>
-                <attribute name="attrs">{'invisible': [('type','==','service')]}</attribute>
+                <attribute name="attrs">{'invisible': [('type', '=', 'service')]}</attribute>
             </xpath>
-            <xpath expr="//field[@name='service_type']" position="after">
-                <field name="service_policy" widget="radio" attrs="{'invisible': [('type','!=','service')]}"/>
-                <field name="service_upsell_warning" attrs="{'invisible': ['|', ('type', '!=', 'service'), ('service_policy', '!=', 'ordered_timesheet')]}" />
-                <field name="service_upsell_threshold" attrs="{'invisible': ['|', '|', ('type', '!=', 'service'), ('service_policy', '!=', 'ordered_timesheet'), ('service_upsell_warning', '=', False)]}" widget="percentage"/>
+            <xpath expr="//field[@name='invoice_policy']" position="after">
+                <field name="service_policy" string="Invoicing Policy" attrs="{'invisible': [('type', '!=', 'service')], 'required': [('type', '=', 'service')]}"/>
             </xpath>
+            <field name="product_tooltip" position="after">
+                <label for="product_tooltip" string="" attrs="{'invisible': ['|', ('type', '!=', 'service'), ('service_policy', '!=', 'ordered_timesheet')]}"/>
+                <div attrs="{'invisible': ['|', ('type', '!=', 'service'), ('service_policy', '!=', 'ordered_timesheet')]}" class="font-italic text-muted">
+                    Warn the salesperson for an upsell when work done exceeds
+                    <field name="service_upsell_threshold" widget="percentage" class="oe_inline"/>
+                    of hours sold. (<field name="service_upsell_threshold_ratio" class="oe_inline"/>)
+                </div>
+            </field>
         </field>
     </record>
 

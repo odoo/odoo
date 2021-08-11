@@ -615,6 +615,9 @@ class ProductTemplate(models.Model):
     responsible_id = fields.Many2one(
         'res.users', string='Responsible', default=lambda self: self.env.uid, company_dependent=True, check_company=True,
         help="This user will be responsible of the next activities related to logistic operations for this product.")
+    detailed_type = fields.Selection(selection_add=[
+        ('product', 'Storable Product')
+    ], tracking=True, ondelete={'product': 'set default'})
     type = fields.Selection(selection_add=[
         ('product', 'Storable Product')
     ], tracking=True, ondelete={'product': 'set default'})
@@ -795,6 +798,14 @@ class ProductTemplate(models.Model):
             template.reordering_min_qty = res[template.id]['reordering_min_qty']
             template.reordering_max_qty = res[template.id]['reordering_max_qty']
 
+    def _compute_product_tooltip(self):
+        super()._compute_product_tooltip()
+        for record in self:
+            if record.type == 'product':
+                record.product_tooltip += _(
+                    "Storable products are physical items for which you manage the inventory level."
+                )
+
     @api.onchange('tracking')
     def onchange_tracking(self):
         return self.mapped('product_variant_ids').onchange_tracking()
@@ -820,6 +831,7 @@ class ProductTemplate(models.Model):
         return res
 
     def write(self, vals):
+        self._sanitize_vals(vals)
         if 'uom_id' in vals:
             new_uom = self.env['uom.uom'].browse(vals['uom_id'])
             updated = self.filtered(lambda template: template.uom_id != new_uom)

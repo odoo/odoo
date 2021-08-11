@@ -155,7 +155,7 @@ class StockMove(models.Model):
     picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
     show_details_visible = fields.Boolean('Details Visible', compute='_compute_show_details_visible')
     show_reserved_availability = fields.Boolean('From Supplier', compute='_compute_show_reserved_availability')
-    product_type = fields.Selection(related='product_id.type', readonly=True)
+    product_type = fields.Selection(related='product_id.detailed_type', readonly=True)
     additional = fields.Boolean("Whether the move was added after the picking's confirmation", default=False)
     is_locked = fields.Boolean(compute='_compute_is_locked', readonly=True)
     is_initial_demand_editable = fields.Boolean('Is initial demand editable', compute='_compute_is_initial_demand_editable')
@@ -991,7 +991,7 @@ class StockMove(models.Model):
     def _key_assign_picking(self):
         self.ensure_one()
         return self.group_id, self.location_id, self.location_dest_id, self.picking_type_id
-    
+
     def _search_picking_for_assignation_domain(self):
         return [('group_id', '=', self.group_id.id),
                 ('location_id', '=', self.location_id.id),

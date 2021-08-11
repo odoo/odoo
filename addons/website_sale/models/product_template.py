@@ -71,10 +71,10 @@ class ProductTemplate(models.Model):
             if len(template.product_variant_ids) == 1:
                 template.product_variant_ids.base_unit_id = template.base_unit_id
 
-    @api.depends('price', 'lst_price', 'base_unit_count')
+    @api.depends('price', 'list_price', 'base_unit_count')
     def _compute_base_unit_price(self):
         for template in self:
-            template.base_unit_price = template.base_unit_count and (template.price or template.lst_price) / template.base_unit_count
+            template.base_unit_price = template.base_unit_count and (template.price or template.list_price) / template.base_unit_count
 
     @api.depends('uom_name', 'base_unit_id.name')
     def _compute_base_unit_name(self):

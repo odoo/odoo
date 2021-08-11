@@ -154,7 +154,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
     def _cls_create_product(cls, name, uom_id, routes=()):
         p = Form(cls.env['product.product'])
         p.name = name
-        p.type = 'product'
+        p.detailed_type = 'product'
         p.uom_id = uom_id
         p.uom_po_id = uom_id
         p.route_ids.clear()
@@ -165,7 +165,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
     def _create_product(self, name, uom_id, routes=()):
         p = Form(self.env['product.product'])
         p.name = name
-        p.type = 'product'
+        p.detailed_type = 'product'
         p.uom_id = uom_id
         p.uom_po_id = uom_id
         p.route_ids.clear()

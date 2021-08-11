@@ -18,7 +18,7 @@ class TestReportsCommon(TransactionCase):
         cls.stock_location = cls.env['stock.location'].browse(cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_stock'))
 
         product_form = Form(cls.env['product.product'])
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.name = 'Product'
         cls.product = product_form.save()
         cls.product_template = cls.product.product_tmpl_id
@@ -62,7 +62,7 @@ class TestReports(TestReportsCommon):
 
     def test_report_quantity_1(self):
         product_form = Form(self.env['product.product'])
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.name = 'Product'
         product = product_form.save()
 
@@ -181,7 +181,7 @@ class TestReports(TestReportsCommon):
         """ Not supported case.
         """
         product_form = Form(self.env['product.product'])
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.name = 'Product'
         product = product_form.save()
 
@@ -241,7 +241,7 @@ class TestReports(TestReportsCommon):
 
     def test_report_quantity_3(self):
         product_form = Form(self.env['product.product'])
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.name = 'Product'
         product = product_form.save()
 

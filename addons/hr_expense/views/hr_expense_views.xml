@@ -153,12 +153,12 @@
                             <label for="total_amount" attrs="{'invisible': [('product_has_cost', '=', True)]}"/>
                             <div class="o_row" attrs="{'invisible': [('product_has_cost', '=', True)]}">
                                 <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                                <field name="currency_id" groups="base.group_multi_currency"/> 
+                                <field name="currency_id" groups="base.group_multi_currency"/>
                             </div>
                             <field name="amount_residual" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                             <div class="o_td_label" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}">
                                 <field name="label_total_amount_company" nolabel="1" class="o_form_label" />
-                            </div>   
+                            </div>
                             <div class="o_row" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}">
                                 <field name="total_amount_company" widget='monetary' options="{'currency_field': 'company_currency_id'}" />
                                 <field name="label_convert_rate"/>
@@ -472,23 +472,6 @@
             <field name="view_mode">kanban</field>
             <field name="view_id" ref="hr_expense_kanban_view_header"/>
             <field name="act_window_id" ref="hr_expense_actions_my_all"/>
-        </record>
-
-        <record id="view_product_hr_expense_form" model="ir.ui.view">
-            <field name="name">product.template.expense.form</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_form_view"/>
-            <field name="arch" type="xml">
-                <div name="options" position="inside">
-                    <div>
-                        <field name="can_be_expensed"/>
-                        <label for="can_be_expensed"/>
-                    </div>
-                </div>
-                <xpath expr="//page[@name='general_information']//field[@name='taxes_id']" position="after">
-                    <field name="supplier_taxes_id" widget="many2many_tags" attrs="{'invisible':['|',('can_be_expensed','=',False),('purchase_ok','=',True)]}" context="{'default_type_tax_use':'purchase', 'search_default_purchase': 1, 'search_default_service': type == 'service', 'search_default_goods': type == 'consu'}"/>
-                </xpath>
-            </field>
         </record>
 
         <record id="product_template_search_view_inherit_hr_expense" model="ir.ui.view">
