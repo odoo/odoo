@@ -63,7 +63,7 @@ class TestOdoobot(TestMailCommon, TestRecipients):
             sender=self.odoobot,
             answer=("help",)
         )
-        channel.execute_command(command="help")
+        channel.execute_command_help()
         self.assertNextMessage(
             last_message,  # no message will be post with command help, use last odoobot message instead
             sender=self.odoobot,

@@ -78,7 +78,7 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
 });
 
 QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async function (assert) {
-    assert.expect(8);
+    assert.expect(7);
 
     // channel that is expected to be found in the sidebar
     // with a random unique id that will be referenced in the test
@@ -89,13 +89,10 @@ QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async 
     });
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'execute_command') {
-                assert.step('execute_command');
+            if (args.method === 'action_unfollow') {
+                assert.step('action_unfollow');
                 assert.deepEqual(args.args[0], [20],
                     "The right id is sent to the server to remove"
-                );
-                assert.strictEqual(args.kwargs.command, 'leave',
-                    "The right command is sent to the server"
                 );
             }
             if (args.method === 'channel_fold') {
@@ -114,16 +111,16 @@ QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async 
             threadGeneral.localId
         }"]`).click()
     );
-    assert.verifySteps([], "neither channel_fold nor execute_command are called yet");
+    assert.verifySteps([], "neither channel_fold nor action_unfollow are called yet");
     await afterNextRender(() =>
         document.querySelector('.o_DiscussSidebarItem_commandLeave').click()
     );
     assert.verifySteps(
         [
             'channel_fold',
-            'execute_command'
+            'action_unfollow'
         ],
-        "both channel_fold and execute_command have been called when unpinning a channel"
+        "both channel_fold and action_unfollow have been called when unpinning a channel"
     );
     assert.containsNone(
         document.body,

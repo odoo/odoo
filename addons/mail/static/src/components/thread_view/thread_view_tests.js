@@ -1762,7 +1762,6 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     // and the conditions from focus would otherwise shadow them.
     assert.expect(3);
 
-    this.data['mail.channel_command'].records.push({ name: 'who' });
     // Needed partner & user to allow simulation of message reception
     this.data['res.partner'].records.push({
         id: 11,

@@ -139,17 +139,11 @@ class MailChannel(models.Model):
         empty_channel_ids = [item['id'] for item in self.env.cr.dictfetchall()]
         self.browse(empty_channel_ids).unlink()
 
-    def _define_command_history(self):
-        return {
-            'channel_types': ['livechat'],
-            'help': _('See 15 last visited pages')
-        }
-
     def _execute_command_help_message_extra(self):
         msg = super(MailChannel, self)._execute_command_help_message_extra()
         return msg + _("Type <b>:shortcut</b> to insert a canned response in your message.<br>")
 
-    def _execute_command_history(self, **kwargs):
+    def execute_command_history(self, **kwargs):
         notification = []
         notification_values = {
             '_type': 'history_command',

@@ -35,7 +35,6 @@ QUnit.test('sidebar find shows channels matching search term', async function (a
     assert.expect(3);
 
     this.data['mail.channel'].records.push({
-        channel_partner_ids: [],
         channel_type: 'channel',
         id: 20,
         members: [],
@@ -88,7 +87,6 @@ QUnit.test('sidebar find shows channels matching search term even when user is m
     assert.expect(3);
 
     this.data['mail.channel'].records.push({
-        channel_partner_ids: [this.data.currentPartnerId],
         channel_type: 'channel',
         id: 20,
         members: [this.data.currentPartnerId],
