@@ -6,12 +6,10 @@ import re
 from collections import defaultdict
 
 from binascii import Error as binascii_error
-from operator import itemgetter
 
 from odoo import _, api, Command, fields, models, modules, tools
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError
 from odoo.osv import expression
-from odoo.tools import groupby
 from odoo.tools.misc import clean_context
 
 _logger = logging.getLogger(__name__)
@@ -682,7 +680,7 @@ class Message(models.Model):
 
         ids = [n['mail_message_id'] for n in notifications.read(['mail_message_id'])]
 
-        notification = {'type': 'mark_as_read', 'message_ids': [id[0] for id in ids], 'needaction_inbox_counter': self.env.user.partner_id.get_needaction_count()}
+        notification = {'type': 'mark_as_read', 'message_ids': [id[0] for id in ids], 'needaction_inbox_counter': self.env.user.partner_id._get_needaction_count()}
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id), notification)
 
         return ids
@@ -706,7 +704,7 @@ class Message(models.Model):
             (self._cr.dbname, 'res.partner', partner_id.id),
             {'type': 'mark_as_read',
              'message_ids': notifications.mapped('mail_message_id').ids,
-             'needaction_inbox_counter': self.env.user.partner_id.get_needaction_count()
+             'needaction_inbox_counter': self.env.user.partner_id._get_needaction_count(),
             }
         )
 
@@ -799,18 +797,6 @@ class Message(models.Model):
             })
 
         return vals_list
-
-    def message_fetch_failed(self):
-        """Returns all messages, sent by the current user, that have errors, in
-        the format expected by the web client."""
-        messages = self.search([
-            ('has_error', '=', True),
-            ('author_id', '=', self.env.user.partner_id.id),
-            ('res_id', '!=', 0),
-            ('model', '!=', False),
-            ('message_type', '!=', 'user_notification')
-        ])
-        return messages._message_notification_format()
 
     @api.model
     def message_fetch(self, domain, limit=20):

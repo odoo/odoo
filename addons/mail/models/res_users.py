@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, exceptions, fields, models, modules, Command
+from odoo import _, api, exceptions, fields, models, modules
 from odoo.addons.base.models.res_users import is_selection_groups
 
 
@@ -79,6 +79,22 @@ class Users(models.Model):
         current_cp.filtered(
             lambda cp: cp.channel_id.public != 'public' and cp.channel_id.channel_type == 'channel'
         ).unlink()
+
+    def _init_messaging(self):
+        self.ensure_one()
+        values = {
+            'channel_slots': self.partner_id._get_channels_as_member(),
+            'current_partner': self.partner_id.mail_partner_format(),
+            'current_user_id': self.id,
+            'mail_failures': self.partner_id._message_fetch_failed(),
+            'menu_id': self.env['ir.model.data']._xmlid_to_res_id('mail.menu_root_discuss'),
+            'needaction_inbox_counter': self.partner_id._get_needaction_count(),
+            'partner_root': self.env.ref('base.partner_root').sudo().mail_partner_format(),
+            'public_partners': [partner.mail_partner_format() for partner in self.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id],
+            'shortcodes': self.env['mail.shortcode'].sudo().search_read([], ['source', 'substitution', 'description']),
+            'starred_counter': self.partner_id._get_starred_count(),
+        }
+        return values
 
     @api.model
     def systray_get_activities(self):

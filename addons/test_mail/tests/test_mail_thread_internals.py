@@ -141,7 +141,7 @@ class TestDiscuss(TestMailCommon, TestRecipients):
                          'needaction_inbox_counter': 0}
                     ]):
                 employee_partner.env['mail.message'].mark_all_as_read(domain=[])
-            na_count = employee_partner.get_needaction_count()
+            na_count = employee_partner._get_needaction_count()
             self.assertEqual(na_count, 0, "mark all as read should conclude all needactions")
 
             # mark all as read also clear inaccessible needactions
@@ -154,7 +154,7 @@ class TestDiscuss(TestMailCommon, TestRecipients):
             needaction_length = len(employee_partner.env['mail.message'].search([['needaction', '=', True]]))
             self.assertEqual(needaction_length, 1, "message should still be readable when notified")
 
-            na_count = employee_partner.get_needaction_count()
+            na_count = employee_partner._get_needaction_count()
             self.assertEqual(na_count, 1, "message not accessible is currently still counted")
 
             self._reset_bus()
@@ -166,7 +166,7 @@ class TestDiscuss(TestMailCommon, TestRecipients):
                          'needaction_inbox_counter': 0}
                     ]):
                 employee_partner.env['mail.message'].mark_all_as_read(domain=[])
-            na_count = employee_partner.get_needaction_count()
+            na_count = employee_partner._get_needaction_count()
             self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")
 
     def test_set_message_done_user(self):
