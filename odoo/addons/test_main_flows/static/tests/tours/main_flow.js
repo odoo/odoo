@@ -33,7 +33,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Quotations')"
     position: 'left',
     run: 'text the_flow.product',
 }, {
-    trigger: "select[name=type]",
+    trigger: "select[name=detailed_type]",
     content: _t("Let's enter the product type"),
     position: 'left',
     run: 'text "product"',
@@ -358,7 +358,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: 'left',
     run: 'text the_flow.service',
 }, {
-    trigger: '.o_field_widget[name=type]',
+    trigger: '.o_field_widget[name=detailed_type]',
     content: _t('Set to service'),
     position: 'left',
     run: 'text "service"',
@@ -376,17 +376,15 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
         }
     },
 }, {
-    trigger: '.o_notebook a:contains("Sales")',
-    content: _t('Go to sales tab'),
-    position: 'bottom',
-}, {
-    trigger: '.o_field_widget[name=service_policy] .o_radio_input[data-value="delivered_timesheet"]',
+    trigger: '.o_field_widget[name=service_policy]',
     content: _t('Change service policy'),
     position: 'left',
+    run: 'text "delivered_timesheet"',
 }, {
-    trigger: '.o_field_widget[name=service_tracking] input[data-value="task_global_project"]',
+    trigger: '.o_field_widget[name=service_tracking]',
     content: _t('Change track service'),
     position: 'left',
+    run: 'text "task_global_project"',
 }, {
     mobile: false,
     trigger: '.o_field_widget[name=project_id] input',

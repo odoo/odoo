@@ -8,12 +8,14 @@ from odoo.exceptions import ValidationError
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    service_tracking = fields.Selection([
-        ('no', 'Don\'t create a task'),
-        ('task_global_project', 'Create a task in an existing project'),
-        ('task_in_project', 'Create a task in sales order\'s project'),
-        ('project_only', 'Create a new project but no task')],
-        string="Service Tracking", default="no",
+    service_tracking = fields.Selection(
+        selection=[
+            ('no', 'Nothing'),
+            ('task_global_project', 'Task'),
+            ('task_in_project', 'Project & Task'),
+            ('project_only', 'Project'),
+        ],
+        string="Create on Order", default="no",
         help="On Sales order confirmation, this product can generate a project and/or task. \
         From those, you can track the service you are selling.\n \
         'In sale order\'s project': Will use the sale order\'s configured project if defined or fallback to \
@@ -26,6 +28,31 @@ class ProductTemplate(models.Model):
         'project.project', 'Project Template', company_dependent=True, copy=True,
         domain="[('company_id', '=', current_company_id)]",
         help='Select a billable project to be the skeleton of the new created project when selling the current product. Its stages and tasks will be duplicated.')
+
+    @api.depends('service_tracking', 'type')
+    def _compute_product_tooltip(self):
+        super()._compute_product_tooltip()
+        for record in self.filtered(lambda record: record.type == 'service'):
+            if record.service_tracking == 'no':
+                record.product_tooltip = _(
+                    "Invoice ordered quantities as soon as this service is sold."
+                )
+            elif record.service_tracking == 'task_global_project':
+                record.product_tooltip = _(
+                    "Invoice as soon as this service is sold, and create a task in an existing "
+                    "project to track the time spent."
+                )
+            elif record.service_tracking == 'task_in_project':
+                record.product_tooltip = _(
+                    "Invoice ordered quantities as soon as this service is sold, and create a "
+                    "project for the order with a task for each sales order line to track the time"
+                    " spent."
+                )
+            elif record.service_tracking == 'project_only':
+                record.product_tooltip = _(
+                    "Invoice ordered quantities as soon as this service is sold, and create an "
+                    "empty project for the order to track the time spent."
+                )
 
     @api.constrains('project_id', 'project_template_id')
     def _check_project_and_template(self):

@@ -87,7 +87,7 @@ class TestSaleMrpProcurement(TransactionCase):
         # Create raw product for manufactured product
         product_form = Form(self.env['product.product'])
         product_form.name = 'Raw Stick'
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.uom_id = self.uom_unit
         product_form.uom_po_id = self.uom_unit
         self.raw_product = product_form.save()
@@ -97,7 +97,7 @@ class TestSaleMrpProcurement(TransactionCase):
         product_form.name = 'Stick'
         product_form.uom_id = self.uom_unit
         product_form.uom_po_id = self.uom_unit
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.route_ids.clear()
         product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
         product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
@@ -106,7 +106,7 @@ class TestSaleMrpProcurement(TransactionCase):
         # Create manifactured product which uses another manifactured
         product_form = Form(self.env['product.product'])
         product_form.name = 'Arrow'
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.route_ids.clear()
         product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
         product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
@@ -115,7 +115,7 @@ class TestSaleMrpProcurement(TransactionCase):
         ## Create raw product for manufactured product
         product_form = Form(self.env['product.product'])
         product_form.name = 'Raw Iron'
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.uom_id = self.uom_unit
         product_form.uom_po_id = self.uom_unit
         self.raw_product_2 = product_form.save()

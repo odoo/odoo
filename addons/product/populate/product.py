@@ -65,7 +65,7 @@ class ProductProduct(models.Model):
             ("active", populate.randomize([True, False], [0.8, 0.2])),
             ("type", populate.randomize(types, types_distribution)),
             ("categ_id", populate.randomize(category_ids)),
-            ("lst_price", populate.compute(get_rand_float)),
+            ("list_price", populate.compute(get_rand_float)),
             ("standard_price", populate.compute(get_rand_float)),
         ]
 

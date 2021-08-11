@@ -4990,14 +4990,14 @@ class StockMove(TransactionCase):
 
         # Check raise UserError(_("You can not change the type of a product that is currently reserved on a stock
         with self.assertRaises(UserError):
-            self.product.type = 'consu'
+            self.product.detailed_type = 'consu'
         move_in._action_cancel()
 
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10)
 
-        # Check raise UserError(_("Available quantity should be set to zero before changing type"))
+        # Check raise UserError(_("Available quantity should be set to zero before changing detailed_type"))
         with self.assertRaises(UserError):
-            self.product.type = 'consu'
+            self.product.detailed_type = 'consu'
 
         move_out = self.env['stock.move'].create({
             'name': 'test_customer',
@@ -5012,7 +5012,7 @@ class StockMove(TransactionCase):
         move_out._action_assign()
         move_out.quantity_done = self.product.qty_available
         move_out._action_done()
-        self.product.type = 'consu'
+        self.product.detailed_type = 'consu'
 
         move2 = self.env['stock.move'].create({
             'name': 'test_customer',
@@ -5028,9 +5028,9 @@ class StockMove(TransactionCase):
         move2._action_assign()
 
         with self.assertRaises(UserError):
-            self.product.type = 'product'
+            self.product.detailed_type = 'product'
         move2._action_cancel()
-        self.product.type = 'product'
+        self.product.detailed_type = 'product'
 
     def test_edit_done_picking_1(self):
         """ Add a new move line in a done picking should generate an
