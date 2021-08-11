@@ -62,7 +62,7 @@
   &.o-popper-position {
     &--tm {
       animation: $animation-time slide-top;
-      margin-top: -$arrow-size;
+      margin-top: $arrow-size;
 
       &::before,
       &::after {
@@ -84,7 +84,7 @@
 
     &--rm {
       animation: $animation-time slide-right;
-      margin-left: $arrow-size;
+      margin-left: -$arrow-size;
 
       &::before,
       &::after {
@@ -106,7 +106,7 @@
 
     &--bm {
       animation: $animation-time slide-bottom;
-      margin-top: $arrow-size;
+      margin-top: -$arrow-size;
 
       &::before,
       &::after {
@@ -128,7 +128,7 @@
 
     &--lm {
       animation: $animation-time slide-left;
-      margin-left: -$arrow-size;
+      margin-left: $arrow-size;
 
       &::before,
       &::after {
