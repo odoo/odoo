@@ -118,6 +118,12 @@ var PaymentAdyen = PaymentInterface.extend({
             return Promise.resolve();
         }
 
+
+        if (this.poll_response_error)   {
+            this.poll_response_error = false;
+            return self._adyen_handle_response({});
+        }
+
         var data = this._adyen_pay_data();
 
         return this._call_adyen(data).then(function (data) {
@@ -185,6 +191,7 @@ var PaymentAdyen = PaymentInterface.extend({
             shadow: true,
         }).catch(function (data) {
             reject();
+            self.poll_response_error = true;
             return self._handle_odoo_connection_failure(data);
         }).then(function (status) {
             var notification = status.latest_response;
