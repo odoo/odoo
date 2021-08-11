@@ -79,23 +79,6 @@ MockServer.include({
         const mailChannel = this._getRecords('mail.channel', [['uuid', '=', uuid]])[0];
         this._mockMailChannelNotifyTyping([mailChannel.id], is_typing, context);
     },
-    /**
-     * @override
-     */
-    _mockRouteMailInitMessaging() {
-        const initMessaging = this._super(...arguments);
-
-        const livechats = this._getRecords('mail.channel', [
-            ['channel_type', '=', 'livechat'],
-            ['is_pinned', '=', true],
-            ['members', 'in', this.currentPartnerId],
-        ]);
-        initMessaging.channel_slots.channel_livechat = this._mockMailChannelChannelInfo(
-            livechats.map(channel => channel.id)
-        );
-
-        return initMessaging;
-    },
 
     //--------------------------------------------------------------------------
     // Private Mocked Methods
@@ -255,5 +238,20 @@ MockServer.include({
         const mailChannelId = this._mockCreate('mail.channel', mailChannelVals);
         this._mockMailChannel_broadcast([mailChannelId], [operator.partner_id]);
         return this._mockMailChannelChannelInfo([mailChannelId])[0];
+    },
+    /**
+     * @override
+     */
+    _mockResPartner_GetChannelsAsMember(ids) {
+        const partner = this._getRecords('res.partner', [['id', 'in', ids]])[0];
+        const livechats = this._getRecords('mail.channel', [
+            ['channel_type', '=', 'livechat'],
+            ['is_pinned', '=', true],
+            ['members', 'in', partner.id],
+        ]);
+        return {
+            channel_livechat: this._mockMailChannelChannelInfo(livechats.map(channel => channel.id)),
+            ...this._super(ids),
+        };
     },
 });

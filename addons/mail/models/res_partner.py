@@ -6,7 +6,6 @@ import logging
 from odoo import _, api, fields, models, tools
 from odoo.addons.bus.models.bus_presence import AWAY_TIMER
 from odoo.addons.bus.models.bus_presence import DISCONNECTION_TIMER
-from odoo.exceptions import AccessError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -87,30 +86,65 @@ class Partner(models.Model):
             res["is_internal_user"] = not main_user.share
         return res
 
-    @api.model
-    def get_needaction_count(self):
-        """ compute the number of needaction of the current user """
-        if self.env.user.partner_id:
-            self.env['mail.notification'].flush(['is_read', 'res_partner_id'])
-            self.env.cr.execute("""
-                SELECT count(*) as needaction_count
-                FROM mail_notification R
-                WHERE R.res_partner_id = %s AND (R.is_read = false OR R.is_read IS NULL)""", (self.env.user.partner_id.id,))
-            return self.env.cr.dictfetchall()[0].get('needaction_count')
-        _logger.error('Call to needaction_count without partner_id')
-        return 0
+    def _get_needaction_count(self):
+        """ compute the number of needaction of the current partner """
+        self.ensure_one()
+        self.env['mail.notification'].flush(['is_read', 'res_partner_id'])
+        self.env.cr.execute("""
+            SELECT count(*) as needaction_count
+            FROM mail_notification R
+            WHERE R.res_partner_id = %s AND (R.is_read = false OR R.is_read IS NULL)""", (self.id,))
+        return self.env.cr.dictfetchall()[0].get('needaction_count')
 
-    @api.model
-    def get_starred_count(self):
-        """ compute the number of starred of the current user """
-        if self.env.user.partner_id:
-            self.env.cr.execute("""
-                SELECT count(*) as starred_count
-                FROM mail_message_res_partner_starred_rel R
-                WHERE R.res_partner_id = %s """, (self.env.user.partner_id.id,))
-            return self.env.cr.dictfetchall()[0].get('starred_count')
-        _logger.error('Call to starred_count without partner_id')
-        return 0
+    def _get_starred_count(self):
+        """ compute the number of starred of the current partner """
+        self.ensure_one()
+        self.env.cr.execute("""
+            SELECT count(*) as starred_count
+            FROM mail_message_res_partner_starred_rel R
+            WHERE R.res_partner_id = %s """, (self.id,))
+        return self.env.cr.dictfetchall()[0].get('starred_count')
+
+    def _message_fetch_failed(self):
+        """Returns all messages, sent by the current partner, that have errors, in
+        the format expected by the web client."""
+        self.ensure_one()
+        messages = self.env['mail.message'].search([
+            ('has_error', '=', True),
+            ('author_id', '=', self.id),
+            ('res_id', '!=', 0),
+            ('model', '!=', False),
+            ('message_type', '!=', 'user_notification')
+        ])
+        return messages._message_notification_format()
+
+    def _get_channels_as_member(self):
+        """ Return the channels of the partner grouped by 'slot' (channel, direct_message or private_group), and
+            the mapping between partner_id/channel_id for direct_message channels.
+            :returns dict : the grouped channels and the mapping
+        """
+        self.ensure_one()
+        values = {}
+        pinned_channels = self.env['mail.channel.partner'].search([('partner_id', '=', self.id), ('is_pinned', '=', True)]).mapped('channel_id')
+        # get the group/public channels
+        values['channel_channel'] = self.env['mail.channel'].search([
+            ('channel_type', '=', 'channel'),
+            ('public', 'in', ['public', 'groups']),
+            ('channel_partner_ids', 'in', [self.id]),
+        ]).channel_info()
+        # get the pinned 'direct message' channel
+        direct_message_channels = self.env['mail.channel'].search([
+            ('channel_type', '=', 'chat'),
+            ('id', 'in', pinned_channels.ids),
+        ])
+        values['channel_direct_message'] = direct_message_channels.channel_info()
+        # get the private group
+        values['channel_private_group'] = self.env['mail.channel'].search([
+            ('channel_type', '=', 'channel'),
+            ('public', '=', 'private'),
+            ('channel_partner_ids', 'in', [self.id]),
+        ]).channel_info()
+        return values
 
     @api.model
     def search_for_channel_invite(self, search_term, channel_id=None, limit=30):

@@ -71,19 +71,6 @@ class MailChannel(models.Model):
                 channel_infos_dict[channel.id]['livechat_visitor'] = channel._channel_get_livechat_visitor_info()
         return list(channel_infos_dict.values())
 
-    @api.model
-    def channel_fetch_slot(self):
-        values = super(MailChannel, self).channel_fetch_slot()
-        livechat_channels = self.env['mail.channel'].search([
-            ('channel_type', '=', 'livechat'),
-            ('channel_last_seen_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
-                ('partner_id', '=', self.env.user.partner_id.id),
-                ('is_pinned', '=', True)])
-            ),
-        ])
-        values['channel_livechat'] = livechat_channels.channel_info()
-        return values
-
     def _channel_get_livechat_visitor_info(self):
         self.ensure_one()
         # remove active test to ensure public partner is taken into account

@@ -356,70 +356,7 @@ MockServer.include({
      * @returns {Object}
      */
     _mockRouteMailInitMessaging() {
-        const channels = this._getRecords('mail.channel', [
-            ['channel_type', '=', 'channel'],
-            ['members', 'in', this.currentPartnerId],
-            ['public', 'in', ['public', 'groups']],
-        ]);
-        const channelInfos = this._mockMailChannelChannelInfo(channels.map(channel => channel.id));
-
-        const directMessages = this._getRecords('mail.channel', [
-            ['channel_type', '=', 'chat'],
-            ['is_pinned', '=', true],
-            ['members', 'in', this.currentPartnerId],
-        ]);
-        const directMessageInfos = this._mockMailChannelChannelInfo(directMessages.map(channel => channel.id));
-
-        const privateGroups = this._getRecords('mail.channel', [
-            ['channel_type', '=', 'channel'],
-            ['members', 'in', this.currentPartnerId],
-            ['public', '=', 'private'],
-        ]);
-        const privateGroupInfos = this._mockMailChannelChannelInfo(privateGroups.map(channel => channel.id));
-
-        const partnerRoot = this._getRecords(
-            'res.partner',
-            [['id', '=', this.partnerRootId]],
-            { active_test: false }
-        )[0];
-        const partnerRootFormat = this._mockResPartnerMailPartnerFormat(partnerRoot.id);
-
-        const publicPartner = this._getRecords(
-            'res.partner',
-            [['id', '=', this.publicPartnerId]],
-            { active_test: false }
-        )[0];
-        const publicPartnerFormat = this._mockResPartnerMailPartnerFormat(publicPartner.id);
-
-        const currentPartner = this._getRecords('res.partner', [['id', '=', this.currentPartnerId]])[0];
-        const currentPartnerFormat = this._mockResPartnerMailPartnerFormat(currentPartner.id);
-
-        const needaction_inbox_counter = this._mockResPartnerGetNeedactionCount();
-
-        const mailFailures = this._mockMailMessageMessageFetchFailed();
-
-        const shortcodes = this._getRecords('mail.shortcode', []);
-
-        const starredCounter = this._getRecords('mail.message', [
-            ['starred_partner_ids', 'in', this.currentPartnerId],
-        ]).length;
-
-        return {
-            channel_slots: {
-                channel_channel: channelInfos,
-                channel_direct_message: directMessageInfos,
-                channel_private_group: privateGroupInfos,
-            },
-            current_partner: currentPartnerFormat,
-            current_user_id: this.currentUserId,
-            mail_failures: mailFailures,
-            menu_id: false,
-            needaction_inbox_counter,
-            partner_root: partnerRootFormat,
-            public_partners: [publicPartnerFormat],
-            shortcodes,
-            starred_counter: starredCounter,
-        };
+        return this._mockResUsers_InitMessaging([this.currentUserId]);
     },
     /**
      * Simulates the `/mail/read_followers` route.
@@ -1166,7 +1103,7 @@ MockServer.include({
                 },
             ]);
         }
-        const notificationData = { type: 'mark_as_read', message_ids: messageIds, needaction_inbox_counter: this._mockResPartnerGetNeedactionCount() };
+        const notificationData = { type: 'mark_as_read', message_ids: messageIds, needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(this.currentPartnerId) };
         const notification = [[false, 'res.partner', this.currentPartnerId], notificationData];
         this._widget.call('bus_service', 'trigger', 'notification', [notification]);
         return messageIds;
@@ -1188,30 +1125,6 @@ MockServer.include({
         // pick at most 'limit' messages
         messages.length = Math.min(messages.length, limit);
         return this._mockMailMessageMessageFormat(messages.map(message => message.id));
-    },
-    /**
-     * Simulates `message_fetch_failed` on `mail.message`.
-     *
-     * @private
-     * @returns {Object[]}
-     */
-    _mockMailMessageMessageFetchFailed() {
-        const messages = this._getRecords('mail.message', [
-            ['author_id', '=', this.currentPartnerId],
-            ['res_id', '!=', 0],
-            ['model', '!=', false],
-            ['message_type', '!=', 'user_notification'],
-        ]).filter(message => {
-            // Purpose is to simulate the following domain on mail.message:
-            // ['notification_ids.notification_status', 'in', ['bounce', 'exception']],
-            // But it's not supported by _getRecords domain to follow a relation.
-            const notifications = this._getRecords('mail.notification', [
-                ['mail_message_id', '=', message.id],
-                ['notification_status', 'in', ['bounce', 'exception']],
-            ]);
-            return notifications.length > 0;
-        });
-        return this._mockMailMessage_MessageNotificationFormat(messages.map(message => message.id));
     },
     /**
      * Simulates `message_format` on `mail.message`.
@@ -1353,7 +1266,7 @@ MockServer.include({
                     ),
                 },
             ]);
-            const data = { type: 'mark_as_read', message_ids: [message.id], needaction_inbox_counter: this._mockResPartnerGetNeedactionCount() };
+            const data = { type: 'mark_as_read', message_ids: [message.id], needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(this.currentPartnerId) };
             const busNotifications = [[[false, 'res.partner', this.currentPartnerId], data]];
             this._widget.call('bus_service', 'trigger', 'notification', busNotifications);
         }
@@ -1681,6 +1594,36 @@ MockServer.include({
         this._mockUnlink(model, [followers.map(follower => follower.id)]);
     },
     /**
+     * Simulates `_get_channels_as_member` on `res.partner`.
+     *
+     * @private
+     * @param {integer[]} ids
+     * @returns {Object}
+     */
+    _mockResPartner_GetChannelsAsMember(ids) {
+        const partner = this._getRecords('res.partner', [['id', 'in', ids]])[0];
+        const channels = this._getRecords('mail.channel', [
+            ['channel_type', '=', 'channel'],
+            ['members', 'in', partner.id],
+            ['public', 'in', ['public', 'groups']],
+        ]);
+        const directMessages = this._getRecords('mail.channel', [
+            ['channel_type', '=', 'chat'],
+            ['is_pinned', '=', true],
+            ['members', 'in', partner.id],
+        ]);
+        const privateGroups = this._getRecords('mail.channel', [
+            ['channel_type', '=', 'channel'],
+            ['members', 'in', partner.id],
+            ['public', '=', 'private'],
+        ]);
+        return {
+            channel_channel: this._mockMailChannelChannelInfo(channels.map(channel => channel.id)),
+            channel_direct_message: this._mockMailChannelChannelInfo(directMessages.map(channel => channel.id)),
+            channel_private_group: this._mockMailChannelChannelInfo(privateGroups.map(channel => channel.id)),
+        };
+    },
+    /**
      * Simulates `get_mention_suggestions` on `res.partner`.
      *
      * @private
@@ -1738,13 +1681,16 @@ MockServer.include({
         return mainMatchingPartners.concat(extraMatchingPartners);
     },
     /**
-     * Simulates `get_needaction_count` on `res.partner`.
+     * Simulates `_get_needaction_count` on `res.partner`.
      *
      * @private
+     * @param {integer} id
+     * @returns {integer}
      */
-    _mockResPartnerGetNeedactionCount() {
+    _mockResPartner_GetNeedactionCount(id) {
+        const partner = this._getRecords('res.partner', [['id', '=', id]])[0];
         return this._getRecords('mail.notification', [
-            ['res_partner_id', '=', this.currentPartnerId],
+            ['res_partner_id', '=', partner.id],
             ['is_read', '=', false],
         ]).length;
     },
@@ -1813,6 +1759,54 @@ MockServer.include({
             "id": partner.id,
             "im_status": partner.im_status,
             "name": partner.name,
+        };
+    },
+    /**
+     * Simulates `_message_fetch_failed` on `res.partner`.
+     *
+     * @private
+     * @param {integer} id
+     * @returns {Object[]}
+     */
+    _mockResPartner_MessageFetchFailed(id) {
+        const partner = this._getRecords('res.partner', [['id', '=', id]])[0];
+        const messages = this._getRecords('mail.message', [
+            ['author_id', '=', partner.id],
+            ['res_id', '!=', 0],
+            ['model', '!=', false],
+            ['message_type', '!=', 'user_notification'],
+        ]).filter(message => {
+            // Purpose is to simulate the following domain on mail.message:
+            // ['notification_ids.notification_status', 'in', ['bounce', 'exception']],
+            // But it's not supported by _getRecords domain to follow a relation.
+            const notifications = this._getRecords('mail.notification', [
+                ['mail_message_id', '=', message.id],
+                ['notification_status', 'in', ['bounce', 'exception']],
+            ]);
+            return notifications.length > 0;
+        });
+        return this._mockMailMessage_MessageNotificationFormat(messages.map(message => message.id));
+    },
+    /**
+     * Simulates `_init_messaging` on `res.users`.
+     *
+     * @private
+     * @param {integer[]} ids
+     * @returns {Object}
+     */
+    _mockResUsers_InitMessaging(ids) {
+        const user = this._getRecords('res.users', [['id', 'in', ids]])[0];
+        return {
+            channel_slots: this._mockResPartner_GetChannelsAsMember(user.partner_id),
+            current_partner: this._mockResPartnerMailPartnerFormat(user.partner_id),
+            current_user_id: this.currentUserId,
+            mail_failures: this._mockResPartner_MessageFetchFailed(user.partner_id),
+            menu_id: false, // not useful in QUnit tests
+            needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
+            partner_root: this._mockResPartnerMailPartnerFormat(this.partnerRootId),
+            public_partners: [this._mockResPartnerMailPartnerFormat(this.publicPartnerId)],
+            shortcodes: this._getRecords('mail.shortcode', []),
+            starred_counter: this._getRecords('mail.message', [['starred_partner_ids', 'in', user.partner_id]]).length,
         };
     },
 });
