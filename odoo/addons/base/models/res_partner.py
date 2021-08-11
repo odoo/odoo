@@ -827,7 +827,7 @@ class Partner(models.Model):
         self.flush()
         if args is None:
             args = []
-        order_by_rank = self.env.context.get('res_partner_search_mode') 
+        order_by_rank = self.env.context.get('res_partner_search_mode')
         if (name or order_by_rank) and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
             self.check_access_rights('read')
             where_query = self._where_calc(args)
