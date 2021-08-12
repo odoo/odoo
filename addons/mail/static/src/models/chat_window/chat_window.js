@@ -13,12 +13,23 @@ function factory(dependencies) {
          * @override
          */
         _created() {
+            this.onClickedHeader = this.onClickedHeader.bind(this);
+            this.onWillHideHomeMenu = this.onWillHideHomeMenu.bind(this);
+            this.onWillShowHomeMenu = this.onWillShowHomeMenu.bind(this);
+            this.onKeydown = this.onKeydown.bind(this);
+            this.onFocusinThread = this.onFocusinThread.bind(this);
+            this.onFocusout = this.onFocusout.bind(this);
+
             const res = super._created(...arguments);
             this._onShowHomeMenu.bind(this);
             this._onHideHomeMenu.bind(this);
 
             this.env.messagingBus.on('hide_home_menu', this, this._onHideHomeMenu);
             this.env.messagingBus.on('show_home_menu', this, this._onShowHomeMenu);
+            if (this.component) {
+                this.env.messagingBus.on('will_hide_home_menu', this, this.onWillHideHomeMenu);
+                this.env.messagingBus.on('will_show_home_menu', this, this.onWillShowHomeMenu);
+            }
             return res;
         }
 
@@ -28,6 +39,10 @@ function factory(dependencies) {
         _willDelete() {
             this.env.messagingBus.off('hide_home_menu', this, this._onHideHomeMenu);
             this.env.messagingBus.off('show_home_menu', this, this._onShowHomeMenu);
+            if (this.component) {
+                this.env.messagingBus.off('will_hide_home_menu', this, this.onWillHideHomeMenu);
+                this.env.messagingBus.off('will_show_home_menu', this, this.onWillShowHomeMenu);
+            }
             return super._willDelete(...arguments);
         }
 
@@ -180,7 +195,12 @@ function factory(dependencies) {
         /**
          * Called when an element in the thread becomes focused.
          */
-        onFocusinThread() {
+        onFocusinThread(ev) {
+            ev.stopPropagation();
+            if (!this.exists()) {
+                // prevent crash on destroy
+                return;
+            }
             this.update({ isFocused: true });
         }
 
@@ -188,6 +208,10 @@ function factory(dependencies) {
          * Handle onFocusout of the chat window.
          */
         onFocusout() {
+            if (!this.exists()) {
+                // prevent crash on destroy
+                return;
+            }
             this.update({ isFocused: false });
         }
 
@@ -197,6 +221,10 @@ function factory(dependencies) {
          * @param {KeyboardEvent} ev
          */
         onKeydown(ev) {
+            if (!this.exists()) {
+                // prevent crash on destroy
+                return;
+            }
             switch (ev.key) {
                 case 'Tab':
                     ev.preventDefault();
@@ -425,6 +453,83 @@ function factory(dependencies) {
             return nextToFocus;
         }
 
+
+        /**
+         * Save the scroll positions of the chat window in the store.
+         * This is useful in order to remount chat windows and keep previous
+         * scroll positions. This is necessary because when toggling on/off
+         * home menu, the chat windows have to be remade from scratch.
+         *
+         * @private
+         */
+        _saveThreadScrollTop() {
+            if (
+                !this.threadRef.comp ||
+                !this.threadViewer ||
+                !this.threadViewer.threadView
+            ) {
+                return;
+            }
+            if (this.threadViewer.threadView.componentHintList.length > 0) {
+                // the current scroll position is likely incorrect due to the
+                // presence of hints to adjust it
+                return;
+            }
+            this.threadViewer.saveThreadCacheScrollHeightAsInitial(
+                this.threadRef.comp.getScrollHeight()
+            );
+            this.threadViewer.saveThreadCacheScrollPositionsAsInitial(
+                this.threadRef.comp.getScrollTop()
+            );
+        }
+
+        /**
+         * Called when clicking on header of chat window. Usually folds the chat
+         * window.
+         *
+         * @private
+         * @param {CustomEvent} ev
+         */
+        onClickedHeader(ev) {
+            ev.stopPropagation();
+            if (this.env.messaging.device.isMobile) {
+                return;
+            }
+            if (this.isFolded) {
+                this.unfold();
+                this.focus();
+            } else {
+                this._saveThreadScrollTop();
+                this.fold();
+            }
+        }
+
+        /**
+         * Save the scroll positions of the chat window in the store.
+         * This is useful in order to remount chat windows and keep previous
+         * scroll positions. This is necessary because when toggling on/off
+         * home menu, the chat windows have to be remade from scratch.
+         *
+         * @private
+         */
+        async onWillHideHomeMenu() {
+            console.log('hide');
+            this._saveThreadScrollTop();
+        }
+
+        /**
+         * Save the scroll positions of the chat window in the store.
+         * This is useful in order to remount chat windows and keep previous
+         * scroll positions. This is necessary because when toggling on/off
+         * home menu, the chat windows have to be remade from scratch.
+         *
+         * @private
+         */
+        async onWillShowHomeMenu() {
+            console.log('show');
+            this._saveThreadScrollTop();
+        }
+
         //----------------------------------------------------------------------
         // Handlers
         //----------------------------------------------------------------------
@@ -452,6 +557,7 @@ function factory(dependencies) {
     }
 
     ChatWindow.fields = {
+        component: attr(),
         /**
          * Determines whether "new message form" should be displayed.
          */
@@ -514,6 +620,7 @@ function factory(dependencies) {
         thread: one2one('mail.thread', {
             inverse: 'chatWindow',
         }),
+        threadRef: attr(),
         /**
          * States the `mail.thread_view` displaying `this.thread`.
          */

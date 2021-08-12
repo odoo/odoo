@@ -6,6 +6,8 @@ import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { AutocompleteInput } from '@mail/components/autocomplete_input/autocomplete_input';
 import { ChatWindowHeader } from '@mail/components/chat_window_header/chat_window_header';
 import { ThreadView } from '@mail/components/thread_view/thread_view';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -22,6 +24,8 @@ export class ChatWindow extends Component {
         useShouldUpdateBasedOnProps();
         useModels();
         useUpdate({ func: () => this._update() });
+        useRefToModel({ fieldName: 'threadRef', modelName: 'mail.chat_window', propNameAsRecordLocalId: 'chatWindowLocalId', refName: 'thread' });
+        useComponentToModel({ fieldName: 'component', modelName: 'mail.chat_window', propNameAsRecordLocalId: 'chatWindowLocalId' });
         /**
          * Reference of the autocomplete input (new_message chat window only).
          * Useful when focusing this chat window, which consists of focusing
@@ -35,8 +39,6 @@ export class ChatWindow extends Component {
          * it has one!
          */
         this._threadRef = useRef('thread');
-        this._onWillHideHomeMenu = this._onWillHideHomeMenu.bind(this);
-        this._onWillShowHomeMenu = this._onWillShowHomeMenu.bind(this);
         this._constructor(...args);
     }
 
@@ -44,16 +46,6 @@ export class ChatWindow extends Component {
      * Allows patching constructor.
      */
     _constructor() {}
-
-    mounted() {
-        this.env.messagingBus.on('will_hide_home_menu', this, this._onWillHideHomeMenu);
-        this.env.messagingBus.on('will_show_home_menu', this, this._onWillShowHomeMenu);
-    }
-
-    willUnmount() {
-        this.env.messagingBus.off('will_hide_home_menu', this, this._onWillHideHomeMenu);
-        this.env.messagingBus.off('will_show_home_menu', this, this._onWillShowHomeMenu);
-    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -112,35 +104,6 @@ export class ChatWindow extends Component {
     }
 
     /**
-     * Save the scroll positions of the chat window in the store.
-     * This is useful in order to remount chat windows and keep previous
-     * scroll positions. This is necessary because when toggling on/off
-     * home menu, the chat windows have to be remade from scratch.
-     *
-     * @private
-     */
-    _saveThreadScrollTop() {
-        if (
-            !this._threadRef.comp ||
-            !this.chatWindow.threadViewer ||
-            !this.chatWindow.threadViewer.threadView
-        ) {
-            return;
-        }
-        if (this.chatWindow.threadViewer.threadView.componentHintList.length > 0) {
-            // the current scroll position is likely incorrect due to the
-            // presence of hints to adjust it
-            return;
-        }
-        this.chatWindow.threadViewer.saveThreadCacheScrollHeightAsInitial(
-            this._threadRef.comp.getScrollHeight()
-        );
-        this.chatWindow.threadViewer.saveThreadCacheScrollPositionsAsInitial(
-            this._threadRef.comp.getScrollTop()
-        );
-    }
-
-    /**
      * @private
      */
     _update() {
@@ -152,95 +115,6 @@ export class ChatWindow extends Component {
             this._focus();
         }
         this._applyVisibleOffset();
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called when clicking on header of chat window. Usually folds the chat
-     * window.
-     *
-     * @private
-     * @param {CustomEvent} ev
-     */
-    _onClickedHeader(ev) {
-        ev.stopPropagation();
-        if (this.env.messaging.device.isMobile) {
-            return;
-        }
-        if (this.chatWindow.isFolded) {
-            this.chatWindow.unfold();
-            this.chatWindow.focus();
-        } else {
-            this._saveThreadScrollTop();
-            this.chatWindow.fold();
-        }
-    }
-
-    /**
-     * Called when an element in the thread becomes focused.
-     *
-     * @private
-     * @param {FocusEvent} ev
-     */
-    _onFocusinThread(ev) {
-        ev.stopPropagation();
-        if (!this.chatWindow) {
-            // prevent crash on destroy
-            return;
-        }
-        this.chatWindow.onFocusinThread();
-    }
-
-    /**
-     * Focus out the chat window.
-     *
-     * @private
-     */
-    _onFocusout() {
-        if (!this.chatWindow) {
-            // ignore focus out due to record being deleted
-            return;
-        }
-        this.chatWindow.onFocusout();
-    }
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeydown(ev) {
-        if (!this.chatWindow) {
-            // prevent crash during delete
-            return;
-        }
-        this.chatWindow.onKeydown(ev);
-    }
-
-    /**
-     * Save the scroll positions of the chat window in the store.
-     * This is useful in order to remount chat windows and keep previous
-     * scroll positions. This is necessary because when toggling on/off
-     * home menu, the chat windows have to be remade from scratch.
-     *
-     * @private
-     */
-    async _onWillHideHomeMenu() {
-        this._saveThreadScrollTop();
-    }
-
-    /**
-     * Save the scroll positions of the chat window in the store.
-     * This is useful in order to remount chat windows and keep previous
-     * scroll positions. This is necessary because when toggling on/off
-     * home menu, the chat windows have to be remade from scratch.
-     *
-     * @private
-     */
-    async _onWillShowHomeMenu() {
-        this._saveThreadScrollTop();
     }
 
 }
