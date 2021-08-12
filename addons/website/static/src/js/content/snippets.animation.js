@@ -1112,9 +1112,14 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         this.__onScrollWebsiteAnimate = _.throttle(this._onScrollWebsiteAnimate.bind(this), 200);
         this.$scrollingElement[0].addEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
 
-        $(window).on('resize.o_animate, shown.bs.modal.o_animate, slid.bs.carousel.o_animate', () => {
+        $(window).on('resize.o_animate, shown.bs.modal.o_animate, slid.bs.carousel.o_animate, shown.bs.dropdown.o_animate', () => {
             this.windowsHeight = $(window).height();
-            this.$scrollingElement[0].dispatchEvent(new Event('scroll'));
+            let $scrollingElement = this.$scrollingElement;
+            const $openDropdown = $('.dropdown-menu.show:has(.o_animate)');
+            if ($openDropdown.length) {
+                $scrollingElement = $openDropdown;
+            }
+            this._scrollWebsiteAnimate($scrollingElement[0]);
         }).trigger("resize");
 
         return this._super(...arguments);
@@ -1202,17 +1207,12 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         } while (el);
         return top;
     },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
     /**
      * @private
-     * @param {Event} ev
+     * @param {Element} el
      */
-    _onScrollWebsiteAnimate(ev) {
-        const scroll = $(ev.currentTarget).scrollTop();
+    _scrollWebsiteAnimate(el) {
+        const scroll = $(el).scrollTop();
         // Handle reverse scrolling
         const direction = (scroll < this.lastScroll) ? -1 : 1;
         this.lastScroll = scroll;
@@ -1238,6 +1238,18 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
                 this._resetAnimation($el);
             }
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onScrollWebsiteAnimate(ev) {
+        this._scrollWebsiteAnimate(ev.currentTarget);
     },
 });
 
