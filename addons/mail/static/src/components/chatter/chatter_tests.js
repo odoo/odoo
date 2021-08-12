@@ -1,17 +1,13 @@
 /** @odoo-module **/
 
-import { Chatter } from '@mail/components/chatter/chatter';
-import { Composer } from '@mail/components/composer/composer';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
-
-const components = { Chatter, Composer };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -22,7 +18,7 @@ QUnit.module('chatter_tests.js', {
 
         this.createChatterComponent = async ({ chatter }, otherProps) => {
             const props = Object.assign({ chatterLocalId: chatter.localId }, otherProps);
-            await createRootComponent(this, components.Chatter, {
+            await createRootMessagingComponent(this, "Chatter", {
                 props,
                 target: this.widget.el,
             });
@@ -30,7 +26,7 @@ QUnit.module('chatter_tests.js', {
 
         this.createComposerComponent = async (composer, otherProps) => {
             const props = Object.assign({ composerLocalId: composer.localId }, otherProps);
-            await createRootComponent(this, components.Composer, {
+            await createRootMessagingComponent(this, "Composer", {
                 props,
                 target: this.widget.el,
             });

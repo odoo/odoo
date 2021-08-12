@@ -2,15 +2,10 @@
 
 import * as mailUtils from '@mail/js/utils';
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { MessageAuthorPrefix } from '@mail/components/message_author_prefix/message_author_prefix';
-import { PartnerImStatusIcon } from '@mail/components/partner_im_status_icon/partner_im_status_icon';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
-
-const components = { MessageAuthorPrefix, PartnerImStatusIcon };
 
 export class ThreadPreview extends Component {
 
@@ -19,8 +14,6 @@ export class ThreadPreview extends Component {
      */
     constructor(...args) {
         super(...args);
-        useShouldUpdateBasedOnProps();
-        useModels();
         /**
          * Reference of the "mark as read" button. Useful to disable the
          * top-level click handler when clicking on this specific button.
@@ -96,9 +89,10 @@ export class ThreadPreview extends Component {
 }
 
 Object.assign(ThreadPreview, {
-    components,
     props: {
         threadLocalId: String,
     },
     template: 'mail.ThreadPreview',
 });
+
+registerMessagingComponent(ThreadPreview);

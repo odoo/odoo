@@ -1,18 +1,15 @@
 /** @odoo-module **/
 
-import { FollowerListMenu } from '@mail/components/follower_list_menu/follower_list_menu';
 import { insert, link } from '@mail/model/model_field_command';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     start,
 } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
-
-const components = { FollowerListMenu };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -23,7 +20,7 @@ QUnit.module('follower_list_menu_tests.js', {
 
         this.createFollowerListMenuComponent = async (thread, otherProps = {}) => {
             const props = Object.assign({ threadLocalId: thread.localId }, otherProps);
-            await createRootComponent(this, components.FollowerListMenu, {
+            await createRootMessagingComponent(this, "FollowerListMenu", {
                 props,
                 target: this.widget.el,
             });

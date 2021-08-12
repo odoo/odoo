@@ -1,16 +1,13 @@
 /** @odoo-module **/
 
-import { FollowerSubtype } from '@mail/components/follower_subtype/follower_subtype';
 import { insert, link } from '@mail/model/model_field_command';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     start,
 } from '@mail/utils/test_utils';
-
-const components = { FollowerSubtype };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -24,7 +21,7 @@ QUnit.module('follower_subtype_tests.js', {
                 followerLocalId: follower.localId,
                 followerSubtypeLocalId: followerSubtype.localId,
             };
-            await createRootComponent(this, components.FollowerSubtype, {
+            await createRootMessagingComponent(this, "FollowerSubtype", {
                 props,
                 target: this.widget.el,
             });

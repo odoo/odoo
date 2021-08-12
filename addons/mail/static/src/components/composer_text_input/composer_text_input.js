@@ -1,15 +1,11 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
-import { ComposerSuggestionList } from '@mail/components/composer_suggestion_list/composer_suggestion_list';
 import { markEventHandled } from '@mail/utils/utils';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
-
-const components = { ComposerSuggestionList };
 
 export class ComposerTextInput extends Component {
 
@@ -18,12 +14,6 @@ export class ComposerTextInput extends Component {
      */
     constructor(...args) {
         super(...args);
-        useShouldUpdateBasedOnProps({
-            compareDepth: {
-                sendShortcuts: 1,
-            },
-        });
-        useModels();
         /**
          * Updates the composer text input content when composer is mounted
          * as textarea content can't be changed from the DOM.
@@ -376,7 +366,6 @@ export class ComposerTextInput extends Component {
 }
 
 Object.assign(ComposerTextInput, {
-    components,
     defaultProps: {
         hasMentionSuggestionsBelowPosition: false,
         sendShortcuts: [],
@@ -403,3 +392,5 @@ Object.assign(ComposerTextInput, {
     },
     template: 'mail.ComposerTextInput',
 });
+
+registerMessagingComponent(ComposerTextInput, { propsCompareDepth: { sendShortcuts: 1 } });

@@ -4,14 +4,14 @@
 const { Component } = owl;
 
 /**
- * Compares `a` and `b` up to the given `compareDepth`.
+ * Compares `a` and `b` up to the given `propsCompareDepth`.
  *
  * @param {any} a
  * @param {any} b
- * @param {Object|integer} compareDepth
+ * @param {Object|integer} propsCompareDepth
  * @returns {boolean}
  */
-function isEqual(a, b, compareDepth) {
+function isEqual(a, b, propsCompareDepth) {
     const keys = Object.keys(a);
     if (Object.keys(b).length !== keys.length) {
         return false;
@@ -20,10 +20,10 @@ function isEqual(a, b, compareDepth) {
         // the depth can be given either as a number (for all keys) or as
         // an object (for each key)
         let depth;
-        if (typeof compareDepth === 'number') {
-            depth = compareDepth;
+        if (typeof propsCompareDepth === 'number') {
+            depth = propsCompareDepth;
         } else {
-            depth = compareDepth[key] || 0;
+            depth = propsCompareDepth[key] || 0;
         }
         if (depth === 0 && a[key] !== b[key]) {
             return false;
@@ -50,10 +50,10 @@ function isEqual(a, b, compareDepth) {
  * comparing props.
  *
  * @param {Object} [param0={}]
- * @param {Object} [param0.compareDepth={}] allows to specify the comparison
+ * @param {Object} [param0.propsCompareDepth={}] allows to specify the comparison
  *  depth to use for each prop. Default is shallow compare (depth = 0).
  */
-export function useShouldUpdateBasedOnProps({ compareDepth = {} } = {}) {
+export function useShouldUpdateBasedOnProps({ propsCompareDepth = {} } = {}) {
     const component = Component.current;
     component.shouldUpdate = nextProps => {
         const allNewProps = Object.assign({}, nextProps);
@@ -63,6 +63,6 @@ export function useShouldUpdateBasedOnProps({ compareDepth = {} } = {}) {
                 allNewProps[key] = defaultProps[key];
             }
         }
-        return !isEqual(component.props, allNewProps, compareDepth);
+        return !isEqual(component.props, allNewProps, propsCompareDepth);
     };
 }

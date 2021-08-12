@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component, useState } = owl;
 
@@ -11,7 +11,6 @@ export class DropZone extends Component {
      */
     constructor(...args) {
         super(...args);
-        useShouldUpdateBasedOnProps();
         this.state = useState({
             /**
              * Determine whether the user is dragging files over the dropzone.
@@ -132,3 +131,5 @@ Object.assign(DropZone, {
     props: {},
     template: 'mail.DropZone',
 });
+
+registerMessagingComponent(DropZone);

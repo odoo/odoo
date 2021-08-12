@@ -1,23 +1,10 @@
 /** @odoo-module **/
 
-import { ComposerSuggestion } from '@mail/components/composer_suggestion/composer_suggestion';
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-const components = { ComposerSuggestion };
-
 export class ComposerSuggestionList extends Component {
-
-    /**
-     * @override
-     */
-    constructor(...args) {
-        super(...args);
-        useShouldUpdateBasedOnProps();
-        useModels();
-    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -33,7 +20,6 @@ export class ComposerSuggestionList extends Component {
 }
 
 Object.assign(ComposerSuggestionList, {
-    components,
     defaultProps: {
         isBelow: false,
     },
@@ -43,3 +29,5 @@ Object.assign(ComposerSuggestionList, {
     },
     template: 'mail.ComposerSuggestionList',
 });
+
+registerMessagingComponent(ComposerSuggestionList);

@@ -1,31 +1,10 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { NotificationGroup } from '@mail/components/notification_group/notification_group';
-import { NotificationRequest } from '@mail/components/notification_request/notification_request';
-import { ThreadNeedactionPreview } from '@mail/components/thread_needaction_preview/thread_needaction_preview';
-import { ThreadPreview } from '@mail/components/thread_preview/thread_preview';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-const components = {
-    NotificationGroup,
-    NotificationRequest,
-    ThreadNeedactionPreview,
-    ThreadPreview,
-};
-
 export class NotificationList extends Component {
-
-    /**
-     * @override
-     */
-    constructor(...args) {
-        super(...args);
-        useModels();
-        useShouldUpdateBasedOnProps();
-    }
 
     mounted() {
         this._loadPreviews();
@@ -194,7 +173,6 @@ export class NotificationList extends Component {
 
 Object.assign(NotificationList, {
     _allowedFilters: ['all', 'mailbox', 'channel', 'chat'],
-    components,
     defaultProps: {
         filter: 'all',
     },
@@ -206,3 +184,5 @@ Object.assign(NotificationList, {
     },
     template: 'mail.NotificationList',
 });
+
+registerMessagingComponent(NotificationList);

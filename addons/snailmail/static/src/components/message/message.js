@@ -1,24 +1,13 @@
 odoo.define('snailmail/static/src/components/message/message.js', function (require) {
 'use strict';
 
-const { Message } = require('@mail/components/message/message');
-
-const components = {
-    Message,
-    SnailmailErrorDialog: require('snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.js'),
-    SnailmailNotificationPopover: require('snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.js'),
-};
+const { Message } = require("@mail/components/message/message");
 
 const { patch } = require('web.utils');
 
 const { useState } = owl;
 
-Object.assign(components.Message.components, {
-    SnailmailErrorDialog: components.SnailmailErrorDialog,
-    SnailmailNotificationPopover: components.SnailmailNotificationPopover,
-});
-
-patch(components.Message.prototype, 'snailmail/static/src/components/message/message.js', {
+patch(Message.prototype, 'snailmail/static/src/components/message/message.js', {
     /**
      * @override
      */

@@ -1,14 +1,12 @@
 /** @odoo-module **/
 
-import { Composer } from '@mail/components/composer/composer';
+import { getMessagingComponent } from "@mail/utils/messaging_component";
 import {
     afterEach,
     afterNextRender,
     beforeEach,
     start,
 } from '@mail/utils/test_utils';
-
-const components = { Composer };
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
@@ -18,7 +16,7 @@ QUnit.module('composer_tests.js', {
         beforeEach(this);
 
         this.createComposerComponent = async (composer, otherProps) => {
-            const ComposerComponent = components.Composer;
+            const ComposerComponent = getMessagingComponent("Composer");
             ComposerComponent.env = this.env;
             this.component = new ComposerComponent(null, Object.assign({
                 composerLocalId: composer.localId,

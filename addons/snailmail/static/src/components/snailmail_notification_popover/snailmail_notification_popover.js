@@ -1,21 +1,11 @@
 odoo.define('snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.js', function (require) {
 'use strict';
 
-const { useModels } = require('@mail/component_hooks/use_models/use_models');
-const { useShouldUpdateBasedOnProps } = require('@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props');
+const { registerMessagingComponent } = require('@mail/utils/messaging_component');
 
 const { Component } = owl;
 
 class SnailmailNotificationPopover extends Component {
-
-    /**
-     * @override
-     */
-    constructor(...args) {
-        super(...args);
-        useModels();
-        useShouldUpdateBasedOnProps();
-    }
 
     /**
      * @returns {string}
@@ -72,6 +62,8 @@ Object.assign(SnailmailNotificationPopover, {
     },
     template: 'snailmail.SnailmailNotificationPopover',
 });
+
+registerMessagingComponent(SnailmailNotificationPopover);
 
 return SnailmailNotificationPopover;
 

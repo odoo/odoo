@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import { AttachmentBox } from '@mail/components/attachment_box/attachment_box';
 import { insert } from '@mail/model/model_field_command';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     dragenterFiles,
     dropFiles,
     start,
@@ -15,7 +14,6 @@ import {
 import { file } from 'web.test_utils';
 
 const { createFile } = file;
-const components = { AttachmentBox };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -26,7 +24,7 @@ QUnit.module('attachment_box_tests.js', {
 
         this.createAttachmentBoxComponent = async (thread, otherProps) => {
             const props = Object.assign({ threadLocalId: thread.localId }, otherProps);
-            await createRootComponent(this, components.AttachmentBox, {
+            await createRootMessagingComponent(this, "AttachmentBox", {
                 props,
                 target: this.widget.el,
             });

@@ -1,13 +1,9 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { Follower } from '@mail/components/follower/follower';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 const { useRef, useState } = owl.hooks;
-
-const components = { Follower };
 
 export class FollowerListMenu extends Component {
     /**
@@ -15,14 +11,12 @@ export class FollowerListMenu extends Component {
      */
     constructor(...args) {
         super(...args);
-        useShouldUpdateBasedOnProps();
         this.state = useState({
             /**
              * Determine whether the dropdown is open or not.
              */
             isDropdownOpen: false,
         });
-        useModels();
         this._dropdownRef = useRef('dropdown');
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
     }
@@ -116,7 +110,6 @@ export class FollowerListMenu extends Component {
 }
 
 Object.assign(FollowerListMenu, {
-    components,
     defaultProps: {
         isDisabled: false,
     },
@@ -126,3 +119,5 @@ Object.assign(FollowerListMenu, {
     },
     template: 'mail.FollowerListMenu',
 });
+
+registerMessagingComponent(FollowerListMenu);

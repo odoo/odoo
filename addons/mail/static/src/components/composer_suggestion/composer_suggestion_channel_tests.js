@@ -1,14 +1,11 @@
 /** @odoo-module **/
 
-import { ComposerSuggestion } from '@mail/components/composer_suggestion/composer_suggestion';
 import {
     afterEach,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     start,
 } from '@mail/utils/test_utils';
-
-const components = { ComposerSuggestion };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -18,7 +15,7 @@ QUnit.module('composer_suggestion_channel_tests.js', {
         beforeEach(this);
 
         this.createComposerSuggestion = async props => {
-            await createRootComponent(this, components.ComposerSuggestion, {
+            await createRootMessagingComponent(this, "ComposerSuggestion", {
                 props,
                 target: this.widget.el,
             });

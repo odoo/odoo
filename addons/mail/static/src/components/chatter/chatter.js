@@ -1,24 +1,10 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
-import { ActivityBox } from '@mail/components/activity_box/activity_box';
-import { AttachmentBox } from '@mail/components/attachment_box/attachment_box';
-import { ChatterTopbar } from '@mail/components/chatter_topbar/chatter_topbar';
-import { Composer } from '@mail/components/composer/composer';
-import { ThreadView } from '@mail/components/thread_view/thread_view';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
-
-const components = {
-    ActivityBox,
-    AttachmentBox,
-    ChatterTopbar,
-    Composer,
-    ThreadView,
-};
 
 export class Chatter extends Component {
 
@@ -27,8 +13,6 @@ export class Chatter extends Component {
      */
     constructor(...args) {
         super(...args);
-        useShouldUpdateBasedOnProps();
-        useModels();
         useUpdate({ func: () => this._update() });
         /**
          * Reference of the composer. Useful to focus it.
@@ -125,9 +109,10 @@ export class Chatter extends Component {
 }
 
 Object.assign(Chatter, {
-    components,
     props: {
         chatterLocalId: String,
     },
     template: 'mail.Chatter',
 });
+
+registerMessagingComponent(Chatter);

@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 
 import { FormViewDialog } from 'web.view_dialogs';
@@ -21,15 +20,11 @@ class FormViewDialogComponentAdapter extends ComponentAdapter {
 
 }
 
-const components = { FormViewDialogComponentAdapter };
-
 export class ComposerSuggestedRecipient extends Component {
 
     constructor(...args) {
         super(...args);
         this.id = _.uniqueId('o_ComposerSuggestedRecipient_');
-        useShouldUpdateBasedOnProps();
-        useModels();
         useUpdate({ func: () => this._update() });
         /**
          * Form view dialog class. Useful to reference it in the template.
@@ -136,9 +131,11 @@ export class ComposerSuggestedRecipient extends Component {
 }
 
 Object.assign(ComposerSuggestedRecipient, {
-    components,
+    components: { FormViewDialogComponentAdapter },
     props: {
         suggestedRecipientInfoLocalId: String,
     },
     template: 'mail.ComposerSuggestedRecipient',
 });
+
+registerMessagingComponent(ComposerSuggestedRecipient);

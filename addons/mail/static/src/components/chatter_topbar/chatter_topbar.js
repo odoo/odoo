@@ -1,24 +1,10 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { FollowButton } from '@mail/components/follow_button/follow_button';
-import { FollowerListMenu } from '@mail/components/follower_list_menu/follower_list_menu';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-const components = { FollowButton, FollowerListMenu };
-
 export class ChatterTopbar extends Component {
-
-    /**
-     * @override
-     */
-    constructor(...args) {
-        super(...args);
-        useShouldUpdateBasedOnProps();
-        useModels();
-    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -114,9 +100,10 @@ export class ChatterTopbar extends Component {
 }
 
 Object.assign(ChatterTopbar, {
-    components,
     props: {
         chatterLocalId: String,
     },
     template: 'mail.ChatterTopbar',
 });
+
+registerMessagingComponent(ChatterTopbar);

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { MessagingMenu } from '@mail/components/messaging_menu/messaging_menu';
+import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 import SystrayMenu from 'web.SystrayMenu';
 import Widget from 'web.Widget';
@@ -27,6 +27,7 @@ const MessagingMenuWidget = Widget.extend({
         this._super(...arguments);
     },
     async on_attach_callback() {
+        const MessagingMenu = getMessagingComponent("MessagingMenu");
         this.component = new MessagingMenu(null);
         await this.component.mount(this.el);
         // unwrap

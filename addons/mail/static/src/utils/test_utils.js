@@ -9,6 +9,7 @@ import {
 import { ModelManager } from '@mail/model/model_manager';
 import ChatWindowService from '@mail/services/chat_window_service/chat_window_service';
 import DialogService from '@mail/services/dialog_service/dialog_service';
+import { getMessagingComponent } from '@mail/utils/messaging_component';
 import { nextTick } from '@mail/utils/utils';
 import DiscussWidget from '@mail/widgets/discuss/discuss';
 import MessagingMenuWidget from '@mail/widgets/messaging_menu/messaging_menu';
@@ -24,8 +25,6 @@ import {
 import Widget from 'web.Widget';
 import { createWebClient, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
-import { ComponentAdapter } from "web.OwlCompatibility";
-import LegacyMockServer from "web.MockServer";
 import LegacyRegistry from "web.Registry";
 
 const {
@@ -353,13 +352,14 @@ function afterEach(self) {
  * the test, which will happen when `afterEach` is called.
  *
  * @param {Object} self the current QUnit instance
- * @param {Class} Component the component class to create
+ * @param {string} componentName the class name of the component to create
  * @param {Object} param2
  * @param {Object} [param2.props={}] forwarded to component constructor
  * @param {DOM.Element} param2.target mount target for the component
  * @returns {owl.Component} the new component instance
  */
-async function createRootComponent(self, Component, { props = {}, target }) {
+async function createRootMessagingComponent(self, componentName, { props = {}, target }) {
+    const Component = getMessagingComponent(componentName);
     Component.env = self.env;
     const component = new Component(null, props);
     delete Component.env;
@@ -796,7 +796,7 @@ export {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     dragenterFiles,
     dropFiles,
     nextAnimationFrame,

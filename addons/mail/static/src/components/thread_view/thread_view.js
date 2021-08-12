@@ -1,15 +1,9 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { Composer } from '@mail/components/composer/composer';
-import { MessageList } from '@mail/components/message_list/message_list';
-import { ThreadViewTopbar } from '@mail/components/thread_view_topbar/thread_view_topbar';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
-
-const components = { Composer, MessageList, ThreadViewTopbar };
 
 export class ThreadView extends Component {
 
@@ -18,8 +12,6 @@ export class ThreadView extends Component {
      */
     setup() {
         super.setup();
-        useModels();
-        useShouldUpdateBasedOnProps();
         /**
          * Reference of the composer. Useful to set focus on composer when
          * thread has the focus.
@@ -117,7 +109,6 @@ export class ThreadView extends Component {
 }
 
 Object.assign(ThreadView, {
-    components,
     defaultProps: {
         composerAttachmentsDetailsMode: 'auto',
         hasComposer: false,
@@ -181,3 +172,5 @@ Object.assign(ThreadView, {
     },
     template: 'mail.ThreadView',
 });
+
+registerMessagingComponent(ThreadView);

@@ -1,16 +1,11 @@
 /** @odoo-module **/
 
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { markEventHandled } from '@mail/utils/utils';
 
 const { Component } = owl;
 
 export class EditableText extends Component {
-
-    constructor(...args) {
-        super(...args);
-        useShouldUpdateBasedOnProps();
-    }
 
     mounted() {
         this.el.focus();
@@ -84,3 +79,5 @@ Object.assign(EditableText, {
     },
     template: 'mail.EditableText',
 });
+
+registerMessagingComponent(EditableText);

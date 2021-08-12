@@ -1,15 +1,12 @@
 /** @odoo-module **/
 
-import { Attachment } from '@mail/components/attachment/attachment';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     start,
 } from '@mail/utils/test_utils';
-
-const components = { Attachment };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -20,7 +17,7 @@ QUnit.module('attachment_tests.js', {
 
         this.createAttachmentComponent = async (attachment, otherProps) => {
             const props = Object.assign({ attachmentLocalId: attachment.localId }, otherProps);
-            await createRootComponent(this, components.Attachment, {
+            await createRootMessagingComponent(this, "Attachment", {
                 props,
                 target: this.widget.el,
             });

@@ -1,23 +1,10 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { ThreadTypingIcon } from '@mail/components/thread_typing_icon/thread_typing_icon';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-const components = { ThreadTypingIcon };
-
 export class ThreadIcon extends Component {
-
-    /**
-     * @override
-     */
-    constructor(...args) {
-        super(...args);
-        useShouldUpdateBasedOnProps();
-        useModels();
-    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -33,9 +20,10 @@ export class ThreadIcon extends Component {
 }
 
 Object.assign(ThreadIcon, {
-    components,
     props: {
         threadLocalId: String,
     },
     template: 'mail.ThreadIcon',
 });
+
+registerMessagingComponent(ThreadIcon);
