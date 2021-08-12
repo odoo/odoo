@@ -6,3 +6,4 @@ from . import multicompany_common
 from . import test_flows
 from . import test_multicompany_flows
 from . import test_transactions
+from . import test_account_payment_register

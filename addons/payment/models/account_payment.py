@@ -87,10 +87,11 @@ class AccountPayment(models.Model):
             elif not payment.payment_token_id:
                 raise ValidationError(_("A token is required to create a new payment transaction."))
 
-        transactions = self.env['payment.transaction']
+        # Transactions in sudo to read acquirer fields.
+        transactions = self.env['payment.transaction'].sudo()
         for payment in self:
             transaction_vals = payment._prepare_payment_transaction_vals(**extra_create_values)
-            transaction = self.env['payment.transaction'].create(transaction_vals)
+            transaction = transactions.create(transaction_vals)
             transactions += transaction
             payment.payment_transaction_id = transaction  # Link the transaction to the payment
         return transactions
@@ -110,30 +111,26 @@ class AccountPayment(models.Model):
         }
 
     def action_post(self):
-        # Post the payments "normally" if no transactions are needed.
-        # If not, let the acquirer update the state.
+        # Create the missing payment transactions.
+        payments_needing_tx = self.filtered(lambda pay: pay.payment_token_id and not pay.payment_transaction_id)
+        payments_needing_tx._create_payment_transaction()
 
-        payments_need_tx = self.filtered(
-            lambda p: p.payment_token_id and not p.payment_transaction_id
-        )
-        # creating the transaction require to access data on payment acquirers, not always accessible to users
-        # able to create payments
-        transactions = payments_need_tx.sudo()._create_payment_transaction()
-
-        res = super(AccountPayment, self - payments_need_tx).action_post()
-
-        for tx in transactions:  # Process the transactions with a payment by token
+        # Process payment transactions directly.
+        transactions_needing_request = self.filtered('payment_transaction_id').payment_transaction_id
+        for tx in transactions_needing_request:
             tx._send_payment_request()
 
-        # Post payments for issued transactions
-        transactions._finalize_post_processing()
-        payments_tx_done = payments_need_tx.filtered(
-            lambda p: p.payment_transaction_id.state == 'done'
-        )
-        super(AccountPayment, payments_tx_done).action_post()
-        payments_tx_not_done = payments_need_tx.filtered(
-            lambda p: p.payment_transaction_id.state != 'done'
-        )
-        payments_tx_not_done.action_cancel()
+        # Post payments.
+        payments_to_post = self.filtered(lambda pay: not pay.payment_transaction_id
+                                                     or pay.payment_transaction_id.state == 'done')
+        res = super(AccountPayment, payments_to_post).action_post()
+
+        # Post-process transactions.
+        transactions_done = payments_needing_tx.payment_transaction_id.filtered(lambda x: x.state == 'done')
+        transactions_done._finalize_post_processing()
+
+        # Cancel payments if the payment transactions failed.
+        payments_to_cancel = payments_needing_tx.payment_transaction_id.filtered(lambda x: x.state != 'done').payment_id
+        payments_to_cancel.action_cancel()
 
         return res
