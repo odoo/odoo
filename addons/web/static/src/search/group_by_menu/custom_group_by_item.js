@@ -11,8 +11,8 @@ export class CustomGroupByItem extends Component {
         }
     }
 
-    onApply(ev) {
-        ev.detail.payload = this.state.fieldName;
+    onApply() {
+        this.trigger("add-custom-group", { fieldName: this.state.fieldName });
     }
 }
 

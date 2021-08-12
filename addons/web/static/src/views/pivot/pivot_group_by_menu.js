@@ -37,7 +37,7 @@ export class PivotGroupByMenu extends GroupByMenu {
      */
     onAddCustomGroup(ev) {
         this.trigger("add-custom-group-by", {
-            fieldName: ev.detail.payload,
+            fieldName: ev.detail.fieldName,
             groupId: this.props.cell.groupId,
         });
     }

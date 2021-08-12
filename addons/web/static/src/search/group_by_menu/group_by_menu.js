@@ -57,7 +57,7 @@ export class GroupByMenu extends Component {
      * @param {CustomEvent} ev
      */
     onAddCustomGroup(ev) {
-        const { payload: fieldName } = ev.detail;
+        const { fieldName } = ev.detail;
         this.env.searchModel.createNewGroupBy(fieldName);
     }
 }

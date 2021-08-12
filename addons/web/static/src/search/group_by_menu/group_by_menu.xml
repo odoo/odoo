@@ -50,7 +50,7 @@
             </t>
             <t t-if="fields.length">
                 <li t-if="items.length" role="separator" class="dropdown-divider"/>
-                <CustomGroupByItem fields="fields"  t-on-dropdown-item-selected.stop=""/>
+                <CustomGroupByItem fields="fields"  t-on-dropdown-item-selected.stop="" t-on-add-custom-group="onAddCustomGroup"/>
             </t>
         </Dropdown>
     </t>
