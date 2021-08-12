@@ -21,7 +21,7 @@
         <t t-call="web._assets_secondary_variables"/>
 
         <!-- Bootstrap variables should not be necessary, all pages come with bootstrap in at least one of their -->
-        <!-- bundle and, ideally, these should be available in all assets... with their odoo override. This system -->
+        <!-- bundle and, ideally, these should be available in all assets... with their  override. This system -->
         <!-- however works for now as non-backend and non-frontend assets do not need overriden BS variables yet. -->
         <link t-if="not no_bs_vars" rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_variables.scss"/>
     </template>
@@ -329,7 +329,7 @@
                 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
 
-                <title t-esc="title or 'Odoo'"/>
+                <title t-esc="title or 'ERPYMES'"/>
                 <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/src/img/favicon.ico'"/>
 
                 <script type="text/javascript">
@@ -368,7 +368,7 @@
                             <t t-if="not disable_database_manager">
                                 <a class="border-right pr-2 mr-1" href="/web/database/manager">Manage Databases</a>
                             </t>
-                            <a href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" target="_blank">Powered by <span>Odoo</span></a>
+                            
                         </div>
                     </div>
                 </div>
@@ -784,7 +784,7 @@
         <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/murmurhash3.js"></script>
         <!--
             NOTE JEM : PDFJS not-minified load its assets dynamically. Not minify, this lib is huge (4000 lines).
-            To load PDFJS using odoo bundle, we create a custom worker_loader, to avoid reloading all the assets (core/*.js) dynamically.
+            To load PDFJS using  bundle, we create a custom worker_loader, to avoid reloading all the assets (core/*.js) dynamically.
             Loading all this assets in a bundle can be problematic in debug mode, since we don't wait all assets to be loaded to start using PDFJS. That's why, in debug mode, we use the native loader, otherwise our custom loader is used.
         -->
         <t t-if="not debug">
