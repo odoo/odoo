@@ -1,17 +1,14 @@
 /** @odoo-module **/
 
-import { ThreadView } from '@mail/components/thread_view/thread_view';
 import { insert, link } from '@mail/model/model_field_command';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     dragenterFiles,
     start,
 } from '@mail/utils/test_utils';
-
-const components = { ThreadView };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -42,7 +39,7 @@ QUnit.module('thread_view_tests.js', {
                 target = this.widget.el;
             }
             const props = Object.assign({ threadViewLocalId: threadView.localId }, otherProps);
-            await createRootComponent(this, components.ThreadView, { props, target });
+            await createRootMessagingComponent(this, "ThreadView", { props, target });
         };
 
         this.start = async params => {

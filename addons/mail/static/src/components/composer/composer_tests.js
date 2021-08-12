@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import { Composer } from '@mail/components/composer/composer';
 import { create } from '@mail/model/model_field_command';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     dragenterFiles,
     dropFiles,
     nextAnimationFrame,
@@ -20,7 +19,6 @@ import {
 } from 'web.test_utils';
 
 const { createFile, inputFiles } = file;
-const components = { Composer };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -31,7 +29,7 @@ QUnit.module('composer_tests.js', {
 
         this.createComposerComponent = async (composer, otherProps) => {
             const props = Object.assign({ composerLocalId: composer.localId }, otherProps);
-            await createRootComponent(this, components.Composer, {
+            await createRootMessagingComponent(this, "Composer", {
                 props,
                 target: this.widget.el,
             });

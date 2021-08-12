@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 const { useState } = owl.hooks;
@@ -12,8 +11,6 @@ export class FollowButton extends Component {
      */
     constructor(...args) {
         super(...args);
-        useModels();
-        useShouldUpdateBasedOnProps();
         this.state = useState({
             /**
              * Determine whether the unfollow button is highlighted or not.
@@ -81,3 +78,5 @@ Object.assign(FollowButton, {
     },
     template: 'mail.FollowButton',
 });
+
+registerMessagingComponent(FollowButton);

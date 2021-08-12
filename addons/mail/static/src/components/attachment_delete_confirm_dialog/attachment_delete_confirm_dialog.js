@@ -1,14 +1,11 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import Dialog from 'web.OwlDialog';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
-
-const components = { Dialog };
 
 export class AttachmentDeleteConfirmDialog extends Component {
 
@@ -17,8 +14,6 @@ export class AttachmentDeleteConfirmDialog extends Component {
      */
     constructor(...args) {
         super(...args);
-        useShouldUpdateBasedOnProps();
-        useModels();
         // to manually trigger the dialog close event
         this._dialogRef = useRef('dialog');
     }
@@ -74,9 +69,11 @@ export class AttachmentDeleteConfirmDialog extends Component {
 }
 
 Object.assign(AttachmentDeleteConfirmDialog, {
-    components,
+    components: { Dialog },
     props: {
         attachmentLocalId: String,
     },
     template: 'mail.AttachmentDeleteConfirmDialog',
 });
+
+registerMessagingComponent(AttachmentDeleteConfirmDialog);

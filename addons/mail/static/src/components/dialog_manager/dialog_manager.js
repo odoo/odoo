@@ -1,23 +1,10 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { Dialog } from '@mail/components/dialog/dialog';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-const components = { Dialog };
-
 export class DialogManager extends Component {
-
-    /**
-     * @override
-     */
-    constructor(...args) {
-        super(...args);
-        useModels();
-        useShouldUpdateBasedOnProps();
-    }
 
     mounted() {
         this._checkDialogOpen();
@@ -53,7 +40,8 @@ export class DialogManager extends Component {
 }
 
 Object.assign(DialogManager, {
-    components,
     props: {},
     template: 'mail.DialogManager',
 });
+
+registerMessagingComponent(DialogManager);

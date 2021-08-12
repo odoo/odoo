@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import core from 'web.core';
 
@@ -17,12 +17,6 @@ export class FileUploader extends Component {
         this._fileInputRef = useRef('fileInput');
         this._fileUploadId = _.uniqueId('o_FileUploader_fileupload');
         this._onAttachmentUploaded = this._onAttachmentUploaded.bind(this);
-        useShouldUpdateBasedOnProps({
-            compareDepth: {
-                attachmentLocalIds: 1,
-                newAttachmentExtraData: 3,
-            },
-        });
     }
 
     mounted() {
@@ -229,4 +223,11 @@ Object.assign(FileUploader, {
         uploadModel: String,
     },
     template: 'mail.FileUploader',
+});
+
+registerMessagingComponent(FileUploader, {
+    propsCompareDepth: {
+        attachmentLocalIds: 1,
+        newAttachmentExtraData: 3,
+    },
 });

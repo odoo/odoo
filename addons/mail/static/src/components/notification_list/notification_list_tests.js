@@ -1,15 +1,12 @@
 /** @odoo-module **/
 
-import { NotificationList } from '@mail/components/notification_list/notification_list';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     start,
 } from '@mail/utils/test_utils';
-
-const components = { NotificationList };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -23,7 +20,7 @@ QUnit.module('notification_list_tests.js', {
          * @param {string} [param0.filter='all']
          */
         this.createNotificationListComponent = async ({ filter = 'all' }) => {
-            await createRootComponent(this, components.NotificationList, {
+            await createRootMessagingComponent(this, "NotificationList", {
                 props: { filter },
                 target: this.widget.el,
             });

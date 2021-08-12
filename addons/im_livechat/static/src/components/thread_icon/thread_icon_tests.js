@@ -1,15 +1,12 @@
 /** @odoo-module **/
 
-import { ThreadIcon } from '@mail/components/thread_icon/thread_icon';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     start,
 } from '@mail/utils/test_utils';
-
-const components = { ThreadIcon };
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
@@ -19,7 +16,7 @@ QUnit.module('thread_icon_tests.js', {
         beforeEach(this);
 
         this.createThreadIcon = async thread => {
-            await createRootComponent(this, components.ThreadIcon, {
+            await createRootMessagingComponent(this, "ThreadIcon", {
                 props: { threadLocalId: thread.localId },
                 target: this.widget.el,
             });

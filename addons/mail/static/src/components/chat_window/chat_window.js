@@ -1,17 +1,11 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
-import { AutocompleteInput } from '@mail/components/autocomplete_input/autocomplete_input';
-import { ChatWindowHeader } from '@mail/components/chat_window_header/chat_window_header';
-import { ThreadView } from '@mail/components/thread_view/thread_view';
 import { isEventHandled } from '@mail/utils/utils';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
-
-const components = { AutocompleteInput, ChatWindowHeader, ThreadView };
 
 export class ChatWindow extends Component {
 
@@ -20,8 +14,6 @@ export class ChatWindow extends Component {
      */
     constructor(...args) {
         super(...args);
-        useShouldUpdateBasedOnProps();
-        useModels();
         useUpdate({ func: () => this._update() });
         /**
          * Reference of the header of the chat window.
@@ -322,7 +314,6 @@ export class ChatWindow extends Component {
 }
 
 Object.assign(ChatWindow, {
-    components,
     defaultProps: {
         hasCloseAsBackButton: false,
         isExpandable: false,
@@ -336,3 +327,5 @@ Object.assign(ChatWindow, {
     },
     template: 'mail.ChatWindow',
 });
+
+registerMessagingComponent(ChatWindow);

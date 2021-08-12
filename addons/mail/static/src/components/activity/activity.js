@@ -1,10 +1,6 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { ActivityMarkDonePopover } from '@mail/components/activity_mark_done_popover/activity_mark_done_popover';
-import { FileUploader } from '@mail/components/file_uploader/file_uploader';
-import { MailTemplate } from '@mail/components/mail_template/mail_template';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import {
     auto_str_to_date,
@@ -15,12 +11,6 @@ import {
 const { Component, useState } = owl;
 const { useRef } = owl.hooks;
 
-const components = {
-    ActivityMarkDonePopover,
-    FileUploader,
-    MailTemplate,
-};
-
 export class Activity extends Component {
 
     /**
@@ -28,11 +18,9 @@ export class Activity extends Component {
      */
     constructor(...args) {
         super(...args);
-        useShouldUpdateBasedOnProps();
         this.state = useState({
             areDetailsVisible: false,
         });
-        useModels();
         /**
          * Reference of the file uploader.
          * Useful to programmatically prompts the browser file uploader.
@@ -180,9 +168,10 @@ export class Activity extends Component {
 }
 
 Object.assign(Activity, {
-    components,
     props: {
         activityLocalId: String,
     },
     template: 'mail.Activity',
 });
+
+registerMessagingComponent(Activity);

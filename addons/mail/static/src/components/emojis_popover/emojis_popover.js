@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import emojis from '@mail/js/emojis';
 
@@ -14,7 +14,6 @@ export class EmojisPopover extends Component {
     constructor(...args) {
         super(...args);
         this.emojis = emojis;
-        useShouldUpdateBasedOnProps();
         useUpdate({ func: () => this._update() });
     }
 
@@ -71,3 +70,5 @@ Object.assign(EmojisPopover, {
     props: {},
     template: 'mail.EmojisPopover',
 });
+
+registerMessagingComponent(EmojisPopover);

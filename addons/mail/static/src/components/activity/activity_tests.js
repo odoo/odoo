@@ -1,22 +1,23 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { Activity } from '@mail/components/activity/activity';
 import { insert } from '@mail/model/model_field_command';
+import {
+    registerMessagingComponent,
+    unregisterMessagingComponent,
+} from '@mail/utils/messaging_component';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     start,
 } from '@mail/utils/test_utils';
 
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import Bus from 'web.Bus';
 import { date_to_str } from 'web.time';
 
 const { Component, tags: { xml } } = owl;
-
-const components = { Activity };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -26,7 +27,7 @@ QUnit.module('activity_tests.js', {
         beforeEach(this);
 
         this.createActivityComponent = async function (activity) {
-            await createRootComponent(this, components.Activity, {
+            await createRootMessagingComponent(this, "Activity", {
                 props: { activityLocalId: activity.localId },
                 target: this.widget.el,
             });
@@ -970,11 +971,6 @@ QUnit.test('activity click on cancel', async function (assert) {
     // Create a parent component to surround the Activity component in order to be able
     // to check that activity component has been destroyed
     class ParentComponent extends Component {
-        constructor(...args) {
-            super(... args);
-            useModels();
-        }
-
         /**
          * @returns {mail.activity}
          */
@@ -984,7 +980,6 @@ QUnit.test('activity click on cancel', async function (assert) {
     }
     ParentComponent.env = this.env;
     Object.assign(ParentComponent, {
-        components,
         props: { activityLocalId: String },
         template: xml`
             <div>
@@ -995,7 +990,9 @@ QUnit.test('activity click on cancel', async function (assert) {
             </div>
         `,
     });
-    await createRootComponent(this, ParentComponent, {
+    registerMessagingComponent(ParentComponent);
+    registerCleanup(() => unregisterMessagingComponent(ParentComponent));
+    await createRootMessagingComponent(this, "ParentComponent", {
         props: { activityLocalId: activity.localId },
         target: this.widget.el,
     });

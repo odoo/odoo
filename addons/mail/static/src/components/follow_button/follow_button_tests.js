@@ -1,15 +1,12 @@
 /** @odoo-module **/
 
-import { FollowButton } from '@mail/components/follow_button/follow_button';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     start,
 } from '@mail/utils/test_utils';
-
-const components = { FollowButton };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -20,7 +17,7 @@ QUnit.module('follow_button_tests.js', {
 
         this.createFollowButtonComponent = async (thread, otherProps = {}) => {
             const props = Object.assign({ threadLocalId: thread.localId }, otherProps);
-            await createRootComponent(this, components.FollowButton, {
+            await createRootMessagingComponent(this, "FollowButton", {
                 props,
                 target: this.widget.el,
             });

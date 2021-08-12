@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useRefs } from '@mail/component_hooks/use_refs/use_refs';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
 import { link } from '@mail/model/model_field_command';
 
 import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
-const { Component, QWeb } = owl;
+const { Component } = owl;
 const { useRef } = owl.hooks;
 
 const MIN_SCALE = 0.5;
@@ -22,8 +21,6 @@ export class AttachmentViewer extends Component {
     constructor(...args) {
         super(...args);
         this.MIN_SCALE = MIN_SCALE;
-        useShouldUpdateBasedOnProps();
-        useModels();
         /**
          * Used to ensure that the ref is always up to date, which seems to be needed if the element
          * has a t-key, which was added to force the rendering of a new element when the src of the image changes.
@@ -599,4 +596,4 @@ Object.assign(AttachmentViewer, {
     template: 'mail.AttachmentViewer',
 });
 
-QWeb.registerComponent('AttachmentViewer', AttachmentViewer);
+registerMessagingComponent(AttachmentViewer);

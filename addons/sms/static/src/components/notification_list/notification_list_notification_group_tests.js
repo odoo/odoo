@@ -1,17 +1,14 @@
 odoo.define('sms/static/src/components/notification_list/notification_list_notification_group_tests.js', function (require) {
 'use strict';
 
-const { NotificationList } = require('@mail/components/notification_list/notification_list');
 const {
     afterEach,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     start,
 } = require('@mail/utils/test_utils');
 
 const Bus = require('web.Bus');
-
-const components = { NotificationList };
 
 QUnit.module('sms', {}, function () {
 QUnit.module('components', {}, function () {
@@ -25,7 +22,7 @@ QUnit.module('notification_list_notification_group_tests.js', {
          * @param {string} [param0.filter='all']
          */
         this.createNotificationListComponent = async ({ filter = 'all' } = {}) => {
-            await createRootComponent(this, components.NotificationList, {
+            await createRootMessagingComponent(this, "NotificationList", {
                 props: { filter },
                 target: this.widget.el,
             });

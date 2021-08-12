@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -19,8 +18,6 @@ export class Dialog extends Component {
         this._componentRef = useRef('component');
         this._onClickGlobal = this._onClickGlobal.bind(this);
         this._onKeydownDocument = this._onKeydownDocument.bind(this);
-        useShouldUpdateBasedOnProps();
-        useModels();
         this._constructor();
     }
 
@@ -105,3 +102,5 @@ Object.assign(Dialog, {
     },
     template: 'mail.Dialog',
 });
+
+registerMessagingComponent(Dialog);

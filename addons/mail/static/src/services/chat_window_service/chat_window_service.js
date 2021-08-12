@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import { ChatWindowManager } from '@mail/components/chat_window_manager/chat_window_manager';
+import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 import AbstractService from 'web.AbstractService';
 import { bus, serviceRegistry } from 'web.core';
-
-const components = { ChatWindowManager };
 
 const ChatWindowService = AbstractService.extend({
     /**
@@ -53,7 +51,7 @@ const ChatWindowService = AbstractService.extend({
             this.component.destroy();
             this.component = undefined;
         }
-        const ChatWindowManagerComponent = components.ChatWindowManager;
+        const ChatWindowManagerComponent = getMessagingComponent("ChatWindowManager");
         this.component = new ChatWindowManagerComponent(null);
         const parentNode = this._getParentNode();
         await this.component.mount(parentNode);

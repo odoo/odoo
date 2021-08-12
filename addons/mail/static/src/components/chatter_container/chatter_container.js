@@ -1,13 +1,9 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { Chatter } from '@mail/components/chatter/chatter';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { clear } from '@mail/model/model_field_command';
 
 const { Component } = owl;
-
-const components = { Chatter };
 
 /**
  * This component abstracts chatter component to its parent, so that it can be
@@ -25,8 +21,6 @@ export class ChatterContainer extends Component {
     constructor(...args) {
         super(...args);
         this.chatter = undefined;
-        useModels();
-        useShouldUpdateBasedOnProps();
         this._insertFromProps(this.props);
     }
 
@@ -77,7 +71,6 @@ export class ChatterContainer extends Component {
 }
 
 Object.assign(ChatterContainer, {
-    components,
     props: {
         hasActivities: {
             type: Boolean,
@@ -115,3 +108,5 @@ Object.assign(ChatterContainer, {
     },
     template: 'mail.ChatterContainer',
 });
+
+registerMessagingComponent(ChatterContainer);

@@ -1,17 +1,10 @@
 /** @odoo-module **/
 
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class ThreadTypingIcon extends Component {
-
-    constructor(...args) {
-        super(...args);
-        useShouldUpdateBasedOnProps();
-    }
-
-}
+export class ThreadTypingIcon extends Component {}
 
 Object.assign(ThreadTypingIcon, {
     defaultProps: {
@@ -34,3 +27,5 @@ Object.assign(ThreadTypingIcon, {
     },
     template: 'mail.ThreadTypingIcon',
 });
+
+registerMessagingComponent(ThreadTypingIcon);
