@@ -117,8 +117,8 @@ _Entry = collections.namedtuple('_Entry', ['mimetype', 'signatures', 'discrimina
 _mime_mappings = (
     # pdf
     _Entry('application/pdf', [b'%PDF'], []),
-    # jpg, jpeg, png, gif, bmp
-    _Entry('image/jpeg', [b'\xFF\xD8\xFF\xE0', b'\xFF\xD8\xFF\xE2', b'\xFF\xD8\xFF\xE3', b'\xFF\xD8\xFF\xE1'], []),
+    # jpg, jpeg, png, gif, bmp, jfif
+    _Entry('image/jpeg', [b'\xFF\xD8\xFF\xE0', b'\xFF\xD8\xFF\xE2', b'\xFF\xD8\xFF\xE3', b'\xFF\xD8\xFF\xE1', b'\xFF\xD8\xFF\xDB'], []),
     _Entry('image/png', [b'\x89PNG\r\n\x1A\n'], []),
     _Entry('image/gif', [b'GIF87a', b'GIF89a'], []),
     _Entry('image/bmp', [b'BM'], []),
