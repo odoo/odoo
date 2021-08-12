@@ -10,7 +10,7 @@
                 'o-has-header': hasHeader,
                 'o-is-compact': props.isCompact,
             }"
-            t-on-keydown="_onKeydown"
+            t-on-keydown="composer.onKeydown"
         >
             <t t-if="composer">
                 <t t-if="isDropZoneVisible.value">
@@ -75,7 +75,7 @@
                         isCompact="props.isCompact"
                         sendShortcuts="props.textInputSendShortcuts"
                         t-on-o-composer-suggestion-clicked="_onComposerSuggestionClicked"
-                        t-on-o-composer-text-input-send-shortcut="_onComposerTextInputSendShortcut"
+                        t-on-o-composer-text-input-send-shortcut="composer.onComposerTextInputSendShortcut"
                         t-on-paste="_onPasteTextInput"
                         t-key="composer.localId"
                         t-ref="textInput"
@@ -90,14 +90,14 @@
                                 <div class="o_Composer_toolButtonSeparator"/>
                             </t>
                             <div class="o_Composer_primaryToolButtons" t-att-class="{ 'o-composer-is-compact': props.isCompact }">
-                                <Popover position="'top'" t-on-o-emoji-selection="_onEmojiSelection">
+                                <Popover position="'top'" t-on-o-emoji-selection="composer.onEmojiSelection">
                                     <!-- TODO FIXME o-open not possible to code due to https://github.com/odoo/owl/issues/693 -->
                                     <button class="o_Composer_button o_Composer_buttonEmojis o_Composer_toolButton btn btn-light"
                                         t-att-class="{
                                             'o-open': false and state.displayed,
                                             'o-mobile': env.messaging.device.isMobile,
                                         }"
-                                        t-on-keydown="_onKeydownEmojiButton"
+                                        t-on-keydown="composer.onKeydownEmojiButton"
                                     >
                                         <i class="fa fa-smile-o"/>
                                     </button>
@@ -105,11 +105,11 @@
                                         <EmojisPopover t-ref="emojisPopover"/>
                                     </t>
                                 </Popover>
-                                <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" title="Add attachment" type="button" t-on-click="_onClickAddAttachment"/>
+                                <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" title="Add attachment" type="button" t-on-click="composer.onClickAddAttachment"/>
                             </div>
                             <t t-if="props.isExpandable">
                                 <div class="o_Composer_secondaryToolButtons">
-                                    <button class="btn btn-light fa fa-expand o_Composer_button o_Composer_buttonFullComposer o_Composer_toolButton" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" title="Full composer" type="button" t-on-click="_onClickFullComposer"/>
+                                    <button class="btn btn-light fa fa-expand o_Composer_button o_Composer_buttonFullComposer o_Composer_toolButton" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" title="Full composer" type="button" t-on-click="composer.onClickFullComposer"/>
                                 </div>
                             </t>
                         </div>
@@ -157,13 +157,13 @@
                     }"
                     t-att-disabled="!composer.canPostMessage ? 'disabled' : ''"
                     type="button"
-                    t-on-click="_onClickSend"
+                    t-on-click="composer.onClickSend"
                 >
                     <t t-if="!env.messaging.device.isMobile"><t t-if="composer.isLog">Log</t><t t-else="">Send</t></t>
                 </button>
             </t>
             <t t-if="!env.messaging.device.isMobile and props.hasDiscardButton">
-                <button class="o_Composer_actionButton o-last o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact': props.isCompact, 'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar }" type="button" t-on-click="_onClickDiscard">
+                <button class="o_Composer_actionButton o-last o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact': props.isCompact, 'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar }" type="button" t-on-click="composer.onClickDiscard">
                     Discard
                 </button>
             </t>

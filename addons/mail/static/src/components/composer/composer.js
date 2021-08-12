@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
 import { useModels } from '@mail/component_hooks/use_models/use_models';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { AttachmentList } from '@mail/components/attachment_list/attachment_list';
@@ -12,10 +14,6 @@ import { EmojisPopover } from '@mail/components/emojis_popover/emojis_popover';
 import { FileUploader } from '@mail/components/file_uploader/file_uploader';
 import { ThreadTextualTypingStatus } from '@mail/components/thread_textual_typing_status/thread_textual_typing_status';
 import { replace } from '@mail/model/model_field_command';
-import {
-    isEventHandled,
-    markEventHandled,
-} from '@mail/utils/utils';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -38,13 +36,17 @@ export class Composer extends Component {
     constructor(...args) {
         super(...args);
         this.isDropZoneVisible = useDragVisibleDropZone();
+        useRefToModel({ fieldName: 'fileUploaderRef', modelName: 'mail.composer', propNameAsRecordLocalId: 'composerLocalId', refName: 'fileUploader' });
         useShouldUpdateBasedOnProps({
             compareDepth: {
                 textInputSendShortcuts: 1,
             },
         });
         useModels();
+        useComponentToModel({ fieldName: 'component', modelName: 'mail.composer', propNameAsRecordLocalId: 'composerLocalId' });
         useUpdate({ func: () => this._update() });
+        useRefToModel({ fieldName: 'textInputRef', modelName: 'mail.composer', propNameAsRecordLocalId: 'composerLocalId', refName: 'textInput' });
+        useRefToModel({ fieldName: 'emojisPopoverRef', modelName: 'mail.composer', propNameAsRecordLocalId: 'composerLocalId', refName: 'emojisPopover' });
         /**
          * Reference of the emoji popover. Useful to include emoji popover as
          * contained "inside" the composer.
@@ -172,30 +174,6 @@ export class Composer extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Post a message in the composer on related thread.
-     *
-     * Posting of the message could be aborted if it cannot be posted like if there are attachments
-     * currently uploading or if there is no text content and no attachments.
-     *
-     * @private
-     */
-    async _postMessage() {
-        if (!this.composer.canPostMessage) {
-            if (this.composer.hasUploadingAttachment) {
-                this.env.services['notification'].notify({
-                    message: this.env._t("Please wait while the file is uploading."),
-                    type: 'warning',
-                });
-            }
-            return;
-        }
-        await this.composer.postMessage();
-        // TODO: we might need to remove trigger and use the store to wait for the post rpc to be done
-        // task-2252858
-        this.trigger('o-message-posted');
-    }
-
-    /**
      * @private
      */
     _update() {
@@ -212,18 +190,6 @@ export class Composer extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Called when clicking on attachment button.
-     *
-     * @private
-     */
-    _onClickAddAttachment() {
-        this._fileUploaderRef.comp.openBrowserFileUploader();
-        if (!this.env.device.isMobile) {
-            this.focus();
-        }
-    }
-
-    /**
      * Discards the composer when clicking away.
      *
      * @private
@@ -234,49 +200,6 @@ export class Composer extends Component {
             return;
         }
         this.composer.discard();
-    }
-
-    /**
-     * Called when clicking on "expand" button.
-     *
-     * @private
-     */
-    _onClickFullComposer() {
-        this.composer.openFullComposer();
-    }
-
-    /**
-     * Called when clicking on "discard" button.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickDiscard(ev) {
-        this.composer.discard();
-    }
-
-    /**
-     * Called when clicking on "send" button.
-     *
-     * @private
-     */
-    _onClickSend() {
-        this._postMessage();
-        this.focus();
-    }
-
-    /**
-     * @private
-     */
-    _onComposerSuggestionClicked() {
-        this.focus();
-    }
-
-    /**
-     * @private
-     */
-    _onComposerTextInputSendShortcut() {
-        this._postMessage();
     }
 
     /**
@@ -291,66 +214,6 @@ export class Composer extends Component {
         ev.stopPropagation();
         await this._fileUploaderRef.comp.uploadFiles(ev.detail.files);
         this.isDropZoneVisible.value = false;
-    }
-
-    /**
-     * Called when selection an emoji from the emoji popover (from the emoji
-     * button).
-     *
-     * @private
-     * @param {CustomEvent} ev
-     * @param {Object} ev.detail
-     * @param {string} ev.detail.unicode
-     */
-    _onEmojiSelection(ev) {
-        ev.stopPropagation();
-        this._textInputRef.comp.saveStateInStore();
-        this.composer.insertIntoTextInput(ev.detail.unicode);
-        if (!this.env.device.isMobile) {
-            this.focus();
-        }
-    }
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeydown(ev) {
-        if (ev.key === 'Escape') {
-            if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
-                return;
-            }
-            if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
-                return;
-            }
-            ev.preventDefault();
-            this.composer.discard();
-        }
-    }
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeydownEmojiButton(ev) {
-        if (ev.key === 'Escape') {
-            if (this._emojisPopoverRef.comp) {
-                this._emojisPopoverRef.comp.close();
-                this.focus();
-                markEventHandled(ev, 'Composer.closeEmojisPopover');
-            }
-        }
-    }
-
-    /**
-     * @private
-     * @param {CustomEvent} ev
-     */
-    async _onPasteTextInput(ev) {
-        if (!ev.clipboardData || !ev.clipboardData.files) {
-            return;
-        }
-        await this._fileUploaderRef.comp.uploadFiles(ev.clipboardData.files);
     }
 
 }

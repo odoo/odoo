@@ -6,6 +6,10 @@ import { clear, insert, link, replace, unlink, unlinkAll } from '@mail/model/mod
 import { OnChange } from '@mail/model/model_onchange';
 import emojis from '@mail/js/emojis';
 import {
+    isEventHandled,
+    markEventHandled,
+} from '@mail/utils/utils';
+import {
     addLink,
     escapeAndCompactTextContent,
     parseAndTransform,
@@ -14,6 +18,20 @@ import {
 function factory(dependencies) {
 
     class Composer extends dependencies['mail.model'] {
+
+        /**
+         * @override
+         */
+        _created() {
+            this.onClickAddAttachment = this.onClickAddAttachment.bind(this);
+            this.onClickDiscard = this.onClickDiscard.bind(this);
+            this.onClickFullComposer = this.onClickFullComposer.bind(this);
+            this.onClickSend = this.onClickSend.bind(this);
+            this.onKeydown = this.onKeydown.bind(this);
+            this.onComposerTextInputSendShortcut = this.onComposerTextInputSendShortcut.bind(this);
+            this.onEmojiSelection = this.onEmojiSelection.bind(this);
+            this.onKeydownEmojiButton = this.onKeydownEmojiButton.bind(this);
+        }
 
         /**
          * @override
@@ -77,6 +95,10 @@ function factory(dependencies) {
                 }
             }
             this.update({ hasFocus: true });
+            if (this.env.messaging.device.isMobile) {
+                this.component.el.scrollIntoView();
+            }
+            this.textInputRef.comp.focus();
         }
 
         /**
@@ -203,6 +225,15 @@ function factory(dependencies) {
          * Post a message in provided composer's thread based on current composer fields values.
          */
         async postMessage() {
+            if (!this.canPostMessage) {
+                if (this.composer.hasUploadingAttachment) {
+                    this.env.services['notification'].notify({
+                        message: this.env._t("Please wait while the file is uploading."),
+                        type: 'warning',
+                    });
+                }
+                return;
+            }
             const thread = this.thread;
             this.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
             const escapedAndCompactContent = escapeAndCompactTextContent(this.textInputContent);
@@ -283,6 +314,7 @@ function factory(dependencies) {
                 this._reset();
             } finally {
                 this.update({ isPostingMessage: false });
+                this.component.trigger('o-message-posted');
             }
         }
 
@@ -306,6 +338,102 @@ function factory(dependencies) {
             } else {
                 this.thread.registerCurrentPartnerIsTyping();
             }
+        }
+
+        /**
+         * Called when clicking on attachment button.
+         */
+        onClickAddAttachment() {
+            this.fileUploaderRef.comp.openBrowserFileUploader();
+            if (!this.env.device.isMobile) {
+                this.focus();
+            }
+        }
+
+        /**
+         * Called when clicking on "expand" button.
+         *
+         */
+        onClickFullComposer() {
+            this.openFullComposer();
+        }
+
+        /**
+         * Called when clicking on "discard" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickDiscard(ev) {
+            this.discard();
+        }
+
+        /**
+         * Called when clicking on "send" button.
+         */
+        async onClickSend() {
+            await this.postMessage();
+            this.focus();
+        }
+
+        onComposerTextInputSendShortcut() {
+            this.postMessage();
+        }
+
+        /**
+         * Called when selection an emoji from the emoji popover (from the emoji
+         * button).
+         *
+         * @param {CustomEvent} ev
+         * @param {Object} ev.detail
+         * @param {string} ev.detail.unicode
+         */
+        onEmojiSelection(ev) {
+            ev.stopPropagation();
+            this.textInputRef.comp.saveStateInStore();
+            this.insertIntoTextInput(ev.detail.unicode);
+            if (!this.env.device.isMobile) {
+                this.focus();
+            }
+        }
+
+        /**
+         * @param {KeyboardEvent} ev
+         */
+        onKeydown(ev) {
+            if (ev.key === 'Escape') {
+                if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
+                    return;
+                }
+                if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
+                    return;
+                }
+                ev.preventDefault();
+                this.discard();
+            }
+        }
+
+        /**
+         * @param {KeyboardEvent} ev
+         */
+        onKeydownEmojiButton(ev) {
+            if (ev.key === 'Escape') {
+                if (this.emojisPopoverRef.comp) {
+                    this.emojisPopoverRef.comp.close();
+                    this.focus();
+                    markEventHandled(ev, 'Composer.closeEmojisPopover');
+                }
+            }
+        }
+
+        /**
+         * @private
+         * @param {CustomEvent} ev
+         */
+        async onPasteTextInput(ev) {
+            if (!ev.clipboardData || !ev.clipboardData.files) {
+                return;
+            }
+            await this.fileUploaderRef.comp.uploadFiles(ev.clipboardData.files);
         }
 
         /**
@@ -816,6 +944,7 @@ function factory(dependencies) {
             compute: '_computeCanPostMessage',
             default: false,
         }),
+        component: attr(),
         /**
          * Instance of discuss if this composer is used as the reply composer
          * from Inbox. This field is computed from the inverse relation and
@@ -824,6 +953,7 @@ function factory(dependencies) {
         discussAsReplying: one2one('mail.discuss', {
             inverse: 'replyingToMessageOriginThreadComposer',
         }),
+        emojisPopoverRef: attr(),
         /**
          * Determines the extra records that are currently suggested.
          * Allows to have different model types of mentions through a dynamic
@@ -833,6 +963,7 @@ function factory(dependencies) {
         extraSuggestedRecords: many2many('mail.model', {
             compute: '_computeExtraSuggestedRecords',
         }),
+        fileUploaderRef: attr(),
         /**
          * This field determines whether some attachments linked to this
          * composer are being uploaded.
@@ -940,6 +1071,7 @@ function factory(dependencies) {
         textInputCursorStart: attr({
             default: 0,
         }),
+        textInputRef: attr(),
         textInputSelectionDirection: attr({
             default: "none",
         }),
