@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0"
+             xmlns:a="http://relaxng.org/ns/annotation/1.0"
+             datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <!-- Handling of element overloading when inheriting from a base
+         template
+    -->
+    <rng:include href="common.rng"/>
+    <rng:define name="gantt">
+        <rng:element name="gantt">
+            <rng:attribute name="date_start"/>
+            <rng:choice>
+                <rng:attribute name="date_stop"/>
+                <rng:attribute name="date_delay"/>
+            </rng:choice>
+            <rng:optional><rng:attribute name="progress"/></rng:optional>
+            <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:optional><rng:attribute name="type"/></rng:optional>
+            <rng:optional><rng:attribute name="default_group_by"/></rng:optional>
+            <rng:optional><rng:attribute name="create"/></rng:optional>
+            <rng:optional><rng:attribute name="delete"/></rng:optional>
+            <rng:optional><rng:attribute name="edit"/></rng:optional>
+            <rng:optional><rng:attribute name="fold_last_level"/></rng:optional>
+            <rng:optional><rng:attribute name="round_dnd_dates"/></rng:optional>
+            <rng:optional><rng:attribute name="consolidation"/></rng:optional>
+            <rng:optional><rng:attribute name="consolidation_max"/></rng:optional>
+            <rng:optional><rng:attribute name="consolidation_exclude"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="scale_zoom">
+                    <rng:choice>
+                        <rng:value>year</rng:value>
+                        <rng:value>month</rng:value>
+                        <rng:value>week</rng:value>
+                        <rng:value>day</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional><rng:attribute name="duration_unit"/></rng:optional>
+            <rng:optional><rng:attribute name="drag_resize"/></rng:optional>
+            <rng:optional><rng:attribute name="relative_field"/></rng:optional>
+            <rng:optional><rng:attribute name="action"/></rng:optional>
+          <rng:empty/>
+        </rng:element>
+    </rng:define>
+    <rng:start>
+        <rng:choice>
+            <rng:ref name="gantt" />
+        </rng:choice>
+    </rng:start>
+</rng:grammar>
