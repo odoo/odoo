@@ -8,7 +8,7 @@
             <xpath expr="//field[@name='slide_type']" position="after">
                 <field name="survey_id"
                     attrs="{'invisible': [('slide_type', '!=', 'certification')], 'required': [('slide_type', '=', 'certification')]}"
-                    domain="[('certification', '=', True)]"/>
+                    domain="[('certification', '=', True)]" context="{'default_certification': True, 'default_scoring_type': 'scoring_without_answers'}"/>
             </xpath>
         </field>
     </record>
