@@ -207,6 +207,7 @@
             'mail/static/src/utils/deferred/deferred.js',
             'mail/static/src/utils/throttle/throttle.js',
             'mail/static/src/utils/timer/timer.js',
+            'mail/static/src/utils/messaging_component.js',
             'mail/static/src/utils/utils.js',
             'mail/static/src/webclient/commands/*.js',
             'mail/static/src/widgets/discuss/discuss.js',

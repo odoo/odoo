@@ -1,16 +1,13 @@
 odoo.define('hr_holidays/static/src/components/thread_view/thread_view_tests.js', function (require) {
 'use strict';
 
-const { ThreadView } = require('@mail/components/thread_view/thread_view');
 const { link } = require('@mail/model/model_field_command');
 const {
     afterEach,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     start,
 } = require('@mail/utils/test_utils');
-
-const components = { ThreadView };
 
 QUnit.module('hr_holidays', {}, function () {
 QUnit.module('components', {}, function () {
@@ -26,7 +23,7 @@ QUnit.module('thread_view_tests.js', {
         this.createThreadViewComponent = async (threadView, otherProps = {}) => {
             const target = this.widget.el;
             const props = Object.assign({ threadViewLocalId: threadView.localId }, otherProps);
-            await createRootComponent(this, components.ThreadView, { props, target });
+            await createRootMessagingComponent(this, "ThreadView", { props, target });
         };
 
         this.start = async params => {

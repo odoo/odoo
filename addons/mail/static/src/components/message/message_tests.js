@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { Message } from '@mail/components/message/message';
 import {
     create,
     insert,
@@ -12,14 +11,12 @@ import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
-
-const components = { Message };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -30,7 +27,7 @@ QUnit.module('message_tests.js', {
 
         this.createMessageComponent = async (message, otherProps) => {
             const props = Object.assign({ messageLocalId: message.localId }, otherProps);
-            await createRootComponent(this, components.Message, {
+            await createRootMessagingComponent(this, "Message", {
                 props,
                 target: this.widget.el,
             });

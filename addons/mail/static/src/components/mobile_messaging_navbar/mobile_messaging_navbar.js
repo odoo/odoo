@@ -1,19 +1,10 @@
 /** @odoo-module **/
 
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
 export class MobileMessagingNavbar extends Component {
-
-    constructor(...args) {
-        super(...args);
-        useShouldUpdateBasedOnProps({
-            compareDepth: {
-                tabs: 2,
-            },
-        });
-    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -54,3 +45,5 @@ Object.assign(MobileMessagingNavbar, {
     },
     template: 'mail.MobileMessagingNavbar',
 });
+
+registerMessagingComponent(MobileMessagingNavbar, { propsCompareDepth: { tabs: 2 } });

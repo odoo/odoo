@@ -1,16 +1,13 @@
 /** @odoo-module **/
 
-import { ThreadTextualTypingStatus } from '@mail/components/thread_textual_typing_status/thread_textual_typing_status';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
-
-const components = { ThreadTextualTypingStatus };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -20,7 +17,7 @@ QUnit.module('thread_textual_typing_status_tests.js', {
         beforeEach(this);
 
         this.createThreadTextualTypingStatusComponent = async thread => {
-            await createRootComponent(this, components.ThreadTextualTypingStatus, {
+            await createRootMessagingComponent(this, "ThreadTextualTypingStatus", {
                 props: { threadLocalId: thread.localId },
                 target: this.widget.el,
             });

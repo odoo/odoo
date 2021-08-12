@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import { DialogManager } from '@mail/components/dialog_manager/dialog_manager';
+import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 import AbstractService from 'web.AbstractService';
 import { bus, serviceRegistry } from 'web.core';
-
-const components = { DialogManager };
 
 const DialogService = AbstractService.extend({
     /**
@@ -53,7 +51,7 @@ const DialogService = AbstractService.extend({
             this.component.destroy();
             this.component = undefined;
         }
-        const DialogManagerComponent = components.DialogManager;
+        const DialogManagerComponent = getMessagingComponent("DialogManager");
         this.component = new DialogManagerComponent(null);
         const parentNode = this._getParentNode();
         await this.component.mount(parentNode);

@@ -1,12 +1,10 @@
 /** @odoo-module **/
 
-import { NotificationAlert } from '@mail/components/notification_alert/notification_alert';
+import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 import { ComponentWrapper, WidgetAdapterMixin } from 'web.OwlCompatibility';
 import Widget from 'web.Widget';
 import widgetRegistry from 'web.widget_registry';
-
-const components = { NotificationAlert };
 
 class NotificationAlertWrapper extends ComponentWrapper {}
 
@@ -29,7 +27,7 @@ const NotificationAlertWidget = Widget.extend(WidgetAdapterMixin, {
 
         this.component = new NotificationAlertWrapper(
             this,
-            components.NotificationAlert,
+            getMessagingComponent("NotificationAlert"),
             {}
         );
         await this.component.mount(this.el);

@@ -1,16 +1,8 @@
 /** @odoo-module **/
 
 import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
-import { AttachmentList } from '@mail/components/attachment_list/attachment_list';
-import { ComposerSuggestedRecipientList } from '@mail/components/composer_suggested_recipient_list/composer_suggested_recipient_list';
-import { ComposerTextInput } from '@mail/components/composer_text_input/composer_text_input';
-import { DropZone } from '@mail/components/drop_zone/drop_zone';
-import { EmojisPopover } from '@mail/components/emojis_popover/emojis_popover';
-import { FileUploader } from '@mail/components/file_uploader/file_uploader';
-import { ThreadTextualTypingStatus } from '@mail/components/thread_textual_typing_status/thread_textual_typing_status';
 import { replace } from '@mail/model/model_field_command';
 import {
     isEventHandled,
@@ -20,16 +12,6 @@ import {
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
-const components = {
-    AttachmentList,
-    ComposerSuggestedRecipientList,
-    ComposerTextInput,
-    DropZone,
-    EmojisPopover,
-    FileUploader,
-    ThreadTextualTypingStatus,
-};
-
 export class Composer extends Component {
 
     /**
@@ -38,12 +20,6 @@ export class Composer extends Component {
     constructor(...args) {
         super(...args);
         this.isDropZoneVisible = useDragVisibleDropZone();
-        useShouldUpdateBasedOnProps({
-            compareDepth: {
-                textInputSendShortcuts: 1,
-            },
-        });
-        useModels();
         useUpdate({ func: () => this._update() });
         /**
          * Reference of the emoji popover. Useful to include emoji popover as
@@ -356,7 +332,6 @@ export class Composer extends Component {
 }
 
 Object.assign(Composer, {
-    components,
     defaultProps: {
         hasCurrentPartnerAvatar: true,
         hasDiscardButton: false,
@@ -410,3 +385,5 @@ Object.assign(Composer, {
     },
     template: 'mail.Composer',
 });
+
+registerMessagingComponent(Composer, { propsCompareDepth: { textInputSendShortcuts: 1 } });

@@ -1,14 +1,10 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
-import { PartnerImStatusIcon } from '@mail/components/partner_im_status_icon/partner_im_status_icon';
 import { link } from '@mail/model/model_field_command';
 
 const { Component } = owl;
-
-const components = { PartnerImStatusIcon };
 
 export class ComposerSuggestion extends Component {
 
@@ -17,8 +13,6 @@ export class ComposerSuggestion extends Component {
      */
     constructor(...args) {
         super(...args);
-        useShouldUpdateBasedOnProps();
-        useModels();
         useUpdate({ func: () => this._update() });
     }
 
@@ -117,7 +111,6 @@ export class ComposerSuggestion extends Component {
 }
 
 Object.assign(ComposerSuggestion, {
-    components,
     defaultProps: {
         isActive: false,
     },
@@ -129,3 +122,5 @@ Object.assign(ComposerSuggestion, {
     },
     template: 'mail.ComposerSuggestion',
 });
+
+registerMessagingComponent(ComposerSuggestion);

@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import { ChatterContainer } from '@mail/components/chatter_container/chatter_container';
+import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 import FormRenderer from 'web.FormRenderer';
 import { ComponentWrapper } from 'web.OwlCompatibility';
-
-const components = { ChatterContainer };
 
 class ChatterContainerWrapperComponent extends ComponentWrapper {}
 
@@ -63,7 +61,7 @@ FormRenderer.include({
         const props = this._makeChatterContainerProps();
         this._chatterContainerComponent = new ChatterContainerWrapperComponent(
             this,
-            components.ChatterContainer,
+            getMessagingComponent("ChatterContainer"),
             props
         );
         // Not in custom_events because other modules may remove this listener

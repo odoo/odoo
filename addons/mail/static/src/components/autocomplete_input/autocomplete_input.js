@@ -1,15 +1,10 @@
 /** @odoo-module **/;
 
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
 export class AutocompleteInput extends Component {
-
-    constructor(...args) {
-        super(...args);
-        useShouldUpdateBasedOnProps();
-    }
 
     mounted() {
         if (this.props.isFocusOnMount) {
@@ -167,3 +162,5 @@ Object.assign(AutocompleteInput, {
     },
     template: 'mail.AutocompleteInput',
 });
+
+registerMessagingComponent(AutocompleteInput);

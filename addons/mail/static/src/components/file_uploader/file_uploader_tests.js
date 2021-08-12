@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { FileUploader } from '@mail/components/file_uploader/file_uploader';
 import {
     afterEach,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
@@ -12,8 +11,6 @@ import {
 import { file } from 'web.test_utils';
 
 const { createFile, inputFiles } = file;
-const components = { FileUploader };
-
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('file_uploader', {}, function () {
@@ -24,7 +21,7 @@ QUnit.module('file_uploader_tests.js', {
 
         this.createFileUploaderComponent = async otherProps => {
             const props = Object.assign({ attachmentLocalIds: [] }, otherProps);
-            return createRootComponent(this, components.FileUploader, {
+            return createRootMessagingComponent(this, "FileUploader", {
                 props,
                 target: this.widget.el,
             });

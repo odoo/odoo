@@ -1,23 +1,10 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { PartnerImStatusIcon } from '@mail/components/partner_im_status_icon/partner_im_status_icon';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-const components = { PartnerImStatusIcon };
-
 export class NotificationRequest extends Component {
-
-    /**
-     * @override
-     */
-    constructor(...args) {
-        super(...args);
-        useShouldUpdateBasedOnProps();
-        useModels();
-    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -75,7 +62,8 @@ export class NotificationRequest extends Component {
 }
 
 Object.assign(NotificationRequest, {
-    components,
     props: {},
     template: 'mail.NotificationRequest',
 });
+
+registerMessagingComponent(NotificationRequest);

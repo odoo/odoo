@@ -1,15 +1,12 @@
 odoo.define('hr_holidays/static/src/components/thread_icon/thread_icon_tests.js', function (require) {
 'use strict';
 
-const { ThreadIcon } = require('@mail/components/thread_icon/thread_icon');
 const {
     afterEach,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     start,
 } = require('@mail/utils/test_utils');
-
-const components = { ThreadIcon };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -19,7 +16,7 @@ QUnit.module('thread_icon_tests.js', {
         beforeEach(this);
 
         this.createThreadIcon = async thread => {
-            await createRootComponent(this, components.ThreadIcon, {
+            await createRootMessagingComponent(this, "ThreadIcon", {
                 props: { threadLocalId: thread.localId },
                 target: this.widget.el
             });

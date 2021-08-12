@@ -1,28 +1,10 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { AutocompleteInput } from '@mail/components/autocomplete_input/autocomplete_input';
-import { Composer } from '@mail/components/composer/composer';
-import { DiscussMobileMailboxSelection } from '@mail/components/discuss_mobile_mailbox_selection/discuss_mobile_mailbox_selection';
-import { DiscussSidebar } from '@mail/components/discuss_sidebar/discuss_sidebar';
-import { MobileMessagingNavbar } from '@mail/components/mobile_messaging_navbar/mobile_messaging_navbar';
-import { NotificationList } from '@mail/components/notification_list/notification_list';
-import { ThreadView } from '@mail/components/thread_view/thread_view';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { link, unlink } from '@mail/model/model_field_command';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
-
-const components = {
-    AutocompleteInput,
-    Composer,
-    DiscussMobileMailboxSelection,
-    DiscussSidebar,
-    MobileMessagingNavbar,
-    NotificationList,
-    ThreadView,
-};
 
 export class Discuss extends Component {
     /**
@@ -30,8 +12,6 @@ export class Discuss extends Component {
      */
     constructor(...args) {
         super(...args);
-        useModels();
-        useShouldUpdateBasedOnProps();
         this._updateLocalStoreProps();
         /**
          * Reference of the composer. Useful to focus it.
@@ -249,7 +229,8 @@ export class Discuss extends Component {
 }
 
 Object.assign(Discuss, {
-    components,
     props: {},
     template: 'mail.Discuss',
 });
+
+registerMessagingComponent(Discuss);

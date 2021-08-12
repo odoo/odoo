@@ -1,20 +1,17 @@
 odoo.define('sms/static/src/components/message/message_tests.js', function (require) {
 'use strict';
 
-const { Message } = require('@mail/components/message/message');
 const { create, insert, link } = require('@mail/model/model_field_command');
 const { makeDeferred } = require('@mail/utils/deferred/deferred');
 const {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     start,
 } = require('@mail/utils/test_utils');
 
 const Bus = require('web.Bus');
-
-const components = { Message };
 
 QUnit.module('sms', {}, function () {
 QUnit.module('components', {}, function () {
@@ -25,7 +22,7 @@ QUnit.module('message_tests.js', {
 
         this.createMessageComponent = async (message, otherProps) => {
             const props = Object.assign({ messageLocalId: message.localId }, otherProps);
-            await createRootComponent(this, components.Message, {
+            await createRootMessagingComponent(this, "Message", {
                 props,
                 target: this.widget.el,
             });

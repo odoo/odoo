@@ -1,19 +1,16 @@
 /** @odoo-module **/
 
-import { Follower } from '@mail/components/follower/follower';
 import { insert, link } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     start,
 } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
-
-const components = { Follower };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -23,7 +20,7 @@ QUnit.module('follower_tests.js', {
         beforeEach(this);
 
         this.createFollowerComponent = async (follower) => {
-            await createRootComponent(this, components.Follower, {
+            await createRootMessagingComponent(this, "Follower", {
                 props: { followerLocalId: follower.localId },
                 target: this.widget.el,
             });

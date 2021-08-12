@@ -1,18 +1,15 @@
 /** @odoo-module **/
 
-import { ChatterTopbar } from '@mail/components/chatter_topbar/chatter_topbar';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
 
 import { makeTestPromise } from 'web.test_utils';
-
-const components = { ChatterTopbar };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -23,7 +20,7 @@ QUnit.module('chatter_topbar_tests.js', {
 
         this.createChatterTopbarComponent = async (chatter, otherProps) => {
             const props = Object.assign({ chatterLocalId: chatter.localId }, otherProps);
-            await createRootComponent(this, components.ChatterTopbar, {
+            await createRootMessagingComponent(this, "ChatterTopbar", {
                 props,
                 target: this.widget.el,
             });

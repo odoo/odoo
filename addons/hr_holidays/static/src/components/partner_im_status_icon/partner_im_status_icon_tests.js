@@ -1,15 +1,12 @@
 odoo.define('hr_holidays/static/src/components/partner_im_status_icon/partner_im_status_icon_tests.js', function (require) {
 'use strict';
 
-const { PartnerImStatusIcon } = require('@mail/components/partner_im_status_icon/partner_im_status_icon');
 const {
     afterEach,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     start,
 } = require('@mail/utils/test_utils');
-
-const components = { PartnerImStatusIcon };
 
 QUnit.module('hr_holidays', {}, function () {
 QUnit.module('components', {}, function () {
@@ -19,7 +16,7 @@ QUnit.module('partner_im_status_icon_tests.js', {
         beforeEach(this);
 
         this.createPartnerImStatusIcon = async partner => {
-            await createRootComponent(this, components.PartnerImStatusIcon, {
+            await createRootMessagingComponent(this, "PartnerImStatusIcon", {
                 props: { partnerLocalId: partner.localId },
                 target: this.widget.el
             });

@@ -1,17 +1,11 @@
 /** @odoo-module **/
 
 import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { AttachmentList } from '@mail/components/attachment_list/attachment_list';
-import { DropZone } from '@mail/components/drop_zone/drop_zone';
-import { FileUploader } from '@mail/components/file_uploader/file_uploader';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { link } from '@mail/model/model_field_command';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
-
-const components = { AttachmentList, DropZone, FileUploader };
 
 export class AttachmentBox extends Component {
 
@@ -21,8 +15,6 @@ export class AttachmentBox extends Component {
     constructor(...args) {
         super(...args);
         this.isDropZoneVisible = useDragVisibleDropZone();
-        useShouldUpdateBasedOnProps();
-        useModels();
         /**
          * Reference of the file uploader.
          * Useful to programmatically prompts the browser file uploader.
@@ -100,9 +92,10 @@ export class AttachmentBox extends Component {
 }
 
 Object.assign(AttachmentBox, {
-    components,
     props: {
         threadLocalId: String,
     },
     template: 'mail.AttachmentBox',
 });
+
+registerMessagingComponent(AttachmentBox);

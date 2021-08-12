@@ -1,15 +1,12 @@
 /** @odoo-module **/
 
-import { ThreadPreview } from '@mail/components/thread_preview/thread_preview';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootComponent,
+    createRootMessagingComponent,
     start,
 } from '@mail/utils/test_utils';
-
-const components = { ThreadPreview };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -19,7 +16,7 @@ QUnit.module('thread_preview_tests.js', {
         beforeEach(this);
 
         this.createThreadPreviewComponent = async props => {
-            await createRootComponent(this, components.ThreadPreview, {
+            await createRootMessagingComponent(this, "ThreadPreview", {
                 props,
                 target: this.widget.el,
             });

@@ -1,12 +1,8 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { AttachmentDeleteConfirmDialog } from '@mail/components/attachment_delete_confirm_dialog/attachment_delete_confirm_dialog';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component, useState } = owl;
-
-const components = { AttachmentDeleteConfirmDialog };
 
 export class Attachment extends Component {
 
@@ -15,12 +11,6 @@ export class Attachment extends Component {
      */
     constructor(...args) {
         super(...args);
-        useShouldUpdateBasedOnProps({
-            compareDepth: {
-                attachmentLocalIds: 1,
-            },
-        });
-        useModels();
         this.state = useState({
             hasDeleteConfirmDialog: false,
         });
@@ -159,7 +149,6 @@ export class Attachment extends Component {
 }
 
 Object.assign(Attachment, {
-    components,
     defaultProps: {
         attachmentLocalIds: [],
         detailsMode: 'auto',
@@ -190,3 +179,5 @@ Object.assign(Attachment, {
     },
     template: 'mail.Attachment',
 });
+
+registerMessagingComponent(Attachment, { propsCompareDepth: { attachmentLocalIds: 1 }});

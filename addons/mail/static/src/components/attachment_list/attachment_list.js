@@ -1,27 +1,10 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models/use_models';
-import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { Attachment } from '@mail/components/attachment/attachment';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-const components = { Attachment };
-
 export class AttachmentList extends Component {
-
-    /**
-     * @override
-     */
-    constructor(...args) {
-        super(...args);
-        useShouldUpdateBasedOnProps({
-            compareDepth: {
-                attachmentLocalIds: 1,
-            },
-        });
-        useModels();
-    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -60,7 +43,6 @@ export class AttachmentList extends Component {
 }
 
 Object.assign(AttachmentList, {
-    components,
     defaultProps: {
         attachmentLocalIds: [],
     },
@@ -98,3 +80,5 @@ Object.assign(AttachmentList, {
     },
     template: 'mail.AttachmentList',
 });
+
+registerMessagingComponent(AttachmentList, { propsCompareDepth: { attachmentLocalIds: 1 } });

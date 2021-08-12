@@ -32,7 +32,6 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'website_livechat/static/src/js/**/*',
         ],
         'web.assets_backend': [
-            'website_livechat/static/src/components/discuss/discuss.js',
             'website_livechat/static/src/components/visitor_banner/visitor_banner.js',
             'website_livechat/static/src/models/messaging_notification_handler/messaging_notification_handler.js',
             'website_livechat/static/src/models/thread/thread.js',
