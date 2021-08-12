@@ -25,10 +25,29 @@ PosApp.template = owl.tags.xml`
 `;
 PosApp.components = { ChromeAdapter };
 
+<<<<<<< HEAD
 function startPosApp() {
     Registries.Component.add(owl.misc.Portal);
     Registries.Component.freeze();
     startWebClient(PosApp);
 }
+=======
+    setupResponsivePlugin(owl.Component.env);
+
+    async function startPosApp(webClient) {
+        Registries.Component.freeze();
+        await env.session.is_bound;
+        env.qweb.addTemplates(env.session.owlTemplates);
+        env.bus = new owl.core.EventBus();
+        await owl.utils.whenReady();
+        await webClient.setElement(document.body);
+        await webClient.start();
+        webClient.isStarted = true;
+        const chrome = new (Registries.Component.get(Chrome))(null, { webClient });
+        await chrome.mount(document.querySelector('.o_action_manager'));
+        configureGui({ component: chrome });
+        await chrome.start();
+    }
+>>>>>>> 900e3ca057d... temp
 
 startPosApp();
