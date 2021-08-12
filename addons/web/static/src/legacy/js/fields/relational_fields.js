@@ -3423,14 +3423,20 @@ var FieldRadio = FieldSelection.extend({
         this.$el.empty();
         this.$el.attr('role', 'radiogroup')
             .attr('aria-label', this.string);
+
         _.each(this.values, function (value, index) {
+            const isChecked = value[0] === currentValue;
+            // On disabled buttons, it is not clear whether they are checked or not
+            // But we want the selected value to be visible even in readonly
+            const isDisabled = self.hasReadonlyModifier && !isChecked;
+
             self.$el.append(qweb.render('FieldRadio.button', {
-                checked: value[0] === currentValue,
+                checked: isChecked,
                 id: self.unique_id + '_' + value[0],
                 index: index,
                 name: self.unique_id,
                 value: value,
-                disabled: self.hasReadonlyModifier,
+                disabled: isDisabled,
             }));
         });
     },

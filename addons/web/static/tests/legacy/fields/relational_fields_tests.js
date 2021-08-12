@@ -2360,6 +2360,36 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('fieldradio widget shows selected value clearly in readonly', async function (assert) {
+        assert.expect(8);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<field name="color" widget="radio" readonly="1"/>' +
+                    '</group>' +
+                '</form>',
+        });
+
+        assert.containsOnce(form, ".o_field_radio");
+        const radio = form.el.querySelector(".o_field_radio");
+        assert.containsN(radio, ".o_radio_item", 2);
+
+        const radioItems = radio.querySelectorAll(".o_radio_input");
+        assert.strictEqual(radioItems[0].dataset.value, "red");
+        assert.strictEqual(radioItems[0].getAttribute("checked"), "true");
+        assert.strictEqual(radioItems[0].getAttribute("disabled"), null); // not disabled
+
+        assert.strictEqual(radioItems[1].dataset.value, "black");
+        assert.strictEqual(radioItems[1].getAttribute("checked"), null); // not checked
+        assert.strictEqual(radioItems[1].getAttribute("disabled"), "true");
+
+        form.destroy();
+    });
+
     QUnit.test('fieldradio widget with numerical keys encoded as strings', async function (assert) {
         assert.expect(7);
 
