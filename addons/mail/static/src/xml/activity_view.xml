@@ -25,10 +25,18 @@
                         </div>
                     </span>
                 </div>
+<<<<<<< HEAD
                 <KanbanColumnProgressBarAdapter Component="widgetComponents.KanbanColumnProgressBar"
                     widgetArgs="[getProgressBarOptions(type[0]), getProgressBarColumnState(type[0])]"
                     t-if="activityTypeIds.includes(type[0])"
                     onSetProgressBarState.bind="_onSetProgressBarState"/>
+=======
+                <div t-if="activityTypeIds.includes(type[0])">
+                    <KanbanColumnProgressBarAdapter Component="widgetComponents.KanbanColumnProgressBar"
+                        widgetArgs="[getProgressBarOptions(type[0]), getProgressBarColumnState(type[0])]"
+                        t-on-set-progress-bar-state="_onSetProgressBarState"/>
+                </div>
+>>>>>>> 86b2f445995... temp
                 <div t-else="" class="mt24"/>
             </th>
         </tr>
