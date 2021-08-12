@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChatWindowHeader" owl="1">
-        <div class="o_ChatWindowHeader" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClick">
+        <div class="o_ChatWindowHeader" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="chatWindow.onClickChatWindowHeader">
             <t t-if="chatWindow">
                 <t t-if="props.hasCloseAsBackButton">
-                    <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandBack o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickClose" title="Close conversation">
+                    <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandBack o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="chatWindow.onClickChatWindowHeaderClose" title="Close conversation">
                         <i class="fa fa-arrow-left"/>
                     </div>
                 </t>
@@ -26,24 +26,24 @@
                 <div class="o-autogrow"/>
                 <div class="o_ChatWindowHeader_item o_ChatWindowHeader_rightArea">
                     <t t-if="chatWindow.hasShiftPrev">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftPrev" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickShiftPrev" t-att-title="shiftPrevText">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftPrev" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="chatWindow.onClickChatWindowHeaderShiftPrev" t-att-title="shiftPrevText">
                             <!-- this is reversed automatically when language is rtl -->
                             <i class="fa fa-angle-left"/>
                         </div>
                     </t>
                     <t t-if="chatWindow.hasShiftNext">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftNext" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickShiftNext" t-att-title="shiftNextText">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftNext" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="chatWindow.onClickChatWindowHeaderShiftNext" t-att-title="shiftNextText">
                             <!-- this is reversed automatically when language is rtl -->
                             <i class="fa fa-angle-right"/>
                         </div>
                     </t>
                     <t t-if="props.isExpandable">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandExpand" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickExpand" title="Open in Discuss">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandExpand" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="chatWindow.onClickChatWindowHeaderExpand" title="Open in Discuss">
                             <i class="fa fa-expand"/>
                         </div>
                     </t>
                     <t t-if="!props.hasCloseAsBackButton">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickClose" title="Close chat window">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="chatWindow.onClickChatWindowHeaderClose" title="Close chat window">
                             <i class="fa fa-close"/>
                         </div>
                     </t>

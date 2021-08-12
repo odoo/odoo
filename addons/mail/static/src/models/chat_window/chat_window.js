@@ -3,7 +3,10 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
 import { clear, create, link, unlink, update } from '@mail/model/model_field_command';
-import { isEventHandled } from '@mail/utils/utils';
+import {
+    isEventHandled,
+    markEventHandled,
+} from '@mail/utils/utils';
 
 function factory(dependencies) {
 
@@ -19,6 +22,9 @@ function factory(dependencies) {
             this.onKeydown = this.onKeydown.bind(this);
             this.onFocusinThread = this.onFocusinThread.bind(this);
             this.onFocusout = this.onFocusout.bind(this);
+            this.onClickChatWindowHeader = this.onClickChatWindowHeader.bind(this);
+            this.onClickChatWindowHeaderClose = this.onClickChatWindowHeaderClose.bind(this);
+            this.onClickChatWindowHeaderExpand = this.onClickChatWindowHeaderExpand.bind(this);
 
             const res = super._created(...arguments);
             this._onShowHomeMenu.bind(this);
@@ -61,6 +67,7 @@ function factory(dependencies) {
                 notifyServer = !this.env.messaging.device.isMobile;
             }
             const thread = this.thread;
+
             this.delete();
             // Flux specific: 'closed' fold state should only be saved on the
             // server when manually closing the chat window. Delete at destroy
@@ -249,16 +256,50 @@ function factory(dependencies) {
         }
 
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickChatWindowHeader(ev) {
+            if (isEventHandled(ev, 'ChatWindowHeader.ClickShiftNext')) {
+                return;
+            }
+            if (isEventHandled(ev, 'ChatWindowHeader.ClickShiftPrev')) {
+                return;
+            }
+            this.componentChatWindowHeader.trigger('o-clicked', { chatWindow: this });
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickChatWindowHeaderClose(ev) {
+            ev.stopPropagation();
+            if (!this.exists()) {
+                return;
+            }
+            this.close();
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickChatWindowHeaderExpand(ev) {
+            ev.stopPropagation();
+            this.expand();
+        }
+
+        /**
          * Swap this chat window with the previous one.
          */
-        shiftPrev() {
+        onClickChatWindowHeaderShiftPrev(ev) {
+            markEventHandled(ev, 'ChatWindowHeader.ClickShiftPrev');
             this.manager.shiftPrev(this);
         }
 
         /**
          * Swap this chat window with the next one.
          */
-        shiftNext() {
+        onClickChatWindowHeaderShiftNext(ev) {
+            markEventHandled(ev, 'ChatWindowHeader.ClickShiftNext');
             this.manager.shiftNext(this);
         }
 
@@ -558,6 +599,7 @@ function factory(dependencies) {
 
     ChatWindow.fields = {
         component: attr(),
+        componentChatWindowHeader: attr(),
         /**
          * Determines whether "new message form" should be displayed.
          */

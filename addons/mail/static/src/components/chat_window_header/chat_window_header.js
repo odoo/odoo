@@ -2,6 +2,7 @@
 
 import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import {
     isEventHandled,
     markEventHandled,
@@ -21,6 +22,7 @@ export class ChatWindowHeader extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useModels();
+        useComponentToModel({ fieldName: 'componentChatWindowHeader', modelName: 'mail.chat_window', propNameAsRecordLocalId: 'chatWindowLocalId' });
     }
 
     //--------------------------------------------------------------------------
@@ -52,64 +54,6 @@ export class ChatWindowHeader extends Component {
             return this.env._t("Shift right");
         }
         return this.env._t("Shift left");
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClick(ev) {
-        if (isEventHandled(ev, 'ChatWindowHeader.ClickShiftNext')) {
-            return;
-        }
-        if (isEventHandled(ev, 'ChatWindowHeader.ClickShiftPrev')) {
-            return;
-        }
-        const chatWindow = this.chatWindow;
-        this.trigger('o-clicked', { chatWindow });
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickClose(ev) {
-        ev.stopPropagation();
-        if (!this.chatWindow) {
-            return;
-        }
-        this.chatWindow.close();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickExpand(ev) {
-        ev.stopPropagation();
-        this.chatWindow.expand();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickShiftPrev(ev) {
-        markEventHandled(ev, 'ChatWindowHeader.ClickShiftPrev');
-        this.chatWindow.shiftPrev();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickShiftNext(ev) {
-        markEventHandled(ev, 'ChatWindowHeader.ClickShiftNext');
-        this.chatWindow.shiftNext();
     }
 
 }
