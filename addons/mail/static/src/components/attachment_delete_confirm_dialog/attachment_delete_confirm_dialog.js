@@ -4,9 +4,11 @@ import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
 
 import Dialog from 'web.OwlDialog';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
+// const { useRef } = owl.hooks;
 
 const components = { Dialog };
 
@@ -19,8 +21,10 @@ export class AttachmentDeleteConfirmDialog extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useModels();
+        useComponentToModel({ fieldName: 'componentAttachmentDeleteConfirmDialog', modelName: 'mail.attachment', propNameAsRecordLocalId: 'attachmentLocalId' });
+        useRefToModel({ fieldName: 'dialogRef', modelName: 'mail.attachment', propNameAsRecordLocalId: 'attachmentLocalId', refName: 'dialog' });
         // to manually trigger the dialog close event
-        this._dialogRef = useRef('dialog');
+        // this._dialogRef = useRef('dialog');
     }
 
     //--------------------------------------------------------------------------
@@ -55,21 +59,6 @@ export class AttachmentDeleteConfirmDialog extends Component {
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     */
-    _onClickCancel() {
-        this._dialogRef.comp._close();
-    }
-
-    /**
-     * @private
-     */
-    async _onClickOk() {
-        await this.attachment.remove();
-        this._dialogRef.comp._close();
-        this.trigger('o-attachment-removed', { attachmentLocalId: this.props.attachmentLocalId });
-    }
 
 }
 

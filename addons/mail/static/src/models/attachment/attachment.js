@@ -14,9 +14,29 @@ function factory(dependencies) {
     }
     class Attachment extends dependencies['mail.model'] {
 
+        /**
+         * @override
+         */
         _created() {
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
             this.onClickDownload = this.onClickDownload.bind(this);
+            this.onClickAttachmentDeleteConfirmDialogCancel = this.onClickAttachmentDeleteConfirmDialogCancel.bind(this);
+            this.onClickAttachmentDeleteConfirmDialogOk = this.onClickAttachmentDeleteConfirmDialogOk.bind(this);
+
+            // Reconciliation between uploading attachment and real attachment.
+            if (this.isUploading) {
+                return;
+            }
+            const relatedUploadingAttachment = this.env.models['mail.attachment']
+                .find(attachment =>
+                    attachment.filename === this.filename &&
+                    attachment.isUploading
+                );
+            if (relatedUploadingAttachment) {
+                const composers = relatedUploadingAttachment.composers;
+                relatedUploadingAttachment.delete();
+                this.update({ composers: replace(composers) });
+            }
         }
 
         //----------------------------------------------------------------------
@@ -81,6 +101,16 @@ function factory(dependencies) {
             this.download();
         }
 
+        onClickAttachmentDeleteConfirmDialogCancel() {
+            this.dialogRef.comp._close();
+        }
+
+        async onClickAttachmentDeleteConfirmDialogOk() {
+            await this.remove();
+            this.dialogRef.comp._close();
+            this.componentAttachmentDeleteConfirmDialog.trigger('o-attachment-removed', { attachmentLocalId: this.localId });
+        }
+
         /**
          * View provided attachment(s), with given attachment initially. Prompts
          * the attachment viewer.
@@ -143,27 +173,6 @@ function factory(dependencies) {
          */
         static _createRecordLocalId(data) {
             return `${this.modelName}_${data.id}`;
-        }
-
-        /**
-         * Reconciliation between uploading attachment and real attachment.
-         *
-         * @private
-         */
-        _created() {
-            if (this.isUploading) {
-                return;
-            }
-            const relatedUploadingAttachment = this.env.models['mail.attachment']
-                .find(attachment =>
-                    attachment.filename === this.filename &&
-                    attachment.isUploading
-                );
-            if (relatedUploadingAttachment) {
-                const composers = relatedUploadingAttachment.composers;
-                relatedUploadingAttachment.delete();
-                this.update({ composers: replace(composers) });
-            }
         }
 
         /**
@@ -356,9 +365,11 @@ function factory(dependencies) {
         composers: many2many('mail.composer', {
             inverse: 'attachments',
         }),
+        componentAttachmentDeleteConfirmDialog: attr(),
         defaultSource: attr({
             compute: '_computeDefaultSource',
         }),
+        dialogRef: attr(),
         displayName: attr({
             compute: '_computeDisplayName',
         }),
