@@ -12,6 +12,7 @@ from odoo.tools import misc
 from odoo import tools
 from odoo.addons import __path__ as ADDONS_PATH
 from odoo import api, fields, http, models
+from odoo.http import root
 
 _logger = getLogger(__name__)
 
@@ -140,6 +141,9 @@ class IrAsset(models.Model):
         if bundle in seen:
             raise Exception("Circular assets bundle declaration: %s" % " > ".join(seen + [bundle]))
 
+        if not root._loaded:
+            root.load_addons()
+            root._loaded = True
         manifest_cache = http.addons_manifest
         exts = []
         if js:
