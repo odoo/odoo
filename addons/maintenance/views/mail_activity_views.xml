@@ -5,7 +5,7 @@
         <field name="name">Activity Types</field>
         <field name="res_model">mail.activity.type</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', '=', 'maintenance.request')]</field>
+        <field name="domain">['|', ('res_model', '=', False), ('res_model', '=', 'maintenance.request')]</field>
         <field name="context">{'default_res_model': 'maintenance.request'}</field>
     </record>
     <menuitem id="maintenance_menu_config_activity_type"

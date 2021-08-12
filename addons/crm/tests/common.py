@@ -216,7 +216,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         cls.activity_type_1 = cls.env['mail.activity.type'].create({
             'name': 'Lead Test Activity 1',
             'summary': 'ACT 1 : Presentation, barbecue, ... ',
-            'res_model_id': cls.env['ir.model']._get('crm.crm_lead').id,
+            'res_model': 'crm.lead',
             'category': 'meeting',
             'delay_count': 5,
         })

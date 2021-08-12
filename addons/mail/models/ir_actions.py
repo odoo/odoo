@@ -28,7 +28,7 @@ class ServerActions(models.Model):
     # Next Activity
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity',
-        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', model_id)]",
+        domain="['|', ('res_model', '=', False), ('res_model', '=', model_name)]",
         ondelete='restrict')
     activity_summary = fields.Char('Summary')
     activity_note = fields.Html('Note')

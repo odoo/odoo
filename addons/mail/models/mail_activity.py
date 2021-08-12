@@ -20,19 +20,19 @@ class MailActivityType(models.Model):
     """ Activity Types are used to categorize activities. Each type is a different
     kind of activity e.g. call, mail, meeting. An activity can be generic i.e.
     available for all models using activities; or specific to a model in which
-    case res_model_id field should be used. """
+    case res_model field should be used. """
     _name = 'mail.activity.type'
     _description = 'Activity Type'
     _rec_name = 'name'
     _order = 'sequence, id'
 
-    @api.model
-    def default_get(self, fields):
-        if not self.env.context.get('default_res_model_id') and self.env.context.get('default_res_model'):
-            self = self.with_context(
-                default_res_model_id=self.env['ir.model']._get(self.env.context.get('default_res_model'))
-            )
-        return super(MailActivityType, self).default_get(fields)
+    def _get_model_selection(self):
+        return [
+            (model.model, model.name)
+            for model in self.env['ir.model'].sudo().search(
+                ['&', ('is_mail_thread', '=', True), ('transient', '=', False)])
+        ]
+
 
     name = fields.Char('Name', required=True, translate=True)
     summary = fields.Char('Default Summary', translate=True)
@@ -55,27 +55,25 @@ class MailActivityType(models.Model):
         ('warning', 'Alert'),
         ('danger', 'Error')], string="Decoration Type",
         help="Change the background color of the related activities of this type.")
-    res_model_id = fields.Many2one(
-        'ir.model', 'Model', index=True,
-        domain=['&', ('is_mail_thread', '=', True), ('transient', '=', False)],
+    res_model = fields.Selection(selection=_get_model_selection, string="Model",
         help='Specify a model if the activity should be specific to a model'
              ' and not available when managing activities for other models.')
     triggered_next_type_id = fields.Many2one(
         'mail.activity.type', string='Trigger', compute='_compute_triggered_next_type_id',
         inverse='_inverse_triggered_next_type_id', store=True, readonly=False,
-        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict',
+        domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]", ondelete='restrict',
         help="Automatically schedule this activity once the current one is marked as done.")
     chaining_type = fields.Selection([
         ('suggest', 'Suggest Next Activity'), ('trigger', 'Trigger Next Activity')
     ], string="Chaining Type", required=True, default="suggest")
     suggested_next_type_ids = fields.Many2many(
         'mail.activity.type', 'mail_activity_rel', 'activity_id', 'recommended_id', string='Suggest',
-        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]",
+        domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
         compute='_compute_suggested_next_type_ids', inverse='_inverse_suggested_next_type_ids', store=True, readonly=False,
         help="Suggest these activities once the current one is marked as done.")
     previous_type_ids = fields.Many2many(
         'mail.activity.type', 'mail_activity_rel', 'recommended_id', 'activity_id',
-        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]",
+        domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
         string='Preceding Activities')
     category = fields.Selection([
         ('default', 'None'), ('upload_file', 'Upload Document')
@@ -86,18 +84,18 @@ class MailActivityType(models.Model):
     default_note = fields.Html(string="Default Note", translate=True)
 
     #Fields for display purpose only
-    initial_res_model_id = fields.Many2one('ir.model', 'Initial model', compute="_compute_initial_res_model_id", store=False,
+    initial_res_model = fields.Selection(selection=_get_model_selection, string='Initial model', compute="_compute_initial_res_model", store=False,
             help='Technical field to keep track of the model at the start of editing to support UX related behaviour')
     res_model_change = fields.Boolean(string="Model has change", help="Technical field for UX related behaviour", default=False, store=False)
 
-    @api.onchange('res_model_id')
-    def _onchange_res_model_id(self):
-        self.mail_template_ids = self.mail_template_ids.filtered(lambda template: template.model_id == self.res_model_id)
-        self.res_model_change = self.initial_res_model_id and self.initial_res_model_id != self.res_model_id
+    @api.onchange('res_model')
+    def _onchange_res_model(self):
+        self.mail_template_ids = self.sudo().mail_template_ids.filtered(lambda template: template.model_id.model == self.res_model)
+        self.res_model_change = self.initial_res_model and self.initial_res_model != self.res_model
 
-    def _compute_initial_res_model_id(self):
+    def _compute_initial_res_model(self):
         for activity_type in self:
-            activity_type.initial_res_model_id = activity_type.res_model_id
+            activity_type.initial_res_model = activity_type.res_model
 
     @api.depends('delay_unit', 'delay_count')
     def _compute_delay_label(self):
@@ -160,12 +158,14 @@ class MailActivity(models.Model):
         if not default_vals.get('res_model_id'):
             return ActivityType
         current_model_id = default_vals['res_model_id']
-        if activity_type_todo and activity_type_todo.active and (activity_type_todo.res_model_id.id == current_model_id or not activity_type_todo.res_model_id):
+        current_model = self.env["ir.model"].sudo().browse(current_model_id)
+        if activity_type_todo and activity_type_todo.active and \
+                (activity_type_todo.res_model == current_model.model or not activity_type_todo.res_model):
             return activity_type_todo
-        activity_type_model = ActivityType.search([('res_model_id', '=', current_model_id)], limit=1)
+        activity_type_model = ActivityType.search([('res_model', '=', current_model.model)], limit=1)
         if activity_type_model:
             return activity_type_model
-        activity_type_generic = ActivityType.search([('res_model_id','=', False)], limit=1)
+        activity_type_generic = ActivityType.search([('res_model', '=', False)], limit=1)
         return activity_type_generic
 
     # owner
@@ -182,7 +182,7 @@ class MailActivity(models.Model):
     # activity
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity Type',
-        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict',
+        domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]", ondelete='restrict',
         default=_default_activity_type_id)
     activity_category = fields.Selection(related='activity_type_id.category', readonly=True)
     activity_decoration = fields.Selection(related='activity_type_id.decoration_type', readonly=True)
@@ -740,8 +740,8 @@ class MailActivity(models.Model):
                 'o_closest_deadline': group['date_deadline'],
             }
         activity_type_infos = []
-        activity_type_ids = self.env['mail.activity.type'].sudo().search(
-            ['|', ('res_model_id.model', '=', res_model), ('res_model_id', '=', False)])
+        activity_type_ids = self.env['mail.activity.type'].search(
+            ['|', ('res_model', '=', res_model), ('res_model', '=', False)])
         for elem in sorted(activity_type_ids, key=lambda item: item.sequence):
             mail_template_info = []
             for mail_template_id in elem.mail_template_ids:
@@ -790,7 +790,7 @@ class MailActivityMixin(models.AbstractModel):
         """
         return self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False) \
             or self.env['mail.activity.type'].search([('res_model', '=', self._name)], limit=1) \
-            or self.env['mail.activity.type'].search([('res_model_id', '=', False)], limit=1)
+            or self.env['mail.activity.type'].search([('res_model', '=', False)], limit=1)
 
     activity_ids = fields.One2many(
         'mail.activity', 'res_id', 'Activities',
