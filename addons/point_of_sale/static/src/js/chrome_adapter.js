@@ -33,9 +33,9 @@ export class ChromeAdapter extends Component {
             // Little trick to avoid displaying the block ui during the POS models loading
             const BlockUiFromRegistry = registry.category("main_components").get("BlockUI");
             registry.category("main_components").remove("BlockUI");
+            configureGui({ component: chrome.comp });
             await chrome.comp.start();
             registry.category("main_components").add("BlockUI", BlockUiFromRegistry);
-            configureGui({ component: chrome.comp });
             setupResponsivePlugin(this.env);
         });
     }
