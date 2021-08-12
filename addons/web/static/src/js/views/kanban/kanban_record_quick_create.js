@@ -101,6 +101,7 @@ var RecordQuickCreate = Widget.extend({
      */
     on_attach_callback: function () {
         if (this.controller) {
+            this.controller.on_attach_callback();
             this.controller.autofocus();
         }
     },
