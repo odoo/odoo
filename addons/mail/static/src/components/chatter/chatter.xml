@@ -24,7 +24,7 @@
                         />
                     </t>
                 </div>
-                <div class="o_Chatter_scrollPanel" t-on-scroll="_onScrollPanelScroll" t-ref="scrollPanel">
+                <div class="o_Chatter_scrollPanel" t-on-scroll="chatter.onScrollPanelScroll" t-ref="scrollPanel">
                     <t t-if="chatter.isAttachmentBoxVisible">
                         <AttachmentBox
                             class="o_Chatter_attachmentBox"

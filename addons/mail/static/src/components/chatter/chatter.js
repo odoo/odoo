@@ -8,6 +8,7 @@ import { AttachmentBox } from '@mail/components/attachment_box/attachment_box';
 import { ChatterTopbar } from '@mail/components/chatter_topbar/chatter_topbar';
 import { Composer } from '@mail/components/composer/composer';
 import { ThreadView } from '@mail/components/thread_view/thread_view';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -30,6 +31,7 @@ export class Chatter extends Component {
         useShouldUpdateBasedOnProps();
         useModels();
         useUpdate({ func: () => this._update() });
+        useRefToModel({ fieldName: 'threadRef', modelName: 'mail.chatter', propNameAsRecordLocalId: 'chatterLocalId', refName: 'thread' });
         /**
          * Reference of the composer. Useful to focus it.
          */
@@ -98,21 +100,6 @@ export class Chatter extends Component {
                 composer.focus();
             }
         }
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onScrollPanelScroll(ev) {
-        if (!this._threadRef.comp) {
-            return;
-        }
-        this._threadRef.comp.onScroll(ev);
     }
 
 }

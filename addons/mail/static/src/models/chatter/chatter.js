@@ -28,6 +28,13 @@ function factory(dependencies) {
         /**
          * @override
          */
+        _created() {
+            this.onScrollPanelScroll = this.onScrollPanelScroll.bind(this);
+        }
+
+        /**
+         * @override
+         */
         _willDelete() {
             this._stopAttachmentsLoading();
             return super._willDelete(...arguments);
@@ -89,6 +96,16 @@ function factory(dependencies) {
             } else {
                 this.showSendMessage();
             }
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        onScrollPanelScroll(ev) {
+            if (!this.threadRef.comp) {
+                return;
+            }
+            this.threadRef.comp.onScroll(ev);
         }
 
         showLogNote() {
@@ -328,6 +345,7 @@ function factory(dependencies) {
          * Determines the model of the thread that will be displayed by `this`.
          */
         threadModel: attr(),
+        threadRef: attr(),
         /**
          * States the `mail.thread_view` displaying `this.thread`.
          */
