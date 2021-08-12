@@ -185,8 +185,8 @@
                                         <label for="barcode"/>
                                         <div class="o_row">
                                             <field name="barcode"/>
-                                            <button string="Generate" class="btn btn-link" type="object" name="generate_random_barcode" attrs="{'invisible': [('barcode', '!=', False)]}"/>
-                                            <button name="%(hr_employee_print_badge)d" string="Print Badge" class="btn btn-link" type="action" attrs="{'invisible': [('barcode', '=', False)]}"/>
+                                            <button string="Generate" class="btn btn-link" type="object" name="generate_random_barcode" attrs="{'invisible': [('barcode', '!=', False)]}" groups="hr.group_hr_user"/>
+                                            <button name="%(hr_employee_print_badge)d" string="Print Badge" class="btn btn-link" type="action" attrs="{'invisible': [('barcode', '=', False)]}" groups="hr.group_hr_user"/>
                                         </div>
                                     </group>
                                 </group>
