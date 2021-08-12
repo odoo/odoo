@@ -140,6 +140,10 @@ class IrAsset(models.Model):
         if bundle in seen:
             raise Exception("Circular assets bundle declaration: %s" % " > ".join(seen + [bundle]))
 
+        from odoo.http import root
+        if not root._loaded:
+            root.load_addons()
+            root._loaded = True
         manifest_cache = http.addons_manifest
         exts = []
         if js:
