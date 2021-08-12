@@ -677,6 +677,49 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create form with boolean field', async function (assert) {
+        assert.expect(3);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                `<kanban on_create="quick_create" quick_create_view="some_view_ref">
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,some_view_ref,form':
+                    `<form>
+                        <field name="foo"/>
+                        <field name="int_field"/>
+                        <field name="bar"/>
+                    </form>`,
+            },
+            groupBy: ['bar'],
+        });
+
+        // click on 'Create' -> should open the quick create in the first column
+        await testUtils.kanban.clickCreate(kanban);
+        var $quickCreate = kanban.$('.o_kanban_group:first .o_kanban_quick_create');
+
+        assert.strictEqual($quickCreate.length, 1,
+            "should have a quick create element in the first column");
+        assert.strictEqual($quickCreate.find('.o_form_view.o_xxs_form_view').length, 1,
+            "should have rendered an XXS form view");
+
+        await testUtils.dom.click($quickCreate.find('.o_field_widget[name=bar] input'));
+        assert.strictEqual($quickCreate.find('.o_form_view .o_field_widget[name=bar]').length, 1,
+            "should have boolean field in quick create form");
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create record in grouped on m2o (no quick_create_view)', async function (assert) {
         assert.expect(12);
 
