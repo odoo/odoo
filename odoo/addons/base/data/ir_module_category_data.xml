@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.module.category" id="module_category_hidden">
+            <field name="name">Technical Settings</field>
+            <field name="sequence">0</field>
+            <field name="visible" eval="0" />
+        </record>
+
+        <record model="ir.module.category" id="module_category_localization">
+            <field name="name">Localization</field>
+            <field name="visible" eval="0" />
+        </record>
+
+        <record model="ir.module.category" id="module_category_localization_account_charts">
+            <field name="parent_id" ref="module_category_localization" />
+            <field name="name">Account Charts</field>
+            <field name="visible" eval="0" />
+        </record>
+
+        <record model="ir.module.category" id="module_category_sales_management">
+            <field name="name">Sales</field>
+            <field name="description">Helps you handle your quotations, sale orders and invoicing.</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_lead_automation">
+            <field name="name">Lead Automation</field>
+            <field name="description">Helps you manage lead of your marketing campaigns step by step.</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_project_management">
+            <field name="name">Project</field>
+            <field name="description">Helps you manage your projects and tasks by tracking them, generating plannings, etc...</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_warehouse_management">
+            <field name="name">Inventory</field>
+            <field name="description">Helps you manage your inventory and main stock operations: delivery orders, receptions, etc.</field>
+            <field name="sequence">4</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_manufacturing">
+            <field name="name">Manufacturing</field>
+            <field name="description">Helps you manage your manufacturing processes and generate reports on those processes.</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_account_voucher">
+            <field name="name">Invoicing &amp; Payments</field>
+            <field name="description">Allows you to create your invoices and track the payments. It is an easier version of the accounting module for managers who are not accountants.</field>
+            <field name="sequence">6</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_accounting_and_finance">
+            <field name="name">Accounting &amp; Finance</field>
+            <field name="description">Helps you handle your accounting needs, if you are not an accountant, we suggest you to install only the Invoicing.</field>
+            <field name="sequence">7</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_purchase_management">
+            <field name="name">Purchases</field>
+            <field name="description">Helps you manage your purchase-related processes such as requests for quotations, supplier bills, etc...</field>
+            <field name="sequence">8</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_user_type">
+            <field name="name">User types</field>
+            <field name="description">Helps you manage users.</field>
+            <field name="sequence">9</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_human_resources">
+            <field name="name">Employees</field>
+            <field name="description">Helps you manage your employees.</field>
+            <field name="sequence">9</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_hr_holidays">
+            <field name="name">Leaves</field>
+            <field name="description">Helps you manage your leaves.</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_hr_contract">
+            <field name="name">Contracts</field>
+            <field name="description">Helps you manage your contracts.</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_hr_recruitment">
+            <field name="name">Recruitment</field>
+            <field name="description">Helps you manage your recruitments.</field>
+            <field name="sequence">11</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_hr_expense">
+            <field name="name">Expenses</field>
+            <field name="description">Helps you manage your expenses.</field>
+            <field name="sequence">12</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_hr_timesheet">
+            <field name="name">Timesheets</field>
+            <field name="description">Helps you manage the timesheets.</field>
+            <field name="sequence">13</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_hr_attendance">
+            <field name="name">Attendance</field>
+            <field name="description">Helps you manage the attendances.</field>
+            <field name="sequence">14</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_hr_appraisal">
+            <field name="name">Appraisals</field>
+            <field name="description">Helps you manage your appraisals.</field>
+            <field name="sequence">15</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_hr_payroll">
+            <field name="name">Payroll</field>
+            <field name="description">Helps you manage your payrolls.</field>
+            <field name="sequence">16</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_hr_gamification">
+            <field name="name">Gamification</field>
+            <field name="description">Helps you manage the gamification process.</field>
+            <field name="sequence">17</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_event_management">
+            <field name="name">Events</field>
+            <field name="description">Helps you manage your Events.</field>
+            <field name="sequence">18</field>
+        </record>
+
+        <record id="module_category_mass_mailing" model="ir.module.category">
+            <field name="name">Email Marketing</field>
+            <field name="sequence">19</field>
+            <field name="description">Helps you manage your mass mailing for design
+                professional emails and reuse templates.</field>
+        </record>
+
+        <record id="module_category_survey" model="ir.module.category">
+            <field name="name">Survey</field>
+            <field name="description">Helps you manage your survey for review of different-different users.</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_point_of_sale">
+            <field name="name">Point of Sale</field>
+            <field name="description">Helps you get the most out of your points of sale with fast sale encoding, simplified payment mode encoding, automatic picking lists generation and more.</field>
+            <field name="sequence">21</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_specific_industry_applications">
+            <field name="name">Specific Industry Applications</field>
+            <field name="sequence">22</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_website">
+            <field name="name">Website</field>
+            <field name="sequence">23</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_sign">
+            <field name="name">Document Signatures</field>
+            <field name="description">Helps you sign and complete your documents easily.</field>
+            <field name="sequence">25</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_helpdesk">
+            <field name="name">After-Sales</field>
+            <field name="description">After-sales services</field>
+            <field name="sequence">2</field>
+        </record>
+
+
+        <record model="ir.module.category" id="module_category_theme">
+            <field name="name">Theme</field>
+            <field name="exclusive" eval="0"/>
+            <field name="sequence">50</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_administration">
+            <field name="name">Administration</field>
+            <field name="sequence">100</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_usability">
+            <field name="name">Extra Rights</field>
+            <field name="sequence">101</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_extra">
+            <field name="name">Other Extra Rights</field>
+            <field name="sequence">102</field>
+        </record>
+
+        <!-- add applications to base groups -->
+        <record model="res.groups" id="group_erp_manager">
+            <field name="category_id" ref="module_category_administration"/>
+        </record>
+        <record model="res.groups" id="group_system">
+            <field name="category_id" ref="module_category_administration"/>
+        </record>
+
+        <record model="res.groups" id="group_user">
+            <field name="category_id" ref="module_category_user_type"/>
+        </record>
+
+        <record model="res.groups" id="group_multi_company">
+            <field name="category_id" ref="module_category_usability"/>
+        </record>
+
+        <record model="res.groups" id="group_multi_currency">
+            <field name="category_id" ref="module_category_usability"/>
+        </record>
+
+        <record model="res.groups" id="group_no_one">
+            <field name="category_id" ref="module_category_usability"/>
+        </record>
+
+        <record id="group_portal" model="res.groups">
+            <field name="category_id" ref="module_category_user_type"/>
+        </record>
+
+        <record id="group_public" model="res.groups">
+            <field name="category_id" ref="module_category_user_type"/>
+        </record>
+
+        <record id="group_partner_manager" model="res.groups">
+            <field name="category_id" ref="module_category_usability"/>
+        </record>
+
+    </data>
+</odoo>

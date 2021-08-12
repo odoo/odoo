@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.module.module" id="base.module_web_studio">
+            <field name="name">web_studio</field>
+            <field name="shortdesc">Studio</field>
+            <field name="sequence">17</field>
+            <field name="category_id" ref="base.module_category_administration"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Create and Customize Applications</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/web_studio.png</field>
+            <field name="website">https://odoo.com/page/studio?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_timesheet_grid">
+            <field name="name">timesheet_grid</field>
+            <field name="shortdesc">Timesheets</field>
+            <field name="sequence">11</field>
+            <field name="category_id" ref="base.module_category_hr_timesheet"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Track time &amp; costs</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/timesheet_grid.png</field>
+            <field name="website">https://www.odoo.com/page/timesheet-mobile-app?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_account_accountant">
+            <field name="name">account_accountant</field>
+            <field name="sequence">15</field>
+            <field name="shortdesc">Accounting</field>
+            <field name="category_id" ref="base.module_category_accounting_and_finance"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Accounting, Taxes, Budgets, Assets...</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/account_accountant.png</field>
+            <field name="website">https://www.odoo.com/page/accounting?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_helpdesk">
+            <field name="name">helpdesk</field>
+            <field name="shortdesc">Helpdesk</field>
+            <field name="sequence">65</field>
+            <field name="category_id" ref="base.module_category_helpdesk"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Track support tickets</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/helpdesk.png</field>
+            <field name="website">https://www.odoo.com/page/helpdesk?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_hr_appraisal">
+            <field name="name">hr_appraisal</field>
+            <field name="shortdesc">Appraisal</field>
+            <field name="category_id" ref="base.module_category_hr_appraisal"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Assess your employees</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/hr_appraisal.png</field>
+            <field name="website">https://www.odoo.com/page/appraisal?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_marketing_automation">
+            <field name="name">marketing_automation</field>
+            <field name="shortdesc">Marketing Automation</field>
+            <field name="sequence">111</field>
+            <field name="category_id" ref="base.module_category_mass_mailing"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Build automated mailing campaigns</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/marketing_automation.png</field>
+            <field name="website">https://www.odoo.com/page/marketing-automation?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_mrp_plm">
+            <field name="name">mrp_plm</field>
+            <field name="shortdesc">Product Lifecycle Management (PLM)</field>
+            <field name="category_id" ref="base.module_category_manufacturing"/>
+            <field name="sequence">17</field>
+            <field name="application" eval="True"/>
+            <field name="summary">PLM, ECOs, Versions</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/mrp_plm.png</field>
+            <field name="website">https://www.odoo.com/page/mrp-plm?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_quality_control">
+            <field name="name">quality_control</field>
+            <field name="shortdesc">Quality</field>
+            <field name="sequence">17</field>
+            <field name="category_id" ref="base.module_category_manufacturing"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Quality Alerts, Control Points</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/quality_control.png</field>
+            <field name="website">https://www.odoo.com/page/quality-management-software?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_sale_ebay">
+            <field name="name">sale_ebay</field>
+            <field name="shortdesc">eBay Connector</field>
+            <field name="category_id" ref="base.module_category_sales_management"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Sell on eBay easily</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/sale_ebay.png</field>
+            <field name="website">https://www.odoo.com/page/sales?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_project_forecast">
+            <field name="name">project_forecast</field>
+            <field name="shortdesc">Project Forecast</field>
+            <field name="category_id" ref="base.module_category_project_management"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Project forecasts, resource allocation</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/project_forecast.png</field>
+            <field name="website">https://www.odoo.com/page/project-management?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_sale_subscription">
+            <field name="name">sale_subscription</field>
+            <field name="shortdesc">Subscriptions</field>
+            <field name="category_id" ref="base.module_category_sales_management"/>
+            <field name="application" eval="True"/>
+            <field name="summary">MRR, Churn, Recurring payments</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/sale_subscription.png</field>
+            <field name="website">https://www.odoo.com/page/subscriptions?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_sign">
+            <field name="name">sign</field>
+            <field name="shortdesc">Sign</field>
+            <field name="category_id" ref="base.module_category_sign"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Send documents to sign online</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/sign.png</field>
+            <field name="website">https://www.odoo.com/page/sign?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_stock_barcode">
+            <field name="name">stock_barcode</field>
+            <field name="shortdesc">Barcode</field>
+            <field name="sequence">14</field>
+            <field name="category_id" ref="base.module_category_warehouse_management"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Barcode scanner for warehouses</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/stock_barcode.png</field>
+            <field name="website">https://www.odoo.com/page/warehouse?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_voip">
+            <field name="name">voip</field>
+            <field name="shortdesc">VoIP</field>
+            <field name="sequence">100</field>
+            <field name="category_id" ref="base.module_category_sales_management"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Call using VoIP</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/voip.png</field>
+            <field name="website">https://www.odoo.com/page/crm?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_website_calendar">
+            <field name="name">website_calendar</field>
+            <field name="shortdesc">Appointments</field>
+            <field name="category_id" ref="base.module_category_sales_management"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Online appointments scheduler</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/website_calendar.png</field>
+            <field name="website">https://www.odoo.com/page/appointments?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_mrp_workorder">
+            <field name="name">mrp_workorder</field>
+            <field name="sequence">16</field>
+            <field name="shortdesc">MRP II</field>
+            <field name="category_id" ref="base.module_category_manufacturing"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Work Orders, Planing, Routing</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/mrp_workorder.png</field>
+            <field name="website">https://www.odoo.com/page/mrp-cloud-software?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_web_mobile">
+            <field name="name">web_mobile</field>
+            <field name="sequence">220</field>
+            <field name="shortdesc">Android &amp; iPhone</field>
+            <field name="category_id" ref="base.module_category_administration"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Support for Android &amp; iOS Apps</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/web_mobile.png</field>
+            <field name="website">https://play.google.com/store/apps/details?id=com.odoo.mobile</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_website_twitter_wall">
+            <field name="name">website_twitter_wall</field>
+            <field name="shortdesc">Twitter Wall</field>
+            <field name="summary">Interactive twitter wall for events</field>
+            <field name="category_id" ref="base.module_category_website"/>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/website_twitter_wall.png</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_website_form_editor">
+            <field name="name">website_form_editor</field>
+            <field name="shortdesc">Form Builder</field>
+            <field name="summary">Customize web forms with drag and drop</field>
+            <field name="category_id" ref="base.module_category_website"/>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/website_form_editor.png</field>
+        </record>
+
+
+    </data>
+</odoo>
