@@ -7,7 +7,7 @@ import logging
 from psycopg2 import sql, DatabaseError
 
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, ormcache
 from odoo.exceptions import ValidationError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 
@@ -120,6 +120,7 @@ class AccountFiscalPosition(models.Model):
         zip_to = vals.get('zip_to')
         if zip_from and zip_to:
             vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from, zip_to)
+        self.clear_caches()
         return super(AccountFiscalPosition, self).create(vals)
 
     def write(self, vals):
@@ -128,8 +129,11 @@ class AccountFiscalPosition(models.Model):
         if zip_from or zip_to:
             for rec in self:
                 vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from or rec.zip_from, zip_to or rec.zip_to)
+        if any(key in ['country_group_ids', 'auto_apply'] for key in vals):
+            self.clear_caches()
         return super(AccountFiscalPosition, self).write(vals)
 
+    @ormcache('country_id', 'state_id', 'zipcode', 'vat_required')
     @api.model
     def _get_fpos_by_region(self, country_id=False, state_id=False, zipcode=False, vat_required=False):
         if not country_id:
