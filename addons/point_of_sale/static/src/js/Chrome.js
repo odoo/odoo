@@ -343,7 +343,10 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 await this.rpc({
                     'route': '/pos/load_onboarding_data',
                 });
-                this.env.pos.load_server_data();
+                await this.env.pos.load_server_data((model) => {
+                    return ['pos.category', 'product.product'].includes(model.model);
+                });
+                this.render();
             }
         }
 

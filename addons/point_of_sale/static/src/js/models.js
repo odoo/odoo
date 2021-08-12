@@ -628,7 +628,9 @@ exports.PosModel = Backbone.Model.extend({
     ],
 
     // loads all the needed data on the sever. returns a promise indicating when all the data has loaded.
-    load_server_data: function(){
+    // loaderSelector should be undefined or a method that takes one item of the `models` field and returns
+    // a boolean.
+    load_server_data: function(loaderSelector){
         var self = this;
         var progress = 0;
         var progress_step = 1.0 / self.models.length;
@@ -640,6 +642,10 @@ exports.PosModel = Backbone.Model.extend({
                     resolve();
                 } else {
                     var model = self.models[index];
+                    if (loaderSelector && !loaderSelector(model)) {
+                        load_model(index+1);
+                        return;
+                    }
                     self.setLoadingMessage(_t('Loading')+' '+(model.label || model.model || ''), progress);
 
                     var cond = typeof model.condition === 'function'  ? model.condition(self,tmp) : true;
