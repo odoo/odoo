@@ -37,8 +37,7 @@
                 <a href="#" class="btn btn-primary btn-block o_browse_apps" role="button"><strong>Browse Apps</strong></a>
             </div>
             <div class="d-flex mt-2 o_web_settings_dashboard_pills">
-                <a href="https://www.odoo.com/apps/modules" target="_blank" class="flex-grow-1 w-25"><i class="fa fa-lg fa-rocket text-muted"/> App store</a>
-                <a href="https://www.odoo.com/apps/themes" target="_blank" class="flex-grow-1 w-25"><i class="fa fa-lg fa-picture-o text-muted"/> Theme store</a>
+                
             </div>
             <div class="clearfix"/>
         </div>
@@ -94,14 +93,12 @@
             <i class="fa fa-share-alt fa-4x text-muted" role="img" aria-label="Share" title="Share"/>
             <div class="o_web_settings_dashboard_header">Share the Love</div>
             <div>
-                <small class="text-muted text-center o_web_settings_dashboard_compact_subtitle">
-                    Help us spread the word: Share Odoo's awesomeness with your friends!
-                </small>
+                
             </div>
             <div class="row mt16">
-                <div class="col-4"><a href="#" aria-label="Twitter" title="Twitter"><i class="fa fa-twitter-square fa-4x tw_share"/></a></div>
-                <div class="col-4"><a href="#" aria-label="Facebook" title="Facebook"><i class="fa fa-facebook-square fa-4x fb_share"/></a></div>
-                <div class="col-4"><a href="#" aria-label="LinkedIn" title="LinkedIn"><i class="fa fa-linkedin-square fa-4x li_share"/></a></div>
+                
+                <div class="col-4"><a href="https://www.facebook.com/unerpsoft/" aria-label="Facebook" title="Facebook"><i class="fa fa-facebook-square fa-4x fb_share"/></a></div>
+              
             </div>
             <hr/>
             <t t-set="server_version" t-value="widget.data.server_version"/>
@@ -110,39 +107,26 @@
             <div class="text-center">
                 <div class="user-heading">
                     <h3>
-                        Odoo <t t-esc="server_version"/>
-                        (Community Edition)
+                        ERPYMES 2.0
+                      
                     </h3>
                 </div>
                 <div>
                     <div class="tab-content">
                         <div role="tabpanel" id="settings" class="tab-pane active text-muted text-center o_web_settings_dashboard_compact_subtitle">
-                            <small>Copyright © 2004 <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo S.A.</a> <a target="_blank" href="http://www.gnu.org/licenses/lgpl.html" style="text-decoration: underline;">GNU LGPL Licensed</a></small>
+                            <small>Copyright © 2018 <a target="_blank" href="https://www.unerp.com.mx" style="text-decoration: underline;">Unerp S.A.</a> <a target="_blank" href="http://www.gnu.org/licenses/lgpl.html" style="text-decoration: underline;">GNU LGPL Licensed</a></small>
                         </div>
                     </div>
                 </div>
             </div>
             <hr/>
-            <a t-if="debug != true" class="oe_activate_debug_mode float-right" href="?debug" >Activate the developer mode</a>
-            <br t-if="debug != true"/>
-            <a t-if="debug != 'assets'" class="oe_activate_debug_mode float-right" href="?debug=assets" >Activate the developer mode (with assets)</a>
-            <br t-if="debug != 'assets'"/>
-            <a t-if="debug != false" class="oe_activate_debug_mode float-right" href="/web" >Deactivate the developer mode</a>
-            <br t-if="debug != false"/>
-            <a t-if="(debug) and !(demo_active)" class="oe_activate_debug_mode float-right o_web_settings_dashboard_force_demo" href="#">Load demo data</a>
-        </div>
+           
+        </div> 
     </t>
 
     <t t-name="DashboardEnterprise">
         <hr class="mt16"/>
-        <div class="text-center o_web_settings_dashboard_enterprise">
-            <div class="o_web_settings_dashboard_header">Odoo Enterprise</div>
-            <div class="mb16"><a href="http://www.odoo.com/editions" target="_blank">Get more features with the Enterprise Edition!</a></div>
-            <div><img class="img img-fluid" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"' alt="Upgrade to enterprise"/></div>
-            <div>
-                <a href="#" class="btn btn-primary btn-block o_confirm_upgrade" role="button"><strong>Upgrade Now</strong></a>
-            </div>
-        </div>
+        
     </t>
 
     <t t-name="DashboardTranslations">
