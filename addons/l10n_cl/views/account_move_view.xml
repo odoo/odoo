@@ -20,6 +20,9 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="l10n_latam_invoice_document.view_move_form"/>
         <field name="arch" type="xml">
+            <field name="l10n_latam_manual_document_number" position="attributes">
+                <attribute name="attrs">{'invisible': [('posted_before', '=', True)]}</attribute>
+            </field>
             <field name="l10n_latam_document_number" position="attributes">
                 <attribute name="attrs">{
                     'invisible': [
