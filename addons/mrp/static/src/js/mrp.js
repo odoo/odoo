@@ -112,7 +112,7 @@ var TimeCounter = fields.FieldFloatTime.extend({
      * @override
      */
     _renderReadonly: function () {
-        if (this.record.data.is_user_working) {
+        if (this.record.data.working_user_ids && this.record.data.working_user_ids.count) {
             this._startTimeCounter();
         } else {
             this._super.apply(this, arguments);
@@ -124,7 +124,7 @@ var TimeCounter = fields.FieldFloatTime.extend({
     _startTimeCounter: function () {
         var self = this;
         clearTimeout(this.timer);
-        if (this.record.data.is_user_working) {
+        if (this.record.data.working_user_ids && this.record.data.working_user_ids.count) {
             this.timer = setTimeout(function () {
                 self.duration += 1/60;
                 self._startTimeCounter();
