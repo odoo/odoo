@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <record id="view_hr_payslip_form" model="ir.ui.view">
+            <field name="name">hr.payslip.nomina</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+            <field name="arch" type="xml">
+              <field name="credit_note" position="after">
+                    <field name="tipo_nomina" />
+                    <field name="fecha_pago" />
+                    <field name="mes" attrs="{'required':[('tipo_nomina','=','O')], 'invisible':[('tipo_nomina','!=','O')]}"/>
+                    <field name="no_nomina" attrs="{'required':[('tipo_nomina','=','O')], 'invisible':[('tipo_nomina','!=','O')]}"/>
+                    <field name="nomina_cfdi" invisible="1"/>
+              </field>
+              <xpath expr="//notebook" position="inside">
+                <page name="info_cdfi" string="CFDI 3.3">
+                        <group cols="4">
+                            <group string="Nómina">
+                                <field name="dias_pagar"/><!--
+                   <field name="acum_per_grav" />
+                   <field name="acum_isr" />
+                   <field name="isr_ajustar" />-->
+
+                            </group>
+                            <group string="Datos CFDI">
+                                <field name="forma_pago"/>
+                                <field name="tipo_comprobante"/>
+                                <field name="methodo_pago"/>
+                                <field name="uso_cfdi"/>
+                            </group>
+                            <group  string="Detalles de Factura">
+                                <field name="folio_fiscal"/>
+                                <field name="estado_factura"/>
+                            </group>
+                            <group string="CFDI Relacionados">
+                                <field name="tipo_relacion"/>
+                                <field name="uuid_relacionado"/>
+                            </group>
+                        </group>
+                </page>
+                <page name="info_cdfi" string="Información adicional">
+                        <group cols="4">
+                            <group string="Dias">
+                                <field name="dias_pagar"/>
+                                <field name="imss_dias"/>
+                            </group>
+                            <group string="Procesamiento">
+                                <field name="concepto_periodico"/>
+                                <field name="isr_ajustar"/>
+                                <field name="isr_devolver"/>
+                            </group>
+                            <group string="Acumulados (mensual)">
+                                <field name="acum_per_totales" />
+                                <field name="acum_per_grav" />
+                                <field name="acum_isr" />
+                                <field name="acum_isr_antes_subem" />
+                                <field name="acum_subsidio_aplicado" />
+                                <field name="acum_fondo_ahorro" />
+                            </group>
+                        </group>
+                </page>
+              </xpath>
+
+              <button name="action_payslip_cancel" position="before">
+                   <button name="action_cfdi_nomina_generate" type="object" string="Generar CFDI" 
+                            attrs="{'invisible':['|',('estado_factura','=','factura_correcta'),('state','!=','done')]}"
+                            class="oe_highlight" groups="base.group_user"/>
+                   <button name="action_cfdi_cancel" type="object" string="Cancelar CFDI" 
+                            attrs="{'invisible':['|',('nomina_cfdi','=',False), ('estado_factura','=','factura_cancelada')]}" 
+                            class="oe_highlight" groups="base.group_user" confirm="¿Esta seguro que quiere cancelar la factura?"/>
+                   <button name="send_nomina" class="oe_highlight" attrs="{'invisible':[('estado_factura','!=','factura_correcta')]}" string="Enviar por correo" type="object"/>
+                </button>
+            </field>
+        </record>
+
+       <record id="hr_payslip_run_form_nomina_cfdi" model="ir.ui.view">
+            <field name="name">hr.payslip.run.form.nomina</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="priority">50</field>
+            <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//sheet" position="replace">
+            		<sheet>
+            			<label for="name" class="oe_edit_only"/>
+		                <h1>
+		                    <field name="name"/>
+		                </h1>
+		                <notebook>
+		                	<page string="Configuración" name="general">
+		                		<group>
+		                			<group>
+		                				<field name="periodicidad_pago" string="Frecuencia de pago"/>
+		                			</group>
+		                			<group>
+					                   <field name="dias_pagar" />
+		                			</group>
+		                		</group>
+		                		<group>
+		                			<label for="date_start" string="Periodo"/>
+				                     <div>
+				                           <field name="date_start" class="oe_inline"/> - <field name="date_end" class="oe_inline"  force_save="1"/> <!--readonly="1"-->
+				                     </div>
+                                    
+				                     <!--<field name="journal_id"/>
+				                    <field name="credit_note"/>-->
+				                </group>
+                                <group>
+		                			<label for="estructura" string="Tipo de nómina"/>
+				                     <div>
+				                       <field name="tipo_nomina" class="oe_inline"/>
+				                       <field name="estructura" attrs="{'invisible' : [('tipo_nomina','!=','E')]}" class="oe_inline"/>
+				                     </div>
+                                </group>
+                                <group cols="4">
+                                <group  string="Configuración">
+					                   <field name="no_nomina" /> 
+				                       <field name="concepto_periodico"/>
+				                       <field name="isr_ajustar"/> 
+				                      <field name="isr_devolver"/> 
+				                </group>
+					                <group  string="Dias a cotizar IMSS">
+					                   <field name="imss_dias"/>
+					                   <field name="imss_mes" />
+					                   <field name="nominas_mes" />
+					                 </group>
+					            </group>
+		                	</page>
+		                	<page name="nominas" string="Nominas">
+		                		<field name="slip_ids"/>
+		                	</page>
+		                	<page name="otras_entradas" string="Otras Entradas">
+		                		<group  string="Otras entradas">
+				                   <field name="tabla_otras_entradas">
+				                            <tree editable="bottom">
+				                               <field name="descripcion"/>
+				                               <field name="codigo"/>
+				                               <field name="monto"/>
+				                            </tree>
+				                        </field>
+				                 </group>
+		                	</page>
+		                </notebook>
+            		</sheet>
+            	</xpath>
+            	
+                <!-- <field name="name" position="after">
+                   <field name="freq_pago" string="Frecuencia de pago"/>
+                </field>
+                <field name="date_end" position="attributes">
+                   <attribute name="readonly">1</attribute>
+                   <attribute name="force_save">1</attribute>
+                </field>
+                <field name="credit_note" position="after">
+                   <field name="tipo_nomina"/>
+                   <field name="estructura" attrs="{'invisible' : [('tipo_nomina','!=','E')]}"/>
+                </field> -->
+                <button name="draft_payslip_run" position="after">
+                    <field name="all_payslip_generated" invisible="1" />
+                    <button string="Timbrar Nomina" name="timbrar_nomina" type="object" attrs="{'invisible':[('all_payslip_generated','=',True)]}" class="oe_highlight"/>
+                    <button string="Enviar Nomina" name="enviar_nomina" type="object" attrs="{'invisible':[('all_payslip_generated','!=',True)]}" class="oe_highlight"/>
+                    <button string="Recalcular nómina" name="recalcular_nomina_payslip_batch" type="object" states='draft' class="oe_highlight"/>
+                </button>
+               <!-- <sheet>
+                <group  string="Otras entradas">
+                   <field name="tabla_otras_entradas">
+                            <tree editable="bottom">
+                               <field name="descripcion"/>
+                               <field name="codigo"/>
+                               <field name="monto"/>
+                            </tree>
+                        </field>
+                 </group>
+               </sheet>
+               <sheet>
+               <group cols="4">
+                <group  string="Nómina">
+                   <field name="dias_pagar" />
+                   <field name="no_nomina" /> 
+                 </group>
+                <group  string="Cotización al IMSS">
+                   <field name="imss_dias" />
+                   <field name="imss_mes" />
+                 </group>
+               </group>
+               </sheet> -->
+            </field>
+       </record> 
+
+    <record id="view_hr_payslip_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.inherit.tree</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree" />
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="estado_factura" string="Estado CFDI"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+   <record id="view_employee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.nomina</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+           <xpath expr="//notebook" position="inside">
+                <page name="info_cdfi" string="CFDI 3.3">
+                        <group cols="4">
+                            <group string="Detalles de Pago">
+                                <field name="no_empleado"/>
+                                <field name="tipo_pago"/>
+                                <field name="banco" attrs="{'invisible':[('tipo_pago','not in',('transferencia','deposito'))]}"/>
+                                <field name="no_cuenta"  attrs="{'invisible':[('tipo_pago','not in',('transferencia','deposito'))]}"/>
+                                <field name="tipo_cuenta"  attrs="{'invisible':[('tipo_pago','not in',('transferencia','deposito'))]}"/>
+                                <field name="banco_pago" attrs="{'invisible':[('tipo_pago','not in',('transferencia','deposito'))]}"/>
+                            </group>
+                            <group string="Información fiscal">
+                                <field name="regimen"/>
+                                <field name="contrato"/>
+                                <field name="jornada"/>
+                            </group>
+                        </group>
+                        <group cols="4">
+                            <group string="Registros">
+                                <field name="rfc"/>
+                                <field name="curp"/>
+                                <field name="segurosocial"/>
+                                <field name="correo_electronico"/>
+                                <field name="estado"/>
+                                <field name="registro_patronal"/>
+                            </group>
+                        </group>
+                </page><!--
+                <page name="fondo_ahorro" string="Fondo de ahorro">
+                        <group cols="4">
+                            <field name="fondo_ahorro"/>
+                        </group>
+                </page>-->
+                <page name="utilidades" string="Reparto de utilidades">
+                   <group cols="4">
+                      <field name="fecha_utilidad_inicio"/>
+                      <field name="fecha_utilidad_fin"/>
+                      <field name="dias_utilidad"/>
+                      <field name="sueldo_utilidad"/>
+                   </group>
+                </page>
+           </xpath>
+        </field>
+    </record>
+</odoo>

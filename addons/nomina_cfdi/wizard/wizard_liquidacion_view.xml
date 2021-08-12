@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="wizard_liquidacion_form_view" model="ir.ui.view">
+        <field name="name">Calculo liquidaciones</field>
+        <field name="model">calculo.liquidaciones</field>
+        <field name="arch" type="xml">
+        <form string="Liquidaciones">
+            <group col="4" string="Generales">
+                <field name="employee_id" required="1"/>
+                <field name="fecha_inicio" required="1"/>
+                <field name="contract_id" required="1"/>
+                <field name="fecha_liquidacion" required="1"/>
+            </group>
+            <group col="4" string="Liquidacion / Compensación">
+                <group>
+                   <field name="indemnizacion"/>
+                   <field name="dias_base"/>
+                   <field name="dias_x_ano"/>
+                   <field name="antiguedad_anos"/>
+                </group>
+                <group>
+                   <field name="monto_prima_antiguedad"/>
+                   <field name="monto_indemnizacion"/>
+                   <field name="pago_separacion"/>
+                </group>
+            </group>
+            <group col="4" string="Conceptos ordinarios">
+                <group>
+                  <field name="dias_pendientes_pagar"/>
+                  <field name="dias_aguinaldo"/>
+                  <field name="dias_vacaciones"/>
+                  
+
+                </group>
+                <group>
+                   <field name="fondo_ahorro"/>
+                   <field name="prima_vacacional"/>
+                </group>
+
+            </group>
+            <footer>
+                <button name="calculo_liquidacion" string="Calcular" type="object" default_focus="1" class="oe_highlight"/>
+                <button string="Cancelar" class="btn btn-default" special="cancel" />
+                <button name="calculo_create" string="Create" type="object" class="oe_highlight"/>
+            </footer>
+        </form>
+        </field>
+    </record>
+    <record id="action_wizard_liquidacion" model="ir.actions.act_window">
+        <field name="name">Calculo liquidaciones</field>
+        <field name="res_model">calculo.liquidaciones</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="wizard_liquidacion_form_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_action_wizard_reglas_salariales" name="Genera liquidaciones"  action="action_wizard_liquidacion" parent="hr_payroll.menu_hr_payroll_root" sequence="12" />
+    
+</odoo>

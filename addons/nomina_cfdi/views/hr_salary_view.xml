@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <record id="hr_salary_rule_form_inherit" model="ir.ui.view">
+            <field name="name">hr.salary.rule.form.nomina</field>
+            <field name="model">hr.salary.rule</field>
+            <field name="inherit_id" ref="hr_payroll.hr_salary_rule_form"/>
+            <field name="arch" type="xml">
+              <field name="appears_on_payslip" position="after">
+                    <field name="category_code" invisible="1"/>
+                    <field name="tipo_percepcion" attrs="{'invisible':[('category_code','not in',['BASIC','ALW','ALW2'])]}" />
+                    <field name="tipo_deduccion" attrs="{'invisible':[('category_code','not in',['DED'])]}"/>
+                    <field name="tipo_otro_pago" attrs="{'invisible':[('category_code','not in',['ALW3'])]}"/>
+                    <field name="forma_pago" />
+              </field><!--
+              <field name="code" position="attributes">
+                   <attribute name="readonly">1</attribute>
+              </field>
+              <field name="sequence" position="attributes">
+                   <attribute name="readonly">1</attribute>
+              </field> -->
+            </field>
+        </record>
+</odoo>

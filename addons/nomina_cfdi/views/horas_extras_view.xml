@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+   <record id="tree_horas_nomina_view" model="ir.ui.view">
+        <field name="name">horas.nomina.tree.view</field>
+        <field name="model">horas.nomina</field>
+        <field name="arch" type="xml">
+        <tree string="Horas extras">
+        	<field name="name" />
+            <field name="employee_id" />
+            <field name="fecha" />
+            <field name="tipo_de_hora" />
+            <field name="horas" />
+            <field name="state" invisible="1"/> 
+         </tree> 
+       </field>
+    </record>
+   <record id="form_horas_nomina_view" model="ir.ui.view">
+        <field name="name">horas.nomina.form.view</field>
+        <field name="model">horas.nomina</field>
+        <field name="arch" type="xml">
+        <form string="Horas extras">
+             
+             <header>
+                 <button name="action_validar" string="Validar" type="object" states="draft" class="btn-primary"/>
+                 <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+             </header>
+             <sheet>
+                 <div class="oe_title">
+                     <h1>
+                         <field name="name" readonly="1"/>
+                     </h1>
+                 </div>
+                 <group>
+                     <group>
+                         <field name="fecha" attrs="{'readonly' : [('state', '!=','draft')], 'required': [('state', '=','draft')]}"/>
+                         <field name="tipo_de_hora" attrs="{'readonly' : [('state', '!=','draft')], 'required': [('state', '=','draft')]}"/>
+                         <field name="employee_id" attrs="{'readonly' : [('state', '!=','draft')], 'required': [('state', '=','draft')]}"/>
+                     </group>
+                     <group>
+                         <field name="horas" attrs="{'readonly' : [('state', '!=','draft')]}"/>
+                     </group>
+                 </group>
+             </sheet>
+         </form> 
+       </field>
+    </record>
+
+    <record id="search_horas_nomina_view" model="ir.ui.view">
+        <field name="name">horas.nomina.search.view</field>
+        <field name="model">horas.nomina</field>
+        <field name="arch" type="xml">
+            <search string="Horas extras">
+               <field name="name" />
+               <field name="tipo_de_hora" />
+               <field name="employee_id" />
+               <field name="state" />
+            </search>
+        </field>
+    </record>
+
+    <record id="action_tree_horas_nomina" model="ir.actions.act_window">
+        <field name="name">Horas</field>
+        <field name="res_model">horas.nomina</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="tree_horas_nomina_view" />
+        <field name="search_view_id" ref="search_horas_nomina_view" />
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem
+          name="Horas extras"
+          parent="nomina_cfdi.menu_main_movimivientos"
+          id="menu_action_tree_horas_nomina"
+          action="action_tree_horas_nomina"
+          sequence="5"
+      />
+
+</odoo>
