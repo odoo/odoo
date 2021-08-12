@@ -21,12 +21,6 @@ function factory(dependencies) {
             if (!threadCache) {
                 return;
             }
-            if (this.chatter) {
-                // Initial scroll height is disabled for chatter because it is
-                // too complex to handle correctly and less important
-                // functionally.
-                return;
-            }
             this.update({
                 threadCacheInitialScrollHeights: Object.assign({}, this.threadCacheInitialScrollHeights, {
                     [threadCache.localId]: scrollHeight,
@@ -41,12 +35,6 @@ function factory(dependencies) {
         saveThreadCacheScrollPositionsAsInitial(scrollTop, threadCache) {
             threadCache = threadCache || this.threadCache;
             if (!threadCache) {
-                return;
-            }
-            if (this.chatter) {
-                // Initial scroll position is disabled for chatter because it is
-                // too complex to handle correctly and less important
-                // functionally.
                 return;
             }
             this.update({
