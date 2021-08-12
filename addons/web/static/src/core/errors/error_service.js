@@ -75,8 +75,6 @@ async function completeUncaughtError(env, uncaughtError, originalError) {
 
 export const errorService = {
     start(env) {
-        const handlers = registry.category("error_handlers").getAll();
-
         function handleError(error, originalError, retry = true) {
             const services = env.services;
             if (!services.dialog || !services.notification || !services.rpc) {
@@ -90,7 +88,7 @@ export const errorService = {
                 }
                 return;
             }
-            for (let handler of handlers) {
+            for (let handler of registry.category("error_handlers").getAll()) {
                 if (handler(env, error, originalError)) {
                     break;
                 }

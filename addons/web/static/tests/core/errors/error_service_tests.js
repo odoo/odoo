@@ -265,3 +265,18 @@ QUnit.test("check retry", async (assert) => {
     await def.resolve();
     assert.verifySteps(["dispatched"]);
 });
+
+QUnit.test("lazy loaded handlers", async (assert) => {
+    await makeTestEnv();
+    const errorEvent = new PromiseRejectionEvent("error", { reason: new Error(), promise: null });
+
+    await unhandledRejectionCb(errorEvent);
+    assert.verifySteps([]);
+
+    errorHandlerRegistry.add("__test_handler__", () => {
+        assert.step("in handler");
+    });
+
+    await unhandledRejectionCb(errorEvent);
+    assert.verifySteps(["in handler"]);
+});
