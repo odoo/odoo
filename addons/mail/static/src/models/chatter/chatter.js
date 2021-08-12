@@ -29,6 +29,8 @@ function factory(dependencies) {
          * @override
          */
         _created() {
+            this.onClickChatterTopbarClose = this.onClickChatterTopbarClose.bind(this);
+            this.onClickScheduleActivity = this.onClickScheduleActivity.bind(this);
             this.onScrollPanelScroll = this.onScrollPanelScroll.bind(this);
         }
 
@@ -96,6 +98,40 @@ function factory(dependencies) {
             } else {
                 this.showSendMessage();
             }
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickChatterTopbarClose(ev) {
+            this.componentChatterTopbar.trigger('o-close-chatter');
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickScheduleActivity(ev) {
+            const action = {
+                type: 'ir.actions.act_window',
+                name: this.env._t("Schedule Activity"),
+                res_model: 'mail.activity',
+                view_mode: 'form',
+                views: [[false, 'form']],
+                target: 'new',
+                context: {
+                    default_res_id: this.thread.id,
+                    default_res_model: this.thread.model,
+                },
+                res_id: false,
+            };
+            return this.env.bus.trigger('do-action', {
+                action,
+                options: {
+                    on_close: () => {
+                        this.componentChatterTopbar.trigger('reload', { keepChanges: true });
+                    },
+                },
+            });
         }
 
         /**
@@ -262,6 +298,7 @@ function factory(dependencies) {
         context: attr({
             default: {},
         }),
+        componentChatterTopbar: attr(),
         /**
          * Determines whether `this` should display an activity box.
          */

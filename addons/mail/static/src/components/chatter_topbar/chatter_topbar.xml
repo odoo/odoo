@@ -34,7 +34,7 @@
                         </button>
                     </t>
                     <t t-if="chatter.hasActivities">
-                        <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity" type="button" t-att-disabled="chatter.isDisabled" t-on-click="_onClickScheduleActivity" title="Schedule an activity" data-hotkey="shift+a">
+                        <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity" type="button" t-att-disabled="chatter.isDisabled" t-on-click="chatter.onClickScheduleActivity" title="Schedule an activity" data-hotkey="shift+a">
                             <i class="fa fa-clock-o"/>
                             Schedule activity
                         </button>
@@ -67,7 +67,7 @@
                         </div>
                 </div>
                 <t t-if="chatter.hasTopbarCloseButton">
-                    <div class="o_ChatterTopbar_buttonClose" title="Close" t-on-click="_onClickClose">
+                    <div class="o_ChatterTopbar_buttonClose" title="Close" t-on-click="chatter.onClickChatterTopbarClose">
                         <i class="fa fa-times"/>
                     </div>
                 </t>
