@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_tax_form_inherit_form" model="ir.ui.view">
+            <field name="name">account.tax.form.inherit.form</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page name="info_cdfi" string="CFDI 3.3">
+                            <group cols="4">
+                                <group string="Datos del impuesto">
+                                    <field name="impuesto"/>
+                                    <field name="tipo_factor"/>
+                                    <field name="impuesto_local" attrs="{'invisible':[('impuesto','!=','004')]}"/>
+                                </group>
+                            </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+</odoo>

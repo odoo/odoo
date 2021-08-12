@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+        <template id="cfdi_payment_layout">
+			<!-- Multicompany -->
+			<t t-if="not o and doc">
+				<t t-set="o" t-value="doc" />
+			</t>
+			<t t-if="o and 'company_id' in o">
+				<t t-set="company" t-value="o.company_id"></t>
+			</t>
+			<t t-if="not o or not 'company_id' in o">
+				<t t-set="company" t-value="res_company"></t>
+			</t>
+        <div class="header">
+			<div class="row">
+				<div class="col-xs-9 text-left" style="margin-top:20px;"
+					t-field="company.report_header" />
+			</div>
+			<div class="row zero_min_height">
+				<div class="col-xs-12">
+					<div style="border-bottom: 1px solid black;"></div>
+				</div>
+			</div>
+        </div>
+
+        <div class="article o_report_layout_standard" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+			<t t-call="web.address_layout"/>
+            <t t-raw="0" />
+        </div>
+
+        <div class="footer">
+            <div class="text-center" style="border-top: 1px solid black;">
+                <ul class="list-inline mb4">
+	                <li t-if="company.phone" class="list-inline-item">Teléfono: <span t-field="company.phone"/></li>
+
+	                <li t-if="company.email" class="list-inline-item">&amp;bull;</li>
+	                <li t-if="company.email" class="list-inline-item">Correo Electrónico: <span t-field="company.email"/></li>
+
+	                <li t-if="company.website" class="list-inline-item">&amp;bull;</li>
+	                <li t-if="company.website" class="list-inline-item">Página web: <span t-field="company.website"/></li>
+                </ul>
+
+                <div name="financial_infos">
+                    <span t-field="company.report_footer"/>
+                </div>
+
+                <div class="text-muted">
+                    Page: <span class="page"/> / <span class="topage"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+		<template id="report_payment_document">
+			<t t-call="cdfi_invoice.cfdi_payment_layout">
+				<t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
+				<div class="page" style="padding-top: 10px; font-size=15px;">
+					<div class="row"  >
+
+					<div class="col-4">
+						<img t-if="o.company_id.logo" t-att-src="'data:image/png;base64,%s' % to_text(o.company_id.logo)"
+							style="max-height: 130px;max-width: 130px;" />
+					</div>
+						<div class="col-4" >
+							<div >
+								<strong>Emisor</strong>
+							</div>
+							<div>
+								<span t-field="o.company_id.nombre_fiscal" />
+
+							</div>
+								<div>
+								<span t-field="o.rfc_emisor" />
+								</div>
+								<div>
+								<strong>Regimen fiscal</strong>: <span t-field="o.company_id.regimen_fiscal" />
+								</div>
+						</div>
+						<div class="col-4">
+							<div>
+								<strong>Folio:</strong>
+								<strong><span t-if="not o.company_id.serie_complemento=='false'" t-field="o.company_id.serie_complemento" /></strong>
+								<span t-field="o.folio" />
+							</div>
+							<div>
+								<strong>Fecha emisión: </strong>
+								<span t-field="o.fecha_emision" />
+							</div>
+							<div>
+								<strong>Lugar de expedición: </strong>
+								<span t-field="o.company_id.partner_id.zip"/>
+							</div>
+							<div>
+								<strong>Tipo de comprobante: </strong>
+								<span t-field="o.tipo_comprobante" />
+							</div>
+						</div>
+					</div>
+					<div class="row" style="padding-top: 10px;">
+					<div  class="col-5">
+						<div >
+							<strong>Receptor</strong>
+						</div>
+						<div >
+								<span t-field="o.partner_id.name" />
+
+						     <div>
+						    	<span t-field="o.partner_id.rfc" />
+						     </div>
+							 <div>
+						    	Uso CFDI: P01
+						     </div>
+						</div>
+					</div>
+					<div class="col-6">
+							<div>
+									<strong>Número de certificado</strong>: <span t-field="o.numero_cetificado" />
+							</div>
+							<div>
+									<strong>Certificado SAT</strong>: <span t-field="o.cetificaso_sat" />
+							</div>
+							<div>
+									<strong>Folio fiscal</strong>: <span t-field="o.folio_fiscal" />
+							</div>
+							<div>
+									<strong>Fecha y hora de certificación</strong>: <span t-field="o.fecha_certificacion" />
+							</div>
+					</div>
+					</div>
+
+					<table class="table" font-size="15px;">
+						<t t-if="o.company_id.modo_prueba == True">
+			    			<div style="position:absolute;opacity:0.2;z-index:99;width:100%;text-align:center;">
+            					<center><span style="font-size:150px;color:red;">PAGO DE <br/>PRUEBA</span></center>
+            				</div>
+        				</t>
+						<thead>
+							<tr>
+								<th>Clave Producto</th>
+								<th class="text-right">Cantidad</th>
+								<th class="text-right">Unidad</th>
+								<th width="50%">Descripción</th>
+								<th class="text-right">Precio Unitario</th>
+								<th class="text-right">Importe</th>
+							</tr>
+						</thead>
+						<tbody class="invoice_tbody">
+							<tr style="page-break-inside: avoid">
+								<td>
+									84111506
+								</td>
+								<td class="text-right">
+									1
+								</td>
+								<td>
+									ACT
+								</td>
+								<td>
+									Pago
+								</td>
+
+								<td class="text-right">
+									$0.00
+								</td>
+								<td class="text-right">
+									$0.00
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<!--TABLA SUBTOTAL TOTAL-->
+					<div class="row" align="right">
+						<div class="col-4">
+							<table class="table table-sm" align="right;" >
+								<tr class="border-black">
+									<td>
+										<strong>Subtotal</strong>
+									</td>
+									<td class="text-right">
+									$0.00
+									</td>
+								</tr>
+								<tr></tr>
+								<tr class="border-black">
+									<td>
+										<strong>Total</strong>
+									</td>
+									<td class="text-right">
+									$0.00
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+
+
+					<!--TERMINA TABLA SUBTOTAL TOTAL-->
+
+					<t t-if="o.tipo_relacion">
+					  <div class="row">
+					    <div>
+					        <strong>CFDI Relacionado </strong>
+					    </div>
+					    <div>
+					        Tipo de Relación: <span t-field="o.tipo_relacion" />
+					    </div>
+					    <div>
+					        CFDI Relacionado: <span t-field="o.uuid_relacionado" />
+					    </div>
+					  </div>
+					</t>
+					<center><strong>Documentos Relacionados</strong></center>
+					<div class="row" style="border:solid 2px black;font-size:15px;">
+					<table class=	"borderless" cellspacing="0" style="width:100%;border:none;border-collapse:separate;border-spacing: 2px;">
+						<thead>
+							<tr>
+								<th>No. pago</th>
+								<th>Documento relacionado</th>
+								<th>Folio factura</th>
+								<th>Moneda</th>
+								<th>T/C</th>
+								<th>Método de pago</th>
+								<th>Saldo pendiente</th>
+								<th>Monto pagado</th>
+								<th>Saldo restante</th>
+							</tr>
+						</thead>
+						<tbody class="invoice_tbody">
+							<tr t-foreach="o.get_docto_relacionados(o)" t-as="row" style="page-break-inside: avoid">
+		                        <td>
+		                            <span t-esc="row.get('no_de_pago')"/>
+		                        </td>
+								<td>
+		                            <span t-esc="row.get('iddocumento')"/>
+		                        </td>
+								<td>
+		                            <span t-esc="row.get('folio_facura')"/>
+		                        </td>
+								<td>
+		                            <span t-esc="row.get('moneda')"/>
+		                        </td>
+								<td>
+		                            <span t-esc="row.get('tipodecambio')"/>
+		                        </td>
+		                        <td>
+		                            <t t-if="row.get('methodo_pago')=='PUE'">Pago en una sola exibición</t>
+		                            <t t-if="row.get('methodo_pago')=='PPD'">Pago en parcialidades o diferido</t>
+		                        </td>
+		                        <td>
+		                            <span t-esc="row.get('saldo_pendiente')" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+		                        </td>
+		                        <td>
+		                            <span t-esc="row.get('monto_pagar')" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+		                        </td>
+		                        <td>
+		                            <span t-esc="row.get('saldo_restante')"  t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+		                        </td>
+							</tr>
+						</tbody>
+					</table>
+					</div>
+					<div><br/></div>
+
+
+					<!--TABLA DETALLES DEL DOCUMENTO-->
+					<center><strong>Detalles del documento</strong></center>
+					<div class="row" style="border:solid 2px black;font-size:15px;">
+						<table class="borderless" cellspacing="0"  style="width:100%;border:none;border-collapse:separate;border-spacing: 2px;">
+							<tr>
+								<td>
+									<strong>Forma de pago</strong>
+								</td>
+								<td >
+									<span t-field="o.forma_pago" />
+								</td>
+								<td>
+									<strong>Fecha de pago</strong>
+								</td>
+								<td >
+									<span t-field="o.fecha_pago" />
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<strong>Importe de Pago</strong>
+								</td>
+								<td >
+									<span t-esc="o.monto_pagar" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+								</td>
+							   <td>
+									<strong>Número de operación</strong>
+								</td>
+								<td >
+									<span t-field="o.numero_operacion" />
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<strong>Moneda</strong>
+								</td>
+								<td >
+									<span t-field="o.monedap" />
+								</td>
+								<td>
+									<strong>Tipo de cambio</strong>
+								</td>
+								<td >
+									<t t-if="o.monedap!='MXN'">
+										<span t-esc="'{0:,.2f}'.format((1/float(o.currency_id.rate)))"/>
+									</t>
+									<t t-if="o.monedap=='MXN'">
+										<span t-field="o.tipocambiop"/>
+									</t>
+
+									<!--<span t-field="o.tipocambiop" /> -->
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div><br/></div>
+					<t t-if="o.banco_emisor and o.banco_receptor and (o.forma_pago == '03' or o.forma_pago == '02')">
+					<center><strong>Detalles bancarios</strong></center>
+					<div class="row" style="border:solid 2px black;font-size:12px;">
+						<table class="borderless" cellspacing="0"  style="width:100%;border:none;border-collapse:separate;border-spacing: 2px;">
+							<tr>
+								<td>
+									<strong>Banco emisor</strong>
+								</td>
+								<td >
+									<span t-field="o.banco_emisor" />
+								</td>
+								<td>
+									<strong>Banco receptor</strong>
+								</td>
+								<td >
+									<span t-field="o.banco_receptor" />
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<strong>Cuenta bancaria emisor</strong>
+								</td>
+								<td >
+									<span t-field="o.cuenta_emisor.acc_number" />
+								</td>
+								<td>
+									<strong>Cuenta bancaria receptor</strong>
+								</td>
+								<td >
+									<span t-field="o.cuenta_beneficiario" />
+								</td>
+							</tr>
+						</table>
+					</div>
+					</t>
+					<div class="row" style="page-break-inside: avoid">
+						<!--INICIA CODIGO QR-->
+						<div class="col-xs-5">
+						<img t-if="o.qrcode_image" t-att-src="'data:image/png;base64,%s' % to_text(o.qrcode_image)"
+								style="height: 190px;width: 190px;padding-left:10px;" />
+						</div>
+						<!--TERMINA CODIGO QR-->
+
+						<div class="col-xs-7" style="font-size:13px;">
+							<div >
+								<strong>Cadena Original del Complemento digital del SAT</strong>
+								<span t-field="o.cadena_origenal" style="word-break:break-word;" />
+							</div>
+							<div>
+								<strong>Sello Digital del CFDI</strong>
+								<span t-field="o.selo_digital_cdfi" style="word-break:break-word;" />
+							</div>
+							<div>
+								<strong>Sello del SAT</strong>
+								<span t-field="o.selo_sat" style="word-break:break-word;" />
+							</div>
+						</div>
+					</div>
+
+					<br/>
+
+					<p>
+						<center>
+							<strong>ESTE DOCUMENTO ES UNA REPRESENTACIÓN IMPRESA DE UN CFDI</strong>
+						</center>
+					</p>
+				</div>
+			</t>
+		</template>
+
+		<template id="report_payment">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="cdfi_invoice.report_payment_document" t-lang="o.partner_id.lang" />
+				</t>
+			</t>
+		</template>
+
+
+		<report id="report_payments"
+				model="account.payment"
+				string="Complemento de Pago"
+        		        menu="True"
+				report_type="qweb-pdf"
+				name="cdfi_invoice.report_payment"
+				file="cdfi_invoice.report_payment"
+				paperformat="cdfi_invoice.paperformat_a4_landscape"/>
+
+	</data>
+</odoo>

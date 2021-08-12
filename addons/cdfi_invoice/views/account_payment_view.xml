@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+       <record model="ir.ui.view" id="view_account_payment_cfdi_inherit_form">
+            <field name="name">Account Payment CFDI</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <data>
+                	<button name="post" position="after">
+                        <button name="complete_payment" class="oe_highlight" attrs="{'invisible':['|',('estado_pago','in',('pago_correcto', 'factura_cancelada')),
+                                                                  ]}" string="Genera REP" type="object"/>
+                        <button name="send_payment" class="oe_highlight" attrs="{'invisible':[('estado_pago','!=','pago_correcto')]}" string="Enviar por correo-e" type="object"/>
+                        <button name="importar_incluir_cep" string="Incluir CEP" type="object" attrs="{'invisible':['|',('forma_pago','!=','03'),
+                                                         ('estado_pago','in',('pago_correcto', 'factura_cancelada'))]}"/>
+                        <button name="action_cfdi_cancel" type="object" string="Cancelar CFDI" attrs="{'invisible':['|',('estado_pago','in',('factura_cancelada','pago_no_enviado'))]}" 
+                                                          class="oe_highlight" groups="base.group_user" confirm="¿Esta seguro que quiere cancelar la factura?"/>
+                	</button>  <!-- ('factura_cfdi','=',False), -->
+                    <xpath expr="//sheet" position="inside">
+                    	<notebook >
+                            <page name="info_cdfi" string="CFDI 3.3" attrs="{'invisible':[('state','not in',['posted','reconciled'])]}">
+                                    <group cols="4">
+                                        <group string="Datos del comprobante">
+                                        	<field name="forma_pago"/>
+                                        	<field name="tipo_comprobante"/>
+                                        <!--	<field name="no_de_pago"/>-->
+                                        </group>
+                                        <group  string="Monto">
+                                            <label for="saldo_pendiente"/>
+                                            <div name="amount_div1" class="o_row">
+                                                 <field name="saldo_pendiente"/>
+                                                 <!--<field name="currency_id"/>-->
+                                            </div>
+                                            <label for="monto_pagar"/>
+                                            <div name="amount_div2" class="o_row">
+                                                 <field name="monto_pagar"/>
+                                                <!-- <field name="currency_id"/>-->
+                                            </div>
+                                        <!--	<field name="saldo_restante"/> -->
+                                        </group>
+                                    </group>
+                                    <separator  string="Datos del pago"/>
+                                    <group cols="4">
+                                        <group>
+                                            <field name="fecha_pago"/>
+                                            <field name="cuenta_emisor" domain="[('partner_id','=', partner_id)]" attrs="{'invisible':[('forma_pago','not in',('02','03'))]}"/>
+                                            <field name="banco_emisor"   attrs="{'invisible':[('forma_pago','not in',('02','03'))]}"/>
+                                            <field name="rfc_banco_emisor"  attrs="{'invisible':[('forma_pago','not in',('02','03'))]}"/>
+                                        </group>
+                                        <group>
+                                            <field name="numero_operacion" />
+                                            <field name="banco_receptor" attrs="{'invisible':[('forma_pago','not in',('02','03'))]}"/>
+                                            <field name="cuenta_beneficiario" attrs="{'invisible':[('forma_pago','not in',('02','03'))]}"/>
+                                            <field name="rfc_banco_receptor" attrs="{'invisible':[('forma_pago','not in',('02','03'))]}"/>
+                                        </group>
+                                    </group>
+                                    <group cols="4">
+                                        <group  string="CFDI Relacionados">
+                                            <field name="tipo_relacion"/>
+                                            <field name="uuid_relacionado"/>
+                                        </group>
+                                        <group  string="Detalles de Pago">
+                                            <field name="folio_fiscal"/>
+                                            <field name="confirmacion"/>
+                                            <field name="estado_pago"/>
+                                        </group>
+                                    </group>
+                             </page>
+                       </notebook>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        
+         <record model="ir.ui.view" id="view_account_payment_invoice_cfdi_inherit_form">
+            <field name="name">Account Payment cfdi</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_invoice_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <button name="action_validate_invoice_payment" position="after">
+                    	<button string='Validar y Generar REP' name="validate_complete_payment" type="object" class="btn-primary"/>
+                    </button>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_payment_inherit_tree" model="ir.ui.view">
+           <field name="name">account.payment.inherit.tree</field>
+           <field name="model">account.payment</field>
+           <field name="inherit_id" ref="account.view_account_payment_tree" />
+           <field name="arch" type="xml">
+              <field name="amount" position="after">
+                  <field name="estado_pago"/>
+              </field>
+           </field>
+        </record>
+
+	</data>
+</odoo>

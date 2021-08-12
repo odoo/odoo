@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="priority">5</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+				<xpath expr="//page[@name='sales']" position="after">
+					<page string="CFDI 3.3" name="datos_sat">
+						<group col="4">
+		                    <field name="unidad_medida" />
+		                    <field name="clave_unidad" />
+		                    <field name="clave_producto" />
+		                </group>
+                    </page>
+				</xpath>
+            </field>
+        </record>
+</odoo>

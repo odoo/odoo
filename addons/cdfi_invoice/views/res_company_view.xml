@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        
+        <!-- INHERIT view_company_form  --> 
+        <record id="Partner_form" model="ir.ui.view">
+            <field name="name">res.company.form.inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page name="info_cdfi" string="CFDI 3.3">
+                            <group cols="4"  string="Configuración">
+                                <group>
+                                    <field name="nombre_fiscal"/>
+                                    <field name="rfc"/>
+                                    <field name="serie_factura"/>
+                                    <field name="serie_complemento"/>
+                                    <field name="regimen_fiscal"/>
+                                </group>
+                                <group>
+                                    <field name="proveedor_timbrado"/>
+                                    <field name="factura_dir"/>
+                                    <field name="modo_prueba"/>
+                                </group>
+                            </group>
+                            <group cols="4"  string="Certificado Digital">
+                                <group>
+                                    <field name="archivo_cer"/>
+                                    <field name="archivo_key"/>
+                                    <field name="contrasena" password="1"/>
+                                    <button name="validar_csd"
+                                        string="Validar CSD" type="object" class="oe_edit_only oe_inline oe_highlight"/>
+                                    <button name="borrar_csd"
+                                        string="Borrar CSD" type="object" class="oe_edit_only oe_inline oe_highlight"/>
+                                </group>
+                                <group>
+                                    <field name="estado_csd" />
+                                    <field name="fecha_csd" />
+                                    <field name="aviso_csd" />
+                                    <button name="borrar_estado"
+                                        string="Borrar estado" type="object" class="oe_edit_only oe_inline oe_highlight"/>
+                                </group>
+                            </group>
+                            <group cols="4"  string="Timbres">
+                                <group>
+                                    <field name="saldo_timbres"/>
+                                    <field name="saldo_alarma"/>
+                                    <field name="correo_alarma"/>
+                                    <button name="button_dummy"
+                                        string="Revisar saldo" type="object" class="oe_edit_only oe_inline oe_highlight" style="margin-left: 10px;"/>
+                                </group>
+                                <group>
+                                </group>
+                            </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

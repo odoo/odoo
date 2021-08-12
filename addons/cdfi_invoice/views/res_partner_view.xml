@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+	<data>
+		<!-- INHERIT view_partner_form -->
+		<record id="view_partner_form" model="ir.ui.view">
+			<field name="name">res.partner.form.inherit</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+				<field name="website" position="after">
+					<field name="rfc" />
+				</field>
+	            <xpath expr="//notebook" position="inside">
+	                <page name="info_cdfi" string="CFDI 3.3">
+	                        <group cols="4">
+	                            <group string="Preferencias de factura">
+	                            	<field name="uso_cfdi"/>
+	                            </group>
+	                            <group string="Detalles extranjero">
+	                            	<field name="residencia_fiscal"/>
+	                            	<field name="registro_tributario"/>
+	                            </group>
+	                        </group>
+	                </page>
+	            </xpath>
+			</field>
+		</record>
+	</data>
+</odoo>

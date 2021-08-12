@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <record id="view_purchase_order_form_extended" model="ir.ui.view">
+        <field name="name">purchase.order.form.extended</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                    <page name="info_cdfi" string="CFDI 3.3">
+                            <group cols="4">
+                                <group string="Detalles de Pago">
+                                	<field name="forma_pago"/>
+                                	<field name="methodo_pago"/>
+                                	<field name="uso_cfdi"/>
+                                </group><!--
+                                <group  string="Detalles de Factura">
+                                	<field name="tipo_comprobante"/>
+                                	<field name="folio_fiscal"/>
+                                	<field name="estado_factura"/>
+               		                <field name="tipocambio"/>
+                                </group>
+					            <group  string="CFDI Relacionados">
+                                	<field name="tipo_relacion"/>
+                                	<field name="uuid_relacionado"/>
+                                </group>
+								<group  string="Sellos SAT">
+                                	<field name="numero_cetificado"/>
+                                	<field name="cetificaso_sat"/>
+									<field name="fecha_certificacion"/>
+									<field name="cadena_origenal"/>
+									<field name="selo_digital_cdfi"/>
+									<field name="selo_sat"/>
+                                </group> -->
+                            </group>
+                    </page>
+                </xpath>
+                <field name="currency_id" position="after">
+                	<field name="factura_cfdi" invisible="1"/>
+                </field>
+        </field>
+    </record>
+		<!--
+	<record id="purchase.purchase_view_tree" model="ir.ui.view">
+        <field name="name">purchase project</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+        <field name="arch" type="xml">
+        	<field name="name" position="after">
+				<field name="titulo_po"/>
+			</field>
+        </field>
+    </record>
+		-->
+    </data>
+</odoo>

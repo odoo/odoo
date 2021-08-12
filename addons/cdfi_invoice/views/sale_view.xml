@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="view_sale_order_form_inherit" model="ir.ui.view">
+		<field name="name">sale.order.form.inherit</field>
+		<field name="model">sale.order</field>
+		<field name="inherit_id" ref="sale.view_order_form" />
+		<field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="info_cdfi" string="CFDI 3.3">
+                        <group cols="4">
+                            <group string="Detalles de Pago">
+                            	<field name="forma_pago"/>
+                            	<field name="methodo_pago"/>
+                            	<field name="uso_cfdi"/>
+                            </group>
+                        </group>
+                </page>
+            </xpath>
+		</field>
+	</record>
+</odoo>

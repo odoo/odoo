@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="view_import_xml_payment_in_payment_form_view" model="ir.ui.view">
+            <field name="name">Import XML Payment Form from Payment Form Button</field>
+            <field name="model">import.account.payment.from.xml</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <form string="Importar CEP">
+                	<group>
+                		<field name="import_file" required="1" filename="file_name"/>
+                		<field name="file_name" invisible="1"/>
+                		<field name="payment_id" invisible="1"/>
+                	</group>
+                	<footer>
+                        <button name="import_xml_file_button" string="Importar" type="object" class="oe_highlight" invisible="context.get('invoice_type')"/>
+                        <button name="import_xml_file_button_cargar" string="Importar" type="object" class="oe_highlight" invisible="not context.get('invoice_type')"/> 
+                        <button string="Cancelar" class="oe_highlight" special="cancel" />
+                    </footer>
+               </form>
+            </field>
+        </record>
+        
+       <act_window id="action_invoice_carger"
+            name="Cargar XML"
+            src_model="account.invoice"
+            res_model="import.account.payment.from.xml"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" 
+            target="new"
+            context="{
+                        'invoice_type': 'cargar',
+                        }"
+            />
+        
+    </data>
+</odoo>

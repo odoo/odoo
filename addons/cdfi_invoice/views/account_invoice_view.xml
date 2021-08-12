@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+    <record id="view_invoice_inherit_tree" model="ir.ui.view">
+        <field name="name">account.invoice.inherit.tree</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_tree" />
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+            	<field name="estado_factura" string="Estado CFDI"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_invoice_inherit_form" model="ir.ui.view">
+            <field name="name">account.invoice.inherit.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page name="info_cdfi" string="CFDI 3.3">
+                            <group cols="4">
+                                <group string="Detalles de Pago">
+                                    <field name="forma_pago"/>
+                                    <field name="methodo_pago"/>
+                                    <field name="uso_cfdi"/>
+                                </group>
+                                <group  string="Detalles de Factura">
+                                    <field name="tipo_comprobante"/>
+                                    <field name="folio_fiscal"/>
+                                    <field name="confirmacion"/>
+                                    <field name="estado_factura"/>
+                                    <field name="fecha_factura"/>
+                                </group>
+                                <group  string="CFDI Relacionados">
+                                    <field name="tipo_relacion"/>
+                                    <field name="uuid_relacionado"/>
+                                </group>
+                            </group>
+                    </page>
+                </xpath>
+                <field name="payment_term_id" position="after">
+                	<field name="factura_cfdi" invisible="1"/>
+                </field>
+                <button name="action_invoice_sent" position="before">
+                	<button name="action_invoice_sent" type="object" string="Enviar por correo-e" attrs="{'invisible':[('state', 'not in', ('cancel'))]}" groups="base.group_user"/>
+                </button>
+                <button name="action_invoice_draft" position="before">
+                    <button name="action_cfdi_generate" type="object" string="Generar CFDI" 
+                            attrs="{'invisible':['|',('factura_cfdi','=',True), ('state','not in',('open', 'paid'))]}"
+                            class="oe_highlight" groups="base.group_user"/>
+                    <button name="action_cfdi_cancel"
+                            type="object" 
+                            string="Cancelar CFDI" 
+                            attrs="{'invisible':['|',('factura_cfdi','=',False), ('estado_factura','in',('solicitud_cancelar', 'factura_cancelada', 'solicitud_rechazada'))]}" 
+                            class="oe_highlight" 
+                            groups="base.group_user"
+                            confirm="¿Esta seguro que quiere cancelar la factura?"/>
+                    <button name="action_cfdi_rechazada"
+                            type="object" 
+                            string="Cambiar estado CFDI a factura correcta" 
+                            attrs="{'invisible':['|',('factura_cfdi','=',False), ('estado_factura','not in',('solicitud_cancelar', 'solicitud_rechazada'))]}" 
+                            class="oe_highlight" 
+                            groups="base.group_user"
+                            confirm="La factura va pasar a estado correcto y puede intentar cancelar nuevamente."/>
+                </button>
+            </field>
+        </record>
+        
+   <record id="action_generate_fcdi" model="ir.actions.server">
+    	<field name="name">Generar CFDI</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="model_id" ref="account.model_account_invoice"/>
+        <field name="binding_model_id" ref="account.model_account_invoice"/>
+        <field name="code">
+				records.action_generate_cfdi()
+        </field>
+    </record>
+        
+</odoo>

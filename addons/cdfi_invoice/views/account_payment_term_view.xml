@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo>
+	<data>
+		<!-- INHERIT view_partner_form -->
+		<record id="view_payment_term_form" model="ir.ui.view">
+			<field name="name">res.payment.term.inherit</field>
+			<field name="model">account.payment.term</field>
+			<field name="inherit_id" ref="account.view_payment_term_form" />
+			<field name="arch" type="xml">
+				<field name="note" position="after">
+					<group cols="4" string="Factura CFDI 3.3">
+					<field name="methodo_pago" />
+					</group>
+				</field>
+			</field>
+		</record>
+	</data>
+</odoo>
