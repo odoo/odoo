@@ -22,7 +22,7 @@ class TestMailActivityMixin(MailCommon):
         cls.activity_type_1 = cls.env['mail.activity.type'].create({
             'name': 'Calendar Activity Test Default',
             'summary': 'default activity',
-            'res_model_id': cls.env['ir.model']._get('base.res_partner').id,
+            'res_model': 'res.partner',
         })
         cls.env['ir.model.data'].create({
             'name': cls.activity_type_1.name.lower().replace(' ', '_'),

@@ -16,24 +16,24 @@
                             <field name="active" invisible="1"/>
                             <field name="category"/>
                             <field name="default_user_id" options="{'no_create': True, 'no_edit': True}" domain="[('share', '=', False)]"/>
-                            <field name="res_model_id" groups="base.group_no_one"/>
+                            <field name="res_model" groups="base.group_no_one"/>
                             <field name="res_model_change" invisible="1"/>
-                            <field name="initial_res_model_id" invisible="1"/>
+                            <field name="initial_res_model" invisible="1"/>
                             <field name="summary"/>
                             <field name="icon" groups="base.group_no_one"/>
                             <field name="decoration_type" groups="base.group_no_one"/>
                         </group>
                         <group name="activity_planning" string="Next Activity">
                             <field name="chaining_type" attrs="{'invisible': [('category', '=', 'upload_file')]}"/>
-                            <field name="triggered_next_type_id" options="{'no_open': True}" context="{'default_res_model_id': res_model_id}"
+                            <field name="triggered_next_type_id" options="{'no_open': True}" context="{'default_res_model': res_model}"
                                 attrs="{'required': ['&amp;', ('chaining_type', '=', 'trigger'), ('category', '!=', 'upload_file')],
                                 'invisible': ['&amp;', ('chaining_type', '=', 'suggest'), ('category', '!=', 'upload_file')]}"/>
-                            <field name="suggested_next_type_ids" widget="many2many_tags" context="{'default_res_model_id': res_model_id}"
+                            <field name="suggested_next_type_ids" widget="many2many_tags" context="{'default_res_model': res_model}"
                                 attrs="{'invisible': ['|', ('chaining_type', '=', 'trigger'), ('category', '=', 'upload_file')]}"/>
                             <field name="mail_template_ids" widget="many2many_tags"
-                                domain="[('model_id', '=', res_model_id)]"
-                                attrs="{'invisible': [('res_model_id', '=', False)]}"
-                                context="{'default_model_id': res_model_id}"/>
+                                domain="[('model_id.model', '=', res_model)]"
+                                attrs="{'invisible': [('res_model', '=', False)]}"
+                                context="{'default_model': res_model}"/>
                             <label for="delay_count"/>
                             <div>
                                 <div class="o_row">
@@ -73,7 +73,7 @@
                 <field name="summary"/>
                 <field name="delay_label" string="Planned in" class="text-right"/>
                 <field name="delay_from" string="Type"/>
-                <field name="res_model_id" groups="base.group_no_one"/>
+                <field name="res_model" groups="base.group_no_one"/>
                 <field name="icon" groups="base.group_no_one"/>
             </tree>
         </field>
@@ -168,7 +168,7 @@
         <field name="model">mail.activity</field>
         <field name="arch" type="xml">
             <search string="Activity">
-                <field name="res_model_id"/>
+                <field name="res_model"/>
                 <field name="summary"/>
                 <field name="activity_type_id"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
