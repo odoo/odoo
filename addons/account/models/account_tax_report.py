@@ -102,7 +102,7 @@ class AccountTaxReportLine(models.Model):
     tag_ids = fields.Many2many(string="Tags", comodel_name='account.account.tag', relation='account_tax_report_line_tags_rel', help="Tax tags populating this line")
     report_action_id = fields.Many2one(string="Report Action", comodel_name='ir.actions.act_window', help="The optional action to call when clicking on this line in accounting reports.")
     children_line_ids = fields.One2many(string="Children Lines", comodel_name='account.tax.report.line', inverse_name='parent_id', help="Lines that should be rendered as children of this one")
-    parent_id = fields.Many2one(string="Parent Line", comodel_name='account.tax.report.line')
+    parent_id = fields.Many2one(string="Parent", comodel_name='account.tax.report.line')
     sequence = fields.Integer(string='Sequence', required=True,
         help="Sequence determining the order of the lines in the report (smaller ones come first). This order is applied locally per section (so, children of the same line are always rendered one after the other).")
     parent_path = fields.Char(index=True, unaccent=False)
@@ -114,7 +114,8 @@ class AccountTaxReportLine(models.Model):
     # fields used in specific localization reports, where a report line isn't simply the given by the sum of account.move.line with selected tags
     code = fields.Char(string="Code", help="Optional unique code to refer to this line in total formulas")
     formula = fields.Char(string="Formula", help="Python expression used to compute the value of a total line. This field is mutually exclusive with tag_name, setting it turns the line to a total line. Tax report line codes can be used as variables in this expression to refer to the balance of the corresponding lines in the report. A formula cannot refer to another line using a formula.")
-
+    hide_if_zero = fields.Boolean(default=False)
+    hide_if_empty = fields.Boolean(default=False)
     # fields used to carry over amounts between periods
 
     # The selection should be filled in localizations using the system

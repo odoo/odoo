@@ -99,15 +99,19 @@
                         <field name="name"/>
                     </group>
                     <group>
-                        <group>
+                        <group string="Main Info">
                             <field name="sequence" invisible="1"/>
                             <field name="tag_name"/>
                             <field name="code"/>
-                        </group>
-                        <group>
-                            <field name="report_id" invisible="1"/>
                             <field name="parent_id" readonly="1"/>
+                        </group>
+                        <group string="Computation">
+                            <field name="report_id" invisible="1"/>
                             <field name="formula"/>
+                        </group>
+                        <group string="Cosmetics" >
+                            <field name="hide_if_zero"/>
+                            <field name="hide_if_empty"/>
                         </group>
                     </group>
                     <group string="Carryover">
