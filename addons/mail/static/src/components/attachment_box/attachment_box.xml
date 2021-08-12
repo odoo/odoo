@@ -26,10 +26,10 @@
                         attachmentsDetailsMode="'hover'"
                         attachmentsImageSize="'small'"
                         showAttachmentsFilenames="true"
-                        t-on-o-attachment-removed="_onAttachmentRemoved"
+                        t-on-o-attachment-removed="thread.onAttachmentRemoved"
                     />
                 </t>
-                <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="_onClickAdd">
+                <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="thread.onClickAdd">
                     <i class="fa fa-plus-square"/>
                     Add attachments
                 </button>
@@ -40,7 +40,7 @@
                     newAttachmentExtraData="newAttachmentExtraData"
                     uploadModel="thread.model"
                     uploadId="thread.id"
-                    t-on-o-attachment-created="_onAttachmentCreated"
+                    t-on-o-attachment-created="thread.onAttachmentCreated"
                     t-ref="fileUploader"
                 />
             </t>

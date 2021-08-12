@@ -7,6 +7,8 @@ import { AttachmentList } from '@mail/components/attachment_list/attachment_list
 import { DropZone } from '@mail/components/drop_zone/drop_zone';
 import { FileUploader } from '@mail/components/file_uploader/file_uploader';
 import { link } from '@mail/model/model_field_command';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -22,6 +24,8 @@ export class AttachmentBox extends Component {
         super(...args);
         this.isDropZoneVisible = useDragVisibleDropZone();
         useShouldUpdateBasedOnProps();
+        useComponentToModel({ fieldName: 'componentAttachementBox', modelName: 'mail.thread', propNameAsRecordLocalId: 'threadLocalId' });
+        useRefToModel({ fieldName: 'fileUploaderRef', modelName: 'mail.thread', propNameAsRecordLocalId: 'threadLocalId', refName: 'fileUploader' });
         useModels();
         /**
          * Reference of the file uploader.
@@ -56,34 +60,6 @@ export class AttachmentBox extends Component {
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onAttachmentCreated(ev) {
-        // FIXME Could be changed by spying attachments count (task-2252858)
-        this.trigger('o-attachments-changed');
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onAttachmentRemoved(ev) {
-        // FIXME Could be changed by spying attachments count (task-2252858)
-        this.trigger('o-attachments-changed');
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onClickAdd(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        this._fileUploaderRef.comp.openBrowserFileUploader();
-    }
 
     /**
      * @private

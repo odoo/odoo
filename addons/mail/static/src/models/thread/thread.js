@@ -16,6 +16,16 @@ function factory(dependencies) {
         /**
          * @override
          */
+        _created() {
+            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
+            this.onAttachmentCreated = this.onAttachmentCreated.bind(this);
+            this.onAttachmentRemoved = this.onAttachmentRemoved.bind(this);
+            this.onClickAdd = this.onClickAdd.bind(this);
+        }
+
+        /**
+         * @override
+         */
         _willCreate() {
             const res = super._willCreate(...arguments);
             /**
@@ -732,6 +742,32 @@ function factory(dependencies) {
         onClickMarkAsSeen(ev, message) {
             markEventHandled(ev, 'thread.markAsSeen');
             this.markAsSeen(message);
+        }
+
+
+        /**
+         * @param {Event} ev
+         */
+        onAttachmentCreated(ev) {
+            // FIXME Could be changed by spying attachments count (task-2252858)
+            this.componentAttachementBox.trigger('o-attachments-changed');
+        }
+
+        /**
+         * @param {Event} ev
+         */
+        onAttachmentRemoved(ev) {
+            // FIXME Could be changed by spying attachments count (task-2252858)
+            this.componentAttachementBox.trigger('o-attachments-changed');
+        }
+
+        /**
+         * @param {Event} ev
+         */
+        onClickAdd(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            this.fileUploaderRef.comp.openBrowserFileUploader();
         }
 
         /**
@@ -1712,6 +1748,7 @@ function factory(dependencies) {
             readonly: true,
             required: true,
         }),
+        componentAttachementBox: attr(),
         channel_type: attr(),
         /**
          * States the chat window related to this thread (if any).
@@ -1741,6 +1778,7 @@ function factory(dependencies) {
         displayName: attr({
             compute: '_computeDisplayName',
         }),
+        fileUploaderRef: attr(),
         followersPartner: many2many('mail.partner', {
             related: 'followers.partner',
         }),
