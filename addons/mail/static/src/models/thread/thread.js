@@ -8,6 +8,7 @@ import throttle from '@mail/utils/throttle/throttle';
 import Timer from '@mail/utils/timer/timer';
 import { cleanSearchTerm } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
+import { markEventHandled } from '@mail/utils/utils';
 
 import { str_to_datetime } from 'web.time';
 

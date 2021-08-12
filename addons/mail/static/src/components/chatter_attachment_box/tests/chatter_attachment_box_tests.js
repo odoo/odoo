@@ -17,8 +17,8 @@ const { createFile } = file;
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('attachment_box', {}, function () {
-QUnit.module('attachment_box_tests.js', {
+QUnit.module('chatter_attachment_box', {}, function () {
+QUnit.module('chatter_attachment_box_tests.js', {
     beforeEach() {
         beforeEach(this);
 
@@ -32,7 +32,7 @@ QUnit.module('attachment_box_tests.js', {
                 chatterLocalId: chatter.localId,
                 ...otherProps,
             };
-            await createRootMessagingComponent(this, "AttachmentBox", {
+            await createRootMessagingComponent(this, "ChatterAttachmentBox", {
                 props,
                 target: this.widget.el,
             });
@@ -62,12 +62,12 @@ QUnit.test('base empty rendering', async function (assert) {
     });
     await this.createAttachmentBoxComponent(thread);
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox`).length,
+        document.querySelectorAll(`.o_ChatterAttachmentBox`).length,
         1,
         "should have an attachment box"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox_buttonAdd`).length,
+        document.querySelectorAll(`.o_ChatterAttachmentBox_buttonAdd`).length,
         1,
         "should have a button add"
     );
@@ -77,7 +77,7 @@ QUnit.test('base empty rendering', async function (assert) {
         "should have a file input"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_ChatterAttachmentBox .o_AttachmentCard`).length,
         0,
         "should not have any attachment"
     );
@@ -119,12 +119,12 @@ QUnit.test('base non-empty rendering', async function (assert) {
         "should have fetched attachments"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox`).length,
+        document.querySelectorAll(`.o_ChatterAttachmentBox`).length,
         1,
         "should have an attachment box"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox_buttonAdd`).length,
+        document.querySelectorAll(`.o_ChatterAttachmentBox_buttonAdd`).length,
         1,
         "should have a button add"
     );
@@ -134,7 +134,7 @@ QUnit.test('base non-empty rendering', async function (assert) {
         "should have a file input"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_attachmentBox_attachmentList`).length,
+        document.querySelectorAll(`.o_ChatterAttachmentBox_attachmentList`).length,
         1,
         "should have an attachment list"
     );
@@ -159,39 +159,39 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
         }),
     ];
     assert.strictEqual(
-        document.querySelectorAll('.o_AttachmentBox').length,
+        document.querySelectorAll('.o_ChatterAttachmentBox').length,
         1,
         "should have an attachment box"
     );
 
     await afterNextRender(() =>
-        dragenterFiles(document.querySelector('.o_AttachmentBox'))
+        dragenterFiles(document.querySelector('.o_ChatterAttachmentBox'))
     );
     assert.ok(
-        document.querySelector('.o_AttachmentBox_dropZone'),
+        document.querySelector('.o_ChatterAttachmentBox_dropZone'),
         "should have a drop zone"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_ChatterAttachmentBox .o_AttachmentCard`).length,
         0,
         "should have no attachment before files are dropped"
     );
 
     await afterNextRender(() =>
         dropFiles(
-            document.querySelector('.o_AttachmentBox_dropZone'),
+            document.querySelector('.o_ChatterAttachmentBox_dropZone'),
             files
         )
     );
 
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_ChatterAttachmentBox .o_AttachmentCard`).length,
         1,
         "should have 1 attachment in the box after files dropped"
     );
 
     await afterNextRender(() =>
-        dragenterFiles(document.querySelector('.o_AttachmentBox'))
+        dragenterFiles(document.querySelector('.o_ChatterAttachmentBox'))
     );
     const file1 = await createFile({
         content: 'hello, world',
@@ -205,12 +205,12 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
     });
     await afterNextRender(() =>
         dropFiles(
-            document.querySelector('.o_AttachmentBox_dropZone'),
+            document.querySelector('.o_ChatterAttachmentBox_dropZone'),
             [file1, file2]
         )
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_ChatterAttachmentBox .o_AttachmentCard`).length,
         3,
         "should have 3 attachments in the box after files dropped"
     );

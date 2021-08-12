@@ -32,6 +32,8 @@ function factory(dependencies) {
             this._attachmentsLoaderTimeout = undefined;
             this._isPreparingAttachmentsLoading = undefined;
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
+            this.onAttachmentCreated = this.onAttachmentCreated.bind(this);
+            this.onAttachmentRemoved = this.onAttachmentRemoved.bind(this);
             this.onClickActivityBoxTitle = this.onClickActivityBoxTitle.bind(this);
             this.onClickButtonAttachments = this.onClickButtonAttachments.bind(this);
             this.onClickChatterTopbarClose = this.onClickChatterTopbarClose.bind(this);
@@ -39,6 +41,7 @@ function factory(dependencies) {
             this.onClickScheduleActivity = this.onClickScheduleActivity.bind(this);
             this.onClickSendMessage = this.onClickSendMessage.bind(this);
             this.onScrollScrollPanel = this.onScrollScrollPanel.bind(this);
+            this.onClickAdd = this.onClickAdd.bind(this);
         }
 
         /**
@@ -57,6 +60,33 @@ function factory(dependencies) {
             if (this.composerView) {
                 this.composerView.update({ doFocus: true });
             }
+        }
+
+        /**
+         * Handle the attachment created event.
+         */
+        onAttachmentCreated() {
+            // FIXME Could be changed by spying attachments count (task-2252858)
+            this.attachementBoxComponent.trigger('o-attachments-changed');
+        }
+
+        /**
+         * Handle the attachment removed event.
+         */
+        onAttachmentRemoved() {
+            // FIXME Could be changed by spying attachments count (task-2252858)
+            this.attachementBoxComponent.trigger('o-attachments-changed');
+        }
+
+        /**
+         * Handle click on "add attachment"
+         *
+         * @param {Event} ev
+         */
+        onClickAdd(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            this.fileUploaderRef.comp.openBrowserFileUploader();
         }
 
         /**
@@ -334,6 +364,14 @@ function factory(dependencies) {
         context: attr({
             default: {},
         }),
+        /**
+         * States the OWL attachment box component for this thread.
+         */
+        attachementBoxComponent: attr(),
+        /**
+         * States the OWL ref of the "fileUploader" of this thread.
+         */
+        fileUploaderRef: attr(),
         /**
          * Determines whether `this` should display an activity box.
          */
