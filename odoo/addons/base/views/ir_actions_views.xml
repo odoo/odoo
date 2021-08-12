@@ -325,8 +325,8 @@
                                         <h3>Help with Python expressions</h3>
                                         <p>Various fields may use Python code or Python expressions. The following variables can be used:</p>
                                         <ul>
-                                            <li><code>env</code>: Odoo Environment on which the action is triggered</li>
-                                            <li><code>model</code>: Odoo Model of the record on which the action is triggered; is a void recordset</li>
+                                            <li><code>env</code>: ERPmyes Environment on which the action is triggered</li>
+                                            <li><code>model</code>: ERPymes Model of the record on which the action is triggered; is a void recordset</li>
                                             <li><code>record</code>: record on which the action is triggered; may be be void</li>
                                             <li><code>records</code>: recordset of all records on which the action is triggered in multi mode; may be void</li>
                                             <li><code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>timezone</code>: useful Python libraries</li>
@@ -447,7 +447,7 @@ env['res.partner'].create({'name': partner_name})
             <field name="res_model">ir.actions.todo</field>
             <field name="view_id" ref="ir_actions_todo_tree"/>
             <field name="view_type">form</field>
-            <field name="help">The configuration wizards are used to help you configure a new instance of Odoo. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
+            <field name="help">The configuration wizards are used to help you configure a new instance of ERPymes. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
         </record>
         <menuitem id="menu_ir_actions_todo_form" action="act_ir_actions_todo_form" parent="base.next_id_6"/>
         <record id="action_run_ir_action_todo" model="ir.actions.server">
