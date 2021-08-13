@@ -15,14 +15,14 @@ class AccountTestInvoicingCommon(TransactionCase):
         return record and record.copy()
 
     @classmethod
-    def copy_account(cls, account):
+    def copy_account(cls, account, default=None):
         suffix_nb = 1
         while True:
             new_code = '%s (%s)' % (account.code, suffix_nb)
             if account.search_count([('company_id', '=', account.company_id.id), ('code', '=', new_code)]):
                 suffix_nb += 1
             else:
-                return account.copy(default={'code': new_code})
+                return account.copy(default={**(default or {}), 'code': new_code})
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
