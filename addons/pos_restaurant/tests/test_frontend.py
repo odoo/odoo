@@ -103,7 +103,7 @@ class TestFrontend(odoo.tests.HttpCase):
         cash_journal = self.env['account.journal'].create({
             'name': 'Cash Test',
             'code': 'TCJ',
-            'type': 'sale',
+            'type': 'cash',
             'company_id': main_company.id
             })
 
@@ -114,8 +114,7 @@ class TestFrontend(odoo.tests.HttpCase):
                 'name': 'Cash restaurant',
                 'split_transactions': True,
                 'receivable_account_id': account_receivable.id,
-                'is_cash_count': True,
-                'cash_journal_id': cash_journal.id,
+                'journal_id': cash_journal.id,
             })],
         })
 
