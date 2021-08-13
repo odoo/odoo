@@ -23,6 +23,7 @@
 
 import datetime
 
+import locale
 import collections
 import dateutil
 import functools
@@ -5663,6 +5664,30 @@ class Model(AbstractModel):
     _register = False           # not visible in ORM registry, meant to be python-inherited only
     _abstract = False           # not abstract
     _transient = False          # not transient
+
+    def get_locale_value(self, original_value, company=False):
+        """Definimos o locale como monetary de modo a formatar os valores
+        monetarios de acordo com a região do usuário ativo.
+
+        Arguments:
+            original_value {float} -- Valor a ser formatado de acordo com
+                                    o locale.
+
+        Returns:
+            str -- Valor formatado para moeda do usuário.
+        """
+        user_locale = self.env.user.lang
+        user_locale_format = user_locale + '.utf8'
+        try:
+            locale.setlocale(locale.LC_MONETARY, user_locale_format)
+        except locale.Error:
+            locale.setlocale(locale.LC_MONETARY, 'en_US.utf8')
+        try:
+            value = '{}'.format(locale.currency(original_value, grouping=True))
+        except AttributeError:
+            value = ''
+
+        return value
 
 class TransientModel(Model):
     """ Model super-class for transient records, meant to be temporarily
