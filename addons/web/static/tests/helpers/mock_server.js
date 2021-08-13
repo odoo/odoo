@@ -942,7 +942,9 @@ export class MockServer {
             fieldNames = Object.keys(model.fields);
         }
         fieldNames = [...new Set(fieldNames.concat(["id"]))];
-        let records = this.getRecords(params.model, params.domain || []);
+        const { context } = params;
+        const active_test = context && "active_test" in context ? context.active_test : true;
+        let records = this.getRecords(params.model, params.domain || [], { active_test });
         if (params.sort) {
             // warning: only consider first level of sort
             params.sort = params.sort.split(",")[0];
