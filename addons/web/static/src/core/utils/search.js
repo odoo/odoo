@@ -1,5 +1,7 @@
 /** @odoo-module */
 
+import { unaccent } from "./strings";
+
 /**
  * This private function computes a score that represent the fact that the
  * string contains the pattern, or not
@@ -17,8 +19,8 @@ function match(pattern, str) {
     let len = str.length;
     let patternIndex = 0;
 
-    pattern = pattern.toLowerCase();
-    str = str.toLowerCase();
+    pattern = unaccent(pattern, false);
+    str = unaccent(str, false);
 
     for (let i = 0; i < len; i++) {
         if (str[i] === pattern[patternIndex]) {
