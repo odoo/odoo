@@ -560,6 +560,13 @@ def email_domain_extract(email):
         return normalized_email.split('@')[1]
     return False
 
+def email_domain_normalize(domain):
+    """Return the domain normalized or False if the domain is invalid."""
+    if not domain or '@' in domain:
+        return False
+
+    return domain.lower()
+
 def url_domain_extract(url):
     """ Extract the company domain to be used by IAP services notably. Domain
     is extracted from an URL e.g:
