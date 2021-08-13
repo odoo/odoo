@@ -656,7 +656,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
               'qty': 1,
               'tax_ids': [(6, 0, self.whiteboard_pen.taxes_id.ids)]}]],
            'name': 'Order 00043-003-0014',
-           'partner_id': False,
+           'partner_id': self.partner1.id,
            'pos_session_id': current_session.id,
            'sequence_number': self.pos_config.journal_id.id,
            'statement_ids': [[0,
