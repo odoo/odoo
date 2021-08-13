@@ -299,6 +299,20 @@ var MassMailingFieldHtml = FieldHtml.extend({
             }
         }
         this.wysiwyg.trigger('reload_snippet_dropzones');
+        this.trigger_up('iframe_updated', { $iframe: this.wysiwyg.$iframe });
+    },
+
+    /**
+     * @private
+     * @override
+     */
+    _toggleCodeView: function ($codeview) {
+        this._super(...arguments);
+        const isFullWidth = !!$(window.top.document).find('.o_mass_mailing_form_full_width')[0];
+        $codeview.css('height', isFullWidth ? $(window).height() : '');
+        if ($codeview.hasClass('d-none')) {
+            this.trigger_up('iframe_updated', { $iframe: this.wysiwyg.$iframe });
+        }
     },
 
     /**
@@ -330,11 +344,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
         this._super();
         this.wysiwyg.odooEditor.observerFlush();
         this.wysiwyg.odooEditor.resetHistory();
-        //this will make the editor take all the bottom space
-        this.wysiwyg.$iframe.css({
-            'min-height': '100vh',
-            width: '100%'
-        });
+        this.wysiwyg.$iframeBody.addClass('o_mass_mailing_iframe');
+        this.trigger_up('iframe_updated', { $iframe: this.wysiwyg.$iframe });
     },
     /**
      * @private
@@ -352,6 +363,15 @@ var MassMailingFieldHtml = FieldHtml.extend({
      */
     _onSnippetsLoaded: function (ev) {
         var self = this;
+        if (this.wysiwyg.snippetsMenu && $(window.top.document).find('.o_mass_mailing_form_full_width')[0]) {
+            // In full width form mode, ensure the snippets menu's scrollable is
+            // in the form view, not in the iframe.
+            this.wysiwyg.snippetsMenu.$scrollable = this.$el.closestScrollable();
+            // Ensure said scrollable keeps its scrollbar at all times to
+            // prevent the scrollbar from appearing at awkward moments (ie: when
+            // previewing an option)
+            this.wysiwyg.snippetsMenu.$scrollable.css('overflow-y', 'scroll');
+        }
         if (!this.$content) {
             this.snippetsLoaded = ev;
             return;
@@ -372,7 +392,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (!odoo.debug) {
             $snippetsSideBar.find('.o_codeview_btn').hide();
         }
-        const $codeview = this.$content.parent().find('textarea.o_codeview');
+        const $codeview = this.wysiwyg.$iframe.contents().find('textarea.o_codeview');
         $snippetsSideBar.on('click', '.o_codeview_btn', () => this._toggleCodeView($codeview));
 
         if ($themes.length === 0) {
@@ -429,8 +449,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (firstChoice) {
             $themeSelectorNew.appendTo(this.wysiwyg.$iframeBody);
         }
-
-        this.wysiwyg.$iframeBody.addClass("o_mass_mailing_iframe")
 
         /**
          * Add proposition to install enterprise themes if not installed.

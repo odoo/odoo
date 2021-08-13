@@ -1,4 +1,4 @@
-.o_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
+.o_form_view.o_mass_mailing_mailing_form .o_notebook .tab-content .tab-pane .o_mail_body {
     // cancel the padding of the form_sheet
     margin-top: -$o-sheet-cancel-hpadding;
     margin-left: -$o-sheet-cancel-hpadding;
@@ -11,6 +11,47 @@
         // cancel the padding of the form_sheet when breakpoints are reached
         margin-left: -$o-sheet-cancel-hpadding*2;
         margin-right: -$o-sheet-cancel-hpadding*2;
+    }
+}
+
+.o_form_view.o_mass_mailing_mailing_form.o_mass_mailing_form_full_width {
+    .o_form_statusbar {
+        margin-bottom: 0;
+
+        .o_statusbar_status {
+            border-left: solid $o-gray-300 1px;
+        }
+    }
+    .o_mass_mailing_mailing_group {
+        margin-top: $o-sheet-cancel-tpadding + 33px;
+    }
+    .o_mail_add_emoji {
+        float: none;
+        display: inline-block;
+        bottom: 0;
+    }
+    input.o_field_char.o_field_widget {
+        min-width: 86%;
+    }
+    .o_FormRenderer_chatterContainer {
+        margin: 0;
+        max-width: unset;
+        width: 100%;
+        border: solid $o-gray-300 1px;
+    }
+    .wysiwyg_iframe {
+        border: none;
+    }
+    .oe_button_box {
+        margin-top: unset;
+
+        > .btn.oe_stat_button {
+            max-width: 135px;
+            border-left: 1px solid $border-color;
+        }
+        > .o_dropdown_more {
+            width: 135px;
+        }
     }
 }
 
@@ -40,14 +81,27 @@
 }
 
 .o_form_view .o_group.o_inner_group.o_mass_mailing_mailing_group {
-    //used to gain extra space in form
+    // Used to gain extra space in form.
     display: block;
 }
 
-.o_mass_mailing_mailing_form {
+.o_mass_mailing_mailing_form:not(.o_mass_mailing_form_full_width) {
     .alert:not(.o_invisible_modifier) + .clearfix.position-relative.o_form_sheet {
         //hides extra space between form and alert messages
         margin-top: -12px;
+    }
+}
+
+.o_mass_mailing_mailing_form.o_mass_mailing_form_full_width .alert.alert-info:not(.o_invisible_modifier) {
+    margin: 0 0 0 12px;
+    flex: 1;
+    padding: unset;
+    border-left-width: 1px;
+    border-left-color: #dee2e6;
+
+    > div {
+        min-height: 100%;
+        padding: 6px;
     }
 }
 
