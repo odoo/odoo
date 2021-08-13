@@ -84,6 +84,20 @@ class TestMrpCommon(common2.TestStockCommon):
             'time_stop': 5,
             'time_efficiency': 80,
         })
+        cls.workcenter_2 = cls.env['mrp.workcenter'].create({
+            'name': 'Simple Workcenter',
+            'capacity': 1,
+            'time_start': 0,
+            'time_stop': 0,
+            'time_efficiency': 100,
+        })
+        cls.workcenter_3 = cls.env['mrp.workcenter'].create({
+            'name': 'Double Workcenter',
+            'capacity': 2,
+            'time_start': 0,
+            'time_stop': 0,
+            'time_efficiency': 100,
+        })
 
         cls.bom_1 = cls.env['mrp.bom'].create({
             'product_id': cls.product_4.id,
@@ -128,6 +142,45 @@ class TestMrpCommon(common2.TestStockCommon):
                 (0, 0, {'product_id': cls.product_5.id, 'product_qty': 2}),
                 (0, 0, {'product_id': cls.product_4.id, 'product_qty': 8}),
                 (0, 0, {'product_id': cls.product_2.id, 'product_qty': 12})
+            ]})
+        cls.bom_4 = cls.env['mrp.bom'].create({
+            'product_id': cls.product_6.id,
+            'product_tmpl_id': cls.product_6.product_tmpl_id.id,
+            'consumption': 'flexible',
+            'product_qty': 1.0,
+            'operation_ids': [
+                (0, 0, {'name': 'Rub it gently with a cloth', 'workcenter_id': cls.workcenter_2.id,
+                        'time_mode_batch': 1, 'time_mode': "auto", 'sequence': 1}),
+            ],
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': cls.product_1.id, 'product_qty': 1}),
+            ]})
+        cls.bom_5 = cls.env['mrp.bom'].create({
+            'product_id': cls.product_6.id,
+            'product_tmpl_id': cls.product_6.product_tmpl_id.id,
+            'consumption': 'flexible',
+            'product_qty': 1.0,
+            'operation_ids': [
+                (0, 0, {'name': 'Rub it gently with a cloth two at once', 'workcenter_id': cls.workcenter_3.id,
+                        'time_mode_batch': 2, 'time_mode': "auto", 'sequence': 1}),
+            ],
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': cls.product_1.id, 'product_qty': 1}),
+            ]})
+        cls.bom_6 = cls.env['mrp.bom'].create({
+            'product_id': cls.product_6.id,
+            'product_tmpl_id': cls.product_6.product_tmpl_id.id,
+            'consumption': 'flexible',
+            'product_qty': 1.0,
+            'operation_ids': [
+                (0, 0, {'name': 'Rub it gently with a cloth two at once', 'workcenter_id': cls.workcenter_3.id,
+                        'time_mode_batch': 1, 'time_mode': "auto", 'sequence': 1}),
+            ],
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': cls.product_1.id, 'product_qty': 1}),
             ]})
 
         cls.stock_location_14 = cls.env['stock.location'].create({
