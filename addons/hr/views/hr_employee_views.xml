@@ -42,6 +42,7 @@
                     <field name="active" invisible="1"/>
                     <field name="user_partner_id" invisible="1"/>
                     <field name="hr_presence_state" invisible="1"/>
+                    <field name="image_128" invisible="1" />
                     <header>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_manager"/>
                     </header>
@@ -252,6 +253,7 @@
                    <field name="user_id"/>
                    <field name="user_partner_id"/>
                    <field name="hr_icon_display"/>
+                   <field name="image_128" />
                    <templates>
                        <t t-name="kanban-box">
                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
