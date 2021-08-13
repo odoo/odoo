@@ -10,12 +10,15 @@
                     <img class="pos-logo" t-on-click="trigger('toggle-debug-widget')"
                          src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
                     <div class="status-button">
-                        <OrderManagementButton t-if="state.uiState === 'READY' and env.pos.config.manage_orders" />
+                        <OrderManagementButton t-if="state.uiState === 'READY' and env.pos.config.manage_orders"
+                                               isOrderManagerScreenShown="isOrderManagerScreenShown" />
                         <TicketButton isTicketScreenShown="isTicketScreenShown" />
                     </div>
                 </div>
                 <div class="pos-rightheader">
-                    <OrderManagementButton t-if="env.isMobile and state.uiState === 'READY' and env.pos.config.manage_orders" t-att-class="{ oe_hidden: state.mobileSearchBarIsShown }" />
+                    <OrderManagementButton t-if="env.isMobile and state.uiState === 'READY' and env.pos.config.manage_orders"
+                                           t-att-class="{ oe_hidden: state.mobileSearchBarIsShown }"
+                                           isOrderManagerScreenShown="isOrderManagerScreenShown" />
                     <TicketButton isTicketScreenShown="isTicketScreenShown" t-if="env.isMobile and !state.mobileSearchBarIsShown" />
                     <div class="search-bar-portal" />
                     <div class="status-buttons-portal" t-att-class="{ oe_hidden: state.mobileSearchBarIsShown }"/>
