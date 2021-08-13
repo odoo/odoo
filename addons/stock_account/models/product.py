@@ -617,7 +617,7 @@ class ProductProduct(models.Model):
             return 0.0
 
         returned_quantities = defaultdict(float)
-        for move in stock_moves:
+        for move in stock_moves.sudo():
             if move.origin_returned_move_id:
                 returned_quantities[move.origin_returned_move_id.id] += abs(sum(move.stock_valuation_layer_ids.mapped('quantity')))
         candidates = stock_moves\
