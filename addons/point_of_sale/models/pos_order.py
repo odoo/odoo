@@ -536,7 +536,6 @@ class PosOrder(models.Model):
         self.ensure_one()
         timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
         vals = {
-            'payment_reference': self.name,
             'invoice_origin': self.name,
             'journal_id': self.session_id.config_id.invoice_journal_id.id,
             'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
@@ -574,6 +573,7 @@ class PosOrder(models.Model):
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
             new_move.sudo().with_company(order.company_id)._post()
             moves += new_move
+            order._apply_invoice_payments()
 
         if not moves:
             return {}
@@ -593,6 +593,16 @@ class PosOrder(models.Model):
     # this method is unused, and so is the state 'cancel'
     def action_pos_order_cancel(self):
         return self.write({'state': 'cancel'})
+
+    def _apply_invoice_payments(self):
+        receivable_account = self.env["res.partner"]._find_accounting_partner(self.partner_id).property_account_receivable_id
+        payment_moves = self.payment_ids._create_payment_moves()
+        invoice_receivable = self.account_move.line_ids.filtered(lambda line: line.account_id == receivable_account)
+        # Reconcile the invoice to the created payment moves.
+        # But not when the invoice's total amount is zero because it's already reconciled.
+        if not invoice_receivable.reconciled and receivable_account.reconcile:
+            payment_receivables = payment_moves.mapped('line_ids').filtered(lambda line: line.account_id == receivable_account)
+            (invoice_receivable | payment_receivables).reconcile()
 
     @api.model
     def create_from_ui(self, orders, draft=False):
@@ -715,7 +725,7 @@ class PosOrder(models.Model):
         }
 
         if self.mapped('account_move'):
-            report = self.env.ref('point_of_sale.pos_invoice_report')._render_qweb_pdf(self.ids[0])
+            report = self.env.ref('account.account_invoices')._render_qweb_pdf(self.account_move.ids[0])
             filename = name + '.pdf'
             attachment = self.env['ir.attachment'].create({
                 'name': filename,

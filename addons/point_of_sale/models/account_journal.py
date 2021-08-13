@@ -7,4 +7,4 @@ from odoo import fields, models, api
 class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
-    pos_payment_method_ids = fields.One2many('pos.payment.method', 'cash_journal_id', string='Point of Sale Payment Methods')
+    pos_payment_method_ids = fields.One2many('pos.payment.method', 'journal_id', string='Point of Sale Payment Methods')

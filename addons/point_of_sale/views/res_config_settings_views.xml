@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
                 <div class="app_settings_block" data-string="Point of sale" string="Point of Sale" data-key="point_of_sale" groups="point_of_sale.group_pos_manager">
-                    <h2>Taxes</h2>
+                    <h2>Accounting</h2>
                     <div class="row mt16 o_settings_container" name="taxes_setting_container">
                         <div class="col-12 col-lg-6 o_setting_box"
                             id="default_sales_tax_setting"
@@ -25,6 +25,21 @@
                                 </div>
                                 <div class="mt8">
                                     <button name="%(account.action_tax_form)d" icon="fa-arrow-right" type="action" string="Taxes" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            groups="account.group_account_readonly"
+                            title="This account is used as intermediary account when nothing is set in a payment method.">
+                            <div class="o_setting_right_pane">
+                                <div>
+                                    <label string="Default Intermediary Account" for="sale_tax_id"/>
+                                    <div class="text-muted">
+                                        This account is used as intermediary account when nothing is set in a payment method.
+                                    </div>
+                                    <div class="content-group mt16">
+                                        <field name="account_default_pos_receivable_account_id" colspan="4" nolabel="1" domain="[('reconcile', '=', True), ('user_type_id.type', '=', 'receivable'), ('company_id', '=', company_id)]"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>

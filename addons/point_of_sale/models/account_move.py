@@ -8,6 +8,7 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     pos_order_ids = fields.One2many('pos.order', 'account_move')
+    pos_payment_ids = fields.One2many('pos.payment', 'account_move_id')
 
     def _stock_account_get_last_step_stock_moves(self):
         stock_moves = super(AccountMove, self)._stock_account_get_last_step_stock_moves()
@@ -40,6 +41,13 @@ class AccountMove(models.Model):
 
         return lot_values
 
+    def _get_reconciled_vals(self, partial, amount, counterpart_line):
+        """Add pos_payment_name field in the reconciled vals to be able to show the payment method in the invoice."""
+        result = super()._get_reconciled_vals(partial, amount, counterpart_line)
+        if counterpart_line.move_id.pos_payment_ids:
+            pos_payment = counterpart_line.move_id.pos_payment_ids
+            result['pos_payment_name'] = pos_payment.payment_method_id.name
+        return result
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
