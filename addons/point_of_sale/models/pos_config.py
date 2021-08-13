@@ -83,7 +83,7 @@ class PosConfig(models.Model):
         return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).pos_type_id.id
 
     def _default_sale_journal(self):
-        return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id), ('code', '=', 'POSS')], limit=1)
+        return self.env['account.journal'].search([('type', 'in', ('sale', 'general')), ('company_id', '=', self.env.company.id), ('code', '=', 'POSS')], limit=1)
 
     def _default_invoice_journal(self):
         return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
@@ -111,9 +111,9 @@ class PosConfig(models.Model):
         domain="[('code', '=', 'outgoing'), ('warehouse_id.company_id', '=', company_id)]",
         ondelete='restrict')
     journal_id = fields.Many2one(
-        'account.journal', string='Sales Journal',
-        domain=[('type', '=', 'sale')],
-        help="Accounting journal used to post sales entries.",
+        'account.journal', string='Point of Sale Journal',
+        domain=[('type', 'in', ('general', 'sale'))],
+        help="Accounting journal used to post POS session journal entries and POS invoice payments.",
         default=_default_sale_journal,
         ondelete='restrict')
     invoice_journal_id = fields.Many2one(
@@ -364,7 +364,7 @@ class PosConfig(models.Model):
     def _check_profit_loss_cash_journal(self):
         if self.cash_control and self.payment_method_ids:
             for method in self.payment_method_ids:
-                if method.is_cash_count and (not method.cash_journal_id.loss_account_id or not method.cash_journal_id.profit_account_id):
+                if method.is_cash_count and (not method.journal_id.loss_account_id or not method.journal_id.profit_account_id):
                     raise ValidationError(_("You need a loss and profit account on your cash journal."))
 
     @api.constrains('company_id', 'invoice_journal_id')
@@ -393,23 +393,9 @@ class PosConfig(models.Model):
         if any(
             self.payment_method_ids\
                 .filtered(lambda pm: pm.is_cash_count)\
-                .mapped(lambda pm: self.currency_id not in (self.company_id.currency_id | pm.cash_journal_id.currency_id))
+                .mapped(lambda pm: self.currency_id not in (self.company_id.currency_id | pm.journal_id.currency_id))
         ):
             raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
-
-    @api.constrains('payment_method_ids')
-    def _check_payment_method_receivable_accounts(self):
-        # This is normally not supposed to happen to have a payment method without a receivable account set,
-        # as this is a required field. However, it happens the receivable account cannot be found during upgrades
-        # and this is a bommer to block the upgrade for that point, given the user can correct this by himself,
-        # without requiring a manual intervention from our upgrade support.
-        # However, this must be ensured this receivable is well set before opening a POS session.
-        invalid_payment_methods = self.payment_method_ids.filtered(lambda method: not method.receivable_account_id)
-        if invalid_payment_methods:
-            method_names = ", ".join(method.name for method in invalid_payment_methods)
-            raise ValidationError(
-                _("You must configure an intermediary account for the payment methods: %s.") % method_names
-            )
 
     def _check_payment_method_ids(self):
         self.ensure_one()
@@ -642,7 +628,6 @@ class PosConfig(models.Model):
             self._check_currencies()
             self._check_profit_loss_cash_journal()
             self._check_payment_method_ids()
-            self._check_payment_method_receivable_accounts()
             self.env['pos.session'].create({
                 'user_id': self.env.uid,
                 'config_id': self.id
@@ -704,21 +689,24 @@ class PosConfig(models.Model):
             if pos_config.payment_method_ids or pos_config.has_active_session:
                 continue
             cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash')], limit=1)
-            pos_receivable_account = company.account_default_pos_receivable_account_id
+            bank_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'bank')], limit=1)
             payment_methods = self.env['pos.payment.method']
             if cash_journal:
                 payment_methods |= payment_methods.create({
                     'name': _('Cash'),
-                    'receivable_account_id': pos_receivable_account.id,
-                    'is_cash_count': True,
-                    'cash_journal_id': cash_journal.id,
+                    'journal_id': cash_journal.id,
+                    'company_id': company.id,
+                })
+            if bank_journal:
+                payment_methods |= payment_methods.create({
+                    'name': _('Bank'),
+                    'journal_id': bank_journal.id,
                     'company_id': company.id,
                 })
             payment_methods |= payment_methods.create({
-                'name': _('Bank'),
-                'receivable_account_id': pos_receivable_account.id,
-                'is_cash_count': False,
+                'name': _('Customer Account'),
                 'company_id': company.id,
+                'split_transactions': True,
             })
             pos_config.write({'payment_method_ids': [(6, 0, payment_methods.ids)]})
 
@@ -729,7 +717,7 @@ class PosConfig(models.Model):
             pos_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('code', '=', 'POSS')])
             if not pos_journal:
                 pos_journal = self.env['account.journal'].create({
-                    'type': 'sale',
+                    'type': 'general',
                     'name': 'Point of Sale',
                     'code': 'POSS',
                     'company_id': company.id,

@@ -42,11 +42,19 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
         }
         async _downloadInvoice(orderId) {
             try {
-                await this.env.pos.do_action('point_of_sale.pos_invoice_report', {
-                    additional_context: {
-                        active_ids: [orderId],
-                    },
+                const [orderWithInvoice] = await this.rpc({
+                    method: 'read',
+                    model: 'pos.order',
+                    args: [orderId, ['account_move']],
+                    kwargs: { load: false },
                 });
+                if (orderWithInvoice && orderWithInvoice.account_move) {
+                    await this.env.pos.do_action('account.account_invoices', {
+                        additional_context: {
+                            active_ids: [orderWithInvoice.account_move],
+                        },
+                    });
+                }
             } catch (error) {
                 if (error instanceof Error) {
                     throw error;

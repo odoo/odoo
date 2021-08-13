@@ -227,13 +227,26 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             return !this.error? 'ReceiptScreen' : 'ProductScreen';
         }
         async _isOrderValid(isForceValidate) {
-            if (this.currentOrder.get_orderlines().length === 0) {
+            if (this.currentOrder.get_orderlines().length === 0 && this.currentOrder.is_to_invoice()) {
                 this.showPopup('ErrorPopup', {
                     title: this.env._t('Empty Order'),
                     body: this.env._t(
-                        'There must be at least one product in your order before it can be validated'
+                        'There must be at least one product in your order before it can be validated and invoiced.'
                     ),
                 });
+                return false;
+            }
+
+            const splitPayments = this.paymentLines.filter(payment => payment.payment_method.split_transactions)
+            if (splitPayments.length && !this.currentOrder.get_client()) {
+                const paymentMethod = splitPayments[0].payment_method
+                const { confirmed } = await this.showPopup('ConfirmPopup', {
+                    title: this.env._t('Customer Required'),
+                    body: _.str.sprintf(this.env._t('Customer is required for %s payment method.'), paymentMethod.name),
+                });
+                if (confirmed) {
+                    this.selectClient();
+                }
                 return false;
             }
 
