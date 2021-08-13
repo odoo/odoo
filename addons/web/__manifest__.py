@@ -92,6 +92,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/core/utils/transitions.scss',
             'web/static/src/core/**/*',
             'web/static/src/fields/**/*',
+            'web/static/src/search/**/*',
             'web/static/src/views/**/*',
             'web/static/src/webclient/**/*',
             ('remove', 'web/static/src/webclient/clickbot/clickbot.js'), # lazy loaded
@@ -110,7 +111,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/tooltip.scss',
             'web/static/src/legacy/scss/switch_company_menu.scss',
             'web/static/src/legacy/scss/ace.scss',
-            'web/static/src/legacy/scss/control_panel.scss',
             'web/static/src/legacy/scss/fields.scss',
             'web/static/src/legacy/scss/file_upload.scss',
             'web/static/src/legacy/scss/views.scss',
@@ -480,6 +480,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/env_tests.js',
             'web/static/tests/core/**/*.js',
             'web/static/tests/fields/**/*.js',
+            'web/static/tests/search/**/*.js',
             'web/static/tests/views/**/*.js',
             'web/static/tests/webclient/**/*.js',
             ('remove', 'web/static/tests/webclient/**/helpers.js'),
