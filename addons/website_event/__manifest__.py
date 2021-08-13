@@ -42,4 +42,5 @@
         'data/event_registration_demo.xml',
     ],
     'application': True,
+    'license': 'LGPL-3',
 }

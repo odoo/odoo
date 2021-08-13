@@ -30,4 +30,5 @@ Allows users to send documents by post
         'static/src/components/snailmail_notification_popover/snailmail_notification_popover.xml',
     ],
     'auto_install': False,
+    'license': 'LGPL-3',
 }

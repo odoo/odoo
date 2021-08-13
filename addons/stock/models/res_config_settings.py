@@ -69,28 +69,27 @@ class ResConfigSettings(models.TransientModel):
         if not self.group_stock_multi_locations and location_grp in base_user.implied_ids and warehouse_grp in base_user.implied_ids:
             raise UserError(_("You can't desactivate the multi-location if you have more than once warehouse by company"))
 
+        previous_group = self.default_get(['group_stock_multi_locations', 'group_stock_production_lot', 'group_stock_tracking_lot'])
         res = super(ResConfigSettings, self).set_values()
 
         if not self.user_has_groups('stock.group_stock_manager'):
             return
 
-        """ If we are not in multiple locations, we can deactivate the internal
+        """ If we disable multiple locations, we can deactivate the internal
         operation types of the warehouses, so they won't appear in the dashboard.
         Otherwise, activate them.
         """
         warehouse_obj = self.env['stock.warehouse']
-        if self.group_stock_multi_locations:
+        if self.group_stock_multi_locations and not previous_group.get('group_stock_multi_locations'):
             # override active_test that is false in set_values
-            warehouses = warehouse_obj.with_context(active_test=True).search([])
-            active = True
-        else:
-            warehouses = warehouse_obj.search([
+            warehouse_obj.with_context(active_test=True).search([]).mapped('int_type_id').write({'active': True})
+        elif not self.group_stock_multi_locations and previous_group.get('group_stock_multi_locations'):
+            warehouse_obj.search([
                 ('reception_steps', '=', 'one_step'),
-                ('delivery_steps', '=', 'ship_only')])
-            active = False
-        warehouses.mapped('int_type_id').write({'active': active})
+                ('delivery_steps', '=', 'ship_only')]
+            ).mapped('int_type_id').write({'active': False})
 
-        if self.group_stock_multi_locations or self.group_stock_production_lot or self.group_stock_tracking_lot:
+        if any(self[group] and not prev_value for group, prev_value in previous_group.items()):
             picking_types = self.env['stock.picking.type'].with_context(active_test=False).search([
                 ('code', '!=', 'incoming'),
                 ('show_operations', '=', False)

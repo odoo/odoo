@@ -4743,6 +4743,40 @@ QUnit.module('basic_fields', {
         unpatchDate();
     });
 
+    QUnit.test('remaining_days widget on a date field in list view in UTC-6', async function (assert) {
+        assert.expect(6);
+
+        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        this.data.partner.records = [
+            { id: 1, date: '2017-10-08' }, // today
+            { id: 2, date: '2017-10-09' }, // tomorrow
+            { id: 3, date: '2017-10-07' }, // yesterday
+            { id: 4, date: '2017-10-10' }, // + 2 days
+            { id: 5, date: '2017-10-05' }, // - 3 days
+        ];
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree><field name="date" widget="remaining_days"/></tree>',
+            session: {
+                getTZOffset: () => -360,
+            },
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:nth(0)').text(), 'Today');
+        assert.strictEqual(list.$('.o_data_cell:nth(1)').text(), 'Tomorrow');
+        assert.strictEqual(list.$('.o_data_cell:nth(2)').text(), 'Yesterday');
+        assert.strictEqual(list.$('.o_data_cell:nth(3)').text(), 'In 2 days');
+        assert.strictEqual(list.$('.o_data_cell:nth(4)').text(), '3 days ago');
+
+        assert.strictEqual(list.$('.o_data_cell:nth(0) .o_field_widget').attr('title'), '10/08/2017');
+
+        list.destroy();
+        unpatchDate();
+    });
+
     QUnit.test('remaining_days widget on a datetime field in list view in UTC-8', async function (assert) {
         assert.expect(5);
 

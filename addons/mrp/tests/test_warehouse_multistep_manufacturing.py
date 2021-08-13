@@ -420,3 +420,88 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         picking = pickings[1]
         self.assertEqual(len(picking.move_lines), 1)
         picking.product_id = self.complex_product
+
+    def test_3_steps_and_byproduct(self):
+        """ Suppose a warehouse with Manufacture option set to '3 setps' and a product P01 with a reordering rule.
+        Suppose P01 has a BoM and this BoM mentions that when some P01 are produced, some P02 are produced too.
+        This test ensures that when a MO is generated thanks to the reordering rule, 2 pickings are also
+        generated:
+            - One to bring the components
+            - Another to return the P01 and P02 produced
+        """
+        warehouse = self.warehouse
+        warehouse.manufacture_steps = 'pbm_sam'
+        warehouse_stock_location = warehouse.lot_stock_id
+        pre_production_location = warehouse.pbm_loc_id
+        post_production_location = warehouse.sam_loc_id
+
+        one_unit_uom = self.env['ir.model.data'].xmlid_to_object('uom.product_uom_unit')
+        [two_units_uom, four_units_uom] = self.env['uom.uom'].create([{
+            'name': 'x%s' % i,
+            'category_id': self.ref('uom.product_uom_categ_unit'),
+            'uom_type': 'bigger',
+            'factor_inv': i,
+        } for i in [2, 4]])
+
+        finished_product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))],
+            'type': 'product',
+        })
+        secondary_product = self.env['product.product'].create({
+            'name': 'Secondary',
+            'type': 'product',
+        })
+        component = self.env['product.product'].create({
+            'name': 'Component',
+            'type': 'consu',
+        })
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': two_units_uom.id,
+            'bom_line_ids': [(0, 0, {
+                'product_id': component.id,
+                'product_qty': 1,
+                'product_uom_id': one_unit_uom.id,
+            })],
+            'byproduct_ids': [(0, 0, {
+                'product_id': secondary_product.id,
+                'product_qty': 1,
+                'product_uom_id': four_units_uom.id,
+            })],
+        })
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse_stock_location.id,
+            'product_id': finished_product.id,
+            'product_min_qty': 2,
+            'product_max_qty': 2,
+        })
+
+        self.env['procurement.group'].run_scheduler()
+        mo = self.env['mrp.production'].search([('product_id', '=', finished_product.id)])
+        pickings = mo.picking_ids
+        self.assertEqual(len(pickings), 2)
+
+        preprod_picking = pickings[0] if pickings[0].location_id == warehouse_stock_location else pickings[1]
+        self.assertEqual(preprod_picking.location_id, warehouse_stock_location)
+        self.assertEqual(preprod_picking.location_dest_id, pre_production_location)
+
+        postprod_picking = pickings - preprod_picking
+        self.assertEqual(postprod_picking.location_id, post_production_location)
+        self.assertEqual(postprod_picking.location_dest_id, warehouse_stock_location)
+
+        postprod_SML = postprod_picking.move_lines
+        self.assertEqual(len(postprod_SML), 2)
+        self.assertEqual(postprod_SML.location_id, post_production_location)
+        self.assertEqual(postprod_SML.location_dest_id, warehouse_stock_location)
+
+        finished_product_SML = postprod_SML[0] if postprod_SML[0].product_id == finished_product else postprod_SML[1]
+        secondary_product_SML = postprod_SML - finished_product_SML
+        self.assertEqual(finished_product_SML.product_uom.id, one_unit_uom.id)
+        self.assertEqual(finished_product_SML.product_uom_qty, 2)
+        self.assertEqual(secondary_product_SML.product_uom.id, four_units_uom.id)
+        self.assertEqual(secondary_product_SML.product_uom_qty, 1)

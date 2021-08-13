@@ -44,5 +44,5 @@ The service is provided by the In App Purchase Odoo platform.
         'static/src/components/message/message.xml',
     ],
     'installable': True,
-    'auto_install': False,
+    'license': 'LGPL-3',
 }

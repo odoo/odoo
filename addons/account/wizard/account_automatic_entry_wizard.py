@@ -23,7 +23,8 @@ class AutomaticEntryWizard(models.TransientModel):
     total_amount = fields.Monetary(compute='_compute_total_amount', store=True, readonly=False, currency_field='company_currency_id', help="Total amount impacted by the automatic entry.")
     journal_id = fields.Many2one('account.journal', required=True, readonly=False, string="Journal",
         domain="[('company_id', '=', company_id), ('type', '=', 'general')]",
-        related="company_id.automatic_entry_default_journal_id",
+        compute="_compute_journal_id",
+        inverse="_inverse_journal_id",
         help="Journal where to create the entry.")
 
     # change period
@@ -32,17 +33,48 @@ class AutomaticEntryWizard(models.TransientModel):
         domain="[('company_id', '=', company_id),"
                "('internal_type', 'not in', ('receivable', 'payable')),"
                "('is_off_balance', '=', False)]",
-        related="company_id.expense_accrual_account_id")
+        compute="_compute_expense_accrual_account",
+        inverse="_inverse_expense_accrual_account",
+    )
     revenue_accrual_account = fields.Many2one('account.account', readonly=False,
         domain="[('company_id', '=', company_id),"
                "('internal_type', 'not in', ('receivable', 'payable')),"
                "('is_off_balance', '=', False)]",
-        related="company_id.revenue_accrual_account_id")
+        compute="_compute_revenue_accrual_account",
+        inverse="_inverse_revenue_accrual_account",
+    )
 
     # change account
     destination_account_id = fields.Many2one(string="To", comodel_name='account.account', help="Account to transfer to.")
     display_currency_helper = fields.Boolean(string="Currency Conversion Helper", compute='_compute_display_currency_helper',
         help="Technical field. Used to indicate whether or not to display the currency conversion tooltip. The tooltip informs a currency conversion will be performed with the transfer.")
+
+    @api.depends('company_id')
+    def _compute_expense_accrual_account(self):
+        for record in self:
+            record.expense_accrual_account = record.company_id.expense_accrual_account_id
+
+    def _inverse_expense_accrual_account(self):
+        for record in self:
+            record.company_id.sudo().expense_accrual_account_id = record.expense_accrual_account
+
+    @api.depends('company_id')
+    def _compute_revenue_accrual_account(self):
+        for record in self:
+            record.revenue_accrual_account = record.company_id.revenue_accrual_account_id
+
+    def _inverse_revenue_accrual_account(self):
+        for record in self:
+            record.company_id.sudo().revenue_accrual_account_id = record.revenue_accrual_account
+
+    @api.depends('company_id')
+    def _compute_journal_id(self):
+        for record in self:
+            record.journal_id = record.company_id.automatic_entry_default_journal_id
+
+    def _inverse_journal_id(self):
+        for record in self:
+            record.company_id.sudo().automatic_entry_default_journal_id = record.journal_id
 
     @api.constrains('percentage', 'action')
     def _constraint_percentage(self):

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 from odoo import fields
+from odoo.exceptions import UserError
 
 
 @tagged('-at_install', 'post_install')
@@ -168,3 +169,57 @@ class TestExpenses(TestExpenseCommon):
 
         # Assert not "Cannot create unbalanced journal entry" error.
         expense.action_sheet_move_create()
+
+    def test_reconcile_payment(self):
+        tax = self.env['account.tax'].create({
+            'name': 'tax abc',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 15,
+            'price_include': False,
+            'include_base_amount': False,
+            'tax_exigibility': 'on_payment'
+        })
+        current_assets_type = self.env.ref('account.data_account_type_current_assets')
+        company = self.env.company.id
+        tax.cash_basis_transition_account_id = self.env['account.account'].create({
+            'name': "test",
+            'code': 999991,
+            'reconcile': True,
+            'user_type_id': current_assets_type.id,
+            'company_id': company,
+        }).id
+
+        sheet = self.env['hr.expense.sheet'].create({
+            'company_id': company,
+            'employee_id': self.expense_employee.id,
+            'name': 'test sheet',
+            'expense_line_ids': [
+                (0, 0, {
+                    'name': 'expense_1',
+                    'date': '2016-01-01',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 10.0,
+                    'employee_id': self.expense_employee.id,
+                    'tax_ids': tax
+                }),
+                (0, 0, {
+                    'name': 'expense_2',
+                    'date': '2016-01-01',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 1.0,
+                    'employee_id': self.expense_employee.id,
+                    'tax_ids': tax
+                }),
+            ],
+        })
+
+
+        #actions
+        sheet.action_submit_sheet()
+        sheet.approve_expense_sheets()
+        sheet.action_sheet_move_create()
+        action_data = sheet.action_register_payment()
+        wizard =  Form(self.env['account.payment.register'].with_context(action_data['context'])).save()
+        wizard.action_create_payments()
+        self.assertEqual(sheet.state, 'done', 'all account.move.line linked to expenses must be reconciled after payment')

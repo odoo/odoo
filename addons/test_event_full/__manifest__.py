@@ -30,4 +30,5 @@ automatic lead generation, full Online support, ...
     'demo': [
     ],
     'installable': True,
+    'license': 'LGPL-3',
 }

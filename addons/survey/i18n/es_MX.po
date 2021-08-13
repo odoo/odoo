@@ -317,7 +317,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
 msgid "<i class=\"fa fa-bar-chart\"/> Graph"
-msgstr "<i class=\"fa fa-bar-chart\"/> Grafica"
+msgstr "<i class=\"fa fa-bar-chart\"/> Grafico"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -1942,7 +1942,7 @@ msgstr "Toronjas"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
 msgid "Graph"
-msgstr "Gráfica"
+msgstr "Gráfico"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_answer_view_search
@@ -2136,7 +2136,8 @@ msgstr ""
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Si se encuentra seleccionado algunos mensajes tienen error de envío."
+msgstr ""
+"Si se encuentra seleccionado algunos mensajes presentan un error de entrega."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__save_as_email
@@ -3054,7 +3055,7 @@ msgstr "Elija un tema"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
 msgid "Pie Graph"
-msgstr "Gráfica circular"
+msgstr "Gráfico circular"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q1_sug1
@@ -4660,6 +4661,26 @@ msgstr ""
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr ""
 "No puede enviar invitaciones para una encuesta que no tiene preguntas."
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"You cannot send an invitation for a \"One page per section\" survey if the "
+"survey has no sections."
+msgstr ""
+"No puede enviar una invitación para una encuesta de \"Una página por "
+"sección\" si la encuesta no tiene secciones."
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"You cannot send an invitation for a \"One page per section\" survey if the "
+"survey only contains empty sections."
+msgstr ""
+"No puede enviar una invitación para una encuesta de \"Una página por "
+"sección\" si las secciones de la encuesta están vacías."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
