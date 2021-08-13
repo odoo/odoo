@@ -370,13 +370,16 @@ function makeActionManager(env) {
         const viewSwitcherEntries = views
             .filter((v) => v.multiRecord === view.multiRecord)
             .map((v) => {
-                return {
-                    // FIXME: missing accesskey
+                const viewSwitcherEntry = {
                     icon: v.icon,
-                    name: v.display_name,
+                    name: v.display_name.toString(),
                     type: v.type,
                     multiRecord: v.multiRecord,
                 };
+                if (view.type === v.type) {
+                    viewSwitcherEntry.active = true;
+                }
+                return viewSwitcherEntry;
             });
         const flags = action.flags || {};
         const viewProps = Object.assign(_getActionProps(action, props), {
