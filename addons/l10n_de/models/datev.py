@@ -46,12 +46,14 @@ class ProductTemplate(models.Model):
         if company.country_id.code == "DE":
             if not self.property_account_income_id:
                 taxes = self.taxes_id.filtered(lambda t: t.company_id == company)
-                if not result['income'] or (result['income'].tax_ids and taxes and taxes[0] not in result['income'].tax_ids):
+                # If income account not set, or that the taxes amount do not correspond, we find the first account that matches the tax id of taxes
+                if not result['income'] or (result['income'].tax_ids and taxes and taxes[0].amount not in result['income'].tax_ids.mapped("amount")):
                     result['income'] = self.env['account.account'].search([('internal_group', '=', 'income'), ('deprecated', '=', False),
                                                                    ('tax_ids', 'in', taxes.ids)], limit=1)
             if not self.property_account_expense_id:
                 supplier_taxes = self.supplier_taxes_id.filtered(lambda t: t.company_id == company)
-                if not result['expense'] or (result['expense'].tax_ids and supplier_taxes and supplier_taxes[0] not in result['expense'].tax_ids):
+                # If expense account not set, or that the taxes amount do not correspond, we find the first account that matches the tax id of supplier_taxes
+                if not result['expense'] or (result['expense'].tax_ids and supplier_taxes and supplier_taxes[0].amount not in result['expense'].tax_ids.mapped("amount")):
                     result['expense'] = self.env['account.account'].search([('internal_group', '=', 'expense'), ('deprecated', '=', False),
                                                                    ('tax_ids', 'in', supplier_taxes.ids)], limit=1)
         return result
