@@ -366,6 +366,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
                 'type': 'lead', 'user_id': False, 'team_id': self.lead_1.team_id.id,
                 'contact_name': 'Duplicate %02d of %s' % (x+1, self.lead_1.contact_name),
                 'email_from': self.lead_1.email_from,
+                'probability': 10,
             })
 
         convert = self.env['crm.lead2opportunity.partner'].with_context({
