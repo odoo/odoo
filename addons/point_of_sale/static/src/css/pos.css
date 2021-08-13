@@ -1511,6 +1511,10 @@ td {
     flex-grow: 1;
     margin-left: 10px;
     margin-right: 10px;
+    /* make the name of the payment line to be truncated with ellipsis */
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 .paymentline .payment-amount {
     margin-left: 10px;
