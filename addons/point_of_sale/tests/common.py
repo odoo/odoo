@@ -6,6 +6,9 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 from odoo.tests.common import Form
 from odoo.tests import tagged
 
+import logging
+
+_logger = logging.getLogger(__name__)
 
 @tagged('post_install', '-at_install')
 class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
@@ -57,14 +60,13 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
         cls.cash_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Cash',
             'receivable_account_id': cls.company_data['default_account_receivable'].id,
-            'is_cash_count': True,
-            'cash_journal_id': cls.company_data['default_journal_cash'].id,
+            'journal_id': cls.company_data['default_journal_cash'].id,
             'company_id': cls.env.company.id,
         })
         cls.bank_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Bank',
+            'journal_id': cls.company_data['default_journal_bank'].id,
             'receivable_account_id': cls.company_data['default_account_receivable'].id,
-            'is_cash_count': False,
             'company_id': cls.env.company.id,
         })
         cls.credit_payment_method = cls.env['pos.payment.method'].create({
@@ -77,7 +79,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
 
         # Create POS journal
         cls.pos_config.journal_id = cls.env['account.journal'].create({
-            'type': 'sale',
+            'type': 'general',
             'name': 'Point of Sale - Test',
             'code': 'POSS - Test',
             'company_id': cls.env.company.id,
@@ -149,12 +151,13 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         # Set basic defaults
         cls.company = cls.company_data['company']
         cls.pos_sale_journal = cls.env['account.journal'].create({
-            'type': 'sale',
+            'type': 'general',
             'name': 'Point of Sale Test',
-            'code': 'POST',
+            'code': 'POSS',
             'company_id': cls.company.id,
             'sequence': 20
         })
+        cls.sales_account = cls.company_data['default_account_revenue']
         cls.invoice_journal = cls.company_data['default_journal_sale']
         cls.receivable_account = cls.company_data['default_account_receivable']
         cls.tax_received_account = cls.company_data['default_account_tax_sale']
@@ -165,6 +168,10 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'user_type_id': cls.env.ref('account.data_account_type_receivable').id,
         })
         cls.pos_receivable_account = cls.company.account_default_pos_receivable_account_id
+        cls.pos_receivable_cash = cls.copy_account(cls.company.account_default_pos_receivable_account_id, {'name': 'POS Receivable Cash'})
+        cls.pos_receivable_bank = cls.copy_account(cls.company.account_default_pos_receivable_account_id, {'name': 'POS Receivable Bank'})
+        cls.outstanding_bank = cls.copy_account(cls.company.account_journal_payment_debit_account_id, {'name': 'Outstanding Bank'})
+        cls.c1_receivable = cls.copy_account(cls.receivable_account, {'name': 'Customer 1 Receivable'})
         cls.other_receivable_account = cls.env['account.account'].create({
             'name': 'Other Receivable',
             'code': 'RCV00' ,
@@ -210,7 +217,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         ], limit=1)
 
         # Set customers
-        cls.customer = cls.env['res.partner'].create({'name': 'Test Customer'})
+        cls.customer = cls.env['res.partner'].create({'name': 'Customer 1', 'property_account_receivable_id': cls.c1_receivable.id})
         cls.other_customer = cls.env['res.partner'].create({'name': 'Other Customer', 'property_account_receivable_id': cls.other_receivable_account.id})
 
         # Set taxes
@@ -238,32 +245,29 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         new_config.available_pricelist_ids.add(cls.currency_pricelist)
         new_config.pricelist_id = cls.currency_pricelist
         config = new_config.save()
-        cash_payment_method = cls.env['pos.payment.method'].create({
+        cls.cash_pm1 = cls.env['pos.payment.method'].create({
             'name': 'Cash',
-            'receivable_account_id': cls.pos_receivable_account.id,
-            'is_cash_count': True,
-            'cash_journal_id': cls.company_data['default_journal_cash'].id,
+            'journal_id': cls.company_data['default_journal_cash'].id,
+            'receivable_account_id': cls.pos_receivable_cash.id,
             'company_id': cls.env.company.id,
         })
-        bank_payment_method = cls.env['pos.payment.method'].create({
+        cls.bank_pm1 = cls.env['pos.payment.method'].create({
             'name': 'Bank',
-            'receivable_account_id': cls.pos_receivable_account.id,
-            'is_cash_count': False,
+            'journal_id': cls.company_data['default_journal_bank'].id,
+            'receivable_account_id': cls.pos_receivable_bank.id,
+            'outstanding_account_id': cls.outstanding_bank.id,
             'company_id': cls.env.company.id,
         })
-        cash_split_pm = cls.env['pos.payment.method'].create({
+        cls.cash_split_pm1 = cls.cash_pm1.copy(default={
             'name': 'Split (Cash) PM',
-            'receivable_account_id': cls.pos_receivable_account.id,
             'split_transactions': True,
-            'is_cash_count': True,
-            'cash_journal_id': cls.company_data['default_journal_cash'].id,
         })
-        bank_split_pm = cls.env['pos.payment.method'].create({
+        cls.bank_split_pm1 = cls.bank_pm1.copy(default={
             'name': 'Split (Bank) PM',
-            'receivable_account_id': cls.pos_receivable_account.id,
             'split_transactions': True,
         })
-        config.write({'payment_method_ids': [(4, cash_split_pm.id), (4, bank_split_pm.id), (4, cash_payment_method.id), (4, bank_payment_method.id)]})
+        cls.pay_later_pm = cls.env['pos.payment.method'].create({'name': 'Pay Later', 'split_transactions': True})
+        config.write({'payment_method_ids': [(4, cls.cash_split_pm1.id), (4, cls.bank_split_pm1.id), (4, cls.cash_pm1.id), (4, cls.bank_pm1.id), (4, cls.pay_later_pm.id)]})
         return config
 
     @classmethod
@@ -297,19 +301,28 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'sequence': 12,
             'currency_id': cls.other_currency.id
         })
+        other_bank_journal = cls.env['account.journal'].create({
+            'name': 'Bank Other',
+            'type': 'bank',
+            'company_id': cls.company.id,
+            'code': 'BNKO',
+            'sequence': 13,
+            'currency_id': cls.other_currency.id
+        })
         other_pricelist = cls.env['product.pricelist'].create({
             'name': 'Public Pricelist Other',
             'currency_id': cls.other_currency.id,
         })
-        other_cash_payment_method = cls.env['pos.payment.method'].create({
+        cls.cash_pm2 = cls.env['pos.payment.method'].create({
             'name': 'Cash Other',
-            'receivable_account_id': cls.pos_receivable_account.id,
-            'is_cash_count': True,
-            'cash_journal_id': other_cash_journal.id,
+            'journal_id': other_cash_journal.id,
+            'receivable_account_id': cls.pos_receivable_cash.id,
         })
-        other_bank_payment_method = cls.env['pos.payment.method'].create({
+        cls.bank_pm2 = cls.env['pos.payment.method'].create({
             'name': 'Bank Other',
-            'receivable_account_id': cls.pos_receivable_account.id,
+            'journal_id': other_bank_journal.id,
+            'receivable_account_id': cls.pos_receivable_bank.id,
+            'outstanding_account_id': cls.outstanding_bank.id,
         })
 
         new_config = Form(cls.env['pos.config'])
@@ -321,8 +334,8 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         new_config.available_pricelist_ids.add(other_pricelist)
         new_config.pricelist_id = other_pricelist
         new_config.payment_method_ids.clear()
-        new_config.payment_method_ids.add(other_cash_payment_method)
-        new_config.payment_method_ids.add(other_bank_payment_method)
+        new_config.payment_method_ids.add(cls.cash_pm2)
+        new_config.payment_method_ids.add(cls.bank_pm2)
         config = new_config.save()
         return config
 
@@ -428,7 +441,10 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         # 2. generate the payments
         total_amount_incl = sum(line[2]['price_subtotal_incl'] for line in order_lines)
         if payments is None:
-            payments = [create_payment(self.cash_pm, total_amount_incl)]
+            default_cash_pm = self.config.payment_method_ids.filtered(lambda pm: pm.is_cash_count)[:1]
+            if not default_cash_pm:
+                raise Exception('There should be a cash payment method set in the pos.config.')
+            payments = [create_payment(default_cash_pm, total_amount_incl)]
         else:
             payments = [
                 create_payment(pm, amount)
@@ -498,19 +514,114 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             * config : the pos.config currently being used.
                 Its value is set at `self.setUp` of the inheriting
                 test class.
-            * session : the current_session_id of config
+            * pos_session : the current_session_id of config
             * currency : currency of the current pos.session
             * pricelist : the default pricelist of the session
-            * cash_pm : cash payment method of the session
-            * bank_pm : bank payment method of the session
-            * cash_split_pm : credit payment method of the session
-            * bank_split_pm : split bank payment method of the session
         """
         self.config.open_session_cb(check_coa=False)
         self.pos_session = self.config.current_session_id
         self.currency = self.pos_session.currency_id
         self.pricelist = self.pos_session.config_id.pricelist_id
-        self.cash_pm = self.pos_session.payment_method_ids.filtered(lambda pm: pm.is_cash_count and not pm.split_transactions)[:1]
-        self.bank_pm = self.pos_session.payment_method_ids.filtered(lambda pm: not pm.is_cash_count and not pm.split_transactions)[:1]
-        self.cash_split_pm = self.pos_session.payment_method_ids.filtered(lambda pm: pm.is_cash_count and pm.split_transactions)[:1]
-        self.bank_split_pm = self.pos_session.payment_method_ids.filtered(lambda pm: not pm.is_cash_count and pm.split_transactions)[:1]
+        return self.pos_session
+
+    def _run_test(self, args):
+        pos_session = self._start_pos_session(args['payment_methods'])
+        _logger.info('DONE: Start session.')
+        orders_map = self._create_orders(args['orders'])
+        _logger.info('DONE: Orders created.')
+        before_closing_cb = args.get('before_closing_cb')
+        if before_closing_cb:
+            before_closing_cb()
+            _logger.info('DONE: Call of before_closing_cb.')
+        self._check_invoice_journal_entries(pos_session, orders_map, expected_values=args['journal_entries_before_closing'])
+        _logger.info('DONE: Checks for journal entries before closing the session.')
+        pos_session.action_pos_session_validate()
+        after_closing_cb = args.get('after_closing_cb')
+        if after_closing_cb:
+            after_closing_cb()
+            _logger.info('DONE: Call of after_closing_cb.')
+        self._check_session_journal_entries(pos_session, expected_values=args['journal_entries_after_closing'])
+        _logger.info('DONE: Checks for journal entries after closing the session.')
+
+    def _start_pos_session(self, payment_methods):
+        self.config.write({'payment_method_ids': [(6, 0, payment_methods.ids)]})
+        pos_session = self.open_new_session()
+        self.assertEqual(self.config.payment_method_ids.ids, pos_session.payment_method_ids.ids, msg='Payment methods in the config should be the same as the session.')
+        return pos_session
+
+    def _create_orders(self, order_data_params):
+        '''Returns a dict mapping uid to its created pos.order record.'''
+        result = {}
+        for params in order_data_params:
+            order_data = self.create_ui_order_data(**params)
+            result[params['uid']] = self.env['pos.order'].browse([order['id'] for order in self.env['pos.order'].create_from_ui([order_data])])
+        return result
+
+    def _check_invoice_journal_entries(self, pos_session, orders_map, expected_values):
+        '''Checks the invoice, together with the payments, from each invoiced order.'''
+        currency_rounding = pos_session.currency_id.rounding
+
+        for uid in orders_map:
+            order = orders_map[uid]
+            if not order.is_invoiced:
+                continue
+            invoice = order.account_move
+            # allow not checking the invoice since pos is not creating the invoices
+            if expected_values[uid].get('invoice'):
+                self._assert_account_move(invoice, expected_values[uid]['invoice'])
+                _logger.info('DONE: Check of invoice for order %s.', uid)
+
+            for pos_payment in order.payment_ids:
+                if pos_payment.payment_method_id == self.pay_later_pm:
+                    # Skip the pay later payments since there are no journal entries
+                    # for them when invoicing.
+                    continue
+
+                # This predicate is used to match the pos_payment's journal entry to the
+                # list of payments specified in the 'payments' field of the `_run_test`
+                # args.
+                def predicate(args):
+                    payment_method, amount = args
+                    first = payment_method == pos_payment.payment_method_id
+                    second = tools.float_is_zero(pos_payment.amount - amount, precision_rounding=currency_rounding)
+                    return first and second
+
+                self._find_then_assert_values(pos_payment.account_move_id, expected_values[uid]['payments'], predicate)
+                _logger.info('DONE: Check of invoice payment (%s, %s) for order %s.', pos_payment.payment_method_id.name, pos_payment.amount, uid)
+
+    def _check_session_journal_entries(self, pos_session, expected_values):
+        '''Checks the journal entries after closing the session excluding entries checked in `_check_invoice_journal_entries`.'''
+        currency_rounding = pos_session.currency_id.rounding
+
+        # check expected session journal entry
+        self._assert_account_move(pos_session.move_id, expected_values['session_journal_entry'])
+        _logger.info("DONE: Check of the session's account move.")
+
+        # check expected cash journal entries
+        for statement_line in pos_session.cash_register_id.line_ids:
+            def statement_line_predicate(args):
+                return tools.float_is_zero(statement_line.amount - args[0], precision_rounding=currency_rounding)
+            self._find_then_assert_values(statement_line.move_id, expected_values['cash_statement'], statement_line_predicate)
+        _logger.info("DONE: Check of cash statement lines.")
+
+        # check expected bank payments
+        for bank_payment in pos_session.bank_payment_ids:
+            def bank_payment_predicate(args):
+                return tools.float_is_zero(bank_payment.amount - args[0], precision_rounding=currency_rounding)
+            self._find_then_assert_values(bank_payment.move_id, expected_values['bank_payments'], bank_payment_predicate)
+        _logger.info("DONE: Check of bank account payments.")
+
+    def _find_then_assert_values(self, account_move, source_of_expected_vals, predicate):
+        expected_move_vals = next(move_vals for args, move_vals in source_of_expected_vals if predicate(args))
+        self._assert_account_move(account_move, expected_move_vals)
+
+    def _assert_account_move(self, account_move, expected_account_move_vals):
+        if expected_account_move_vals:
+            # We allow partial checks of the lines of the account move if `line_ids_predicate` is specified.
+            # This means that only those that satisfy the predicate are compared to the expected account move line_ids.
+            line_ids_predicate = expected_account_move_vals.pop('line_ids_predicate', lambda _: True)
+            self.assertRecordValues(account_move.line_ids.filtered(line_ids_predicate), expected_account_move_vals.pop('line_ids'))
+            self.assertRecordValues(account_move, [expected_account_move_vals])
+        else:
+            # if the expected_account_move_vals is falsy, the account_move should be falsy.
+            self.assertFalse(account_move)

@@ -53,8 +53,7 @@ class TestAngloSaxonCommon(common.TransactionCase):
         self.pos_config.invoice_journal_id = self.sale_journal
         self.cash_payment_method = self.env['pos.payment.method'].create({
             'name': 'Cash Test',
-            'is_cash_count': True,
-            'cash_journal_id': self.cash_journal.id,
+            'journal_id': self.cash_journal.id,
             'receivable_account_id': self.account.id,
         })
         self.pos_config.write({'payment_method_ids': [(6, 0, self.cash_payment_method.ids)]})
