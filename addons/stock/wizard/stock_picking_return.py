@@ -58,7 +58,7 @@ class ReturnPicking(models.TransientModel):
                     move_dest_exists = True
                 quantity = move.product_qty - sum(move.move_dest_ids.filtered(lambda m: m.state in ['partially_available', 'assigned', 'done']).\
                                                   mapped('move_line_ids').mapped('product_qty'))
-                quantity = float_round(quantity, precision_rounding=move.product_uom.rounding)
+                quantity = float_round(quantity, precision_rounding=move.product_id.uom_id.rounding)
                 product_return_moves_data = dict(product_return_moves_data_tmpl)
                 product_return_moves_data.update({
                     'product_id': move.product_id.id,
