@@ -24,6 +24,9 @@ BaseSettingController.include({
      * Without this override, it is impossible to go to a website other than the
      * first because discarding will revert it back to the default value.
      *
+     * Without this override, it is impossible to edit robots.txt website other than the
+     * first because discarding will revert it back to the default value.
+     *
      * Without this override, it is impossible to install a theme on a website
      * other than the first because discarding will revert it back to the
      * default value.
@@ -32,6 +35,7 @@ BaseSettingController.include({
      */
     _onButtonClicked: function (ev) {
         if (ev.data.attrs.name === 'website_go_to'
+                || ev.data.attrs.name === 'action_open_robots'
                 || ev.data.attrs.name === 'install_theme_on_current_website') {
             FormController.prototype._onButtonClicked.apply(this, arguments);
         } else {
