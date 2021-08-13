@@ -168,6 +168,7 @@ class ResConfigSettings(models.TransientModel):
         }
 
     def action_open_robots(self):
+        self.website_id._force()
         return {
             'name': _("Robots.txt"),
             'view_mode': 'form',
