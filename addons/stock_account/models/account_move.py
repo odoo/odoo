@@ -225,7 +225,7 @@ class AccountMoveLine(models.Model):
             and self.move_id.is_purchase_document():
             fiscal_position = self.move_id.fiscal_position_id
             accounts = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
-            if accounts['stock_input']:
+            if accounts['stock_input'] and len(accounts) == 1:
                 return accounts['stock_input']
         return super(AccountMoveLine, self)._get_computed_account()
 
