@@ -376,6 +376,10 @@ odoo.define('point_of_sale.Chrome', function(require) {
             return this.mainScreen.name === 'TicketScreen';
         }
 
+        get isOrderManagerScreenShown() {
+            return this.mainScreen.name === 'OrderManagementScreen';
+        }
+
         // MISC METHODS //
 
         async _loadDemoData() {

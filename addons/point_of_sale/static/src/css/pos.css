@@ -2892,6 +2892,21 @@ td {
 
 /* Order Management */
 
+.pos .pos-topheader .oe_status.order-management {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    color: #fff;
+    font-size: larger;
+}
+
+.pos .pos-topheader .oe_status.order-management:hover {
+    background: rgb(104,69,95);
+    cursor: pointer;
+}
+.pos .pos-topheader .oe_status.order-management.highlight {
+    background: rgb(104,69,95);
+}
 .order-row {
     display: flex;
     flex-direction: row;
@@ -3740,10 +3755,6 @@ td {
 
     .pos .popups .modal-dialog .popup-control-buttons .control-buttons .control-button {
         width: 100%;
-    }
-
-    .pos .pos-topheader .order-management {
-        color: #fff;
     }
 
 }
