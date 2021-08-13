@@ -132,6 +132,7 @@
                                                             data-model="project.task"
                                                             data-views='[[false, "list"], [false, "form"]]'
                                                             t-att-data-domain="json.dumps([['project_id', 'in', projects.ids], ['sale_line_id', '=', False]])"
+                                                            t-att-data-context="json.dumps({'active_test': False})"
                                                         >
                                                             <span class="btn-link"
                                                                   style="font-weight:normal;"
