@@ -52,7 +52,7 @@ class TestLeadMerge(TestLeadMergeCommon):
 
         Original order:
 
-        lead_w_contact ----------lead---seq=30---proba=15
+        lead_w_contact ----------lead---seq=3----proba=15
         lead_w_email ------------lead---seq=3----proba=15
         lead_1 ------------------lead---seq=1----proba=?
         lead_w_partner ----------lead---seq=False---proba=10
@@ -89,7 +89,7 @@ class TestLeadMerge(TestLeadMergeCommon):
     def test_lead_merge_internals(self):
         """ Test internals of merge wizard. In this test leads are ordered as
 
-        lead_w_contact --lead---seq=30
+        lead_w_contact --lead---seq=3
         lead_w_email ----lead---seq=3
         lead_1 ----------lead---seq=1
         lead_w_partner --lead---seq=False
@@ -113,7 +113,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         ordered_merge_description = '<br><br>'.join(l.description for l in ordered_merge)
 
         # merged opportunity: in this test, all input are leads. Confidence is based on stage
-        # sequence -> lead_w_contact has a stage sequence of 30
+        # sequence -> lead_w_contact has a stage sequence of 3 and ID is greater than lead_w_email
         result = merge.action_merge()
         merge_opportunity = self.env['crm.lead'].browse(result['res_id'])
         self.assertFalse((ordered_merge - merge_opportunity).exists())
@@ -132,7 +132,7 @@ class TestLeadMerge(TestLeadMergeCommon):
 
         lead_1 -------------------opp----seq=1
         lead_w_partner_company ---opp----seq=1 (ID greater)
-        lead_w_contact -----------lead---seq=30
+        lead_w_contact -----------lead---seq=3
         lead_w_email -------------lead---seq=3
         lead_w_partner -----------lead---seq=False
         """
@@ -175,6 +175,8 @@ class TestLeadMerge(TestLeadMergeCommon):
     @mute_logger('odoo.models.unlink')
     def test_lead_merge_probability_auto(self):
         """ Check master lead keeps its automated probability when merged. """
+        self.lead_1.write({'probability': self.lead_1.automated_probability})
+        self.assertTrue(self.lead_1.is_automated_probability)
         leads = self.env['crm.lead'].browse((self.lead_1 + self.lead_w_partner + self.lead_w_partner_company).ids)
         merged_lead = self._run_merge_wizard(leads)
         self.assertEqual(merged_lead, self.lead_1)
@@ -186,6 +188,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         """ Check master lead keeps its automated probability when merged
         even if its probability is 0. """
         self.lead_1.write({'probability': 0, 'automated_probability': 0})
+        self.assertTrue(self.lead_1.is_automated_probability)
         leads = self.env['crm.lead'].browse((self.lead_1 + self.lead_w_partner + self.lead_w_partner_company).ids)
         merged_lead = self._run_merge_wizard(leads)
         self.assertEqual(merged_lead, self.lead_1)
@@ -196,6 +199,7 @@ class TestLeadMerge(TestLeadMergeCommon):
     def test_lead_merge_probability_manual(self):
         """ Check master lead keeps its manual probability when merged. """
         self.lead_1.write({'probability': 40})
+        self.assertFalse(self.lead_1.is_automated_probability)
         leads = self.env['crm.lead'].browse((self.lead_1 + self.lead_w_partner + self.lead_w_partner_company).ids)
         merged_lead = self._run_merge_wizard(leads)
         self.assertEqual(merged_lead, self.lead_1)
@@ -221,7 +225,7 @@ class TestLeadMerge(TestLeadMergeCommon):
 
         lead_1 -------------------opp----seq=1
         lead_w_partner_company ---opp----seq=1 (ID greater)
-        lead_w_contact -----------lead---seq=30
+        lead_w_contact -----------lead---seq=3
         lead_w_email -------------lead---seq=3
         lead_w_partner -----------lead---seq=False
         """
@@ -240,7 +244,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         this test leads are ordered as
 
         lead_w_partner_company ---opp----seq=1 (ID greater)
-        lead_w_contact -----------lead---seq=30
+        lead_w_contact -----------lead---seq=3
         lead_w_email -------------lead---seq=3----------------attachments
         lead_1 -------------------lead---seq=1----------------activity+meeting
         lead_w_partner -----------lead---seq=False
