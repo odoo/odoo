@@ -827,3 +827,6 @@ class SaleOrderLine(models.Model):
     def _is_not_sellable_line(self):
         # True if the line is a computed line (reward, delivery, ...) that user cannot add manually
         return False
+
+    def _is_eligible_for_total(self):
+        return bool(self.product_id)

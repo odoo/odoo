@@ -159,6 +159,9 @@ class SaleOrderLine(models.Model):
     def _is_not_sellable_line(self):
         return self.is_delivery or super(SaleOrderLine, self)._is_not_sellable_line()
 
+    def _is_eligible_for_total(self):
+        return not self.is_delivery or super(SaleOrderLine, self)._is_eligible_for_total()
+
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_product_qty(self):
         for line in self:

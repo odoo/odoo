@@ -80,7 +80,7 @@ class ProviderGrid(models.Model):
                 continue
             if line.is_delivery:
                 total_delivery += line.price_total
-            if not line.product_id or line.is_delivery:
+            if not line._is_eligible_for_total():
                 continue
             qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
             weight += (line.product_id.weight or 0.0) * qty
