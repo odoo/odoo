@@ -119,6 +119,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'contact_name': 'Amy Wong',
             'email_from': 'amy.wong@test.example.com',
             'country_id': cls.env.ref('base.us').id,
+            'probability': 20,
         })
         # update lead_1: stage_id is not computed anymore by default for leads
         cls.lead_1.write({
@@ -333,6 +334,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'type': 'lead',
             'team_id': lead.team_id.id,
             'email_from': lead.email_from,
+            'probability': lead.probability,
         })
         lead_email_normalized = self.env['crm.lead'].create({
             'name': 'Duplicate: email_normalize comparison',
@@ -340,12 +342,14 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'team_id': lead.team_id.id,
             'stage_id': lead.stage_id.id,
             'email_from': 'CUSTOMER WITH NAME <%s>' % lead.email_normalized.upper(),
+            'probability': lead.probability,
         })
         lead_partner = self.env['crm.lead'].create({
             'name': 'Duplicate: customer ID',
             'type': 'lead',
             'team_id': lead.team_id.id,
             'partner_id': customer.id,
+            'probability': lead.probability,
         })
         if create_opp:
             opp_lost = self.env['crm.lead'].create({
@@ -354,6 +358,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
                 'team_id': lead.team_id.id,
                 'stage_id': lead.stage_id.id,
                 'email_from': lead.email_from,
+                'probability': lead.probability,
             })
             opp_lost.action_set_lost()
         else:
@@ -605,7 +610,7 @@ class TestLeadConvertMassCommon(TestLeadConvertCommon):
         cls.lead_w_partner_company = cls.env['crm.lead'].create({
             'name': 'New1',
             'type': 'lead',
-            'probability': 15,
+            'probability': 50,
             'user_id': cls.user_sales_manager.id,
             'stage_id': cls.stage_team1_1.id,
             'partner_id': cls.contact_company_1.id,
@@ -615,7 +620,7 @@ class TestLeadConvertMassCommon(TestLeadConvertCommon):
         cls.lead_w_contact = cls.env['crm.lead'].create({
             'name': 'LeadContact',
             'type': 'lead',
-            'probability': 15,
+            'probability': 25,
             'contact_name': 'TestContact',
             'user_id': cls.user_sales_salesman.id,
             'stage_id': cls.stage_gen_1.id,
