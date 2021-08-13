@@ -4,6 +4,7 @@
 from datetime import timedelta
 
 from odoo import api, fields, models
+from odoo.tools import float_is_zero
 
 
 class StockPicking(models.Model):
@@ -38,10 +39,10 @@ class StockPicking(models.Model):
     # -------------------------------------------------------------------------
 
     def action_done(self):
-        res = super(StockPicking, self).action_done()
         productions = self.env['mrp.production']
         for picking in self:
             for move in picking.move_lines:
+                to_process = False
                 if not move.is_subcontract:
                     continue
                 production = move.move_orig_ids.production_id
@@ -49,6 +50,8 @@ class StockPicking(models.Model):
                     move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel')).move_line_ids.unlink()
                     move_finished_ids = move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
                     for ml in move.move_line_ids:
+                        if float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding):
+                            continue
                         ml.copy({
                             'picking_id': False,
                             'production_id': move_finished_ids.production_id.id,
@@ -58,9 +61,12 @@ class StockPicking(models.Model):
                             'location_id': move_finished_ids.location_id.id,
                             'location_dest_id': move_finished_ids.location_dest_id.id,
                         })
+                        to_process = True
                 else:
                     wizards_vals = []
                     for move_line in move.move_line_ids:
+                        if float_is_zero(move_line.qty_done, precision_rounding=move_line.product_uom_id.rounding):
+                            continue
                         wizards_vals.append({
                             'production_id': production.id,
                             'qty_producing': move_line.qty_done,
@@ -68,10 +74,13 @@ class StockPicking(models.Model):
                             'finished_lot_id': move_line.lot_id.id,
                             'consumption': 'strict',
                         })
-                    wizards = self.env['mrp.product.produce'].with_context(default_production_id=production.id).create(wizards_vals)
-                    wizards._generate_produce_lines()
-                    wizards._record_production()
-                productions |= production
+                        to_process = True
+                    if to_process:
+                        wizards = self.env['mrp.product.produce'].with_context(default_production_id=production.id).create(wizards_vals)
+                        wizards._generate_produce_lines()
+                        wizards._record_production()
+                if to_process:
+                    productions |= production
             for subcontracted_production in productions:
                 if subcontracted_production.state == 'progress':
                     subcontracted_production.post_inventory()
@@ -83,7 +92,7 @@ class StockPicking(models.Model):
                 production_moves = subcontracted_production.move_raw_ids | subcontracted_production.move_finished_ids
                 production_moves.write({'date': minimum_date - timedelta(seconds=1)})
                 production_moves.move_line_ids.write({'date': minimum_date - timedelta(seconds=1)})
-        return res
+        return super().action_done()
 
     def action_record_components(self):
         self.ensure_one()

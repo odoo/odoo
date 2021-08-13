@@ -47,17 +47,6 @@ class StockMove(models.Model):
         default['location_id'] = self.picking_id.location_id.id
         return super(StockMove, self).copy(default=default)
 
-    def write(self, values):
-        """ If the initial demand is updated then also update the linked
-        subcontract order to the new quantity.
-        """
-        if 'product_uom_qty' in values:
-            if self.env.context.get('cancel_backorder') is False:
-                return super(StockMove, self).write(values)
-            self.filtered(lambda m: m.is_subcontract and
-            m.state not in ['draft', 'cancel', 'done'])._update_subcontract_order_qty(values['product_uom_qty'])
-        return super(StockMove, self).write(values)
-
     def action_show_details(self):
         """ Open the produce wizard in order to register tracked components for
         subcontracted product. Otherwise use standard behavior.
@@ -206,4 +195,3 @@ operations.""") % ('\n'.join(overprocessed_moves.mapped('product_id.display_name
                     'mo_id': production.id,
                     'product_qty': production.product_uom_qty + quantity_change
                 }).change_prod_qty()
-
