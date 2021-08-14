@@ -2881,7 +2881,7 @@ msgstr "취소된 청구서"
 msgid ""
 "Cannot create an invoice of type %(move_type)s with a journal having "
 "%(journal_type)s as type."
-msgstr ""
+msgstr "전표에 %(journal_type)s유형을 가지고 있을 경우 %(move_type)s유형의 청구서를 생성할 수 없습니다. "
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -3778,7 +3778,7 @@ msgstr "첫 번째 현금 올림 생성"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "Create your first invoice."
-msgstr ""
+msgstr "첫번째 청구서를 생성합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_uid
@@ -7189,7 +7189,7 @@ msgstr "배치"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sale_activity_user_id
 msgid "Leave empty to assign the Salesperson of the invoice."
-msgstr ""
+msgstr "청구서의 영업담당자를 할당하기 위해 비워둡니다."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_ledgers
@@ -7446,7 +7446,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Match Invoice/bill with"
-msgstr ""
+msgstr "청구서/공급업체 청구서 연결"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__match_regex
@@ -10323,6 +10323,11 @@ msgid ""
 "\n"
 "Only PDF and XML files will be interpreted by Odoo"
 msgstr ""
+"각각의 청구서별 이메일을 따로 전송합니다.\n"
+"\n"
+"모든 파일 확장이 허용됩니다.\n"
+"\n"
+"PDF와 XML파일이 Odoo에서 허용됩니다. "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
@@ -11920,7 +11925,7 @@ msgstr "이 기간에 사용된 날짜는 반드시 양수여야 합니다."
 #: model:ir.model.fields,help:account.field_account_move__invoice_origin
 #: model:ir.model.fields,help:account.field_account_payment__invoice_origin
 msgid "The document(s) that generated the invoice."
-msgstr "청구서을 생성한 문서"
+msgstr "청구서을 생성한 문서(들)"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -11983,7 +11988,7 @@ msgstr ""
 msgid ""
 "The following invoice(s) will not be sent by email, because the customers "
 "don't have email address."
-msgstr "고객에게 이메일 주소가 없으므로 다음 청구서을 이메일로 보내지 않습니다."
+msgstr "고객에게 이메일 주소가 없으므로 다음 청구서(들)을 이메일로 보내지 않습니다."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -14243,7 +14248,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
 msgid "invoice(s) that will not be sent"
-msgstr "발송되지 않을 청구서"
+msgstr "발송되지 않을 청구서(들)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
