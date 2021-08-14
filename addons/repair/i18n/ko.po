@@ -60,10 +60,10 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
-"* '초안' 상태는 사용자가 새로운 미확인 수리 요청서를 기록할 때 사용합니다.\n"
-"* '확인됨' 상태는 사용자가 수리 요청서를 확인할 때 사용됩니다.\n"
-"* '수리 준비 완료' 상태는 수리를 시작하는 데 사용되며, 수리 요청서가 확인되어야만 수리를 시작할 수 있습니다.\n"
-"* '송장 처리 예정' 상태는 수리 전 또는 수리 후 송장을 생성하는 데 사용됩니다.\n"
+"* '초안' 상태는 사용자가 신규 미승인된 수리 요청서를 기록할 때 사용합니다.\n"
+"* '확인됨' 상태는 사용자가 수리 요청서를 승인할 때 사용됩니다.\n"
+"* '수리 준비 완료' 상태는 수리를 시작하는 데 사용되며, 수리 요청서가 승인되어야만 수리를 시작할 수 있습니다.\n"
+"* '청구서 발행대기' 상태는 수리 전 또는 수리 후 청구서를 생성하는 데 사용됩니다.\n"
 "* '완료' 상태는 수리가 완료되면 설정됩니다.\n"
 "* '취소' 상태는 사용자가 수리 요청을 취소할 때 사용됩니다."
 
@@ -112,7 +112,7 @@ msgid ""
 "                                <span class=\"o_stat_text\">Invoices</span>"
 msgstr ""
 "<span class=\"o_stat_text\">1</span>\n"
-"                                <span class=\"o_stat_text\">송장</span>"
+"                                <span class=\"o_stat_text\">청구서</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -302,12 +302,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Invoice"
-msgstr "청구서 만들기"
+msgstr "청구서 생성"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order_make_invoice
 msgid "Create Mass Invoice (repair)"
-msgstr "일괄 송장 (수리) 작성하기"
+msgstr "일괄 (수리) 청구서 작성하기"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
@@ -397,7 +397,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr "정말로 청구서를 작성하시겠습니까?"
+msgstr "정말로 청구서(들)를 작성하시겠습니까?"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__state__done
@@ -413,7 +413,7 @@ msgstr "임시"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid ""
 "Draft invoices for this order will be cancelled. Do you confirm the action?"
-msgstr ""
+msgstr "이 주문의 청구서가 취소되었습니다. 작업을 승인하겠습니까?"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -468,7 +468,7 @@ msgstr "그룹별"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__group
 msgid "Group by partner invoice address"
-msgstr "협력사 송장 주소별로 그룹화"
+msgstr "협력사 청구서 주소별로 그룹화"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -546,12 +546,12 @@ msgstr "청구서 제외"
 #: model:ir.model.fields,field_description:repair.field_repair_fee__invoice_line_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__invoice_line_id
 msgid "Invoice Line"
-msgstr "청구서 명세"
+msgstr "청구서 내역"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_method
 msgid "Invoice Method"
-msgstr "송장 방법"
+msgstr "청구서 발행법"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_state
@@ -566,7 +566,7 @@ msgstr "청구서 주소 :"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Invoice and shipping address:"
-msgstr "송장 및 선적 주소 :"
+msgstr "청구서 및 배송 주소 :"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -696,7 +696,7 @@ msgstr "다음 활동 유형"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__none
 msgid "No Invoice"
-msgstr "송장 없음"
+msgstr "청구서 미발행"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
@@ -1042,8 +1042,8 @@ msgid ""
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
 msgstr ""
-"'수리 전'또는 '수리 후'를 선택하면 각각 수리 전후에 송장을 생성할 수 있습니다. '송장 없음'은 이 수리 요청에 대해 송장을 "
-"생성하지 않음을 의미합니다."
+"'수리 전'또는 '수리 후'를 선택하면 각각 수리 전후에 청구서를 생성할 수 있습니다. '청구서 미발행'은 이 수리 요청에 대해 청구서를"
+" 생성하지 않음을 의미합니다."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1166,7 +1166,7 @@ msgstr "수리할 상품이 있는 위치입니다."
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__2binvoiced
 msgid "To be Invoiced"
-msgstr "청구할 예정"
+msgstr "청구서 발행 대기"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1289,7 +1289,7 @@ msgstr ""
 msgid ""
 "You can not delete a repair order which is linked to an invoice which has "
 "been posted once."
-msgstr ""
+msgstr "한번이라도 승인된 청구서가  연결된 수리요청서를 삭제할 수 없습니다."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0

@@ -10,8 +10,8 @@
 # SeongHyeon Cho <jaymz9634@gmail.com>, 2020
 # Link Up링크업 <linkup.way@gmail.com>, 2020
 # Mark Lee <odoos@soti.33mail.com>, 2020
-# Linkup <link-up@naver.com>, 2021
 # JH CHOI <hwangtog@gmail.com>, 2021
+# Linkup <link-up@naver.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-16 12:59+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,7 +67,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.report,print_report_name:point_of_sale.pos_invoice_report
 msgid "'Invoice - %s' % (object.name)"
-msgstr "'송장 - %s' % (object.name)"
+msgstr "'청구서 - %s' % (object.name)"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -352,7 +352,7 @@ msgstr "회계"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__invoice_journal_id
 msgid "Accounting journal used to create invoices."
-msgstr "송장 생성에 사용되는 회계 분개장"
+msgstr "청구서 생성에 사용되는 회계 분개장"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__journal_id
@@ -799,7 +799,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/OrderManagementScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Cannot invoice order from closed session."
-msgstr ""
+msgstr "마감된 세션에서는 청구서를 발행할 수 없습니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1816,7 +1816,7 @@ msgstr "전자 저울 통합을 가능하게 합니다."
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_account
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__invoice_group
 msgid "Enables invoice generation from the Point of Sale."
-msgstr "POS에서 송장 생성이 가능합니다."
+msgstr "POS에서 청구서 생성이 가능합니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2269,7 +2269,7 @@ msgstr "청구서"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__invoice_journal_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Invoice Journal"
-msgstr "송장 분개"
+msgstr "청구서 분개장"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -2309,7 +2309,7 @@ msgstr "팔로워입니다"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_invoiced
 msgid "Is Invoiced"
-msgstr "송장 발행 여부"
+msgstr "청구서 발행됨"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__is_in_company_currency
@@ -2748,7 +2748,7 @@ msgstr "아직 정보가 없습니다!"
 #: code:addons/point_of_sale/report/pos_invoice.py:0
 #, python-format
 msgid "No link to an invoice for %s."
-msgstr "%s에 대한 송장에 대한 링크가 없습니다."
+msgstr "%s에 대한 청구서의 링크가 없습니다."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
@@ -3406,7 +3406,7 @@ msgstr "해당 상품의 손익 계정을 정의하세요 : \"%s\" (id:%d)."
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Please print the invoice from the backend"
-msgstr "백엔드에서 송장을 인쇄하십시오"
+msgstr "백엔드에서 청구서를 인쇄하십시오"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -3526,7 +3526,7 @@ msgstr "점포판매시스템 세부사항 보고서"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_invoice
 msgid "Point of Sale Invoice Report"
-msgstr "점포판매시스템 송장 보고서"
+msgstr "점포판매시스템 청구서 보고서"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
@@ -3758,7 +3758,7 @@ msgstr "현재 POS 세션의 모든 매출이 포함된 보고서 인쇄"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Print invoices on customer request"
-msgstr "고객 요청에 따라 송장 인쇄"
+msgstr "고객 요청에 따라 청구서 인쇄"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4849,7 +4849,7 @@ msgstr "왼쪽이 비어있는 경우 자동 감지되는 하드웨어 프록시
 #, python-format
 msgid ""
 "The invoice journal and the point of sale must belong to the same company."
-msgstr "송장 분개장과 POS는 동일한 회사에 속해야 합니다."
+msgstr "청구서 분개장과 POS는 동일한 회사에 속해야 합니다."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4857,7 +4857,7 @@ msgstr "송장 분개장과 POS는 동일한 회사에 속해야 합니다."
 msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
-msgstr "송장 분개는 판매 분개 또는 회사 통화와 같은 통화로 설정해야 합니다."
+msgstr "청구서 분개는 판매 분개 또는 회사 통화와 같은 통화로 설정해야 합니다."
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -5121,7 +5121,7 @@ msgid ""
 "This invoice has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
-"이 송장은 POS 세션에서 생성되었습니다 : <a href=# data-oe-model=pos.order data-oe-"
+"이 청구서는 POS 세션에서 생성되었습니다 : <a href=# data-oe-model=pos.order data-oe-"
 "id=%d>%s</a>"
 
 #. module: point_of_sale
@@ -5253,7 +5253,7 @@ msgstr "규모 무게"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
 msgid "To invoice"
-msgstr "청구하기"
+msgstr "청구서 발행대기"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
@@ -5818,7 +5818,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "You need to select the customer before you can invoice an order."
-msgstr "주문을 청구하기 전에 고객을 선택해야 합니다."
+msgstr "주문에서 청구서를 발행하기 전에 고객을 선택해야 합니다."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0

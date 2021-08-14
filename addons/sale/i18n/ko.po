@@ -4025,7 +4025,7 @@ msgstr "이 판매 주문의 지불 통신."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance, taxes excluded."
-msgstr "사전 발행된 송장 금액 비율, 세금 제외 금액."
+msgstr "사전 발행된 청구서 금액 비율, 세금 제외 금액."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -4033,7 +4033,8 @@ msgstr "사전 발행된 송장 금액 비율, 세금 제외 금액."
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
-msgstr "선금 송장으로 발행된 제품은 '서비스' 유형이어야만 합니다. 다른 제품을 사용하거나 이 제품을 업데이트하십시오."
+msgstr ""
+"청구서에서 계약금으로 사용되는 품목은 반드시 '서비스' 유형이어야만 합니다. 다른 품목을 사용하거나 이 품목을 업데이트하십시오."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -4043,8 +4044,8 @@ msgid ""
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
 msgstr ""
-"선금 송장으로 발행된 제품의 송장스 정책이 \"주문 수량\"으로 설정되어 있어야 합니다. 보증금 송장을 만들려면 보증금 상품을 "
-"업데이트하십시오."
+"청구서에 계약금으로 사용되는 품목은 청구서발행 정책이  \"주문 수량\"으로 설정되어 있어야 합니다. 보증금 청구서을 만들려면 보증금 "
+"품목을 업데이트하십시오."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__currency_rate
@@ -4343,7 +4344,7 @@ msgstr "공급가액 청구됨"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr "청구될 공급가액"
+msgstr "청구서 발행할 공급가액"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced

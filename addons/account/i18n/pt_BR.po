@@ -6957,7 +6957,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "It was previously '%(previous)s' and it is now '%(now)s'."
-msgstr ""
+msgstr "Era anteriormente '%(previous)s' e agora é '%(now)s'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12528,7 +12528,7 @@ msgid ""
 "validation."
 msgstr ""
 "A despesa é contabilizada quando uma nota de fornecedor é validada, exceto "
-"em contabilidade anglo saxônica com validação de inventário perpétua quando "
+"em contabilidade anglo-saxônica com validação de inventário perpétua quando "
 "é o caso em que a despesa (conta Custo de Bens Vendidos) é reconhecida na "
 "validação de fatura de consumidor."
 
@@ -13060,7 +13060,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The sequence format has changed."
-msgstr ""
+msgstr "O formato de sequência foi alterado."
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -13079,6 +13079,8 @@ msgid ""
 "The sequence will never restart.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"A sequência nunca reiniciará.\n"
+"O número de incremento neste caso é '%(formatted_seq)s'"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13088,6 +13090,9 @@ msgid ""
 "The year detected here is '%(year)s' and the month is '%(month)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"A sequência reiniciará para 1 no início de cada mês.\n"
+"O ano detectado aqui é '%(year)s' e o mês é '%(month)s'.\n"
+"O número de incremento neste caso é '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13097,6 +13102,9 @@ msgid ""
 "The year detected here is '%(year)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"A sequência reiniciará para 1 no início de cada ano.\n"
+"O ano detectado aqui é '%(year)s'.\n"
+"O número de incremento neste caso é '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -13945,7 +13953,7 @@ msgstr "Carregue sua própria conta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
 msgid "Use Anglo-Saxon accounting"
-msgstr "Usar contabilidade Anglo-Saxão"
+msgstr "Usar contabilidade Anglo-Saxônica"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_exigibility
@@ -13971,7 +13979,7 @@ msgstr "Utilizar domínio ativo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__anglo_saxon_accounting
 msgid "Use anglo-saxon accounting"
-msgstr "Usar contabilidade anglo-saxão"
+msgstr "Usar contabilidade Anglo-Saxônica"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_batch_payment
@@ -14409,6 +14417,12 @@ msgid ""
 "2/ then filter on 'Draft' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
+"Você não pode arquivar um diário que contém rascunhos de entradas de diário.\n"
+"\n"
+"Para proceder:\n"
+"1/ clique no botão superior direito 'Entradas de Diário' a partir deste formulário\n"
+"2/ então filtre as entradas por 'Rascunho'\n"
+"3/ selecione todas elas e faça o lançamento ou delete-as através do menu de ação"
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0

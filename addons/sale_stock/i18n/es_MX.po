@@ -349,7 +349,7 @@ msgstr "Existencias pronosticadas"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
-msgstr "Cant. Libre Hoy"
+msgstr "Cantidades gratis hoy"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
@@ -501,9 +501,9 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
-"Margen de error para fechas prometidas a los clientes. La entrega de los "
-"productos quedará programada días antes de la fecha prometida para hacer "
-"frente a posibles retrasos inesperados en la cadena de suministro."
+"Margen de error en las fechas prometidas a los clientes. Se programará la "
+"entrega de los productos unos días antes de la fecha real prometida con el "
+"fin de evitar retrasos inesperados en la cadena de suministro."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
@@ -514,10 +514,10 @@ msgid ""
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
 msgstr ""
-"Margen de error para las fechas prometidas a los clientes. Los productos "
-"serán planificados para el abastecimiento y entrega días antes de la fecha "
-"prometida actual, para lidiar con posibles retrasos inesperados en la cadena"
-" de suministro."
+"Margen de error en las fechas prometidas a los clientes. Se programará el "
+"aprovisionamiento y la entrega de los productos unos días antes de la fecha "
+"real prometida con el fin de evitar retrasos inesperados en la cadena de "
+"suministro."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
@@ -527,7 +527,7 @@ msgstr "Método para actualizar la cantidad entregada"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr "Avanzar las fechas de entrega previstas por"
+msgstr "Adelantar las fechas de entrega previstas por"
 
 #. module: sale_stock
 #. openerp-web
@@ -548,7 +548,7 @@ msgstr "No hay disponibilidad futura"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "On"
-msgstr "Al"
+msgstr "En"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -585,12 +585,12 @@ msgstr "Tipo de producto"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
 msgid "Qty Available Today"
-msgstr "Cant. Disponible Hoy"
+msgstr "Cantidad disponible actualmente"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr "Cant. Por Entregar"
+msgstr "Cantidad por entregar"
 
 #. module: sale_stock
 #. openerp-web
@@ -614,10 +614,11 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
-"Es aconsejable reservar manualmente los productos en las órdenes de entrega "
-"o por medio del planificador para gestionar mejor las prioridades si se dan "
-"plazos largos de entrega o desabastecimientos frecuentes. El planificador se"
-" ejecuta automáticamente, por defecto, cada 24 horas."
+"Se aconseja reservar los productos en las órdenes de entrega o ejecutar el "
+"planificador manualmente para manejar de mejor manera las prioridades en el "
+"caso de largos plazos de entrega de los clientes y/o el desabastecimiento "
+"frecuente. El planificador se ejecuta automáticamente de forma "
+"predeterminada cada 24 horas."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
@@ -678,12 +679,12 @@ msgstr "Órdenes de venta"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
 msgid "Sales Safety Days"
-msgstr "Días de seguridad para ventas"
+msgstr "Días de seguridad para las ventas"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr "Programe las entregas antes para evitar retrasos"
+msgstr "Programe sus entregas con anticipación para evitar retrasos"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
@@ -703,7 +704,7 @@ msgstr "Plazo de seguridad para ventas"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr "Seleccionable en las líneas de los pedidos de venta"
+msgstr "Se puede seleccionar en la línea de la orden de venta"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__one
@@ -714,8 +715,7 @@ msgstr "Enviar todos los productos a la vez"
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
 msgid "Ship products as soon as available, with back orders"
 msgstr ""
-"Enviar los productos tan pronto como estén disponibles, con los pedidos en "
-"espera"
+"Enviar los productos lo antes posible, incluyendo las órdenes pendientes."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
@@ -782,9 +782,9 @@ msgid ""
 "                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
 "                        You should probably update the partner on this document."
 msgstr ""
-"La dirección de entrega ha sido cambiada en el Pedido de Venta<br/>\n"
-"                        De <strong>\"%s\"</strong> A <strong>\"%s\"</strong>,\n"
-"                        Probablemente debe actualizar el contacto en este documento."
+"Se ha cambiado la dirección de entrega en la orden de venta<br/>\n"
+"                        De <strong>\"%s\"</strong> a <strong>\"%s\"</strong>,\n"
+"                        Debería informar al partner sobre este documento."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -801,7 +801,7 @@ msgstr ""
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "This product is replenished on demand."
-msgstr "Este producto se repone bajo demanda."
+msgstr "Este producto se reabastece según la demanda."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -828,7 +828,7 @@ msgstr "Ver pronóstico"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
 msgid "Virtual Available At Date"
-msgstr "Virtual disponible en la fecha"
+msgstr "Disponibilidad virtual a la fecha"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
@@ -882,7 +882,7 @@ msgid ""
 "Create a return first."
 msgstr ""
 "No puede disminuir la cantidad pedida por debajo de la cantidad entregada.\n"
-"Crea un retorno primero."
+"Cree un retorno primero."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
