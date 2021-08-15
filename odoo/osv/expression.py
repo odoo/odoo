@@ -119,15 +119,12 @@ import warnings
 import logging
 import reprlib
 import traceback
-from functools import partial
 
 from datetime import date, datetime, time
 import odoo.modules
 from odoo.osv.query import Query
 from odoo.tools import pycompat
-from odoo.tools.misc import get_lang
-from ..models import MAGIC_COLUMNS, BaseModel
-import odoo.tools as tools
+from ..models import BaseModel
 
 
 # Domain operators.
@@ -136,16 +133,29 @@ OR_OPERATOR = '|'
 AND_OPERATOR = '&'
 DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 
-# List of available term operators. It is also possible to use the '<>'
-# operator, which is strictly the same as '!='; the later should be preferred
-# for consistency. This list doesn't contain '<>' as it is simplified to '!='
-# by the normalize_operator() function (so later part of the code deals with
-# only one representation).
-# Internals (i.e. not available to the user) 'inselect' and 'not inselect'
-# operators are also used. In this case its right operand has the form (subselect, params).
-TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
+# List of available term operators. It's also possible to use short-circuit
+# and alias operators. This list doesn't contain them as they are normalized
+# by :meth:`~normalize_term_operators` before they're processed.
+TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
                   'child_of', 'parent_of')
+
+# List of short-circuit term operators.
+# They are normalized by :meth:`~normalize_term_operators` before being processed.
+SHORT_CIRCUIT_TERM_OPERATORS = tuple(fstr.format(operator) for operator in TERM_OPERATORS for fstr in ("{}?", "?{}"))
+
+# Aliases should be avoided for consistency.
+# They are normalized by :meth:`~normalize_term_operators` before being processed.
+TERM_OPERATORS_ALIASES = {
+    '<>': '!=',
+}
+
+# List of alias term operators.
+ALIAS_TERM_OPERATORS = tuple(TERM_OPERATORS_ALIASES.keys())
+
+# Internals (i.e. not available to the user) 'inselect' and 'not inselect'
+# In this case its right operand has the form (subselect, params).
+INTERNAL_TERM_OPERATORS = ('inselect', 'not inselect')
 
 # A subset of the above operators, with a 'negative' semantic. When the
 # expressions 'in NEGATIVE_TERM_OPERATORS' or 'not in NEGATIVE_TERM_OPERATORS' are used in the code
@@ -279,6 +289,62 @@ def OR(domains):
     return combine(OR_OPERATOR, [FALSE_LEAF], [TRUE_LEAF], domains)
 
 
+def normalize_term_operators(domain):
+    """Returns a domain with normalized term operators
+
+    All short-circuit and alias operators will be replaced with their canonical form.
+
+    Short-circuit operators are:
+    <term_operator>?     right is false or left <term_operator> right
+    ?<term_operator>     left is false or left <term_operator> right
+
+    Some examples of short-circuit operators:
+
+    =?          right = false or left = right
+    !=?         right = false or left != right
+    >?          right = false or left > right
+    <?          right = false or left < right
+    >=?         right = false or left >= right
+    <=?         right = false or left <= right
+    in?         right = false or left is in right
+    not in?     right = false or left is not in right
+
+    ?=          left = false or left = right
+    ?!=         left = false or left != right
+    ?>          left = false or left > right
+    ?<          left = false or left < right
+    ?>=         left = false or left >= right
+    ?<=         left = false or left <= right
+    ?in         left = false or left is in right
+    ?not in     left = false or left is not in right
+    """
+
+    def normalize_term_operator_leaf(leaf):
+        if not is_leaf(leaf):
+            return [leaf]
+        left, operator, right = leaf
+        operator = operator.lower()
+        if operator in TERM_OPERATORS_ALIASES:
+            return [(left, TERM_OPERATORS_ALIASES[operator], right)]
+        elif operator in SHORT_CIRCUIT_TERM_OPERATORS:
+            if operator[0] == '?':
+                # short-circuit meaning left is False or left {operator} right.
+                return ['|', (left, '=', False), (left, operator[1:], right)]
+            if operator[-1] == '?':
+                # short-circuit meaning right is falsy or left {operator} right.
+                if right is False or right is None or isinstance(right, (tuple, list)) and len(right) == 0:
+                    return [TRUE_LEAF]
+                else:
+                    return [(left, operator[:-1], right)]
+        else:
+            return [leaf]
+
+    result = []
+    for leaf in domain:
+        result.extend(normalize_term_operator_leaf(leaf))
+    return result
+
+
 def distribute_not(domain):
     """ Distribute any '!' domain operators found inside a normalized domain.
 
@@ -350,8 +416,6 @@ def normalize_leaf(element):
     left, operator, right = element
     original = operator
     operator = operator.lower()
-    if operator == '<>':
-        operator = '!='
     if isinstance(right, bool) and operator in ('in', 'not in'):
         _logger.warning("The domain term '%s' should use the '=' or '!=' operator." % ((left, original, right),))
         operator = '=' if operator == 'in' else '!='
@@ -378,9 +442,9 @@ def is_leaf(element, internal=False):
 
         Note: OLD TODO change the share wizard to use this function.
     """
-    INTERNAL_OPS = TERM_OPERATORS + ('<>',)
+    INTERNAL_OPS = TERM_OPERATORS + SHORT_CIRCUIT_TERM_OPERATORS + ALIAS_TERM_OPERATORS
     if internal:
-        INTERNAL_OPS += ('inselect', 'not inselect')
+        INTERNAL_OPS += INTERNAL_TERM_OPERATORS
     return (isinstance(element, tuple) or isinstance(element, list)) \
         and len(element) == 3 \
         and element[1] in INTERNAL_OPS \
@@ -433,7 +497,7 @@ class expression(object):
         self.root_alias = alias or model._table
 
         # normalize and prepare the expression for parsing
-        self.expression = distribute_not(normalize_domain(domain))
+        self.expression = distribute_not(normalize_domain(normalize_term_operators(domain)))
 
         # this object handles all the joins
         self.query = Query(model.env.cr, model._table, model._table_query) if query is None else query
@@ -491,7 +555,6 @@ class expression(object):
                 :var obj comodel: relational model of field (field.comodel)
                     (res_partner.bank_ids -> res.partner.bank)
         """
-        cr, uid, context, su = self.root_model.env.args
 
         def to_ids(value, comodel, leaf):
             """ Normalize a single id or name, or a list of those, into a list of ids
@@ -1024,15 +1087,6 @@ class expression(object):
         elif (right is False or right is None) and (operator == '!='):
             query = '%s."%s" IS NOT NULL' % (table_alias, left)
             params = []
-
-        elif operator == '=?':
-            if right is False or right is None:
-                # '=?' is a short-circuit that makes the term TRUE if right is None or False
-                query = 'TRUE'
-                params = []
-            else:
-                # '=?' behaves like '=' in other cases
-                query, params = self.__leaf_to_sql((left, '=', right), model, alias)
 
         else:
             need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')

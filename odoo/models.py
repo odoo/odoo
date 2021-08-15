@@ -5455,6 +5455,7 @@ Fields:
 
     def filtered_domain(self, domain):
         if not domain: return self
+        domain = expression.normalize_term_operators(domain)
         result = []
         for d in reversed(domain):
             if d == '|':
@@ -5520,7 +5521,7 @@ Fields:
                         ok = any(map(lambda x: x is not None and x <= value, data))
                     elif comparator == '>=':
                         ok = any(map(lambda x: x is not None and x >= value, data))
-                    elif comparator in ('!=', '<>'):
+                    elif comparator == '!=':
                         ok = value not in data
                     elif comparator == 'not in':
                         ok = all(map(lambda x: x not in data, value))
@@ -5536,8 +5537,6 @@ Fields:
                     elif comparator == 'like':
                         data = [(x or "") for x in data]
                         ok = bool(fnmatch.filter(data, value and '*'+value_esc+'*'))
-                    elif comparator == '=?':
-                        ok = (value in data) or not value
                     elif comparator in ('=like'):
                         data = [(x or "") for x in data]
                         ok = bool(fnmatch.filter(data, value_esc))

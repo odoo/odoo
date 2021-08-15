@@ -306,7 +306,7 @@ class Partner(models.Model):
             Partner = self.with_context(active_test=False).sudo()
             domain = [
                 ('vat', '=', partner.vat),
-                ('company_id', 'in', [False, partner.company_id.id]),
+                ('company_id', '?=', partner.company_id.id),
             ]
             if partner_id:
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]

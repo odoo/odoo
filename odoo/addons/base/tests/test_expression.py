@@ -626,12 +626,35 @@ class TestExpression(SavepointCaseWithUserDemo):
         # Test2: inheritance + relational fields
         users = self._search(Users, [('child_ids.name', 'like', 'test_B')])
         self.assertEqual(users, b1, 'searching through inheritance failed')
-        
-        # Special =? operator mean "is equal if right is set, otherwise always True"
-        users = self._search(Users, [('name', 'like', 'test'), ('parent_id', '=?', False)])
-        self.assertEqual(users, a + b1 + b2, '(x =? False) failed')
-        users = self._search(Users, [('name', 'like', 'test'), ('parent_id', '=?', b1.partner_id.id)])
-        self.assertEqual(users, b2, '(x =? id) failed')
+
+    def test_25_expression_short_circuit_term_operators(self):
+        Partners = self.env['res.partner']
+        partner_a = Partners.create({'name': 'test_A'})
+        partner_a_child = Partners.create({'name': 'test_A_child', 'parent_id': partner_a.id})
+        partner_b = Partners.create({'name': 'test_B'})
+        partner_b_child = Partners.create({'name': 'test_B_child', 'parent_id': partner_b.id})
+        all_partners = partner_a + partner_a_child + partner_b + partner_b_child
+        # alias term operators
+        res = self._search(Partners, [('id', 'in', all_partners.ids), ('id', '<>', partner_b.id)])
+        self.assertEqual(res, partner_a + partner_a_child + partner_b_child, 'alias operator <> failed')
+        # left short-circuit '?='
+        res = self._search(Partners, [('id', 'in', all_partners.ids), ('parent_id', '?=', partner_b.id)])
+        self.assertEqual(res, partner_a + partner_b + partner_b_child, 'short-circuit ?= failed')
+        # left short-circuit '?in'
+        res = self._search(Partners, [('id', 'in', all_partners.ids), ('parent_id', '?in', [partner_b.id])])
+        self.assertEqual(res, partner_a + partner_b + partner_b_child, 'short-circuit ?in failed')
+        # right short-circuit '=?'
+        res = self._search(Partners, [('id', 'in', all_partners.ids), ('parent_id', '=?', partner_a.id)])
+        self.assertEqual(res, partner_a_child, 'short-circuit =? failed')
+        # right short-circuit '=?' with False condition
+        res = self._search(Partners, [('id', 'in', all_partners.ids), ('parent_id', '=?', False)])
+        self.assertEqual(res, all_partners, 'short-circuit =? failed')
+        # right short-circuit 'in?'
+        res = self._search(Partners, [('id', 'in', all_partners.ids), ('parent_id', 'in?', [partner_a.id])])
+        self.assertEqual(res, partner_a_child, 'short-circuit in? failed')
+        # right short-circuit 'in?' with empty condition
+        res = self._search(Partners, [('id', 'in', all_partners.ids), ('parent_id', 'in?', [])])
+        self.assertEqual(res, all_partners, 'short-circuit in? failed')
 
     def test_30_normalize_domain(self):
         norm_domain = domain = ['&', (1, '=', 1), ('a', '=', 'b')]
