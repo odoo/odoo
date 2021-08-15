@@ -13,6 +13,7 @@
 # Mandy Choy <mnc@odoo.com>, 2021
 # JustinC <dev@dottdot.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Benson White <Benson.Dr@Gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2016-08-05 13:09+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Last-Translator: Benson White <Benson.Dr@Gmail.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,6 +66,9 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order'} (Ref "
 "${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('draft', 'sent') 和 "
+"(ctx.get('proforma') 以及 'Proforma' 或者 'Quotation') 或者 'Order'} (Ref "
+"${object.name or 'n/a' })"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -97,7 +101,7 @@ msgstr ""
 #, python-format
 msgid ""
 "<b>Send the quote</b> to yourself and check what the customer will receive."
-msgstr ""
+msgstr "<b>傳送此報價單</b>給你自己先審查一遍客戶將看到的內容."
 
 #. module: sale
 #. openerp-web
@@ -484,6 +488,8 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                            <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
+"<span groups=\\\"account.group_show_line_subtotals_tax_excluded\\\">金額</span>\\n\n"
+"<span groups=\\\"account.group_show_line_subtotals_tax_included\\\">總價格</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -787,6 +793,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "                ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"訂單是在交貨數量超過最初數量時追加銷售\n"
+"                 訂購數量，并且發票策略基於訂購數量."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__analytic_account_id
@@ -835,6 +843,7 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "                to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"舉個粟子：超市裡，客人從貨架拿了瓶茅台到前台買單結賬，而此時你收銀系統裡卻顯示茅台庫存為0，系統顯示沒庫存了，你不可能告訴客人說這瓶茅台不賣讓客人別買。當然53度飛天除外。賬實不符，庫存不准，這些都是真實存在的，存在即合理，odoo預設允許超賣，有個模組，可以禁止超賣。都是開放原始碼的，自己找吧."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -924,7 +933,7 @@ msgstr "取消"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Cancel Sales Order"
-msgstr ""
+msgstr "取消銷售訂單"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -952,7 +961,7 @@ msgstr "如果您要向客戶發送報價單，而不是立即確認訂單，點
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Choose between electronic signatures or online payments."
-msgstr ""
+msgstr "選取線上支付或電子簽名."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
@@ -1254,12 +1263,12 @@ msgstr "自定義報價的外觀。"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Customize your quotes and orders."
-msgstr ""
+msgstr "自訂您的報價和訂單."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL USA Connector"
-msgstr ""
+msgstr "美國 DHL 連接器"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1432,7 +1441,7 @@ msgstr "顯示類型"
 #: code:addons/sale/static/src/js/sale_order_view.js:0
 #, python-format
 msgid "Do you want to apply this discount to all order lines?"
-msgstr ""
+msgstr "您想將此折扣應用於所有訂單行嗎?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1460,7 +1469,7 @@ msgstr "預付定金總額"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr ""
+msgstr "預付款金額 (固定)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
@@ -1515,7 +1524,7 @@ msgstr "草稿報價單"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 msgid "Draft invoices for this order will be cancelled."
-msgstr ""
+msgstr "此訂單的草稿發票將被取消."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -1692,7 +1701,7 @@ msgstr "獲取產品或客戶的訂單警告"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Good job, let's continue."
-msgstr ""
+msgstr "幹得好，我們繼續."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1719,7 +1728,7 @@ msgstr "有訊息"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
 msgid "Has Pricelist Changed"
-msgstr ""
+msgstr "價格表已更改"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
@@ -1828,7 +1837,7 @@ msgstr "發票地址"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__display_invoice_alert
 msgid "Invoice Alert"
-msgstr ""
+msgstr "應收憑單警示"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
@@ -1893,7 +1902,7 @@ msgstr "已開發票數量"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Invoiced Quantity: %s"
-msgstr ""
+msgstr "已開立應收憑單數量: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
@@ -2065,14 +2074,14 @@ msgstr "讓您的客戶登錄查看他們的文件"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Let's send the quote."
-msgstr ""
+msgstr "讓我們傳送報價."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Lets keep electronic signature for now."
-msgstr ""
+msgstr "讓我們暫時保留電子簽名."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2095,7 +2104,7 @@ msgstr "已鎖定"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Looks good. Let's continue."
-msgstr ""
+msgstr "看來不錯, 讓我們繼續."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -2147,7 +2156,7 @@ msgstr "毛利"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
 msgid "Mark Quotation as Sent"
-msgstr ""
+msgstr "標記報價單為已發送"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -2286,7 +2295,7 @@ msgstr "沒有要開立應收憑單的訂單"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr ""
+msgstr "沒有找到超賣訂單."
 
 #. module: sale
 #. openerp-web
@@ -2319,7 +2328,7 @@ msgstr "沒有要開立發票的"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Now, we'll create a sample quote."
-msgstr ""
+msgstr "現在，我們將建立一個示範報價."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -2411,7 +2420,7 @@ msgstr "線上簽名"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
-msgstr ""
+msgstr "只有草稿訂單可以標記為直接傳送."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
@@ -2503,7 +2512,7 @@ msgstr "已開立發票"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
-msgstr ""
+msgstr "訂購數量: %(old_qty)s -> %(new_qty)s"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__invoice_policy
@@ -2656,7 +2665,7 @@ msgstr "請為公司 %s （%s） 定義會計銷售日記帳。"
 #: code:addons/sale/static/src/js/sale.js:0
 #, python-format
 msgid "Please enter an integer value"
-msgstr ""
+msgstr "請輸入一個整數值"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
@@ -2771,7 +2780,7 @@ msgstr "產品模板"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
 msgid "Product Uom Readonly"
-msgstr ""
+msgstr "產品計量單位唯讀"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
@@ -2788,7 +2797,7 @@ msgstr "產品變體"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed according to pricelist <b>%s<b> "
-msgstr ""
+msgstr "已根據價目表重新計算產品價格 <b>%s<b> "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2850,7 +2859,7 @@ msgstr "數量"
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_qty_configurator
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_qty_configurator
 msgid "Quantity visible in configurator"
-msgstr ""
+msgstr "在設定中可見的數量"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2969,7 +2978,7 @@ msgstr "重新開立應收憑單策略可見"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
-msgstr ""
+msgstr "根據此價目表重新計算所有價格"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3539,7 +3548,7 @@ msgstr "階段"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Start by checking your company's data."
-msgstr ""
+msgstr "從檢查你公司的資料開始."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
@@ -3631,6 +3640,8 @@ msgid ""
 "Technical Field, True if the pricelist was changed;\n"
 " this will then display a recomputation button"
 msgstr ""
+"技術欄位，如果價格表發生變化，則為真:\n"
+"   這將顯示一個重新計算按鈕"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
@@ -3727,6 +3738,9 @@ msgid ""
 "%s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"下列產品不限於本公司%s，因為它們已在其他公司的報價或銷售訂單中使用:\n"
+"%s\n"
+"你可以將這些產品存檔，然后根據公司的限制重新建立它們，或者將它們作為共用產品保留."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -3758,13 +3772,13 @@ msgstr "訂單未處於需要客戶簽名的狀態。"
 msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
 "total is %r but acquirer replied with %r."
-msgstr ""
+msgstr "儘管來自收購人(%s)的因應:訂單全部是%r，但是收購者用%r回答."
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "訂單數量已更新."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
@@ -3834,6 +3848,12 @@ msgid ""
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales tab\" and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\".\n"
 "        "
 msgstr ""
+"沒有什麼須要發票的!\n"
+"\n"
+"這種行為的原因可能是:\n"
+" - 您應該在開具發票之前交付您的產品：按一下 \"卡車\" 圖像 (螢幕右上角) 并按照說明進行作業.\n"
+"- 您應該修改產品的發票政策：開啟產品，轉到 \"銷售\" 選項卡，將發票政策從 \"交貨數量\" 修改為 \"訂購數量\".\n"
+" "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3918,7 +3938,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "This will update all unit prices based on the currently set pricelist."
-msgstr ""
+msgstr "這將根據目前設定的價目表更新所有單價."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -3954,7 +3974,7 @@ msgstr "要在 B2B 模式下發出邀請，請開啟一個聯絡人或在清單�
 msgid ""
 "To speed up order confirmation, we can activate electronic signatures or "
 "payments."
-msgstr ""
+msgstr "為了加快訂單確認，我們可以啟用電子簽名或付款."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4110,7 +4130,7 @@ msgstr "計量單位"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
-msgstr ""
+msgstr "更新價格"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4194,7 +4214,7 @@ msgstr "網站溝通記錄"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Write a company name to create one, or see suggestions."
-msgstr ""
+msgstr "寫一個公司名稱來建立一個，或檢視建議."
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4280,6 +4300,8 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"你的報價單包含來自公司 %(product_company)s 的產品，而你的報價單屬於公司 %(quote_company)s。 "
+"請變更報價單公司或從其他公司移除產品 (%(bad_products)s)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost

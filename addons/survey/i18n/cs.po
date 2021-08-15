@@ -11,7 +11,7 @@
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Martin Trigaux, 2021
 # Michal Veselý <michal@veselyberanek.net>, 2021
-# trendspotter, 2021
+# trendspotter <jirka.p@volny.cz>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: trendspotter, 2021\n"
+"Last-Translator: trendspotter <jirka.p@volny.cz>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,6 +72,8 @@ msgid ""
 "<b>Certificate</b>\n"
 "                            <br/>"
 msgstr ""
+"<b>Certifikát</b>\n"
+"                            <br/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -86,7 +88,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
 msgid "<br/>by"
-msgstr ""
+msgstr "<br/>od"
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_certification
@@ -3222,6 +3224,22 @@ msgstr "Nemůžete poslat pozvánku na průzkum, který nemá otázky."
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
+msgid ""
+"You cannot send an invitation for a \"One page per section\" survey if the "
+"survey has no sections."
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"You cannot send an invitation for a \"One page per section\" survey if the "
+"survey only contains empty sections."
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "Nemůžete odesílat pozvánky na uzavřené průzkumy."
 
@@ -3248,7 +3266,7 @@ msgstr "odpověděl"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "attempts"
-msgstr ""
+msgstr "pokusů"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
