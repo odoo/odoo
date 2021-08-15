@@ -1186,6 +1186,16 @@
                 <t t-set="model">utm.source</t>
                 <t t-set="call_with">display_name</t>
             </t>
+            <we-select string="⌙ Users"
+                data-dependencies="visibility_conditional"
+                data-attribute-name="data-logged"
+                data-save-attribute="visibilityValueLogged"
+                data-no-preview="true"
+                data-attribute-default-value="">
+                <we-button data-select-value="true">Visible for Logged In</we-button>
+                <we-button data-select-value="false">Visible for Logged Out</we-button>
+                <we-button data-select-value="">Visible for Everyone</we-button>
+            </we-select>
         </we-collapse>
     </div>
 
