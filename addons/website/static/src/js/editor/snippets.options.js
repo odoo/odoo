@@ -2970,12 +2970,15 @@ options.registry.ConditionalVisibility = options.Class.extend({
         await this._super(...arguments);
 
         for (const widget of this._userValueWidgets) {
-            if (widget.el.classList.contains('o_we_m2m')) {
-                const dataAttributes = widget.options.dataAttributes;
+            const params = widget.getMethodsParams();
+            if (params.saveAttribute) {
                 this.optionsAttributes.push({
-                    saveAttribute: dataAttributes.saveAttribute,
-                    attributeName: dataAttributes.attributeName,
-                    callWith: dataAttributes.callWith,
+                    saveAttribute: params.saveAttribute,
+                    attributeName: params.attributeName,
+                    // If callWith dataAttribute is not specified, the default
+                    // field to check on the record will be .value for values
+                    // coming from another widget than M2M.
+                    callWith: params.callWith || 'value',
                 });
             }
         }
@@ -3025,6 +3028,24 @@ options.registry.ConditionalVisibility = options.Class.extend({
         this._updateCSSSelectors();
     },
     /**
+     * Selects a value for target's data-attributes.
+     * Should be used instead of selectRecord if the visibility is not related
+     * to database values.
+     *
+     * @see this.selectClass for parameters
+     */
+    selectValue(previewMode, widgetValue, params) {
+        if (widgetValue) {
+            const widgetValueIndex = params.possibleValues.indexOf(widgetValue);
+            const value = [{value: widgetValue, id: widgetValueIndex}];
+            this.$target[0].dataset[params.saveAttribute] = JSON.stringify(value);
+        } else {
+            delete this.$target[0].dataset[params.saveAttribute];
+        }
+
+        this._updateCSSSelectors();
+    },
+    /**
      * Opens the toggler when 'conditional' is selected.
      *
      * @override
@@ -3065,6 +3086,10 @@ options.registry.ConditionalVisibility = options.Class.extend({
     async _computeWidgetState(methodName, params) {
         if (methodName === 'selectRecord') {
             return this.$target[0].dataset[params.saveAttribute] || '[]';
+        }
+        if (methodName === 'selectValue') {
+            const selectedValue = this.$target[0].dataset[params.saveAttribute];
+            return selectedValue ? JSON.parse(selectedValue)[0].value : params.attributeDefaultValue;
         }
         return this._super(...arguments);
     },
