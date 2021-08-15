@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
         htmlEl.dataset.country = country;
     }
 
+    htmlEl.dataset.logged = !session.is_website_user;
+
     // Create CSS rules in a dedicated style tag according to the snippet
     // visibility option's computed ones (saved as data attributes).
     const styleEl = document.createElement('style');
