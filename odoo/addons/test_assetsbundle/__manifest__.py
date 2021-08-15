@@ -11,4 +11,5 @@
         "views/views.xml",
     ],
     'auto_install': False,
+    'license': 'LGPL-3',
 }

@@ -65,8 +65,8 @@
 # Arnaud Willem <contact@arnaud-willem.eu>, 2020
 # Idir Talem <idir.talem@gmail.com>, 2020
 # Alice Van Goethem <vga@odoo.com>, 2021
-# Quentin Delcourte <delcourte.quentin@hotmail.com>, 2021
-# JEK Odoo <jek@odoo.com>, 2021
+# qdelcourte <delcourte.quentin@hotmail.com>, 2021
+# Jérôme JEK <jek@odoo.com>, 2021
 # Yann Papouin <y.papouin@dec-industrie.com>, 2021
 # Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
 # Christophe Ricevuto <cri@nalios.be>, 2021
@@ -74,13 +74,15 @@
 # Martin Trigaux, 2021
 # Pierre Delacroix <pde@odoo.com>, 2021
 # Benjamin Stienon <tsb@odoo.com>, 2021
-# Didier LUBERRIAGA <didier.luberriaga@gmail.com>, 2021
+# Didier Luberriaga, 2021
 # Jonathan Castillo <jcs@odoo.com>, 2021
 # Fabien Pinckaers <fp@openerp.com>, 2021
 # Alexandra Jubert <aju@odoo.com>, 2021
 # Saad Thaifa <saad.thaifa@gmail.com>, 2021
 # Amaury oci <asalmon@oci.fr>, 2021
 # Cécile Collart <cco@odoo.com>, 2021
+# Camille Dantinne <cmd@odoo.com>, 2021
+# sbr <sbr@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -88,7 +90,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
+"Last-Translator: sbr <sbr@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5642,7 +5644,7 @@ msgstr "Nombre à virgule flottante"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Follow Customer Payments"
-msgstr ""
+msgstr "Suivi des paiements clients "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_follower_ids
@@ -5931,7 +5933,7 @@ msgstr "Regrouper par"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__group_payment
 msgid "Group Payments"
-msgstr "Grouper les Payements"
+msgstr "Grouper les Paiements"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__group
@@ -6961,7 +6963,7 @@ msgstr "Il crée des brouillons de facture et de notes en envoyant un email."
 #: model:ir.model.fields,help:account.field_account_move__is_move_sent
 #: model:ir.model.fields,help:account.field_account_payment__is_move_sent
 msgid "It indicates that the invoice/payment has been sent."
-msgstr "Cela indique que la facture ou le payement a été envoyé."
+msgstr "Cela indique que la facture ou le paiement a été envoyé."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -6972,6 +6974,12 @@ msgid ""
 msgstr ""
 "Il semble que les taxes aient été modifiées depuis la création de l'écriture"
 " de journal. Vous devriez plutôt créer la note de crédit manuellement."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "It was previously '%(previous)s' and it is now '%(now)s'."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -8822,23 +8830,23 @@ msgstr "Compte de sortie pour la valorisation d'inventaire"
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Outstanding Payments"
-msgstr "Payements Sortants en Suspens"
+msgstr "Paiements Sortants en Suspens"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_credit_account_id
 msgid "Outstanding Payments Account"
-msgstr "Compte de Payements Sortants"
+msgstr "Compte de Paiements Sortants"
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Outstanding Receipts"
-msgstr "Payements Entrants en Suspens"
+msgstr "Paiements Entrants en Suspens"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_debit_account_id
 msgid "Outstanding Receipts Account"
-msgstr "Compte de Payements Entrants"
+msgstr "Compte de Paiements Entrants"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -9067,7 +9075,7 @@ msgstr "Paiement"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payment Communications"
-msgstr "Communications de Payements"
+msgstr "Communications de Paiements"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_date
@@ -9116,7 +9124,7 @@ msgstr "Méthodes de paiements"
 #: model:ir.model.fields,field_description:account.field_account_move__qr_code_method
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code_method
 msgid "Payment QR-code"
-msgstr "Code QR de Payement"
+msgstr "Code QR de Paiement"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_payment_receipt
@@ -9239,7 +9247,7 @@ msgstr "Paiements"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payments Configuration"
-msgstr "Configuration des Payements"
+msgstr "Configuration des Paiements"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_payments
@@ -9258,7 +9266,7 @@ msgstr ""
 msgid ""
 "Payments generated during the reconciliation of this bank statement lines."
 msgstr ""
-"Payements générés lors de la réconciliation de cette transaction bancaire."
+"Paiements générés lors de la réconciliation de cette transaction bancaire."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -9341,7 +9349,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Please define a payment method on your payment."
-msgstr "Précisez svp une Méthode sur votre Payement."
+msgstr "Précisez svp une Méthode sur votre Paiement."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -11999,7 +12007,7 @@ msgid ""
 " required or not in the payments form views"
 msgstr ""
 "Champ technique utilisé pour savoir si le champ 'partner_bank_id' doit être "
-"exigé dans la vue formulaire des payements"
+"exigé dans la vue formulaire des paiements"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_exigible
@@ -12576,7 +12584,7 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, all the write-off journal items must share the same account."
 msgstr ""
-"Le payement de cette Ecriture Comptable %s n'est pas autorisé.\n"
+"Le paiement de cette Ecriture Comptable %s n'est pas autorisé.\n"
 "Pour être cohérents, tous les write-off doivent partager le même compte."
 
 #. module: account
@@ -12939,11 +12947,43 @@ msgstr ""
 "Le champ séquence est utilisé pour définir l'ordre d'application des taxes."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The sequence format has changed."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid ""
 "The sequence regex should at least contain the seq grouping keys. For instance:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will never restart.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every month.\n"
+"The year detected here is '%(year)s' and the month is '%(month)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every year.\n"
+"The year detected here is '%(year)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
 
 #. module: account
@@ -14186,6 +14226,18 @@ msgstr ""
 "défaut est la référence Odoo."
 
 #. module: account
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"You can not archive a journal containing draft journal entries.\n"
+"\n"
+"To proceed:\n"
+"1/ click on the top-right button 'Journal Entries' from this journal form\n"
+"2/ then filter on 'Draft' entries\n"
+"3/ select them all and post or delete them through the action menu"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid ""
@@ -14336,7 +14388,7 @@ msgstr ""
 msgid ""
 "You can't create payments for entries belonging to different companies."
 msgstr ""
-"Vous ne pouvez pas créer de payements pour des Ecritures appartenant à des "
+"Vous ne pouvez pas créer de paiements pour des Ecritures appartenant à des "
 "sociétés différentes."
 
 #. module: account

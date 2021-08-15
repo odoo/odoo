@@ -15,13 +15,15 @@
         name="_init_data_analytic_account"
         eval="[]"/>
 
-    <record id="ir_config_parameter_timesheet_rounding" model="ir.config_parameter">
-        <field name="key">hr_timesheet.timesheet_rounding</field>
-        <field name="value">15</field>
-    </record>
-    <record id="ir_config_parameter_timesheet_min_duration" model="ir.config_parameter">
-        <field name="key">hr_timesheet.timesheet_min_duration</field>
-        <field name="value">15</field>
-    </record>
+    <data noupdate="1">
+        <record id="ir_config_parameter_timesheet_rounding" model="ir.config_parameter">
+            <field name="key">hr_timesheet.timesheet_rounding</field>
+            <field name="value">15</field>
+        </record>
+        <record id="ir_config_parameter_timesheet_min_duration" model="ir.config_parameter">
+            <field name="key">hr_timesheet.timesheet_min_duration</field>
+            <field name="value">15</field>
+        </record>
+    </data>
 
 </odoo>

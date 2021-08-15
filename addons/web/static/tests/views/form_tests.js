@@ -1025,6 +1025,55 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('reset local state when switching to another view', async function (assert) {
+        assert.expect(3);
+
+        const actionManager = await createActionManager({
+            data: this.data,
+            archs: {
+                'partner,false,form': `<form>
+                        <sheet>
+                            <field name="product_id"/>
+                            <notebook>
+                                <page string="Foo">
+                                    <field name="foo"/>
+                                </page>
+                                <page string="Bar">
+                                    <field name="bar"/>
+                                </page>
+                            </notebook>
+                        </sheet>
+                    </form>`,
+                'partner,false,list': '<tree><field name="foo"/></tree>',
+                'partner,false,search': '<search></search>',
+            },
+            actions: [{
+                id: 1,
+                name: 'Partner',
+                res_model: 'partner',
+                type: 'ir.actions.act_window',
+                views: [[false, 'list'], [false, 'form']],
+            }],
+        });
+
+        await actionManager.doAction(1);
+
+        await testUtils.dom.click(actionManager.$('.o_list_button_add'));
+        assert.containsOnce(actionManager, '.o_form_view');
+
+        // click on second page tab
+        await testUtils.dom.click(actionManager.$('.o_notebook .nav-link:eq(1)'));
+
+        await testUtils.dom.click('.o_control_panel .o_form_button_cancel');
+        assert.containsNone(actionManager, '.o_form_view');
+
+        await testUtils.dom.click(actionManager.$('.o_list_button_add'));
+        // check notebook active page is 0th page
+        assert.hasClass(actionManager.$('.o_notebook .nav-link:eq(0)'), 'active');
+
+        actionManager.destroy();
+    });
+
     QUnit.test('rendering stat buttons', async function (assert) {
         assert.expect(3);
 

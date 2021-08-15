@@ -4,20 +4,29 @@
 
 <template id="report_generic_barcode">
     <t t-call="web.html_container">
-      <div t-foreach="[[docs[x:x+2], docs[x+2:x+4]] for x in range(0, len(docs), 4)]" t-as="page_docs" class="page article">
+        <t t-set='nRows' t-value='8'/>
+        <t t-set='nCols' t-value='3'/>
+        <div t-foreach="[docs[x:x + nRows * nCols] for x in range(0, len(docs), nRows * nCols)]" t-as="page_docs" class="page article">
         <t t-if="title">
           <h2 style="text-align: center; font-size: 3em"><t t-esc="title"/></h2>
         </t>
-        <table height="1000">
-            <t t-foreach="page_docs" t-as="page_row">
-              <tr>
-                <t t-foreach="page_row" t-as="o">
-                  <td>
-                    <div style="text-align: center; font-size: 2em"><span t-field="o.name"/></div>
-                    <img t-if="o.barcode" class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', o.barcode, 600, 150)" alt="Barcode"/>
-                  </td>
-                </t>
-              </tr>
+        <table>
+            <t t-foreach="range(nRows)" t-as="row">
+                <tr>
+                    <t t-foreach="range(nCols)" t-as="col">
+                        <t t-set="barcode_index" t-value="(row * nCols + col)"/>
+                        <t t-if="barcode_index &lt; len(page_docs)">
+                            <t t-set="o" t-value="page_docs[barcode_index]"/>
+                        </t>
+                        <t t-else="">
+                            <t t-set="o" t-value="page_docs[0]"/>
+                        </t>
+                        <td t-att-style="barcode_index &gt;= len(page_docs) and 'visibility:hidden'">
+                            <div style="text-align: center; font-size: 2em"><span t-esc="o.name"/></div>
+                            <img t-if="o.barcode" class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', o.barcode, 400, 100)" alt="Barcode"/>
+                        </td>
+                    </t>
+                </tr>
             </t>
         </table>
       </div>

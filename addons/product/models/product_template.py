@@ -1125,7 +1125,7 @@ class ProductTemplate(models.Model):
             yield necessary_values
 
         product_template_attribute_values_per_line = [
-            ptal.product_template_value_ids
+            ptal.product_template_value_ids._only_active()
             for ptal in attribute_lines
         ]
 

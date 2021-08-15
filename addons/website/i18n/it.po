@@ -19,6 +19,7 @@
 # Martin Trigaux, 2020
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
+# BigBlu <paolo.moroni@air-srl.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-04 15:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
+"Last-Translator: BigBlu <paolo.moroni@air-srl.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -193,7 +194,7 @@ msgid ""
 "            Changing its name will break these calls."
 msgstr ""
 ".\n"
-"            Modificare il suo nome interromperà queste chiamate."
+"            La modifica del nome interromperà le chiamate."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
@@ -1560,6 +1561,8 @@ msgstr "Frecce"
 #, python-format
 msgid "As promised, we will offer 4 free tickets to our next summit."
 msgstr ""
+"Come promesso, offriamo 4 biglietti gratuiti per la nostra prossima "
+"conferenza."
 
 #. module: website
 #: model:ir.model,name:website.model_web_editor_assets
@@ -2019,6 +2022,13 @@ msgstr "Ottieni 20€ di sconto sul primo ordine se effettui ora il pagamento."
 #, python-format
 msgid "Check your configuration."
 msgstr "Controlla la configurazione."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Check your connexion and try again"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -2541,7 +2551,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:website.field_website_route__create_date
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: website
 #. openerp-web
@@ -3309,6 +3319,13 @@ msgstr "Abilita fatturazione sul progetto Google"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Enter an API Key"
+msgstr ""
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid ""
@@ -4034,7 +4051,7 @@ msgstr "Menù hamburger"
 #: code:addons/website/static/src/snippets/s_countdown/000.xml:0
 #, python-format
 msgid "Happy Odoo Anniversary!"
-msgstr ""
+msgstr "Felice anniversario Odoo!"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__has_social_default_image
@@ -4352,6 +4369,9 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Se questa è una vista ereditata,\n"
+"* se True, la vista estende sempre la vista genitore\n"
+"* se False, la vista attualmente non estende la vista genitore ma si può abilitare"
 
 #. module: website
 #. openerp-web
@@ -4556,6 +4576,13 @@ msgstr "Cronologia interazioni"
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "Intuitive system"
 msgstr "Sistema intuitivo"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Invalid API Key. The following error was returned by Google:"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
@@ -4943,7 +4970,7 @@ msgstr "Menù sinistro"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 msgid "Legal"
-msgstr ""
+msgstr "Legale"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -7294,7 +7321,7 @@ msgstr "La lingua della parola chiave e di quelle correlate."
 #. module: website
 #: model:ir.model.fields,help:website.field_website_snippet_filter__limit
 msgid "The limit is the maximum number of records retrieved"
-msgstr ""
+msgstr "Il limite corrisponde al numero massimo di record recuperati"
 
 #. module: website
 #: code:addons/website/models/website_snippet_filter.py:0
@@ -7460,6 +7487,8 @@ msgid ""
 "This field should be used when accessing view arch. It will use translation.\n"
 "                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 msgstr ""
+"Questo campo dovrebbe essere usato quando si accede all'architettura della vista (view arch). Utilizzerà la traduzione.\n"
+"Notare che leggerà `arch_db` oppure `arch_fs` se in modalità dev-xml."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__arch_db
@@ -7544,7 +7573,7 @@ msgstr "Durata della cache per la pagina. (0 = nessuna cache)"
 #: code:addons/website/static/src/snippets/s_countdown/000.xml:0
 #, python-format
 msgid "Time's up! You can now visit"
-msgstr ""
+msgstr "Tempo scaduto! Adesso puoi visitare"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
@@ -8201,6 +8230,8 @@ msgstr "Data visita"
 #, python-format
 msgid "Visit our Facebook page to know if you are one of the lucky winners."
 msgstr ""
+"Per sapere se sei uno dei fortunati vincitori visita la nostra pagina "
+"Facebook."
 
 #. module: website
 #: model:ir.model,name:website.model_website_track
@@ -8289,7 +8320,7 @@ msgid ""
 "We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems.\n"
 "                            <br/><br/>Our products are designed for small to medium size companies willing to optimize their performance."
 msgstr ""
-"Siamo un team di entusiasti che si sono posti l'obiettivo di migliorare la vita di tutti grazie a prodotti rivoluzionari. Sviluppiamo soluzioni eccellenti per risolvere i problemi della tua azienda.\n"
+"Siamo un team di persone che, con passione, si è posto l'obiettivo di migliorare la vita di tutti grazie a prodotti rivoluzionari. Sviluppiamo soluzioni eccellenti per risolvere i problemi della tua azienda.\n"
 "                            <br/><br/>I nostri prodotti sono progettati per le piccole e medie imprese che vogliono ottimizzare le proprie prestazioni."
 
 #. module: website
@@ -8300,11 +8331,11 @@ msgid ""
 "problems. Our products are designed for small to medium size companies "
 "willing to optimize their performance."
 msgstr ""
-"Siamo un team di entusiasti che si sono posti l'obiettivo di migliorare la "
-"vita di tutti grazie a prodotti rivoluzionari. Sviluppiamo soluzioni "
-"eccellenti per risolvere i problemi della tua azienda. I nostri prodotti "
-"sono progettati per le piccole e medie imprese che vogliono ottimizzare le "
-"proprie prestazioni."
+"Siamo un team di persone che, con passione, si è posto l'obiettivo di "
+"migliorare la vita di tutti grazie a prodotti rivoluzionari. Sviluppiamo "
+"soluzioni eccellenti per risolvere i problemi della tua azienda. I nostri "
+"prodotti sono progettati per le piccole e medie imprese che vogliono "
+"ottimizzare le proprie prestazioni."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
@@ -8312,9 +8343,9 @@ msgid ""
 "We are a team of passionate people whose goal is to improve everyone's "
 "life.<br/>Our services are designed for small to medium size companies."
 msgstr ""
-"Siamo un team di entusiasti che si sono posti l'obiettivo di migliorare la "
-"vita di tutti.<br/>I nostri servizi sono progettati per le piccole e medie "
-"imprese."
+"Siamo un team di persone che, con passione, si è posto l'obiettivo di "
+"migliorare la vita di tutti.<br/>I nostri servizi sono progettati per le "
+"piccole e medie imprese."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar
@@ -8548,7 +8579,7 @@ msgstr "Visitatore sito web n° %s"
 #: model:ir.cron,cron_name:website.website_visitor_cron
 #: model:ir.cron,name:website.website_visitor_cron
 msgid "Website Visitor : Archive old visitors"
-msgstr ""
+msgstr "Visitatore sito web: archivia vecchi visitatori"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -9277,7 +9308,7 @@ msgstr "theme.ir.ui.view"
 #: code:addons/website/static/src/snippets/s_countdown/000.xml:0
 #, python-format
 msgid "this page"
-msgstr "questa"
+msgstr "questa pagina"
 
 #. module: website
 #. openerp-web

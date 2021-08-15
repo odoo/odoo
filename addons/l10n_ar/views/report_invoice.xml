@@ -233,7 +233,8 @@
                     <br/><strong>Currency: </strong><span t-esc="'%s - %s' % (o.currency_id.name, o.currency_id.currency_unit_label)"/>
                     <br/><strong>Exchange rate: </strong> <span t-field="o.l10n_ar_currency_rate"/>
                 </t>
-                <t t-if="o.l10n_latam_document_type_id.code in ['201', '206', '211']">
+                <!-- Show CBU for FACTURA DE CREDITO ELECTRONICA MiPyMEs and NOTA DE DEBITO ELECTRONICA MiPyMEs -->
+                <t t-if="o.l10n_latam_document_type_id.code in ['201', '206', '211', '202', '207', '212'] and o.partner_bank_id">
                     <br/><strong>CBU for payment: </strong><span t-esc="o.partner_bank_id.acc_number or '' if o.partner_bank_id.acc_type == 'cbu' else ''"/>
                 </t>
 
@@ -262,14 +263,6 @@
             <t t-if="o._get_name_invoice_report() == 'l10n_ar.report_invoice_document'"
                 t-call="l10n_ar.report_invoice_document" t-lang="lang"/>
         </xpath>
-
-        <!-- RG 5003: Add legend for 'A' documents that have a Monotribuista receptor -->
-        <p name="comment" position="after">
-            <p t-if="o.partner_id.l10n_ar_afip_responsibility_type_id.code in ['6', '13'] and o.l10n_latam_document_type_id.l10n_ar_letter == 'A'" >
-                El crédito fiscal discriminado en el presente comprobante, sólo podrá ser computado a efectos del Régimen de Sostenimiento e Inclusión Fiscal para Pequeños Contribuyentes de la Ley Nº 27.618
-            </p>
-        </p>
-
     </template>
 
 </odoo>

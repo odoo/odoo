@@ -16,4 +16,5 @@
     'application': False,
     'auto_install': False,
     'post_init_hook': 'account_edi_block_level',
+    'license': 'LGPL-3',
 }

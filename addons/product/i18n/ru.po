@@ -8,13 +8,13 @@
 # Denis Baranov <baranov@itlibertas.com>, 2020
 # Андрей Гусев <gaussgss@gmail.com>, 2020
 # Vasiliy Korobatov <korobatov@gmail.com>, 2020
-# ILMIR <karamov@it-projects.info>, 2020
 # Oleg Kuryan <oleg@ventor.tech>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
 # Ekaterina <nawsikaya@bk.ru>, 2020
 # Martin Trigaux, 2020
 # Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2021
 # Сергей Шебанин <sergey@shebanin.ru>, 2021
+# ILMIR <karamov@it-projects.info>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2021\n"
+"Last-Translator: ILMIR <karamov@it-projects.info>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -239,7 +239,7 @@ msgstr "Действия"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Оформление исключения активности"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_state
@@ -1073,7 +1073,7 @@ msgstr "Иконка"
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Значок, обозначающий действие исключения."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction
@@ -2046,7 +2046,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Related Products"
-msgstr ""
+msgstr "Связанные продукты"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_product_variant_ids
@@ -2471,7 +2471,7 @@ msgstr "Сегодняшние мероприятия"
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Тип активности исключения в записи."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2888,6 +2888,14 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
+"%s"
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot delete this pricelist (%s), it is used in other pricelist(s) : \n"
 "%s"
 msgstr ""
 

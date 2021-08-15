@@ -122,4 +122,5 @@ Master Data:
     'installable': True,
     'auto_install': False,
     'application': False,
+    'license': 'LGPL-3',
 }

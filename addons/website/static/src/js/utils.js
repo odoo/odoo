@@ -14,15 +14,20 @@ var qweb = core.qweb;
  */
 function loadAnchors(url) {
     return new Promise(function (resolve, reject) {
-        if (url !== window.location.pathname && url[0] !== '#') {
-            $.get(window.location.origin + url).then(resolve, reject);
-        } else {
+        if (url === window.location.pathname || url[0] === '#') {
             resolve(document.body.outerHTML);
+        } else if (url.length && !url.startsWith("http")) {
+            $.get(window.location.origin + url).then(resolve, reject);
+        } else { // avoid useless query
+            resolve();
         }
     }).then(function (response) {
         return _.map($(response).find('[id][data-anchor=true]'), function (el) {
             return '#' + el.id;
         });
+    }).catch(error => {
+        console.debug(error);
+        return [];
     });
 }
 
@@ -68,6 +73,9 @@ function autocompleteWithPages(self, $input, options) {
                 loadAnchors(request.term).then(function (anchors) {
                     response(anchors);
                 });
+            } else if (request.term.startsWith('http') || request.term.length === 0) {
+                // avoid useless call to /website/get_suggested_links
+                response();
             } else {
                 return self._rpc({
                     route: '/website/get_suggested_links',
@@ -90,6 +98,8 @@ function autocompleteWithPages(self, $input, options) {
             }
         },
         select: function (ev, ui) {
+            // choose url in dropdown with arrow change ev.target.value without trigger_up
+            // so cannot check here if value has been updated
             ev.target.value = ui.item.value;
             self.trigger_up('website_url_chosen');
             ev.preventDefault();

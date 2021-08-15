@@ -1024,6 +1024,9 @@ class Website(models.Model):
     def _get_cached(self, field):
         return self._get_cached_values()[field]
 
+    def _get_relative_url(self, url):
+        return urls.url_parse(url).replace(scheme='', netloc='').to_url()
+
 
 class BaseModel(models.AbstractModel):
     _inherit = 'base'

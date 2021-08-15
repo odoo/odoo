@@ -60,6 +60,21 @@ var dom = {
         }
     },
     /**
+     * Detects if 2 elements are colliding.
+     *
+     * @param {Element} el1
+     * @param {Element} el2
+     * @returns {boolean}
+     */
+     areColliding(el1, el2) {
+        const el1Rect = el1.getBoundingClientRect();
+        const el2Rect = el2.getBoundingClientRect();
+        return el1Rect.bottom > el2Rect.top
+            && el1Rect.top < el2Rect.bottom
+            && el1Rect.right > el2Rect.left
+            && el1Rect.left < el2Rect.right;
+    },
+    /**
      * Autoresize a $textarea node, by recomputing its height when necessary
      * @param {number} [options.min_height] by default, 50.
      * @param {Widget} [options.parent] if set, autoresize will listen to some
@@ -614,10 +629,11 @@ var dom = {
         core.bus.on('resize', null, debouncedAdapt);
         _adapt();
 
+        $el.data('dom:autoMoreMenu:adapt', _adapt);
         $el.data('dom:autoMoreMenu:destroy', function () {
             _restore();
             core.bus.off('resize', null, debouncedAdapt);
-            $el.removeData('dom:autoMoreMenu:destroy');
+            $el.removeData(['dom:autoMoreMenu:destroy', 'dom:autoMoreMenu:adapt']);
         });
 
         function _restore() {

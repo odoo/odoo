@@ -3,7 +3,7 @@
 # 	* delivery
 # 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -172,6 +172,7 @@ msgid ""
 msgstr "免費送貨的訂單金額，以公司本位貨幣顯示"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
 msgstr "封存"
@@ -903,7 +904,7 @@ msgstr "國際航運和貨物申報的標準化代碼。目前，僅用於聯邦
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
 msgid "States"
-msgstr "狀態"
+msgstr "縣市"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -1108,6 +1109,16 @@ msgstr "寬度"
 #: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_width
 msgid "Width must be positive"
 msgstr "寬度必須是正數"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid ""
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

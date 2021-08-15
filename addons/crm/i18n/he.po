@@ -15,9 +15,9 @@
 # ExcaliberX <excaliberx@gmail.com>, 2020
 # Yihya Hugirat <hugirat@gmail.com>, 2020
 # hed shefetr <hed@laylinetech.com>, 2020
-# דודי מלכה <Dudimalka6@gmail.com>, 2020
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # Lilach Gilliam <lilach@apprcase.com>, 2021
+# דודי מלכה <Dudimalka6@gmail.com>, 2021
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # 
 msgid ""
@@ -79,7 +79,7 @@ msgstr "% endif"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "% if record and record.alias_domain"
-msgstr ""
+msgstr "% if record ו- record.alias_domain"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -87,12 +87,14 @@ msgid ""
 "% set record = object.env['crm.team'].search([('alias_name', '!=', "
 "'False')], limit=1)"
 msgstr ""
+"10\n"
+"% set record = object.env ['crm.team']. חיפוש ([('alias_name', '! =', 'False')], limit = 1)"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "%s's opportunity"
-msgstr ""
+msgstr "ההזדמנות של %s"
 
 #. module: crm
 #. openerp-web
@@ -121,7 +123,7 @@ msgstr "<b>ציון ליד חזוי</b>"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "<b>Write a few letters</b> to look for a company, or create a new one."
-msgstr ""
+msgstr "כתוב כמה אותיות לחיפוש שם החברה, או צור חברה חדשה."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_partner_kanban_view
@@ -186,6 +188,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "<span class=\"o_stat_text\"> Leads</span>"
 msgstr "<span class=\"o_stat_text\"> לידים </span>"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
+"מכיוון שאינך משתייך לאף צוות מכירות, המערכת פותחת את הראשון כברירת מחדל."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -426,7 +437,7 @@ msgstr "מודל בעל כינוי"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "All set. Let’s <b>Schedule</b> it."
-msgstr ""
+msgstr "מוכן. ניתן לתזמן את זה."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1180,7 +1191,7 @@ msgstr "סגירה צפויה"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Expected MRR"
-msgstr ""
+msgstr "MRR צפוי"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__expected_revenue
@@ -1794,6 +1805,8 @@ msgid ""
 "Looks like nothing is planned. :(<br><br><i>Tip : Schedule activities to "
 "keep track of everything you have to do!</i>"
 msgstr ""
+"נראה ששום דבר לא מתוכנן.  טיפ: תזמן פעילויות כדי לעקוב אחר כל מה שאתה צריך "
+"לעשות!"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -2097,7 +2110,7 @@ msgstr "הערות"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Now, <b>add your Opportunity</b> to your Pipeline."
-msgstr ""
+msgstr "כעת, הוסף את ההזדמנות שלך לרשימת ההזדמנויות שלך."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction_counter
@@ -2201,6 +2214,12 @@ msgstr ""
 "צפויות, עלות מתוכננת, תאריכי יעד שעברו או מספר האינטראקציות להזדמנות. דוח זה"
 " משמש בעיקר את מנהל המכירות לצורך ביצוע הסקירה התקופתית בערוצי צינור פעילות "
 "המכירות."
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr "ספירת הזדמנויות "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
@@ -2311,6 +2330,7 @@ msgstr "מעל 5 שנים"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "הזדמנויות באיחור"
 
@@ -2473,7 +2493,7 @@ msgstr "הצעה"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly_prorated
 msgid "Prorated MRR"
-msgstr ""
+msgstr "MRR פרופורציה"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__prorated_revenue
@@ -2491,7 +2511,7 @@ msgstr "מעוניין"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Ready to boost your sales? Let's have a look at your <b>Pipeline</b>."
-msgstr ""
+msgstr "מוכן להגדיל את המכירות שלך? בואו נסתכל על רשימת ההזדמנויות שלכם."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_force_thread_id
@@ -2555,7 +2575,7 @@ msgstr "שחזר"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__ribbon_message
 msgid "Ribbon message"
-msgstr ""
+msgstr "הודעת סרט"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_sms_error
@@ -2659,6 +2679,8 @@ msgid ""
 "Set Recurring Plans on Opportunities to display the contracts' renewal "
 "periodicity<br>(e.g: Monthly, Yearly)."
 msgstr ""
+"הגדר תוכניות מתחדשות עבור הזדמנויות להצגת תקופתיות החידוש של החוזים (למשל: "
+"חודשי, שנתי)."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
@@ -2851,6 +2873,12 @@ msgstr "תגיות"
 #: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
 msgid "Teams"
 msgstr "צוותים"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr "שדה טכני המשמש ללחצן stat"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
@@ -3184,6 +3212,8 @@ msgid ""
 "Use the top left <i>Create</i> button, or send an email to %s to test the "
 "email gateway."
 msgstr ""
+"השתמש בלחצן 'צור' בפינה הימנית העליונה, או שלח דוא\"ל ל- %s כדי לבדוק את "
+"מעבר הדוא\"ל."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form

@@ -595,7 +595,7 @@ class HolidaysRequest(models.Model):
         if employee_id:
             employee = self.env['hr.employee'].browse(employee_id)
             result = employee._get_work_days_data_batch(date_from, date_to)[employee.id]
-            if self.request_unit_half:
+            if self.request_unit_half and result['hours'] > 0:
                 result['days'] = 0.5
             return result
 
@@ -927,8 +927,8 @@ class HolidaysRequest(models.Model):
             'holiday_status_id': self.holiday_status_id.id,
             'date_from': self.date_from,
             'date_to': self.date_to,
-            'request_date_from': self.date_from,
-            'request_date_to': self.date_to,
+            'request_date_from': self.request_date_from,
+            'request_date_to': self.request_date_to,
             'notes': self.notes,
             'number_of_days': work_days_data[employee.id]['days'],
             'parent_id': self.id,

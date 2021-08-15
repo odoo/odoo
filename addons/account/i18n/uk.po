@@ -9,8 +9,8 @@
 # Sergey Doroshenko <sdoroshenko@artwebny.com>, 2020
 # Oleksandr Paziuk <o.paziuk@mobilunity.com>, 2020
 # Martin Trigaux, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # Bohdan Lisnenko, 2021
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Bohdan Lisnenko, 2021\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1967,6 +1967,8 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the credit "
 "line foreign currency."
 msgstr ""
+"Завжди позитивна сума, пов'язана з цим узгодженням, виражена в іноземній "
+"валюті у полі кредиту."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__debit_amount_currency
@@ -1974,6 +1976,8 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the debit "
 "line foreign currency."
 msgstr ""
+"Завжди позитивна сума, пов'язана з цим узгодженням, виражена в іноземній "
+"валюті у полі дебету."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount
@@ -3008,6 +3012,8 @@ msgid ""
 "Cannot create an invoice of type %(move_type)s with a journal having "
 "%(journal_type)s as type."
 msgstr ""
+"Не можа створити рахунок типу %(move_type)s з журналом, що має тип "
+"%(journal_type)s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -3149,13 +3155,13 @@ msgstr "Виписка по касі"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Cash difference observed during the counting (Loss)"
-msgstr ""
+msgstr "Грошова різниця, що спостерігається під час підрахунку (Витрати)"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Cash difference observed during the counting (Profit)"
-msgstr ""
+msgstr "Грошова різниця, що спостерігається під час підрахунку (Доходи)"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -3764,7 +3770,7 @@ msgstr "Група країн"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report__country_id
 msgid "Country for which this report is available."
-msgstr ""
+msgstr "Країна, для якої доступний цей звіт."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__country_id
@@ -6863,6 +6869,12 @@ msgid ""
 msgstr ""
 "Це означає, що податки було змінено з часу створення запису журналу. Замість"
 " цього вам слід створити сторно вручну."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "It was previously '%(previous)s' and it is now '%(now)s'."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12810,11 +12822,43 @@ msgstr ""
 "показуються податкові рядки."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The sequence format has changed."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid ""
 "The sequence regex should at least contain the seq grouping keys. For instance:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will never restart.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every month.\n"
+"The year detected here is '%(year)s' and the month is '%(month)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every year.\n"
+"The year detected here is '%(year)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
 
 #. module: account
@@ -14059,6 +14103,18 @@ msgid ""
 msgstr ""
 "Ви можете обрати різні моделі для кожного типу референсу. Референс Odoo "
 "встановлюється за замовчуванням."
+
+#. module: account
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"You can not archive a journal containing draft journal entries.\n"
+"\n"
+"To proceed:\n"
+"1/ click on the top-right button 'Journal Entries' from this journal form\n"
+"2/ then filter on 'Draft' entries\n"
+"3/ select them all and post or delete them through the action menu"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0

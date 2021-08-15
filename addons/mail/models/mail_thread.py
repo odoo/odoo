@@ -2354,7 +2354,10 @@ class MailThread(models.AbstractModel):
             if add_sign:
                 signature = "<p>-- <br/>%s</p>" % author.name
 
-        company = self.company_id.sudo() if self and 'company_id' in self else user.company_id
+        # company value should fall back on env.company if:
+        # - no company_id field on record
+        # - company_id field available but not set
+        company = self.company_id.sudo() if self and 'company_id' in self and self.company_id else self.env.company
         if company.website:
             website_url = 'http://%s' % company.website if not company.website.lower().startswith(('http:', 'https:')) else company.website
         else:

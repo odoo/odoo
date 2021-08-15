@@ -168,11 +168,10 @@ class AccountFiscalPosition(models.Model):
         # This can be easily overridden to apply more complex fiscal rules
         PartnerObj = self.env['res.partner']
         partner = PartnerObj.browse(partner_id)
+        delivery = PartnerObj.browse(delivery_id)
 
-        # if no delivery use invoicing
-        if delivery_id:
-            delivery = PartnerObj.browse(delivery_id)
-        else:
+        # If partner and delivery have the same vat prefix, use invoicing
+        if not delivery or (delivery.vat and partner.vat and delivery.vat[:2] == partner.vat[:2]):
             delivery = partner
 
         # partner manually set fiscal position always win

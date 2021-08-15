@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/model/model_field.js', function (require) {
 'use strict';
 
-const { FieldCommand } = require('mail/static/src/model/model_field_command.js');
+const { clear, FieldCommand } = require('mail/static/src/model/model_field_command.js');
 
 /**
  * Class whose instances represent field on a model.
@@ -295,18 +295,15 @@ class ModelField {
             const OtherModel = otherRecord.constructor;
             const otherField = OtherModel.__fieldMap[relatedFieldName];
             const newVal = otherField.get(otherRecord);
+            if (newVal === undefined) {
+                return clear();
+            }
             if (this.fieldType === 'relation') {
-                if (newVal) {
-                    return [['replace', newVal]];
-                } else {
-                    return [['unlink-all']];
-                }
+                return [['replace', newVal]];
             }
             return newVal;
         }
-        if (this.fieldType === 'relation') {
-            return [];
-        }
+        return clear();
     }
 
     /**

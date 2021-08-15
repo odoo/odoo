@@ -7,19 +7,19 @@
 # laznikd <laznik@mentis.si>, 2021
 # Grega Vavtar <grega@hbs.si>, 2021
 # matjaz k <matjaz@mentis.si>, 2021
-# Martin Trigaux, 2021
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2021
 # Boris Kodelja <boris@hbs.si>, 2021
-# Tadej Lupšina <tadej@hbs.si>, 2021
 # Jasmina Macur <jasmina@hbs.si>, 2021
+# Martin Trigaux, 2021
+# Tadej Lupšina <tadej@hbs.si>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-26 09:03+0000\n"
+"POT-Creation-Date: 2021-07-16 12:59+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2021\n"
+"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -247,6 +247,13 @@ msgstr ""
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? Če kliknete »Potrdi«, bo plačilo potrjeno."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientDetailsEdit.js:0
+#, python-format
+msgid "A Customer Name Is Required"
+msgstr "Zahtevan je naziv kupca"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
@@ -752,6 +759,13 @@ msgstr "SPREMEMBA"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
+#, python-format
+msgid "Change Customer"
+msgstr "Sprememba kupca"
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/EditListPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductConfiguratorPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
@@ -1119,6 +1133,13 @@ msgid "Confirm"
 msgstr "Potrdi"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/NumberPopup.js:0
+#, python-format
+msgid "Confirm ?"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices to your PoS directly without an IoT Box"
 msgstr ""
@@ -1415,7 +1436,7 @@ msgstr "Privzeti prodajni davek za izdelke"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__product_uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "Privzeta merska enota, ki se uporablja za vse operacije z zalogami."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -1481,6 +1502,13 @@ msgstr "Izbrišite neplačana naročila"
 #, python-format
 msgid "Delete Unpaid Orders ?"
 msgstr "Ali želite izbrisati neplačana naročila?"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
+#, python-format
+msgid "Deselect Customer"
+msgstr "Odstrani kupca iz izbora"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.desk_organizer
@@ -1745,6 +1773,13 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Email sent."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #, python-format
 msgid "Employee"
@@ -1876,6 +1911,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Positions"
 msgstr "Davčno območje"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
+#, python-format
+msgid "Fiscal data module error"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_follower_ids
@@ -2184,6 +2226,13 @@ msgstr "Interne opombe"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Invalid action"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Invalid email."
 msgstr ""
 
 #. module: point_of_sale
@@ -2597,6 +2646,11 @@ msgid "Monitor Stand"
 msgstr "Stojalo za monitor"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "My Sessions"
 msgstr ""
@@ -2941,6 +2995,7 @@ msgid "Order %s"
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Order %s is not fully paid."
@@ -3866,13 +3921,6 @@ msgstr "Količina"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
-#, python-format
-msgid "ROUNDED"
-msgstr ""
-
-#. module: point_of_sale
-#. openerp-web
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Read Weighing Scale"
@@ -4065,9 +4113,23 @@ msgid "Review"
 msgstr "Pregled"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "Rounding"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Rounding Method"
 msgstr "Metoda zaokroževanja"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid "Rounding error in payment lines"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -4080,6 +4142,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "Napaka pri dostavi SMS "
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/Orderline.xml:0
+#: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "SN"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
@@ -4246,6 +4316,13 @@ msgid "Send by email"
 msgstr "Pošlji po e-pošti"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Sending email failed. Please try again."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
 msgid "Sequence"
 msgstr "Zaporedje"
@@ -4331,6 +4408,13 @@ msgstr "Seje"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Set Closing Cash"
 msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
+#, python-format
+msgid "Set Customer"
+msgstr "Nastavi kupca"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_bnk_stmt_cashbox_footer
@@ -4448,6 +4532,14 @@ msgstr ""
 #: model:product.product,name:point_of_sale.small_shelf
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"Some Cash Registers are already posted. Please reset them to new in order to close the session.\n"
+"Cash Registers: %r"
 msgstr ""
 
 #. module: point_of_sale
@@ -4723,9 +4815,26 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"The amount of your payment lines must be rounded to validate the "
+"transaction."
+msgstr ""
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "The default pricelist must be included in the available pricelists."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
+#, python-format
+msgid ""
+"The fiscal data module encountered an error while receiving your order."
 msgstr ""
 
 #. module: point_of_sale
@@ -5122,6 +5231,13 @@ msgstr "Napitnina"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "To Close"
 msgstr "Za uskladitev"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "To Pay"
+msgstr "Za plačilo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__to_weight
@@ -5572,6 +5688,12 @@ msgstr ""
 msgid ""
 "You can't validate a bank statement that is used in an opened Session of a "
 "Point of Sale."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "You cannot close the POS when orders are still in draft"
 msgstr ""
 
 #. module: point_of_sale

@@ -6,8 +6,8 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2020
 # Shunho Kin <s-kin@shonan-innovation.co.jp>, 2020
 # Martin Trigaux, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2020
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2020
+# Shigekazu N. <shigekazu.noka@gmail.com>, 2020
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
 # Tim Siu Lai <tl@roomsfor.hk>, 2020
@@ -175,6 +175,7 @@ msgid ""
 msgstr "配達無料、会社負担の速達の適用を受けるためのオーダ金額"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
 msgstr "アーカイブ済"
@@ -1110,6 +1111,16 @@ msgstr "幅"
 #: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_width
 msgid "Width must be positive"
 msgstr "幅は正の値でなければなりません"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid ""
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

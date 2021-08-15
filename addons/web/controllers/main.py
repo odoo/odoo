@@ -1772,7 +1772,7 @@ class Export(http.Controller):
         fields = self.fields_get(model)
         if import_compat:
             if parent_field_type in ['many2one', 'many2many']:
-                rec_name = request.env[model]._rec_name
+                rec_name = request.env[model]._rec_name_fallback()
                 fields = {'id': fields['id'], rec_name: fields[rec_name]}
         else:
             fields['.id'] = {**fields['id']}
@@ -2046,7 +2046,7 @@ class ReportController(http.Controller):
             # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
             # the user explicitely wants to change the lang, this mechanism overwrites it.
             data['context'] = json.loads(data['context'])
-            if data['context'].get('lang'):
+            if data['context'].get('lang') and not data.get('force_context_lang'):
                 del data['context']['lang']
             context.update(data['context'])
         if converter == 'html':

@@ -185,18 +185,6 @@ class Project(models.Model):
             },
         }
 
-    def action_view_so(self):
-        self.ensure_one()
-        action_window = {
-            "type": "ir.actions.act_window",
-            "res_model": "sale.order",
-            "name": "Sales Order",
-            "views": [[False, "form"]],
-            "context": {"create": False, "show_sale": True},
-            "res_id": self.sale_order_id.id
-        }
-        return action_window
-
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
@@ -250,7 +238,7 @@ class ProjectTask(models.Model):
             if timesheet.so_line == timesheet.task_id.sale_line_id:
                 delta -= timesheet.unit_amount
             if delta:
-                mapped_remaining_hours[timesheet.task_id._origin.id] += timesheet.so_line.product_uom._compute_quantity(delta, uom_hour)
+                mapped_remaining_hours[timesheet.task_id._origin.id] += timesheet.product_uom_id._compute_quantity(delta, uom_hour)
 
         for task in self:
             task.remaining_hours_so = mapped_remaining_hours[task._origin.id]

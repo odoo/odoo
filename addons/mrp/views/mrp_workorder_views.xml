@@ -125,6 +125,7 @@
             <header>
                 <field name="state" widget="statusbar" statusbar_visible="pending,ready,progress,done"/>
             </header>
+            <sheet>
                 <div class="oe_button_box" name="button_box">
                     <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="fa-arrows-v" attrs="{'invisible': [('scrap_count', '=', 0)]}">
                         <div class="o_field_widget o_stat_info">
@@ -195,23 +196,8 @@
                     <field name="operation_note" attrs="{'invisible': [('worksheet_type', '!=', 'text')]}"/>
                 </page>
                 </notebook>
+            </sheet>
             </form>
-        </field>
-    </record>
-
-    <record id="mrp_production_workorder_form_view_inherit_editable" model="ir.ui.view">
-        <field name="name">mrp.production.work.order.tree</field>
-        <field name="model">mrp.workorder</field>
-        <field name="mode">primary</field>
-        <field name="priority" eval="10"/>
-        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/>
-        <field name="arch" type="xml">
-            <xpath expr="//notebook" position="after">
-                <footer>
-                    <button string="Save" special="save" class="btn-primary"/>
-                    <button string="Discard" special="cancel"/>
-                </footer>
-            </xpath>
         </field>
     </record>
 
@@ -445,7 +431,7 @@
         <field name="res_model">mrp.workorder</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
-        <field name="view_id" ref="mrp_production_workorder_form_view_inherit_editable"/>
+        <field name="view_id" ref="mrp_production_workorder_form_view_inherit"/>
     </record>
 
     <record model="ir.actions.act_window" id="mrp_workorder_todo">

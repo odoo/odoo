@@ -647,6 +647,31 @@ var FieldDateRange = InputField.extend({
         }
         this._super.apply(this, arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Field widget is valid if value entered can convered to date/dateime value
+     * while parsing input value to date/datetime throws error then widget considered
+     * invalid
+     *
+     * @override
+     */
+    isValid: function () {
+        const value = this.mode === "readonly" ? this.value : this.$input.val();
+        try {
+            return field_utils.parse[this.formatType](value, this.field, { timezone: true }) || true;
+        } catch (error) {
+            return false;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * Return the date written in the input, in UTC.
      *
@@ -654,7 +679,14 @@ var FieldDateRange = InputField.extend({
      * @returns {Moment|false}
      */
     _getValue: function () {
-        return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
+        try {
+            // user may enter manual value in input and it may not be parsed as date/datetime value
+            this.removeInvalidClass();
+            return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
+        } catch (error) {
+            this.setInvalidClass();
+            return false;
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -986,8 +1018,8 @@ const RemainingDays = AbstractField.extend({
         // timezone), to get a meaningful delta for the user
         const nowUTC = moment().utc();
         const nowUserTZ = nowUTC.clone().add(session.getTZOffset(nowUTC), 'minutes');
-        const valueUserTZ = this.value.clone().add(session.getTZOffset(this.value), 'minutes');
-        const diffDays = valueUserTZ.startOf('day').diff(nowUserTZ.startOf('day'), 'days');
+        const fieldValue = this.field.type == "datetime" ? this.value.clone().add(session.getTZOffset(this.value), 'minutes') : this.value;
+        const diffDays = fieldValue.startOf('day').diff(nowUserTZ.startOf('day'), 'days');
         let text;
         if (Math.abs(diffDays) > 99) {
             text = this._formatValue(this.value, 'date');

@@ -113,7 +113,7 @@ class AccountPayment(models.Model):
         help="Invoices whose journal items have been reconciled with these payments.")
     reconciled_bills_count = fields.Integer(string="# Reconciled Bills",
         compute="_compute_stat_buttons_from_reconciliation")
-    reconciled_statement_ids = fields.Many2many('account.move', string="Reconciled Statements",
+    reconciled_statement_ids = fields.Many2many('account.bank.statement', string="Reconciled Statements",
         compute='_compute_stat_buttons_from_reconciliation',
         help="Statements matched to this payment")
     reconciled_statements_count = fields.Integer(string="# Reconciled Statements",
@@ -330,7 +330,8 @@ class AccountPayment(models.Model):
         for pay in self:
             available_partner_bank_accounts = pay.partner_id.bank_ids.filtered(lambda x: x.company_id in (False, pay.company_id))
             if available_partner_bank_accounts:
-                pay.partner_bank_id = available_partner_bank_accounts[0]._origin
+                if pay.partner_bank_id not in available_partner_bank_accounts:
+                    pay.partner_bank_id = available_partner_bank_accounts[0]._origin
             else:
                 pay.partner_bank_id = False
 
@@ -401,6 +402,7 @@ class AccountPayment(models.Model):
                     pay.destination_account_id = self.env['account.account'].search([
                         ('company_id', '=', pay.company_id.id),
                         ('internal_type', '=', 'receivable'),
+                        ('deprecated', '=', False),
                     ], limit=1)
             elif pay.partner_type == 'supplier':
                 # Send money to pay a bill or receive money to refund it.
@@ -410,6 +412,7 @@ class AccountPayment(models.Model):
                     pay.destination_account_id = self.env['account.account'].search([
                         ('company_id', '=', pay.company_id.id),
                         ('internal_type', '=', 'payable'),
+                        ('deprecated', '=', False),
                     ], limit=1)
 
     @api.depends('partner_bank_id', 'amount', 'ref', 'currency_id', 'journal_id', 'move_id.state',
@@ -752,8 +755,8 @@ class AccountPayment(models.Model):
             for line in writeoff_lines:
                 line_ids_commands.append((2, line.id))
 
-            if writeoff_lines:
-                line_ids_commands.append((0, 0, line_vals_list[2]))
+            for extra_line_vals in line_vals_list[2:]:
+                line_ids_commands.append((0, 0, extra_line_vals))
 
             # Update the existing journal items.
             # If dealing with multiple write-off lines, they are dropped and a new one is generated.

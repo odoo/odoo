@@ -141,6 +141,17 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             self.term_line_vals_1,
         ], self.move_vals)
 
+    def test_out_invoice_onchange_invoice_date(self):
+        for tax_date, invoice_date, accounting_date in [
+            ('2019-03-31', '2019-05-12', '2019-05-12'),
+            ('2019-03-31', '2019-02-10', '2019-04-1'),
+            ('2019-05-31', '2019-06-15', '2019-06-15'),
+        ]:
+            self.invoice.company_id.tax_lock_date = tax_date
+            with Form(self.invoice) as move_form:
+                move_form.invoice_date = invoice_date
+            self.assertEqual(self.invoice.date, fields.Date.to_date(accounting_date))
+
     def test_out_invoice_line_onchange_product_1(self):
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
@@ -2525,6 +2536,81 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total' : self.move_vals['amount_total'],
             'amount_untaxed' : self.move_vals['amount_untaxed'],
         })
+
+    def test_out_invoice_reverse_move_tags(self):
+        country = self.env.ref('base.us')
+        tags = self.env['account.account.tag'].create([{
+            'name': "Test tag %s" % i,
+            'applicability': 'taxes',
+            'country_id': country.id,
+        } for i in range(8)])
+
+        taxes = self.env['account.tax'].create([{
+            'name': "Test tax include_base_amount = %s" % include_base_amount,
+            'amount': 10.0,
+            'include_base_amount': include_base_amount,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tags[(i * 4)].ids)],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'tag_ids': [(6, 0, tags[(i * 4) + 1].ids)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tags[(i * 4) + 2].ids)],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'tag_ids': [(6, 0, tags[(i * 4) + 3].ids)],
+                }),
+            ],
+        } for i, include_base_amount in enumerate((True, False))])
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000.0,
+                    'tax_ids': [(6, 0, taxes.ids)],
+                }),
+            ]
+        })
+        invoice.action_post()
+
+        self.assertRecordValues(invoice.line_ids.sorted('tax_line_id'), [
+            # Product line
+            {'tax_line_id': False,          'tax_ids': taxes.ids,       'tax_tag_ids': (tags[0] + tags[4]).ids},
+            # Receivable line
+            {'tax_line_id': False,          'tax_ids': [],              'tax_tag_ids': []},
+            # Tax lines
+            {'tax_line_id': taxes[0].id,    'tax_ids': taxes[1].ids,    'tax_tag_ids': (tags[1] + tags[4]).ids},
+            {'tax_line_id': taxes[1].id,    'tax_ids': [],              'tax_tag_ids': tags[5].ids},
+        ])
+
+        refund = invoice._reverse_moves(cancel=True)
+
+        self.assertRecordValues(refund.line_ids.sorted('tax_line_id'), [
+            # Product line
+            {'tax_line_id': False,          'tax_ids': taxes.ids,       'tax_tag_ids': (tags[2] + tags[6]).ids},
+            # Receivable line
+            {'tax_line_id': False,          'tax_ids': [],              'tax_tag_ids': []},
+            # Tax lines
+            {'tax_line_id': taxes[0].id,    'tax_ids': taxes[1].ids,    'tax_tag_ids': (tags[3] + tags[6]).ids},
+            {'tax_line_id': taxes[1].id,    'tax_ids': [],              'tax_tag_ids': tags[7].ids},
+        ])
 
     def test_out_invoice_change_period_accrual_1(self):
         move = self.env['account.move'].create({

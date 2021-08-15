@@ -10,11 +10,11 @@
 # Vasiliy Korobatov <korobatov@gmail.com>, 2020
 # Максим Дронь <dronmax@gmail.com>, 2020
 # Martin Trigaux, 2020
-# ILMIR <karamov@it-projects.info>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
 # Ekaterina <nawsikaya@bk.ru>, 2020
-# Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2021
 # Сергей Шебанин <sergey@shebanin.ru>, 2021
+# Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2021
+# ILMIR <karamov@it-projects.info>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2021\n"
+"Last-Translator: ILMIR <karamov@it-projects.info>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -176,6 +176,14 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "<span class=\"o_stat_text\"> Leads</span>"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
 msgstr ""
 
 #. module: crm
@@ -340,7 +348,7 @@ msgstr "Описание действия"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Оформление исключения активности"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_state
@@ -548,7 +556,7 @@ msgstr "стадии CRM"
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
 msgid "Calendar Event"
-msgstr ""
+msgstr "Событие в календаре"
 
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
@@ -1365,7 +1373,7 @@ msgstr "Иконка"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Значок, обозначающий действие исключения."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -2178,6 +2186,12 @@ msgstr ""
 "воронки продаж."
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr "подсчет возможностей"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr "Доходы от сделок"
@@ -2287,6 +2301,7 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "Просроченные сделки"
 
@@ -2533,7 +2548,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Ошибка доставки SMS"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_sales
@@ -2829,6 +2844,12 @@ msgid "Teams"
 msgstr "Команды"
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
@@ -3071,7 +3092,7 @@ msgstr "Тип используется для разделения лидов �
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Тип активности исключения в записи."
 
 #. module: crm
 #: model:ir.model,name:crm.model_utm_campaign

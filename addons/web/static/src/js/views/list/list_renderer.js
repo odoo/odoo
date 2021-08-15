@@ -1273,13 +1273,16 @@ var ListRenderer = BasicRenderer.extend({
         // default, which is why we need to toggle the dropdown manually.
         ev.stopPropagation();
         this.$('.o_optional_columns .dropdown-toggle').dropdown('toggle');
-        // Explicitly set left of the optional column dropdown as it is pushed inside
-        // this.$el, so we need to position it at the end of top left corner in case of
-        // rtl language direction.
+        // Explicitly set left/right of the optional column dropdown as it is pushed
+        // inside this.$el, so we need to position it at the end of top left corner.
+        var position = (this.$(".table-responsive").css('overflow') === "auto" ? this.$el.width() :
+            this.$('table').width());
+        var direction = "left";
         if (_t.database.parameters.direction === 'rtl') {
-            var left = this.$('.o_optional_columns .o_optional_columns_dropdown').width();
-            this.$('.o_optional_columns').css("left", left);
+            position = position - this.$('.o_optional_columns .o_optional_columns_dropdown').width();
+            direction = "right";
         }
+        this.$('.o_optional_columns').css(direction, position);
     },
     /**
      * Manages the keyboard events on the list. If the list is not editable, when the user navigates to

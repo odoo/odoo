@@ -37,6 +37,8 @@ msgid ""
 "                                    Calendar Mismatch : The employee's calendar does not match this contract's calendar. This could lead to unexpected behaviors.\n"
 "                                </span>"
 msgstr ""
+"Ism חוסר התאמה ביומן: לוח השנה של העובד אינו תואם את לוח השנה של חוזה זה. זה"
+" יכול להוביל להתנהגויות בלתי צפויות."
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
@@ -59,7 +61,7 @@ msgid ""
 "<span class=\"o_stat_text text-danger\" attrs=\"{'invisible' : [('contract_warning', '=', False)]}\" title=\"In Contract Since\">\n"
 "                                    In Contract Since\n"
 "                                </span>"
-msgstr ""
+msgstr "בחוזה מאז"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
@@ -67,7 +69,7 @@ msgid ""
 "<span class=\"o_stat_text text-danger\">\n"
 "                                    Contracts\n"
 "                                </span>"
-msgstr ""
+msgstr " חוזים"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
@@ -75,7 +77,7 @@ msgid ""
 "<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : "
 "[('contract_warning', '=', True)]}\" title=\"In Contract Since\"> In "
 "Contract Since</span>"
-msgstr ""
+msgstr "בחוזה מאז"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -166,7 +168,7 @@ msgstr "רכב חברה"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__company_country_id
 msgid "Company country"
-msgstr ""
+msgstr "ארץ החברה"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract
@@ -187,7 +189,7 @@ msgstr "פרטי חוזה"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
 msgid "Contract End Date"
-msgstr ""
+msgstr "תאריך סיום החוזה"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__name
@@ -199,7 +201,7 @@ msgstr "מזהה חוזה"
 #: model:ir.model,name:hr_contract.model_hr_payroll_structure_type
 #: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__name
 msgid "Contract Type"
-msgstr ""
+msgstr "סוג חוזה"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_warning
@@ -303,6 +305,7 @@ msgstr "אשף עזיבה"
 msgid ""
 "Departure date can't be earlier than the start date of current contract."
 msgstr ""
+"תאריך היציאה מהחוזה לא יכול להיות מוקדם יותר מתאריך ההתחלה של החוזה הנוכחי."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__display_name
@@ -629,17 +632,17 @@ msgstr "חפש חוזה"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_departure_wizard__set_date_end
 msgid "Set Contract End Date"
-msgstr ""
+msgstr "הגדר את תאריך הסיום של החוזה"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
 msgid "Set end date to current contract"
-msgstr ""
+msgstr "קבע את תאריך הסיום לחוזה הנוכחי"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Show all records which have a next action date before today"
-msgstr ""
+msgstr "הצג את כל הרשומות עם תאריך הפעולה הבא לפני היום"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_start
@@ -679,7 +682,7 @@ msgstr "סטטוס החוזה"
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid "The contract of %s is about to expire."
-msgstr ""
+msgstr "החוזה של %s עומד להסתיים."
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
@@ -739,4 +742,4 @@ msgstr "לוח זמני עבודה"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Yearly Advantages"
-msgstr ""
+msgstr "יתרונות שנתיים"

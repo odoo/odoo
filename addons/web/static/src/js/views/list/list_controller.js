@@ -390,7 +390,7 @@ var ListController = BasicController.extend({
      */
     _getExportDialogWidget() {
         let state = this.model.get(this.handle);
-        let defaultExportFields = this.renderer.columns.filter(field => field.tag === 'field').map(field => field.attrs.name);
+        let defaultExportFields = this.renderer.columns.filter(field => field.tag === 'field' && state.fields[field.attrs.name].exportable !== false).map(field => field.attrs.name);
         let groupedBy = this.renderer.state.groupedBy;
         const domain = this.isDomainSelected && state.getDomain();
         return new DataExport(this, state, defaultExportFields, groupedBy,

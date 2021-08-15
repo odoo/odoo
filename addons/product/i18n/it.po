@@ -686,7 +686,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__create_date
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__1
@@ -2473,8 +2473,8 @@ msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
 msgstr ""
-"Listino prezzi utilizzato, al posto di quello predefinito, per le vendite al"
-" partner corrente"
+"Listino prezzi utilizzato, al posto di quello predefinito, per vendite al "
+"partner corrente"
 
 #. module: product
 #: code:addons/product/models/uom_uom.py:0
@@ -2961,6 +2961,16 @@ msgid ""
 "%s"
 msgstr ""
 "Impossibile eliminare il valore %s, è utilizzato nei seguenti prodotti:\n"
+"%s"
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot delete this pricelist (%s), it is used in other pricelist(s) : \n"
+"%s"
+msgstr ""
+"Impossibile eliminare il listino prezzi (%s), è utilizzato in altri listini : \n"
 "%s"
 
 #. module: product

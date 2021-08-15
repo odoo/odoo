@@ -1716,7 +1716,7 @@ ListRenderer.include({
 
         // Fix container width to prevent the table from overflowing when being resized
         if (!this.el.style.width) {
-            this.el.style.width = `${initialTableWidth}px`;
+            this.el.style.width = `${this.el.offsetWidth}px`;
         }
 
         // Apply classes to table and selected column
@@ -1731,6 +1731,7 @@ ListRenderer.include({
             const newWidth = Math.max(10, initialWidth + delta);
             const tableDelta = newWidth - initialWidth;
             th.style.width = `${newWidth}px`;
+            th.style.maxWidth = `${newWidth}px`;
             table.style.width = `${initialTableWidth + tableDelta}px`;
             if (optionalDropdown) {
                 optionalDropdown.style.left = `${initialDropdownX + tableDelta}px`;
@@ -1834,6 +1835,12 @@ ListRenderer.include({
         // ignore clicks if target is inside the list. In that case, they are
         // handled directly by the renderer.
         if (this.el.contains(event.target) && this.el !== event.target) {
+            return;
+        }
+
+        // ignore click if search facet is removed as it will re-render whole
+        // listview again
+        if ($(event.target).hasClass('o_facet_remove')) {
             return;
         }
 

@@ -574,6 +574,8 @@ class PosConfig(models.Model):
          }
 
     def _force_http(self):
+        if self.other_devices:
+            return True
         return False
 
     def _get_pos_base_url(self):

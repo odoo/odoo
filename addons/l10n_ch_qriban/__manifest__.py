@@ -19,4 +19,5 @@ This should help for reconciliation on the bank statements where the old IBAN co
         'views/swissqr_report.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

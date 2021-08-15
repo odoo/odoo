@@ -8,6 +8,7 @@
 # Wanradt Koell <wanradt@gmail.com>, 2020
 # Hedi Hunt <Hedi.Hunt@gmail.com>, 2020
 # Maidu Targama <m.targama@gmail.com>, 2020
+# Algo Kärp <algokarp@gmail.com>, 2020
 # Rivo Zängov <eraser@eraser.ee>, 2020
 # Arma Gedonsky <armagedonsky@hot.ee>, 2020
 # Egon Raamat <egon@avalah.ee>, 2020
@@ -16,13 +17,12 @@
 # Helen Sulaoja <helen@avalah.ee>, 2020
 # Indrek Linnas <indrek@estpos.ee>, 2020
 # Toomas Ant <toomas.ant@gmail.com>, 2020
-# Algo Kärp <algokarp@gmail.com>, 2020
 # Martin Trigaux, 2021
 # Triine Aavik <triine@avalah.ee>, 2021
-# Eneli Õigus <enelioigus@gmail.com>, 2021
 # Piia Paurson <piia@avalah.ee>, 2021
 # Andre Roomet <andreroomet@gmail.com>, 2021
 # Aveli Kannel <aveli@avalah.ee>, 2021
+# Eneli Õigus <enelioigus@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Aveli Kannel <aveli@avalah.ee>, 2021\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -786,7 +786,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Unit Price</span>"
-msgstr "<span>Ühiku hind</span>"
+msgstr "<span>Ühikuhind</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -915,7 +915,7 @@ msgstr "<strong>Algne saldo</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Subtotal</strong>"
-msgstr "<strong>Vahekokkuvõte</strong>"
+msgstr "<strong>Vahesumma</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -5565,7 +5565,7 @@ msgstr "Protsendi jaoks sisestage väärtus vahemikus 0-100."
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_non_accountable_fields_null
 msgid ""
 "Forbidden unit price, account and quantity on non-accountable invoice line"
-msgstr "Keelatud ühiku hind, konto ja kogus arve real mittevastavuses"
+msgstr "Keelatud ühikuhind, konto ja kogus arve real mittevastavuses"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__force_post
@@ -6834,6 +6834,12 @@ msgstr ""
 "nüüd luua kreedit-arve käsitsi."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "It was previously '%(previous)s' and it is now '%(now)s'."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "JRNL/2016/00001"
 msgstr "JRNL/2016/00001"
@@ -7460,12 +7466,12 @@ msgstr "Rida"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__show_line_subtotals_tax_selection
 msgid "Line Subtotals Tax Display"
-msgstr "Maksude kuvamine vahesumma real"
+msgstr "Vahesumma rida maksude kuvamiseks"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Line subtotals tax display"
-msgstr "Rida vahekokkuvõtete maksu näiduks"
+msgstr "Vahesumma rida maksude kuvamiseks"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -9227,7 +9233,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
-msgstr "Kasutage ülekande tegemiseks järgmist selgitust:"
+msgstr "Palun märkige ülekande selgitusse arve number"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__plus_report_line_ids
@@ -12746,11 +12752,43 @@ msgstr ""
 "Järjestuse välja kasutatakse maksuridade reastamiseks soovitud järjekorda."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The sequence format has changed."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid ""
 "The sequence regex should at least contain the seq grouping keys. For instance:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will never restart.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every month.\n"
+"The year detected here is '%(year)s' and the month is '%(month)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every year.\n"
+"The year detected here is '%(year)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
 
 #. module: account
@@ -12848,7 +12886,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "There are currently no invoices and payments for your account."
-msgstr "Hetke lei ole ühtegi arvet ega maksed selle konto kohta."
+msgstr "Hetkel ei ole selle kontoga seotud ühtegi arvet ega makset."
 
 #. module: account
 #: code:addons/account/wizard/account_validate_account_move.py:0
@@ -13440,7 +13478,7 @@ msgstr "Ühikhind"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Unit Price:"
-msgstr "Ühiku hind:"
+msgstr "Ühikuhind:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
@@ -13985,6 +14023,18 @@ msgstr ""
 msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"You can not archive a journal containing draft journal entries.\n"
+"\n"
+"To proceed:\n"
+"1/ click on the top-right button 'Journal Entries' from this journal form\n"
+"2/ then filter on 'Draft' entries\n"
+"3/ select them all and post or delete them through the action menu"
 msgstr ""
 
 #. module: account

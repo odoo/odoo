@@ -1488,15 +1488,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         view = E.calendar(string=self._description)
         view.append(E.field(name=self._rec_name_fallback()))
 
-        if self._date_name not in self._fields:
-            date_found = False
-            for dt in ['date', 'date_start', 'x_date', 'x_date_start']:
-                if dt in self._fields:
-                    self._date_name = dt
-                    break
-            else:
-                raise UserError(_("Insufficient fields for Calendar View!"))
-        view.set('date_start', self._date_name)
+        if not set_first_of([self._date_name, 'date', 'date_start', 'x_date', 'x_date_start'],
+                            self._fields, 'date_start'):
+            raise UserError(_("Insufficient fields for Calendar View!"))
 
         set_first_of(["user_id", "partner_id", "x_user_id", "x_partner_id"],
                      self._fields, 'color')
@@ -2286,9 +2280,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         self._apply_ir_rules(query, 'read')
         for gb in groupby_fields:
-            assert gb in self._fields, "Unknown field %r in 'groupby'" % gb
+            if gb not in self._fields:
+                raise UserError(_("Unknown field %r in 'groupby'") % gb)
             gb_field = self._fields[gb].base_field
-            assert gb_field.store and gb_field.column_type, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
+            if not (gb_field.store and gb_field.column_type):
+                raise UserError(_("Fields in 'groupby' must be database-persisted fields (no computed fields)"))
 
         aggregated_fields = []
         select_terms = []
@@ -5926,7 +5922,7 @@ Fields:
             presence of ``other_fields``.
         """
         return (field.name in self._onchange_methods) or any(
-            dep in other_fields for dep in self._dependent_fields(field)
+            dep in other_fields for dep in self._dependent_fields(field.base_field)
         )
 
     @api.model
@@ -6193,6 +6189,11 @@ Fields:
         # triggers default_get() on the new record when creating snapshot0
         initial_values = dict(values, **dict.fromkeys(names, False))
 
+        # do not force delegate fields to False
+        for name in self._inherits.values():
+            if not initial_values.get(name, True):
+                initial_values.pop(name)
+
         # create a new record with values
         record = self.new(initial_values, origin=self)
 
@@ -6219,6 +6220,15 @@ Fields:
         protected = [self._fields[name] for name in names]
         with self.env.protecting(protected, record):
             record.modified(todo)
+            for name in todo:
+                field = self._fields[name]
+                if field.inherited:
+                    # modifying an inherited field should modify the parent
+                    # record accordingly; because we don't actually assign the
+                    # modified field on the record, the modification on the
+                    # parent record has to be done explicitly
+                    parent = record[field.related[0]]
+                    parent[name] = record[name]
 
         result = {'warnings': OrderedSet()}
 

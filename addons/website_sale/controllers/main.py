@@ -532,9 +532,6 @@ class WebsiteSale(http.Controller):
                         partner_id = int(kw.get('partner_id'))
                     if partner_id in shippings.mapped('id'):
                         order.partner_shipping_id = partner_id
-                elif not order.partner_shipping_id:
-                    last_order = request.env['sale.order'].sudo().search([("partner_id", "=", order.partner_id.id)], order='id desc', limit=1)
-                    order.partner_shipping_id.id = last_order and last_order.id
 
         values = {
             'order': order,

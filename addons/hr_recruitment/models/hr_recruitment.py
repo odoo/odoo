@@ -341,6 +341,7 @@ class Applicant(models.Model):
         category = self.env.ref('hr_recruitment.categ_meet_interview')
         res = self.env['ir.actions.act_window']._for_xml_id('calendar.action_calendar_event')
         res['context'] = {
+            'default_applicant_id': self.id,
             'default_partner_ids': partners.ids,
             'default_user_id': self.env.uid,
             'default_name': self.name,
