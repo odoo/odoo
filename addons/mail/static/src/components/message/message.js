@@ -406,7 +406,7 @@ export class Message extends Component {
                 el.remove();
             }
             this._insertReadMoreLess($(this._contentRef.el));
-            this.env.messagingBus.trigger('o-component-message-read-more-less-inserted', {
+            this.message.messaging.messagingBus.trigger('o-component-message-read-more-less-inserted', {
                 message: this.message,
             });
         }

@@ -505,7 +505,7 @@ export class MessageList extends Component {
             return;
         }
         const scrollTop = this._getScrollableElement().scrollTop;
-        this.env.messagingBus.trigger('o-component-message-list-scrolled', {
+        this.threadView.messaging.messagingBus.trigger('o-component-message-list-scrolled', {
             orderedMessages,
             scrollTop,
             thread,

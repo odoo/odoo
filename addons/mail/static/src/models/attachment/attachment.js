@@ -315,7 +315,7 @@ function factory(dependencies) {
                 if (!this.uploadingAbortController) {
                     const abortController = new AbortController();
                     abortController.signal.onabort = () => {
-                        this.env.messagingBus.trigger('o-attachment-upload-abort', {
+                        this.messaging.messagingBus.trigger('o-attachment-upload-abort', {
                             attachment: this
                         });
                     };

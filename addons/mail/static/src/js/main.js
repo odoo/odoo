@@ -6,7 +6,6 @@ import MessagingService from '@mail/services/messaging/messaging';
 import env from 'web.commonEnv';
 import { serviceRegistry } from 'web.core';
 
-const { EventBus } = owl.core;
 
 async function createMessaging() {
     await new Promise(resolve => {
@@ -39,23 +38,12 @@ async function createMessaging() {
  * Environment keys used in messaging.
  */
 Object.assign(env, {
-    autofetchPartnerImStatus: true,
-    disableAnimation: false,
     isMessagingInitialized() {
         if (!this.modelManager.messaging) {
             return false;
         }
         return this.modelManager.messaging.isInitialized;
     },
-    /**
-     * States whether the environment is in QUnit test or not.
-     *
-     * Useful to prevent some behaviour in QUnit tests, like applying
-     * style of attachment that uses url.
-     */
-    isQUnitTest: false,
-    loadingBaseDelayDuration: 400,
-    messagingBus: new EventBus(),
     /**
      * Promise which becomes resolved when messaging is created.
      *

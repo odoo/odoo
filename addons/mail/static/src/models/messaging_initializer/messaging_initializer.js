@@ -52,7 +52,7 @@ function factory(dependencies) {
             if (discuss.isOpen) {
                 discuss.openInitThread();
             }
-            if (this.env.autofetchPartnerImStatus) {
+            if (this.messaging.autofetchPartnerImStatus) {
                 this.env.models['mail.partner'].startLoopFetchImStatus();
             }
         }

@@ -48,7 +48,7 @@ function factory(dependencies) {
             this.update({
                 componentHintList: this.componentHintList.filter(h => h !== hint),
             });
-            this.env.messagingBus.trigger('o-thread-view-hint-processed', {
+            this.messaging.messagingBus.trigger('o-thread-view-hint-processed', {
                 hint,
                 threadViewer: this.threadViewer,
             });

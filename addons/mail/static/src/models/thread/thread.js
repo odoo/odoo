@@ -1540,7 +1540,7 @@ function factory(dependencies) {
          * @private
          */
         _onChangeLastSeenByCurrentPartnerMessageId() {
-            this.env.messagingBus.trigger('o-thread-last-seen-by-current-partner-message-id-changed', {
+            this.messaging.messagingBus.trigger('o-thread-last-seen-by-current-partner-message-id-changed', {
                 thread: this,
             });
         }
