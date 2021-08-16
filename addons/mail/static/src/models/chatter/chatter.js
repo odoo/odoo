@@ -178,7 +178,7 @@ function factory(dependencies) {
             this._attachmentsLoaderTimeout = this.env.browser.setTimeout(() => {
                 this.update({ isShowingAttachmentsLoading: true });
                 this._isPreparingAttachmentsLoading = false;
-            }, this.env.loadingBaseDelayDuration);
+            }, this.messaging.loadingBaseDelayDuration);
         }
 
         /**

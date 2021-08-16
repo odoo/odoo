@@ -101,8 +101,10 @@ export class ModelManager {
     /**
      * Called when all JS modules that register or patch models have been
      * done. This launches generation of models.
+     *
+     * @param {Object} values field name/value pairs to give at messaging create
      */
-    start() {
+    start(values) {
         /**
          * Generate the models.
          */
@@ -110,7 +112,7 @@ export class ModelManager {
         /**
          * Create the messaging singleton record.
          */
-        this.models['mail.messaging'].create();
+        this.models['mail.messaging'].create(values);
     }
 
     //--------------------------------------------------------------------------

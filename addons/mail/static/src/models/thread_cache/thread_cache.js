@@ -283,7 +283,7 @@ function factory(dependencies) {
             if (!extraDomain && messages.length < limit) {
                 this.update({ isAllHistoryLoaded: true });
             }
-            this.env.messagingBus.trigger('o-thread-cache-loaded-messages', {
+            this.messaging.messagingBus.trigger('o-thread-cache-loaded-messages', {
                 fetchedMessages: messages,
                 threadCache: this,
             });
