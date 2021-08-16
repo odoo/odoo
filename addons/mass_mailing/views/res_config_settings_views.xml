@@ -21,22 +21,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-6 o_setting_box col-12" name="dedicated_server_setting_container">
-                                <div class="o_setting_left_pane" title="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.">
-                                    <field name="mass_mailing_outgoing_mail_server"/>
+                            <div class="col-md-6 o_setting_box col-12" name="allow_testing_a_b">
+                                <div class="o_setting_left_pane" title="Test multiple versions of your mailings and send the best one">
+                                    <field name="group_mass_mailing_ab_testing"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="mass_mailing_outgoing_mail_server"/>
+                                    <label for="group_mass_mailing_ab_testing"/>
                                     <div class="text-muted">
-                                        Use a dedicated server for mailings
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('mass_mailing_outgoing_mail_server', '=', False)]}">
-                                        <div class="mt16">
-                                            <field name="mass_mailing_mail_server_id" options="{'no_create': True, 'no_open': True}"/>
-                                        </div>
-                                        <div class="mt8">
-                                            <button type="action" name="base.action_ir_mail_server_list" string="Configure Email Server" icon="fa-arrow-right" class="oe_link"/>
-                                        </div>
+                                        Test multiple versions of your mailings
                                     </div>
                                 </div>
                             </div>
@@ -53,14 +45,22 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 o_setting_box col-12" name="allow_testing_a_b">
-                                <div class="o_setting_left_pane" title="Test multiple versions of your mailings and send the best one">
-                                    <field name="group_mass_mailing_ab_testing"/>
+                            <div class="col-lg-6 o_setting_box col-12" name="dedicated_server_setting_container">
+                                <div class="o_setting_left_pane" title="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.">
+                                    <field name="mass_mailing_outgoing_mail_server"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="group_mass_mailing_ab_testing"/>
+                                    <label for="mass_mailing_outgoing_mail_server"/>
                                     <div class="text-muted">
-                                        Test multiple versions of your mailings and send the best one
+                                        Use a dedicated server for mailings
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('mass_mailing_outgoing_mail_server', '=', False)]}">
+                                        <div class="mt16">
+                                            <field name="mass_mailing_mail_server_id" options="{'no_create': True, 'no_open': True}"/>
+                                        </div>
+                                        <div class="mt8">
+                                            <button type="action" name="base.action_ir_mail_server_list" string="Configure Email Server" icon="fa-arrow-right" class="oe_link"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

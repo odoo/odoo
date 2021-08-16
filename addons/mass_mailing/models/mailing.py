@@ -748,7 +748,10 @@ class MassMailing(models.Model):
             mass_mailing = mass_mailing.with_context(**user.with_user(user).context_get())
             if len(mass_mailing._get_remaining_recipients()) > 0:
                 mass_mailing.state = 'sending'
-                mass_mailing.action_send_mail(mass_mailing.testing_mailing_id._get_recipients() if mass_mailing.testing_mailing_id else None)
+                if mass_mailing.testing_mailing_id:
+                    mass_mailing.testing_mailing_id.action_send_mailing(mass_mailing)
+                else:
+                    mass_mailing.action_send_mail()
             else:
                 mass_mailing.write({
                     'state': 'done',

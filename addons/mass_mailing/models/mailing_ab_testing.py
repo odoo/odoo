@@ -51,7 +51,7 @@ class MassMailingTestingCampaign(models.Model):
         readonly=True, related_sudo=True)
     mailing_domain = fields.Char('Domain', compute='_compute_mailing_domain', readonly=False, store=True)
     contact_list_ids = fields.Many2many('mailing.list', 'mail_testing_mass_mailing_list_rel', string="Mailing Lists")
-    user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user, required=True)
+    user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user)
     testing_mode = fields.Selection([('manual', 'Manual'), ('based_on', 'Based On')], string='Testing Mode',
         default='based_on', required=True)
     based_on = fields.Selection([
@@ -73,24 +73,22 @@ class MassMailingTestingCampaign(models.Model):
         ('min', 'Minutes'),
         ('hours', 'Hours'),
         ('days', 'Days')], string="Duration Type", default='days')
-    duration = fields.Float("After", default="1")
-    state = fields.Selection([('new', 'New'), ('in_progress', 'In Progress'), ('done', 'Done')],
-        string='Status', default='new', group_expand='_group_expand_states', required=True)
+    duration = fields.Integer("After", default="1")
+    state = fields.Selection([
+        ('new', 'New'),
+        ('in_progress', 'In Progress'),
+        ('sent', 'Sent'),
+        ('done', 'Done')], string='Status', default='new',
+        tracking=True, group_expand='_group_expand_states', required=True)
     tag_ids = fields.Many2many('mailing.ab.testing.tag', 'mailing_ab_testing_tag_rel',
         'mailing_ab_testing_tag_id', 'tag_id', string='Tags')
     total_recipients = fields.Integer('Total Recipients', compute='_compute_total_recipients')
 
-    @api.constrains('mailing_model_id', 'mailing_domain', 'sample_size')
-    def _constrains_recipients_nbr(self):
-        for mailing in self:
-            contact_nbr = self.env[mailing.mailing_model_real].search_count(mailing._parse_mailing_domain())
-            if contact_nbr * int(mailing.sample_size) / 200 < 1:
-                raise ValidationError(_("There are not enough recipients to test your mailing."))
-
     @api.model
     def create(self, vals):
         vals['campaign_id'] = self.env['utm.campaign'].create({
-            'name': 'Mass Mailing A/B Testing: %s' % vals['name']
+            'name': 'A/B Testing: %s' % vals['name'],
+            'user_id': vals.get('user_id', self.env.user.id),
         }).id
         return super().create(vals)
 
@@ -163,10 +161,16 @@ class MassMailingTestingCampaign(models.Model):
                 mailing.action_send_mail(recipients)
             else:
                 raise ValidationError(_("There are not enough recipients to send the testing mailings. Increase the sample size or the number of recipients"))
-        self.write({'state': 'in_progress'})
-        at = mailing.sent_date + timedelta(hours=self._get_duration_hours())
-        if not cron.lastcall or at > cron.lastcall:
-            cron._trigger(at=at)
+        if mailing:
+            sent_mailings = self.mailing_ids.filtered(lambda m: m.state == 'done')
+            if sent_mailings == self.mailing_ids and len(self.mailing_ids) >= 2:
+                status = {'state': 'sent'}
+            else:
+                status = {'state': 'in_progress'}
+            self.write(status)
+            at = mailing.sent_date + timedelta(hours=self._get_duration_hours())
+            if not cron.lastcall or at > cron.lastcall:
+                cron._trigger(at=at)
 
     def action_send_winner_mailing(self):
         self.ensure_one()

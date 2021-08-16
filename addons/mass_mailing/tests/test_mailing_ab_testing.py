@@ -49,7 +49,7 @@ class TestMailingABTesting(MassMailCommon):
 
         with self.mock_mail_gateway():
             ab_testing.action_send_mailings()
-        self.assertEqual(ab_testing.state, 'in_progress')
+        self.assertEqual(ab_testing.state, 'sent')
         self.assertEqual(mailing_a.state, 'done')
         self.assertEqual(mailing_b.state, 'done')
         self.assertEqual(mailing_a.opened_ratio, 0)
@@ -93,7 +93,7 @@ class TestMailingABTesting(MassMailCommon):
 
         with self.mock_mail_gateway():
             ab_testing.action_send_mailings()
-        self.assertEqual(ab_testing.state, 'in_progress')
+        self.assertEqual(ab_testing.state, 'sent')
         self.assertEqual(mailing_a.state, 'done')
         self.assertEqual(mailing_b.state, 'done')
         self.assertEqual(mailing_a.opened_ratio, 0)
