@@ -1167,6 +1167,8 @@ class MrpProduction(models.Model):
 
         # run scheduler for moves forecasted to not have enough in stock
         self.move_raw_ids._trigger_scheduler()
+        self.picking_ids.filtered(
+            lambda p: p.state not in ['cancel', 'done']).action_confirm()
         return True
 
     def action_assign(self):
