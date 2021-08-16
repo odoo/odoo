@@ -85,7 +85,7 @@ const Wysiwyg = Widget.extend({
                 const selection = document.getSelection();
                 if (selection.isCollapsed && selection.rangeCount) {
                     const node = closestElement(selection.anchorNode, 'P, DIV');
-                    return !(node.hasAttribute && node.hasAttribute('data-oe-model')) && node;
+                    return !(node && node.hasAttribute && node.hasAttribute('data-oe-model')) && node;
                 }
             },
             isHintBlacklisted: node => {
