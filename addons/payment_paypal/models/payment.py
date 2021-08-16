@@ -91,7 +91,7 @@ class AcquirerPaypal(models.Model):
             'business': self.paypal_email_account,
             'item_name': '%s: %s' % (self.company_id.name, values['reference']),
             'item_number': values['reference'],
-            'amount': values['amount'],
+            'amount': values['amount'] + values['fees'],
             'currency_code': values['currency'] and values['currency'].name or '',
             'address1': values.get('partner_address'),
             'city': values.get('partner_city'),
