@@ -33,33 +33,19 @@ async function createMessaging() {
     await env.session.is_bound;
 
     env.modelManager.start();
-    /**
-     * Create the messaging singleton record.
-     */
-    env.messaging = env.models['mail.messaging'].create();
 }
 
-/**
- * Registry of models.
- */
-env.models = {};
 /**
  * Environment keys used in messaging.
  */
 Object.assign(env, {
     autofetchPartnerImStatus: true,
-    destroyMessaging() {
-        if (env.modelManager) {
-            env.modelManager.deleteAll();
-            env.messaging = undefined;
-        }
-    },
     disableAnimation: false,
     isMessagingInitialized() {
-        if (!this.messaging) {
+        if (!this.modelManager.messaging) {
             return false;
         }
-        return this.messaging.isInitialized;
+        return this.modelManager.messaging.isInitialized;
     },
     /**
      * States whether the environment is in QUnit test or not.
@@ -69,7 +55,6 @@ Object.assign(env, {
      */
     isQUnitTest: false,
     loadingBaseDelayDuration: 400,
-    messaging: undefined,
     messagingBus: new EventBus(),
     /**
      * Promise which becomes resolved when messaging is created.
@@ -79,6 +64,16 @@ Object.assign(env, {
      */
     messagingCreatedPromise: createMessaging(),
     modelManager: new ModelManager(env),
+});
+Object.defineProperty(env, 'messaging', {
+    get() {
+        return this.modelManager.messaging;
+    },
+});
+Object.defineProperty(env, 'models', {
+    get() {
+        return this.modelManager.models;
+    },
 });
 
 serviceRegistry.add('messaging', MessagingService);

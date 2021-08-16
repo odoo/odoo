@@ -161,6 +161,7 @@ function factory(dependencies) {
         _onThreadIsLoadingAttachmentsChanged() {
             if (!this.thread || !this.thread.isLoadingAttachments) {
                 this._stopAttachmentsLoading();
+                this.update({ isShowingAttachmentsLoading: false });
                 return;
             }
             if (this._isPreparingAttachmentsLoading || this.isShowingAttachmentsLoading) {
@@ -186,7 +187,6 @@ function factory(dependencies) {
         _stopAttachmentsLoading() {
             this.env.browser.clearTimeout(this._attachmentsLoaderTimeout);
             this._attachmentsLoaderTimeout = null;
-            this.update({ isShowingAttachmentsLoading: false });
             this._isPreparingAttachmentsLoading = false;
         }
 

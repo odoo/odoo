@@ -179,10 +179,17 @@ function factory(dependencies) {
     }
 
     Messaging.fields = {
+        /**
+         * Inverse of the messaging field present on all models. This field
+         * therefore contains all existing records.
+         */
+        allRecords: one2many('mail.model', {
+            inverse: 'messaging',
+            isCausal: true,
+        }),
         cannedResponses: one2many('mail.canned_response'),
         chatWindowManager: one2one('mail.chat_window_manager', {
             default: create(),
-            inverse: 'messaging',
             isCausal: true,
             readonly: true,
         }),
@@ -201,7 +208,6 @@ function factory(dependencies) {
         }),
         discuss: one2one('mail.discuss', {
             default: create(),
-            inverse: 'messaging',
             isCausal: true,
             readonly: true,
         }),
@@ -223,7 +229,6 @@ function factory(dependencies) {
         }),
         initializer: one2one('mail.messaging_initializer', {
             default: create(),
-            inverse: 'messaging',
             isCausal: true,
             readonly: true,
         }),
@@ -245,7 +250,6 @@ function factory(dependencies) {
         }),
         messagingMenu: one2one('mail.messaging_menu', {
             default: create(),
-            inverse: 'messaging',
             isCausal: true,
             readonly: true,
         }),
@@ -256,7 +260,6 @@ function factory(dependencies) {
         }),
         notificationHandler: one2one('mail.messaging_notification_handler', {
             default: create(),
-            inverse: 'messaging',
             isCausal: true,
             readonly: true,
         }),

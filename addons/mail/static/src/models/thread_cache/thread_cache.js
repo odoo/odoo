@@ -27,13 +27,16 @@ function factory(dependencies) {
             let fetchedMessages;
             let success;
             try {
-                fetchedMessages = await this.async(() => this._loadMessages({
+                fetchedMessages = await this._loadMessages({
                     extraDomain: [['id', '<', Math.min(...messageIds)]],
                     limit,
-                }));
+                });
                 success = true;
-            }  catch (e) {
+            } catch (e) {
                 success = false;
+            }
+            if (!this.exists()) {
+                return;
             }
             if (success) {
                 if (fetchedMessages.length < limit) {
@@ -254,19 +257,22 @@ function factory(dependencies) {
             const context = this.env.session.user_context;
             let messages;
             try {
-                messages = await this.async(() =>
-                    this.env.models['mail.message'].performRpcMessageFetch(
-                        domain,
-                        limit,
-                        context,
-                    )
+                messages = await this.env.models['mail.message'].performRpcMessageFetch(
+                    domain,
+                    limit,
+                    context,
                 );
-            } catch(e) {
-                this.update({
-                    hasLoadingFailed: true,
-                    isLoading: false,
-                });
+            } catch (e) {
+                if (this.exists()) {
+                    this.update({
+                        hasLoadingFailed: true,
+                        isLoading: false,
+                    });
+                }
                 throw e;
+            }
+            if (!this.exists()) {
+                return;
             }
             this.update({
                 fetchedMessages: link(messages),
@@ -339,7 +345,7 @@ function factory(dependencies) {
             if (!this.hasToLoadMessages) {
                 return;
             }
-            const fetchedMessages = await this.async(() => this._loadMessages());
+            const fetchedMessages = await this._loadMessages();
             for (const threadView of this.threadViews) {
                 threadView.addComponentHint('messages-loaded', { fetchedMessages });
             }

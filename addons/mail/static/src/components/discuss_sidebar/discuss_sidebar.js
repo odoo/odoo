@@ -235,6 +235,9 @@ export class DiscussSidebar extends Component {
      */
     _onHideAddingItem(ev) {
         ev.stopPropagation();
+        if (!this.discuss) {
+            return;
+        }
         this.discuss.clearIsAddingItem();
     }
 
