@@ -218,7 +218,7 @@
                 <field name="survey_id"/>
                 <field name="question_type"/>
                 <field name="triggering_question_id" invisible="1"/>
-                <button icon="fa-code-fork" attrs="{'invisible': [('triggering_question_id', '=', False)]}"
+                <button disabled="disabled" icon="fa-code-fork" attrs="{'invisible': [('triggering_question_id', '=', False)]}"
                     title="This question depends on another question's answer." class="icon_rotates"/>
             </tree>
         </field>
