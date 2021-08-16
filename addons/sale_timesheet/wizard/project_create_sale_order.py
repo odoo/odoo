@@ -245,6 +245,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
                 'so_line': map_entry.sale_line_id.id
             })
             map_entry.sale_line_id.with_context({'no_update_planned_hours': True}).write({
+                'price_unit': map_entry.sale_line_id.price_unit,
                 'product_uom_qty': map_entry.sale_line_id.qty_delivered
             })
 

@@ -122,7 +122,6 @@ class TestSaleOrder(TestSaleCommon):
         # Trigger onchange to reset discount, unit price, subtotal, ...
         for line in self.sale_order.order_line:
             line.product_id_change()
-            line._onchange_discount()
         # Check that pricelist of the SO has been applied on the sale order lines or not
         for line in self.sale_order.order_line:
             if line.product_id == self.company_data['product_order_no']:
@@ -146,7 +145,6 @@ class TestSaleOrder(TestSaleCommon):
         # Trigger onchange to reset discount, unit price, subtotal, ...
         for line in self.sale_order.order_line:
             line.product_id_change()
-            line._onchange_discount()
 
         # Check pricelist of the SO apply or not on order lines where pricelist contains formula that add 15% on the cost price
         for line in self.sale_order.order_line:

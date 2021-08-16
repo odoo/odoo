@@ -64,7 +64,7 @@ class SaleOrderOption(models.Model):
 
     website_description = fields.Html('Website Description', sanitize_attributes=False, translate=html_translate)
 
-    @api.onchange('product_id', 'uom_id')
+    @api.onchange('product_id', 'uom_id', 'quantity')
     def _onchange_product_id(self):
         ret = super(SaleOrderOption, self)._onchange_product_id()
         if self.product_id:

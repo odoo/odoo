@@ -35,6 +35,11 @@ publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
             'input_quantity': quantity >= 0 ? quantity : false,
             'access_token': self.orderDetail.token
         }).then((data) => {
+            const $saleTemplate = $(data['sale_template']);
+            if ($saleTemplate.length) {
+                self.$('#portal_sale_content').html($saleTemplate);
+                self.elems = self._getUpdatableElements();
+            }
             self._updateOrderLineValues($target.closest('tr'), data);
             self._updateOrderValues(data);
         });
@@ -55,7 +60,7 @@ publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
             'access_token': self.orderDetail.token
         }).then((data) => {
             var $saleTemplate = $(data['sale_template']);
-            if ($saleTemplate.length && data['unlink']) {
+            if ($saleTemplate.length) {
                 self.$('#portal_sale_content').html($saleTemplate);
                 self.elems = self._getUpdatableElements();
             }

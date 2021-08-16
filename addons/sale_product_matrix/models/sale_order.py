@@ -113,7 +113,6 @@ class SaleOrder(models.Model):
                 self.update(dict(order_line=new_lines))
                 for line in self.order_line.filtered(lambda line: line.product_template_id == product_template):
                     res = line.product_id_change() or res
-                    line._onchange_discount()
                     line._onchange_product_id_set_customer_lead()
                 return res
 

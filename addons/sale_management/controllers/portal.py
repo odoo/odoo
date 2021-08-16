@@ -55,20 +55,16 @@ class CustomerPortal(portal.CustomerPortal):
 
         if unlink or quantity <= 0:
             order_line.unlink()
-            results = self._get_portal_order_details(order_sudo)
-            results.update({
-                'unlink': True,
-                'sale_template': request.env['ir.ui.view']._render_template('sale.sale_order_portal_content', {
-                    'sale_order': order_sudo,
-                    'report_type': "html"
-                }),
-            })
-            return results
+        else:
+            order_line.product_uom_qty = quantity
 
-        order_line.write({'product_uom_qty': quantity})
-        results = self._get_portal_order_details(order_sudo, order_line)
-
-        return results
+        return {
+            'sale_template': request.env['ir.ui.view']._render_template('sale.sale_order_portal_content', {
+                'sale_order': order_sudo,
+                'report_type': "html"
+            }),
+            **self._get_portal_order_details(order_sudo, False if (unlink or quantity <= 0) else order_line)
+        }
 
     @http.route(["/my/orders/<int:order_id>/add_option/<int:option_id>"], type='json', auth="public", website=True)
     def add(self, order_id, option_id, access_token=None, **post):
