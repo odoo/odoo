@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2018 Tecnativa - Jairo Llopis
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<template>
+    <t t-extend="AppsMenu">
+        <!-- App icons must be clickable -->
+        <t t-jquery=".o_app" t-operation="attributes">
+            <attribute
+                name="t-attf-href"
+                t-translation="off"
+            >#menu_id=#{app.menuID}&amp;action_id=#{app.actionID}</attribute>
+            <attribute name="draggable" t-translation="off">false</attribute>
+        </t>
+        <!-- App icons should be more than a text -->
+        <t t-jquery=".o_app &gt; t" t-operation="replace">
+            <t t-call="web_responsive.AppIcon" />
+        </t>
+        <!-- Same hotkey as in EE -->
+        <t t-jquery=".full" t-operation="attributes">
+            <attribute name="accesskey">a</attribute>
+        </t>
+        <!-- Search bar -->
+        <t t-jquery="[t-as=app]" t-operation="before">
+            <div class="search-container align-items-center col-12">
+                <div class="search-input">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="fa fa-search" />
+                        </div>
+                        <input
+                            type="search"
+                            autocomplete="off"
+                            placeholder="Search menus..."
+                            class="form-control"
+                        />
+                    </div>
+                    <div class="search-results ml-auto mr-auto rounded" />
+                </div>
+            </div>
+        </t>
+    </t>
+    <!-- Separate app icon template, for easier inheritance -->
+    <t t-name="web_responsive.AppIcon">
+        <img
+            class="o-app-icon"
+            draggable="false"
+            t-attf-src="data:image/png;base64,#{app.web_icon_data}"
+        />
+        <span class="o-app-name">
+            <t t-esc="app.name" />
+        </span>
+    </t>
+    <!-- A search result -->
+    <t t-name="web_responsive.MenuSearchResults">
+        <t t-foreach="results" t-as="result">
+            <t t-set="menu" t-value="widget._menuInfo(result.original)" />
+            <a
+                t-attf-class="o-menu-search-result dropdown-item col-12 ml-auto mr-auto #{result_first ? 'active' : ''}"
+                t-attf-style="background-image:url('data:image/png;base64,#{menu.web_icon_data}')"
+                t-attf-href="#menu_id=#{menu.id}&amp;action_id=#{menu.action_id}"
+                t-att-data-menu-id="menu.id"
+                t-att-data-action-id="menu.action_id"
+                t-att-data-parent-id="menu.parent_id[0]"
+                draggable="false"
+                t-raw="result.string"
+            />
+        </t>
+    </t>
+</template>

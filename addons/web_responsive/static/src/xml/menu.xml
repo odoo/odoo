@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <div t-extend="UserMenu.shortcuts">
+        <t
+            t-jquery="table.o_shortcut_table > tbody > tr > td:nth-child(2) > span:first-child"
+            t-operation="after"
+        >
+        + <span class="o_key">Shift</span>
+    </t>
+    </div>
+</templates>

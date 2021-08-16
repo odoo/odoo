@@ -1,0 +1,933 @@
+/* Copyright 2018 Tecnativa - Jairo Llopis
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+$chatter_zone_width: 35%;
+
+@mixin full-screen-dropdown {
+    border: none;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - #{$o-navbar-height});
+    position: fixed;
+    margin: 0;
+    width: 100vw;
+    z-index: 100;
+    // Inline style will override our `top`, so we need !important here
+    top: $o-navbar-height !important;
+    transform: none !important;
+}
+
+// Support for long titles
+@include media-breakpoint-up(md) {
+    .o_form_view .oe_button_box + .oe_title,
+    .o_form_view .oe_button_box + .oe_avatar + .oe_title {
+        /* Button-box has a hardcoded width of 132px per button and have three columns */
+        width: calc(100% - 450px);
+    }
+}
+
+// Main navbar (with apps menu, user menu, debug menu...)
+@include media-breakpoint-down(sm) {
+    .o_main_navbar {
+        // This allows to have a sane layout for mobiles
+        display: flex;
+
+        // Remove clutter to only have small icons that fit in a small screen
+        > .dropdown {
+            display: flex;
+
+            .navbar-toggler {
+                color: gray("white");
+            }
+
+            .o_menu_sections,
+            .o_menu_systray {
+                padding: 0;
+            }
+        }
+
+        // Whitespace before systray icons
+        .o_menu_systray {
+            margin-left: auto;
+        }
+
+        // Hide big things
+        .o_menu_brand,
+        .o_menu_sections,
+        .oe_topbar_name {
+            display: none;
+        }
+
+        // Fix toggler button padding
+        .o-menu-toggle {
+            cursor: pointer;
+            padding: 0 $o-horizontal-padding;
+        }
+
+        // Custom fullscreen layout when showing submenus
+        .o_menu_sections.show {
+            @include full-screen-dropdown();
+            background-color: $dropdown-bg;
+            overflow: auto;
+
+            .show {
+                display: flex;
+                flex-direction: column;
+
+                .dropdown-menu {
+                    margin-left: 1rem;
+                    min-width: auto;
+                    width: calc(100vw - 2rem);
+                }
+            }
+
+            > li,
+            .o_menu_entry_lvl_1,
+            .o_menu_header_lvl_1 {
+                // Homogeneous background color
+                background-color: $dropdown-bg;
+                color: $dropdown-link-color;
+
+                &:hover {
+                    background-color: $dropdown-link-hover-bg;
+                    color: $dropdown-link-hover-color;
+                }
+
+                // Disable the .o-no-caret class effect, to display the caret
+                &.o-no-caret::after {
+                    content: "";
+                }
+
+                // Fix a strange glitch leaving headers invisible
+                .dropdown-header {
+                    color: $dropdown-header-color;
+                }
+            }
+        }
+
+        // Custom fullscreen layout for systray items
+        .o_mail_systray_dropdown.show {
+            @include full-screen-dropdown();
+
+            // Fix stretchy images
+            .o_mail_preview_image {
+                align-items: center;
+                display: flex;
+                flex-direction: row;
+
+                img {
+                    display: block;
+                    height: auto;
+                }
+            }
+        }
+
+        // Higher height for dropdown items, for those with sausage fingers
+        .dropdown-menu .dropdown-item {
+            padding: {
+                bottom: 0.5rem;
+                top: 0.5rem;
+            }
+        }
+    }
+}
+.o_main_navbar {
+    color: color-yiq($o-brand-odoo);
+
+    > ul > li > a,
+    > ul > li > label {
+        color: color-yiq($o-brand-odoo);
+    }
+    .dropdown-menu.show {
+        max-height: calc(100vh - #{$o-navbar-height});
+    }
+}
+// Iconized full screen apps menu
+.o_menu_apps {
+    user-select: none;
+
+    a.full {
+        width: $o-navbar-height;
+        text-align: center;
+    }
+
+    .dropdown-menu.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .dropdown-menu {
+        @include full-screen-dropdown();
+
+        opacity: 0;
+        visibility: hidden;
+        transition: visibility 100ms ease, opacity 100ms ease;
+        background: url("../img/home-menu-bg-overlay.svg"),
+            linear-gradient(
+                to bottom,
+                $o-brand-odoo,
+                desaturate(lighten($o-brand-odoo, 20%), 15)
+            );
+        background-size: cover;
+        border-radius: 0;
+        // Display apps in a grid
+        align-content: flex-start;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+
+        @include media-breakpoint-up(lg) {
+            padding: {
+                left: calc((100vw - 850px) / 2);
+                right: calc((100vw - 850px) / 2);
+            }
+        }
+
+        .o_app {
+            align-items: center;
+            display: flex;
+            padding: 10px 0;
+            border-radius: 4px;
+            flex-direction: column;
+            justify-content: flex-start;
+            background: none;
+            transition: 300ms ease;
+            transition-property: background-color;
+            white-space: normal;
+            text-align: center;
+
+            img {
+                box-shadow: none;
+                transition: 300ms ease;
+                transition-property: box-shadow, transform;
+            }
+
+            &:focus {
+                background-color: rgba(gray("white"), 0.05);
+            }
+
+            // Size depends on screen
+            width: 33.33333333%;
+            @include media-breakpoint-up(sm) {
+                width: 25%;
+            }
+            @include media-breakpoint-up(md) {
+                width: 16.6666666%;
+            }
+        }
+
+        .o_app:hover img {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 12px -4px rgba(gray("black"), 0.3);
+        }
+
+        // Hide app icons when searching
+        .has-results ~ .o_app {
+            display: none;
+        }
+
+        .o-app-icon {
+            height: auto;
+            max-width: 6rem;
+        }
+
+        .o-app-name {
+            color: gray("white");
+            margin-top: 4px;
+            font-size: 1.25rem;
+            text-shadow: 1px 1px 1px rgba(gray("black"), 0.4);
+        }
+        // Search input for menus
+        .form-row {
+            width: 100%;
+        }
+
+        .o-menu-search-result {
+            align-items: center;
+            background-position: left;
+            background-repeat: no-repeat;
+            background-size: contain;
+            cursor: pointer;
+            padding-left: 3rem;
+            white-space: normal;
+        }
+
+        .search-container {
+            padding-top: 1rem;
+            padding-bottom: 1.5rem;
+
+            .search-input {
+                margin-bottom: 0 !important;
+                padding: 0;
+
+                .input-group {
+                    box-shadow: inset 0 1px 0 rgba(gray("white"), 0.1),
+                        0 1px 0 rgba(gray("black"), 0.1);
+                    text-shadow: 0 1px 0 rgba(gray("black"), 0.5);
+                    border-radius: 4px;
+                    padding: 0.4rem 0.8rem;
+                    background-color: rgba(gray("white"), 0.1);
+
+                    @include media-breakpoint-up(md) {
+                        padding: 0.8rem 1.2rem;
+                    }
+
+                    .input-group-prepend {
+                        span.fa {
+                            color: gray("white");
+                            font-size: 1.5rem;
+                            margin-right: 1rem;
+                            padding-top: 1px;
+                        }
+                    }
+
+                    .form-control {
+                        height: 2rem;
+                        background: none;
+                        border: none;
+                        color: gray("white");
+                        display: block;
+                        padding: 1px 2px 2px 2px;
+                        box-shadow: none;
+
+                        &::placeholder {
+                            color: gray("white");
+                            opacity: 0.5;
+                        }
+                    }
+                }
+            }
+        }
+        // Allow to scroll only on results, keeping static search box above
+        .search-container.has-results {
+            height: 100%;
+            .search-results {
+                max-height: calc(100vh - 47px - 6em);
+                overflow-y: hidden;
+                overflow-x: scroll;
+                overflow: auto;
+                background: url("../img/home-menu-bg-overlay.svg"),
+                    linear-gradient(to bottom, gray("200"), gray("white"));
+                background-position: center;
+                background-size: cover;
+            }
+        }
+    }
+}
+
+// Scroll all but top bar
+html .o_web_client .o_action_manager .o_action {
+    @include media-breakpoint-down(sm) {
+        overflow: auto;
+
+        .o_content {
+            overflow: visible;
+        }
+    }
+
+    max-width: 100%;
+}
+
+// Make enough space for search panel filters buttons
+.o_control_panel {
+    // There is no media breakpoint for XL upper bound
+    @include media-breakpoint-up(lg) {
+        @media (max-width: 1360px) {
+            .o_cp_top_left,
+            .o_cp_bottom_left {
+                width: 40%;
+            }
+            .o_cp_top_right,
+            .o_cp_bottom_right {
+                width: 60%;
+            }
+        }
+    }
+    // For FULL HD devices
+    @media (min-width: 1900px) {
+        .o_cp_top_left,
+        .o_cp_bottom_left {
+            width: 60%;
+        }
+        .o_cp_top_right,
+        .o_cp_bottom_right {
+            width: 40%;
+        }
+    }
+    @include media-breakpoint-only(md) {
+        .o_search_options_hide_labels .o_dropdown_title {
+            display: none;
+        }
+    }
+    .o_cp_bottom_right {
+        height: 30px;
+    }
+}
+
+// Mobile Control panel (breadcrumbs, search box, buttons...)
+@include media-breakpoint-down(sm) {
+    .o_control_panel {
+        // Avoid horizontal scrolling of control panel.
+        // It doesn't work on iOS Safari, but it looks similar as
+        // without this patch. With this patch it looks better for
+        // other browsers.
+        position: sticky;
+        left: 0;
+        z-index: 3;
+
+        // Arrange buttons to use space better
+        .o_cp_top_left,
+        .o_cp_top_right {
+            flex: 1 1 100%;
+        }
+
+        .o_cp_top_left {
+            flex-basis: 80%;
+        }
+
+        .o_cp_top_right {
+            flex-basis: 20%;
+        }
+
+        .o_cp_bottom {
+            position: relative; // Necessary for dropdown menu positioning
+            display: block;
+            margin: 0;
+        }
+
+        .o_cp_bottom_left {
+            float: left;
+            margin: 5px 0;
+        }
+
+        .o_cp_bottom_right {
+            float: right;
+            height: 30px;
+            padding-left: 10px;
+            margin: 5px 0;
+        }
+
+        .o_cp_bottom_right,
+        .o_cp_pager {
+            white-space: nowrap;
+        }
+        .o_cp_pager {
+            margin-bottom: 0;
+        }
+
+        .o_cp_bottom_left > .o_cp_action_menus {
+            padding-right: 0;
+            .o_dropdown_title,
+            .fa-chevron-right,
+            .fa-chevron-down {
+                display: none;
+            }
+            .o_dropdown_toggler_btn {
+                margin: 0px 2px;
+            }
+            @include media-breakpoint-down(xs) {
+                .o_dropdown {
+                    position: static;
+                }
+                .dropdown-menu {
+                    right: 0;
+                    left: 0;
+                    top: 35px;
+                }
+            }
+        }
+
+        // Hide all but 2 last breadcrumbs, and render 2nd-to-last as arrow
+        .breadcrumb-item {
+            &:not(.active) {
+                padding-left: 0;
+            }
+
+            &::before {
+                content: none;
+                padding-right: 0;
+            }
+
+            &:nth-last-of-type(1n + 3) {
+                display: none;
+            }
+
+            &:nth-last-of-type(2) {
+                &::before {
+                    color: var(--primary);
+                    content: "\f060"; // .fa-arrow-left
+                    cursor: pointer;
+                    font-family: FontAwesome;
+                }
+
+                a {
+                    display: none;
+                }
+            }
+        }
+
+        // Ellipsize long breadcrumbs
+        .breadcrumb {
+            max-width: 100%;
+            text-overflow: ellipsis;
+        }
+
+        // In case you install `mail`, there is a mess on BS vs inline styles
+        // we need to fix
+        .o_cp_buttons .btn.d-block:not(.d-none) {
+            display: inline-block !important;
+        }
+
+        .o_searchview {
+            padding: 1px 0px 3px 0px;
+            &.o_searchview_mobile {
+                cursor: pointer;
+            }
+            &.o_searchview_quick {
+                display: flex;
+                flex: 1 1 auto;
+                align-items: center;
+                .o_searchview_input_container {
+                    flex: 1 1 auto;
+                }
+            }
+        }
+    }
+    .o_calendar_view .o_calendar_widget {
+        .fc-timeGridDay-view .fc-axis,
+        .fc-timeGridWeek-view .fc-axis {
+            padding-left: 0px;
+        }
+        .fc-dayGridMonth-view {
+            padding-left: 0px;
+            .fc-week-number {
+                display: none;
+            }
+        }
+        .fc-dayGridYear-view {
+            padding-left: 0px;
+            > .fc-month-container > .fc-month {
+                width: 100%;
+            }
+        }
+        .fc-timeGridDay-view .fc-widget-header {
+            margin: 0 4px;
+        }
+        .fc-timeGridWeek-view .fc-widget-header {
+            word-spacing: 4em;
+            white-space: normal;
+            text-align: center;
+        }
+    }
+    .o_base_settings .o_setting_container {
+        display: block;
+        .settings_tab {
+            flex-flow: row nowrap;
+            padding-top: 0px;
+            .tab {
+                padding-right: 16px;
+            }
+            .selected {
+                background-color: #212529;
+                box-shadow: inset 0 -5px #7c7bad;
+            }
+        }
+    }
+}
+
+// Normal views
+.o_content,
+.modal-content {
+    max-width: 100%;
+
+    // Form views
+    .o_form_view {
+        .o_form_sheet {
+            max-width: calc(100% - 32px);
+            overflow-x: auto;
+        }
+
+        .o_FormRenderer_chatterContainer {
+            padding-top: 0;
+            .o_Activity_info {
+                flex-wrap: wrap;
+            }
+            .o_ActivityBox_title {
+                margin-bottom: 0;
+            }
+            .o_MessageList_separatorDate {
+                padding-bottom: 0;
+            }
+        }
+        // Sided chatter scrolling behavior
+        .o_Chatter {
+            height: fit-content;
+            .o_Chatter_fixedPanel {
+                position: sticky;
+                top: 0;
+                z-index: 1;
+                background-color: white;
+                padding-bottom: 10px;
+            }
+            .o_Chatter_scrollPanel {
+                overflow: initial;
+            }
+        }
+
+        // Sticky statusbar
+        .o_form_statusbar {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        // Support for long title (with ellipsis)
+        .oe_title {
+            span.o_field_widget:not(.oe_inline) {
+                max-width: 100%;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                width: initial;
+                &:active {
+                    white-space: normal;
+                }
+            }
+        }
+
+        @include media-breakpoint-down(sm) {
+            min-width: auto;
+
+            // More buttons border
+            .oe_button_box {
+                .o_dropdown_more {
+                    button:last-child {
+                        border-right: 1px solid gray("400");
+                    }
+                }
+            }
+
+            // Avoid overflow on forms with title and/or button box
+            .oe_title {
+                max-width: 100%;
+            }
+
+            .oe_button_box + .oe_title,
+            .oe_button_box + .oe_avatar + .oe_title {
+                width: 100%;
+            }
+
+            // Avoid overflow on modals
+            .o_form_sheet {
+                min-width: auto;
+            }
+
+            // Render website inputs properly in phones
+            .o_group .o_field_widget.o_text_overflow {
+                // Overrides another !important
+                width: auto !important;
+            }
+
+            // Make all input groups vertical
+            .o_group_col_6 {
+                width: 100%;
+            }
+
+            // Statusbar buttons dropdown for mobiles
+            .o_statusbar_buttons_dropdown {
+                border: {
+                    bottom: 0;
+                    radius: 0;
+                    top: 0;
+                }
+                height: 100%;
+            }
+            .o_statusbar_buttons.dropdown-menu > .btn {
+                border-radius: 0;
+                border: 0;
+                width: 100%;
+                margin-bottom: 0.2rem;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+
+            .o_statusbar_status {
+                // Arrow from rightmost button exceeds allowed width
+                .o_arrow_button:first-child::before {
+                    content: none;
+                    display: none;
+                }
+            }
+
+            // Full width in form sheets
+            .o_form_sheet,
+            .o_FormRenderer_chatterContainer {
+                min-width: auto;
+                max-width: 98%;
+            }
+
+            // Settings pages
+            .app_settings_block {
+                .row {
+                    margin: 0;
+                }
+            }
+
+            .o_FormRenderer_chatterContainer {
+                padding-top: initial;
+
+                // Display send button on small screens
+                .o_thread_composer {
+                    padding-left: $o-mail-thread-avatar-size * 0.5;
+
+                    .o_composer_button_send {
+                        display: initial !important; // Forced in core
+                    }
+                    .o_chatter_avatar {
+                        display: none;
+                    }
+                }
+
+                .o_chatter_topbar {
+                    > .o_topbar_right_area {
+                        flex: 1 0 auto;
+                        flex-wrap: wrap;
+                        max-width: 100%;
+
+                        // Display followers on small screens
+                        .o_followers {
+                            display: initial !important; // Forced in core
+
+                            @include media-breakpoint-down(xs) {
+                                padding-bottom: 50px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //No content message improvements on mobile
+    @include media-breakpoint-down(md) {
+        .o_view_nocontent {
+            top: 80px;
+        }
+        .o_nocontent_help {
+            box-shadow: none;
+        }
+        .o_sample_data_disabled {
+            display: none;
+        }
+    }
+
+    // Sided chatter, if user wants
+    .o_chatter_position_sided & {
+        @include media-breakpoint-up(lg) {
+            .o_form_view:not(.o_form_nosheet) {
+                display: flex;
+                flex-flow: row nowrap;
+                height: 100%;
+
+                .o_form_sheet_bg {
+                    flex: 1 1 auto;
+                    overflow: auto;
+
+                    > .o_form_sheet {
+                        min-width: unset;
+                    }
+                }
+
+                .o_FormRenderer_chatterContainer {
+                    border-left: 1px solid gray("400");
+                    flex: 0 0 $chatter_zone_width;
+                    max-width: initial;
+                    min-width: initial;
+                    overflow: auto;
+
+                    .o_chatter_header_container {
+                        padding-top: $grid-gutter-width * 0.5;
+                        top: 0;
+                        position: sticky;
+                        background-color: $o-view-background-color;
+                        z-index: 1;
+
+                        // Scrollable input text to avoid hide conversation & buttons
+                        .o_composer_text_field {
+                            max-height: 120px;
+                            overflow-y: auto !important; /* Forced because Odoo uses inline style */
+                        }
+                        .o_attachments_list {
+                            overflow: auto;
+                            max-height: $o-mail-attachment-image-size * 3;
+                            margin-top: 0.4em;
+                        }
+                        .o_attachments_previews {
+                            overflow: auto;
+                            max-height: $o-mail-attachment-image-size * 6;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Sticky Header & Footer in List View
+.o_list_view {
+    .table-responsive {
+        .o_list_table {
+            // th & td are here for compatibility with chrome
+            thead tr:nth-child(1) th {
+                position: sticky;
+                top: 0;
+                z-index: 1;
+            }
+            thead tr:nth-child(1) th {
+                background-color: $o-list-footer-bg-color;
+            }
+            tfoot,
+            tfoot tr:nth-child(1) td {
+                position: sticky;
+                bottom: 0;
+            }
+            tfoot tr:nth-child(1) td {
+                background-color: $o-list-footer-bg-color;
+            }
+        }
+    }
+}
+
+// Big checkboxes
+.o_list_view {
+    .custom-checkbox:not(.o_boolean_toggle) {
+        margin-right: 10px;
+
+        .custom-control-label {
+            top: -6px;
+
+            &::after {
+                width: 24px;
+                height: 24px;
+            }
+            &::before {
+                outline: none !important;
+                border: 1px solid #4c4c4c;
+                width: 24px;
+                height: 24px;
+            }
+        }
+    }
+}
+
+// Waiting Cursor
+.oe_wait {
+    cursor: progress;
+}
+
+// Attachment Viewer
+.o_web_client.o_chatter_position_sided .o_Dialog_AttachmentViewer {
+    /* Show sided viewer on large screens */
+    @include media-breakpoint-up(lg) {
+        position: static;
+        .o_AttachmentViewer_main {
+            padding-bottom: 20px;
+        }
+        .o_AttachmentViewer {
+            // On-top of navbar
+            z-index: 10;
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin-left: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+
+            .o_AttachmentViewer_name {
+                display: contents;
+            }
+
+            width: $chatter_zone_width;
+            &.o_AttachmentViewer_maximized {
+                width: 100%;
+            }
+
+            /* Show/Hide control buttons (next, prev, etc..) */
+            &:hover .o_AttachmentViewer_buttonNavigation,
+            &:hover .o_AttachmentViewer_toolbar {
+                display: flex;
+            }
+            .o_AttachmentViewer_buttonNavigation,
+            .o_AttachmentViewer_toolbar {
+                display: none;
+            }
+            .o_AttachmentViewer_viewIframe {
+                width: 95%;
+            }
+        }
+    }
+    @include media-breakpoint-down(md) {
+        .o_AttachmentViewer_headerItemButtonMinimize,
+        .o_AttachmentViewer_headerItemButtonMaximize {
+            display: none;
+        }
+    }
+}
+/* Attachment Viewer Max/Min buttons only are useful in sided mode */
+.o_web_client:not(.o_chatter_position_sided) {
+    .o_AttachmentViewer_headerItemButtonMinimize,
+    .o_AttachmentViewer_headerItemButtonMaximize {
+        display: none;
+    }
+}
+
+.o_control_panel {
+    // Filter Menu
+    // Cut long filters names in the filters menu
+    .o_filter_menu {
+        .o_menu_item {
+            width: auto;
+            @include media-breakpoint-up(md) {
+                max-width: 250px;
+            }
+            a {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+    // Enable scroll on dropdowns
+    .o_cp_buttons .dropdown-menu {
+        max-height: 70vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    // Dropdown with buttons to switch the view type
+    .o_cp_switch_buttons.show {
+        .dropdown-menu {
+            align-content: center;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            padding: 0;
+
+            .btn {
+                border: {
+                    bottom: 0;
+                    radius: 0;
+                    top: 0;
+                }
+                font-size: 1.3em;
+            }
+        }
+    }
+}
+
+// Shortcut table ui improvement
+.o_shortcut_table {
+    width: 100%;
+}

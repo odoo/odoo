@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2019 Tecnativa - Alexandre Díaz
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<template>
+    <t t-extend="mail.discuss.ControlButtons">
+        <t
+            t-jquery=".o_mail_discuss_button_multi_user_channel"
+            t-operation="attributes"
+        >
+            <attribute name="class" t-translation="off">
+                btn btn-secondary o_mail_discuss_button_multi_user_channel d-md-block
+                d-none
+            </attribute>
+        </t>
+    </t>
+</template>
