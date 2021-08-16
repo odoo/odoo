@@ -741,13 +741,7 @@ class PosOrder(models.Model):
             'target': 'current',
         }
 
-    def action_receipt_to_customer(self, name, client, ticket):
-        if not self:
-            return False
-        if not client.get('email'):
-            return False
-
-        message = _("<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>") % (client['name'], name)
+    def _add_mail_attachment(self, name, ticket):
         filename = 'Receipt-' + name + '.jpg'
         receipt = self.env['ir.attachment'].create({
             'name': filename,
@@ -758,19 +752,12 @@ class PosOrder(models.Model):
             'store_fname': filename,
             'mimetype': 'image/jpeg',
         })
-        mail_values = {
-            'subject': _('Receipt %s', name),
-            'body_html': message,
-            'author_id': self.env.user.partner_id.id,
-            'email_from': self.env.company.email or self.env.user.email_formatted,
-            'email_to': client['email'],
-            'attachment_ids': [(4, receipt.id)],
-        }
+        attachment = [(4, receipt.id)]
 
         if self.mapped('account_move'):
             report = self.env.ref('account.account_invoices')._render_qweb_pdf(self.account_move.ids[0])
             filename = name + '.pdf'
-            attachment = self.env['ir.attachment'].create({
+            invoice = self.env['ir.attachment'].create({
                 'name': filename,
                 'type': 'binary',
                 'datas': base64.b64encode(report[0]),
@@ -779,7 +766,26 @@ class PosOrder(models.Model):
                 'res_id': self.ids[0],
                 'mimetype': 'application/x-pdf'
             })
-            mail_values['attachment_ids'] += [(4, attachment.id)]
+            attachment += [(4, invoice.id)]
+
+        return attachment
+
+    def action_receipt_to_customer(self, name, client, ticket):
+        if not self:
+            return False
+        if not client.get('email'):
+            return False
+
+        message = _("<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>") % (client['name'], name)
+
+        mail_values = {
+            'subject': _('Receipt %s', name),
+            'body_html': message,
+            'author_id': self.env.user.partner_id.id,
+            'email_from': self.env.company.email or self.env.user.email_formatted,
+            'email_to': client['email'],
+            'attachment_ids': self._add_mail_attachment(name, ticket),
+        }
 
         mail = self.env['mail.mail'].sudo().create(mail_values)
         mail.send()
