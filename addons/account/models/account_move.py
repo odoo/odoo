@@ -434,6 +434,7 @@ class AccountMove(models.Model):
     @api.onchange('line_ids', 'invoice_payment_term_id', 'invoice_date_due', 'invoice_cash_rounding_id', 'invoice_vendor_bill_id')
     def _onchange_recompute_dynamic_lines(self):
         self._recompute_dynamic_lines()
+        self._onchange_currency()
 
     @api.model
     def _get_tax_grouping_key_from_tax_line(self, tax_line):
