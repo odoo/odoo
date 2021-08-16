@@ -1,23 +1,34 @@
 .o_timeoff_calendar .o_content {
     .o_timeoff_container {
-        height: 6rem;
+        height: auto;
         box-shadow: inset 0 -1px 0 $border-color;
 
-        + .o_calendar_container {
-            height: calc(100% - 6rem);
-        }
     }
 
     .o_calendar_container {
-        height: 100%;
+        height: auto;
     }
 
     .o_timeoff_card {
         border-right: $border-color solid 2px;
         text-align: center;
-        margin-top: 4px;
         div {
             line-height: 1;
+        }
+    }
+
+    .fc-dayGridYear-view {
+        .fc-bgevent {
+            border-radius: 25px;
+        }
+        > .fc-month-container {
+            > .fc-month {
+                .fc-dayGridMonth-view {
+                    .fc-has-event {
+                        background-color: unset;
+                    }
+                }
+            }
         }
     }
 
@@ -27,6 +38,10 @@
 
     .o_timeoff_big {
         font-size: 15px;
+    }
+
+    .o_timeoff_huge {
+        font-size: 30px;
     }
 
     .o_timeoff_purple {
@@ -41,5 +56,8 @@
         > h5 {
             font-weight: bold;
         }
+    }
+    .fc-week-number {
+        color: #adb5bd;
     }
 }

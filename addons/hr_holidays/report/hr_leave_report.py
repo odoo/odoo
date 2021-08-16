@@ -36,7 +36,7 @@ class LeaveReport(models.Model):
     ], string='Allocation Mode', readonly=True)
     date_from = fields.Datetime('Start Date', readonly=True)
     date_to = fields.Datetime('End Date', readonly=True)
-    payslip_status = fields.Boolean('Reported in last payslips', readonly=True)
+    company_id = fields.Many2one('res.company', string="Company", readonly=True)
 
     def init(self):
         tools.drop_view_if_exists(self._cr, 'hr_leave_report')
@@ -49,7 +49,7 @@ class LeaveReport(models.Model):
                 leaves.category_id as category_id, leaves.department_id as department_id,
                 leaves.holiday_status_id as holiday_status_id, leaves.state as state,
                 leaves.holiday_type as holiday_type, leaves.date_from as date_from,
-                leaves.date_to as date_to, leaves.payslip_status as payslip_status
+                leaves.date_to as date_to, leaves.company_id
                 from (select
                     allocation.employee_id as employee_id,
                     allocation.private_name as name,
@@ -61,8 +61,8 @@ class LeaveReport(models.Model):
                     allocation.holiday_type,
                     null as date_from,
                     null as date_to,
-                    FALSE as payslip_status,
-                    'allocation' as leave_type
+                    'allocation' as leave_type,
+                    allocation.employee_company_id as company_id
                 from hr_leave_allocation as allocation
                 union all select
                     request.employee_id as employee_id,
@@ -75,8 +75,8 @@ class LeaveReport(models.Model):
                     request.holiday_type,
                     request.date_from as date_from,
                     request.date_to as date_to,
-                    request.payslip_status as payslip_status,
-                    'request' as leave_type
+                    'request' as leave_type,
+                    request.employee_company_id as company_id
                 from hr_leave as request) leaves
             );
         """)

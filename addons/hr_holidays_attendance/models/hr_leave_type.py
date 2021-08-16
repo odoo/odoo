@@ -16,7 +16,7 @@ class HRLeaveType(models.Model):
         res = super().get_employees_days(employee_ids)
         deductible_time_off_type_ids = self.env['hr.leave.type'].search([
             ('overtime_deductible', '=', True),
-            ('allocation_type', '=', 'no')]).ids
+            ('requires_allocation', '=', 'no')]).ids
         for employee_id, allocations in res.items():
             for allocation_id in allocations:
                 if allocation_id in deductible_time_off_type_ids:

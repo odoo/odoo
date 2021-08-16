@@ -6,6 +6,7 @@ from odoo.tests import new_test_user
 from odoo.tests.common import TransactionCase, tagged
 
 from odoo.exceptions import AccessError, ValidationError
+import time
 
 @tagged('post_install', '-at_install', 'holidays_attendance')
 class TestHolidaysOvertime(TransactionCase):
@@ -36,19 +37,22 @@ class TestHolidaysOvertime(TransactionCase):
         cls.leave_type_no_alloc = cls.env['hr.leave.type'].create({
             'name': 'Overtime Compensation No Allocation',
             'company_id': cls.company.id,
-            'allocation_type': 'no',
+            'requires_allocation': 'no',
             'overtime_deductible': True,
         })
         cls.leave_type_employee_allocation = cls.env['hr.leave.type'].create({
             'name': 'Overtime Compensation Employee Allocation',
             'company_id': cls.company.id,
-            'allocation_type': 'fixed_allocation',
+            'requires_allocation': 'yes',
+            'employee_requests': 'yes',
             'overtime_deductible': True,
         })
         cls.leave_type_manager_alloc = cls.env['hr.leave.type'].create({
             'name': 'Overtime Compensation Manager Allocation',
             'company_id': cls.company.id,
-            'allocation_type': 'fixed',
+            'requires_allocation': 'yes',
+            'employee_requests': 'no',
+            'allocation_validation_type': 'set',
             'overtime_deductible': True,
         })
 
@@ -163,6 +167,8 @@ class TestHolidaysOvertime(TransactionCase):
                     'employee_id': self.employee.id,
                     'number_of_days': 1,
                     'state': 'draft',
+                    'date_from': time.strftime('%Y-1-1'),
+                    'date_to': time.strftime('%Y-12-31'),
                 })
 
             self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
@@ -174,6 +180,8 @@ class TestHolidaysOvertime(TransactionCase):
                 'employee_id': self.employee.id,
                 'number_of_days': 1,
                 'state': 'draft',
+                'date_from': time.strftime('%Y-1-1'),
+                'date_to': time.strftime('%Y-12-31'),
             })
             allocation.action_confirm()
             self.assertEqual(self.employee.total_overtime, 0)
@@ -181,7 +189,8 @@ class TestHolidaysOvertime(TransactionCase):
             leave_type = self.env['hr.leave.type'].sudo().create({
                 'name': 'Overtime Compensation Employee Allocation',
                 'company_id': self.company.id,
-                'allocation_type': 'fixed_allocation',
+                'requires_allocation': 'yes',
+                'employee_requests': 'yes',
                 'overtime_deductible': False,
             })
 
@@ -192,6 +201,8 @@ class TestHolidaysOvertime(TransactionCase):
                 'employee_id': self.employee.id,
                 'number_of_days': 1,
                 'state': 'draft',
+                'date_from': time.strftime('%Y-1-1'),
+                'date_to': time.strftime('%Y-12-31'),
             })
             allocation2.action_confirm()
 
@@ -206,6 +217,8 @@ class TestHolidaysOvertime(TransactionCase):
             'employee_id': self.employee.id,
             'number_of_days': 1,
             'state': 'draft',
+            'date_from': time.strftime('%Y-1-1'),
+            'date_to': time.strftime('%Y-12-31'),
         })
         self.assertEqual(self.employee.total_overtime, 8)
 

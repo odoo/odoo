@@ -8,6 +8,7 @@ from odoo import fields, SUPERUSER_ID
 
 from odoo.tests import common, new_test_user
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
+import time
 
 
 class TestTimesheetHolidaysCreate(common.TransactionCase):
@@ -16,7 +17,7 @@ class TestTimesheetHolidaysCreate(common.TransactionCase):
         """Ensure that when a status is created, it fullfills the project and task constrains"""
         status = self.env['hr.leave.type'].create({
             'name': 'A nice Leave Type',
-            'allocation_type': 'no'
+            'requires_allocation': 'no'
         })
 
         company = self.env.company
@@ -53,19 +54,17 @@ class TestTimesheetHolidays(TestCommonTimesheet):
 
         self.hr_leave_type_with_ts = self.env['hr.leave.type'].create({
             'name': 'Leave Type with timesheet generation',
-            'allocation_type': 'no',
+            'requires_allocation': 'no',
             'timesheet_generate': True,
             'timesheet_project_id': self.internal_project.id,
             'timesheet_task_id': self.internal_task_leaves.id,
-            'validity_start': False,
         })
         self.hr_leave_type_no_ts = self.env['hr.leave.type'].create({
             'name': 'Leave Type without timesheet generation',
-            'allocation_type': 'no',
+            'requires_allocation': 'no',
             'timesheet_generate': False,
             'timesheet_project_id': False,
             'timesheet_task_id': False,
-            'validity_start': False,
         })
 
         # HR Officer allocates some leaves to the employee 1
@@ -76,15 +75,21 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             'employee_id': self.empl_employee.id,
             'holiday_status_id': self.hr_leave_type_with_ts.id,
             'number_of_days': 10,
+            'state': 'confirm',
+            'date_from': time.strftime('%Y-01-01'),
+            'date_to': time.strftime('%Y-12-31'),
         })
-        self.hr_leave_allocation_with_ts.action_approve()
+        self.hr_leave_allocation_with_ts.action_validate()
         self.hr_leave_allocation_no_ts = self.Allocations.sudo().create({
             'name': 'Days for limited category without timesheet',
             'employee_id': self.empl_employee.id,
             'holiday_status_id': self.hr_leave_type_no_ts.id,
             'number_of_days': 10,
+            'state': 'confirm',
+            'date_from': time.strftime('%Y-01-01'),
+            'date_to': time.strftime('%Y-12-31'),
         })
-        self.hr_leave_allocation_no_ts.action_approve()
+        self.hr_leave_allocation_no_ts.action_validate()
 
     def test_validate_with_timesheet(self):
         # employee creates a leave request

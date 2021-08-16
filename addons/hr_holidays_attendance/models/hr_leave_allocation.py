@@ -16,9 +16,9 @@ class HolidaysAllocation(models.Model):
             type_operator = '=' if self.env.context.get('deduct_extra_hours_allocation_type') else '!='
             type_value = self.env.context.get('deduct_extra_hours_allocation_type', 'no')
             leave_type = self.env['hr.leave.type'].search([
-                ('valid', '=', True),
+                ('has_valid_allocation', '=', True),
                 ('overtime_deductible', '=', True),
-                ('allocation_type', type_operator, type_value)], limit=1)
+                ('requires_allocaiton', '=', 'yes')], limit=1)
             res['holiday_status_id'] = leave_type.id
         return res
 
