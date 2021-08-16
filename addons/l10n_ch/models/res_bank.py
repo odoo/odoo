@@ -311,6 +311,30 @@ class ResPartnerBank(models.Model):
         line_2 = partner.zip + ' ' + partner.city
         return line_1[:70], line_2[:70]
 
+<<<<<<< HEAD
+=======
+    def _check_qr_iban_range(self, iban):
+        if not iban or len(iban) < 9:
+            return False
+        iid_start_index = 4
+        iid_end_index = 8
+        iid = iban[iid_start_index : iid_end_index+1]
+        return re.match('\d+', iid) \
+               and 30000 <= int(iid) <= 31999 # Those values for iid are reserved for QR-IBANs only
+
+    def _is_qr_iban(self):
+        """ Tells whether or not this bank account has a QR-IBAN account number.
+        QR-IBANs are specific identifiers used in Switzerland as references in
+        QR-codes. They are formed like regular IBANs, but are actually something
+        different.
+        """
+        self.ensure_one()
+
+        return self.sanitized_acc_number.startswith('CH')\
+               and self.acc_type == 'iban'\
+               and self._check_qr_iban_range(self.sanitized_acc_number)
+
+>>>>>>> c880b403e4b... temp
     @api.model
     def _is_qr_reference(self, reference):
         """ Checks whether the given reference is a QR-reference, i.e. it is
