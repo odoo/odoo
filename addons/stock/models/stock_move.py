@@ -427,7 +427,8 @@ class StockMove(models.Model):
             if picking_type.code in self._consuming_picking_types() and is_unreserved:
                 outgoing_unreserved_moves_per_warehouse[warehouse_by_location[move.location_id]] |= move
             elif picking_type.code in self._consuming_picking_types():
-                move.forecast_availability = move.reserved_availability
+                move.forecast_availability = move.product_uom._compute_quantity(
+                    move.reserved_availability, move.product_id.uom_id, rounding_method='HALF-UP')
 
         for warehouse, moves in outgoing_unreserved_moves_per_warehouse.items():
             if not warehouse:  # No prediction possible if no warehouse.
@@ -1622,7 +1623,7 @@ class StockMove(models.Model):
         return new_move_vals
 
     def _recompute_state(self):
-        moves_state_to_write = defaultdict(OrderedSet)
+        moves_state_to_write = defaultdict(set)
         for move in self:
             if move.state in ('cancel', 'done', 'draft'):
                 continue
@@ -1637,8 +1638,7 @@ class StockMove(models.Model):
             else:
                 moves_state_to_write['confirmed'].add(move.id)
         for state, moves_ids in moves_state_to_write.items():
-            moves = self.env['stock.move'].browse(moves_ids)
-            moves.write({'state': state})
+            self.browse(moves_ids).write({'state': state})
 
     @api.model
     def _consuming_picking_types(self):

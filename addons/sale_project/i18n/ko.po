@@ -41,7 +41,7 @@ msgstr "판매 주문 프로젝트에 작업 만들기"
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.project_task_server_action_batch_invoice
 msgid "Create invoice"
-msgstr "송장 만들기"
+msgstr "청구서 생성"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__display_name
@@ -110,7 +110,7 @@ msgstr "새로운"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__invoice_count
 msgid "Number of invoices"
-msgstr "송장 개수"
+msgstr "청구서 수"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
@@ -326,7 +326,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
 msgid "To invoice"
-msgstr "청구하기"
+msgstr "청구서 발행 대기"
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
@@ -335,6 +335,7 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"재청구된 비용이므로 이 작업을 위해 %(order_id)s - %(product_id)s 아이템의 주문을 연결할 수 없습니다. "
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
