@@ -88,11 +88,11 @@ var FormController = BasicController.extend({
      *                            for the new record.
      * @returns {Promise}
      */
-    createRecord: function (parentID) {
+    createRecord: function (parentID, additionalContext) {
         var self = this;
         var record = this.model.get(this.handle, {raw: true});
         return this.model.load({
-            context: record.getContext(),
+            context: record.getContext({ additionalContext: additionalContext}),
             fields: record.fields,
             fieldsInfo: record.fieldsInfo,
             modelName: this.modelName,

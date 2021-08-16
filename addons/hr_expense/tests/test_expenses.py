@@ -134,6 +134,7 @@ class TestAccountEntry(TestExpenseCommon):
                     self.assertEquals(len(line.analytic_line_ids), 1, "The debit move line should have 1 analytic lines")
                     self.assertEquals(line.product_id, self.product_expense, "Product of debit move line should be the one from the expense")
                 else:
+                    self.assertEqual(line.tax_base_amount, 318.18)
                     self.assertAlmostEquals(line.debit, 31.82)
                     self.assertAlmostEquals(line.amount_currency, 63.64)
                     self.assertEquals(len(line.analytic_line_ids), 0, "The tax move line should not have analytic lines")
