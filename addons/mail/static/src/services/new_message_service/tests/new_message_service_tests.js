@@ -54,12 +54,14 @@ QUnit.test('Open "New Message" chat window with a command', async function (asse
     await afterNextRender(() => click(document.body, ".o_command.focused"));
     assert.containsOnce(document.body, ".o_ChatWindow");
     assert.strictEqual(document.querySelector(".o_ChatWindow .o_ChatWindowHeader_name").textContent, "New message");
+
+    webClient.destroy();
 });
 
 QUnit.test('open "New Message" chat window with a hotkey', async function (assert) {
     assert.expect(2);
 
-    await start({
+    const { widget: webClient } = await start({
         data: this.data,
         hasChatWindow: true,
         hasWebClient: true,
@@ -67,6 +69,8 @@ QUnit.test('open "New Message" chat window with a hotkey', async function (asser
     await afterNextRender(() => triggerHotkey("alt+shift+w"));
     assert.containsOnce(document.body, ".o_ChatWindow");
     assert.strictEqual(document.querySelector(".o_ChatWindow .o_ChatWindowHeader_name").textContent, "New message");
+
+    webClient.destroy();
 });
 
 QUnit.test('Open "New Message" in discuss with a command', async function (assert) {
@@ -88,12 +92,14 @@ QUnit.test('Open "New Message" in discuss with a command', async function (asser
 
     await afterNextRender(() => click(document.body, ".o_command.focused"));
     assert.containsOnce(document.body, ".o_DiscussSidebar_itemNewInput");
+
+    webClient.destroy();
 });
 
 QUnit.test('Open "New Message" in discuss with a hotkey', async function (assert) {
     assert.expect(1);
 
-    await start({
+    const { widget: webClient } = await start({
         autoOpenDiscuss: true,
         data: this.data,
         hasDiscuss: true,
@@ -101,6 +107,8 @@ QUnit.test('Open "New Message" in discuss with a hotkey', async function (assert
     });
     await afterNextRender(() => triggerHotkey("alt+shift+w"));
     assert.containsOnce(document.body, ".o_DiscussSidebar_itemNewInput");
+
+    webClient.destroy();
 });
 
 });

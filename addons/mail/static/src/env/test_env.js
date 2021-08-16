@@ -3,8 +3,6 @@
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 import { nextTick } from '@mail/utils/utils';
 
-const { EventBus } = owl.core;
-
 /**
  * @param {Object} [providedEnv={}]
  * @returns {Object}
@@ -19,7 +17,6 @@ export function addMessagingToEnv(providedEnv = {}) {
      * Environment keys used in messaging.
      */
     Object.assign(env, {
-        autofetchPartnerImStatus: false,
         browser: Object.assign({
             innerHeight: 1080,
             innerWidth: 1920,
@@ -30,24 +27,14 @@ export function addMessagingToEnv(providedEnv = {}) {
                 },
             }, (env.browser && env.browser.Notification) || {}),
         }, env.browser),
-        disableAnimation: true,
         isMessagingInitialized() {
             if (!this.messaging) {
                 return false;
             }
             return this.messaging.isInitialized;
         },
-        /**
-         * States whether the environment is in QUnit test or not.
-         *
-         * Useful to prevent some behaviour in QUnit tests, like applying
-         * style of attachment that uses url.
-         */
-        isQUnitTest: true,
-        loadingBaseDelayDuration: providedEnv.loadingBaseDelayDuration || 0,
         messagingCreatedPromise: makeDeferred(),
         messagingInitializedDeferred: makeDeferred(),
-        messagingBus: new EventBus(),
     });
     return env;
 }

@@ -33,6 +33,7 @@ const {
     unpatch: legacyUnpatch,
 } = mock;
 const { Component } = owl;
+const { EventBus } = owl.core;
 
 //------------------------------------------------------------------------------
 // Private
@@ -394,6 +395,7 @@ async function createRootMessagingComponent(self, componentName, { props = {}, t
  *     `env.testUtils`.
  * @param {boolean} [param0.hasView=false] if set, use createView to create a
  *   view instead of a generic widget.
+ * @param {integer} [param0.loadingBaseDelayDuration=0]
  * @param {Deferred|Promise} [param0.messagingBeforeCreationDeferred=Promise.resolve()]
  *   Deferred that let tests block messaging creation and simulate resolution.
  *   Useful for testing working components when messaging is not yet created.
@@ -445,6 +447,7 @@ async function start(param0 = {}) {
         hasMessagingMenu = false,
         hasTimeControl = false,
         hasView = false,
+        loadingBaseDelayDuration = 0,
         messagingBeforeCreationDeferred = Promise.resolve(),
         waitUntilEvent,
         waitUntilMessagingCondition = 'initialized',
@@ -471,6 +474,7 @@ async function start(param0 = {}) {
     if (hasMessagingMenu) {
         callbacks = _useMessagingMenu(callbacks);
     }
+    const messagingBus = new EventBus();
     const {
         init: initCallbacks,
         mount: mountCallbacks,
@@ -650,7 +654,7 @@ async function start(param0 = {}) {
         });
         // Set up the promise to resolve if the event is triggered.
         const eventProm = new Promise(resolve => {
-            testEnv.messagingBus.on(eventName, null, data => {
+            messagingBus.on(eventName, null, data => {
                 if (!predicate || predicate(data)) {
                     resolve();
                 }
@@ -681,8 +685,14 @@ async function start(param0 = {}) {
              */
             await env.session.is_bound;
 
-            testEnv.modelManager.start();
-            testEnv.messaging.start().then(() =>
+            testEnv.modelManager.start({
+                autofetchPartnerImStatus: false,
+                disableAnimation: true,
+                isQUnitTest: true,
+                loadingBaseDelayDuration,
+                messagingBus,
+            });
+            modelManager.messaging.start().then(() =>
                 testEnv.messagingInitializedDeferred.resolve()
             );
             testEnv.messagingCreatedPromise.resolve();
@@ -702,7 +712,7 @@ async function start(param0 = {}) {
         returnCallbacks.forEach(callback => callback(result));
     };
     if (waitUntilEvent) {
-        await afterEvent(Object.assign({ func: start }, waitUntilEvent));
+        await afterEvent({ func: start, ...waitUntilEvent });
     } else {
         await start();
     }
