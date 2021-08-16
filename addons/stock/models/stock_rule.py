@@ -527,8 +527,6 @@ class ProcurementGroup(models.Model):
         # recomputed
         orderpoints.sudo()._compute_qty_to_order()
         orderpoints.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id, raise_user_error=False)
-        if use_new_cursor:
-            self._cr.commit()
 
         # Search all confirmed stock_moves and try to assign them
         domain = self._get_moves_to_assign_domain(company_id)
@@ -538,12 +536,14 @@ class ProcurementGroup(models.Model):
             self.env['stock.move'].browse(moves_chunk).sudo()._action_assign()
             if use_new_cursor:
                 self._cr.commit()
+                _logger.info("A batch of 100 moves are assigned and commited")
 
         # Merge duplicated quants
         self.env['stock.quant']._quant_tasks()
 
         if use_new_cursor:
             self._cr.commit()
+            _logger.info("_run_scheduler_tasks is finished and commited")
 
     @api.model
     def run_scheduler(self, use_new_cursor=False, company_id=False):
