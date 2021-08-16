@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.addons.gift_card.tests.common import TestSaleGiftCardCommon
+from odoo.addons.sale_gift_card.tests.common import TestSaleGiftCardCommon
 
 class TestBuyGiftCard(TestSaleGiftCardCommon):
 

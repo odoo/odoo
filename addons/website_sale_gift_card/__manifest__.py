@@ -7,7 +7,7 @@
     'description': """Integrate gift card mechanism in your ecommerce.""",
     'category': 'Website/Website',
     'version': '1.0',
-    'depends': ['website_sale', 'gift_card'],
+    'depends': ['website_sale', 'sale_gift_card'],
     'data': [
         'views/template.xml',
         'views/gift_card_views.xml',
