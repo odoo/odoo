@@ -115,4 +115,66 @@ Tour.register('bank_statement_reconciliation', {
     ]
 );
 
+Tour.register('payment_reconciliation', {
+        test: true,
+        // Go to the payments
+    }, [
+        {
+            content: "wait form view",
+            trigger: '.o_list_view .o_data_row td.o_data_cell:contains(test)',
+        },
+
+        {
+            content: "open reconciliation view",
+            trigger: 'button[name="open_payment_matching_screen"]',
+        },
+
+        {
+            content: "add the invoice line",
+            trigger: '.match .cell_account_code:first'
+        },
+        {
+            content: "add the payment line",
+            extra_trigger: '.accounting_view tbody tr .cell_right .line_amount',
+            trigger: '.match .cell_account_code:first'
+        },
+        {
+            content: "create write-off: add label",
+            trigger: '.create .create_label input',
+            run: 'text label test'
+        },
+        {
+            content: "create write-off: open account selection",
+            trigger: '.create .create_account_id input',
+            run: 'text bank test'
+        },
+        {
+            content: "create write-off: select account",
+            trigger: '.ui-autocomplete .ui-menu-item a:contains(bank test)',
+        },
+        {
+            content: "create write-off: open journal selection",
+            trigger: '.create .create_journal_id input',
+            run: 'text journal test',
+        },
+        {
+            content: "create write-off: select journal",
+            trigger: '.ui-autocomplete .ui-menu-item a:contains(journal test)',
+        },
+
+        {
+            content: "click on reconcile",
+            extra_trigger: '.accounting_view tbody tr:last:contains(label test)',
+            trigger: '.o_reconcile.btn-primary'
+        },
+
+        // Be done
+        {
+            content: "check the number off validate lines",
+            trigger: '.o_control_panel .progress-reconciliation:contains(1 / 1)'
+        },
+    ]
+);
+
+
 });

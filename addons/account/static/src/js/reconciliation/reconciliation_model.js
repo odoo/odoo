@@ -1413,11 +1413,16 @@ var StatementModel = BasicModel.extend({
 
         var result = {
             name : prop.label,
-            debit : amount > 0 ? amount : 0,
-            credit : amount < 0 ? -amount : 0,
             tax_exigible: prop.tax_exigible,
             analytic_tag_ids: [[6, null, _.pluck(prop.analytic_tag_ids, 'id')]]
         };
+        if (line.currency_id) {
+            result.amount_currency = amount;
+            result.currency_id = line.currency_id;
+        } else {
+            result.debit = amount > 0 ? amount : 0;
+            result.credit = amount < 0 ? -amount : 0;
+        }
         if (!isNaN(prop.id)) {
             result.counterpart_aml_id = prop.id;
         } else {

@@ -38,6 +38,7 @@ var db = {
             {id: 4, display_name: "partner 4", image: 'DDD'},
             {id: 8, display_name: "Agrolait", image: 'EEE'},
             {id: 12, display_name: "Camptocamp", image: 'FFF', property_account_receivable_id: 287, property_account_payable_id: 287},
+            {id: 13, display_name: "partner currency", image: 'GGG'},
             // add more to have 'Search More' option
             {id: 98, display_name: "partner 98", image: 'YYY'},
             {id: 99, display_name: "partner 99", image: 'ZZZ'},
@@ -63,6 +64,7 @@ var db = {
             {id: 287, code: 101200, name: "101200 Account Receivable", company_id: 1},
             {id: 288, code: 101300, name: "101300 Tax Paid", company_id: 1},
             {id: 308, code: 101401, name: "101401 Bank", company_id: 1},
+            {id: 309, code: 101402, name: "101402 Bank €", company_id: 1},
             {id: 499, code: 499001, name: "499001 Suspense Account", company_id: 1},
             {id: 500, code: 500, name: "500 Account", company_id: 1},
             {id: 501, code: 501, name: "501 Account", company_id: 1},
@@ -168,7 +170,8 @@ var db = {
             company_id: {string: "Company", type: 'many2one', relation: 'res.company'},
         },
         records: [
-            {id: 8, display_name: "company 1 journal", type:'general', company_id: 1}
+            {id: 8, display_name: "company 1 journal", type:'general', company_id: 1},
+            {id: 9, display_name: "company 1 journal €", type:'general', company_id: 1},
         ]
     },
     'account.analytic.account': {
@@ -470,6 +473,55 @@ var data_widget = [
         },
         'reconciliation_proposition': []
     },
+    {
+        'st_line': {
+            'currency_id': 3,
+            'communication_partner_name': false,
+            'open_balance_account_id': 285,
+            'name': "First",
+            'partner_name': "partner currency",
+            'partner_id': 13,
+            'has_no_partner': false,
+            'journal_id': 8,
+            'account_name': "Bank",
+            'note': "",
+            'amount': 50.0,
+            'amount_str': "$ 50.00",
+            'amount_currency_str': "",
+            'date': "2017-01-01",
+            'account_code': "101401",
+            'ref': "",
+            'id': 9,
+            'statement_id': 2,
+            'company_id': 1,
+        },
+        'reconciliation_proposition': []
+    },
+    {
+        'st_line': {
+            'currency_id': 7,
+            'communication_partner_name': false,
+            'open_balance_account_id': 285,
+            'name': "Second",
+            'partner_name': "partner currency",
+            'partner_id': 13,
+            'has_no_partner': false,
+            'journal_id': 8,
+            'account_name': "Bank",
+            'note': "",
+            'amount': 50.0,
+            'amount_currency': 70.0,
+            'amount_str': "£ 50.00",
+            'amount_currency_str': "$ 70.00",
+            'date': "2017-01-01",
+            'account_code': "101401",
+            'ref': "",
+            'id': 10,
+            'statement_id': 2,
+            'company_id': 1,
+        },
+        'reconciliation_proposition': []
+    },
 ];
 
 var mv_lines = {
@@ -511,6 +563,14 @@ var mv_lines = {
         {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-22", 'date': "2017-01-23", 'total_amount_str': "$ 525.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0004", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 399, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 525.00", 'debit': 525.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
     ],
     '[8,"",0]': [],
+    '[9,"",0]': [
+        {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 100.00", 'partner_id': 13, 'account_name': "Bank", 'name': "BNK1/2017/0003: CUST.IN/2017/0001", 'partner_name': "partner currency", 'total_amount_currency_str': "", 'id': 394, 'credit': 0.0, 'journal_id': [8, "company 1 journal"], 'amount_str': "$ 100.00", 'debit': 100.0, 'account_code': "101401", 'ref': "", 'already_paid': true},
+        {'account_type': "liquidity", 'amount_currency_str': "€ 100.00", 'currency_id': 5, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 130.00", 'partner_id': 13, 'account_name': "Bank €", 'name': "BNK1/2017/0004: CUST.IN/2017/0002", 'partner_name': "partner currency", 'total_amount_currency_str': "€ 100.00", 'id': 396, 'credit': 0.0, 'journal_id': [9, "company 1 journal €"], 'amount_str': "$ 130.00", 'debit': 130.0, 'account_code': "101402", 'ref': "INV/2017/0003", 'already_paid': true},
+    ],
+    '[10,"",0]': [
+        {'account_type': "liquidity", 'amount_currency_str': "$ 100.00", 'currency_id': 3, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "£ 120.00", 'partner_id': 13, 'account_name': "Bank", 'name': "BNK1/2017/0003: CUST.IN/2017/0001", 'partner_name': "partner currency", 'total_amount_currency_str': "$ 100.00", 'id': 394, 'credit': 0.0, 'journal_id': [8, "company 1 journal"], 'amount_str': "£ 120.00", 'debit': 120.0, 'account_code': "101401", 'ref': "", 'already_paid': true},
+        {'account_type': "liquidity", 'amount_currency_str': "€ 100.00", 'currency_id': 5, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "£ 140.00", 'partner_id': 13, 'account_name': "Bank €", 'name': "BNK1/2017/0004: CUST.IN/2017/0002", 'partner_name': "partner currency", 'total_amount_currency_str': "€ 100.00", 'id': 396, 'credit': 0.0, 'journal_id': [9, "company 1 journal €"], 'amount_str': "£ 140.00", 'debit': 140.0, 'account_code': "101402", 'ref': "INV/2017/0003", 'already_paid': true},
+    ],
 };
 
 var auto_reconciliation = {
@@ -529,7 +589,7 @@ var auto_reconciliation = {
 };
 
 var data_for_manual_reconciliation_widget = {
-    '[null,[282,283,284,285,286,287,288,308,499,500,501,502,503,504]]': {
+    '[null,[282,283,284,285,286,287,288,308,309,499,500,501,502,503,504]]': {
         'customers': [
             {'account_id': 287, 'partner_name': "Agrolait", 'reconciliation_proposition': [], 'currency_id': 3, 'max_date': "2017-02-14 12:30:31", 'last_time_entries_checked': null, 'account_code': "101200", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'mode': "customers"},
             {'account_id': 7, 'partner_name': "Camptocamp", 'reconciliation_proposition': [], 'currency_id': 3, 'max_date': "2017-02-13 14:24:55", 'last_time_entries_checked': null, 'account_code': "101200", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'mode': "customers"}
@@ -948,10 +1008,8 @@ QUnit.module('account', {
         testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             mockRPC: function (route, args) {
-                console.log(args.method);
                 if (args.method === 'process_bank_statement_line') {
                     var lines = args.args['1'];
-                    console.log(args.arsg);
                     assert.deepEqual(args.args, [
                         [6],
                         [{
@@ -1050,6 +1108,293 @@ QUnit.module('account', {
 
         assert.strictEqual(clientAction.$('.accounting_view tbody').text().replace(/[\n\r\s]+/g, ' ').replace(/[\u200B]/g, ''),
             " 101200 2017-02-07 INV/2017/0012 $ 650.00 ", "should display the created reconciliation line with the currency");
+
+        clientAction.destroy();
+    });
+
+    QUnit.test('Reconciliation currencies: create write-off', async function (assert) {
+        assert.expect(21);
+
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
+
+        this.params.data_preprocess = {
+            value_min: 0,
+            value_max: 4,
+            notifications: [],
+            num_already_reconciled_lines: 0,
+            st_lines_ids: [9, 10],
+            statement_name: 'BNK/2014/001',
+        };
+
+        testUtils.mock.addMockEnvironment(clientAction, {
+            data: this.params.data,
+            session: {
+                currencies: Object.assign({
+                    5: {
+                        digits: [69, 2],
+                        position: "before",
+                        symbol: "€",
+                    },
+                    7: {
+                        digits: [69, 2],
+                        position: "before",
+                        symbol: "£",
+                    },
+                }, this.params.session.currencies),
+            },
+            translateParameters: {
+                date_format: "%m/%d/%Y",
+                direction:"ltr",
+                name:"English",
+                thousands_sep: ",",
+                time_format: "%H:%M:%S",
+                decimal_point: ".",
+                id:1,
+                grouping: [3,0],
+            },
+            archs: {
+                'account.bank.statement.line,false,search': '<search string="Statement Line"><field name="display_name"/></search>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'process_bank_statement_line') {
+                    assert.deepEqual(args.args[0], [10], "Should have the selected proposition");
+                    assert.deepEqual(args.args[1][0].new_aml_dicts, [{
+                        "name": "test",
+                        "debit": 90,
+                        "credit": 0,
+                        "analytic_tag_ids": [[6, null, []]],
+                        "account_id": 287,
+                    }], "Should call process_bank_statement_line with write-off");
+                    assert.deepEqual(args.args[1][0].partner_id, 13, "Should call process_bank_statement_line with write-off partner");
+                    assert.deepEqual(args.args[1][0].payment_aml_ids, [396], "Should call process_bank_statement_line with write-off aml");
+                }
+                return this._super(route, args);
+            },
+        });
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
+
+        const line0 = clientAction.widgets[0];
+        const line1 = clientAction.widgets[1];
+
+        // first
+
+        assert.strictEqual(line0.$('.o_multi_currency').data("content"), "€ 100.00", "should display icon money for multi-currency in propositions");
+        assert.strictEqual(line0.$('.mv_line .cell_right').text().replace(/[\n\r\s]+/g, ' '), " $ 100.00 $ 130.00 ", "should display the different amounts with the currency in propositions");
+        assert.strictEqual(line0.$('.accounting_view tfoot .cell_right').text(), "$\u00a050.00", "should display the total in currency");
+
+        await testUtils.dom.click(line0.$('.match td:last'));
+
+        assert.strictEqual(line0.$('.accounting_view tbody .o_multi_currency').data("content"), "€ 100.00", "should display icon money for multi-currency in selection");
+        assert.strictEqual(line0.$('.accounting_view tbody .cell_right').text().replace(/[\n\r\s]+/g, ' '), " $ 130.00 ", "should display the different amounts with the currency in selection");
+        assert.strictEqual(line0.$('.accounting_view tfoot .cell_left').text(), "$\u00a080.00", "should display the total in currency");
+
+        // check and open the second line (in £).
+
+        assert.strictEqual(line1.$('.accounting_view .cell_label:first').text().replace(/[\n\r\s]+/g, ' '), " Second ( $ 70.00) ", "should display the original value currency in head");
+        assert.strictEqual(line1.$('.accounting_view thead .o_multi_currency').data("content"), "£ 50.00", "should display icon money for multi-currency on head");
+        assert.strictEqual(line1.$('.accounting_view tfoot .cell_right').text(), "£\u00a050.00", "should display the total in currency");
+        assert.strictEqual(line1.$('.accounting_view thead .cell_left').text(), "£ 50.00", "should display the value in journal currency in propositions");
+
+        await testUtils.dom.click(line1.$('tfoot td:first'));
+
+        assert.strictEqual(line1.$('.mv_line .o_multi_currency:first').data("content"), "$ 100.00", "should display icon money for multi-currency in propositions");
+        assert.strictEqual(line1.$('.mv_line .o_multi_currency:last').data("content"), "€ 100.00", "should display icon money for multi-currency in propositions");
+        assert.strictEqual(line1.$('.mv_line .cell_right').text().replace(/[\n\r\s]+/g, ' '), " £ 120.00 £ 140.00 ", "should display the different amounts with the currency");
+
+        // add a matched line
+
+        await testUtils.dom.click(line1.$('.match td:last'));
+
+        assert.strictEqual(line1.$('.accounting_view tbody .o_multi_currency').data("content"), "€ 100.00", "should display icon money for multi-currency in selection");
+        assert.strictEqual(line1.$('.accounting_view tbody .cell_right').text().replace(/[\n\r\s]+/g, ' '), " £ 140.00 ", "should display the different amounts with the currency in selection");
+        assert.strictEqual(line1.$('.accounting_view tfoot .cell_left').text(), "£\u00a090.00", "should display the total in currency");
+
+        // open create write-off tab
+
+        await testUtils.dom.click(line1.$('li[data-original-title="Create a counterpart"] a'));
+
+        // select an account with the many2one (drop down)
+        await testUtils.dom.click(line1.$('.create .create_account_id input'));
+        $('.ui-autocomplete .ui-menu-item a:contains(101200)').trigger('mouseenter').trigger('click');
+        await testUtils.nextTick();
+        // insert label
+        await testUtils.fields.editInput(line1.$('.create .create_label input'), 'test');
+        await testUtils.nextTick();
+
+        assert.strictEqual(line1.$('.accounting_view tbody tr:eq(1)').text().replace(/[\n\r\s]+/g, ' '), " 101200​ New test £ 90.00 ", "should add the write-off");
+
+        // reconcile
+
+        await testUtils.dom.click(line1.$('.o_reconcile.btn-primary'));
+
+        clientAction.destroy();
+    });
+
+    QUnit.test('Manual Reconciliation currencies: create write-off', async function (assert) {
+        // see python test: test_02_admin_reconcile_multi_currency_writeoff
+        assert.expect(3);
+
+        var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
+
+        // tweak the data to fit our needs
+        this.params.data_for_manual_reconciliation_widget = {};
+        this.params.data_for_manual_reconciliation_widget["[null,[282,283,284,285,286,287,288,308,309,499,500,501,502,503,504]]"] = {
+            customers: [],
+            suppliers: [],
+            accounts: [
+                {
+                    "partner_id": 13,
+                    "partner_name": "ooo",
+                    "last_time_entries_checked": null,
+                    "account_id": 309,
+                    "account_name": "101402 Bank €",
+                    "account_code": "101402",
+                    "max_date": "2021-08-23 11:12:22",
+                    "currency_id": 5,
+                    "reconciliation_proposition": [],
+                    "mode": "customers",
+                    "company_id": 1
+                },
+            ],
+        };
+        this.params.move_lines_for_manual_reconciliation['[309,13,"",0]'] = [
+            {
+                "id": 320,
+                "name": "BNK1/2021/0001: Customer Payment",
+                "ref": "",
+                "account_id": [309, "101402 Bank €"],
+                "already_paid": false,
+                "account_code": "101402",
+                "account_name": "101402 Bank €",
+                "account_type": "receivable",
+                "date_maturity": "08/23/2021",
+                "date": "08/23/2021",
+                "journal_id": [9, "company 1 journal €"],
+                "partner_id": 13,
+                "partner_name": "partner currency",
+                "currency_id": 5,
+                "recs_count": 2,
+                "debit": 0,
+                "credit": 50,
+                "amount_currency": "",
+                "amount_str": "€ 50.00",
+                "total_amount_str": "€ 50.00",
+                "amount_currency_str": "",
+                "total_amount_currency_str": ""
+            },
+            {
+                "id": 318,
+                "name": "INV/2021/0001",
+                "ref": "",
+                "account_id": [309, "101402 Bank €"],
+                "already_paid": false,
+                "account_code": "101402",
+                "account_name": "101402 Bank €",
+                "account_type": "receivable",
+                "date_maturity": "08/23/2021",
+                "date": "08/23/2021",
+                "journal_id": [9, "company 1 journal €"],
+                "partner_id": 13,
+                "partner_name": "partner currency",
+                "currency_id": 5,
+                "recs_count": 2,
+                "debit": 100,
+                "credit": 0,
+                "amount_currency": "",
+                "amount_str": "€ 100.00",
+                "total_amount_str": "€ 100.00",
+                "amount_currency_str": "",
+                "total_amount_currency_str": ""
+            },
+        ];
+
+        this.params.data_preprocess = {
+            value_min: 0,
+            value_max: 4,
+            notifications: [],
+            num_already_reconciled_lines: 0,
+            st_lines_ids: [9, 10],
+            statement_name: 'BNK/2014/001',
+        };
+
+        testUtils.mock.addMockEnvironment(clientAction, {
+            data: this.params.data,
+            session: {
+                currencies: Object.assign({
+                    5: {
+                        digits: [69, 2],
+                        position: "before",
+                        symbol: "€",
+                    },
+                    7: {
+                        digits: [69, 2],
+                        position: "before",
+                        symbol: "£",
+                    },
+                }, this.params.session.currencies),
+            },
+            archs: {
+                'account.bank.statement.line,false,search': '<search string="Statement Line"><field name="display_name"/></search>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'process_move_lines') {
+                    assert.deepEqual(args.args,
+                        [
+                            [
+                              {
+                                "id": null,
+                                "type": null,
+                                "mv_line_ids": [318, 320],
+                                "new_mv_line_dicts": [
+                                  {
+                                    "account_id": 287,
+                                    "amount_currency": -50,
+                                    "analytic_tag_ids": [[6, null, []]],
+                                    "currency_id": 5,
+                                    "date": args.args[0][0].new_mv_line_dicts[0].date,
+                                    "journal_id": 9,
+                                    "name": "test"
+                                  }
+                                ],
+                              }
+                            ]
+                        ], "should call process_move_lines with the write-off data");
+                }
+
+                return this._super(route, args);
+            },
+        });
+
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
+
+        // The first reconciliation "line" is where it happens
+        var line0 = clientAction.widgets[0];
+
+        // Add invoice prop & add payment prop
+        await testUtils.dom.click(line0.$('.match:first .cell_account_code:last'));
+        await testUtils.dom.click(line0.$('.match:first .cell_account_code:last'));
+
+        assert.strictEqual(line0.$('.accounting_view tfoot .cell_right').text(), "€\u00a050.00", "should display the total");
+
+        // select an account with the many2one (drop down)
+        await testUtils.dom.click(line0.$('.create .create_account_id input'));
+        $('.ui-autocomplete .ui-menu-item a:contains(101200)').trigger('mouseenter').trigger('click');
+        await testUtils.nextTick();
+        // insert label
+        await testUtils.fields.editInput(line0.$('.create .create_label input'), 'test');
+        await testUtils.nextTick();
+        // select an account with the many2one (drop down)
+        await testUtils.dom.click(line0.$('.create .create_journal_id input'));
+        $('.ui-autocomplete .ui-menu-item a:contains(€)').trigger('mouseenter').trigger('click');
+        await testUtils.nextTick();
+
+        assert.strictEqual(line0.$('.accounting_view tbody tr:last').text().replace(/[\n\r\s]+/g, ' '), " 101200​ New test € 50.00 ", "should add the write-off");
+
+        // reconcile
+
+        await testUtils.dom.click(line0.$('.o_reconcile.btn-primary'));
 
         clientAction.destroy();
     });
@@ -1788,7 +2133,7 @@ QUnit.module('account', {
         assert.expect(5);
 
         // tweak the data to fit our needs
-        this.params.data_for_manual_reconciliation_widget['[283, null, "", 0, 6]'] = _.extend({}, this.params.data_for_manual_reconciliation_widget['[null,[282,283,284,285,286,287,288,308,499,500,501,502,503,504]]']);
+        this.params.data_for_manual_reconciliation_widget['[283, null, "", 0, 6]'] = _.extend({}, this.params.data_for_manual_reconciliation_widget['[null,[282,283,284,285,286,287,288,308,309,499,500,501,502,503,504]]']);
         this.params.data_for_manual_reconciliation_widget['[283, null, "", 0, 6]'].accounts[0].reconciliation_proposition = [
             {account_id: 283, account_type: "other", amount_currency_str: "", currency_id: false, date_maturity: "2017-03-18", date: "2017-02-16",
              total_amount_str: "$ 500.00", partner_id: 8, account_name: "101000 Current Assets", name: "INV/2017/0987", partner_name: "Agrolait",
@@ -1906,7 +2251,7 @@ QUnit.module('account', {
     QUnit.test('Tax on account receivable', async function(assert){
         assert.expect(21);
 
-        this.params.data_for_manual_reconciliation_widget['[null,[282,283,284,285,286,287,288,308,499,500,501,502,503,504]]'].accounts = [];
+        this.params.data_for_manual_reconciliation_widget['[null,[282,283,284,285,286,287,288,308,309,499,500,501,502,503,504]]'].accounts = [];
         var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
         testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
@@ -1947,16 +2292,33 @@ QUnit.module('account', {
 
                     // Index aiming at the correct object in the list
                     var idx = _.has(args.args[0][0].new_mv_line_dicts[0], 'journal_id') ? 0 : 1;
-                    assert.deepEqual(
-                        _.pick(args.args[0][0].new_mv_line_dicts[idx],
-                               'account_id', 'name', 'credit', 'debit', 'journal_id'),
-                        {account_id: 287, name: "dummy text", credit: 0, debit: 180, journal_id: 8},
+                    assert.deepEqual(args.args[0][0].new_mv_line_dicts[idx], {
+                            "account_id": 287,
+                            "amount_currency": 180,
+                            "analytic_tag_ids": [[6, null, []]],
+                            "currency_id": 3,
+                            "date": args.args[0][0].new_mv_line_dicts[0].date,
+                            "journal_id": 8,
+                            "name": "dummy text",
+                            "tag_ids": [[6, null, [1]]],
+                            "tax_ids": [[6, null, [6]]],
+                        },
                         "Reconciliation rpc payload, new_mv_line_dicts.gift is correct"
                     );
                     assert.deepEqual(
-                        _.pick(args.args[0][0].new_mv_line_dicts[1 - idx],
-                               'account_id', 'name', 'credit', 'debit', 'tax_repartition_line_id'),
-                        {account_id: 287, name: "dummy text Tax 20.00%", credit: 0, debit: 36, tax_repartition_line_id: 2},
+                        args.args[0][0].new_mv_line_dicts[1 - idx], {
+                            "account_id": 287,
+                            "amount_currency": 36,
+                            "analytic_tag_ids": [[6, null, []]],
+                            "currency_id": 3,
+                            "date": args.args[0][0].new_mv_line_dicts[1 - idx].date,
+                            "journal_id": 8,
+                            "name": "dummy text Tax 20.00%",
+                            "tag_ids": [[6, null, [2]]],
+                            "tax_base_amount": -180,
+                            "tax_ids": [[6, null, [6]]],
+                            "tax_repartition_line_id": 2
+                        },
                         "Reconciliation rpc payload, new_mv_line_dicts.tax is correct"
                     );
                 }
@@ -1994,7 +2356,7 @@ QUnit.module('account', {
         assert.verifySteps(["Tax"], "Tax rpc done");
 
         await testUtils.dom.click($reconcileForm.find('.create_journal_id input'),{allowInvisible:true});
-        $('.ui-autocomplete .ui-menu-item a:contains(company 1 journal)').trigger('mouseover').trigger('click');
+        $('.ui-autocomplete .ui-menu-item a:contains(company 1 journal):first').trigger('mouseover').trigger('click');
         await testUtils.nextTick();
         await testUtils.fields.editAndTrigger($reconcileForm.find('.create_label input'),'dummy text','input');
         await testUtils.dom.click($reconcileForm.find('.create_label input'));

@@ -4022,7 +4022,7 @@ class AccountMoveLine(models.Model):
                 'journal_id': writeoff_journal_id.id
             }
             if not all_aml_share_same_currency:
-                writeoff_vals['amount_currency'] = False
+                writeoff_vals.pop('amount_currency', None)
             writeoff_to_reconcile = remaining_moves._create_writeoff([writeoff_vals])
             #add writeoff line to reconcile algorithm and finish the reconciliation
             remaining_moves = (remaining_moves + writeoff_to_reconcile).auto_reconcile_lines()
@@ -4058,7 +4058,8 @@ class AccountMoveLine(models.Model):
                 writeoff_dict[journal_id].append(val)
 
         partner_id = self.env['res.partner']._find_accounting_partner(self[0].partner_id).id
-        company_currency = self[0].account_id.company_id.currency_id
+        company = self[0].account_id.company_id
+        company_currency = company.currency_id
         writeoff_currency = self[0].account_id.currency_id or company_currency
         line_to_reconcile = self.env['account.move.line']
         # Iterate and create one writeoff by journal
@@ -4074,6 +4075,10 @@ class AccountMoveLine(models.Model):
                     raise UserError(_("It is mandatory to specify an account and a journal to create a write-off."))
                 if ('debit' in vals) ^ ('credit' in vals):
                     raise UserError(_("Either pass both debit and credit or none."))
+                if 'amount_currency' in vals and 'currency_id' not in vals:
+                    raise UserError(_("Amount in currency must be provide with the currency."))
+                if 'currency_id' in vals and vals.get('currency_id') != writeoff_currency.id:
+                    raise UserError(_("The currency must be the same of the computed write-off currency."))
                 if 'date' not in vals:
                     vals['date'] = self._context.get('date_p') or fields.Date.today()
                 vals['date'] = fields.Date.to_date(vals['date'])
@@ -4085,7 +4090,11 @@ class AccountMoveLine(models.Model):
                     vals['analytic_account_id'] = self.env.context.get('analytic_id', False)
                 #compute the writeoff amount if not given
                 if 'credit' not in vals and 'debit' not in vals:
-                    amount = sum([r.amount_residual for r in self])
+                    if vals.get('amount_currency'):
+                        amount = -writeoff_currency._convert(vals.get('amount_currency'), company_currency, company, date)
+                    else:
+                        #compute the writeoff amount if not given
+                        amount = sum(self.mapped('amount_residual'))
                     vals['credit'] = amount > 0 and amount or 0.0
                     vals['debit'] = amount < 0 and abs(amount) or 0.0
                 vals['partner_id'] = partner_id
@@ -4094,6 +4103,10 @@ class AccountMoveLine(models.Model):
                     vals['currency_id'] = writeoff_currency.id
                     sign = 1 if vals['debit'] > 0 else -1
                     vals['amount_currency'] = sign * abs(sum([r.amount_residual_currency for r in self]))
+                if writeoff_currency == company_currency:
+                    vals.pop('currency_id', None)
+                    vals.pop('amount_currency', None)
+                else:
                     total_currency += vals['amount_currency']
 
                 writeoff_lines.append(compute_writeoff_counterpart_vals(vals))
