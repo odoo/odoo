@@ -32,7 +32,7 @@ registerInstancePatchModel('mail.partner', 'hr_holidays/static/src/models/partne
         if (!this.outOfOfficeDateEnd) {
             return clear();
         }
-        if (!this.env.messaging.locale.language) {
+        if (!this.messaging.locale || !this.messaging.locale.language) {
             return clear();
         }
         const currentDate = new Date();

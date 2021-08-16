@@ -55,7 +55,7 @@ function factory(dependencies) {
                 data2.email_from = data.email_from;
             }
             if ('history_partner_ids' in data) {
-                data2.isHistory = data.history_partner_ids.includes(this.env.messaging.currentPartner.id);
+                data2.isHistory = data.history_partner_ids.includes(this.messaging.currentPartner.id);
             }
             if ('id' in data) {
                 data2.id = data.id;
@@ -171,6 +171,9 @@ function factory(dependencies) {
                     limit,
                 },
             }, { shadow: true });
+            if (!this.messaging) {
+                return;
+            }
             const messages = this.env.models['mail.message'].insert(messagesData.map(
                 messageData => this.env.models['mail.message'].convertData(messageData)
             ));
@@ -427,14 +430,14 @@ function factory(dependencies) {
          */
         _computeThreads() {
             const threads = [];
-            if (this.isHistory) {
-                threads.push(this.env.messaging.history);
+            if (this.isHistory && this.messaging.history) {
+                threads.push(this.messaging.history);
             }
-            if (this.isNeedaction) {
-                threads.push(this.env.messaging.inbox);
+            if (this.isNeedaction && this.messaging.inbox) {
+                threads.push(this.messaging.inbox);
             }
-            if (this.isStarred) {
-                threads.push(this.env.messaging.starred);
+            if (this.isStarred && this.messaging.starred) {
+                threads.push(this.messaging.starred);
             }
             if (this.originThread) {
                 threads.push(this.originThread);

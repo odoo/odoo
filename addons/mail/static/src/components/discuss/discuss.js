@@ -37,6 +37,9 @@ export class Discuss extends Component {
     }
 
     patched() {
+        if (!this.discuss) {
+            return;
+        }
         if (this.discuss.thread) {
             this.trigger('o-push-state-action-manager');
         }

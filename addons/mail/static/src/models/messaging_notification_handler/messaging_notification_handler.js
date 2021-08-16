@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { one2one } from '@mail/model/model_field';
 import { decrement, increment, insert, link } from '@mail/model/model_field_command';
 import { htmlToTextContentInline } from '@mail/js/utils';
 
@@ -711,12 +710,6 @@ function factory(dependencies) {
         }
 
     }
-
-    MessagingNotificationHandler.fields = {
-        messaging: one2one('mail.messaging', {
-            inverse: 'notificationHandler',
-        }),
-    };
 
     MessagingNotificationHandler.modelName = 'mail.messaging_notification_handler';
 

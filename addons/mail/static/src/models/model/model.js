@@ -2,6 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { RecordDeletedError } from '@mail/model/model_errors';
+import { many2one } from '@mail/model/model_field';
 
 /**
  * This function generates a class that represent a model. Instances of such
@@ -242,7 +243,17 @@ function factory() {
      * Note: fields of super-class are automatically inherited, therefore a
      * sub-class should (re-)define fields without copying ancestors' fields.
      */
-    Model.fields = {};
+    Model.fields = {
+        /**
+         * States the messaging singleton. Automatically assigned by the model
+         * manager at creation.
+         */
+        messaging: many2one('mail.messaging', {
+            inverse: 'allRecords',
+            required: true,
+            readonly: true,
+        }),
+    };
 
     /**
      * Name of the model. Important to refer to appropriate model class

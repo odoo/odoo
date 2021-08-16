@@ -112,6 +112,9 @@ export class Composer extends Component {
      * @returns {boolean}
      */
     get hasFooter() {
+        if (!this.composer) {
+            return false;
+        }
         return (
             this.props.hasThreadTyping ||
             this.composer.attachments.length > 0 ||
@@ -207,6 +210,9 @@ export class Composer extends Component {
      */
     _onClickCaptureGlobal(ev) {
         if (this.contains(ev.target)) {
+            return;
+        }
+        if (!this.composer) {
             return;
         }
         this.composer.discard();

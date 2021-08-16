@@ -4,7 +4,7 @@ import { registry } from '@mail/model/model_core';
 import { ModelField } from '@mail/model/model_field';
 import { Listener } from '@mail/model/model_listener';
 import { patchClassMethods, patchInstanceMethods } from '@mail/utils/utils';
-import { unlinkAll } from '@mail/model/model_field_command';
+import { link, unlinkAll } from '@mail/model/model_field_command';
 
 /**
  * Object that manage models and records, notably their update cycle: whenever
@@ -84,6 +84,14 @@ export class ModelManager {
          */
         this._localIdsObservedByListener = new Map();
         /**
+         * The messaging singleton associated to this model manager.
+         */
+        this._messaging = undefined;
+        /**
+         * All generated models. Keys are model name, values are model class.
+         */
+        this.models = {};
+        /**
          * Set of records that have been updated during the current update
          * cycle.
          */
@@ -98,7 +106,11 @@ export class ModelManager {
         /**
          * Generate the models.
          */
-        Object.assign(this.env.models, this._generateModels());
+        this.models = this._generateModels();
+        /**
+         * Create the messaging singleton record.
+         */
+        this.models['mail.messaging'].create();
     }
 
     //--------------------------------------------------------------------------
@@ -147,18 +159,6 @@ export class ModelManager {
      */
     delete(record) {
         this._delete(record);
-        this._flushUpdateCycle();
-    }
-
-    /**
-     * Delete all records.
-     */
-    deleteAll() {
-        for (const Model of Object.values(this.env.models)) {
-            for (const record of Object.values(Model.__records)) {
-                this._delete(record);
-            }
-        }
         this._flushUpdateCycle();
     }
 
@@ -232,7 +232,7 @@ export class ModelManager {
             return;
         }
         // support for inherited models (eg. relation targeting `mail.model`)
-        for (const SubModel of Object.values(this.env.models)) {
+        for (const SubModel of Object.values(this.models)) {
             if (!(SubModel.prototype instanceof Model)) {
                 continue;
             }
@@ -258,6 +258,20 @@ export class ModelManager {
         const res = this._insert(Model, data);
         this._flushUpdateCycle();
         return res;
+    }
+
+    /**
+     * Returns the messaging singleton associated to this model manager.
+     *
+     * @returns {mail.messaging}
+     */
+    get messaging() {
+        if (!this.models || !this._messaging) {
+            return undefined;
+        }
+        // Use "get" specifically to ensure the record still exists and to
+        // ensure listeners are properly notified of this access.
+        return this.get(this.models['mail.messaging'], this._messaging.localId);
     }
 
     /**
@@ -605,6 +619,12 @@ export class ModelManager {
              * expected to be found on every record.
              */
             const record = new Model({ valid: true });
+            if (Model.modelName === 'mail.messaging') {
+                if (this._messaging) {
+                    throw Error('messaging should be a singleton');
+                }
+                this._messaging = record;
+            }
             Object.assign(record, {
                 // The messaging env.
                 env: this.env,
@@ -651,6 +671,7 @@ export class ModelManager {
                     data2[field.fieldName] = field.default;
                 }
             }
+            data2.messaging = link(this._messaging);
             this._update(record, data2, { allowWriteReadonly: true });
             for (const field of Model.__fieldList) {
                 if (field.compute) {
@@ -724,6 +745,9 @@ export class ModelManager {
             this._markListenerToNotify(listener);
         }
         delete Model.__records[record.localId];
+        if (record === this._messaging) {
+            this._messaging = undefined;
+        }
     }
 
     /**
@@ -812,6 +836,12 @@ export class ModelManager {
             // Make environment accessible from Model.
             const Model = generatable.factory(Models);
             Model.env = this.env;
+            const modelManager = this;
+            Object.defineProperty(Model, 'messaging', {
+                get() {
+                    return modelManager.messaging;
+                },
+            });
             /**
             * Contains all records. key is local id, while value is the record.
             */
@@ -900,7 +930,6 @@ export class ModelManager {
             {},
             relFunc(Model.modelName, { inverse: field.fieldName }),
             {
-                env: this.env,
                 fieldName: `_inverse_${Model.modelName}/${field.fieldName}`,
                 modelManager: this,
             }
@@ -983,7 +1012,6 @@ export class ModelManager {
             // Make fields aware of their field name.
             for (const [fieldName, fieldData] of Object.entries(Model.fields)) {
                 Model.fields[fieldName] = new ModelField(Object.assign({}, fieldData, {
-                    env: this.env,
                     fieldName,
                     modelManager: this,
                 }));
