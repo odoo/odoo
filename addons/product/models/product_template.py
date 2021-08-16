@@ -475,6 +475,14 @@ class ProductTemplate(models.Model):
     def _price_get(self, products, ptype='list_price'):
         return products.price_compute(ptype)
 
+    def get_variant_creation_values(self, tmpl_id, value_ids):
+        vals = {
+            'product_tmpl_id': tmpl_id.id,
+            'attribute_value_ids': [(6, 0, list(value_ids))],
+            'active': tmpl_id.active,
+        }
+        return vals
+
     @api.multi
     def create_variant_ids(self):
         Product = self.env["product.product"]
@@ -513,11 +521,7 @@ class ProductTemplate(models.Model):
                 for value_ids in all_variants:
                     value_ids = frozenset(value_ids)
                     if value_ids not in existing_variants:
-                        variants_to_create.append({
-                            'product_tmpl_id': tmpl_id.id,
-                            'attribute_value_ids': [(6, 0, list(value_ids))],
-                            'active': tmpl_id.active,
-                        })
+                        variants_to_create.append(self.get_variant_creation_values(tmpl_id, value_ids))
                         if len(variants_to_create) > 1000:
                             raise UserError(_(
                                 'The number of variants to generate is too high. '
