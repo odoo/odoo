@@ -25,7 +25,15 @@ $-seen-urls: ();
 
     // 2) The values in the $theme-colors map are already printed by Bootstrap.
 
-    // 3) The values in the $colors map are also printed by Bootstrap.
+    // 3) The values in the $colors map are also printed by Bootstrap. However,
+    // we have color variables which can contain a reference to a color
+    // combination and that is the info we want in that case.
+    @each $key in ('menu', 'header-boxed', 'footer', 'copyright') {
+        $-value: map-get($o-color-palette, $key);
+        @if type-of($-value) == 'number' {
+            @include print-variable($key, $-value);
+        }
+    }
 
     // 4) The Odoo values map, $o-website-values, must be printed.
     @each $key, $value in $o-website-values {
