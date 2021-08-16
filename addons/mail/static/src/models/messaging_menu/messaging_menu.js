@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+import { attr } from '@mail/model/model_field';
 
 function factory(dependencies) {
 
@@ -95,9 +95,6 @@ function factory(dependencies) {
          */
         isOpen: attr({
             default: false,
-        }),
-        messaging: one2one('mail.messaging', {
-            inverse: 'messagingMenu',
         }),
     };
     MessagingMenu.modelName = 'mail.messaging_menu';

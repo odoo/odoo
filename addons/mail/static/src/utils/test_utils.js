@@ -536,8 +536,8 @@ async function start(param0 = {}) {
                 destroyCallbacks.forEach(callback => callback({ widget }));
                 this._super(...arguments);
                 legacyUnpatch(widget);
-                if (testEnv) {
-                    testEnv.destroyMessaging();
+                if (testEnv && testEnv.modelManager.messaging) {
+                    testEnv.modelManager.messaging.delete();
                 }
             }
         });
@@ -587,8 +587,8 @@ async function start(param0 = {}) {
                 destroyCallbacks.forEach(callback => callback({ widget }));
                 this._super(...arguments);
                 legacyUnpatch(widget);
-                if (testEnv) {
-                    testEnv.destroyMessaging();
+                if (testEnv && testEnv.modelManager.messaging) {
+                    testEnv.modelManager.messaging.delete();
                 }
             }
         });
@@ -603,13 +603,26 @@ async function start(param0 = {}) {
                 delete widget.destroy;
                 destroyCallbacks.forEach(callback => callback({ widget }));
                 parent.destroy();
-                if (testEnv) {
-                    testEnv.destroyMessaging();
+                if (testEnv && testEnv.modelManager.messaging) {
+                    testEnv.modelManager.messaging.delete();
                 }
             },
         });
     }
+    // get the final test env after execution of createView/createWebClient/addMockEnvironment
     testEnv = Component.env;
+    const modelManager = new ModelManager(testEnv);
+    Object.assign(testEnv, { modelManager });
+    Object.defineProperty(testEnv, 'messaging', {
+        get() {
+            return this.modelManager.messaging;
+        },
+    });
+    Object.defineProperty(testEnv, 'models', {
+        get() {
+            return this.modelManager.models;
+        },
+    });
     /**
      * Returns a promise resolved after the expected event is received.
      *
@@ -668,12 +681,7 @@ async function start(param0 = {}) {
              */
             await env.session.is_bound;
 
-            testEnv.modelManager = new ModelManager(testEnv);
             testEnv.modelManager.start();
-            /**
-             * Create the messaging singleton record.
-             */
-            testEnv.messaging = testEnv.models['mail.messaging'].create();
             testEnv.messaging.start().then(() =>
                 testEnv.messagingInitializedDeferred.resolve()
             );

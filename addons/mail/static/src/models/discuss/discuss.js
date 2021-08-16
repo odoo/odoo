@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
-import { clear, create, link, replace, unlink, unlinkAll, update } from '@mail/model/model_field_command';
+import { clear, create, link, unlink, unlinkAll, update } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -343,23 +343,9 @@ function factory(dependencies) {
          * @returns {mail.thread|undefined}
          */
         _computeThread() {
-            let thread = this.thread;
-            if (this.env.messaging &&
-                this.env.messaging.inbox &&
-                this.env.messaging.device.isMobile &&
-                this.activeMobileNavbarTabId === 'mailbox' &&
-                this.initActiveId !== 'mail.box_inbox' &&
-                !thread
-            ) {
-                // After loading Discuss from an arbitrary tab other then 'mailbox',
-                // switching to 'mailbox' requires to also set its inner-tab ;
-                // by default the 'inbox'.
-                return replace(this.env.messaging.inbox);
-            }
-            if (!thread || !thread.isPinned) {
+            if (!this.thread || !this.thread.isPinned) {
                 return unlink();
             }
-            return;
         }
 
         /**
@@ -453,9 +439,6 @@ function factory(dependencies) {
          */
         menu_id: attr({
             default: null,
-        }),
-        messaging: one2one('mail.messaging', {
-            inverse: 'discuss',
         }),
         renamingThreads: one2many('mail.thread'),
         /**

@@ -297,7 +297,7 @@ function factory(dependencies) {
          */
         _computeVisual() {
             let visual = JSON.parse(JSON.stringify(BASE_VISUAL));
-            if (!this.messaging) {
+            if (!this.messaging || !this.messaging.device) {
                 return visual;
             }
             const device = this.messaging.device;
@@ -390,9 +390,6 @@ function factory(dependencies) {
         }),
         lastVisible: many2one('mail.chat_window', {
             compute: '_computeLastVisible',
-        }),
-        messaging: one2one('mail.messaging', {
-            inverse: 'chatWindowManager',
         }),
         newMessageChatWindow: one2one('mail.chat_window', {
             compute: '_computeNewMessageChatWindow',

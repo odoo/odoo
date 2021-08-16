@@ -9,9 +9,8 @@ const { EventBus } = owl.core;
  * @param {Object} [providedEnv={}]
  * @returns {Object}
  */
-function addMessagingToEnv(providedEnv = {}) {
-    const env = Object.assign(providedEnv);
-
+export function addMessagingToEnv(providedEnv = {}) {
+    const env = { ...providedEnv };
     /**
      * Registry of models.
      */
@@ -31,12 +30,6 @@ function addMessagingToEnv(providedEnv = {}) {
                 },
             }, (env.browser && env.browser.Notification) || {}),
         }, env.browser),
-        destroyMessaging() {
-            if (env.modelManager) {
-                env.modelManager.deleteAll();
-                env.messaging = undefined;
-            }
-        },
         disableAnimation: true,
         isMessagingInitialized() {
             if (!this.messaging) {
@@ -52,13 +45,10 @@ function addMessagingToEnv(providedEnv = {}) {
          */
         isQUnitTest: true,
         loadingBaseDelayDuration: providedEnv.loadingBaseDelayDuration || 0,
-        messaging: undefined,
         messagingCreatedPromise: makeDeferred(),
         messagingInitializedDeferred: makeDeferred(),
         messagingBus: new EventBus(),
-        modelManager: undefined,
     });
-
     return env;
 }
 
@@ -66,10 +56,8 @@ function addMessagingToEnv(providedEnv = {}) {
  * @param {Object} [providedEnv={}]
  * @returns {Object}
  */
-function addTimeControlToEnv(providedEnv = {}) {
-
-    let env = Object.assign({}, providedEnv);
-
+export function addTimeControlToEnv(providedEnv = {}) {
+    const env = { ...providedEnv };
     if (!env.browser) {
         env.browser = {};
     }
@@ -125,9 +113,4 @@ function addTimeControlToEnv(providedEnv = {}) {
         },
     });
     return env;
-}
-
-export {
-    addMessagingToEnv,
-    addTimeControlToEnv,
 }

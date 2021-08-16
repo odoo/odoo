@@ -16,11 +16,11 @@ export class ModelField {
     constructor({
         compute,
         default: def,
-        env,
         fieldName,
         fieldType,
         inverse,
         isCausal = false,
+        modelManager,
         readonly = false,
         related,
         relationType,
@@ -39,10 +39,6 @@ export class ModelField {
          * set a value by default.
          */
         this.default = def;
-        /**
-         * The messaging env.
-         */
-        this.env = env;
         /**
          * Name of the field in the definition of fields on model.
          */
@@ -68,6 +64,10 @@ export class ModelField {
          * relation is removed, the related record is automatically deleted.
          */
         this.isCausal = isCausal;
+        /**
+         * Reference to the manager of this field.
+         */
+        this.modelManager = modelManager;
         /**
          * Determines whether the field is read only. Read only field
          * can't be updated once the record is created.
@@ -482,8 +482,8 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationCreate(record, data, options) {
-        const OtherModel = this.env.models[this.to];
-        const other = this.env.modelManager._create(OtherModel, data);
+        const OtherModel = this.modelManager.models[this.to];
+        const other = this.modelManager._create(OtherModel, data);
         return this._setRelationLink(record, other, options);
     }
 
@@ -500,8 +500,8 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationInsert(record, data, options) {
-        const OtherModel = this.env.models[this.to];
-        const other = this.env.modelManager._insert(OtherModel, data);
+        const OtherModel = this.modelManager.models[this.to];
+        const other = this.modelManager._insert(OtherModel, data);
         return this._setRelationLink(record, other, options);
     }
 
@@ -517,8 +517,8 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationInsertAndReplace(record, data, options) {
-        const OtherModel = this.env.models[this.to];
-        const newValue = this.env.modelManager._insert(OtherModel, data);
+        const OtherModel = this.modelManager.models[this.to];
+        const newValue = this.modelManager._insert(OtherModel, data);
         return this._setRelationReplace(record, newValue, options);
     }
 
@@ -569,7 +569,7 @@ export class ModelField {
             otherRecords.add(recordToLink);
             // link current record to other records
             if (hasToUpdateInverse) {
-                this.env.modelManager._update(
+                this.modelManager._update(
                     recordToLink,
                     { [this.inverse]: link(record) },
                     { allowWriteReadonly: true, hasToUpdateInverse: false }
@@ -605,7 +605,7 @@ export class ModelField {
         record.__values[this.fieldName] = recordToLink;
         // link current record to other record
         if (hasToUpdateInverse) {
-            this.env.modelManager._update(
+            this.modelManager._update(
                 recordToLink,
                 { [this.inverse]: link(record) },
                 { allowWriteReadonly: true, hasToUpdateInverse: false }
@@ -713,7 +713,7 @@ export class ModelField {
         if (!otherRecord) {
             throw Error(`Record ${record.localId} cannot update undefined relational field ${this.fieldName}.`);
         }
-        this.env.modelManager._update(otherRecord, data);
+        this.modelManager._update(otherRecord, data);
         return false;
     }
 
@@ -756,9 +756,9 @@ export class ModelField {
                 }
                 // apply causality
                 if (this.isCausal) {
-                    this.env.modelManager._delete(recordToUnlink);
+                    this.modelManager._delete(recordToUnlink);
                 } else {
-                    this.env.modelManager._update(
+                    this.modelManager._update(
                         recordToUnlink,
                         { [this.inverse]: unlink(record) },
                         { allowWriteReadonly: true, hasToUpdateInverse: false }
@@ -800,9 +800,9 @@ export class ModelField {
             }
             // apply causality
             if (this.isCausal) {
-                this.env.modelManager._delete(otherRecord);
+                this.modelManager._delete(otherRecord);
             } else {
-                this.env.modelManager._update(
+                this.modelManager._update(
                     otherRecord,
                     { [this.inverse]: unlink(record) },
                     { allowWriteReadonly: true, hasToUpdateInverse: false }
@@ -822,7 +822,7 @@ export class ModelField {
      * @throws {Error} if record does not satisfy related model
      */
     _verifyRelationalValue(record) {
-        const OtherModel = this.env.models[this.to];
+        const OtherModel = this.modelManager.models[this.to];
         if (!OtherModel.get(record.localId, { isCheckingInheritance: true })) {
             throw Error(`Record ${record.localId} is not valid for relational field ${this.fieldName}.`);
         }

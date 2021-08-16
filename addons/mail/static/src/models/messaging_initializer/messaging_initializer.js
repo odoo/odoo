@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { one2one } from '@mail/model/model_field';
 import { executeGracefully } from '@mail/utils/utils';
 import { create, link, insert } from '@mail/model/model_field_command';
 
@@ -236,12 +235,6 @@ function factory(dependencies) {
         }
 
     }
-
-    MessagingInitializer.fields = {
-        messaging: one2one('mail.messaging', {
-            inverse: 'initializer',
-        }),
-    };
 
     MessagingInitializer.modelName = 'mail.messaging_initializer';
 
