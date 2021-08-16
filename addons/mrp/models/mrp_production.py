@@ -1395,7 +1395,7 @@ class MrpProduction(models.Model):
             return name
         seq_back = "-" + "0" * (SIZE_BACK_ORDER_NUMERING - 1 - int(math.log10(sequence))) + str(sequence)
         regex = re.compile(r"-\d+$")
-        if regex.search(name):
+        if regex.search(name) and sequence > 1:
             return regex.sub(seq_back, name)
         return name + seq_back
 
@@ -1418,6 +1418,7 @@ class MrpProduction(models.Model):
         for production in self:
             if production.backorder_sequence == 0:  # Activate backorder naming
                 production.backorder_sequence = 1
+            production.name = self._get_name_backorder(production.name, production.backorder_sequence)
             backorder_mo = production.copy(default=production._get_backorder_mo_vals())
             if close_mo:
                 production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')).write({
@@ -1448,8 +1449,6 @@ class MrpProduction(models.Model):
                     wo.qty_producing = 1
                 else:
                     wo.qty_producing = wo.qty_remaining
-
-            production.name = self._get_name_backorder(production.name, production.backorder_sequence)
 
             # We need to adapt `duration_expected` on both the original workorders and their
             # backordered workorders. To do that, we use the original `duration_expected` and the
