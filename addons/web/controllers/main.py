@@ -824,6 +824,8 @@ class ExportXlsxWriter:
             cell_style = self.datetime_style
         elif isinstance(cell_value, datetime.date):
             cell_style = self.date_style
+        elif isinstance(cell_value, (list, tuple)):
+            cell_value = pycompat.to_text(cell_value)
         self.write(row, column, cell_value, cell_style)
 
 class GroupExportXlsxWriter(ExportXlsxWriter):

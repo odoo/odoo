@@ -53,6 +53,12 @@ class XlsxCreatorCase(common.HttpCase):
                 'type': self.model._fields[f].type,
             } for f in fields]
 
+        # export first without the mocked spreadsheet, just to ensure it doesn't crash
+        self.url_open('/web/export/xlsx', data={
+            'data': json.dumps(dict(self.default_params, **params)),
+            'token': 'dummy',
+            'csrf_token': http.WebRequest.csrf_token(self),
+        })
         with patch.object(ExportXlsxWriter, 'write', self._mock_write):
             self.url_open('/web/export/xlsx', data={
                 'data': json.dumps(dict(self.default_params, **params)),
@@ -368,4 +374,17 @@ class TestGroupedExport(XlsxCreatorCase):
             ['3 (1)','1000.000'],
             ['    1000.0 (1)','1000.000'],
             ['3','1000.0'],
+        ])
+
+@tagged('-at_install', 'post_install')
+class TestComputedBinaryExport(XlsxCreatorCase):
+    model_name = 'export.computed.binary'
+
+    def test_grouped_computed_binary(self):
+        values = [{}]
+        export = self.export(values, fields=['binary_field'], params={'groupby': ['create_uid']})
+        self.assertExportEqual(export, [
+            ['Binary Field'],
+            ['OdooBot (1)'],
+            ["['computed value']"],
         ])
