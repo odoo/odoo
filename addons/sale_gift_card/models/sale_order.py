@@ -51,7 +51,7 @@ class SaleOrder(models.Model):
         return error
 
     def _send_gift_card_mail(self):
-        template = self.env.ref('gift_card.mail_template_gift_card', raise_if_not_found=False)
+        template = self.env.ref('sale_gift_card.mail_template_gift_card', raise_if_not_found=False)
         if template and self.gift_card_count:
             for gift in self.order_line.mapped("generated_gift_card_ids"):
                 template.send_mail(gift.id, force_send=True, notif_layout='mail.mail_notification_light')

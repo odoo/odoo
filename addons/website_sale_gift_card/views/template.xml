@@ -25,7 +25,7 @@
                 </t>
                 <t t-else="">
                     <strong t-field="line.name_short"/>
-                    <t t-call="gift_card.used_gift_card"/>
+                    <t t-call="sale_gift_card.used_gift_card"/>
                 </t>
             </div>
         </xpath>
@@ -51,13 +51,13 @@
 
     <template id="cart_summary_inherit_website_gift_card_sale" inherit_id="website_sale.cart_summary">
         <xpath expr="//td[hasclass('td-product_name')]/div/strong" position="after">
-            <t t-if="line.gift_card_id" t-call="gift_card.used_gift_card"/>
+            <t t-if="line.gift_card_id" t-call="sale_gift_card.used_gift_card"/>
         </xpath>
     </template>
 
     <template id="website_sale_purchased_gift_card" inherit_id="website_sale.confirmation" >
         <xpath expr="//div[@id='oe_structure_website_sale_confirmation_2']" position="after">
-            <t t-call="gift_card.sale_purchased_gift_card"/>
+            <t t-call="sale_gift_card.sale_purchased_gift_card"/>
         </xpath>
     </template>
 </odoo>
