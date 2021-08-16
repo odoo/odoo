@@ -482,12 +482,17 @@ class StockWarehouseOrderpoint(models.Model):
                 while orderpoints_batch:
                     procurements = []
                     for orderpoint in orderpoints_batch:
+                        origins = orderpoint.env.context.get('origins', {}).get(orderpoint.id, False)
+                        if origins:
+                            origin = '%s - %s' % (orderpoint.display_name, ','.join(origins))
+                        else:
+                            origin = orderpoint.name
                         if float_compare(orderpoint.qty_to_order, 0.0, precision_rounding=orderpoint.product_uom.rounding) == 1:
                             date = datetime.combine(orderpoint.lead_days_date, time.min)
                             values = orderpoint._prepare_procurement_values(date=date)
                             procurements.append(self.env['procurement.group'].Procurement(
                                 orderpoint.product_id, orderpoint.qty_to_order, orderpoint.product_uom,
-                                orderpoint.location_id, orderpoint.name, orderpoint.name,
+                                orderpoint.location_id, orderpoint.name, origin,
                                 orderpoint.company_id, values))
 
                     try:
