@@ -25,7 +25,6 @@ $o-cw-filter-avatar-size: 20px;
         margin: 0 1px;
         border-style: solid;
         border-width: 0 0 0 3px;
-        border-radius: 0;
         box-sizing: border-box;
         overflow: hidden;
         background: none;
@@ -260,6 +259,10 @@ $o-cw-filter-avatar-size: 20px;
         .fc-dayGridMonth-view {
             padding-left: $o-horizontal-padding;
 
+            .fc-event {
+                border-radius: 25px;
+            }
+
             .fc-widget-header {
                 padding: 3px 0;
             }
@@ -388,6 +391,14 @@ $o-cw-filter-avatar-size: 20px;
 
             @for $i from 1 through length($o-colors-complete) {
                 $color: nth($o-colors-complete, $i);
+
+                .fc-bgevent.o_calendar_striked {
+                    background: linear-gradient(
+                        transparent 0 40%,
+                        $color 40% 60%,
+                        transparent 60% 100%)
+                }
+
                 .o_cw_popover_link.o_calendar_color_#{$i - 1} {
                     border: solid 2px;
                     padding-left: 5px;
@@ -809,12 +820,13 @@ $o-cw-filter-avatar-size: 20px;
 }
 
 // Generated with http://phrogz.net/css/distinct-colors.html
-$o-filter_colors: #ff1e00, #bf9600, #00ff84, #00aeff, #0003b3, #ff006a, #cc3300, #ffea00, #00cc85, #007ab3,
-                    #6900cc, #ff0048, #ff6200, #c2cc00, #00ffc8, #008cff, #a600ff, #bf0036, #b24400, #d0ff00,
-                    #00ffea, #0062b3, #ea00ff, #ff0026, #ff8400, #8bcc00, #00bfaf, #006aff, #af00bf, #bf001d,
-                    #bf6300, #8cff00, #00f2ff, #004ab3, #ff00d0, #ffa600, #3acc00, #00b6bf, #0048ff, #d90094,
-                    #bf7c00, #04ff00, #00d0ff, #0036bf, #ff008c, #ffc800, #00bf49, #0092b3, #0004ff, #b20062,
-                    #649173 !default;
+// Do not modify the first 12 colors of this list or it will break the colors in the Time Off Calendar
+$o-filter_colors: lighten(#000, 46.7%), #F06050, #F4A460, #F7CD1F, #6CC1ED, #814968, #EB7E7F, #2C8397, #475577,
+                    #D6145F, #30C381, #9365B8, #ff1e00, #bf9600, #0003b3, #ff006a, #cc3300, #ffea00, #00cc85,
+                    #007ab3, #6900cc, #ff0048, #c2cc00, #00ffc8, #008cff, #bf0036, #b24400, #d0ff00, #00ffea,
+                    #0062b3, #ea00ff, #ff0026, #8bcc00, #00bfaf, #006aff, #af00bf, #bf001d, #bf6300, #8cff00,
+                    #00f2ff, #004ab3, #ff00d0, #ffa600, #3acc00, #00b6bf, #0048ff, #bf7c00, #04ff00, #00d0ff,
+                    #0036bf, #ff008c, #00bf49, #0092b3, #0004ff, #b20062, #649173 !default;
 
 // ===============  Generate color classes ===============
 @for $i from 1 through length($o-filter_colors) {
@@ -840,10 +852,23 @@ $o-filter_colors: #ff1e00, #bf9600, #00ff84, #00aeff, #0003b3, #ff006a, #cc3300,
                 );
             }
         }
+        .o_calendar_striked_#{$i - 1} {
+            background: linear-gradient(
+                        transparent 0 45%,
+                        $color 45% 55%,
+                        transparent 55% 100%);
+
+            .fc-bg {
+                background: none;
+            }
+        }
         .fc-bgevent.o_calendar_color_#{$i - 1} {
             border-color: $color;
             background-color: $color;
             opacity: 0.5;
+        }
+        .fc-event.o_calendar_striked_#{$i - 1} {
+            border: none;
         }
         .fc-event.o_calendar_color_#{$i - 1} {
             border-color: $color;
@@ -858,7 +883,7 @@ $o-filter_colors: #ff1e00, #bf9600, #00ff84, #00aeff, #0003b3, #ff006a, #cc3300,
                 }
             }
 
-            &:not(.o_calendar_hatched) {
+            &:not(.o_calendar_hatched):not(.o_calendar_striked){
                 background: $color;
                 .fc-bg {
                     background: mix($color, white);

@@ -42,10 +42,9 @@ class TestDiscussFullPerformance(TransactionCase):
             'user_id': user.id,
         } for user in self.users])
         self.leave_type = self.env['hr.leave.type'].create({
-            'allocation_type': 'no',
+            'requires_allocation': 'no',
             'name': 'Legal Leaves',
             'time_type': 'leave',
-            'validity_start': False,
         })
         self.leaves = self.env['hr.leave'].create([{
             'date_from': date.today() + relativedelta(days=-2),

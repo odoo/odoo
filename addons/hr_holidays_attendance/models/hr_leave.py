@@ -16,7 +16,7 @@ class HRLeave(models.Model):
     @api.depends('holiday_status_id')
     def _compute_overtime_deductible(self):
         for leave in self:
-            leave.overtime_deductible = leave.holiday_status_id.overtime_deductible and leave.holiday_status_id.allocation_type == 'no'
+            leave.overtime_deductible = leave.holiday_status_id.overtime_deductible and leave.holiday_status_id.requires_allocation == 'no'
 
     @api.model_create_multi
     def create(self, vals_list):

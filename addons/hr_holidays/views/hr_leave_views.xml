@@ -1,17 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <odoo>
 
-    <record model="ir.actions.server" id="action_report_to_payslip">
-        <field name="name">Report to Payslip</field>
-        <field name="model_id" ref="model_hr_leave"/>
-        <field name="binding_model_id" ref="model_hr_leave" />
-        <field name="state">code</field>
-        <field name="code">
-            if records:
-                records.write({'payslip_status': True})
-        </field>
-    </record>
-
     <record model="ir.actions.server" id="action_manager_approval">
         <field name="name">Manager Approval</field>
         <field name="model_id" ref="model_hr_leave"/>
@@ -64,13 +53,12 @@
                 <filter string="My Time Off" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Active Employee" name="active_employee" domain="[('active_employee','=',True)]"/>
-                <separator/>
-                <filter string="To Report in Payslip" name="gray" domain="[('payslip_status', '=', False)]" groups="hr_holidays.group_hr_holidays_user"/>
-                <separator/>
                 <filter name="filter_date_from" date="date_from"/>
                 <separator/>
-                <filter name="year" string="Active Time Off"
+                <filter name="active_time_off" string="Active Time Off"
                     domain="[('holiday_status_id.active', '=', True)]" help="Active Time Off"/>
+                <filter name="archive" string="Archived Time Off"
+                    domain="[('holiday_status_id.active', '=', False)]" help="Archived Time Off"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
@@ -83,11 +71,13 @@
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
                     <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
                     <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_company" string="Company" context="{'group_by':'employee_company_id'}" groups="base.group_multi_company"/>
                     <separator/>
                     <filter name="group_date_from" string="Start Date" context="{'group_by':'date_from'}"/>
                 </group>
                 <searchpanel>
                     <field name="state" string="Status"/>
+                    <field name="department_id" string="Department" icon="fa-users"/>
                 </searchpanel>
             </search>
         </field>
@@ -106,6 +96,7 @@
                 <field name="can_approve"/>
                 <field name="holiday_status_id"/>
                 <field name="state"/>
+                <field name="supported_attachment_ids_count"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click container">
@@ -150,7 +141,7 @@
                             </div>
                             <div class="row no-gutters" t-if="record.can_approve.raw_value">
                                 <div class="col-3"/>
-                                <div class="col=9" t-if="['confirm', 'validate1'].includes(record.state.raw_value)">
+                                <div class="col=6" t-if="['confirm', 'validate1'].includes(record.state.raw_value)">
                                     <button t-if="record.state.raw_value === 'confirm'" name="action_approve" type="object" class="btn btn-link btn-sm pl-0">
                                         <i class="fa fa-thumbs-up"/> Approve
                                     </button>
@@ -159,6 +150,11 @@
                                     </button>
                                     <button t-if="['confirm', 'validate1'].includes(record.state.raw_value)" name="action_refuse" type="object" class="btn btn-link btn-sm pl-0">
                                         <i class="fa fa-times"/> Refuse
+                                    </button>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <button t-if="record.supported_attachment_ids_count.raw_value > 0" name="action_documents" type="object" class="btn btn-link btn-sm pl-0">
+                                        <i class="fa fa-paperclip"> <field name="supported_attachment_ids_count" nolabel="1"/></i>
                                     </button>
                                 </div>
                             </div>
@@ -205,6 +201,7 @@
             <form string="Time Off Request">
             <field name="can_reset" invisible="1"/>
             <field name="can_approve" invisible="1"/>
+            <field name="holiday_allocation_id" invisible="1" force_save="1"/>
             <header>
                 <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
                 <button string="Approve" name="action_approve" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
@@ -215,7 +212,7 @@
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate"/>
             </header>
             <sheet>
-                <div class="alert alert-info" role="alert" attrs="{'invisible': ['|', ('tz_mismatch', '=', False), ('holiday_type', '=', 'category')]}">
+                <div class="alert alert-info" role="alert" attrs="{'invisible': ['|', ('request_unit_hours', '=', False), '|', ('tz_mismatch', '=', False), ('holiday_type', '=', 'category')]}">
                     <span attrs="{'invisible': [('holiday_type', '!=', 'employee')]}">
                         The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone
                     </span>
@@ -230,21 +227,16 @@
                 <field name="tz_mismatch" invisible="1"/>
                 <field name="holiday_type" invisible="1"/>
                 <field name="leave_type_request_unit" invisible="1"/>
-                <div class="oe_title" name="title">
+                <div name="title">
                     <field name="display_name" invisible="1"/>
-                    <h1>
-                        <field name="employee_id" nolabel="1" readonly="1" force_save="1" invisible="1"/>
-                    </h1>
-                    <h2>
-                        <field name="holiday_status_id" nolabel="1" domain="[('valid', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), '|', ('allocation_type', 'in', ['fixed_allocation', 'no']),'&amp;',('allocation_type', '=', 'fixed'), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True}" class="w-100"/>
-                    </h2>
+                    <field name="employee_id" nolabel="1" readonly="1" force_save="1" invisible="1"/>
                 </div>
                 <group>
-                    <group>
-
-                        <label for="request_date_from" string="Dates"/>
+                    <group name="col_left">
+                        <field name="holiday_status_id" force_save="1" domain="['|', ('requires_allocation', '=', 'no'), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True}" class="w-100"/>
+                        <label for="request_date_from" string="Dates" id="label_dates"/>
                         <div>
-                            <field name="date_from" invisible="1"/>
+                            <field name="date_from" invisible="1" widget="daterange"/>
                             <field name="date_to" invisible="1"/>
                             <div class="o_row o_row_readonly">
                                 <span class="oe_inline"
@@ -254,7 +246,8 @@
                                 <field name="request_date_from" class="oe_inline" nolabel="1"
                                     attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))],
                                             'required': ['|', ('date_from', '=', False), ('date_to', '=', False)]
-                                            }"/>
+                                            }"
+                                    widget="daterange" options="{'related_end_date': 'request_date_to'}"/>
                                 <span class="oe_inline"
                                     attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}">
                                     To
@@ -264,7 +257,8 @@
                                         'readonly': [('state', 'not in', ('draft', 'confirm'))],
                                         'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)],
                                         'required': ['|', ('date_from', '=', False), ('date_to', '=', False)]
-                                    }"/>
+                                            }"
+                                    widget="daterange" options="{'related_end_date': 'request_date_from'}"/>
                                 <field name="request_date_from_period" class="oe_inline"
                                     string="In"
                                     options="{'horizontal': True}"
@@ -280,17 +274,18 @@
                                 }"/>
                                 <label for="request_unit_half" attrs="{
                                     'invisible': [('leave_type_request_unit', '=', 'day')]
-                                }"/>
+                                 }"/>
                                 <field name="request_unit_hours" attrs="{
                                     'readonly': [('state', 'not in', ('draft', 'confirm'))],
                                     'invisible': [('leave_type_request_unit', '!=', 'hour')]
-                                }" class="ml-5"/>
+                                 }" class="ml-5"/>
                                 <label for="request_unit_hours" attrs="{
                                     'invisible': [('leave_type_request_unit', '!=', 'hour')]
                                 }"/>
+
                                 <field name="request_unit_custom" invisible="1" attrs="{
                                     'readonly': [('state', 'not in', ('draft', 'confirm'))],
-                                }"/>
+                                 }" class="ml-5"/>
                                 <label for="request_unit_custom" invisible="1"/>
                             </div>
                             <div class="o_row o_row_readonly">
@@ -332,7 +327,7 @@
                         <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}" widget="text"/>
                         <field name="user_id" invisible="1"/>
                         <field name="leave_type_support_document" invisible="1"/>
-                        <label for="supported_attachment_ids" string="Supporting Documents"
+                        <label for="supported_attachment_ids" string="Supporting Document"
                             attrs="{'invisible': ['|', ('leave_type_support_document', '=', False), ('state', 'not in', ('draft', 'confirm', 'validate1'))]}"/>
                         <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1"
                             attrs="{'invisible': ['|', ('leave_type_support_document', '=', False), ('state', 'not in', ('draft', 'confirm', 'validate1'))]}"/>
@@ -364,19 +359,6 @@
         </field>
     </record>
 
-    <record id="hr_leave_view_dashboard" model="ir.ui.view">
-        <field name="name">hr.leave.view.dashboard</field>
-        <field name="model">hr.leave</field>
-        <field name="arch" type="xml">
-            <calendar js_class="time_off_calendar" string="Time Off Request" form_view_id="%(hr_holidays.hr_leave_view_form_dashboard)d" event_open_popup="true" date_start="date_from" date_stop="date_to" mode="month" quick_add="False" show_unusual_days="True" color="holiday_status_id" hide_time="True">
-                <field name="display_name"/>
-                <field name="holiday_status_id" filters="1" invisible="1"/>
-                <field name="state" invisible="1"/>
-                <field name="is_hatched" invisible="1" />
-            </calendar>
-        </field>
-    </record>
-
     <record id="hr_leave_view_form_dashboard_new_time_off" model="ir.ui.view">
         <field name="name">hr.leave.view.form.dashboard.new.time.off</field>
         <field name="model">hr.leave</field>
@@ -384,12 +366,23 @@
         <field name="mode">primary</field>
         <field name="priority">17</field>
         <field name="arch" type="xml">
-            <xpath expr="//sheet" position="after">
-                <footer>
-                    <button string="Save" special="save" data-hotkey="v" class="oe_highlight" />
-                    <button string="Discard" special="cancel" data-hotkey="z" />
-                </footer>
+            <xpath expr="//group[@name='col_left']" position="attributes">
+                <attribute name="colspan">5</attribute>
             </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_view_dashboard" model="ir.ui.view">
+        <field name="name">hr.leave.view.dashboard</field>
+        <field name="model">hr.leave</field>
+        <field name="arch" type="xml">
+            <calendar js_class="time_off_calendar" string="Time Off Request" form_view_id="%(hr_holidays.hr_leave_view_form_dashboard_new_time_off)d" event_open_popup="true" date_start="date_from" date_stop="date_to" mode="year" quick_add="False" show_unusual_days="True" color="color" hide_time="True">
+                <field name="display_name"/>
+                <field name="holiday_status_id" filters="1" invisible="1" color="color"/>
+                <field name="state" invisible="1"/>
+                <field name="is_hatched" invisible="1" />
+                <field name="is_striked" invisible="1"/>
+            </calendar>
         </field>
     </record>
 
@@ -400,26 +393,34 @@
         <field name="mode">primary</field>
         <field name="priority">16</field>
         <field name="arch" type="xml">
-            <div name="title" position="replace">
-                <field name="display_name" invisible="1"/>
-                <div class="oe_title" name="title">
-                    <h2>
-                        <field name="holiday_status_id" nolabel="1" options="{'no_create': True, 'no_open': True}"/>
-                    </h2>
-                </div>
+            <field name="holiday_status_id" position="replace"/>
+            <div name="title" position="inside">
+                <h1 class="d-flex flex-row justify-content-between">
+                    <field name="holiday_status_id" options="{'no_open': True}"/>
+                </h1>
             </div>
+            <field name="employee_id" position="replace"/>
+            <label id="label_dates" position="before">
+                    <field name="multi_employee" invisible="1" force_save="1"/>
+                    <field name="employee_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
+                        'invisible': ['|', '|', ('holiday_type', '!=', 'employee'), ('state', '!=', 'validate'), ('employee_id', '=', False)]
+                        }" widget="many2one_avatar_employee"/>
+                    <field name="employee_ids" groups="hr_holidays.group_hr_holidays_user" attrs="{
+                        'required': [('holiday_type', '=', 'employee')],
+                        'invisible': ['|', ('holiday_type', '!=', 'employee'), '&amp;', ('state', '=', 'validate'), ('employee_id', '!=', False)],
+                        }" widget="many2many_tags"/>
+            </label>
             <field name="name" position="replace"/>
             <field name="user_id" position="before">
                 <field name="name"/>
             </field>
             <xpath expr="//group[@name='col_right']" position="replace">
                 <group>
+                    <widget name="hr_leave_stats"/>
+                </group>
+                <group>
                     <field name="holiday_type" string="Mode"
                         groups="hr_holidays.group_hr_holidays_user"/>
-                    <field name="employee_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
-                        'required': [('holiday_type', '=', 'employee')],
-                        'invisible': [('holiday_type', '!=', 'employee')]
-                        }"/>
                     <field name="mode_company_id" string="Company" groups="hr_holidays.group_hr_holidays_user" attrs="{
                         'required': [('holiday_type', '=', 'company')],
                         'invisible': [('holiday_type', '!=', 'company')]
@@ -430,15 +431,8 @@
                         }"/>
                     <field name="department_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
                         'required': [('holiday_type', '=', 'department')],
-                        'invisible': [('holiday_type', 'not in', ('employee', 'department'))]
+                        'invisible': [('holiday_type', '!=', 'department')]
                         }"/>
-                    <field name="payslip_status" groups="hr_holidays.group_hr_holidays_user" widget="toggle_button"/>
-                </group>
-                <group groups="hr_holidays.group_hr_holidays_manager" string="Manager's Comment">
-                    <field name="report_note" placeholder="e.g. Report to the next month..." nolabel="1"/>
-                </group>
-                <group>
-                    <widget name="hr_leave_stats"/>
                 </group>
             </xpath>
         </field>
@@ -448,11 +442,12 @@
         <field name="name">hr.leave.view.calendar</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <calendar js_class="time_off_calendar_all" string="Time Off Request" form_view_id="%(hr_holidays.hr_leave_view_form_dashboard)d" event_open_popup="true" date_start="date_from" date_stop="date_to" mode="month" show_unusual_days="True" quick_add="False" color="employee_id">
+            <calendar js_class="time_off_calendar_all" string="Time Off Request" form_view_id="%(hr_holidays.hr_leave_view_form_dashboard)d" event_open_popup="true" date_start="date_from" date_stop="date_to" mode="month" show_unusual_days="True" quick_add="False" color="color">
                 <field name="display_name"/>
-                <field name="holiday_status_id" filters="1" invisible="1"/>
+                <field name="holiday_status_id" color="color" filters="1" invisible="1"/>
                 <field name="employee_id" filters="1" invisible="1"/>
                 <field name="is_hatched" invisible="1" />
+                <field name="is_striked" invisible="1"/>
             </calendar>
         </field>
     </record>
@@ -470,7 +465,6 @@
                 <field name="date_from"/>
                 <field name="date_to"/>
                 <field name="duration_display" string="Duration"/>
-                <field name="payslip_status" widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_user" nolabel="1"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'"/>
                 <field name="active_employee" invisible="1"/>
                 <field name="category_id" invisible="1"/>
@@ -509,9 +503,6 @@
             <xpath expr="//field[@name='holiday_type']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//field[@name='payslip_status']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
             <xpath expr="//button[@name='action_approve']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -544,9 +535,6 @@
             <xpath expr="//filter[@name='my_leaves']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//filter[@name='gray']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
             <xpath expr="//filter[@name='group_employee']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -563,9 +551,6 @@
             <xpath expr="//filter[@name='my_leaves']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//filter[@name='gray']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
             <xpath expr="//filter[@name='group_employee']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -577,7 +562,7 @@
         <field name="res_model">hr.leave</field>
         <field name="view_mode">calendar,tree,form,activity</field>
         <field name="domain">[('user_id', '=', uid)]</field>
-        <field name="context">{'short_name': 1}</field>
+        <field name="context">{'short_name': 1, 'search_default_active_time_off': 1}</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_my"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -610,7 +595,7 @@
     </record>
 
     <record id="hr_leave_action_my_request" model="ir.actions.act_window">
-        <field name="name">Time Off Requests</field>
+        <field name="name">Time Off Request</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">form</field>
@@ -623,7 +608,7 @@
     </record>
 
     <record id="hr_leave_action_my" model="ir.actions.act_window">
-        <field name="name">My Time Off Requests</field>
+        <field name="name">My Time Off</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">tree,form,kanban,activity</field>
@@ -662,9 +647,28 @@
             'search_default_approve': 1,
             'search_default_managed_people': 2,
             'search_default_active_employee': 3,
+            'search_default_active_time_off': 4,
             'hide_employee_name': 1}
         </field>
         <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Meet the time off dashboard.
+            </p><p>
+                A great way to keep track on employee’s PTOs, sick days, and approval status.
+            </p>
+        </field>
+    </record>
+
+    <record id="hr_leave_action_holiday_allocation_id" model="ir.actions.act_window">
+        <field name="name">Time Off</field>
+        <field name="res_model">hr.leave</field>
+        <field name="view_mode">tree,kanban,form,calendar,activity</field>
+        <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_manager"/>
+        <field name="context">{
+            'hide_employee_name': 1}
+        </field>
+        <field name="domain">[('holiday_allocation_id', '=', active_id)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Meet the time off dashboard.

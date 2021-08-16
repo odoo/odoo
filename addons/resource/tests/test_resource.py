@@ -279,6 +279,20 @@ class TestCalendar(TestResourceCommon):
 
         leave.unlink()
 
+        # leave without calendar, should count for anyone in the company
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'small leave',
+            'resource_id': False,
+            'date_from': datetime_str(2018, 4, 3, 9, 0, 0, tzinfo=self.patel.tz),
+            'date_to': datetime_str(2018, 4, 3, 12, 0, 0, tzinfo=self.patel.tz),
+        })
+
+        hours = self.calendar_patel.get_work_hours_count(
+            datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.tz),
+            datetime_tz(2018, 4, 6, 23, 59, 59, tzinfo=self.patel.tz),
+        )
+        self.assertEqual(hours, 32)
+
     def test_calendar_working_hours_count(self):
         calendar = self.env.ref('resource.resource_calendar_std_35h')
         calendar.tz = 'UTC'
