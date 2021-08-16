@@ -44,7 +44,7 @@ class StockScrap(models.Model):
         'stock.quant.package', 'Package',
         states={'done': [('readonly', True)]}, check_company=True)
     owner_id = fields.Many2one('res.partner', 'Owner', states={'done': [('readonly', True)]}, check_company=True)
-    move_id = fields.Many2one('stock.move', 'Scrap Move', readonly=True, check_company=True)
+    move_id = fields.Many2one('stock.move', 'Scrap Move', readonly=True, check_company=True, copy=False)
     picking_id = fields.Many2one('stock.picking', 'Picking', states={'done': [('readonly', True)]}, check_company=True)
     location_id = fields.Many2one(
         'stock.location', 'Source Location', domain="[('usage', '=', 'internal'), ('company_id', 'in', [company_id, False])]",
