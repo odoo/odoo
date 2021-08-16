@@ -1,0 +1,154 @@
+@font-face {
+    font-family: cairo;
+    src: url(/aumet/static/src/fonts/Cairo-Light.ttf);
+}
+
+
+body {
+  font-family: Cairo;
+  font-style: normal;
+  font-weight: 535;
+  font-size: 14px;
+  line-height: 26px;
+  text-align: center;
+  border: white;}
+
+.brand-wrapper {
+  padding-top: 15vh;
+  padding-bottom: 5vh; }
+
+  .brand-wrapper .logo {
+    width: 42vh;
+    height: 10vh;
+    margin:auto;
+ }
+
+.login-section-wrapper {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-direction: column;
+  background-color: #fff; }
+
+
+  @media (max-width: 991px) {
+    .login-section-wrapper {
+      padding-left: 50px;
+      padding-right: 50px; }
+     }
+  @media (max-width: 575px) {
+    .login-section-wrapper {
+      padding-left: 20px;
+      padding-right: 20px;
+      min-height: 100vh; } }
+
+.login-wrapper {
+  width: 707px;
+  max-width: 100%;
+  }
+
+
+#login {
+    background: url(/aumet/static/src/img/email.svg) no-repeat scroll 7px 7px;
+    padding-left: 52px;
+    background-position: left 8px;
+    background-color: #F4F8FF;
+    background-position-x: 11px;
+}
+
+
+#password {
+    background: url(/aumet/static/src/img/password.svg) no-repeat scroll 7px 7px;
+    padding-left: 52px;
+    background-position: left 8px;
+    background-color: #F4F8FF;
+    background-position-x: 11px;
+
+}
+
+
+  .login-wrapper .form-control {
+    background: linear-gradient(0deg, #F4F8FF, #F4F8FF), linear-gradient(0deg, #F4F8FF, #F4F8FF), linear-gradient(0deg, #F4F8FF, #F4F8FF), #F4F8FF;
+    
+    width: 405px;
+    margin:auto;
+    border-radius: 0px;
+    border: white;
+
+    }
+
+
+  .login-wrapper .login-btn {
+    margin-top: 5vh;
+    margin-bottom: 2vh;
+    color:#fff;
+    width: 204px;
+    background: linear-gradient(180deg, #3CB9A8 0%, rgba(60, 185, 168, 0.62) 99.99%, rgba(60, 185, 168, 0) 100%);
+    border-radius: 5px;
+   }
+
+
+  .login-wrapper a.forgot-password-link {
+    color: #000000;
+   }
+
+   .login-wrapper-footer-header{
+    padding-top:5vh ;
+    width: 211px;
+    height: 4vh;
+    color: #000000;
+    font-size: 22px;
+    margin:auto;
+   }
+   .login-wrapper-footer-text a.registration-link{
+    color: #3CB9A8;
+  }
+  .login-wrapper-footer-text {
+    font-size: 14px;
+    color: #979797;
+    width: 352px;
+    height: 6px;
+    margin:auto;
+    text-align: center;
+    padding-top:5vh ;
+
+
+  }
+  .login-wrapper-hr{
+    color: #E5E5E5;
+    width: 400px;
+    margin:auto;    
+  }
+
+  @media (max-width: 575px) {
+    .login-wrapper {
+      width: 100%; 
+    }
+    .login-wrapper-hr{
+      width: 100%;
+    }
+    .login-wrapper-footer-text{
+      width: 100%;
+    }
+
+  }
+ 
+ 
+.login-img {
+  width: 100%;
+  background: linear-gradient(180deg, #41D4C0 0%, rgba(65, 141, 212, 0.33) 99.98%, rgba(65, 212, 192, 0.0260417) 99.99%, rgba(65, 212, 192, 0.0234501) 99.99%, rgba(65, 212, 192, 0) 100%);
+  height: 100vh;
+  -o-object-fit: cover;
+  object-fit: cover;
+  -o-object-position: left;
+  object-position: left; }
+
+.reset_password_header{
+font-size: 22px;
+line-height: 41px;
+color: #000000;
+font-style: normal;
+font-weight: 600;
+
+}

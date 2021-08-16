@@ -1,0 +1,169 @@
+<odoo>
+    <data>
+
+        <template id="login_layout" inherit_id="web.login_layout" name="Login Layout Inherit">
+
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="../aumet_auth_signup/static/src/css/signup_style.css"/>
+                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+            </xpath>
+
+
+            <xpath expr="//t[@t-set='body_classname']" position="after">
+                <t t-set="body_classname"
+                   t-value=""/>
+            </xpath>
+
+            <xpath expr="//div[hasclass('container')]" position="attributes">
+                <attribute name="class">container-fluid</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('card-body')]/div[1]" position="replace">
+                <div class="brand-wrapper  align-self-center">
+                    <img src="../aumet_auth_signup/static/src/img/aumet-pharmacy.svg" alt="logo"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('card-body')]"
+                   position="before">
+                <div class="col-sm-6 px-0 d-none d-sm-block">
+                    <img src="../aumet_auth_signup/static/src/img/iStock-537309906.png" alt="login image"
+                         class="login-img"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('card-body')]" position="attributes">
+                <attribute name="class">col-sm-6 login-section-wrapper</attribute>
+            </xpath>
+            <xpath expr="//div[@t-if='not disable_footer']" position="attributes">
+                <attribute name="t-if">request.session.debug</attribute>
+            </xpath>
+            <xpath expr="//div[@t-attf-class='card border-0 mx-auto bg-100 {{login_card_classes}} o_database_list']"
+                   position="attributes">
+                <attribute name="t-attf-class">row</attribute>
+                <attribute name="style"/>
+            </xpath>
+
+        </template>
+        <template id="login" inherit_id="web.login" name="Login Inherit">
+            <xpath expr="//label[@for='db']" position="replace"/>
+            <xpath expr="//label[@for='login']" position="replace"/>
+
+            <xpath expr="//label[@for='password']" position="replace"/>
+            <xpath expr="//input[@name='login']" position="attributes">
+                <attribute name="placeholder">Email Address</attribute>
+                <attribute name="class">form-control</attribute>
+
+                <attribute name="autocomplete">off</attribute>
+                <attribute name="autocorrect">off</attribute>
+            </xpath>
+            <xpath expr="//input[@name='password']" position="attributes">
+                <attribute name="placeholder">Password</attribute>
+                <attribute name="class">form-control
+                </attribute>
+
+
+            </xpath>
+
+             <xpath expr="//form[contains(@class,'oe_login_buttons')]" position="inside">
+                             <button type="submit"
+                             class="btn btn-link btn-sm btn-block">Log in as superuser
+                </button>
+
+            </xpath>
+
+
+
+            <xpath expr="//a[@href='/web/database/selector']" position="replace">
+                <a role="button" href="/web/database/selector" class="btn btn-secondary">
+                    <i class="fa fa-database" role="img" aria-label="Database" title="Database"/>
+                </a>
+            </xpath>
+            <xpath expr="//button[@type='submit']" position="attributes">
+                <attribute name="class">btn login-btn</attribute>
+            </xpath>
+        </template>
+        <template id="aumet_auth_signup_inherit" inherit_id="auth_signup.login" name="Sign Aumet">
+            <xpath expr="//form" position="attributes">
+                <attribute name="class">login-wrapper align-self-center</attribute>
+            </xpath>
+
+            <xpath expr="//a[@t-if='signup_enabled']" position="replace"/>
+            <xpath expr="//a[@t-if='reset_password_enabled']" position="replace"/>
+            <xpath expr="//button[@value='/web/become']" position="replace"/>
+
+            <xpath expr="//button[@type='submit']" position="after">
+
+                <button type="submit" t-if="request.session.debug" name="redirect" value="/web/become"
+                        class="btn btn-link btn-sm btn-block">Log in as superuser
+                </button>
+
+                <p>
+                    <a t-if="reset_password_enabled" class="forgot-password-link"
+                       t-attf-href="/web/reset_password?{{ keep_query() }}">Forgot your password?
+                    </a>
+                </p>
+                <hr class="login-wrapper-hr"/>
+
+                <p class="login-wrapper-footer-header">Dont have an account?</p>
+                <p class="login-wrapper-footer-text">You need an account to access aumet Pharmacy. To regsiter for an
+                    account or see a full demo, please
+                    <a t-if="signup_enabled" t-attf-href="/web/signup?{{ keep_query() }}">
+                        click here
+                    </a>
+                </p>
+
+            </xpath>
+
+
+        </template>
+        <template id="aumet_auth_reset_password" inherit_id="auth_signup.reset_password" name="Reset password">
+
+            <xpath expr="//form" position="before">
+                <p class="reset_password_header">Reset password</p>
+            </xpath>
+            <xpath expr="//form" position="attributes">
+                <attribute name="class">login-wrapper align-self-center</attribute>
+            </xpath>
+            <xpath expr="//label[hasclass('col-form-label')]" position="replace"/>
+            <xpath expr="//input[@name='login']" position="attributes">
+                <attribute name="placeholder">Email Address</attribute>
+                <attribute name="class">form-control</attribute>
+
+                <attribute name="autocomplete">off</attribute>
+                <attribute name="autocorrect">off</attribute>
+            </xpath>
+
+            <xpath expr="//button[@type='submit']" position="attributes">
+                <attribute name="class">btn login-btn</attribute>
+            </xpath>
+            <xpath expr="//a[@t-if='not token']" position="replace"/>
+            <xpath expr="//a[@t-if='invalid_token']" position="replace"/>
+            <xpath expr="//button[@type='submit']" position="after">
+                <p>
+                    <a t-if="not token" class="forgot-password-link"
+                       t-attf-href="/web/login?{{ keep_query() }}">Return to login
+                    </a>
+                    <a t-if="invalid_token" class="forgot-password-link"
+                       t-attf-href="/web/login">Return to login
+                    </a>
+                </p>
+            </xpath>
+
+
+        </template>
+
+        <template id="signup" inherit_id="auth_signup.signup" name="Sign up login">
+
+            <xpath expr="//form" position="attributes">
+                <attribute name="class">login-wrapper align-self-center</attribute>
+            </xpath>
+
+<!--            <xpath expr="//label[@for='login']" position="replace"/>-->
+<!--            <xpath expr="//input[@name='login']" position="attributes">-->
+<!--                <attribute name="placeholder">Email Address</attribute>-->
+<!--                <attribute name="class">form-control</attribute>-->
+<!--                <attribute name="autocomplete">off</attribute>-->
+<!--                <attribute name="autocorrect">off</attribute>-->
+<!--            </xpath>-->
+        </template>
+
+    </data>
+</odoo>

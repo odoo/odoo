@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <record id="purchase_order_form_inherit" model="ir.ui.view">
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='price_unit']" position="after">
+                <field name="bonus"/>
+                <field name="payment_method" widget="many2one"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="res_users_view_form_aumet_inherit" model="ir.ui.view">
+        <field name="name">aumet.res.users.form.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='references']" position="after">
+
+
+                <page id="marketplace_info" string="Marketplace Info">
+                    <group string="Aumet Marketplace" name="marketplace">
+                        <field name="marketplace_id" readonly="1" class="marketplace_fields"/>
+                        <field name="marketplace_name" class="marketplace_fields"/>
+                        <field name="marketplace_email" class="marketplace_fields"/>
+                        <field name="marketplace_password" class="marketplace_fields"/>
+                        <field name="marketplace_pharmacy_id" class="marketplace_fields"/>
+                        <field name="marketplace_token" readonly="1" password="True"
+                               class="market_place_token marketplace_fields"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+
     <record id="product_template_form_view" model="ir.ui.view">
         <field name="name">product.template.form.inherit</field>
         <field name="model">product.template</field>
@@ -8,17 +44,36 @@
             <xpath expr="//page[@name='sales']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
-            <xpath expr="//page[@name='inventory']" position="after">
-                <page name="aumet" string="Aumet" attrs="{'invisible': [('sale_ok','=',False)]}">
-                    <group name="Aumet">
-                        <group>
-                            <field name="scientific_name" string="Scientific Name"/>
-                        </group>
+            <xpath expr="//page[@name='general_information']" position="inside">
+                <group name="Aumet">
+                    <group>
+                        <field name="scientific_name" string="Scientific Name"/>
+                        <field name="marketplace_reference" string="Marketplace Id" readonly="1"/>
+                        <field name="marketplace_referenced" string="referenced in Marketplace" readonly="1"/>
                     </group>
-                </page>
+                </group>
             </xpath>
         </field>
     </record>
+    <record id="menu_product_scientific_name" model="ir.actions.act_window">
+        <field name="name">Scientific Names</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">aumet.scientific_name</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{"search_default_consumable": 1, 'default_type': 'product'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No product found. Let's create one!
+            </p>
+            <p>
+                Track your stock quantities by creating storable products.
+            </p>
+        </field>
+    </record>
+
+
+    <menuitem id="menu_product_scientific_name" name="Scientific Names" action="menu_product_scientific_name"
+              parent="stock.menu_stock_inventory_control" sequence="5"/>
 
 
 </odoo>
