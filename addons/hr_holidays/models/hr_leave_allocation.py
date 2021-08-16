@@ -3,6 +3,7 @@
 
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
 
+from collections import defaultdict
 import logging
 
 from datetime import datetime, time
@@ -13,6 +14,7 @@ from odoo.addons.resource.models.resource import HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
+from odoo.tools.date_utils import get_timedelta
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -28,15 +30,15 @@ class HolidaysAllocation(models.Model):
 
     def _default_holiday_status_id(self):
         if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
-            domain = [('valid', '=', True), ('allocation_type', '!=', 'no')]
+            domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', 'yes')]
         else:
-            domain = [('valid', '=', True), ('allocation_type', '=', 'fixed_allocation')]
+            domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', 'yes'), ('employee_requests', '=', 'yes')]
         return self.env['hr.leave.type'].search(domain, limit=1)
 
-    def _holiday_status_id_domain(self):
-        if self.user_has_groups('hr_holidays.group_hr_holidays_manager'):
-            return [('valid', '=', True), ('allocation_type', '!=', 'no')]
-        return [('valid', '=', True), ('allocation_type', '=', 'fixed_allocation')]
+    def _domain_holiday_status_id(self):
+        if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
+            return []
+        return [('employee_requests', '=', 'yes')]
 
     name = fields.Char('Description', compute='_compute_description', inverse='_inverse_description', search='_search_description', compute_sudo=False)
     active = fields.Boolean(default=True)
@@ -46,30 +48,28 @@ class HolidaysAllocation(models.Model):
         ('cancel', 'Cancelled'),
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
-        ('validate1', 'Second Approval'),
         ('validate', 'Approved')
-        ], string='Status', readonly=True, tracking=True, copy=False, default='confirm',
+        ], string='Status', readonly=True, tracking=True, copy=False, default='draft',
         help="The status is set to 'To Submit', when an allocation request is created." +
         "\nThe status is 'To Approve', when an allocation request is confirmed by user." +
         "\nThe status is 'Refused', when an allocation request is refused by manager." +
         "\nThe status is 'Approved', when an allocation request is approved by manager.")
-    date_from = fields.Datetime(
-        'Start Date', readonly=True, index=True, copy=False, default=fields.Date.context_today,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, tracking=True)
-    date_to = fields.Datetime(
-        'End Date', compute='_compute_from_holiday_status_id', store=True, readonly=False, copy=False, tracking=True,
+    date_from = fields.Date('Start Date', index=True, copy=False, default=fields.Date.context_today,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, tracking=True, required=True)
+    date_to = fields.Date('End Date', copy=False, tracking=True,
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
     holiday_status_id = fields.Many2one(
-        "hr.leave.type", compute='_compute_from_employee_id', store=True, string="Time Off Type", required=True, readonly=False,
+        "hr.leave.type", compute='_compute_holiday_status_id', store=True, string="Time Off Type", required=True, readonly=False,
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]},
-        domain=_holiday_status_id_domain, default=_default_holiday_status_id)
+        domain=_domain_holiday_status_id,
+        default=_default_holiday_status_id)
     employee_id = fields.Many2one(
-        'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employee', index=True, readonly=False, ondelete="restrict", tracking=True,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
-    employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True)
+        'hr.employee', compute='_compute_from_employee_ids', store=True, string='Employee', index=True, readonly=False, ondelete="restrict", tracking=True,
+        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate': [('readonly', True)]})
+    employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True, store=True)
     active_employee = fields.Boolean('Active Employee', related='employee_id.active', readonly=True)
-    manager_id = fields.Many2one('hr.employee', compute='_compute_from_employee_id', store=True, string='Manager')
-    notes = fields.Html('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    manager_id = fields.Many2one('hr.employee', compute='_compute_manager_id', store=True, string='Manager')
+    notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     # duration
     number_of_days = fields.Float(
         'Number of Days', compute='_compute_from_holiday_status_id', store=True, readonly=False, tracking=True, default=1,
@@ -86,12 +86,9 @@ class HolidaysAllocation(models.Model):
     # details
     parent_id = fields.Many2one('hr.leave.allocation', string='Parent')
     linked_request_ids = fields.One2many('hr.leave.allocation', 'parent_id', string='Linked Requests')
-    first_approver_id = fields.Many2one(
+    approver_id = fields.Many2one(
         'hr.employee', string='First Approval', readonly=True, copy=False,
         help='This area is automatically filled by the user who validates the allocation')
-    second_approver_id = fields.Many2one(
-        'hr.employee', string='Second Approval', readonly=True, copy=False,
-        help='This area is automatically filled by the user who validates the allocation with second level (If allocation type need second validation)')
     validation_type = fields.Selection(string='Validation Type', related='holiday_status_id.allocation_validation_type', readonly=True)
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
@@ -108,126 +105,49 @@ class HolidaysAllocation(models.Model):
              "\n- By Company: all employees of the specified company"
              "\n- By Department: all employees of the specified department"
              "\n- By Employee Tag: all employees of the specific employee group category")
+    employee_ids = fields.Many2many(
+        'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employees', readonly=False,
+        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate': [('readonly', True)]})
+    multi_employee = fields.Boolean(
+        compute='_compute_from_employee_ids', store=True,
+        help='Holds whether this allocation concerns more than 1 employee')
     mode_company_id = fields.Many2one(
         'res.company', compute='_compute_from_holiday_type', store=True, string='Company Mode', readonly=False,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
+        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate': [('readonly', True)]})
     department_id = fields.Many2one(
         'hr.department', compute='_compute_department_id', store=True, string='Department',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     category_id = fields.Many2one(
         'hr.employee.category', compute='_compute_from_holiday_type', store=True, string='Employee Tag', readonly=False,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
+        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate': [('readonly', True)]})
     # accrual configuration
+    lastcall = fields.Date("Date of the last accrual allocation", readonly=True, default=fields.Date.context_today)
+    nextcall = fields.Date("Date of the next accrual allocation", default=False, readonly=True)
     allocation_type = fields.Selection(
         [
             ('regular', 'Regular Allocation'),
             ('accrual', 'Accrual Allocation')
         ], string="Allocation Type", default="regular", required=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    accrual_limit = fields.Integer('Balance limit', default=0, help="Maximum of allocation for accrual; 0 means no maximum.")
-    number_per_interval = fields.Float("Number of unit per interval", compute='_compute_from_holiday_status_id', store=True, readonly=False,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
-    interval_number = fields.Integer("Number of unit between two intervals", compute='_compute_from_holiday_status_id', store=True, readonly=False,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
-    unit_per_interval = fields.Selection([
-        ('hours', 'Hours'),
-        ('days', 'Days')
-        ], compute='_compute_from_holiday_status_id', store=True, string="Unit of time added at each interval", readonly=False,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
-    interval_unit = fields.Selection([
-        ('days', 'Days'),
-        ('weeks', 'Weeks'),
-        ('months', 'Months'),
-        ('years', 'Years')
-        ], compute='_compute_from_holiday_status_id', store=True, string="Unit of time between two intervals", readonly=False,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
-    nextcall = fields.Date("Date of the next accrual allocation", default=False, readonly=True)
+    is_officer = fields.Boolean(compute='_compute_is_officer')
+    accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', compute="_compute_from_holiday_status_id", store=True, readonly=False, domain="[('time_off_type_id', '=?', holiday_status_id)]", tracking=True)
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves')
+    taken_leave_ids = fields.One2many('hr.leave', 'holiday_allocation_id', domain="[('state', 'in', ['confirm', 'validate1', 'validate'])]")
 
     _sql_constraints = [
         ('type_value',
-         "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or "
+         "CHECK( (holiday_type='employee' AND (employee_id IS NOT NULL OR multi_employee IS TRUE)) or "
          "(holiday_type='category' AND category_id IS NOT NULL) or "
          "(holiday_type='department' AND department_id IS NOT NULL) or "
          "(holiday_type='company' AND mode_company_id IS NOT NULL))",
          "The employee, department, company or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
-        ('duration_check', "CHECK ( number_of_days >= 0 )", "The number of days must be greater than 0."),
-        ('number_per_interval_check', "CHECK(number_per_interval > 0)", "The number per interval should be greater than 0"),
-        ('interval_number_check', "CHECK(interval_number > 0)", "The interval number should be greater than 0"),
+        ('duration_check', "CHECK( ( number_of_days > 0 AND allocation_type='regular') or (allocation_type != 'regular'))", "The duration must be greater than 0."),
     ]
 
-    @api.model
-    def _update_accrual(self):
-        """
-            Method called by the cron task in order to increment the number_of_days when
-            necessary.
-        """
-        today = fields.Date.from_string(fields.Date.today())
-
-        holidays = self.search([('allocation_type', '=', 'accrual'), ('employee_id.active', '=', True), ('state', '=', 'validate'), ('holiday_type', '=', 'employee'),
-                                '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()),
-                                '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
-
-        for holiday in holidays:
-            values = {}
-
-            delta = relativedelta(days=0)
-
-            if holiday.interval_unit == 'days':
-                delta = relativedelta(days=holiday.interval_number)
-            if holiday.interval_unit == 'weeks':
-                delta = relativedelta(weeks=holiday.interval_number)
-            if holiday.interval_unit == 'months':
-                delta = relativedelta(months=holiday.interval_number)
-            if holiday.interval_unit == 'years':
-                delta = relativedelta(years=holiday.interval_number)
-
-            if holiday.nextcall:
-                values['nextcall'] = holiday.nextcall + delta
-            else:
-                values['nextcall'] = holiday.date_from
-                while values['nextcall'] <= datetime.combine(today, time(0, 0, 0)):
-                    values['nextcall'] += delta
-
-            period_start = datetime.combine(today, time(0, 0, 0)) - delta
-            period_end = datetime.combine(today, time(0, 0, 0))
-
-            # We have to check when the employee has been created
-            # in order to not allocate him/her too much leaves
-            start_date = holiday.employee_id._get_date_start_work()
-            # If employee is created after the period, we cancel the computation
-            if period_end <= start_date or period_end < holiday.date_from:
-                holiday.write(values)
-                continue
-
-            # If employee created during the period, taking the date at which he has been created
-            if period_start <= start_date:
-                period_start = start_date
-
-            employee = holiday.employee_id
-            worked = employee._get_work_days_data_batch(
-                period_start, period_end,
-                domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')]
-            )[employee.id]['days']
-            left = employee._get_leave_days_data_batch(
-                period_start, period_end,
-                domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')]
-            )[employee.id]['days']
-            prorata = worked / (left + worked) if worked else 0
-
-            days_to_give = holiday.number_per_interval
-            if holiday.unit_per_interval == 'hours':
-                # As we encode everything in days in the database we need to convert
-                # the number of hours into days for this we use the
-                # mean number of hours set on the employee's calendar
-                days_to_give = days_to_give / (employee.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
-
-            values['number_of_days'] = holiday.number_of_days + days_to_give * prorata
-            if holiday.accrual_limit > 0:
-                values['number_of_days'] = min(values['number_of_days'], holiday.accrual_limit)
-
-            holiday.write(values)
+    @api.depends_context('uid')
+    def _compute_is_officer(self):
+        self.is_officer = self.user_has_groups("hr_holidays.group_hr_holidays_user")
 
     @api.depends_context('uid')
     def _compute_description(self):
@@ -261,9 +181,8 @@ class HolidaysAllocation(models.Model):
     @api.depends('employee_id', 'holiday_status_id')
     def _compute_leaves(self):
         for allocation in self:
-            leave_type = allocation.holiday_status_id.with_context(employee_id=allocation.employee_id.id)
-            allocation.max_leaves = leave_type.max_leaves
-            allocation.leaves_taken = leave_type.leaves_taken
+            allocation.max_leaves = allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days
+            allocation.leaves_taken = sum(taken_leave.number_of_hours_display if taken_leave.leave_type_request_unit == 'hour' else taken_leave.number_of_days for taken_leave in allocation.taken_leave_ids)
 
     @api.depends('number_of_days')
     def _compute_number_of_days_display(self):
@@ -303,37 +222,44 @@ class HolidaysAllocation(models.Model):
     def _compute_can_approve(self):
         for allocation in self:
             try:
-                if allocation.state == 'confirm' and allocation.validation_type == 'both':
-                    allocation._check_approval_update('validate1')
-                else:
+                if allocation.state == 'confirm' and allocation.validation_type != 'no':
                     allocation._check_approval_update('validate')
             except (AccessError, UserError):
                 allocation.can_approve = False
             else:
                 allocation.can_approve = True
 
+    @api.depends('employee_ids')
+    def _compute_from_employee_ids(self):
+        for allocation in self:
+            if len(allocation.employee_ids) == 1:
+                allocation.employee_id = allocation.employee_ids[0]._origin
+            else:
+                allocation.employee_id = False
+            allocation.multi_employee = (len(allocation.employee_ids) > 1)
+
     @api.depends('holiday_type')
     def _compute_from_holiday_type(self):
         for allocation in self:
             if allocation.holiday_type == 'employee':
-                if not allocation.employee_id:
-                    allocation.employee_id = self.env.user.employee_id
+                if not allocation.employee_ids:
+                    allocation.employee_ids = self.env.user.employee_id
                 allocation.mode_company_id = False
                 allocation.category_id = False
             if allocation.holiday_type == 'company':
-                allocation.employee_id = False
+                allocation.employee_ids = False
                 if not allocation.mode_company_id:
                     allocation.mode_company_id = self.env.company
                 allocation.category_id = False
             elif allocation.holiday_type == 'department':
-                allocation.employee_id = False
+                allocation.employee_ids = False
                 allocation.mode_company_id = False
                 allocation.category_id = False
             elif allocation.holiday_type == 'category':
-                allocation.employee_id = False
+                allocation.employee_ids = False
                 allocation.mode_company_id = False
-            elif not allocation.employee_id and not allocation._origin.employee_id:
-                allocation.employee_id = self.env.context.get('default_employee_id') or self.env.user.employee_id
+            else:
+                allocation.employee_ids = self.env.context.get('default_employee_id') or self.env.user.employee_id
 
     @api.depends('holiday_type', 'employee_id')
     def _compute_department_id(self):
@@ -347,47 +273,207 @@ class HolidaysAllocation(models.Model):
                 allocation.department_id = False
 
     @api.depends('employee_id')
-    def _compute_from_employee_id(self):
-        default_holiday_status_id = self._default_holiday_status_id()
+    def _compute_manager_id(self):
+        for allocation in self:
+            allocation.manager_id = allocation.employee_id and allocation.employee_id.parent_id
+
+    @api.depends('employee_id', 'accrual_plan_id')
+    def _compute_holiday_status_id(self):
+        default_holiday_status_id = None
+        holiday_status_by_accrual = {accrual.id: accrual.time_off_type_id for accrual in self.accrual_plan_id}
         for holiday in self:
-            holiday.manager_id = holiday.employee_id and holiday.employee_id.parent_id
             if holiday.employee_id.user_id != self.env.user and holiday._origin.employee_id != holiday.employee_id:
                 holiday.holiday_status_id = False
-            elif not holiday.holiday_status_id and not holiday._origin.holiday_status_id:
-                holiday.holiday_status_id = default_holiday_status_id
+            elif not holiday.holiday_status_id:
+                holiday_status = None
+                if holiday.accrual_plan_id:
+                    holiday_status = holiday_status_by_accrual.get(holiday.accrual_plan_id.id)
+                if holiday_status:
+                    holiday.holiday_status_id = holiday_status
+                elif not holiday._origin.holiday_status_id:
+                    if not default_holiday_status_id:  # fetch when we need it
+                        default_holiday_status_id = self._default_holiday_status_id()
+                    holiday.holiday_status_id = default_holiday_status_id
 
-    @api.depends('holiday_status_id', 'allocation_type', 'number_of_hours_display', 'number_of_days_display')
+    @api.depends('holiday_status_id', 'allocation_type', 'number_of_hours_display', 'number_of_days_display', 'date_to')
     def _compute_from_holiday_status_id(self):
+        accrual_allocations = self.filtered(lambda alloc: alloc.allocation_type == 'accrual' and not alloc.accrual_plan_id and alloc.holiday_status_id)
+        accruals_dict = {}
+        default_accrual_plan = None
+        if accrual_allocations:
+            accruals_read_group = self.env['hr.leave.accrual.plan'].read_group(
+                [('time_off_type_id', 'in', accrual_allocations.holiday_status_id.ids)],
+                ['time_off_type_id', 'ids:array_agg(id)'],
+                ['time_off_type_id'],
+            )
+            accruals_dict = {res['time_off_type_id'][0]: res['ids'] for res in accruals_read_group}
         for allocation in self:
             allocation.number_of_days = allocation.number_of_days_display
             if allocation.type_request_unit == 'hour':
                 allocation.number_of_days = allocation.number_of_hours_display / (allocation.employee_id.sudo().resource_calendar_id.hours_per_day or HOURS_PER_DAY)
-
-            # set default values
-            if not allocation.interval_number and not allocation._origin.interval_number:
-                allocation.interval_number = 1
-            if not allocation.number_per_interval and not allocation._origin.number_per_interval:
-                allocation.number_per_interval = 1
-            if not allocation.unit_per_interval and not allocation._origin.unit_per_interval:
-                allocation.unit_per_interval = 'hours'
-            if not allocation.interval_unit and not allocation._origin.interval_unit:
-                allocation.interval_unit = 'weeks'
-
-            if allocation.holiday_status_id.validity_stop and allocation.date_to:
-                new_date_to = datetime.combine(allocation.holiday_status_id.validity_stop, time.max)
-                if new_date_to < allocation.date_to:
-                    allocation.date_to = new_date_to
-
-            if allocation.allocation_type == 'accrual':
-                if allocation.holiday_status_id.request_unit == 'hour':
-                    allocation.unit_per_interval = 'hours'
+            if allocation.accrual_plan_id.time_off_type_id != allocation.holiday_status_id:
+                allocation.accrual_plan_id = False
+            if allocation.allocation_type == 'accrual' and not allocation.accrual_plan_id:
+                accrual_plan = None
+                if allocation.holiday_status_id:
+                    accrual_plan = accruals_dict.get(allocation.holiday_status_id.id, [False])[0]
                 else:
-                    allocation.unit_per_interval = 'days'
+                    if not default_accrual_plan:  # fetch the first accrual plan only when we need
+                        default_accrual_plan = self.env['hr.leave.accrual.plan'].search([], limit=1)
+                    accrual_plan = default_accrual_plan
+                allocation.accrual_plan_id = accrual_plan
+
+    #TODO: remove after impl prorata in _process_accrual_plan_level
+    def _compute_accrual_days(self, first_day, start_date, end_date):
+        """
+        Increase the number of days depending on the period, the start date of the employee and how many days he worked according to his
+        work entry.
+        This method takes also in account if the employee started during the period to apply a prorata
+        """
+        for allocation in self.filtered(lambda i: i.employee_id and i.accrual_plan_id):
+            start_date_prorata = 1.0
+            if first_day > start_date:
+                # The employee was created during the period after the start_date
+                # This prorata depends on the number of days worked during this period
+                worked_days = end_date - first_day
+                period_days = end_date - start_date
+                start_date_prorata = worked_days.days / period_days.days
+                # We calculate from the first_day to end_date
+                start_date = first_day
+            if end_date <= first_day or end_date < datetime.combine(allocation.date_from, time(0, 0, 0)):
+                # Stop the calculation if
+                # * the user was created after the period
+                # * the period ends before the allocation is valid
+                return
+            # The prorata depends if the employee took holidays during the period.
+            # Unpaid holidays and work_entry_type.leave_right = False decrease the amount of holidays
+            if allocation.accrual_level_id.is_based_on_worked_time:
+                worked = allocation.employee_id._get_work_days_data_batch(start_date, end_date, calendar=allocation.employee_id.resource_calendar_id)\
+                    [allocation.employee_id.id]['days']
+                left = allocation.employee_id.sudo()._get_leave_days_data_batch(start_date, end_date,
+                    domain=[('time_type', '=', 'leave')])[allocation.employee_id.id]['days']
+                work_entry_prorata = worked / (left + worked) if worked else 0
+                # Calculate the number of days that could be added
+                added_value = work_entry_prorata * start_date_prorata * allocation.accrual_level_id.added_value
             else:
-                allocation.interval_number = 1
-                allocation.interval_unit = 'weeks'
-                allocation.number_per_interval = 1
-                allocation.unit_per_interval = 'hours'
+                added_value = allocation.accrual_level_id.added_value
+            number_of_days = min(allocation.number_of_days + added_value, allocation.accrual_level_id.maximum_leave)
+            allocation.write({'number_of_days': number_of_days})
+            # Do not send a message if the maximum number of days is already reached
+
+    def _end_of_year_accrual(self):
+        # to override in payroll
+        today = fields.Date.today()
+        for allocation in self:
+            current_level = allocation._get_current_accrual_plan_level_id(today)
+            if current_level and current_level.action_with_unused_accruals == 'lost':
+                # Allocations are lost but number_of_days should not be lower than leaves_taken
+                allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': today, 'nextcall': False})
+
+    def _get_current_accrual_plan_level_id(self, date):
+        """
+        Returns the accrual_plan_level for the given date of the record's accrual plan
+        """
+        self.ensure_one()
+        if not self.accrual_plan_id.level_ids:
+            return False
+        # Sort by sequence which should be equivalent to the level
+        level_ids = self.accrual_plan_id.level_ids.sorted('sequence')
+        current_level = False
+        current_level_idx = -1
+        for idx, level in enumerate(level_ids):
+            if date >= self.date_from + get_timedelta(level.start_count, level.start_type):
+                current_level = level
+                current_level_idx = idx
+        # If transition_mode is set to `immediately` or we are currently on the first level
+        # the current_level is simply the first level in the list.
+        if current_level_idx <= 0 or self.accrual_plan_id.transition_mode == "immediately":
+            return current_level
+        # In this case we have to verify that the 'previous level' is not the current one due to `end_of_accrual`
+        level_start_date = self.date_from + get_timedelta(current_level.start_count, current_level.start_type)
+        previous_level = level_ids[current_level_idx - 1]
+        # If the next date from the current level's start date is before the last call of the previous level
+        # return the previous level
+        if current_level._get_next_date(level_start_date) < previous_level._get_next_date(level_start_date):
+            return previous_level
+        return current_level
+
+    def _get_first_accrual_plan_level_start_date(self):
+        self.ensure_one()
+        level = self.accrual_plan_id.level_ids.sorted('sequence')[0]
+        if not level:
+            return False
+        return self.date_from + get_timedelta(level.start_count, level.start_type)
+
+    def _process_accrual_plan_level(self, level, start_date, end_date):
+        """
+        Returns the added days for that level
+        """
+        self.ensure_one()
+        #TODO: ask gmf about prorata stuff see `_compute_accrual_days`
+        if level.is_based_on_worked_time:
+            start_dt = datetime.combine(start_date, datetime.min.time())
+            end_dt = datetime.combine(end_date, datetime.min.time())
+            worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
+                [self.employee_id.id]['days']
+            left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt,
+                domain=[('time_type', '=', 'leave')])[self.employee_id.id]['days']
+            work_entry_prorata = worked / (left + worked) if worked else 0
+            added_value = work_entry_prorata * level.added_value
+        else:
+            added_value = level.added_value
+        # Convert time in hours to time in days in case the level is encoded in hours
+        if level.added_value_type == 'hours':
+            added_value = added_value / (self.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+        return added_value
+
+    def _process_accrual_plans(self):
+        """
+        This method is part of the cron's process.
+        The goal of this method is to retroactively apply accrual plan levels and progress from nextcall to today
+        """
+        today = fields.Date.today()
+        for allocation in self:
+            if not allocation.nextcall:
+                current_level = allocation._get_current_accrual_plan_level_id(today)
+                if not current_level:
+                    # Accrual plan is not configured properly or has not started
+                    continue
+                allocation.lastcall = max(allocation.lastcall, allocation.date_from + get_timedelta(current_level.start_count, current_level.start_type))
+                allocation.nextcall = current_level._get_next_date(allocation.lastcall)
+            days_added_per_level = defaultdict(lambda: 0)
+            while allocation.nextcall <= today:
+                current_level = allocation._get_current_accrual_plan_level_id(allocation.nextcall)
+                nextcall = current_level._get_next_date(allocation.nextcall)
+                days_added_per_level[current_level] += allocation._process_accrual_plan_level(current_level, allocation.lastcall, allocation.nextcall)
+                allocation.lastcall = allocation.nextcall
+                allocation.nextcall = nextcall
+            if days_added_per_level:
+                number_of_days_to_add = 0
+                for value in days_added_per_level.values():
+                    number_of_days_to_add += value
+                # Let's assume the limit of the last level is the correct one
+                allocation.write({'number_of_days': min(allocation.number_of_days + number_of_days_to_add, current_level.maximum_leave)})
+
+    @api.model
+    def _update_accrual(self):
+        """
+            Method called by the cron task in order to increment the number_of_days when
+            necessary.
+        """
+        # Get the current date to determine the start and end of the accrual period
+        today = datetime.combine(fields.Date.today(), time(0, 0, 0))
+        if today.day == 1 and today.month == 1:
+            end_of_year_allocations = self.search(
+            [('allocation_type', '=', 'accrual'), ('state', '=', 'validate'), ('accrual_plan_id', '!=', False), ('employee_id', '!=', False),
+             '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now())])
+            end_of_year_allocations._end_of_year_accrual()
+            end_of_year_allocations.flush()
+        allocations = self.search(
+        [('allocation_type', '=', 'accrual'), ('state', '=', 'validate'), ('accrual_plan_id', '!=', False), ('employee_id', '!=', False),
+            '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()),
+            '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
+        allocations._process_accrual_plans()
 
     ####################################################
     # ORM Overrides methods
@@ -402,8 +488,10 @@ class HolidaysAllocation(models.Model):
                 target = allocation.department_id.name
             elif allocation.holiday_type == 'category':
                 target = allocation.category_id.name
+            elif allocation.employee_id:
+                target = allocation.employee_id.name
             else:
-                target = allocation.employee_id.sudo().name
+                target = ', '.join(allocation.employee_ids.sudo().mapped('name'))
 
             res.append(
                 (allocation.id,
@@ -421,20 +509,6 @@ class HolidaysAllocation(models.Model):
         if employee.user_id:
             self.message_subscribe(partner_ids=employee.user_id.partner_id.ids)
 
-    @api.constrains('holiday_status_id')
-    def _check_leave_type_validity(self):
-        for allocation in self:
-            if allocation.holiday_status_id.validity_stop:
-                vstop = allocation.holiday_status_id.validity_stop
-                today = fields.Date.today()
-
-                if vstop < today:
-                    raise ValidationError(_(
-                        'You can allocate %(allocation_type)s only before %(date)s.',
-                        allocation_type=allocation.holiday_status_id.display_name,
-                        date=allocation.holiday_status_id.validity_stop
-                    ))
-
     @api.model_create_multi
     def create(self, vals_list):
         """ Override to avoid automatic logging of creation """
@@ -442,6 +516,9 @@ class HolidaysAllocation(models.Model):
             employee_id = values.get('employee_id', False)
             if not values.get('department_id'):
                 values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
+            # default `lastcall` to `nextcall`
+            if 'date_from' in values and 'lastcall' not in values:
+                values['lastcall'] = values['date_from']
         holidays = super(HolidaysAllocation, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         for holiday in holidays:
             partners_to_subscribe = set()
@@ -453,6 +530,8 @@ class HolidaysAllocation(models.Model):
             holiday.message_subscribe(partner_ids=tuple(partners_to_subscribe))
             if not self._context.get('import_file'):
                 holiday.activity_update()
+            if holiday.validation_type == 'no':
+                holiday.state = 'validate'
         return holidays
 
     def write(self, values):
@@ -476,9 +555,9 @@ class HolidaysAllocation(models.Model):
     # Business methods
     ####################################################
 
-    def _prepare_holiday_values(self, employee):
+    def _prepare_holiday_values(self, employees):
         self.ensure_one()
-        values = {
+        return [{
             'name': self.name,
             'holiday_type': 'employee',
             'holiday_status_id': self.holiday_status_id.id,
@@ -486,23 +565,19 @@ class HolidaysAllocation(models.Model):
             'number_of_days': self.number_of_days,
             'parent_id': self.id,
             'employee_id': employee.id,
+            'state': 'confirm',
             'allocation_type': self.allocation_type,
             'date_from': self.date_from,
             'date_to': self.date_to,
-            'interval_unit': self.interval_unit,
-            'interval_number': self.interval_number,
-            'number_per_interval': self.number_per_interval,
-            'unit_per_interval': self.unit_per_interval,
-        }
-        return values
+            'accrual_plan_id': self.accrual_plan_id.id,
+        } for employee in employees]
 
     def action_draft(self):
         if any(holiday.state not in ['confirm', 'refuse'] for holiday in self):
             raise UserError(_('Allocation request state must be "Refused" or "To Approve" in order to be reset to Draft.'))
         self.write({
             'state': 'draft',
-            'first_approver_id': False,
-            'second_approver_id': False,
+            'approver_id': False,
         })
         linked_requests = self.mapped('linked_request_ids')
         if linked_requests:
@@ -518,29 +593,14 @@ class HolidaysAllocation(models.Model):
         self.activity_update()
         return res
 
-    def action_approve(self):
-        # if validation_type == 'both': this method is the first approval approval
-        # if validation_type != 'both': this method calls action_validate() below
-        if any(holiday.state != 'confirm' for holiday in self):
-            raise UserError(_('Allocation request must be confirmed ("To Approve") in order to approve it.'))
-
-        current_employee = self.env.user.employee_id
-
-        self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})
-        self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()
-        self.activity_update()
-
     def action_validate(self):
         current_employee = self.env.user.employee_id
         for holiday in self:
-            if holiday.state not in ['confirm', 'validate1']:
+            if holiday.state != 'confirm':
                 raise UserError(_('Allocation request must be confirmed in order to approve it.'))
 
             holiday.write({'state': 'validate'})
-            if holiday.validation_type == 'both':
-                holiday.write({'second_approver_id': current_employee.id})
-            else:
-                holiday.write({'first_approver_id': current_employee.id})
+            holiday.write({'approver_id': current_employee.id})
 
             holiday._action_validate_create_childs()
         self.activity_update()
@@ -548,22 +608,26 @@ class HolidaysAllocation(models.Model):
 
     def _action_validate_create_childs(self):
         childs = self.env['hr.leave.allocation']
-        if self.state == 'validate' and self.holiday_type in ['category', 'department', 'company']:
-            if self.holiday_type == 'category':
+        # In the case we are in holiday_type `employee` and there is only one employee we can keep the same allocation
+        # Otherwise we do need to create an allocation for all employees to have a behaviour that is in line
+        # with the other holiday_type
+        if self.state == 'validate' and (self.holiday_type in ['category', 'department', 'company'] or
+            (self.holiday_type == 'employee' and len(self.employee_ids) > 1)):
+            if self.holiday_type == 'employee':
+                employees = self.employee_ids
+            elif self.holiday_type == 'category':
                 employees = self.category_id.employee_ids
             elif self.holiday_type == 'department':
                 employees = self.department_id.member_ids
             else:
                 employees = self.env['hr.employee'].search([('company_id', '=', self.mode_company_id.id)])
 
-            for employee in employees:
-                childs += self.with_context(
-                    mail_notify_force_send=False,
-                    mail_activity_automation_skip=True
-                ).create(self._prepare_holiday_values(employee))
-            # TODO is it necessary to interleave the calls?
-            childs.action_approve()
-            if childs and self.validation_type == 'both':
+            allocation_create_vals = self._prepare_holiday_values(employees)
+            childs += self.with_context(
+                mail_notify_force_send=False,
+                mail_activity_automation_skip=True
+            ).create(allocation_create_vals)
+            if childs and self.validation_type != 'no':
                 childs.action_validate()
         return childs
 
@@ -572,9 +636,7 @@ class HolidaysAllocation(models.Model):
         if any(holiday.state not in ['confirm', 'validate', 'validate1'] for holiday in self):
             raise UserError(_('Allocation request must be confirmed or validated in order to refuse it.'))
 
-        validated_holidays = self.filtered(lambda hol: hol.state == 'validate1')
-        validated_holidays.write({'state': 'refuse', 'first_approver_id': current_employee.id})
-        (self - validated_holidays).write({'state': 'refuse', 'second_approver_id': current_employee.id})
+        self.write({'state': 'refuse', 'approver_id': current_employee.id})
         # If a category that created several holidays, cancel all related
         linked_requests = self.mapped('linked_request_ids')
         if linked_requests:
@@ -621,6 +683,13 @@ class HolidaysAllocation(models.Model):
             if state == 'validate' and val_type == 'both':
                 if not is_officer:
                     raise UserError(_('Only a Time off Approver can apply the second approval on allocation requests.'))
+
+    @api.onchange('allocation_type')
+    def _onchange_allocation_type(self):
+        if self.allocation_type == 'accrual':
+            self.number_of_days = 0.0
+        elif not self.number_of_days_display:
+            self.number_of_days = 1.0
 
     # ------------------------------------------------------------
     # Activity methods

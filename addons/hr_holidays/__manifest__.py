@@ -38,6 +38,7 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'views/hr_leave_views.xml',
         'views/hr_leave_type_views.xml',
         'views/hr_leave_allocation_views.xml',
+        'views/hr_leave_accrual_views.xml',
         'views/mail_activity_views.xml',
 
         'wizard/hr_holidays_summary_employees_views.xml',
@@ -47,6 +48,7 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'report/hr_holidays_reports.xml',
         'report/hr_leave_reports.xml',
         'report/hr_leave_report_calendar.xml',
+        'report/hr_leave_employee_type_report.xml',
 
         'views/hr_views.xml',
         'views/hr_holidays_views.xml',
@@ -64,10 +66,12 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         ],
         'web.assets_backend': [
             'hr_holidays/static/src/js/time_off_calendar.js',
+            'hr_holidays/static/src/js/radio_image.js',
             'hr_holidays/static/src/js/leave_stats_widget.js',
             'hr_holidays/static/src/models/*/*.js',
             'hr_holidays/static/src/scss/time_off.scss',
             'hr_holidays/static/src/components/*/*.scss',
+            'hr_holidays/static/src/scss/accrual_plan_level.scss',
         ],
         'web.tests_assets': [
             'hr_holidays/static/tests/helpers/**/*',

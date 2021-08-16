@@ -25,19 +25,17 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         HolidayStatusManagerGroup = HolidaysStatus.with_user(self.user_hrmanager_id)
         HolidayStatusManagerGroup.create({
             'name': 'WithMeetingType',
-            'allocation_type': 'no',
+            'requires_allocation': 'no',
         })
         self.holidays_status_hr = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedHR',
-            'allocation_type': 'no',
+            'requires_allocation': 'no',
             'leave_validation_type': 'hr',
-            'validity_start': False,
         })
         self.holidays_status_manager = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedManager',
-            'allocation_type': 'no',
+            'requires_allocation': 'no',
             'leave_validation_type': 'manager',
-            'validity_start': False,
         })
 
         HolidaysEmployeeGroup = Requests.with_user(self.user_employee_id)
@@ -86,9 +84,10 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
 
         holiday_status_paid_time_off = self.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
-            'allocation_type': 'fixed',
+            'requires_allocation': 'yes',
+            'employee_requests': 'no',
+            'allocation_validation_type': 'set',
             'leave_validation_type': 'both',
-            'validity_start': time.strftime('%Y-%m-01'),
             'responsible_id': self.env.ref('base.user_admin').id,
         })
 
@@ -99,12 +98,16 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 'number_of_days': 20,
                 'employee_id': self.employee_emp_id,
                 'state': 'validate',
+                'date_from': time.strftime('%Y-%m-01'),
+                'date_to': time.strftime('%Y-12-31'),
             }, {
                 'name': 'Paid Time off for David',
                 'holiday_status_id': holiday_status_paid_time_off.id,
                 'number_of_days': 20,
                 'employee_id': self.ref('hr.employee_admin'),
                 'state': 'validate',
+                'date_from': time.strftime('%Y-%m-01'),
+                'date_to': time.strftime('%Y-12-31'),
             }
         ])
 
@@ -122,16 +125,15 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         HolidayStatusManagerGroup = HolidaysStatus.with_user(self.user_hrmanager_id)
         HolidayStatusManagerGroup.create({
             'name': 'WithMeetingType',
-            'allocation_type': 'no',
-            'validity_start': False,
+            'requires_allocation': 'no',
         })
 
         self.holidays_status_limited = HolidayStatusManagerGroup.create({
             'name': 'Limited',
-            'allocation_type': 'fixed',
-            'allocation_validation_type': 'both',
+            'requires_allocation': 'yes',
+            'employee_requests': 'no',
+            'allocation_validation_type': 'set',
             'leave_validation_type': 'both',
-            'validity_start': False,
         })
         HolidaysEmployeeGroup = Requests.with_user(self.user_employee_id)
 
@@ -141,9 +143,11 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_status_limited.id,
             'number_of_days': 2,
+            'state': 'confirm',
+            'date_from': time.strftime('%Y-%m-01'),
+            'date_to': time.strftime('%Y-12-31'),
         })
         # HrUser validates the first step
-        aloc1_user_group.action_approve()
 
         # HrManager validates the second step
         aloc1_user_group.with_user(self.user_hrmanager_id).action_validate()
@@ -164,11 +168,6 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         # Check left days: - 1 virtual remaining day
         hol_status_2_employee_group.invalidate_cache()
         _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 1.0)
-
-        # HrManager validates the first step
-        hol2_user_group.with_user(self.user_hrmanager_id).action_approve()
-        self.assertEqual(hol2.state, 'validate1',
-                         'hr_holidays: first validation should lead to validate1 state')
 
         # HrManager validates the second step
         hol2_user_group.with_user(self.user_hrmanager_id).action_validate()
@@ -216,7 +215,6 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         hol3.action_confirm()
         self.assertEqual(hol3.state, 'confirm', 'hr_holidays: confirming should lead to confirm state')
         # I validate the holiday request by clicking on "To Approve" button.
-        hol3.action_approve()
         hol3.action_validate()
         self.assertEqual(hol3.state, 'validate', 'hr_holidays: validation should lead to validate state')
         # Check left days for casual leave: 19 days left
@@ -243,9 +241,10 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
 
         holiday_status_paid_time_off = self.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
-            'allocation_type': 'fixed',
+            'requires_allocation': 'yes',
+            'employee_requests': 'no',
+            'allocation_validation_type': 'set',
             'leave_validation_type': 'both',
-            'validity_start': time.strftime('%Y-%m-01'),
             'responsible_id': self.env.ref('base.user_admin').id,
         })
 
@@ -255,6 +254,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'number_of_days': 20,
             'employee_id': self.ref('hr.employee_admin'),
             'state': 'validate',
+            'date_from': time.strftime('%Y-%m-01'),
+            'date_to': time.strftime('%Y-12-31'),
         })
 
         leave_vals = {

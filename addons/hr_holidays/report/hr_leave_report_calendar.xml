@@ -1,17 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <odoo>
-    <record id="action_hr_holidays_dashboard" model="ir.actions.act_window">
-        <field name="name">All Time Off</field>
-        <field name="res_model">hr.leave.report.calendar</field>
-        <field name="view_mode">calendar</field>
-        <!-- YTI : Ecrabouille explicitely those fields, as this is deployed on 
-                   a stable release. -->
-        <field name="view_id"/>
-        <field name="search_view_id"/>
-        <field name="domain">[('employee_id.active','=',True)]</field>
-        <field name="context">{'hide_employee_name': 1}</field>
-    </record>
-
     <record id="hr_leave_report_calendar_view" model="ir.ui.view">
         <field name="name">hr.leave.report.calendar.view</field>
         <field name="model">hr.leave.report.calendar</field>
@@ -47,17 +35,28 @@
                 <field name="name"/>
                 <field name="employee_id"/>
                 <field name="department_id"/>
+                <field name="job_id"/>
+                <filter name="my_team" string="My Team" domain="['|', ('employee_id.user_id', '=', uid), ('employee_id.parent_id.user_id', '=', uid)]"/>
                 <filter string="My Department" name="department" domain="['|', ('department_id.member_ids.user_id', '=', uid), ('employee_id.user_id', '=', uid)]" help="My Department Time Off"/>
                 <filter string="People I Manage" name="managed_people" domain="[('employee_id.leave_manager_id', '=', uid)]" help="Time off of people you are manager of"/>
                 <separator/>
+                <filter string="Off Today" name="off_today" domain="[('start_datetime', '&lt;=', context_today().strftime('%Y-%m-%d')), ('stop_datetime', '&gt;=', context_today().strftime('%Y-%m-%d'))]" help="My Department Time Off"/>
+                <separator/>
                 <filter string="Approved" name="validate" domain="[('state', '=', 'validate')]" help="validate"/>
                 <filter string="Waiting for Approval" name="approve" domain="[('state','in',('confirm','validate1'))]"/>
+                <filter name="groupby_job_id" string="Job Position" context="{'group_by': 'job_id'}"/>
+                <filter name="groupby_company_id" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                <filter name="groupby_department_id" context="{'group_by': 'department_id'}"/>
             </search>
         </field>
     </record>
 
-    <record id="hr_holidays.action_hr_holidays_dashboard" model="ir.actions.act_window">
+    <record id="action_hr_holidays_dashboard" model="ir.actions.act_window">
+        <field name="name">All Time Off</field>
+        <field name="res_model">hr.leave.report.calendar</field>
         <field name="view_mode">calendar</field>
         <field name="search_view_id" ref="hr_leave_report_calendar_view_search"/>
+        <field name="domain">[('employee_id.active','=',True)]</field>
+        <field name="context">{'hide_employee_name': 1}</field>
     </record>
 </odoo>

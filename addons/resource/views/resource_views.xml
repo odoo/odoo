@@ -98,6 +98,7 @@
                 <field name="resource_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="calendar_id"/>
+                <filter name="filter_date" date="date_from" default_period="this_year" string="Period"/>
                 <group expand="0" string="Group By">
                     <filter string="Resource" name="resource" domain="[]" context="{'group_by':'resource_id'}"/>
                     <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -145,12 +146,13 @@
     <record id="resource_calendar_leave_tree" model="ir.ui.view">
         <field name="name">resource.calendar.leaves.tree</field>
         <field name="model">resource.calendar.leaves</field>
+        <field name="priority">1</field>
         <field name="arch" type="xml">
             <tree string="Leave Detail">
                 <field name="name" string="Reason"/>
                 <field name="resource_id" />
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="calendar_id" />
+                <field name="calendar_id"/>
                 <field name="date_from" />
                 <field name="date_to" />
             </tree>
@@ -291,15 +293,6 @@
                             <field name="two_weeks_explanation" nolabel="1"/>
                         </group>
                             <field name="attendance_ids" widget="section_one2many"/>
-                        </page>
-                        <page string="Global Time Off" name="global_leaves">
-                            <field name="global_leave_ids">
-                                <tree editable="top">
-                                    <field name="name"/>
-                                    <field name="date_from"/>
-                                    <field name="date_to"/>
-                                </tree>
-                            </field>
                         </page>
                     </notebook>
                 </sheet>

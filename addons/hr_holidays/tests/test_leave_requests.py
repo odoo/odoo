@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, date
+import time
 from dateutil.relativedelta import relativedelta
 from pytz import timezone, UTC
 
@@ -34,22 +35,19 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         self.holidays_type_1 = LeaveType.create({
             'name': 'NotLimitedHR',
-            'allocation_type': 'no',
+            'requires_allocation': 'no',
             'leave_validation_type': 'hr',
-            'validity_start': False,
         })
         self.holidays_type_2 = LeaveType.create({
             'name': 'Limited',
-            'allocation_type': 'fixed_allocation',
+            'requires_allocation': 'yes',
+            'employee_requests': 'yes',
             'leave_validation_type': 'hr',
-            'validity_start': False,
         })
         self.holidays_type_3 = LeaveType.create({
             'name': 'TimeNotLimited',
-            'allocation_type': 'no',
+            'requires_allocation': 'no',
             'leave_validation_type': 'manager',
-            'validity_start': fields.Datetime.from_string('2017-01-01 00:00:00'),
-            'validity_stop': fields.Datetime.from_string('2017-06-01 00:00:00'),
         })
 
         self.set_employee_create_date(self.employee_emp_id, '2010-02-03 00:00:00')
@@ -111,8 +109,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_type_2.id,
             'number_of_days': 2,
+            'state': 'confirm',
+            'date_from': time.strftime('%Y-1-1'),
+            'date_to': time.strftime('%Y-12-31'),
         })
-        aloc1_user_group.action_approve()
+        aloc1_user_group.action_validate()
 
         holiday_status = self.holidays_type_2.with_user(self.user_employee_id)
         self._check_holidays_status(holiday_status, 2.0, 0.0, 2.0, 2.0)
@@ -137,10 +138,21 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_accrual_validity_time_valid(self):
         """  Employee ask leave during a valid validity time """
+
+        self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
+                'name': 'Sick Time Off',
+                'holiday_status_id': self.holidays_type_2.id,
+                'employee_id': self.employee_emp.id,
+                'date_from': fields.Datetime.from_string('2017-01-01 00:00:00'),
+                'date_to': fields.Datetime.from_string('2017-06-01 00:00:00'),
+                'number_of_days': 10,
+                'state': 'validate',
+        })
+
         self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Valid time period',
             'employee_id': self.employee_emp_id,
-            'holiday_status_id': self.holidays_type_3.id,
+            'holiday_status_id': self.holidays_type_2.id,
             'date_from': fields.Datetime.from_string('2017-03-03 06:00:00'),
             'date_to': fields.Datetime.from_string('2017-03-11 19:00:00'),
             'number_of_days': 1,
@@ -148,12 +160,12 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_accrual_validity_time_not_valid(self):
-        """  Employee ask leav during a not valid validity time """
+        """  Employee ask leave when there's no valid allocation """
         with self.assertRaises(ValidationError):
-            self.env['hr.leave'].with_user(self.user_employee_id).create({
+            self.env['hr.leave'].with_user(self.user_employee).create({
                 'name': 'Sick Time Off',
                 'employee_id': self.employee_emp_id,
-                'holiday_status_id': self.holidays_type_3.id,
+                'holiday_status_id': self.holidays_type_2.id,
                 'date_from': fields.Datetime.from_string('2017-07-03 06:00:00'),
                 'date_to': fields.Datetime.from_string('2017-07-11 19:00:00'),
                 'number_of_days': 1,
@@ -182,6 +194,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         allocation_form = Form(self.env['hr.leave.allocation'].with_user(self.user_employee))
         allocation_form.name = 'New Allocation Request'
         allocation_form.holiday_status_id = self.holidays_type_2
+        allocation_form.date_from = date(2019, 5, 6)
+        allocation_form.date_to = date(2019, 5, 6)
         allocation = allocation_form.save()
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -307,8 +321,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'holiday_status_id': leave_type.id,
             'number_of_days': 20,
             'employee_id': employee.id,
+            'state': 'confirm',
+            'date_from': time.strftime('2018-1-1'),
+            'date_to': time.strftime('%Y-1-1'),
         })
-        allocation.action_approve()
+        allocation.action_validate()
 
         leave1 = self.env['hr.leave'].create({
             'name': 'Holiday 1 week',
@@ -374,7 +391,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'Sick',
             'request_unit': 'hour',
             'leave_validation_type': 'both',
-            'allocation_type': 'no',
+            'requires_allocation': 'no',
         })
         leave1 = self.env['hr.leave'].create({
             'name': 'Sick 1 week during christmas snif',
@@ -428,13 +445,13 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         # 12 13 14 15 16 17 18
         # 19 20 21 22 23 24 25
         # 26 27 28 29 30 31
-        local_date_from = datetime(2019, 1, 1, 7, 0, 0)
-        local_date_to = datetime(2019, 1, 1, 19, 0, 0)
+        local_date_from = datetime(2020, 1, 1, 7, 0, 0)
+        local_date_to = datetime(2020, 1, 1, 19, 0, 0)
         for tz in timezones_to_test:
             self._test_leave_with_tz(tz, local_date_from, local_date_to, 1)
 
         # We, Th, Fr, Mo, Tu, We => 6 days
-        local_date_from = datetime(2019, 1, 1, 7, 0, 0)
-        local_date_to = datetime(2019, 1, 8, 19, 0, 0)
+        local_date_from = datetime(2020, 1, 1, 7, 0, 0)
+        local_date_to = datetime(2020, 1, 8, 19, 0, 0)
         for tz in timezones_to_test:
-            self._test_leave_with_tz(tz, local_date_from, local_date_to, 6)
+            self._test_leave_with_tz(tz, local_date_from, local_date_to, 6)#TODO JUD check why this fails

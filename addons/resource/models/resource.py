@@ -474,7 +474,7 @@ class ResourceCalendar(models.Model):
         if domain is None:
             domain = [('time_type', '=', 'leave')]
         domain = domain + [
-            ('calendar_id', '=', self.id),
+            ('calendar_id', 'in', [False, self.id]),
             ('resource_id', 'in', resource_ids),
             ('date_from', '<=', datetime_to_string(end_dt)),
             ('date_to', '>=', datetime_to_string(start_dt)),
@@ -990,10 +990,29 @@ class ResourceCalendarLeaves(models.Model):
     _description = "Resource Time Off Detail"
     _order = "date_from"
 
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if 'date_from' in fields_list and 'date_to' in fields_list and not res.get('date_from') and not res.get('date_to'):
+            # Then we give the current day and we search the begin and end hours for this day in resource.calendar of the current company
+            today = fields.Datetime.now()
+            user_tz = timezone(self.env.user.tz or self._context.get('tz') or self.company_id.resource_calendar_id.tz or 'UTC')
+            date_from = user_tz.localize(datetime.combine(today, time.min))
+            date_to = user_tz.localize(datetime.combine(today, time.max))
+            intervals = self.env.company.resource_calendar_id._work_intervals_batch(date_from.replace(tzinfo=utc), date_to.replace(tzinfo=utc))[False]
+            if intervals:  # Then we stop and return the dates given in parameter
+                list_intervals = [(start, stop) for start, stop, records in intervals]  # Convert intervals in interval list
+                date_from = list_intervals[0][0]  # We take the first date in the interval list
+                date_to = list_intervals[-1][1]  # We take the last date in the interval list
+            res.update(
+                date_from=date_from.astimezone(utc).replace(tzinfo=None),
+                date_to=date_to.astimezone(utc).replace(tzinfo=None)
+            )
+        return res
+
     name = fields.Char('Reason')
     company_id = fields.Many2one(
-        'res.company', related='calendar_id.company_id', string="Company",
-        readonly=True, store=True)
+        'res.company', string="Company", readonly=True, store=True,
+        default=lambda self: self.env.company, compute='_compute_company_id')
     calendar_id = fields.Many2one('resource.calendar', 'Working Hours', index=True)
     date_from = fields.Datetime('Start Date', required=True)
     date_to = fields.Datetime('End Date', required=True)
@@ -1002,6 +1021,11 @@ class ResourceCalendarLeaves(models.Model):
         help="If empty, this is a generic time off for the company. If a resource is set, the time off is only for this resource")
     time_type = fields.Selection([('leave', 'Time Off'), ('other', 'Other')], default='leave',
                                  help="Whether this should be computed as a time off or as work time (eg: formation)")
+
+    @api.depends('calendar_id')
+    def _compute_company_id(self):
+        for leave in self:
+            leave.company_id = leave.calendar_id.company_id or self.env.company
 
     @api.constrains('date_from', 'date_to')
     def check_dates(self):

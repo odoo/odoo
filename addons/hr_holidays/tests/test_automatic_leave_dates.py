@@ -14,8 +14,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         self.leave_type = self.env['hr.leave.type'].create({
             'name': 'Automatic Test',
             'time_type': 'leave',
-            'allocation_type': 'no',
-            'validity_start': False,
+            'requires_allocation': 'no',
         })
 
     def test_no_attendances(self):

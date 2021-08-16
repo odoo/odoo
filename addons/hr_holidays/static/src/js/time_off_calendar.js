@@ -32,13 +32,6 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
         },
     });
 
-    var TimeoffCalendarModel = CalendarModel.extend({
-
-        _getFilterDomain: function() {
-            return this._super.apply(this, arguments).concat([["state", "!=", "refuse"]]);
-        },
-    });
-
     var TimeOffCalendarController = CalendarController.extend({
         events: _.extend({}, CalendarController.prototype.events, {
             'click .btn-time-off': '_onNewTimeOff',
@@ -69,7 +62,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
 
             $(QWeb.render('hr_holidays.dashboard.calendar.button', {
                 time_off: _t('New Time Off'),
-                request: _t('New Allocation'),
+                request: _t('Allocation Request'),
             })).appendTo(this.$buttons);
 
             if ($node) {
@@ -90,7 +83,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
          */
         _onNewTimeOff: function () {
             var self = this;
-
+            //use formViewId for this view?
             this.do_action('hr_holidays.hr_leave_action_my_request', {
                 on_close: function () {
                     self.reload();
@@ -118,9 +111,31 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
                 }
             });
         },
+
+        /**
+         * @override
+         */
+        _setEventTitle: function () {
+            return _t('Time Off Request');
+        },
     });
 
     var TimeOffPopoverRenderer = CalendarRenderer.extend({
+        template: "TimeOff.CalendarView.extend",
+        /**
+         * We're overriding this to display the weeknumbers on the year view
+         *
+         * @override
+         * @private
+         */
+        _getFullCalendarOptions: function () {
+            const oldOptions = this._super(...arguments);
+            // Parameters
+            oldOptions.views.dayGridYear.weekNumbers = true;
+            oldOptions.views.dayGridYear.weekNumbersWithinDays = false;
+            return oldOptions;
+        },
+
         config: _.extend({}, CalendarRenderer.prototype.config, {
             CalendarPopover: TimeOffCalendarPopover,
         }),
@@ -147,20 +162,6 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
             var self = this;
             return this._super.apply(this, arguments).then(function () {
                 self.$el.parent().find('.o_calendar_mini').hide();
-
-                // Check if there is a filter to display on the sidebar
-                // If there is no filter, hide the sidebar
-                const noFilters = !Object.values(self.state.filters).some(f => f.filters.length);
-
-                // Remove the no data sidebar
-                self.$sidebar.find('#o_calendar_filter_no_data').remove();
-                if (noFilters) {
-                    // Show a special sidebar
-                    self.$sidebar.html(QWeb.render('hr_holidays.calendar.sidebar.nofilter', {
-                        title: 'Time Off Type',
-                        description: '(no data)'
-                    }));
-                }
             });
         },
     });
@@ -201,7 +202,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
         config: _.extend({}, CalendarView.prototype.config, {
             Controller: TimeOffCalendarController,
             Renderer: TimeOffCalendarRenderer,
-            Model: TimeoffCalendarModel,
+            Model: CalendarModel,
         }),
     });
 
@@ -210,6 +211,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
      */
     var TimeOffCalendarAllView = CalendarView.extend({
         config: _.extend({}, CalendarView.prototype.config, {
+            Controller: TimeOffCalendarController,
             Renderer: TimeOffPopoverRenderer,
         }),
     });

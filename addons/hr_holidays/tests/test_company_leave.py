@@ -20,6 +20,7 @@ class TestCompanyLeave(TransactionCase):
             'name': 'Bank Holiday',
             'responsible_id': cls.env.user.id,
             'company_id': cls.company.id,
+            'requires_allocation': 'no',
         })
 
         cls.paid_time_off = cls.env['hr.leave.type'].create({
@@ -27,6 +28,7 @@ class TestCompanyLeave(TransactionCase):
             'request_unit': 'day',
             'leave_validation_type': 'both',
             'company_id': cls.company.id,
+            'requires_allocation': 'no',
         })
 
         cls.employee = cls.env['hr.employee'].create({
@@ -313,7 +315,7 @@ class TestCompanyLeave(TransactionCase):
         })
         company_leave._compute_date_from_to()
 
-        with self.assertQueryCount(__system__=845, admin=865):
+        with self.assertQueryCount(__system__=846, admin=865):
             # Original query count: 1987
             # Without tracking/activity context keys: 5154
             company_leave.action_validate()

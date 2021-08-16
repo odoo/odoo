@@ -358,7 +358,7 @@ var CalendarController = AbstractController.extend({
 
         var options = _.extend({}, this.options, event.options, {
             context: context,
-            title: _t('New Event')
+            title: this._setEventTitle()
         });
 
         if (this.quick != null) {
@@ -375,13 +375,12 @@ var CalendarController = AbstractController.extend({
             return;
         }
 
-        const title = _t('New Event');
         if (this.eventOpenPopup) {
             if (this.previousOpen) { this.previousOpen.close(); }
             this.previousOpen = new dialogs.FormViewDialog(self, {
                 res_model: this.modelName,
                 context: context,
-                title: title,
+                title: options.title,
                 view_id: this.formViewId || false,
                 disable_multiple_selection: true,
                 on_saved: function () {
@@ -532,7 +531,15 @@ var CalendarController = AbstractController.extend({
         }).then( function () {
             self.reload();
         });
-    }
+    },
+    /**
+     * This function has been created for the only purpose of
+     * changing the title on the quick create from a calendar.
+     * This way it can be overriden in other apps
+     */
+    _setEventTitle: function () {
+        return _t('New Event');
+    },
 });
 
 return CalendarController;

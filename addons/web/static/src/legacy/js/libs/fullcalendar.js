@@ -172,7 +172,6 @@ odoo.define('/web/static/src/js/libs/fullcalendar.js', function () {
                     titleFormat: { month: 'short', year: 'numeric' },
                     height: 0,
                     contentHeight: 0,
-                    weekNumbers: false,
                     showNonCurrentDates: false,
                     views: {
                         dayGridMonth: {

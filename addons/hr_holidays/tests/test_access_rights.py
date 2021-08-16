@@ -17,8 +17,7 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
         self.leave_type = self.env['hr.leave.type'].create({
             'name': 'Unlimited',
             'leave_validation_type': 'hr',
-            'allocation_type': 'no',
-            'validity_start': False,
+            'requires_allocation': 'no',
         })
         self.rd_dept.manager_id = False
         self.hr_dept.manager_id = False
@@ -36,29 +35,25 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
         self.lt_no_validation = self.env['hr.leave.type'].create({
             'name': 'Validation = no_validation',
             'leave_validation_type': 'hr',
-            'allocation_type': 'no',
-            'validity_start': False,
+            'requires_allocation': 'no',
         })
 
         self.lt_validation_hr = self.env['hr.leave.type'].create({
             'name': 'Validation = HR',
             'leave_validation_type': 'hr',
-            'allocation_type': 'no',
-            'validity_start': False,
+            'requires_allocation': 'no',
         })
 
         self.lt_validation_manager = self.env['hr.leave.type'].create({
             'name': 'Validation = manager',
             'leave_validation_type': 'hr',
-            'allocation_type': 'no',
-            'validity_start': False,
+            'requires_allocation': 'no',
         })
 
         self.lt_validation_both = self.env['hr.leave.type'].create({
             'name': 'Validation = both',
             'leave_validation_type': 'hr',
-            'allocation_type': 'no',
-            'validity_start': False,
+            'requires_allocation': 'no',
         })
 
         self.draft_status = [
@@ -779,7 +774,7 @@ class TestMultiCompany(TestHrHolidaysCommon):
             'name': 'Unlimited - Company New',
             'company_id': self.new_company.id,
             'leave_validation_type': 'hr',
-            'allocation_type': 'no',
+            'requires_allocation': 'no',
         })
         self.rd_dept.manager_id = False
         self.hr_dept.manager_id = False

@@ -32,6 +32,7 @@ class HrEmployeeBase(models.AbstractModel):
     leave_date_to = fields.Date('To Date', compute='_compute_leave_status')
     leaves_count = fields.Float('Number of Time Off', compute='_compute_remaining_leaves')
     allocation_count = fields.Float('Total number of days allocated.', compute='_compute_allocation_count')
+    allocations_count = fields.Integer('Total number of allocations', compute="_compute_allocation_count")
     allocation_used_count = fields.Float('Total number of days off used', compute='_compute_total_allocation_used')
     show_leaves = fields.Boolean('Able to see Remaining Time Off', compute='_compute_show_leaves')
     is_absent = fields.Boolean('Absent Today', compute='_compute_leave_status', search='_search_absent_employee')
@@ -39,9 +40,6 @@ class HrEmployeeBase(models.AbstractModel):
     allocation_used_display = fields.Char(compute='_compute_total_allocation_used')
     hr_icon_display = fields.Selection(selection_add=[('presence_holiday_absent', 'On leave'),
                                                       ('presence_holiday_present', 'Present but on leave')])
-
-    def _get_date_start_work(self):
-        return self.create_date
 
     def _get_remaining_leaves(self):
         """ Helper to compute the remaining leaves for the current employees
@@ -64,7 +62,7 @@ class HrEmployeeBase(models.AbstractModel):
                 join hr_leave_type s ON (s.id=h.holiday_status_id)
             WHERE
                 s.active = true AND h.state='validate' AND
-                (s.allocation_type='fixed' OR s.allocation_type='fixed_allocation') AND
+                s.requires_allocation='yes' AND
                 h.employee_id in %s
             GROUP BY h.employee_id""", (tuple(self.ids),))
         return dict((row['employee_id'], row['days']) for row in self._cr.dictfetchall())
@@ -84,10 +82,12 @@ class HrEmployeeBase(models.AbstractModel):
             ('holiday_status_id.active', '=', True),
             ('state', '=', 'validate'),
         ], ['number_of_days:sum', 'employee_id'], ['employee_id'])
-        rg_results = dict((d['employee_id'][0], d['number_of_days']) for d in data)
+        rg_results = dict((d['employee_id'][0], {"employee_id_count": d['employee_id_count'], "number_of_days": d['number_of_days']}) for d in data)
         for employee in self:
-            employee.allocation_count = float_round(rg_results.get(employee.id, 0.0), precision_digits=2)
+            result = rg_results.get(employee.id)
+            employee.allocation_count = float_round(result['number_of_days'], precision_digits=2) if result else 0.0
             employee.allocation_display = "%g" % employee.allocation_count
+            employee.allocations_count = result['employee_id_count'] if result else 0.0
 
     def _compute_total_allocation_used(self):
         for employee in self:

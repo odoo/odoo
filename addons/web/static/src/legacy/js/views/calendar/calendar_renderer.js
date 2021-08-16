@@ -567,6 +567,9 @@ return AbstractRenderer.extend({
                 },
                 dayGridMonth: {
                     columnHeaderFormat: 'dddd'
+                },
+                dayGridYear: {
+                    weekNumbers: false
                 }
             },
             height: 'parent',

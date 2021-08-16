@@ -1,0 +1,107 @@
+$o-hr-holidays-border-color: gray('300');
+
+.o_hr_holidays_hierarchy {
+    margin-left: -$o-horizontal-padding;
+    margin-right: -$o-horizontal-padding;
+    @include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
+        margin-left: -$o-horizontal-padding*2;
+        margin-right: -$o-horizontal-padding*2;
+    }
+    margin-bottom:-24px;
+    padding: 10px 0px 24px 16px;
+    background-color: #F0F0F0;
+    box-shadow: 0px 1px 1px rgba(17, 17, 17, 0.23);
+    overflow-x: auto;
+    .o_hr_holidays_title {
+        padding: 0px 0px 0px  86px;
+        font-size: 18px;
+    }
+
+    .o_hr_holidays_hierarchy_readonly {
+        padding: 40px 0px 0px 40px;
+    }
+
+    .o_hr_holidays_plan_level_container {
+        .o-kanban-button-new {
+            padding: 2px 12px;
+            margin: 0px 0px 0px 44px;
+            border-radius: 25px;
+        }
+
+        .o_kanban_view.o_kanban_ungrouped .o_kanban_record {
+            display: flex;
+            flex: 0 0 100%;
+            border: 0px;
+            padding: 0px 0px 0px 100px;
+            margin: 0px 0px 0px 0px;
+            background-color: transparent;
+
+            // Timeline Border
+            &:before {
+                content: '';
+                display: block;
+                @include o-position-absolute;
+                height: 100%;
+                margin-left: 8px;
+                border-left: 1px dashed darken($o-hr-holidays-border-color, 10%);
+            }
+
+            // Whole record
+            .o_hr_holidays_body {
+                margin-left: 8px;
+                padding-top: 20px;
+
+                // Left side 'Level'
+                .o_hr_holidays_timeline {
+                    @include o-position-absolute($top: 32px, $left: 6px);
+                    width: 90px;
+                    padding: 3px 0px;
+                    border-radius: 3px;
+                    background-color: white;
+                    box-shadow: 0 1px 2px rgba(0,0,0,.1);
+                }
+
+                // Actual kanban card
+                .o_hr_holidays_card {
+                    position: relative;
+                    margin-left: 22px;
+                    margin-right: 2px;
+                    width: 500px;
+                    border-radius: 3px;
+                    background: white;
+                    box-shadow: 0 1px 2px rgba(0,0,0,.1);
+
+                    // Triangle
+                    &:before {
+                        content: '';
+                        @include o-position-absolute($top: 12px, $left: -17px);
+                        margin-left: 10px;
+                        width: 14px;
+                        height: 14px;
+                        background: white;
+                        border-bottom: 1px solid $o-hr-holidays-border-color;
+                        transform: rotate(45deg);
+                    }
+
+                    // Circle
+                    &:after {
+                        content: '';
+                        @include o-position-absolute($top: 14px, $left: -28px);
+                        width: 12px;
+                        height: 12px;
+                        border: 2px solid $o-brand-primary;
+                        border-radius: 10px;
+                        background: #F0F0F0
+                    }
+
+                    .content {
+                        position: relative;
+                        background-color: white;
+                        padding: 5px 7px;
+                        font-size: 14px;
+                    }
+                }
+            }
+        }
+    }
+}
