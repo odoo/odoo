@@ -1154,7 +1154,7 @@ class StockMove(models.Model):
         procurement_requests = []
         for move in move_create_proc:
             values = move._prepare_procurement_values()
-            origin = (move.group_id and move.group_id.name or (move.origin or move.picking_id.name or "/"))
+            origin = move._prepare_procurement_origin()
             procurement_requests.append(self.env['procurement.group'].Procurement(
                 move.product_id, move.product_uom_qty, move.product_uom,
                 move.location_id, move.rule_id and move.rule_id.name or "/",
@@ -1176,6 +1176,10 @@ class StockMove(models.Model):
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation
         moves.filtered(lambda move: not move.picking_id.immediate_transfer and move._should_bypass_reservation() and move.state == 'confirmed')._action_assign()
         return moves
+
+    def _prepare_procurement_origin(self):
+        self.ensure_one()
+        return self.group_id and self.group_id.name or (self.origin or self.picking_id.name or "/")
 
     def _prepare_procurement_values(self):
         """ Prepare specific key for moves or other componenets that will be created from a stock rule
@@ -1805,6 +1809,7 @@ class StockMove(models.Model):
             return
 
         orderpoints_by_company = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
+        orderpoints_context_by_company = defaultdict(dict)
         for move in self:
             orderpoint = self.env['stock.warehouse.orderpoint'].search([
                 ('product_id', '=', move.product_id.id),
@@ -1814,8 +1819,12 @@ class StockMove(models.Model):
             ], limit=1)
             if orderpoint:
                 orderpoints_by_company[orderpoint.company_id] |= orderpoint
+            if orderpoint and move.product_qty > orderpoint.product_min_qty and move.origin:
+                orderpoints_context_by_company[orderpoint.company_id].setdefault(orderpoint.id, [])
+                orderpoints_context_by_company[orderpoint.company_id][orderpoint.id].append(move.origin)
         for company, orderpoints in orderpoints_by_company.items():
-            orderpoints._procure_orderpoint_confirm(company_id=company, raise_user_error=False)
+            orderpoints.with_context(origins=orderpoints_context_by_company[company])._procure_orderpoint_confirm(
+                company_id=company, raise_user_error=False)
 
     def _trigger_assign(self):
         """ Check for and trigger action_assign for confirmed/partially_available moves related to done moves.

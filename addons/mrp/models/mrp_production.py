@@ -959,6 +959,11 @@ class MrpProduction(models.Model):
 
     def _get_move_raw_values(self, product_id, product_uom_qty, product_uom, operation_id=False, bom_line=False):
         source_location = self.location_src_id
+        origin = self.name
+        if self.orderpoint_id:
+            origin = self.origin.replace(
+                '%s - ' % (self.orderpoint_id.display_name), '')
+            origin = '%s,%s' % (origin, self.name)
         data = {
             'sequence': bom_line.sequence if bom_line else 10,
             'name': self.name,
@@ -976,7 +981,7 @@ class MrpProduction(models.Model):
             'operation_id': operation_id,
             'price_unit': product_id.standard_price,
             'procure_method': 'make_to_stock',
-            'origin': self.name,
+            'origin': origin,
             'state': 'draft',
             'warehouse_id': source_location.get_warehouse().id,
             'group_id': self.procurement_group_id.id,

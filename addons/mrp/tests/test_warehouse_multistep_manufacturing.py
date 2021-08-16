@@ -545,3 +545,56 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         mo.action_confirm()
 
         self.assertEqual(self.bom.bom_line_ids.product_id + self.product_2, mo.picking_ids.move_lines.product_id)
+
+    def test_manufacturing_3_steps_trigger_reordering_rules(self):
+        with Form(self.warehouse) as warehouse:
+            warehouse.manufacture_steps = 'pbm_sam'
+
+        with Form(self.raw_product) as p:
+            p.route_ids.clear()
+            p.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
+
+        # Create an additional BoM for component
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'Wood'
+        product_form.type = 'product'
+        product_form.uom_id = self.uom_unit
+        product_form.uom_po_id = self.uom_unit
+        self.wood_product = product_form.save()
+
+        # Create bom for manufactured product
+        bom_product_form = Form(self.env['mrp.bom'])
+        bom_product_form.product_id = self.raw_product
+        bom_product_form.product_tmpl_id = self.raw_product.product_tmpl_id
+        bom_product_form.product_qty = 1.0
+        bom_product_form.type = 'normal'
+        with bom_product_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.wood_product
+            bom_line.product_qty = 1.0
+
+        bom_product_form.save()
+
+        self.env['stock.quant']._update_available_quantity(
+            self.finished_product, self.warehouse.lot_stock_id, -1.0)
+
+        rr_form = Form(self.env['stock.warehouse.orderpoint'])
+        rr_form.product_id = self.wood_product
+        rr_form.location_id = self.warehouse.lot_stock_id
+        rr_form.save()
+
+        rr_form = Form(self.env['stock.warehouse.orderpoint'])
+        rr_form.product_id = self.finished_product
+        rr_form.location_id = self.warehouse.lot_stock_id
+        rr_finish = rr_form.save()
+
+        rr_form = Form(self.env['stock.warehouse.orderpoint'])
+        rr_form.product_id = self.raw_product
+        rr_form.location_id = self.warehouse.lot_stock_id
+        rr_form.save()
+
+        self.env['procurement.group'].run_scheduler()
+
+        pickings_component = self.env['stock.picking'].search(
+            [('product_id', '=', self.wood_product.id)])
+        self.assertTrue(pickings_component)
+        self.assertTrue(rr_finish.name in pickings_component.origin)
