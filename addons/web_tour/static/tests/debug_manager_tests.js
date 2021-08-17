@@ -12,6 +12,7 @@ import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { DebugMenuParent } from "@web/../tests/core/debug/debug_manager_tests";
+import { fakeCommandService } from "@web/../tests/helpers/mock_services";
 
 const { mount } = owl;
 
@@ -29,7 +30,8 @@ QUnit.module("Tours", (hooks) => {
             .add("hotkey", hotkeyService)
             .add("ui", uiService)
             .add("orm", ormService)
-            .add("localization", makeFakeLocalizationService());
+            .add("localization", makeFakeLocalizationService())
+            .add("command", fakeCommandService);
     });
 
     QUnit.test("can disable tours", async (assert) => {
