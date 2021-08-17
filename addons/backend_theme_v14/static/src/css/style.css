@@ -1,5 +1,34 @@
-.o_main_navbar > ul > li > a, .o_main_navbar > ul > li > label {
+@font-face {
+    font-family: cairo;
+    src: url(/aumet/static/src/fonts/Cairo-Light.ttf);
+}
+
+@font-face {
+    font-family: cairo-bold;
+    src: url(/aumet/static/src/fonts/Cairo-Bold.ttf);
+}
+
+.o-app-name {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 400;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-shadow: none!important;
+    font-family: cairo-bold;
+}
+
+
+.o_menu_apps .dropdown-menu {
     color: black;
+    margin-top: 4px;
+    font-size: 1.25rem;
+    text-shadow: none;
+    font-family: cairo;
+}
+
+.o_main_navbar > ul > li > a, .o_main_navbar > ul > li > label {
+  border: white;
 }
 
 .o_menu_apps .dropdown-menu.show {
@@ -18,8 +47,15 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#1df2dd",endColorstr="#ffffff",GradientType=1);
 }
 
-
-
 .search-container {
     display: none;
+}
+
+.o_menu_apps .dropdown-menu .o-app-icon {
+    height: auto;
+    max-width: 10rem;
+}
+
+.o_menu_apps .dropdown-menu .o_app {
+    width: 24.667%;
 }
