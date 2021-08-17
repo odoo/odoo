@@ -6,9 +6,24 @@
             min-width: 300px;
         }
         thead > tr > th {
-            @include o-position-sticky($top: -1px);
+            @include o-position-sticky($top: 0px);
             background-color: white;
             z-index: 1;
+            &:after,
+            &:before {
+                content: '';
+                position: absolute;
+                left: 0;
+                width: 100%;
+            }
+            &:before {
+                top: -1px;
+                border-top: 2px solid #E0E2E6;
+            }
+            &:after {
+                bottom: -2px;
+                border-bottom: 2px solid #E0E2E6;
+            }
         }
         tbody > tr > td, tfoot > tr > td {
             cursor: pointer;
