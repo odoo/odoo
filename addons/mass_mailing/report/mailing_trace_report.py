@@ -19,6 +19,7 @@ class MailingTraceReport(models.Model):
         string='Status', readonly=True)
     email_from = fields.Char('From', readonly=True)
     # traces
+    scheduled = fields.Integer(readonly=True)
     sent = fields.Integer(readonly=True)
     delivered = fields.Integer(readonly=True)
     error = fields.Integer(readonly=True)
@@ -57,11 +58,12 @@ class MailingTraceReport(models.Model):
             'trace.create_date as scheduled_date',
             'mailing.state',
             'mailing.email_from',
+            "COUNT(trace.id) as scheduled",
             'COUNT(trace.sent_datetime) as sent',
-            "(COUNT(trace.sent_datetime) - COUNT(trace.trace_status) FILTER (WHERE trace.trace_status IN ('error', 'bounce', 'cancel'))) as delivered",
+            "(COUNT(trace.id) - COUNT(trace.trace_status) FILTER (WHERE trace.trace_status IN ('error', 'bounce', 'cancel'))) as delivered",
             "COUNT(trace.trace_status) FILTER (WHERE trace.trace_status = 'error') as error",
             "COUNT(trace.trace_status) FILTER (WHERE trace.trace_status = 'bounce') as bounced",
-            "COUNT(trace.trace_status) FILTER (WHERE trace.trace_status = 'cancel') as cancel",
+            "COUNT(trace.trace_status) FILTER (WHERE trace.trace_status = 'cancel') as canceled",
             "COUNT(trace.trace_status) FILTER (WHERE trace.trace_status = 'open') as opened",
             "COUNT(trace.trace_status) FILTER (WHERE trace.trace_status = 'reply') as replied",
             "COUNT(trace.links_click_datetime) as clicked",
