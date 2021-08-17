@@ -36,6 +36,35 @@ export function debounce(func, wait, immediate = false) {
 }
 
 /**
+ * Returns a function which returns a Promise, that, as long as it continues
+ * to be invoked, will not be triggered. The function (func) will be called
+ * after it stops being called for N milliseconds and the Promise will be resolved.
+ *
+ * @param {Function} func
+ * @param {number} wait
+ * @returns {Function}
+ */
+export function debouncePromise(func, wait) {
+    let resolver;
+    const funcName = func.name ? func.name + " (promise)" : "promise";
+    const obj = {
+        [funcName]: (...args) => {
+            func.apply(this, args);
+            resolver();
+        },
+    };
+    const debouncedFunc = debounce(obj[funcName], wait);
+    return {
+        [funcName](...args) {
+            return new Promise((resolve) => {
+                resolver = resolve;
+                debouncedFunc.apply(this, args);
+            });
+        },
+    }[funcName];
+}
+
+/**
  * Returns a function, that, as long as it continues to be invoked, will be
  * triggered every N milliseconds.
  *
