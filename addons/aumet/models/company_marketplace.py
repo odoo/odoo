@@ -18,7 +18,7 @@ class MarketplaceUser(models.Model):
 
     def write(self, vals):
         if "marketplace_password" not in vals:
-            raise ValidationError("This is error message.")
+            raise ValidationError("Password can't be empty")
 
         login_resp = ProfileAPI.login(vals.get("marketplace_email", self.marketplace_email), vals["marketplace_password"])
 
