@@ -1147,6 +1147,11 @@ class ChromeBrowser:
             message += '\n' + stack
 
         log_type = type
+        self._logger.getChild('browser').log(
+            self._TO_LEVEL.get(log_type, logging.INFO),
+            "%s", message # might still have %<x> characters
+        )
+
         if log_type == 'error':
             self.take_screenshot()
             self._save_screencast()
@@ -1159,13 +1164,8 @@ class ChromeBrowser:
                     "Trying to set result to failed (%s) but found the future settled (%s)",
                     message, self._result
                 )
-        else:
-            self._logger.getChild('browser').log(
-                self._TO_LEVEL.get(log_type, logging.INFO),
-                "%s", message # might still have %<x> characters
-            )
-            if 'test successful' in message:
-                self._result.set_result(True)
+        elif 'test successful' in message:
+            self._result.set_result(True)
 
     def _handle_exception(self, exceptionDetails, timestamp):
         message = exceptionDetails['text']
