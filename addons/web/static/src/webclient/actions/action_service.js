@@ -12,6 +12,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { ActionDialog } from "./action_dialog";
 import { CallbackRecorder } from "./action_hook";
+import { View } from "@web/views/view";
 
 const { Component, hooks, tags } = owl;
 const { useRef, useSubEnv } = hooks;
@@ -762,7 +763,7 @@ function makeActionManager(env) {
 
         const controller = {
             jsId: `controller_${++id}`,
-            Component: view,
+            Component: view.isLegacy ? view : View,
             action,
             view,
             views,
@@ -779,7 +780,7 @@ function makeActionManager(env) {
         if (lazyView) {
             updateUIOptions.lazyController = {
                 jsId: `controller_${++id}`,
-                Component: lazyView,
+                Component: lazyView.isLegacy ? lazyView : View,
                 action,
                 view: lazyView,
                 views,
@@ -1173,7 +1174,7 @@ function makeActionManager(env) {
         }
         const newController = controller.action.controllers[viewType] || {
             jsId: `controller_${++id}`,
-            Component: view,
+            Component: view.isLegacy ? view : View,
             action: controller.action,
             views: controller.views,
             view,

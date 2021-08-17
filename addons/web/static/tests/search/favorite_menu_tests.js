@@ -1,10 +1,13 @@
 /** @odoo-module **/
 
-import { patchDate } from "@web/../tests/helpers/utils";
+import { click, patchDate } from "@web/../tests/helpers/utils";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { dialogService } from "@web/core/dialog/dialog_service";
+import { FavoriteMenu } from "@web/search/favorite_menu/favorite_menu";
 import {
     makeWithSearch,
+    deleteFavorite,
     getFacetTexts,
     isItemSelected,
     toggleComparisonMenu,
@@ -13,8 +16,10 @@ import {
     setupControlPanelServiceRegistry,
 } from "./helpers";
 import { registry } from "@web/core/registry";
+import { SearchBar } from "@web/search/search_bar/search_bar";
 
 const serviceRegistry = registry.category("services");
+const viewRegistry = registry.category("views");
 
 function getDomain(comp) {
     return comp.env.searchModel.domain;
@@ -77,6 +82,78 @@ QUnit.module("Search", (hooks) => {
             "Save current search"
         );
     });
+
+    QUnit.test(
+        "delete an active favorite remove it both in list of favorite and in search bar",
+        async function (assert) {
+            assert.expect(7);
+
+            class ToyView extends owl.Component {
+                setup() {
+                    assert.deepEqual(this.props.domain, [["foo", "=", "qsdf"]]);
+                }
+                willUpdateProps(nextProps) {
+                    assert.deepEqual(nextProps.domain, []);
+                }
+            }
+            ToyView.components = { FavoriteMenu, SearchBar };
+            ToyView.template = owl.tags.xml`
+                <div>
+                    <SearchBar/>
+                    <FavoriteMenu/>
+                </div>
+            `;
+            ToyView.type = "toy";
+            ToyView.display_name = "";
+
+            viewRegistry.add("toy", ToyView);
+
+            serverData.views["foo,false,toy"] = `<toy/>`;
+
+            serverData.models.foo.filters = [
+                {
+                    context: "{}",
+                    domain: "[['foo', '=', 'qsdf']]",
+                    id: 7,
+                    is_default: true,
+                    name: "My favorite",
+                    sort: "[]",
+                    user_id: [2, "Mitchell Admin"],
+                },
+            ];
+
+            const webClient = await createWebClient({
+                serverData,
+                mockRPC: async (_, args) => {
+                    if (args.model === "ir.filters" && args.method === "unlink") {
+                        return { result: true }; // mocked unlink result
+                    }
+                },
+            });
+            await doAction(webClient, {
+                name: "Action",
+                res_model: "foo",
+                type: "ir.actions.act_window",
+                views: [[false, "toy"]],
+            });
+
+            await toggleFavoriteMenu(webClient);
+
+            assert.deepEqual(getFacetTexts(webClient), ["My favorite"]);
+            assert.hasClass(
+                webClient.el.querySelector(".o_favorite_menu li.o_menu_item"),
+                "selected"
+            );
+
+            await deleteFavorite(webClient, 0);
+
+            await click(document.querySelector("div.o_dialog footer button"));
+
+            assert.deepEqual(getFacetTexts(webClient), []);
+            assert.containsNone(webClient, ".o_favorite_menu .o_menu_item");
+            assert.containsOnce(webClient, ".o_favorite_menu .o_add_favorite");
+        }
+    );
 
     QUnit.test(
         "default favorite is not activated if activateFavorite is set to false",
