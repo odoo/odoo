@@ -5,4 +5,23 @@
     <WithSearch t-props="withSearchProps" class="o_action o_view_controller"/>
   </t>
 
+  <t t-name="web.ReportViewMeasures" owl="1">
+    <Dropdown togglerClass="'btn btn-primary'">
+            <t t-set-slot="toggler">
+                Measures <i class="fa fa-caret-down ml-1"/>
+            </t>
+            <t t-foreach="measures"
+               t-as="measure"
+               t-key="measure_value.name">
+                <div t-if="!measure_first and measure == '__count'" role="separator" class="dropdown-divider"/>
+                <DropdownItem class="o_menu_item dropdown-item"
+                    t-att-class="{ active:activeMeasures.includes(measure) }"
+                    payload="{ measure: measure_value.name }"
+                    parentClosingMode="'none'"
+                    >
+                    <t t-esc="measures[measure].string"/>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+  </t>
 </templates>
