@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
+import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
+import { legacyExtraNextTick, nextTick } from "../../helpers/utils";
 import { registry } from "@web/core/registry";
 import testUtils from "web.test_utils";
-import { legacyExtraNextTick, nextTick } from "../../helpers/utils";
-import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
 const { Component, tags } = owl;
 const actionRegistry = registry.category("actions");

@@ -6,7 +6,12 @@ import { useSetupAction } from "../webclient/actions/action_hook";
 import legacyViewRegistry from "web.view_registry";
 import { ViewAdapter } from "./action_adapters";
 import Widget from "web.Widget";
-import { breadcrumbsToLegacy } from "./utils";
+import {
+    breadcrumbsToLegacy,
+    exportGlobalState,
+    exportLocalState,
+    searchModelStateToLegacy,
+} from "./backend_utils";
 import { setScrollPosition } from "../core/utils/scrolling";
 import { registry } from "@web/core/registry";
 
@@ -34,6 +39,21 @@ function registerView(name, LegacyView) {
             this.Widget = Widget; // fool the ComponentAdapter with a simple Widget
             this.View = LegacyView;
             this.viewInfo = {};
+
+            let resIds;
+            let searchModel;
+            let searchPanel;
+            const { globalState } = this.props;
+            if (globalState) {
+                resIds = globalState.resIds;
+                if (globalState.__legacySearchModel__) {
+                    searchModel = globalState.__legacySearchModel__;
+                } else {
+                    searchModel = searchModelStateToLegacy(globalState.searchModel);
+                }
+                searchPanel = globalState.searchPanel;
+            }
+
             this.viewParams = Object.assign({}, this.props.actionFlags, {
                 action: this.props.action,
                 // legacy views automatically add the last part of the breadcrumbs
@@ -45,13 +65,9 @@ function registerView(name, LegacyView) {
                         "resId" in this.props
                             ? this.props.resId
                             : this.props.state && this.props.state.currentId,
-                    resIds: this.props.resIds || (this.props.state && this.props.state.resIds),
-                    searchModel:
-                        this.props.searchModel ||
-                        (this.props.state && this.props.state.searchModel),
-                    searchPanel:
-                        this.props.searchPanel ||
-                        (this.props.state && this.props.state.searchPanel),
+                    resIds: this.props.resIds || resIds,
+                    searchModel,
+                    searchPanel,
                 },
             });
 
@@ -71,7 +87,8 @@ function registerView(name, LegacyView) {
                 this.props.state && this.props.state.__on_reverse_breadcrumb__;
             useSetupAction({
                 beforeLeave: () => this.controllerRef.comp.__widget.canBeRemoved(),
-                export: () => this.controllerRef.comp.exportState(),
+                exportGlobalState: () => exportGlobalState(this.controllerRef.comp.exportState()),
+                exportLocalState: () => exportLocalState(this.controllerRef.comp.exportState()),
             });
             this.onScrollTo = (ev) => {
                 setScrollPosition(this, { left: ev.detail.left, top: ev.detail.top });
@@ -86,7 +103,6 @@ function registerView(name, LegacyView) {
             };
             const options = {
                 actionId: this.props.actionId,
-                context: this.props.context,
                 loadActionMenus: this.props.loadActionMenus,
                 loadIrFilters: this.props.loadIrFilters,
             };
