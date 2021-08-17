@@ -139,6 +139,9 @@ export class MockServer {
         }
         // generate a field_view_get result
         const fields = Object.assign({}, this.models[modelName].fields);
+        for (const fieldName in fields) {
+            fields[fieldName].name = fieldName;
+        }
         // var viewOptions = params.viewOptions || {};
         const fvg = this._fieldsViewGet({ arch, modelName, fields, context: kwargs.context || {} });
         if (kwargs.options.toolbar) {
@@ -730,7 +733,7 @@ export class MockServer {
         let aggregatedFields = [];
         // if no fields have been given, the server picks all stored fields
         if (kwargs.fields.length === 0) {
-            aggregatedFields = Object.keys(this.models[modelName].fields).filter(
+            aggregatedFields = Object.keys(fields).filter(
                 (fieldName) => !groupByFieldNames.includes(fieldName)
             );
         } else {
@@ -1503,7 +1506,11 @@ export class MockServer {
         fieldNames = [...new Set(fieldNames.concat(["id"]))];
         const { context } = params;
         const active_test = context && "active_test" in context ? context.active_test : true;
-        let records = this.getRecords(params.model, params.domain || [], { active_test });
+        let records = this.getRecords(
+            params.model,
+            params.domain || [],
+            Object.assign({}, params.context, { active_test })
+        );
         if (params.sort) {
             // warning: only consider first level of sort
             params.sort = params.sort.split(",")[0];

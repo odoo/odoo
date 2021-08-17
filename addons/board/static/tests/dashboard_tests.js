@@ -7,6 +7,15 @@ var ListController = require('web.ListController');
 var testUtils = require('web.test_utils');
 var ListRenderer = require('web.ListRenderer');
 var pyUtils = require('web.py_utils');
+const { registry } = require("@web/core/registry");
+const { PivotView } = require("@web/views/pivot/pivot_view");
+const {
+    toggleFilterMenu,
+    toggleMenuItem,
+    toggleMenuItemOption,
+    toggleComparisonMenu,
+    toggleFavoriteMenu,
+} = require("@web/../tests/search/helpers");
 
 const cpHelpers = testUtils.controlPanel;
 const { createWebClient, doAction } = require("@web/../tests/webclient/helpers");
@@ -1053,7 +1062,8 @@ QUnit.test('click on a cell of pivot view inside dashboard', async function (ass
     form.destroy();
 });
 
-QUnit.test(
+// TODO: The button "Add to my dashboard" is not yet developped on the new control panel search view
+QUnit.skip(
     "correctly save the time ranges of a reporting view in comparison mode",
     async function (assert) {
         assert.expect(1);
@@ -1090,6 +1100,7 @@ QUnit.test(
             }
         };
 
+        registry.category("views").add("pivot", PivotView, { force: true });
         const webClient = await createWebClient({ serverData, mockRPC });
 
         await doAction(webClient, {
@@ -1100,16 +1111,16 @@ QUnit.test(
         });
 
         // filter on July 2020
-        await cpHelpers.toggleFilterMenu(webClient);
-        await cpHelpers.toggleMenuItem(webClient, "Date");
-        await cpHelpers.toggleMenuItemOption(webClient, "Date", "July");
+        await toggleFilterMenu(webClient);
+        await toggleMenuItem(webClient, "Date");
+        await toggleMenuItemOption(webClient, "Date", "July");
 
         // compare July 2020 to June 2020
-        await cpHelpers.toggleComparisonMenu(webClient);
-        await cpHelpers.toggleMenuItem(webClient, 0);
+        await toggleComparisonMenu(webClient);
+        await toggleMenuItem(webClient, 0);
 
         // add the view to the dashboard
-        await cpHelpers.toggleFavoriteMenu(webClient);
+        await toggleFavoriteMenu(webClient);
 
         await testUtils.dom.click($(".o_add_to_board > button"));
         await testUtils.fields.editInput($(".o_add_to_board input"), "a name");
