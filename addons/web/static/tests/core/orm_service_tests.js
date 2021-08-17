@@ -155,11 +155,11 @@ QUnit.test("write method", async (assert) => {
     });
 });
 
-QUnit.test("readGroup method", async (assert) => {
+QUnit.test("webReadGroup method", async (assert) => {
     const [query, rpc] = makeFakeRPC();
     serviceRegistry.add("rpc", rpc);
     const env = await makeTestEnv();
-    await env.services.orm.readGroup(
+    await env.services.orm.webReadGroup(
         "sale.order",
         [["user_id", "=", 2]],
         ["amount_total:sum"],
@@ -181,6 +181,36 @@ QUnit.test("readGroup method", async (assert) => {
             offset: 1,
         },
         method: "web_read_group",
+        model: "sale.order",
+    });
+});
+
+QUnit.test("readGroup method", async (assert) => {
+    const [query, rpc] = makeFakeRPC();
+    serviceRegistry.add("rpc", rpc);
+    const env = await makeTestEnv();
+    await env.services.orm.readGroup(
+        "sale.order",
+        [["user_id", "=", 2]],
+        ["amount_total:sum"],
+        ["date_order"],
+        { offset: 1 }
+    );
+    assert.strictEqual(query.route, "/web/dataset/call_kw/sale.order/read_group");
+    assert.deepEqual(query.params, {
+        args: [],
+        kwargs: {
+            domain: [["user_id", "=", 2]],
+            fields: ["amount_total:sum"],
+            groupby: ["date_order"],
+            context: {
+                lang: "en",
+                uid: 7,
+                tz: "taht",
+            },
+            offset: 1,
+        },
+        method: "read_group",
         model: "sale.order",
     });
 });
