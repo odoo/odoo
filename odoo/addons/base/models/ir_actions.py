@@ -19,7 +19,7 @@ import dateutil
 from pytz import timezone
 
 _logger = logging.getLogger(__name__)
-
+_server_action_logger = logging.getLogger("server_action")
 
 class IrActions(models.Model):
     _name = 'ir.actions.actions'
@@ -492,6 +492,9 @@ class IrActionsServer(models.Model):
                     VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """, (self.env.uid, 'server', self._cr.dbname, __name__, level, message, "action", action.id, action.name))
 
+        def logger_log(message="", stack_info=False, level=20):
+            _server_action_logger.log(level, message, stack_info=stack_info)
+
         eval_context = super(IrActionsServer, self)._get_eval_context(action=action)
         model_name = action.model_id.sudo().model
         model = self.env[model_name]
@@ -514,6 +517,7 @@ class IrActionsServer(models.Model):
             'records': records,
             # helpers
             'log': log,
+            'logger_log': logger_log,
         })
         return eval_context
 
