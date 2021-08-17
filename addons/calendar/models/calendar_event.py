@@ -832,7 +832,7 @@ class Meeting(models.Model):
                         deadline = deadline.astimezone(pytz.timezone(user_tz))
                     activity_values['date_deadline'] = deadline.date()
                 if 'user_id' in fields:
-                    activity_values['user_id'] = event.user_id.id
+                    activity_values['user_id'] = event.user_id.id or self.env.user.id
                 if activity_values.keys():
                     event.activity_ids.write(activity_values)
 
