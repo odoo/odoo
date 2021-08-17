@@ -10,7 +10,9 @@
                     </t>
                 </div>
                 <div t-if="display['top-right']" class="o_cp_top_right">
-                    <t t-slot="control-panel-top-right"/>
+                    <t t-slot="control-panel-top-right">
+                        <SearchBar/>
+                    </t>
                 </div>
             </div>
             <div t-if="display['bottom']" class="o_cp_bottom">
@@ -18,7 +20,13 @@
                     <t t-slot="control-panel-bottom-left"/>
                 </div>
                 <div t-if="display['bottom-right']" class="o_cp_bottom_right">
-                    <t t-slot="control-panel-bottom-right"/>
+                    <t t-slot="control-panel-bottom-right">
+                        <div class="btn-group o_search_options position-static" role="search">
+                            <t t-foreach="searchMenus" t-as="menu" t-key="menu.key">
+                                <t t-component="menu.Component"/>
+                            </t>
+                        </div>
+                    </t>
 
                     <div class="o_cp_pager"/>
 

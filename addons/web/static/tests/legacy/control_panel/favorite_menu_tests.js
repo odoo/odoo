@@ -22,7 +22,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
         },
     }, function () {
 
-        QUnit.module('FavoriteMenu');
+        QUnit.module('FavoriteMenu (legacy)');
 
         QUnit.test('simple rendering with no favorite', async function (assert) {
             assert.expect(8);

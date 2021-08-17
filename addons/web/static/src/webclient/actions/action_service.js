@@ -11,6 +11,15 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { sprintf } from "@web/core/utils/strings";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { ActionDialog } from "./action_dialog";
+import { CallbackRecorder } from "./action_hook";
+import { View } from "@web/views/view";
+
+const { Component, hooks, tags } = owl;
+const { useRef, useSubEnv } = hooks;
+
+const actionHandlersRegistry = registry.category("action_handlers");
+const actionRegistry = registry.category("actions");
+const viewRegistry = registry.category("views");
 
 /** @typedef {number|false} ActionId */
 /** @typedef {Object} ActionDescription */
@@ -31,12 +40,6 @@ import { ActionDialog } from "./action_dialog";
  * @property {Object} [props]
  * @property {ViewType} [viewType]
  */
-
-const { Component, hooks, tags } = owl;
-
-const viewRegistry = registry.category("views");
-const actionHandlersRegistry = registry.category("action_handlers");
-const actionRegistry = registry.category("actions");
 
 export function clearUncommittedChanges(env) {
     const callbacks = [];
@@ -72,7 +75,6 @@ const CTX_KEY_REGEX = /^(?:(?:default_|search_default_|show_).+|.+_view_ref|grou
 
 // only register this template once for all dynamic classes ControllerComponent
 const ControllerComponentTemplate = tags.xml`<t t-component="Component" t-props="props"
-    registerCallback="registerCallback"
     t-ref="component"
     t-on-history-back="onHistoryBack"
     t-on-controller-title-updated.stop="onTitleUpdated"/>`;
@@ -382,21 +384,58 @@ function makeActionManager(env) {
                 }
                 return viewSwitcherEntry;
             });
+        const context = action.context || {};
         const flags = action.flags || {};
-        const viewProps = Object.assign(_getActionProps(action, props), {
-            actionFlags: Object.assign({}, flags, flags[view.type]),
-            context: action.context,
+        const viewProps = Object.assign({}, props, {
+            actionFlags: Object.assign({}, flags, flags[view.type]), // review system
+            action: {
+                id: action.id || false,
+                type: action.type || false,
+            },
+            context,
+            display: { mode: target === "new" ? "inDialog" : target },
+            displayName: action.display_name || action.name,
             domain: action.domain || [],
+            groupBy: action.context.group_by || [],
+            loadActionMenus: target !== "new" && target !== "inline",
+            loadIrFilters: action.views.some((v) => v[1] === "search"),
             resModel: action.res_model,
             type: view.type,
             views: action.views,
             viewSwitcherEntries,
-            loadActionMenus: target !== "new" && target !== "inline",
-            loadIrFilters: action.views.some((v) => v[1] === "search"),
         });
+
+        if (target === "inline") {
+            viewProps.searchMenuTypes = [];
+        }
+
+        const specialKeys = ["help", "useSampleModel", "limit", "count"];
+        for (const key of specialKeys) {
+            if (key in action) {
+                if (key === "help") {
+                    viewProps.noContentHelp = action.help;
+                } else {
+                    viewProps[key] = action[key];
+                }
+            }
+        }
+
+        if (context.active_id || context.active_ids || context.search_disable_custom_filters) {
+            viewProps.activateFavorite = false; // not sure --> check logic
+        }
+
+        // view specific
         if (action.res_id) {
             viewProps.resId = action.res_id;
         }
+
+        // LEGACY CODE COMPATIBILITY: remove when all views will be written in owl
+        if (view.isLegacy) {
+            const legacyActionInfo = { ...action, ...viewProps.action };
+            Object.assign(viewProps, { action: legacyActionInfo, View: view });
+        }
+        // END LEGACY CODE COMPATIBILITY
+
         return viewProps;
     }
 
@@ -465,24 +504,20 @@ function makeActionManager(env) {
         class ControllerComponent extends Component {
             setup() {
                 this.Component = controller.Component;
-                this.componentRef = hooks.useRef("component");
+                this.componentRef = useRef("component");
                 useDebugCategory("action", { action });
                 if (action.target !== "new") {
-                    let beforeLeaveFn;
-                    this.registerCallback = (type, fn) => {
-                        switch (type) {
-                            case "export":
-                                controller.getState = fn;
-                                break;
-                            case "beforeLeave":
-                                beforeLeaveFn = fn;
-                                break;
-                        }
-                    };
+                    this.__beforeLeave__ = new CallbackRecorder();
+                    this.__exportGlobalState__ = new CallbackRecorder();
+                    this.__exportLocalState__ = new CallbackRecorder();
                     useBus(env.bus, "CLEAR-UNCOMMITTED-CHANGES", (callbacks) => {
-                        if (beforeLeaveFn) {
-                            callbacks.push(beforeLeaveFn);
-                        }
+                        const beforeLeaveFns = this.__beforeLeave__.callbacks;
+                        callbacks.push(...beforeLeaveFns);
+                    });
+                    useSubEnv({
+                        __beforeLeave__: this.__beforeLeave__,
+                        __exportGlobalState__: this.__exportGlobalState__,
+                        __exportLocalState__: this.__exportLocalState__,
                     });
                 }
             }
@@ -523,6 +558,19 @@ function makeActionManager(env) {
                     });
                     dialog = nextDialog;
                 } else {
+                    controller.getGlobalState = () => {
+                        const exportFns = this.__exportGlobalState__.callbacks;
+                        if (exportFns.length) {
+                            return Object.assign({}, ...exportFns.map((fn) => fn()));
+                        }
+                    };
+                    controller.getLocalState = () => {
+                        const exportFns = this.__exportLocalState__.callbacks;
+                        if (exportFns.length) {
+                            return Object.assign({}, ...exportFns.map((fn) => fn()));
+                        }
+                    };
+
                     // LEGACY CODE COMPATIBILITY: remove when controllers will be written in owl
                     // we determine here which actions no longer occur in the nextStack,
                     // and we manually destroy all their controller's widgets
@@ -532,7 +580,10 @@ function makeActionManager(env) {
                         if (!nextStackActionIds.includes(c.action.jsId)) {
                             if (c.action.type === "ir.actions.act_window") {
                                 for (const viewType in c.action.controllers) {
-                                    toDestroy.add(c.action.controllers[viewType]);
+                                    const controller = c.action.controllers[viewType];
+                                    if (controller.Component.isLegacy) {
+                                        toDestroy.add(controller);
+                                    }
                                 }
                             } else {
                                 toDestroy.add(c);
@@ -540,7 +591,7 @@ function makeActionManager(env) {
                         }
                     }
                     for (const c of toDestroy) {
-                        if (c.exportedState) {
+                        if (c.exportedState && c.exportedState.__legacy_widget__) {
                             c.exportedState.__legacy_widget__.destroy();
                         }
                     }
@@ -603,12 +654,28 @@ function makeActionManager(env) {
         }
 
         const currentController = _getCurrentController();
-        if (currentController && currentController.getState) {
-            currentController.exportedState = currentController.getState();
+        if (currentController && currentController.getLocalState) {
+            currentController.exportedState = currentController.getLocalState();
         }
-
         if (controller.exportedState) {
             controller.props.state = controller.exportedState;
+        }
+
+        // TODO DAM Remarks:
+        // this thing seems useless for client actions.
+        // restore and switchView (at least) use this --> cannot be done in switchView only
+        // if prop globalState has been passed in doAction, since the action is new the prop won't be overridden in l655.
+        // if globalState is not useful for client actions --> maybe use that thing in useSetupView instead of useSetupAction?
+        // a good thing: the Object.assign seems to reflect the use of "externalState" in legacy Model class --> things should be fine.
+        if (currentController && currentController.getGlobalState) {
+            currentController.action.globalState = Object.assign(
+                {},
+                currentController.action.globalState,
+                currentController.getGlobalState() // what if this = {}?
+            );
+        }
+        if (controller.action.globalState) {
+            controller.props.globalState = controller.action.globalState;
         }
 
         const index = _computeStackIndex(options);
@@ -700,7 +767,7 @@ function makeActionManager(env) {
 
         const controller = {
             jsId: `controller_${++id}`,
-            Component: view,
+            Component: view.isLegacy ? view : View,
             action,
             view,
             views,
@@ -717,7 +784,7 @@ function makeActionManager(env) {
         if (lazyView) {
             updateUIOptions.lazyController = {
                 jsId: `controller_${++id}`,
-                Component: lazyView,
+                Component: lazyView.isLegacy ? lazyView : View,
                 action,
                 view: lazyView,
                 views,
@@ -1111,7 +1178,7 @@ function makeActionManager(env) {
         }
         const newController = controller.action.controllers[viewType] || {
             jsId: `controller_${++id}`,
-            Component: view,
+            Component: view.isLegacy ? view : View,
             action: controller.action,
             views: controller.views,
             view,
@@ -1120,7 +1187,7 @@ function makeActionManager(env) {
         // LEGACY CODE COMPATIBILITY: remove when controllers will be written in owl
         if (view.isLegacy && newController.jsId === controller.jsId) {
             // case where a legacy view is reloaded via the view switcher
-            const { __legacy_widget__ } = controller.getState();
+            const { __legacy_widget__ } = controller.getLocalState();
             const params = {};
             if ("resId" in props) {
                 params.currentId = props.resId;
