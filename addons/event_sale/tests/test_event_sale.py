@@ -270,3 +270,13 @@ class TestEventSale(TestEventSaleCommon):
         self.assertEqual(event.seats_expected, 1)
         self.sale_order.order_line.unlink()
         self.assertEqual(event.seats_expected, 0)
+        
+    @users('user_salesman')
+    def test_cancel_so(self):
+        """ This test ensures that when canceling a sale order, if the latter is linked to an event registration,
+        the number of expected seats will be correctly updated """
+        event = self.env['event.event'].browse(self.event_0.ids)
+        self.register_person.action_make_registration()
+        self.assertEqual(event.seats_expected, 1)
+        self.sale_order.action_cancel()
+        self.assertEqual(event.seats_expected, 0)
