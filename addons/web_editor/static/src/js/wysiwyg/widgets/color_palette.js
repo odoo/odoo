@@ -359,9 +359,9 @@ const ColorPaletteWidget = Widget.extend({
      */
     _markSelectedColor: function () {
         this.el.querySelectorAll('button.selected').forEach(el => el.classList.remove('selected'));
-        const selectedButton = this.el.querySelector(`button[data-color="${this.selectedColor}"], button[style*="background-color:${this.selectedColor};"]`);
-        if (selectedButton) {
-            selectedButton.classList.add('selected');
+        const buttonToSelectEls = this.el.querySelectorAll(`button[data-color="${this.selectedColor}"], button[style*="background-color:${this.selectedColor};"]`);
+        for (const buttonToSelectEl of buttonToSelectEls) {
+            buttonToSelectEl.classList.add('selected');
         }
     },
     /**
