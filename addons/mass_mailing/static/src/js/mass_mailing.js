@@ -73,7 +73,7 @@ const MassMailingKanbanView = KanbanView.extend({
 KanbanColumn.include({
     init: function () {
         this._super.apply(this, arguments);
-        if (this.modelName in ['mailing.mailing', 'mailing.ab.testing']) {
+        if (this.modelName == 'mailing.mailing') {
             this.draggable = false;
         }
     },

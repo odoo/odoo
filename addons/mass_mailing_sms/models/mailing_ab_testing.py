@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.osv import expression
 
 
 class MassMailingSmsTestingCamapign(models.Model):
@@ -25,3 +26,14 @@ class MassMailingSmsTestingCamapign(models.Model):
         if self.mailing_type == 'sms':
             sorted_by = self.sms_based_on
         return sorted_by
+
+    # --------------------------------------------------
+    # TOOLS
+    # --------------------------------------------------
+
+    def _get_default_mailing_domain(self):
+        mailing_domain = super()._get_default_mailing_domain()
+        if self.mailing_type == 'sms' and 'phone_sanitized_blacklisted' in self.env[self.mailing_model_name]._fields:
+            mailing_domain = expression.AND([mailing_domain, [('phone_sanitized_blacklisted', '=', False)]])
+
+        return mailing_domain

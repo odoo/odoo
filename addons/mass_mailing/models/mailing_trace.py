@@ -70,7 +70,7 @@ class MailingTrace(models.Model):
     res_id = fields.Many2oneReference(string='Document ID', model_field='model', required=True)
     # campaign / wave data
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mailing', index=True, ondelete='cascade')
-    mass_mailing_testing_id = fields.Many2one('mailing.ab.testing', related="mass_mailing_id.testing_mailing_id", string='Testing Mailing', index=True, ondelete='cascade')
+    mass_mailing_testing_id = fields.Many2one('mailing.ab.testing', related="mass_mailing_id.ab_testing_mailing_id", string='Testing Mailing', index=True, ondelete='cascade')
     campaign_id = fields.Many2one(
         related='mass_mailing_id.campaign_id',
         string='Campaign',

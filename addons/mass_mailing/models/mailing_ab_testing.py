@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import random
 from ast import literal_eval
 from datetime import timedelta
 
@@ -18,27 +17,9 @@ class MassMailingTestingCampaign(models.Model):
     _description = "A/B Testing Campaign"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'mail.render.mixin']
 
-    def _get_default_mailing_domain(self):
-        mailing_domain = []
-        if hasattr(self.env[self.mailing_model_name], '_mailing_get_default_domain'):
-            mailing_domain = self.env[self.mailing_model_name]._mailing_get_default_domain(self)
-
-        if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
-            mailing_domain = expression.AND([[('is_blacklisted', '=', False)], mailing_domain])
-
-        return mailing_domain
-
-    def _parse_mailing_domain(self):
-        self.ensure_one()
-        try:
-            mailing_domain = literal_eval(self.mailing_domain)
-        except Exception:
-            mailing_domain = [('id', 'in', [])]
-        return mailing_domain
-
     name = fields.Char('Title', required=True)
     active = fields.Boolean(default=True, tracking=True)
-    mailing_ids = fields.One2many('mailing.mailing', 'testing_mailing_id', string='Mailings')
+    mailing_ids = fields.One2many('mailing.mailing', 'ab_testing_mailing_id', string='Mailings')
     nbr_mailing_ids = fields.Integer('Mailings #', compute='_compute_nbr_mailing_ids')
     mailing_count = fields.Integer('Number of Testing Mailings', compute="_compute_mailing_count")
     mailing_type = fields.Selection([('mail', 'Email')], string="Mailing Type", default="mail", required=True)
@@ -123,10 +104,10 @@ class MassMailingTestingCampaign(models.Model):
     @api.depends('mailing_ids')
     def _compute_mailing_count(self):
         mailing_data = self.env['mailing.mailing'].read_group(
-            [('testing_mailing_id', 'in', self.ids)],
-            ['testing_mailing_id'], ['testing_mailing_id'])
+            [('ab_testing_mailing_id', 'in', self.ids)],
+            ['ab_testing_mailing_id'], ['ab_testing_mailing_id'])
         count_data = dict(
-            (item['testing_mailing_id'][0], item['testing_mailing_id_count']) for item in mailing_data
+            (item['ab_testing_mailing_id'][0], item['ab_testing_mailing_id_count']) for item in mailing_data
         )
         for testing_mailing in self:
             testing_mailing.mailing_count = count_data.get(testing_mailing.id, 0)
@@ -144,7 +125,7 @@ class MassMailingTestingCampaign(models.Model):
                 'default_mailing_model_id': self.mailing_model_id.id,
                 'default_mailing_domain': self.mailing_domain,
                 'default_contact_list_ids': self.contact_list_ids.ids,
-                'default_testing_mailing_id': self.id,
+                'default_ab_testing_mailing_id': self.id,
                 'default_mailing_type': self.mailing_type,
             }),
         }
@@ -155,13 +136,13 @@ class MassMailingTestingCampaign(models.Model):
         if not mailings:
             mailings = self.mailing_ids.filtered(lambda m: m.state == 'draft')
         for mailing in mailings:
-            recipients = self._get_recipients(mailing.contact_ab_pc)
+            recipients = mailing._get_recipients()
             if recipients:
                 mailing.campaign_id = self.campaign_id
                 mailing.action_send_mail(recipients)
             else:
                 raise ValidationError(_("There are not enough recipients to send the testing mailings. Increase the sample size or the number of recipients"))
-        if mailing:
+        if mailings:
             sent_mailings = self.mailing_ids.filtered(lambda m: m.state == 'done')
             if sent_mailings == self.mailing_ids and len(self.mailing_ids) >= 2:
                 status = {'state': 'sent'}
@@ -169,42 +150,14 @@ class MassMailingTestingCampaign(models.Model):
                 status = {'state': 'in_progress'}
             self.write(status)
             at = mailing.sent_date + timedelta(hours=self._get_duration_hours())
-            if not cron.lastcall or at > cron.lastcall:
-                cron._trigger(at=at)
+            cron._trigger(at=at)
 
     def action_send_winner_mailing(self):
         self.ensure_one()
         if self.testing_mode == 'based_on' and self.mailing_ids:
             sorted_by = self._get_sort_by_field()
             selected_mailing = self.mailing_ids.filtered(lambda m: m.state == 'done').sorted(sorted_by, reverse=True)[0]
-            final_mailing = selected_mailing.copy()
-            old_version_name = selected_mailing.version_id.name if selected_mailing.version_id else _("Version")
-            version_name = _("%s - Final", old_version_name)
-            version_id = self.env['mailing.mailing.version']._search_create_version_id(version_name)
-            final_mailing.write({
-                'is_winner': True,
-                'version_id': version_id.id,
-            })
-            final_mailing.action_send_mail(self._get_remaining_recipients())
-            self.write({'state': 'done'})
-
-    def _get_recipients(self, percentage_used):
-        mailing_domain = self._parse_mailing_domain()
-        res_ids = self.env[self.mailing_model_real].search(mailing_domain).ids
-
-        contact_nbr = len(res_ids)
-        topick = int(contact_nbr * percentage_used)
-
-        if self.campaign_id:
-            already_mailed = self.campaign_id._get_mailing_recipients()[self.campaign_id.id]
-        else:
-            already_mailed = set([])
-
-        remaining = set(res_ids).difference(already_mailed)
-        if topick > len(remaining):
-            topick = len(remaining)
-        res_ids = random.sample(remaining, topick)
-        return res_ids
+            selected_mailing.action_select_as_winner()
 
     def _get_remaining_recipients(self):
         mailing_domain = self._parse_mailing_domain()
@@ -213,6 +166,28 @@ class MassMailingTestingCampaign(models.Model):
             already_mailed = set([trace.res_id for trace in mailing.mailing_trace_ids])
             res_ids = res_ids.difference(already_mailed)
         return list(res_ids)
+
+    # ------------------------------------------------------
+    # TOOLS
+    # ------------------------------------------------------
+
+    def _get_default_mailing_domain(self):
+        mailing_domain = []
+        if hasattr(self.env[self.mailing_model_name], '_mailing_get_default_domain'):
+            mailing_domain = self.env[self.mailing_model_name]._mailing_get_default_domain(self)
+
+        if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
+            mailing_domain = expression.AND([[('is_blacklisted', '=', False)], mailing_domain])
+
+        return mailing_domain
+
+    def _parse_mailing_domain(self):
+        self.ensure_one()
+        try:
+            mailing_domain = literal_eval(self.mailing_domain)
+        except Exception:
+            mailing_domain = [('id', 'in', [])]
+        return mailing_domain
 
     def _get_duration_hours(self):
         if self.duration_type == 'min':
