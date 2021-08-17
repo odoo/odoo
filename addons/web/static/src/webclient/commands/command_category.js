@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 const commandCategoryRegistry = registry.category("command_categories");
-commandCategoryRegistry.add("app", { label: _lt("Current App Commands") }, { sequence: 10 });
-commandCategoryRegistry.add("actions", { label: _lt("More Actions") }, { sequence: 30 });
-commandCategoryRegistry.add("navbar", { label: _lt("NavBar") }, { sequence: 40 });
-commandCategoryRegistry.add("default", { label: _lt("Other commands") }, { sequence: 100 });
-commandCategoryRegistry.add("debug", { label: _lt("Debug") }, { sequence: 110 });
+commandCategoryRegistry
+    .add("app", {}, { sequence: 10 })
+    .add("actions", {}, { sequence: 30 })
+    .add("navbar", {}, { sequence: 40 })
+    .add("default", {}, { sequence: 100 })
+    .add("debug", {}, { sequence: 110 });

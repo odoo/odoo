@@ -3,49 +3,99 @@
 import { registry } from "@web/core/registry";
 import { CommandPaletteDialog } from "./command_palette_dialog";
 
+const { xml } = owl.tags;
+
 /**
- * @typedef {import("./command_palette").NextProvider} NextProvider
+ * @typedef {import("./command_palette").CommandPaletteConfig} CommandPaletteConfig
  */
 
 /**
  * @typedef {{
- *  name: string,
- *  action: ()=>(void | NextProvider),
- *  category?: string,
- *  hotkey?: string,
- *  hotkeyOptions?: any,
+ *  name: string;
+ *  action: ()=>(void | CommandPaletteConfig);
+ *  category?: string;
  * }} Command
  */
 
 /**
  * @typedef {{
  *  category?: string;
+ *  global?: boolean;
  *  hotkey?: string;
- *  hotkeyOptions?: any;
- * }} CommandServiceAddOptions
+ * }} CommandOptions
  */
+
+/**
+ * @typedef {Command & CommandOptions & {
+ *  activeElement?: HTMLElement;
+ *  removeHotkey?: ()=>void;
+ * }} CommandRegistration
+ */
+
+const commandCategoryRegistry = registry.category("command_categories");
+const commandEmptyMessageRegistry = registry.category("command_empty_list");
+const commandProviderRegistry = registry.category("command_provider");
+
+const footerTemplate = xml`
+<span>
+    <span class='o_promote'>TIP</span> — search for <span class='o_promote'>@</span>users, <span class='o_promote'>#</span>channels, and <span class='o_promote'>/</span>menus
+</span>
+`;
 
 export const commandService = {
     dependencies: ["dialog", "hotkey", "ui"],
     start(env, { dialog, hotkey: hotkeyService, ui }) {
+        /** @type {Map<CommandRegistration>} */
         const registeredCommands = new Map();
         let nextToken = 0;
         let isPaletteOpened = false;
 
-        hotkeyService.add("control+k", openPalette, {
+        hotkeyService.add("control+k", openMainPalette, {
             global: true,
         });
 
-        function openPalette() {
+        function openMainPalette() {
+            const categoriesByNamespace = {};
+            commandCategoryRegistry.getEntries().forEach(([category, el]) => {
+                const namespace = el.namespace ? el.namespace : "default";
+                if (namespace in categoriesByNamespace) {
+                    categoriesByNamespace[namespace].push(category);
+                } else {
+                    categoriesByNamespace[namespace] = [category];
+                }
+            });
+
+            const emptyMessageByNamespace = {};
+            commandEmptyMessageRegistry.getEntries().forEach(([key, message]) => {
+                emptyMessageByNamespace[key] = message.toString();
+            });
+
+            const config = {
+                categoriesByNamespace,
+                emptyMessageByNamespace,
+                footerTemplate,
+                placeholder: env._t("Search for a command..."),
+                providers: commandProviderRegistry.getAll(),
+            };
+            return openPalette(config);
+        }
+
+        /**
+         * @param {CommandPaletteConfig} config
+         * @returns config if the command palette is already open
+         */
+        function openPalette(config) {
             if (isPaletteOpened) {
-                return;
+                return config;
             }
 
-            // Open palette dialog
+            // Open Command Palette dialog
             isPaletteOpened = true;
             dialog.add(
                 CommandPaletteDialog,
-                {},
+                {
+                    config,
+                },
                 {
                     onClose: () => {
                         isPaletteOpened = false;
@@ -56,20 +106,23 @@ export const commandService = {
 
         /**
          * @param {Command} command
+         * @param {CommandOptions} options
          * @returns {number} token
          */
-        function registerCommand(command) {
+        function registerCommand(command, options) {
             if (!command.name || !command.action || typeof command.action !== "function") {
                 throw new Error("A Command must have a name and an action function.");
             }
 
-            const registration = Object.assign({}, command, { activeElement: null });
+            const registration = Object.assign({}, command, options, { activeElement: null });
 
-            if (command.hotkey) {
+            if (registration.hotkey) {
                 registration.removeHotkey = hotkeyService.add(
-                    command.hotkey,
-                    command.action,
-                    command.hotkeyOptions
+                    registration.hotkey,
+                    registration.action,
+                    {
+                        global: registration.global,
+                    }
                 );
             }
 
@@ -102,18 +155,12 @@ export const commandService = {
         return {
             /**
              * @param {string} name
-             * @param {() => void} action
-             * @param {CommandServiceAddOptions} [options]
+             * @param {()=>(void | CommandPaletteConfig)} action
+             * @param {CommandOptions} [options]
              * @returns {() => void}
              */
             add(name, action, options = {}) {
-                const token = registerCommand({
-                    name,
-                    action,
-                    category: options.category,
-                    hotkey: options.hotkey,
-                    hotkeyOptions: options.hotkeyOptions,
-                });
+                const token = registerCommand({ name, action }, options);
                 return () => {
                     unregisterCommand(token);
                 };
@@ -124,9 +171,10 @@ export const commandService = {
              */
             getCommands(activeElement) {
                 return [...registeredCommands.values()].filter(
-                    (command) => command.activeElement === activeElement
+                    (command) => command.activeElement === activeElement || command.global
                 );
             },
+            openPalette,
         };
     },
 };

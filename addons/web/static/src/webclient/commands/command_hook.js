@@ -3,7 +3,7 @@
 import { useEffect, useService } from "@web/core/utils/hooks";
 
 /**
- * @typedef {import("./command_service").CommandServiceAddOptions} CommandServiceAddOptions
+ * @typedef {import("./command_service").CommandOptions} CommandOptions
  */
 
 /**
@@ -11,8 +11,8 @@ import { useEffect, useService } from "@web/core/utils/hooks";
  * when the caller component will mount/unmount.
  *
  * @param {string} name
- * @param {() => void} action
- * @param {CommandServiceAddOptions} [options]
+ * @param {()=>(void | CommandPaletteConfig)} action
+ * @param {CommandOptions} [options]
  */
 export function useCommand(name, action, options = {}) {
     const commandService = useService("command");

@@ -171,6 +171,20 @@ export function makeFakeRouterService(params = {}) {
     };
 }
 
+export const fakeCommandService = {
+    start() {
+        return {
+            add() {
+                return () => {};
+            },
+            getCommands() {
+                return [];
+            },
+            openPalette() {},
+        };
+    },
+};
+
 export const fakeCookieService = {
     start() {
         const cookie = {};
@@ -234,6 +248,7 @@ export function makeFakeDialogService(addDialog) {
 
 export const mocks = {
     company: () => companyService,
+    command: () => fakeCommandService,
     cookie: () => fakeCookieService,
     effect: () => effectService, // BOI The real service ? Is this what we want ?
     localization: makeFakeLocalizationService,
