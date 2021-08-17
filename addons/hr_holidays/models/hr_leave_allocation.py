@@ -180,7 +180,12 @@ class HolidaysAllocation(models.Model):
             if holiday.interval_unit == 'years':
                 delta = relativedelta(years=holiday.interval_number)
 
-            values['nextcall'] = (holiday.nextcall if holiday.nextcall else today) + delta
+            if holiday.nextcall:
+                values['nextcall'] = holiday.nextcall + delta
+            else:
+                values['nextcall'] = holiday.date_from
+                while values['nextcall'] <= datetime.combine(today, time(0, 0, 0)):
+                    values['nextcall'] += delta
 
             period_start = datetime.combine(today, time(0, 0, 0)) - delta
             period_end = datetime.combine(today, time(0, 0, 0))
