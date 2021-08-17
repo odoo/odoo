@@ -53,3 +53,71 @@ export function compileWidget({ document }, { node }) {
 
     return viewWidget;
 }
+
+// LPE KEEP SOMEWHERE
+/*    compileInnerGroup(node, params) {
+        const table = this.doc.createElement("table");
+        table.setAttribute("class", "o_group o_inner_group o_group_col_6");
+        const tbody = this.doc.createElement("tbody");
+        table.appendChild(tbody);
+
+        const colAttr = node.hasAttribute("col")
+            ? parseInt(node.getAttribute("col"), 10)
+            : this.constructor.INNER_GROUP_COL;
+
+        if (node.hasAttribute("string")) {
+            const td = this.doc.createElement("td");
+            td.setAttribute("colspan", colAttr);
+            td.setAttribute("style", "width: 100%");
+            appendTo(td, makeGroupTitleRow(node));
+            appendTo(tbody, td);
+        }
+
+        const rows = [];
+        let currentColspan = 0;
+        let currentRow = this.doc.createElement("tr");
+        for (let child of node.children) {
+            if (child.tagName === "newline") {
+                rows.push(currentRow);
+                currentRow = this.doc.createElement("tr");
+                currentColspan = 0;
+                continue;
+            }
+
+            let colspan = "colspan" in child.attributes
+                ? parseInt(child.getAttribute("colspan"), 10)
+                : 0;
+
+            const isLabeledField =
+                child.tagName === "field" &&
+                !evalIrUiViewModifier(child.getAttribute("nolabel"));
+
+            if (!colspan) {
+                if (isLabeledField) {
+                    colspan = 2;
+                } else {
+                    colspan = 1;
+                }
+            }
+            const finalColspan = colspan - (isLabeledField ? 1 : 0);
+            currentColspan += colspan;
+
+            if (currentColspan > colAttr) {
+                rows.push(currentRow);
+                currentRow = this.doc.createElement("tr");
+                currentColspan = colspan;
+            }
+
+
+            const tds = [];
+            tds.push(...this.compileInnerGroupChild(child, params));
+            appendTo(currentRow, tds);
+        }
+
+        if (currentRow.childNodes.length) {
+            rows.push(currentRow);
+        }
+
+        appendTo(tbody, rows);
+        return table;
+    }*/
