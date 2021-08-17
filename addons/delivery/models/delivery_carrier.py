@@ -157,6 +157,10 @@ class DeliveryCarrier(models.Model):
                 res['warning_message'] = _('The shipping is free since the order amount exceeds %.2f.') % (self.amount)
                 res['price'] = 0.0
             return res
+        else:
+            return {
+                'error_message': _("Shipment rate not found")
+            }
 
     def send_shipping(self, pickings):
         ''' Send the package to the service provider
