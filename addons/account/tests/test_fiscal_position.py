@@ -154,15 +154,3 @@ class TestFiscalPosition(common.SavepointCase):
         mapped_taxes = self.fp2m.map_tax(self.src_tax)
 
         self.assertEqual(mapped_taxes, self.dst1_tax | self.dst2_tax)
-
-    def test_30_fp_country_delivery(self):
-        """
-            Customer is in Belgium
-            Delivery is in France
-            Check if fiscal position is France
-        """
-        self.george.vat = False
-        self.assertEqual(
-            self.fp.get_fiscal_position(self.ben.id, self.george.id).id,
-            self.fr_b2c.id,
-            "FR B2C should be set")
