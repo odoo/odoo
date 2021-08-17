@@ -11,6 +11,7 @@
                 <field name="state" invisible="1"/>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="replace"/>
+            <xpath expr="//div[hasclass('oe_title')]" position="replace"/>
             <xpath expr="//group[@name='group_extra_info']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -23,13 +24,10 @@
             <xpath expr="//page[@name='miscellaneous']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//field[@name='name']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//field[@name='priority']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
             <xpath expr="//field[@name='bom_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_byproduct_ids']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//button[@name='action_generate_serial']" position="attributes">
