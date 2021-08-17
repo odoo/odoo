@@ -3,14 +3,12 @@ odoo.define('hr_expense.expenses.tree', function (require) {
     var DocumentUploadMixin = require('hr_expense.documents.upload.mixin');
     var KanbanController = require('web.KanbanController');
     var KanbanView = require('web.KanbanView');
-    var PivotView = require('web.PivotView');
     var ListController = require('web.ListController');
     var ListView = require('web.ListView');
     var viewRegistry = require('web.view_registry');
     var core = require('web.core');
     var ListRenderer = require('web.ListRenderer');
     var KanbanRenderer = require('web.KanbanRenderer');
-    var PivotRenderer = require('web.PivotRenderer');
     var session = require('web.session');
     const config = require('web.config');
 
