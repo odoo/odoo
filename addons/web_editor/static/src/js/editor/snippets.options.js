@@ -5431,7 +5431,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
         if ('colorName' in params) {
             const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
             return src.searchParams.has(params.colorName);
-        } else if (widgetName === 'dynamic_color_opt') {
+        } else if (widgetName === 'main_color_opt') {
             const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
             return src.origin === window.location.origin && src.pathname.startsWith('/web_editor/shape/');
         }
