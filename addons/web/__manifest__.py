@@ -150,6 +150,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/root_widget.js',
             'web/static/src/legacy/systray_menu.js',
             'web/static/src/legacy/systray_menu_item.js',
+            'web/static/src/legacy/backend_utils.js',
             'web/static/src/legacy/utils.js',
             'web/static/src/legacy/web_client.js',
             'web/static/src/legacy/js/_deprecated/*',
