@@ -18,7 +18,7 @@ function factory(dependencies) {
          */
         static recomputeFetchedValues(channel = undefined) {
             const indicatorFindFunction = channel ? localIndicator => localIndicator.thread === channel : undefined;
-            const indicators = this.env.models['mail.message_seen_indicator'].all(indicatorFindFunction);
+            const indicators = this.messaging.models['mail.message_seen_indicator'].all(indicatorFindFunction);
             for (const indicator of indicators) {
                 indicator.update({
                     hasEveryoneFetched: indicator._computeHasEveryoneFetched(),
@@ -34,7 +34,7 @@ function factory(dependencies) {
          */
         static recomputeSeenValues(channel = undefined) {
             const indicatorFindFunction = channel ? localIndicator => localIndicator.thread === channel : undefined;
-            const indicators = this.env.models['mail.message_seen_indicator'].all(indicatorFindFunction);
+            const indicators = this.messaging.models['mail.message_seen_indicator'].all(indicatorFindFunction);
             for (const indicator of indicators) {
                 indicator.update({
                     hasEveryoneSeen: indicator._computeHasEveryoneSeen(),

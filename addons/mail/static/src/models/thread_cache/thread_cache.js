@@ -257,7 +257,7 @@ function factory(dependencies) {
             const context = this.env.session.user_context;
             let messages;
             try {
-                messages = await this.env.models['mail.message'].performRpcMessageFetch(
+                messages = await this.messaging.models['mail.message'].performRpcMessageFetch(
                     domain,
                     limit,
                     context,
@@ -329,7 +329,7 @@ function factory(dependencies) {
                 // ignore the request
                 return;
             }
-            this.env.models['mail.message'].markAllAsRead([
+            this.messaging.models['mail.message'].markAllAsRead([
                 ['model', '=', this.thread.model],
                 ['res_id', '=', this.thread.id],
             ]);

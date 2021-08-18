@@ -28,7 +28,7 @@ function factory(dependencies) {
                     data2.attachments = unlinkAll();
                 } else {
                     data2.attachments = insertAndReplace(data.attachment_ids.map(attachmentData =>
-                        this.env.models['mail.attachment'].convertData(attachmentData)
+                        this.messaging.models['mail.attachment'].convertData(attachmentData)
                     ));
                 }
             }
@@ -93,7 +93,7 @@ function factory(dependencies) {
             }
             if ('notifications' in data) {
                 data2.notifications = insert(data.notifications.map(notificationData =>
-                    this.env.models['mail.notification'].convertData(notificationData)
+                    this.messaging.models['mail.notification'].convertData(notificationData)
                 ));
             }
             if ('partner_ids' in data) {
@@ -174,8 +174,8 @@ function factory(dependencies) {
             if (!this.messaging) {
                 return;
             }
-            const messages = this.env.models['mail.message'].insert(messagesData.map(
-                messageData => this.env.models['mail.message'].convertData(messageData)
+            const messages = this.messaging.models['mail.message'].insert(messagesData.map(
+                messageData => this.messaging.models['mail.message'].convertData(messageData)
             ));
             // compute seen indicators (if applicable)
             for (const message of messages) {
@@ -185,7 +185,7 @@ function factory(dependencies) {
                         // on `channel` channels for performance reasons
                         continue;
                     }
-                    this.env.models['mail.message_seen_indicator'].insert({
+                    this.messaging.models['mail.message_seen_indicator'].insert({
                         channelId: thread.id,
                         messageId: message.id,
                     });

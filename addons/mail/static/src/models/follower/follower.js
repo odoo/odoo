@@ -94,8 +94,8 @@ function factory(dependencies) {
             }));
             this.update({ subtypes: unlinkAll() });
             for (const data of subtypesData) {
-                const subtype = this.env.models['mail.follower_subtype'].insert(
-                    this.env.models['mail.follower_subtype'].convertData(data)
+                const subtype = this.messaging.models['mail.follower_subtype'].insert(
+                    this.messaging.models['mail.follower_subtype'].convertData(data)
                 );
                 this.update({ subtypes: link(subtype) });
                 if (data.followed) {

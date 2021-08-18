@@ -64,8 +64,8 @@ function factory(dependencies) {
                     fields,
                 },
             });
-            this.env.models['hr.employee'].insert(employeesData.map(employeeData =>
-                this.env.models['hr.employee'].convertData(employeeData)
+            this.messaging.models['hr.employee'].insert(employeesData.map(employeeData =>
+                this.messaging.models['hr.employee'].convertData(employeeData)
             ));
         }
 
@@ -88,8 +88,8 @@ function factory(dependencies) {
                     fields,
                 },
             });
-            this.env.models['hr.employee'].insert(employeesData.map(employeeData =>
-                this.env.models['hr.employee'].convertData(employeeData)
+            this.messaging.models['hr.employee'].insert(employeesData.map(employeeData =>
+                this.messaging.models['hr.employee'].convertData(employeeData)
             ));
         }
 
@@ -98,7 +98,7 @@ function factory(dependencies) {
          * them if applicable.
          */
         async checkIsUser() {
-            return this.env.models['hr.employee'].performRpcRead({
+            return this.messaging.models['hr.employee'].performRpcRead({
                 ids: [this.id],
                 fields: ['user_id', 'user_partner_id'],
                 context: { active_test: false },

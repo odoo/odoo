@@ -129,7 +129,7 @@ function factory(dependencies) {
                 );
                 this.update({
                     searchResultCount: count,
-                    selectablePartners: insertAndReplace(partnersData.map(partnerData => this.env.models['mail.partner'].convertData(partnerData))),
+                    selectablePartners: insertAndReplace(partnersData.map(partnerData => this.messaging.models['mail.partner'].convertData(partnerData))),
                 });
             } finally {
                 this.update({ hasSearchRpcInProgress: false });
