@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <template id="project_sharing_portal" name="Project Sharing View in Portal">
+        <t t-call="portal.frontend_layout">
+            <t t-set="no_footer" t-value="true"/>
+            <t t-call="project.project_sharing"/>
+        </t>
+    </template>
+
     <template id="project_sharing" name="Project Sharing View">
         <iframe width="100%" height="100%" frameborder="0" t-attf-src="/embed/project/{{ project_id }}"/>
     </template>

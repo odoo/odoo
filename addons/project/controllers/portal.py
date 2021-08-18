@@ -86,7 +86,8 @@ class ProjectCustomerPortal(CustomerPortal):
             project_sudo = self._document_check_access('project.project', project_id, access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
-
+        if project_sudo.privacy_visibility == 'portal' and not request.env.user._is_public():
+            return request.render("project.project_sharing_portal", {'project_id': project_id})
         values = self._project_get_page_view_values(project_sudo, access_token, **kw)
         return request.render("project.portal_my_project", values)
 
@@ -119,15 +120,20 @@ class ProjectCustomerPortal(CustomerPortal):
         }
 
         project_company = project.company_id
-        session_info.update(cache_hashes=cache_hashes, action_name='project.project_sharing_project_task_action', project_id=project.id, user_companies={
-            'current_company': project_company.id,
-            'allowed_companies': {
-                project_company.id: {
-                    'id': project_company.id,
-                    'name': project_company.name,
+        session_info.update(
+            cache_hashes=cache_hashes,
+            action_name='project.project_sharing_project_task_action',
+            project_id=project.id,
+            user_companies={
+                'current_company': project_company.id,
+                'allowed_companies': {
+                    project_company.id: {
+                        'id': project_company.id,
+                        'name': project_company.name,
+                    },
                 },
             },
-        })
+        )
 
         return request.render(
             'project.project_sharing_embed',
