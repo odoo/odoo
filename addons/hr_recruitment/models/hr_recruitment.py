@@ -428,7 +428,7 @@ class Applicant(models.Model):
         recipients = super(Applicant, self)._message_get_suggested_recipients()
         for applicant in self:
             if applicant.partner_id:
-                applicant._message_add_suggested_recipient(recipients, partner=applicant.partner_id, reason=_('Contact'))
+                applicant._message_add_suggested_recipient(recipients, partner=applicant.partner_id.sudo(), reason=_('Contact'))
             elif applicant.email_from:
                 email_from = applicant.email_from
                 if applicant.partner_name:
