@@ -283,7 +283,7 @@ class IrAttachment(models.Model):
         if not mimetype and values.get('name'):
             mimetype = mimetypes.guess_type(values['name'])[0]
         if not mimetype and values.get('url'):
-            mimetype = mimetypes.guess_type(values['url'])[0]
+            mimetype = mimetypes.guess_type(values['url'].split('?')[0])[0]
         if not mimetype or mimetype == 'application/octet-stream':
             raw = None
             if values.get('raw'):
