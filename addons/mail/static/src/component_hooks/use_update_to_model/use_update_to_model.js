@@ -17,7 +17,7 @@ const { useComponent } = owl.hooks;
 export function useUpdateToModel({ methodName, modelName, propNameAsRecordLocalId }) {
     const component = useComponent();
     useUpdate({ func: () => {
-        const record = component.env.models[modelName].get(component.props[propNameAsRecordLocalId]);
+        const record = component.env.services.messaging.modelManager.models[modelName].get(component.props[propNameAsRecordLocalId]);
         if (record) {
             record[methodName]();
         }

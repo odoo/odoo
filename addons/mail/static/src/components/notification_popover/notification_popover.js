@@ -48,8 +48,11 @@ export class NotificationPopover extends Component {
      * @returns {mail.notification[]}
      */
     get notifications() {
+        if (!this.messaging) {
+            return [];
+        }
         return this.props.notificationLocalIds.map(
-            notificationLocalId => this.env.models['mail.notification'].get(notificationLocalId)
+            notificationLocalId => this.messaging.models['mail.notification'].get(notificationLocalId)
         );
     }
 

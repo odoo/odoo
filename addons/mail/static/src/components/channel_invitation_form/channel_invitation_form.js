@@ -24,7 +24,7 @@ export class ChannelInvitationForm extends Component {
     //--------------------------------------------------------------------------
 
     get channelInvitationForm() {
-        return this.env.models['mail.channel_invitation_form'].get(this.props.localId);
+        return this.messaging && this.messaging.models['mail.channel_invitation_form'].get(this.props.localId);
     }
 
 }

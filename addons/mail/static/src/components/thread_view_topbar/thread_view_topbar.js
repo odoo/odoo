@@ -25,7 +25,7 @@ export class ThreadViewTopbar extends Component {
      * @returns {mail.thread_view_topbar}
      */
     get threadViewTopBar() {
-        return this.env.models['mail.thread_view_topbar'].get(this.props.localId);
+        return this.messaging && this.messaging.models['mail.thread_view_topbar'].get(this.props.localId);
     }
 
 }

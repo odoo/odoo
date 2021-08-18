@@ -76,7 +76,7 @@ export class MessageSeenIndicator extends Component {
      * @returns {mail.message}
      */
     get message() {
-        return this.env.models['mail.message'].get(this.props.messageLocalId);
+        return this.messaging && this.messaging.models['mail.message'].get(this.props.messageLocalId);
     }
 
     /**
@@ -86,7 +86,7 @@ export class MessageSeenIndicator extends Component {
         if (!this.thread || this.thread.model !== 'mail.channel') {
             return undefined;
         }
-        return this.env.models['mail.message_seen_indicator'].findFromIdentifyingData({
+        return this.messaging.models['mail.message_seen_indicator'].findFromIdentifyingData({
             channelId: this.thread.id,
             messageId: this.message.id,
         });
@@ -96,7 +96,7 @@ export class MessageSeenIndicator extends Component {
      * @returns {mail.Thread}
      */
     get thread() {
-        return this.env.models['mail.thread'].get(this.props.threadLocalId);
+        return this.messaging && this.messaging.models['mail.thread'].get(this.props.threadLocalId);
     }
 }
 

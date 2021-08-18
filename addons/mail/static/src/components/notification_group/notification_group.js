@@ -27,7 +27,7 @@ export class NotificationGroup extends Component {
      * @returns {mail.notification_group}
      */
     get group() {
-        return this.env.models['mail.notification_group'].get(this.props.notificationGroupLocalId);
+        return this.messaging && this.messaging.models['mail.notification_group'].get(this.props.notificationGroupLocalId);
     }
 
     /**

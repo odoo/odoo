@@ -166,7 +166,7 @@ export class MessagingMenu extends Component {
      */
     _onMobileNewMessageInputSource(req, res) {
         const value = _.escape(req.term);
-        this.env.models['mail.partner'].imSearch({
+        this.messaging.models['mail.partner'].imSearch({
             callback: partners => {
                 const suggestions = partners.map(partner => {
                     return {

@@ -221,7 +221,7 @@ export class MessageList extends Component {
             .filter(([refId, ref]) => (
                     // Message refs have message local id as ref id, and message
                     // local ids contain name of model 'mail.message'.
-                    refId.includes(this.env.models['mail.message'].modelName) &&
+                    refId.includes(this.messaging.models['mail.message'].modelName) &&
                     // Component that should be destroyed but haven't just yet.
                     ref.message
                 )
@@ -308,7 +308,7 @@ export class MessageList extends Component {
      * @returns {mail.thread_view}
      */
     get threadView() {
-        return this.env.models['mail.thread_view'].get(this.props.threadViewLocalId);
+        return this.messaging && this.messaging.models['mail.thread_view'].get(this.props.threadViewLocalId);
     }
 
     //--------------------------------------------------------------------------

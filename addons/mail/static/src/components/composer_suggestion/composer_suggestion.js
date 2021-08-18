@@ -24,7 +24,7 @@ export class ComposerSuggestion extends Component {
      * @returns {mail.composer}
      */
     get composer() {
-        return this.env.models['mail.composer'].get(this.props.composerLocalId);
+        return this.messaging && this.messaging.models['mail.composer'].get(this.props.composerLocalId);
     }
 
     get isCannedResponse() {
@@ -44,7 +44,7 @@ export class ComposerSuggestion extends Component {
     }
 
     get record() {
-        return this.env.models[this.props.modelName].get(this.props.recordLocalId);
+        return this.messaging && this.messaging.models[this.props.modelName].get(this.props.recordLocalId);
     }
 
     /**
