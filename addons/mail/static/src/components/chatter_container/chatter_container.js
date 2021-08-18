@@ -50,8 +50,7 @@ export class ChatterContainer extends Component {
      * @private
      */
     async _insertFromProps(props) {
-        await this.env.messagingCreatedPromise;
-        await this.env.messaging.initializedPromise;
+        const messaging = await this.env.services.messaging.modelManager.getMessaging();
         if (this.__owl__.status === 5 /* destroyed */) {
             return;
         }
@@ -60,7 +59,7 @@ export class ChatterContainer extends Component {
             values.threadId = clear();
         }
         if (!this.chatter) {
-            this.chatter = this.env.models['mail.chatter'].create(values);
+            this.chatter = messaging.models['mail.chatter'].create(values);
         } else {
             this.chatter.update(values);
         }

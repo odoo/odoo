@@ -2,22 +2,18 @@
 
 import { registry } from "@web/core/registry";
 
-const { Component } = owl;
-
 export const newMessageService = {
     dependencies: ["command"],
     start(newEnv, { command }) {
         command.add("Message a user", async () => {
-            const env = Component.env;
-            await env.messagingCreatedPromise;
-            await env.messaging.initializedPromise;
-            if (env.messaging.discuss.isOpen) {
-                env.messaging.discuss.update({
+            const messaging = await owl.Component.env.services.messaging.modelManager.getMessaging();
+            if (messaging.discuss.isOpen) {
+                messaging.discuss.update({
                     isAddingChannel: false,
                     isAddingChat: true,
                 });
             } else {
-                env.messaging.chatWindowManager.openNewMessage();
+                messaging.chatWindowManager.openNewMessage();
             }
         }, {
             category: "mail",

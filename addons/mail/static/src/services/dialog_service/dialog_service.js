@@ -12,7 +12,6 @@ const DialogService = AbstractService.extend({
      */
     start() {
         this._super(...arguments);
-        this._webClientReady = false;
         this._listenHomeMenu();
     },
     /**
@@ -65,7 +64,6 @@ const DialogService = AbstractService.extend({
      */
     async _onWebClientReady() {
         await this._mount();
-        this._webClientReady = true;
     }
 });
 

@@ -7,7 +7,7 @@ import {
     addTimeControlToEnv,
 } from '@mail/env/test_env';
 import ChatWindowService from '@mail/services/chat_window_service/chat_window_service';
-import MessagingService from '@mail/services/messaging/messaging';
+import { MessagingService } from '@mail/services/messaging/messaging';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 import DialogService from '@mail/services/dialog_service/dialog_service';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
@@ -328,7 +328,7 @@ function beforeEach(self) {
             if (!this.env || !this.env.services.messaging) {
                 return undefined;
             }
-            return this.env.services.messaging.messaging;
+            return this.env.services.messaging.modelManager.messaging;
         },
     });
 }
@@ -534,6 +534,14 @@ async function start(param0 = {}) {
         }),
         local_storage: AbstractStorageService.extend({ storage: new RamStorage() }),
         messaging: MessagingService.extend({
+            // test specific values
+            messagingValues: {
+                autofetchPartnerImStatus: false,
+                disableAnimation: true,
+                isQUnitTest: true,
+                loadingBaseDelayDuration,
+                messagingBus,
+            },
             /**
              * Override to bind the getters on the actual env that is given,
              * because the env in the scope of this test might only serve as
@@ -541,46 +549,34 @@ async function start(param0 = {}) {
              *
              * @override
              */
-            init() {
-                this._super(...arguments);
-                Object.defineProperty(this.env, 'messaging', {
+            init(env) {
+                Object.defineProperty(env, 'messaging', {
                     get() {
-                        return this.modelManager.messaging;
+                        return this.services.messaging.modelManager.messaging;
                     },
                 });
-                Object.defineProperty(this.env, 'models', {
+                Object.defineProperty(env, 'models', {
                     get() {
-                        return this.modelManager.models;
+                        return this.services.messaging.modelManager.models;
                     },
                 });
+                this._super(env);
             },
             /**
-             * Override to control when messaging is created, useful to test
-             * spinners and race conditions.
+             * Override:
+             * - to ensure the test setup is complete before starting otherwise
+             *   for example the mock server might not be ready yet at init
+             *   messaging,
+             * - to add control on when messaging is created, useful to test
+             *   spinners and race conditions.
              *
              * @override
              */
             async start() {
                 const _super = this._super.bind(this);
-                await messagingBeforeCreationDeferred;
-                await _super();
-            },
-            /**
-             * Override to ensure the test setup is complete before starting
-             * otherwise for example the mock server might not be ready yet.
-             * And also override to give test values to messaging.
-             *
-             * @override
-             */
-            async startModelManager() {
                 await testSetupDoneDeferred;
-                await this._modelManager.start({
-                    autofetchPartnerImStatus: false,
-                    disableAnimation: true,
-                    isQUnitTest: true,
-                    loadingBaseDelayDuration,
-                    messagingBus,
-                });
+                await messagingBeforeCreationDeferred;
+                _super();
             },
         }),
     }, param0.services);
@@ -727,12 +723,13 @@ async function start(param0 = {}) {
         mockServer,
         widget,
     };
+    const { modelManager } = testEnv.services.messaging;
     if (waitUntilMessagingCondition === 'created') {
-        await testEnv.messagingCreatedPromise;
+        await modelManager.messagingCreatedPromise;
     }
     if (waitUntilMessagingCondition === 'initialized') {
-        await testEnv.messagingCreatedPromise;
-        await testEnv.modelManager.messaging.initializedPromise;
+        await modelManager.messagingCreatedPromise;
+        await modelManager.messagingInitializedPromise;
     }
     if (mountCallbacks.length > 0) {
         await afterNextRender(async () => {

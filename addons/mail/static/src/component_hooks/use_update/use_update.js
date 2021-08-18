@@ -12,24 +12,25 @@ const { onMounted, onPatched, useComponent } = owl.hooks;
  */
 export function useUpdate({ func }) {
     const component = useComponent();
+    const { modelManager } = component.env.services.messaging;
     const listener = new Listener({
         onChange: () => component.render(),
     });
     function onUpdate() {
-        if (component.env.modelManager) {
-            component.env.modelManager.startListening(listener);
+        if (modelManager) {
+            modelManager.startListening(listener);
         }
         func();
-        if (component.env.modelManager) {
-            component.env.modelManager.stopListening(listener);
+        if (modelManager) {
+            modelManager.stopListening(listener);
         }
     }
     onMounted(onUpdate);
     onPatched(onUpdate);
     const __destroy = component.__destroy;
     component.__destroy = parent => {
-        if (component.env.modelManager) {
-            component.env.modelManager.removeListener(listener);
+        if (modelManager) {
+            modelManager.removeListener(listener);
         }
         __destroy.call(component, parent);
     };

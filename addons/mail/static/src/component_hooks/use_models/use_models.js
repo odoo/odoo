@@ -10,27 +10,28 @@ const { useComponent } = owl.hooks;
  */
 export function useModels() {
     const component = useComponent();
+    const { modelManager } = component.env.services.messaging;
     const listener = new Listener({
         onChange: () => component.render(),
     });
     const __render = component.__render;
     component.__render = fiber => {
-        if (component.env.modelManager) {
-            component.env.modelManager.startListening(listener);
+        if (modelManager) {
+            modelManager.startListening(listener);
         }
         __render.call(component, fiber);
-        if (component.env.modelManager) {
-            component.env.modelManager.stopListening(listener);
+        if (modelManager) {
+            modelManager.stopListening(listener);
         }
     };
     const __destroy = component.__destroy;
     component.__destroy = parent => {
-        if (component.env.modelManager) {
-            component.env.modelManager.removeListener(listener);
+        if (modelManager) {
+            modelManager.removeListener(listener);
         }
         __destroy.call(component, parent);
     };
-    if (!component.env.messaging) {
-        component.env.messagingCreatedPromise.then(() => component.render());
-    }
+    modelManager.messagingCreatedPromise.then(() => {
+        component.render();
+    });
 }

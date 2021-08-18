@@ -32,7 +32,7 @@ const DiscussWidget = AbstractAction.extend({
 
         this._lastPushStateActiveThread = null;
         this.env = Component.env;
-        this.env.messagingCreatedPromise.then(() => {
+        Component.env.services.messaging.modelManager.messagingCreatedPromise.then(() => {
             const initActiveId = this.options.active_id ||
                 (this.action.context && this.action.context.active_id) ||
                 (this.action.params && this.action.params.default_active_id) ||
