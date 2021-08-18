@@ -241,7 +241,6 @@
         <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
         <div t-attf-class="o_pricelist_dropdown dropdown#{'' if website_sale_pricelists and len(website_sale_pricelists)&gt;1 else ' d-none'} #{_classes}">
             <t t-set="curr_pl" t-value="website.get_current_pricelist()" />
-            <span class="font-weight-bold text-muted">Pricelist:</span>
             <a role="button" href="#" class="dropdown-toggle btn btn-light border-0 px-0 text-muted align-baseline" data-toggle="dropdown">
                 <t t-esc="curr_pl and curr_pl.name or ' - '" />
             </a>
