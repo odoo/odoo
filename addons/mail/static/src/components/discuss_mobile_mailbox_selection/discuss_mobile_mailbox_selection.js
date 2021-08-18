@@ -17,16 +17,16 @@ export class DiscussMobileMailboxSelection extends Component {
         return this.env.models['mail.thread']
             .all(thread => thread.isPinned && thread.model === 'mail.box')
             .sort((mailbox1, mailbox2) => {
-                if (mailbox1 === this.env.messaging.inbox) {
+                if (mailbox1 === this.discuss.messaging.inbox) {
                     return -1;
                 }
-                if (mailbox2 === this.env.messaging.inbox) {
+                if (mailbox2 === this.discuss.messaging.inbox) {
                     return 1;
                 }
-                if (mailbox1 === this.env.messaging.starred) {
+                if (mailbox1 === this.discuss.messaging.starred) {
                     return -1;
                 }
-                if (mailbox2 === this.env.messaging.starred) {
+                if (mailbox2 === this.discuss.messaging.starred) {
                     return 1;
                 }
                 const mailbox1Name = mailbox1.displayName;

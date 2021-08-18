@@ -93,12 +93,7 @@ export class MessagingMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickCaptureGlobal(ev) {
-        if (!this.env.messaging) {
-            /**
-             * Messaging not created, which means essential models like
-             * messaging menu are not ready, so user interactions are omitted
-             * during this (short) period of time.
-             */
+        if (!this.messagingMenu) {
             return;
         }
         // ignore click inside the menu
@@ -122,8 +117,8 @@ export class MessagingMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickNewMessage(ev) {
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.chatWindowManager.openNewMessage();
+        if (!this.messagingMenu.messaging.device.isMobile) {
+            this.messagingMenu.messaging.chatWindowManager.openNewMessage();
             this.messagingMenu.close();
         } else {
             this.messagingMenu.toggleMobileNewMessage();
@@ -137,12 +132,7 @@ export class MessagingMenu extends Component {
     _onClickToggler(ev) {
         // avoid following dummy href
         ev.preventDefault();
-        if (!this.env.messaging) {
-            /**
-             * Messaging not created, which means essential models like
-             * messaging menu are not ready, so user interactions are omitted
-             * during this (short) period of time.
-             */
+        if (!this.messagingMenu) {
             return;
         }
         this.messagingMenu.toggleOpen();
@@ -165,7 +155,7 @@ export class MessagingMenu extends Component {
      * @param {integer} ui.item.id
      */
     _onMobileNewMessageInputSelect(ev, ui) {
-        this.env.messaging.openChat({ partnerId: ui.item.id });
+        this.messagingMenu.messaging.openChat({ partnerId: ui.item.id });
     }
 
     /**
