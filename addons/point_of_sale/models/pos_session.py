@@ -460,6 +460,20 @@ class PosSession(models.Model):
 
         return data
 
+    def _accumulate_payment_amounts(self, payment, data):
+        amount, date = payment.amount, payment.payment_date
+        if payment.payment_method_id.split_transactions:
+            if payment.payment_method_id.is_cash_count:
+                data["split_receivables_cash"][payment] = self._update_amounts(data["split_receivables_cash"][payment], {'amount': amount}, date)
+            else:
+                data["split_receivables"][payment] = self._update_amounts(data["split_receivables"][payment], {'amount': amount}, date)
+        else:
+            key = payment.payment_method_id
+            if payment.payment_method_id.is_cash_count:
+                data["combine_receivables_cash"][key] = self._update_amounts(data["combine_receivables_cash"][key], {'amount': amount}, date)
+            else:
+                data["combine_receivables"][key] = self._update_amounts(data["combine_receivables"][key], {'amount': amount}, date)
+
     def _accumulate_amounts(self, data):
         # Accumulate the amounts for each accounting lines group
         # Each dict maps `key` -> `amounts`, where `key` is the group key.
@@ -468,10 +482,10 @@ class PosSession(models.Model):
         # field of the pos.payment record.
         amounts = lambda: {'amount': 0.0, 'amount_converted': 0.0}
         tax_amounts = lambda: {'amount': 0.0, 'amount_converted': 0.0, 'base_amount': 0.0, 'base_amount_converted': 0.0}
-        split_receivables = defaultdict(amounts)
-        split_receivables_cash = defaultdict(amounts)
-        combine_receivables = defaultdict(amounts)
-        combine_receivables_cash = defaultdict(amounts)
+        data["split_receivables"] = defaultdict(amounts)
+        data["split_receivables_cash"] = defaultdict(amounts)
+        data["combine_receivables"] = defaultdict(amounts)
+        data["combine_receivables_cash"] = defaultdict(amounts)
         invoice_receivables = defaultdict(amounts)
         sales = defaultdict(amounts)
         taxes = defaultdict(tax_amounts)
@@ -488,18 +502,7 @@ class PosSession(models.Model):
             # Combine pos receivable lines
             # Separate cash payments for cash reconciliation later.
             for payment in order.payment_ids:
-                amount, date = payment.amount, payment.payment_date
-                if payment.payment_method_id.split_transactions:
-                    if payment.payment_method_id.is_cash_count:
-                        split_receivables_cash[payment] = self._update_amounts(split_receivables_cash[payment], {'amount': amount}, date)
-                    else:
-                        split_receivables[payment] = self._update_amounts(split_receivables[payment], {'amount': amount}, date)
-                else:
-                    key = payment.payment_method_id
-                    if payment.payment_method_id.is_cash_count:
-                        combine_receivables_cash[key] = self._update_amounts(combine_receivables_cash[key], {'amount': amount}, date)
-                    else:
-                        combine_receivables[key] = self._update_amounts(combine_receivables[key], {'amount': amount}, date)
+                self._accumulate_payment_amounts(payment, data)
 
             if order.is_invoiced:
                 # Combine invoice receivable lines
@@ -589,10 +592,6 @@ class PosSession(models.Model):
             'taxes':                               taxes,
             'sales':                               sales,
             'stock_expense':                       stock_expense,
-            'split_receivables':                   split_receivables,
-            'combine_receivables':                 combine_receivables,
-            'split_receivables_cash':              split_receivables_cash,
-            'combine_receivables_cash':            combine_receivables_cash,
             'invoice_receivables':                 invoice_receivables,
             'stock_return':                        stock_return,
             'stock_output':                        stock_output,
