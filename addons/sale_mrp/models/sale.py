@@ -105,7 +105,8 @@ class SaleOrderLine(models.Model):
                 # when the product sold is made only of kits. In this case, the BOM of the stock moves
                 # do not correspond to the product sold => no relevant BOM.
                 elif boms:
-                    if all(m.state == 'done' for m in order_line.move_ids):
+                    # if the move is ingoing, the product **sold** has delivered qty 0
+                    if all(m.state == 'done' and m.location_dest_id.usage == 'customer' for m in order_line.move_ids):
                         order_line.qty_delivered = order_line.product_uom_qty
                     else:
                         order_line.qty_delivered = 0.0
