@@ -4,7 +4,8 @@ import logging
 import pprint
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.fields import Command
+from odoo.exceptions import UserError, ValidationError
 
 from .authorize_request import AuthorizeAPI
 
@@ -30,6 +31,39 @@ class PaymentAcquirer(models.Model):
     # See https://community.developer.authorize.net/t5/The-Authorize-Net-Developer-Blog/Authorize-Net-UK-Europe-Update/ba-p/35957
     authorize_currency_id = fields.Many2one(
         string="Authorize Currency", comodel_name='res.currency', groups='base.group_system')
+    authorize_payment_method_type = fields.Selection(
+        string="Allow Payments From",
+        help="Determines with what payment method the customer can pay.",
+        selection=[('credit_card', "Credit Card"), ('bank_account', "Bank Account (USA Only)")],
+        default='credit_card',
+        required_if_provider='authorize',
+    )
+
+    @api.constrains('authorize_payment_method_type')
+    def _check_payment_method_type(self):
+        for acquirer in self.filtered(lambda acq: acq.provider == "authorize"):
+            if self.env['payment.token'].search([('acquirer_id', '=', acquirer.id)], limit=1):
+                raise ValidationError(_(
+                    "There are active tokens linked to this acquirer. To change the payment method "
+                    "type, please disable the acquirer and duplicate it. Then, change the payment "
+                    "method type on the duplicated acquirer."
+                ))
+
+    @api.onchange('authorize_payment_method_type')
+    def _onchange_authorize_payment_method_type(self):
+        if self.authorize_payment_method_type == 'bank_account':
+            self.display_as = _("Bank (powered by Authorize)")
+            self.payment_icon_ids = [Command.clear()]
+        else:
+            self.display_as = _("Credit Card (powered by Authorize)")
+            self.payment_icon_ids = [Command.set([self.env.ref(icon_xml_id).id for icon_xml_id in (
+                'payment.payment_icon_cc_maestro',
+                'payment.payment_icon_cc_mastercard',
+                'payment.payment_icon_cc_discover',
+                'payment.payment_icon_cc_diners_club_intl',
+                'payment.payment_icon_cc_jcb',
+                'payment.payment_icon_cc_visa',
+            )])]
 
     def action_update_merchant_details(self):
         """ Fetch the merchant details to update the client key and the account currency. """

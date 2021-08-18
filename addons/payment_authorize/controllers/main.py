@@ -19,12 +19,14 @@ class AuthorizeController(http.Controller):
         """ Return public information on the acquirer.
 
         :param int acquirer_id: The acquirer handling the transaction, as a `payment.acquirer` id
-        :return: Information on the acquirer, namely: the state, login ID and public client key
+        :return: Information on the acquirer, namely: the state, payment method type, login ID, and
+                 public client key
         :rtype: dict
         """
         acquirer_sudo = request.env['payment.acquirer'].sudo().browse(acquirer_id).exists()
         return {
             'state': acquirer_sudo.state,
+            'payment_method_type': acquirer_sudo.authorize_payment_method_type,
             # The public API key solely used to identify the seller account with Authorize.Net
             'login_id': acquirer_sudo.authorize_login,
             # The public client key solely used to identify requests from the Accept.js suite
