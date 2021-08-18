@@ -3,11 +3,10 @@
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 import AbstractAction from 'web.AbstractAction';
-import { action_registry } from 'web.core';
 
 const { Component } = owl;
 
-const DiscussWidget = AbstractAction.extend({
+export const DiscussWidget = AbstractAction.extend({
     template: 'mail.widgets.Discuss',
     /**
      * @override {web.AbstractAction}
@@ -130,7 +129,3 @@ const DiscussWidget = AbstractAction.extend({
         });
     },
 });
-
-action_registry.add('mail.widgets.discuss', DiscussWidget);
-
-export default DiscussWidget;
