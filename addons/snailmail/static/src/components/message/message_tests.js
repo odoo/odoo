@@ -44,14 +44,14 @@ QUnit.test('Sent', async function (assert) {
     assert.expect(8);
 
     await this.start();
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: create({
             id: 11,
             model: 'mail.channel',
         }),
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.messaging.models['mail.message'].create({
         id: 10,
         message_type: 'snailmail',
         notifications: insert({
@@ -115,14 +115,14 @@ QUnit.test('Canceled', async function (assert) {
     assert.expect(8);
 
     await this.start();
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: create({
             id: 11,
             model: 'mail.channel',
         }),
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.messaging.models['mail.message'].create({
         id: 10,
         message_type: 'snailmail',
         notifications: insert({
@@ -186,14 +186,14 @@ QUnit.test('Pending', async function (assert) {
     assert.expect(8);
 
     await this.start();
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: create({
             id: 11,
             model: 'mail.channel',
         }),
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.messaging.models['mail.message'].create({
         id: 10,
         message_type: 'snailmail',
         notifications: insert({
@@ -264,14 +264,14 @@ QUnit.test('No Price Available', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: create({
             id: 11,
             model: 'mail.channel',
         }),
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.messaging.models['mail.message'].create({
         id: 10,
         message_type: 'snailmail',
         notifications: insert({
@@ -351,14 +351,14 @@ QUnit.test('Credit Error', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: create({
             id: 11,
             model: 'mail.channel',
         }),
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.messaging.models['mail.message'].create({
         id: 10,
         message_type: 'snailmail',
         notifications: insert({
@@ -443,14 +443,14 @@ QUnit.test('Trial Error', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: create({
             id: 11,
             model: 'mail.channel',
         }),
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.messaging.models['mail.message'].create({
         id: 10,
         message_type: 'snailmail',
         notifications: insert({
@@ -543,14 +543,14 @@ QUnit.test('Format Error', async function (assert) {
     });
 
     await this.start({ env: { bus } });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: create({
             id: 11,
             model: 'mail.channel',
         }),
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.messaging.models['mail.message'].create({
         id: 10,
         message_type: 'snailmail',
         notifications: insert({
@@ -632,11 +632,11 @@ QUnit.test('Missing Required Fields', async function (assert) {
     await this.start({
         env: { bus },
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: insert({ id: 20, model: 'res.partner' }),
     });
-    const message = this.env.models['mail.message'].findFromIdentifyingData({ id: 10 });
+    const message = this.messaging.models['mail.message'].findFromIdentifyingData({ id: 10 });
     await this.createMessageComponent(message, {
         threadViewLocalId: threadViewer.threadView.localId,
     });

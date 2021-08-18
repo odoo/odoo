@@ -44,7 +44,7 @@ QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async func
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarItem[data-thread-local-id="${
-            this.env.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['mail.thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -61,7 +61,7 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
 
-    const threadGeneral = this.env.models['mail.thread'].findFromIdentifyingData({
+    const threadGeneral = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -102,7 +102,7 @@ QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async 
         },
     });
 
-    const threadGeneral = this.env.models['mail.thread'].findFromIdentifyingData({
+    const threadGeneral = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -141,7 +141,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const threadGeneral = this.env.models['mail.thread'].findFromIdentifyingData({
+    const threadGeneral = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -211,7 +211,7 @@ QUnit.test('[technical] sidebar: channel group_based_subscription: mandatorily p
         is_pinned: false, // expected value for this test
     });
     await this.start();
-    const threadGeneral = this.env.models['mail.thread'].findFromIdentifyingData({
+    const threadGeneral = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });

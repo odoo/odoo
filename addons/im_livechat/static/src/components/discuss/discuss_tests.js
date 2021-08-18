@@ -56,7 +56,7 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
     );
     const livechat = groupLivechat.querySelector(`
         .o_DiscussSidebarItem[data-thread-local-id="${
-            this.env.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['mail.thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -283,11 +283,11 @@ QUnit.test('livechats are sorted by last message date in the sidebar: most recen
         },
     );
     await this.start();
-    const livechat11 = this.env.models['mail.thread'].findFromIdentifyingData({
+    const livechat11 = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const livechat12 = this.env.models['mail.thread'].findFromIdentifyingData({
+    const livechat12 = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 12,
         model: 'mail.channel',
     });
@@ -370,15 +370,15 @@ QUnit.test('livechats with no messages are sorted by creation date in the sideba
         },
     );
     await this.start();
-    const livechat11 = this.env.models['mail.thread'].findFromIdentifyingData({
+    const livechat11 = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const livechat12 = this.env.models['mail.thread'].findFromIdentifyingData({
+    const livechat12 = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 12,
         model: 'mail.channel',
     });
-    const livechat13 = this.env.models['mail.thread'].findFromIdentifyingData({
+    const livechat13 = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 13,
         model: 'mail.channel',
     });

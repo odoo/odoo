@@ -44,11 +44,11 @@ QUnit.test('base rendering not editable', async function (assert) {
 
     await this.start();
 
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.env.models['mail.follower'].create({
+    const follower = await this.messaging.models['mail.follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -90,11 +90,11 @@ QUnit.test('base rendering editable', async function (assert) {
     assert.expect(6);
 
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.env.models['mail.follower'].create({
+    const follower = await this.messaging.models['mail.follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -165,11 +165,11 @@ QUnit.test('click on partner follower details', async function (assert) {
     await this.start({
         env: { bus },
     });
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.env.models['mail.follower'].create({
+    const follower = await this.messaging.models['mail.follower'].create({
         followedThread: link(thread),
         id: 2,
         isActive: true,
@@ -221,7 +221,7 @@ QUnit.test('click on edit follower', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -271,11 +271,11 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.env.models['mail.follower'].create({
+    const follower = await this.messaging.models['mail.follower'].create({
         followedThread: link(thread),
         id: 2,
         isActive: true,
