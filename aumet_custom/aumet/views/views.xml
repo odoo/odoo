@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="purchase_order_form_inherit" model="ir.ui.view">
+    <record id="purchase_order_form_inherit_aumet" model="ir.ui.view">
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
@@ -18,7 +18,6 @@
         <field name="inherit_id" ref="base.view_users_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='references']" position="after">
-
 
                 <page id="marketplace_info" string="Marketplace Info">
                     <group string="Aumet Marketplace" name="marketplace">
@@ -74,6 +73,5 @@
 
     <menuitem id="menu_product_scientific_name" name="Scientific Names" action="menu_product_scientific_name"
               parent="stock.menu_stock_inventory_control" sequence="5"/>
-
 
 </odoo>

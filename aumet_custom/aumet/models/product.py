@@ -16,12 +16,12 @@ class ProductTemplate(models.Model):
         ('marketplace_reference_unique', 'unique(marketplace_reference)', "Can't be duplicate value for this field!")
     ]
 
-    @api.model
-    def create(self, vals_list):
-        if not vals_list["company_id"]:
-            vals_list["company_id"] = self.env.company.id
-
-        return super(ProductTemplate, self).create(vals_list)
+    # @api.model
+    # def create(self, vals_list):
+    #     if not vals_list["company_id"]:
+    #         vals_list["company_id"] = self.env.company.id
+    #
+    #     return super(ProductTemplate, self).create(vals_list)
 
     @api.depends('marketplace_reference')
     def compute_referenced(self):

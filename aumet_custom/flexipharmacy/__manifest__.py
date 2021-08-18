@@ -17,7 +17,7 @@
     'website': "http://www.acespritech.com",
     'version': '3.4.3',
     'depends': ['base', 'point_of_sale', 'sale_management', 'barcodes', 'stock', 'purchase', 'bus',
-                'hr_attendance', 'account', 'pos_hr', 'product_expiry'],
+                'hr_attendance', 'account', 'pos_hr', 'product_expiry', 'hr', 'stock', 'hr_expense'],
     'price': 350.00,
     'currency': 'EUR',
     'images': [
