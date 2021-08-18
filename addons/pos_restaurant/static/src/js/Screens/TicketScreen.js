@@ -19,20 +19,10 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                     posbus.trigger('table-set');
                 }
             }
-            get filterOptions() {
-                const { Payment, Open, Tipping } = this.getOrderStates();
-                var filterOptions = super.filterOptions;
-                if (this.env.pos.config.set_tip_after_payment) {
-                    var idx = filterOptions.indexOf(Payment);
-                    filterOptions[idx] = Open;
-                }
-                return [...filterOptions, Tipping];
-            }
-            get _screenToStatusMap() {
-                const { Open, Tipping } = this.getOrderStates();
-                return Object.assign(super._screenToStatusMap, {
-                    PaymentScreen: this.env.pos.config.set_tip_after_payment ? Open : super._screenToStatusMap.PaymentScreen,
-                    TipScreen: Tipping,
+            _getScreenToStatusMap() {
+                return Object.assign(super._getScreenToStatusMap(), {
+                    PaymentScreen: this.env.pos.config.set_tip_after_payment ? 'OPEN' : super._getScreenToStatusMap().PaymentScreen,
+                    TipScreen: 'TIPPING',
                 });
             }
             getTable(order) {
@@ -47,7 +37,7 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                 });
             }
             _setOrder(order) {
-                if (!this.env.pos.config.iface_floorplan) {
+                if (!this.env.pos.config.iface_floorplan || order === this.env.pos.get_order()) {
                     super._setOrder(order);
                 } else if (order !== this.env.pos.get_order()) {
                     // Only call set_table if the order is not the same as the current order.
@@ -56,19 +46,19 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                     this.env.pos.set_table(order.table, order);
                 }
             }
-            get showNewTicketButton() {
-                return this.env.pos.config.iface_floorplan ? Boolean(this.env.pos.table) : super.showNewTicketButton;
+            shouldShowNewOrderButton() {
+                return this.env.pos.config.iface_floorplan ? Boolean(this.env.pos.table) : super.shouldShowNewOrderButton();
             }
-            get orderList() {
+            _getOrderList() {
                 if (this.env.pos.table) {
-                    return super.orderList;
+                    return super._getOrderList();
                 } else {
                     return this.env.pos.get('orders').models;
                 }
             }
             async settleTips() {
                 // set tip in each order
-                for (const order of this.filteredOrderList) {
+                for (const order of this.getFilteredOrderList()) {
                     const tipAmount = parse.float(order.uiState.TipScreen.state.inputTipAmount || '0');
                     const serverId = this.env.pos.validated_orders_name_server_id_map[order.name];
                     if (!serverId) {
@@ -118,11 +108,14 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                     args: [serverId],
                 });
             }
-            getOrderStates() {
-                return Object.assign(super.getOrderStates(), {
-                    Tipping: this.env._t('Tipping'),
-                    Open: this.env._t('Open'),
-                });
+            _getOrderStates() {
+                const result = super._getOrderStates();
+                if (this.env.pos.config.set_tip_after_payment) {
+                    result.delete('PAYMENT');
+                    result.set('OPEN', this.env._t('Open'));
+                    result.set('TIPPING', this.env._t('Tipping'));
+                }
+                return result;
             }
         };
 

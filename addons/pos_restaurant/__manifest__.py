@@ -51,8 +51,6 @@ This module adds several features to the Point of Sale that are specific to rest
             'pos_restaurant/static/src/js/Screens/FloorScreen/EditBar.js',
             'pos_restaurant/static/src/js/Screens/FloorScreen/TableWidget.js',
             'pos_restaurant/static/src/js/Screens/FloorScreen/EditableTable.js',
-            'pos_restaurant/static/src/js/Screens/OrderManagementScreen/OrderManagementScreen.js',
-            'pos_restaurant/static/src/js/Screens/OrderManagementScreen/OrderRow.js',
             'pos_restaurant/static/src/js/Screens/TicketScreen.js',
             'pos_restaurant/static/src/js/ChromeWidgets/BackToFloorButton.js',
             'pos_restaurant/static/src/js/ChromeWidgets/TicketButton.js',

@@ -56,6 +56,7 @@ odoo.define('point_of_sale.tour.Chrome', function (require) {
     // Pay order 1, with change
     Chrome.do.clickTicketButton();
     TicketScreen.do.selectOrder('-0001');
+    ProductScreen.check.isShown();
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickPaymentMethod('Cash');
     PaymentScreen.do.pressNumpad('2 0');
