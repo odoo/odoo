@@ -5,17 +5,17 @@
         <div class="o_Discuss"
             t-att-class="{
                 'o-adding-item': discuss ? discuss.isAddingChannel or discuss.isAddingChat : false,
-                'o-mobile': discuss and discuss.messaging ? discuss.messaging.device.isMobile : false,
+                'o-mobile': messaging ? messaging.device.isMobile : false,
             }"
         >
-            <t t-if="!env.isMessagingInitialized()">
+            <t t-if="!discuss or !messaging.isInitialized">
                 <div class="o_Discuss_messagingNotInitialized"><i class="o_Discuss_messagingNotInitializedIcon fa fa-circle-o-notch fa-spin"/>Please wait...</div>
             </t>
             <t t-else="">
-                <t t-if="!discuss.messaging.device.isMobile">
+                <t t-if="!messaging.device.isMobile">
                     <DiscussSidebar class="o_Discuss_sidebar"/>
                 </t>
-                <t t-if="discuss.messaging.device.isMobile" t-call="mail.Discuss.content"/>
+                <t t-if="messaging.device.isMobile" t-call="mail.Discuss.content"/>
                 <t t-else="">
                     <div class="o_Discuss_content">
                         <t t-call="mail.Discuss.content"/>
@@ -26,10 +26,10 @@
     </t>
 
     <t t-name="mail.Discuss.content" owl="1">
-        <t t-if="discuss.messaging.device.isMobile and discuss.activeMobileNavbarTabId === 'mailbox'">
+        <t t-if="messaging.device.isMobile and discuss.activeMobileNavbarTabId === 'mailbox'">
             <DiscussMobileMailboxSelection class="o_Discuss_mobileMailboxSelection border-bottom"/>
         </t>
-        <t t-if="discuss.messaging.device.isMobile and (discuss.isAddingChannel or discuss.isAddingChat)">
+        <t t-if="messaging.device.isMobile and (discuss.isAddingChannel or discuss.isAddingChat)">
             <div class="o_Discuss_mobileAddItemHeader border-bottom">
                 <AutocompleteInput
                     class="o_Discuss_mobileAddItemHeaderInput"
@@ -45,26 +45,26 @@
         <t t-if="discuss.threadView">
             <ThreadView
                 class="o_Discuss_thread"
-                t-att-class="{ 'o-mobile': discuss.messaging.device.isMobile }"
+                t-att-class="{ 'o-mobile': messaging.device.isMobile }"
                 composerAttachmentsDetailsMode="'card'"
                 hasComposer="discuss.thread.model !== 'mail.box'"
-                hasComposerCurrentPartnerAvatar="!discuss.messaging.device.isMobile"
+                hasComposerCurrentPartnerAvatar="!messaging.device.isMobile"
                 hasComposerThreadTyping="true"
                 hasSquashCloseMessages="discuss.thread.model !== 'mail.box'"
-                haveMessagesMarkAsReadIcon="discuss.thread === discuss.messaging.inbox"
-                haveMessagesReplyIcon="discuss.thread === discuss.messaging.inbox"
+                haveMessagesMarkAsReadIcon="discuss.thread === messaging.inbox"
+                haveMessagesReplyIcon="discuss.thread === messaging.inbox"
                 isDoFocus="discuss.isDoFocus"
                 threadViewLocalId="discuss.threadView.localId"
                 t-on-o-focusin-composer="_onFocusinComposer"
                 t-ref="threadView"
             />
         </t>
-        <t t-if="!discuss.thread and (!discuss.messaging.device.isMobile or discuss.activeMobileNavbarTabId === 'mailbox')">
+        <t t-if="!discuss.thread and (!messaging.device.isMobile or discuss.activeMobileNavbarTabId === 'mailbox')">
             <div class="o_Discuss_noThread">
                 No conversation selected.
             </div>
         </t>
-        <t t-if="discuss.messaging.device.isMobile and discuss.activeMobileNavbarTabId !== 'mailbox'">
+        <t t-if="messaging.device.isMobile and discuss.activeMobileNavbarTabId !== 'mailbox'">
             <t t-if="discuss.activeMobileNavbarTabId === 'chat'">
                 <button class="o_Discuss_mobileNewChatButton btn btn-secondary" t-on-click="discuss.onClickMobileNewChatButton.bind(discuss)">
                     Start a conversation
@@ -80,7 +80,7 @@
                 filter="discuss.activeMobileNavbarTabId"
             />
         </t>
-        <t t-if="discuss.messaging.device.isMobile and !discuss.isReplyingToMessage">
+        <t t-if="messaging.device.isMobile and !discuss.isReplyingToMessage">
             <MobileMessagingNavbar
                 class="o_Discuss_mobileNavbar"
                 activeTabId="discuss.activeMobileNavbarTabId"
@@ -92,7 +92,7 @@
             <Composer
                 class="o_Discuss_replyingToMessageComposer"
                 composerLocalId="discuss.replyingToMessage.originThread.composer.localId"
-                hasCurrentPartnerAvatar="!discuss.messaging.device.isMobile"
+                hasCurrentPartnerAvatar="!messaging.device.isMobile"
                 hasDiscardButton="true"
                 hasThreadName="true"
                 isDoFocus="discuss.isDoFocus"

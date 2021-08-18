@@ -82,7 +82,7 @@ export class NotificationList extends Component {
             });
         let notifications = threadNeedactionNotifications.concat(threadNotifications);
         if (this.props.filter === 'all') {
-            const notificationGroups = this.env.messaging.notificationGroupManager.groups;
+            const notificationGroups = this.messaging.notificationGroupManager.groups;
             notifications = Object.values(notificationGroups)
                 .sort((group1, group2) => group1.sequence - group2.sequence)
                 .map(notificationGroup => {
@@ -93,7 +93,7 @@ export class NotificationList extends Component {
                 }).concat(notifications);
         }
         // native notification request
-        if (this.props.filter === 'all' && this.env.messaging.isNotificationPermissionDefault) {
+        if (this.props.filter === 'all' && this.messaging.isNotificationPermissionDefault) {
             notifications.unshift({
                 type: 'odoobotRequest',
                 uniqueId: 'odoobotRequest',
@@ -130,16 +130,16 @@ export class NotificationList extends Component {
             return this.messaging.models['mail.thread']
                 .all(thread => thread.isPinned && thread.model === 'mail.box')
                 .sort((mailbox1, mailbox2) => {
-                    if (mailbox1 === this.env.messaging.inbox) {
+                    if (mailbox1 === this.messaging.inbox) {
                         return -1;
                     }
-                    if (mailbox2 === this.env.messaging.inbox) {
+                    if (mailbox2 === this.messaging.inbox) {
                         return 1;
                     }
-                    if (mailbox1 === this.env.messaging.starred) {
+                    if (mailbox1 === this.messaging.starred) {
                         return -1;
                     }
-                    if (mailbox2 === this.env.messaging.starred) {
+                    if (mailbox2 === this.messaging.starred) {
                         return 1;
                     }
                     const mailbox1Name = mailbox1.displayName;

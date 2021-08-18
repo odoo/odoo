@@ -14,14 +14,14 @@ export class NotificationAlert extends Component {
      * @returns {boolean}
      */
     get isNotificationBlocked() {
-        if (!this.env.isMessagingInitialized()) {
+        if (!this.messaging) {
             return false;
         }
         const windowNotification = this.env.browser.Notification;
         return (
             windowNotification &&
             windowNotification.permission !== "granted" &&
-            !this.env.messaging.isNotificationPermissionDefault
+            !this.messaging.isNotificationPermissionDefault
         );
     }
 

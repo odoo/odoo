@@ -13,14 +13,14 @@
                     <t t-if="notification.type === 'thread' and notification.thread">
                         <ThreadPreview
                             class="o_NotificationList_preview"
-                            t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"
+                            t-att-class="{ 'o-mobile': messaging.device.isMobile }"
                             threadLocalId="notification.thread.localId"
                         />
                     </t>
                     <t t-if="notification.type === 'thread_needaction' and notification.thread">
                         <ThreadNeedactionPreview
                             class="o_NotificationList_preview"
-                            t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"
+                            t-att-class="{ 'o-mobile': messaging.device.isMobile }"
                             threadLocalId="notification.thread.localId"
                         />
                     </t>
@@ -33,7 +33,7 @@
                     <t t-if="notification.type === 'odoobotRequest'">
                         <NotificationRequest
                             class="o_NotificationList_notificationRequest"
-                            t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"
+                            t-att-class="{ 'o-mobile': messaging.device.isMobile }"
                         />
                     </t>
                     <t t-if="!notification_last">
