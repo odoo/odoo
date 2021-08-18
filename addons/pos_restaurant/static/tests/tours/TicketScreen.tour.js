@@ -38,6 +38,7 @@ odoo.define('pos_restaurant.tour.TicketScreen', function (require) {
     TicketScreen.do.deleteOrder('-0003');
     Chrome.do.confirmPopup();
     TicketScreen.do.selectOrder('-0002');
+    ProductScreen.check.isShown();
     ProductScreen.check.totalAmountIs('2.0');
     Chrome.check.backToFloorTextIs('Main Floor', 'T2');
     Chrome.do.backToFloor();

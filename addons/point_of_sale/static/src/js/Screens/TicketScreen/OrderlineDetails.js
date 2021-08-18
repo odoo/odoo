@@ -38,7 +38,7 @@ odoo.define('point_of_sale.OrderlineDetails', function (require) {
             return this.line.quantity;
         }
         get unitPrice() {
-            return this.line.unitPrice;
+            return this.env.pos.format_currency(this.line.unitPrice);
         }
         get unit() {
             return this.line.unit;

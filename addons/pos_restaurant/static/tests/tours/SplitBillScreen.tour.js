@@ -45,6 +45,7 @@ odoo.define('pos_restaurant.tour.SplitBillScreen', function (require) {
     // go back to the original order and see if the order is changed
     Chrome.do.clickTicketButton();
     TicketScreen.do.selectOrder('-0001');
+    ProductScreen.check.isShown()
     ProductScreen.do.clickOrderline('Water', '2.0')
     ProductScreen.do.clickOrderline('Minute Maid', '3.0')
 

@@ -37,7 +37,6 @@
                     <field name="company_has_template" invisible="1"/>
                     <field name="allowed_pricelist_ids" invisible="1"/>
                     <field name="has_active_session" invisible="1"/>
-                    <field name="show_allow_invoicing_alert" invisible="1"/>
                     <div class="oe_title" id="title">
                         <label for="name"/>
                         <h1><field name="name" placeholder="e.g. NYC Shop"/></h1>
@@ -91,20 +90,6 @@
                     </div>
                     <h2 name="order">PoS Interface</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane">
-                                <field name="manage_orders" />
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="manage_orders" />
-                                <div class="text-muted">
-                                    Reprint receipt, refund and exchange orders
-                                </div>
-                                <div class="o_notification_alert alert alert-warning" attrs="{'invisible':[('show_allow_invoicing_alert', '=', False)]}" role="alert">
-                                    Allow invoicing of paid orders by activating 'Invoicing' in the 'Bills &amp; Receipts' section.
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-12 col-lg-6 o_setting_box" groups="product.group_product_variant" >
                             <div class="o_setting_left_pane">
                                 <field name="product_configurator" />

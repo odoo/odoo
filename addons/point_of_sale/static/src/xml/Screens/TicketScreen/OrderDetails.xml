@@ -25,7 +25,23 @@
                                 <OrderlineDetails line="orderline" />
                             </t>
                         </ul>
-                        <OrderSummary total="total" tax="tax" />
+                        <!-- Not using OrderSummary because we don't need it's overrides in this view. -->
+                        <div class="summary clearfix">
+                            <div class="line">
+                                <div class="entry total">
+                                    <span class="badge">Total: </span>
+                                    <span class="value">
+                                        <t t-esc="total" />
+                                    </span>
+                                    <div t-if="tax" class="subentry">
+                                        Taxes:
+                                        <span class="value">
+                                            <t t-esc="tax" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </t>
                 </div>
             </div>

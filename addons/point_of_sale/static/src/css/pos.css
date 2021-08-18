@@ -589,10 +589,11 @@ td {
     color: #6ec89b;
 }
 
-
+.pos .pane-border {
+    border-right: solid 3px #787878;
+}
 
 .pos .leftpane {
-    border-right: solid 3px #787878;
     background: #e2e2e2;
     height: 100%;
     display: flex;
@@ -2915,117 +2916,28 @@ td {
     text-align: right;
 }
 
-.order-management-screen .flex-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.order-management-screen .orders {
-    display: flex;
-    flex-direction: column;
-}
-
-.order-management-screen .order-list {
-    flex: 1;
-    overflow-y: auto;
-}
-
-.order-management-screen .control-panel {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0.5rem;
-}
-
-.order-management-screen .control-panel .item {
-    font-size: medium;
-}
-
-.order-management-screen .control-panel .item .page-controls {
+.item .page-controls {
     display: flex;
     flex-direction: row;
     align-items: center;
     font-size: x-large;
 }
 
-.order-management-screen .control-panel .page-controls > div {
+.page-controls > div {
     border: darkgray solid 1px;
     border-radius: 2px;
 }
 
-.order-management-screen .control-panel .page-controls > div:hover {
+.page-controls > div:hover {
     color: rgb(110,200,155);
 }
 
-.order-management-screen .control-panel .page-controls .previous {
+.page-controls .previous {
     margin-right: 0.2rem;
 }
 
-.order-management-screen .control-panel .page-controls .next {
+.page-controls .next {
     margin-left: 0.2rem;
-}
-
-
-.order-management-screen .control-panel .search-box {
-    flex: 1;
-    position: relative;
-    text-align: center;
-    margin: 0.2rem;
-}
-
-.order-management-screen .control-panel .search-box .clear {
-    position: relative;
-    right: 25px;
-    cursor: pointer;
-    color: #808080;
-    font-size: 13px;
-}
-
-.order-management-screen .control-panel .search-box .icon {
-    position: relative;
-    left: 25px;
-    color: #808080;
-    font-size: 13px;
-}
-
-.order-management-screen .control-panel .search-box input {
-    border: 1px solid #cecbcb;
-    padding: 10px 30px;
-    margin: auto;
-    background-color: white;
-    border-radius: 20px;
-    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
-    font-size: 13px;
-}
-
-.order-management-screen .control-panel .search-box input:focus {
-    outline: none;
-    box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
-    color: rgb(153, 153, 255);
-}
-
-.order-management-screen .control-panel .button {
-    line-height: 32px;
-    padding: 3px 13px;
-    font-size: 20px;
-    background: rgb(230, 230, 230);
-    border-radius: 3px;
-    border: solid 1px rgb(209, 209, 209);
-    cursor: pointer;
-    transition: all 150ms linear;
-}
-
-.order-management-screen .control-panel .button:hover {
-    background: #efefef;
-}
-
-.order-management-screen .back-to-list {
-    font-size: large;
-    padding: 10px;
-    background-color: #6EC89B;
-    color: white;
 }
 
 .order-receipt {
@@ -3200,10 +3112,16 @@ td {
     justify-content: space-evenly;
 }
 
+.ticket-screen .orders .order-row.highlight {
+    color: white;
+    background-color:  rgb(110,200,155);
+}
+
 .ticket-screen .orders .col {
     display: flex;
     flex: 1;
     padding: 10px;
+    text-align: start;
 }
 
 .ticket-screen .orders .col.start {
@@ -3241,6 +3159,20 @@ td {
 .ticket-screen .order-row:hover {
     background: rgb(110,200,155);
     color: white;
+}
+
+.ticket-screen .empty-order-list {
+    text-align: center;
+    margin: 48px;
+    color: #adadad;
+}
+
+.ticket-screen .empty-order-list h1 {
+    font-size: 20px;
+}
+
+.ticket-screen .empty-order-list .fa {
+    font-size: 64px;
 }
 
 .ticket-screen .pointer {
@@ -3336,6 +3268,7 @@ td {
     padding-top: 0.2em;
     padding-bottom: 0.2em;
     padding-left: 35px;
+    text-align: left;
 }
 
 .ticket-screen .pos-search-bar .search li:hover {

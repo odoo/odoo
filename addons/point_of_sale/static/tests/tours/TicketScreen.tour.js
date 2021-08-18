@@ -4,6 +4,7 @@ odoo.define('point_of_sale.tour.TicketScreen', function (require) {
     const { ProductScreen } = require('point_of_sale.tour.ProductScreenTourMethods');
     const { ReceiptScreen } = require('point_of_sale.tour.ReceiptScreenTourMethods');
     const { PaymentScreen } = require('point_of_sale.tour.PaymentScreenTourMethods');
+    const { ClientListScreen } = require('point_of_sale.tour.ClientListScreenTourMethods');
     const { TicketScreen } = require('point_of_sale.tour.TicketScreenTourMethods');
     const { Chrome } = require('point_of_sale.tour.ChromeTourMethods');
     const { getSteps, startSteps } = require('point_of_sale.tour.utils');
@@ -41,7 +42,7 @@ odoo.define('point_of_sale.tour.TicketScreen', function (require) {
     TicketScreen.check.nthRowContains(2, 'Payment');
     TicketScreen.do.selectFilter('Ongoing');
     TicketScreen.check.nthRowContains(2, 'Ongoing');
-    TicketScreen.do.selectFilter('All');
+    TicketScreen.do.selectFilter('Active Orders');
     TicketScreen.check.nthRowContains(4, 'Receipt');
     TicketScreen.do.search('Customer', 'Nicole');
     TicketScreen.check.nthRowContains(2, 'Nicole');
@@ -49,6 +50,41 @@ odoo.define('point_of_sale.tour.TicketScreen', function (require) {
     TicketScreen.check.nthRowContains(2, 'Brandon');
     TicketScreen.do.search('Receipt Number', '-0003');
     TicketScreen.check.nthRowContains(2, 'Receipt');
+    // Close the TicketScreen to see the current order which is in ReceiptScreen.
+    // This is just to remove the search string in the search bar.
+    TicketScreen.do.clickDiscard();
+    ReceiptScreen.check.isShown();
+    // Open again the TicketScreen to check the Paid filter.
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.selectFilter('Paid');
+    TicketScreen.check.nthRowContains(2, '-0003');
+    // Pay the order that was in PaymentScreen.
+    TicketScreen.do.selectFilter('Payment');
+    TicketScreen.do.selectOrder('-0002');
+    PaymentScreen.do.clickPaymentMethod('Cash');
+    PaymentScreen.do.clickValidate();
+    ReceiptScreen.check.isShown();
+    ReceiptScreen.do.clickNextOrder();
+    ProductScreen.check.isShown();
+    // Check that the Paid filter will show the 2 synced orders.
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.selectFilter('Paid');
+    TicketScreen.check.nthRowContains(2, 'Brandon Freeman');
+    TicketScreen.check.nthRowContains(3, '-0003');
+    // Invoice order
+    TicketScreen.do.selectOrder('-0003');
+    TicketScreen.check.orderWidgetIsNotEmpty();
+    TicketScreen.do.clickControlButton('Invoice');
+    Chrome.do.confirmPopup();
+    ClientListScreen.check.isShown();
+    ClientListScreen.exec.setClient('Colleen Diaz');
+    TicketScreen.check.customerIs('Colleen Diaz');
+    // Reprint receipt
+    TicketScreen.do.clickControlButton('Print Receipt');
+    ReceiptScreen.check.isShown();
+    ReceiptScreen.do.clickBack();
+    // When going back, the ticket screen should be in its previous state.
+    TicketScreen.check.filterIs('Paid');
 
     Tour.register('TicketScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });
