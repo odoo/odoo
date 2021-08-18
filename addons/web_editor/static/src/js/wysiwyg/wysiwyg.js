@@ -90,7 +90,8 @@ const Wysiwyg = Widget.extend({
             },
             isHintBlacklisted: node => {
                 return node.hasAttribute &&
-                    (node.hasAttribute('data-target') || node.hasAttribute('data-oe-model'));
+                    (node.hasAttribute('data-target') || node.hasAttribute('data-oe-model'))
+                    || !!(node.closest('.o_not_editable'));
             },
             noScrollSelector: 'body, .note-editable, .o_content, #wrapwrap',
             commands: commands,
