@@ -37,6 +37,7 @@ class AuthorizeAPI:
         self.state = acquirer.state
         self.name = acquirer.authorize_login
         self.transaction_key = acquirer.authorize_transaction_key
+        self.payment_method_type = acquirer.authorize_payment_method_type
 
     def _make_request(self, operation, data=None):
         request = {
@@ -123,7 +124,11 @@ class AuthorizeAPI:
             'customerPaymentProfileId': res['payment_profile_id'],
         })
 
-        res['name'] = response.get('paymentProfile', {}).get('payment', {}).get('creditCard', {}).get('cardNumber')
+        payment = response.get('paymentProfile', {}).get('payment', {})
+        if self.payment_method_type == 'credit_card':
+            res['name'] = payment.get('creditCard', {}).get('cardNumber')
+        else:
+            res['name'] = payment.get('bankAccount', {}).get('accountNumber')
         return res
 
     def delete_customer_profile(self, profile_id):
@@ -138,25 +143,48 @@ class AuthorizeAPI:
         return self._format_response(response, 'deleteCustomerProfile')
 
     #=== Transaction management ===#
-    def _prepare_authorization_transaction_request(self, transaction_type, tx_data, amount, reference):
+    def _prepare_authorization_transaction_request(self, transaction_type, tx_data, tx):
+        # The billTo parameter is required for new ACH transactions (transactions without a payment.token),
+        # but is not allowed for transactions with a payment.token.
+        bill_to = {}
+        if 'profile' not in tx_data:
+            split_name = payment_utils.split_partner_name(tx.partner_name)
+            bill_to = {
+                'billTo': {
+                    'firstName': '' if tx.partner_id.is_company else split_name[0],
+                    'lastName': split_name[1],  # lastName is always required
+                    'company': tx.partner_name if tx.partner_id.is_company else '',
+                    'address': tx.partner_address,
+                    'city': tx.partner_city,
+                    'state': tx.partner_state_id.name or '',
+                    'zip': tx.partner_zip,
+                    'country': tx.partner_country_id.name or '',
+                }
+            }
+
+        # These keys have to be in the order defined in
+        # https://apitest.authorize.net/xml/v1/schema/AnetApiSchema.xsd
         return {
             'transactionRequest': {
                 'transactionType': transaction_type,
-                'amount': str(amount),
+                'amount': str(tx.amount),
                 **tx_data,
                 'order': {
-                    'invoiceNumber': reference[:20],
-                    'description': reference[:255],
+                    'invoiceNumber': tx.reference[:20],
+                    'description': tx.reference[:255],
                 },
+                'customer': {
+                    'email': tx.partner_email or '',
+                },
+                **bill_to,
                 'customerIP': payment_utils.get_customer_ip_address(),
             }
         }
 
-    def authorize(self, amount, reference, token=None, opaque_data=None):
+    def authorize(self, tx, token=None, opaque_data=None):
         """ Authorize (without capture) a payment for the given amount.
 
-        :param float amount: The amount to pay
-        :param str reference: The "invoiceNumber" in Authorize.net backend
+        :param recordset tx: The transaction of the payment, as a `payment.transaction` record
         :param recordset token: The token of the payment method to charge, as a `payment.token`
                                 record
         :param dict opaque_data: The payment details obfuscated by Authorize.Net
@@ -166,18 +194,17 @@ class AuthorizeAPI:
         tx_data = self._prepare_tx_data(token=token, opaque_data=opaque_data)
         response = self._make_request(
             'createTransactionRequest',
-            self._prepare_authorization_transaction_request('authOnlyTransaction', tx_data, amount, reference)
+            self._prepare_authorization_transaction_request('authOnlyTransaction', tx_data, tx)
         )
         return self._format_response(response, 'auth_only')
 
-    def auth_and_capture(self, amount, reference, token=None, opaque_data=None):
+    def auth_and_capture(self, tx, token=None, opaque_data=None):
         """Authorize and capture a payment for the given amount.
 
         Authorize and immediately capture a payment for the given payment.token
         record for the specified amount with reference as communication.
 
-        :param str amount: transaction amount (up to 15 digits with decimal point)
-        :param str reference: used as "invoiceNumber" in the Authorize.net backend
+        :param recordset tx: The transaction of the payment, as a `payment.transaction` record
         :param record token: the payment.token record that must be charged
         :param str opaque_data: the transaction opaque_data obtained from Authorize.net
 
@@ -187,7 +214,7 @@ class AuthorizeAPI:
         tx_data = self._prepare_tx_data(token=token, opaque_data=opaque_data)
         response = self._make_request(
             'createTransactionRequest',
-            self._prepare_authorization_transaction_request('authCaptureTransaction', tx_data, amount, reference)
+            self._prepare_authorization_transaction_request('authCaptureTransaction', tx_data, tx)
         )
 
         result = self._format_response(response, 'auth_capture')
