@@ -114,6 +114,15 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(mo_copy.move_finished_ids), 1, "Incorrect number of moves for products to produce [i.e. cancelled moves should not be copied")
         self.assertEqual(mo_copy.move_finished_ids.product_uom_qty, 2, "Incorrect qty of products to produce")
 
+        # check that a cancelled MO is copied correctly
+        mo_copy.action_cancel()
+        self.assertEqual(mo_copy.state, 'cancel')
+        mo_copy_2 = mo_copy.copy()
+        self.assertEqual(mo_copy_2.state, 'draft', "Copied production order should be draft.")
+        self.assertEqual(len(mo_copy_2.move_raw_ids), 2, "Incorrect number of component moves.")
+        self.assertEqual(len(mo_copy_2.move_finished_ids), 1, "Incorrect number of moves for products to produce [i.e. copying a cancelled MO should copy its cancelled moves]")
+        self.assertEqual(mo_copy_2.move_finished_ids.product_uom_qty, 2, "Incorrect qty of products to produce")
+
     def test_production_avialability(self):
         """ Checks the availability of a production order through mutliple calls to `action_assign`.
         """
