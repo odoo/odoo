@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="SelectedSerialNumberPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup popup-selection">
+                    <header class="title drag-handle">
+                        <t t-esc="props.title"/>
+                    </header>
+                    <div class="selection scrollable-y">
+                        <t t-foreach="props.numberlist" t-as="item" t-key="item.id">
+                            <div class="selection-item"
+                                 t-att-class="{ selected: state.selectedLotid.includes(item.id) }"
+                                 t-on-click="selectItem(item)">
+                                <t t-esc="item.name"/>
+                            </div>
+                        </t>
+                    </div>
+                    <footer class="footer">
+                        <div class="button confirm" t-on-click="confirm">
+                            <t t-esc="props.confirmText"/>
+                        </div>
+                        <div class="button confirm" t-on-click="SelectAll" t-if="!state.SelectAll">
+                            Select All
+                        </div>
+                        <div class="button confirm" t-on-click="SelectAll" t-if="state.SelectAll">
+                            Unselect All
+                        </div>
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText"/>
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

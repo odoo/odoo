@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="aspl_account_payable_receivable_view" model="ir.ui.view">
+        <field name="name">Aged Payable</field>
+        <field name="model">aged.payable</field>
+        <field name="arch" type="xml">
+            <form string="Aged Receivable">
+                <field name="state" invisible="1"/>
+                <field name="name" invisible="1"/>
+                <group col="4" states="choose">
+                    <field name="start_date"/>
+                    <field name="period_length"/>
+                    <field name="target_move" widget="radio"/>
+                    <field name='company_id' invisible='1'/>
+                </group>
+                <div states="get">
+                    <h2>Report Complete</h2>
+                    <p>Here is the Xls File :
+                        <field name="data" readonly="1" filename="name"/>
+                    </p>
+                </div>
+                <footer states="choose">
+                    <button name="generate_aged_payble" string="Print PDF" type="object" default_focus="1"
+                            class="oe_highlight"/>
+                    <button name="generated_aged_payable_xls" string="XLS" type="object" class="btn btn-primary"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="aspl_action_report_aged_payble" model="ir.actions.act_window">
+        <field name="name">Aged Payable</field>
+        <field name="res_model">aged.payable</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id='menu_aged_payable' name='Aged Payable' parent='account.menu_finance_reports'
+              action='aspl_action_report_aged_payble'
+              groups="account.group_account_user"/>
+
+</odoo>

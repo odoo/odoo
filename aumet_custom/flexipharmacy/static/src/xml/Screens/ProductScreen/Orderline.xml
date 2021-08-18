@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrderlineInh" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-esc='props.line.get_unit().name'][2]" position="after">
+            <img src="/flexipharmacy/static/src/img/scale.png"
+                 t-if="env.pos.config.enable_multi_uom and !env.pos.get_order().get_refund_order() and env.pos.user.access_multi_uom"
+                 style="height: 20px;width: 22px;margin-left: 5px;"
+                 t-on-click="trigger('click-uom-button', {uom: props.line.get_unit().id})"/>
+        </xpath>
+        <xpath expr="//ul[@class='info-list']" position="after">
+            <ul class="info-list"
+                t-if="props.line.selected and env.pos.config.enable_order_note and env.pos.config.enable_product_note">
+                <li t-on-click="trigger('click-to-open-note-text')">
+                    <t t-if="selectedOrderline.get_product_note()">
+                        <t t-esc="selectedOrderline.get_product_note()"/>
+                    </t>
+                    <t t-else="">
+                        Add Product Note
+                    </t>
+                </li>
+            </ul>
+            <ul class="info-list"
+                t-if="env.pos.config.enable_active_ingredients and env.pos.config.display_ingredients_in_orderline">
+                <t t-if="props.line.get_selected_orderline_ingredients()">
+                    <li>
+                        <t t-foreach="props.line.get_selected_orderline_ingredients()" t-as="ingredient">
+                            <t t-esc="ingredient.name"/>,
+                        </t>
+                    </li>
+                </t>
+            </ul>
+        </xpath>
+        <xpath expr="//span[hasclass('product-name')]" position="replace">
+            <span class="product-name">
+                <t t-esc="props.line.get_full_product_name()"/>
+                <ProductPurchaseHistoryButton
+                        t-if="env.pos.config.is_customer_purchase_history and env.pos.user.access_purchase_history"/>
+                <t t-if="env.pos.config.enable_active_ingredients">
+                    <img t-on-click="showIngredientPopup(props.line)" style="height: 20px;width: 22px;margin-left: 5px;"
+                         src="/flexipharmacy/static/src/img/ingredient.png"/>
+                </t>
+                <span> </span>
+                <t t-if="props.line.get_product().tracking!=='none'">
+                    <t t-if="props.line.has_valid_product_lot()">
+                        <i t-on-click.stop="lotIconClicked"
+                           class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_green"
+                           aria-label="Valid product lot"
+                           role="img"
+                           title="Valid product lot"
+                        />
+                        <i t-on-click="onClickDelete(props.line)"
+                           t-attf-class="oe_link_icon fa fa-trash oe_icon oe_del"/>
+                    </t>
+                    <t t-else="">
+                        <i t-on-click.stop="lotIconClicked"
+                           class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_red"
+                           aria-label="Invalid product lot"
+                           role="img"
+                           title="Invalid product lot"
+                        />
+                    </t>
+                </t>
+            </span>
+        </xpath>
+        <!-- POS Promotion Start -->
+        <xpath expr="//ul[hasclass('info-list')]" position="inside">
+            <t t-if="props.line.get_promotion()">
+                <li class="info">
+                    <span style="color: #6ec89b;font-size: 14px;">
+                        <t t-esc="props.line.get_promotion().promotion_code"/>
+                        Applied...
+                    </span>
+                </li>
+            </t>
+        </xpath>
+        <!-- POS Promotion End -->
+    </t>
+
+    <t t-if="uom_line">
+        <tr class='template_list' t-att-id='uom_line.id'>
+            <td><t t-esc='uom_line.name' /></td>
+        </tr>
+    </t>
+    
+</templates>

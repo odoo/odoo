@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="Ratings" owl="1">
+        <div class="customer-ratings">
+            <t t-if="env.pos.config.enable_customer_rating">
+                <table class="star-container">
+                    <tr style="width: 80%;">
+                        <td class="stars" t-on-mouseout="trigger('mouse-out')">
+                            <span class="star" t-att-value="1" t-on-mouseover="trigger('mouse-over',{value:1})"
+                                  t-on-click="trigger('click-star',{value:1})">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            </span>
+                            <span class="star" t-att-value="2" t-on-mouseover="trigger('mouse-over',{value:2})"
+                                  t-on-click="trigger('click-star',{value:2})">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            </span>
+                            <span class="star" t-att-value="3" t-on-mouseover="trigger('mouse-over',{value:3})"
+                                  t-on-click="trigger('click-star',{value:3})">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            </span>
+                            <span class="star" t-att-value="4" t-on-mouseover="trigger('mouse-over',{value:4})"
+                                  t-on-click="trigger('click-star',{value:4})">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            </span>
+                            <span class="star" t-att-value="5" t-on-mouseover="trigger('mouse-over',{value:5})"
+                                  t-on-click="trigger('click-star',{value:5})">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </t>
+        </div>
+    </t>
+</templates>

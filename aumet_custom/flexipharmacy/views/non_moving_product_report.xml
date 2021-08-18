@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="flexipharmacy.product_template">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <br/>
+                    <h3 style="font-size:18px;">
+                        <center>
+                            <b>
+                                Non Moving Products
+                            </b>
+                        </center>
+                    </h3>
+                    <h4 style="font-size:14px">
+                        <b>
+                            Non Moving Product in Last
+                            <span t-esc="data.get('days')"/>
+                            Days
+                        </b>
+                        <span t-esc="data.get('current_date')" style="float:right;font-size:14px;"/>
+                        <b style="float:right;font-size:14px;">
+                            Date:
+                        </b>
+                    </h4>
+
+                    <br/>
+                    <t t-if="data.get('warehouse')">
+                        <h5 style="font-size:13px">
+                            <b>Warehouses:</b>
+                            <span t-esc="data.get('warehouse')"/>
+                        </h5>
+                        <br/>
+
+                    </t>
+                    <t t-if="data.get('category')">
+                        <h5 style="font-size:13px">
+                            <b>Categories:</b>
+                            <span t-esc="data.get('category')"/>
+                        </h5>
+                        <br/>
+                    </t>
+                    <t t-if="data.get('group_by')">
+                        <t t-foreach="data.get('data')" t-as="stock_line">
+                            <h5 style="font-size:13px">
+                                <b>Category:</b>
+                                <span t-esc="stock_line"/>
+                            </h5>
+                            <table class="table table-hover table-bordered">
+                                <tr>
+                                    <th style="font-size:13px">Default Code</th>
+                                    <th style="font-size:13px">Product</th>
+                                    <th style="font-size:13px">Location</th>
+                                    <th style="font-size:13px;text-align:right;">Quantity</th>
+                                    <th style="font-size:13px;text-align:right;">Cost Price</th>
+                                    <th style="font-size:13px;text-align:right;">Sale Price</th>
+                                </tr>
+                                <t t-foreach="data.get('data').get(stock_line)" t-as="line">
+                                    <tr>
+                                        <td>
+                                            <span t-esc="line.get('default_code')" style="font-size:13px"/>
+                                        </td>
+                                        <td width="200px">
+                                            <span t-esc="line.get('name')" style="font-size:13px"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="line.get('complete_name')" style="font-size:13px"/>
+                                        </td>
+                                        <td style="text-align:right">
+                                            <span t-esc="line.get('quantity')" style="font-size:13px"/>
+                                        </td>
+
+                                        <td style="text-align:right" width="110px">
+                                            <span t-esc="'%.2f'%line.get('unit_price')" style="font-size:13px"/>
+                                            <span t-esc="data.get('currency')" style="font-size:13px"/>
+                                        </td>
+
+                                        <td style="text-align:right" width="110px">
+                                            <span t-esc="'%.2f'%line.get('sell_price')" style="font-size:13px"/>
+                                            <span t-esc="data.get('currency')" style="font-size:13px"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </t>
+                    </t>
+                    <t t-if=" not data.get('group_by')">
+                        <table class="table table-hover table-bordered">
+                            <tr>
+                                <th style="font-size:13px">Default Code</th>
+                                <th style="font-size:13px">Product</th>
+                                <th style="font-size:13px">Location</th>
+                                <th style="font-size:13px;text-align:right;">Quantity</th>
+                                <th style="font-size:13px;text-align:right;">Cost Price</th>
+                                <th style="font-size:13px;text-align:right;">Sale Price</th>
+                            </tr>
+                            <t t-foreach="data.get('data')" t-as="stock_line">
+                                <t t-foreach="data.get('data').get(stock_line)" t-as="line">
+                                    <tr>
+                                        <td>
+                                            <span t-esc="line.get('default_code')" style="font-size:13px"/>
+                                        </td>
+                                        <td width="200px">
+                                            <span t-esc="line.get('name')" style="font-size:13px"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="line.get('complete_name')" style="font-size:13px"/>
+                                        </td>
+                                        <td style="text-align:right">
+                                            <span t-esc="line.get('quantity')" style="font-size:13px"/>
+                                        </td>
+
+                                        <td style="text-align:right" width="110px">
+                                            <span t-esc="'%.2f'%line.get('unit_price')" style="font-size:13px"/>
+                                            <span t-esc="data.get('currency')" style="font-size:13px"/>
+                                        </td>
+
+                                        <td style="text-align:right" width="110px">
+                                            <span t-esc="'%.2f'%line.get('sell_price')" style="font-size:13px"/>
+                                            <span t-esc="data.get('currency')" style="font-size:13px"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                        </table>
+                    </t>
+                </div>
+
+            </t>
+
+        </template>
+
+        <template id="non_moving_stock_template">
+            <t t-call="web.html_container">
+                <t t-call="flexipharmacy.product_template"/>
+            </t>
+        </template>
+    </data>
+
+</odoo>

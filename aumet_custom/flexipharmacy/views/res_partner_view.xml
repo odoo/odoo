@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="aspl_view_customer_form" model="ir.ui.view">
+            <field name="name">Customer Form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='internal_notes']" position="after">
+                    <page name="Customer Reward" string="Earned Loyalty">
+                        <field name="earned_loyalty_ids">
+                            <tree>
+                                <field name="order_no"/>
+                                <field name="order_date"/>
+                                <field name="points" sum="Earned Points"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page name="Customer Redeem" string="Redeem Loyalty">
+                        <field name="redeem_loyalty_ids">
+                            <tree>
+                                <field name="order_no"/>
+                                <field name="order_date"/>
+                                <field name="points" sum="Redeem Point"/>
+                                <field name="points_amount" sum="Redeem Amount"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="remaining_points"/>
+                    <field name="is_doctor"/>
+                </xpath>
+                <xpath expr="//div[hasclass('o_address_format')]" position='after'>
+                    <field name="date_of_birth"/>
+                    <field name="anniversary_date"/>
+                </xpath>
+                <notebook>
+                    <page string="Wallet">
+                        <group>
+                            <field name="remaining_wallet_amount"/>
+                        </group>
+                        <group>
+                            <field name="wallet_lines" nolabel='1'>
+                                <tree create="true">
+                                    <field name="order_id"/>
+                                    <field name="cashier_id"/>
+                                    <field name="type"/>
+                                    <field name="debit"/>
+                                    <field name="credit"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+    </data>
+</odoo>

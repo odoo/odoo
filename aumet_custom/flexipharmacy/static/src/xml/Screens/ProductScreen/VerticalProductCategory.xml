@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="VerticalProductCategory" owl="1">
+        <div class="vertical-product-category">
+            <div class="vertical-category" t-if="state.expanded" t-transition="slide-fade">
+                <div id="wrapper">
+                    <HomeCategoryBreadcrumb subcategories="subcategories"
+                                            currentCat="breadcrumbs[breadcrumbs.length - 1]"/>
+                    <t t-if="selectedCategory and selectedCategory.name">
+                        <t t-if="selectedCategory.parent_id">
+                            <span class="category-simple-button active"
+                                  t-on-click="trigger('switch-category', selectedCategory.parent_id[0])">
+                                <t t-esc="selectedCategory.name"/>
+                            </span>
+                        </t>
+                        <t t-else="">
+                            <span class="category-simple-button active" t-on-click="trigger('switch-category', 0)">
+                                <t t-esc="selectedCategory.name"/>
+                            </span>
+                        </t>
+                    </t>
+                    <t t-foreach="subcategories" t-as="category" t-key="category.id">
+                        <CategorySimpleButton category="category"/>
+                    </t>
+                </div>
+            </div>
+            
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- QWeb Reports -->
+        <record id="report_tax" model="ir.actions.report">
+            <field name="name">Tax Report</field>
+            <field name="model">tax.report.wiz</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.tax_report_template</field>
+            <field name="report_file">flexipharmacy.tax_report_template</field>
+            <field name="print_report_name">'Tax Report'</field>
+            <field name="binding_model_id" ref="model_tax_report_wiz"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="report_trial_balance" model="ir.actions.report">
+            <field name="name">Trial Balanace</field>
+            <field name="model">trial.balance.wiz</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.trial_balance_template</field>
+            <field name="report_file">flexipharmacy.trial_balance_template</field>
+            <field name="print_report_name">'Trial Balance'</field>
+            <field name="binding_model_id" ref="model_trial_balance_wiz"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="report_aged_payble" model="ir.actions.report">
+            <field name="name">Aged Payable</field>
+            <field name="model">aged.payable</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.aged_payble_template</field>
+            <field name="report_file">flexipharmacy.aged_payble_template</field>
+            <field name="print_report_name">'Aged Payable'</field>
+            <field name="binding_model_id" ref="model_aged_payable"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="report_aged_receivable" model="ir.actions.report">
+            <field name="name">Aged Receivable</field>
+            <field name="model">aged.receivable</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.aged_receivable_template</field>
+            <field name="report_file">flexipharmacy.aged_receivable_template</field>
+            <field name="print_report_name">'Aged Receivable'</field>
+            <field name="binding_model_id" ref="model_aged_receivable"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="report_partner_ledger" model="ir.actions.report">
+            <field name="name">Partner Ledger</field>
+            <field name="model">account.report.partner.ledger</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.partner_ledger_template</field>
+            <field name="report_file">flexipharmacy.partner_ledger_template</field>
+            <field name="print_report_name">'Partner Ledger'</field>
+            <field name="binding_model_id" ref="model_account_report_partner_ledger"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_report_financial" model="ir.actions.report">
+            <field name="name">Financial Report</field>
+            <field name="model">account.financial.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.report_financial</field>
+            <field name="report_file">flexipharmacy.report_financial</field>
+            <field name="print_report_name">'Financial Report'</field>
+            <field name="binding_model_id" ref="model_account_financial_report"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="report_general_ledger" model="ir.actions.report">
+            <field name="name">General Ledger</field>
+            <field name="model">account.general.ledger.wiz</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.general_ledger_template</field>
+            <field name="report_file">flexipharmacy.general_ledger_template</field>
+            <field name="print_report_name">'General Ledger'</field>
+            <field name="binding_model_id" ref="model_account_general_ledger_wiz"/>
+            <field name="binding_type">report</field>
+        </record>
+
+
+    </data>
+</odoo>

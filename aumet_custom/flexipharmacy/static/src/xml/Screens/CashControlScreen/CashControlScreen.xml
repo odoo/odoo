@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="CashControlScreen" owl="1">
+        <div class="ticket-screen screen">
+            <div class="screen-content">
+                <div class="controls">
+                    <div class="buttons">
+                        <button class="discard" t-on-click="clickSkip">Close</button>
+                    </div>
+                    <div class='cash-control-header'>
+                        Opening Cash Control
+                    </div>
+                </div>
+                <div class="orders scroll_property">
+                    <div class="header-row">
+                        <div class="col center">Coins/Bills</div>
+                        <div class="col center">Coins/Bills Value</div>
+                        <div class="col center"> </div>
+                        <div class="col center">Subtotal</div>
+                        <div class="col start"></div>
+                    </div>
+                    <t t-if="state.showStaticLines">
+                        <t t-foreach="state.staticData" t-as="data">
+                            <StaticInputLines line="data"/>
+                        </t>
+                    </t>
+                    <t t-if="!state.showStaticLines">
+                        <t t-foreach="state.inputLines" t-as="line">
+                             <CashControlScreenInput line="line"/>
+                        </t>
+                    </t>
+                </div>
+                <div class="open_balance_add">
+                    <div class="add_new_input">
+                        <button id="add_open_balance" t-on-click="createNewInputLine">Add New Item</button>
+                    </div>
+                    <div class="open_subtotal">
+                        <h3 class="h3_design">Subtotal :<t t-esc="env.pos.format_currency(state.total)"/></h3>
+                    </div>
+                </div>
+                <div class="open_footer">
+                    <button t-on-click="validateOpenBalance" id="validate_open_balance">Validate Cash</button>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

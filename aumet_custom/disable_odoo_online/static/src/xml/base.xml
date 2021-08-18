@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-extend="UserMenu.Actions">
+        <t
+            t-jquery="a[data-menu='account'], a[data-menu='documentation'], a[data-menu='support'],a[data-menu='separator'],a[data-menu='shortcuts']"
+        >
+            this.remove();
+        </t>
+    </t>
+</templates>

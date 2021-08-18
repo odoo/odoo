@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="Chrome" t-inherit="point_of_sale.Chrome" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('pos-branding')]" position="before">
+            <OpenDetailButton t-if="!env.isMobile"/>
+            <t t-if="state.uiState === 'READY'">
+                <t t-if="env.pos.config and env.pos.config.enable_manual_lock and !env.isMobile and env.pos.user.access_pos_lock">
+                    <LockPosScreen/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//CashierName" position="before">
+            <SelectUserForOrder
+                    t-if="env.pos.config and env.pos.config.enable_select_sale_person and env.pos.user.access_select_sale_person"/>
+        </xpath>
+        <xpath expr="//div[hasclass('pos-topheader')]" position="before">
+            <UnlockPosScreen/>
+        </xpath>
+        <xpath expr="//div[hasclass('pos-content')]" position="replace">
+            <div class="pos-content">
+                <div class="window">
+                    <div class="subwindow">
+                        <div class="subwindow-container">
+                            <div class="subwindow-container-fix screens">
+                                <t isShown="!tempScreen.isShown" t-component="mainScreen.component"
+                                   t-props="mainScreenProps" t-key="mainScreen.name" OrderCount="state.OrderCount"
+                                   showOrderPanel="state.showOrderPanel"/>
+                                <t t-if="tempScreen.isShown" t-component="tempScreen.component"
+                                   t-props="tempScreenProps" t-key="tempScreen.name" t-ref="RfidScaneCoderef"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <DebugWidget t-if="env.isDebug() and state.debugWidgetIsShown"
+                             t-transition="fade"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('status-buttons')]//CashierName" position="before">
+            <CustomerScreenButton t-if="env.pos.config.customer_display"/>
+        </xpath>
+    </t>
+
+</templates>

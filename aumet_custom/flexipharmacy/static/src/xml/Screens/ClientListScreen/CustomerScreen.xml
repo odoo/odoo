@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="CustomerScreen" t-inherit="point_of_sale.ClientListScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('top-content')]" position="inside">
+            <button t-if="env.pos.config.enable_default_customer and isNextButtonVisible" type="button"
+                    class="button next highlight" t-on-click="onClick">Set Default Customer</button>
+        </xpath>
+    </t>
+
+</templates>

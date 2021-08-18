@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="email_template_for_coupon_expire_7" model="mail.template">
+            <field name="name">Coupon Expire</field>
+            <field name="email_from">${(user.email or '')}</field>
+            <field name="subject">Regarding expired your gift card</field>
+            <field name="email_to">${object.customer_id.email}</field>
+            <field name="model_id" ref="flexipharmacy.model_aspl_gift_card"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
+   <p>Hello ${object.customer_id.name}
+   <br/>
+   <p style="margin-left: 50px;">
+       Your card will be expired on ${object.expire_date}.Please renew your card ${object.card_no}.<br/>
+       Thanks for using our services.
+   </p>
+   </p>
+   <br/>
+   Thank You,
+   <br/>
+   ${user.name}
+</div>
+           ]]></field>
+        </record>
+
+        <record id="email_template_regarding_balance" model="mail.template">
+            <field name="name">Regarding balance of your gift card</field>
+            <field name="email_from">${(user.email or '')}</field>
+            <field name="subject">Regarding balance of your gift card</field>
+            <field name="email_to">${object.customer_id.email}</field>
+            <field name="model_id" ref="flexipharmacy.model_aspl_gift_card"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
+   <p>Hello ${object.customer_id.name}
+   <br/>
+   <p style="margin-left: 50px;">
+       Your card ${object.card_no} have balance ${object.card_value}.<br/>
+       Thanks for using our services.
+   </p>
+   </p>
+   <br/>
+   Thank You,
+   <br/>
+   ${user.name}
+</div>
+           ]]></field>
+        </record>
+
+        <record id="email_template_exchange_number" model="mail.template">
+            <field name="name">Regarding change gift card number</field>
+            <field name="email_from">${(user.email or '')}</field>
+            <field name="subject">Regarding change gift card number</field>
+            <field name="email_to">${object.customer_id.email}</field>
+            <field name="model_id" ref="flexipharmacy.model_aspl_gift_card"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
+   <p>Hello ${object.customer_id.name}
+   <br/>
+   <p style="margin-left: 50px;">
+       Your card number has been updated. It has been changed to ${object.card_no}.<br/>
+       Thanks for using our services.
+   </p>
+   </p>
+   <br/>
+   Thank You,
+   <br/>
+   ${user.name}
+</div>
+           ]]></field>
+        </record>
+
+        <record id="email_template_regarding_card_use" model="mail.template">
+            <field name="name">Regarding Card Use</field>
+            <field name="email_from">${(user.email or '')}</field>
+            <field name="subject">Regarding Card Use</field>
+            <field name="email_to">${object.customer_id.email}</field>
+            <field name="model_id" ref="flexipharmacy.model_aspl_gift_card_use"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
+   <p>Hello ${object.customer_id.name}
+   <br/>
+   <p style="margin-left: 50px;">
+       <p>Your card ${object.card_id.card_no} has been used at our store with following details.</p><br/>
+                                  <b>Receipt Reference </b>: ${object.pos_order_id.pos_reference}<br/>
+                                  <b>Order No</b>     : ${object.pos_order_id.name}<br/>
+                                  <b>Order Date</b>   : ${object.order_date}<br/>
+                                  <b>Order Amount</b> : ${object.pos_order_id.amount_total}<br/>
+                                  <b>Card Amount</b>  : ${object.amount}
+                                <p>Thanks for using our services.</p>
+                                <p>Regards,</p>
+                                <p> ${user.name}</p>
+   </p>
+   </p>
+</div>
+           ]]></field>
+        </record>
+
+        <record id="email_template_birthday_reminder" model="mail.template">
+            <field name="name">Birthday Reminder Template</field>
+            <field name="email_from">${(user.email or '')}</field>
+            <field name="subject">Birthday Wishes</field>
+            <field name="email_to">${object.email}</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html"><![CDATA[
+            <p>Dear ${object.name},</p>
+            <br/>
+            <p>Like you, your special day is also important for us. We are sending you our heartiest and sincerest wishes on your birthday enjoy your day to the fullest and have the brightest year ahead. We are looking forward to our strong relationship and bonding for the next number of upcoming years. Happy birthday ${object.name}</p>
+            <br/>
+
+            <p>With Best Regards,</p>
+            <p>${user.company_id.name}</p>
+
+            <br/>
+            <p>Dear ${object.name},</p>
+            <br/>
+
+            <p>Wishing you a very happy birthday and the number of happiest years ahead, we hope our relationship would grow years and years and long good to go, we are honored to have a wonderful customer like you. We respect your feelings and concerns and your all requests are our command and utmost priority for us. We hope that we can serve you our best services years and years ahead. Thank you to have faith in us.</p>
+            <br/>
+
+            <p>With Best Wishes,</p>
+            <p>${user.name}, ${user.company_id.name}</p>
+                ]]></field>
+        </record>
+
+        <record id="email_template_anniversary_reminder" model="mail.template">
+            <field name="name">Anniversary Reminder Template</field>
+            <field name="email_from">${(user.email or '')}</field>
+            <field name="subject">Anniversary Wishes</field>
+            <field name="email_to">${object.email}</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html"><![CDATA[
+            Anniversary Wishes
+                ]]></field>
+        </record>
+
+        <!-- session close mail template -->
+        <record id="email_template_pos_z_report" model="mail.template">
+            <field name="name">Z Report - Send by Email</field>
+            <field name="email_from">${(user.email or 'noreply@localhost')|safe}</field>
+            <field name="subject">POS Session ${object.name or ''}</field>
+            <field name="email_to">${(ctx.get('email_to'))}</field>
+            <field name="model_id" ref="model_pos_session"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                    <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                        <p>Hello There!</p>
+                        <p>Please find attachment for z report of session ${object.name or ''}.</p>
+                    </div>
+                ]]>
+            </field>
+        </record>
+        <record id="email_template_product_expiry_alert" model="mail.template">
+            <field name="name">Product Expiry Alert</field>
+            <field name="email_from">ravi.acespritech@gmail.com</field>
+            <field name="subject">Product Expiry Alert</field>
+            <field name="email_to">${ctx['email_list']|safe}</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="body_html" type="html">
+                <table border="0" width="100%" cellpadding="0" bgcolor="#7C7BAD" style="padding: 20px; background-color: #ededed; border-collapse:separate;" summary="o_mail_notification">
+                    <tbody>
+                        % set company = ctx.get('company')
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table width="750" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: #7C7BAD; padding: 20px; border-collapse:separate;">
+                                    <tr>
+                                        <td>
+                                            <span style="font-size:20px; color:white; font-weight: bold;">
+                                                Product Expiry Alert
+                                            </span>
+                                        </td>
+                                        <td align="right">
+                                            <!--<img src="/logo.png?company=${company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${company.name}"/>-->
+                                            <!--<img src="/logo.png?company=${user.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}"/>-->
+                                        <!--<img src="/logo.png?company=${company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${company.name}"/>-->
+                                            <!--<img src="/web/image/res.company/${company.id}/logo" type="base64" style="width:80px;"></img>-->
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr style="border:0">
+                            <td align="center" style="min-width: 690px;">
+                                <table width="750" border="0" cellpadding="0" bgcolor="#ffffff" style="min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <td colspan="3" style="font-size:18px;font-weight:600;text-align:left;padding-bottom:10px;">Following Products are going to be Expire soon</td>
+                                        </tr>
+                                            <tr>
+                                            <td style="width:250px;text-align:left;font-size:15px;font-weight: 700;">Stock</td>
+                                            <td style="width:250px;text-align:left;font-size:15px;font-weight: 700;">Lot</td>
+                                            <td style="width:250px;text-align:left;font-size:15px;font-weight: 700;">Product</td>
+                                            <td style="width: 135px;text-align:left;font-size:15px;font-weight: 700;">Expiry Date</td>
+                                            <td align="right" style="width: 125px;text-align:right;font-size:15px;font-weight: 700;">Quantity</td>
+                                        </tr>
+                                      </thead>
+                                    <tbody>
+                                        % set data_list = ctx.get('data_list')
+                                        % for each_product in data_list:
+                                            <tr>
+                                                <td valign="top" style="text-align:left;
+                                                font-family:Arial,Helvetica,sans-serif; color: dimgray; font-size: 14px;
+                                                 font-weight: 600;">${each_product.stock_location}</td>
+                                                <td style="text-align:left;font-family:Arial,Helvetica,sans-serif;
+                                                color: dimgray; font-weight: 600;font-size: 14px;">${each_product.lot_number}</td>
+                                                <td style="text-align:left;font-family:Arial,Helvetica,sans-serif;
+                                                color: dimgray;  font-weight: 600;font-size: 14px;">${each_product.product}</td>
+                                                <td style="text-align:left;font-family:Arial,Helvetica,sans-serif;
+                                                color: dimgray;  font-weight: 600;font-size: 14px;">${each_product.product_expiry_alert}</td>
+                                                <td style="text-align:right;font-family:Arial,Helvetica,sans-serif;
+                                                color: dimgray;  font-weight: 600;font-size: 14px;">${each_product.quantity}</td>
+                                            </tr>
+                                        % endfor
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                      <!-- FOOTER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table width="750" border="0" cellpadding="0" bgcolor="#7C7BAD" style="min-width: 590px; background-color: #7C7BAD; padding: 20px; border-collapse:separate;">
+                                    <tr>
+                                        <td align="right" style="color:white; font-size: 13px;">
+                                            ${company.name}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="a" align="right" style="color:white !important; font-size: 13px;">
+                                            <span style="color:white !important">
+                                            % if company.email:
+                                                ${company.email}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right" style="color: white; font-size: 13px;">
+                                            ${company.phone or ''}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="a" valign="middle" align="right" style="color: white !important; font-size: 13px;">
+                                            <span style="color:white !important">
+                                            % endif
+
+                                            % if company.website:
+                                                ${company.website}
+                                            % endif
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center">
+                            Powered by <a style="color:blue !important;" target="_blank" href="https://acespritech.com/">Acespritech Solutions Pvt. Ltd.</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </field>
+       </record>
+    </data>
+</odoo>

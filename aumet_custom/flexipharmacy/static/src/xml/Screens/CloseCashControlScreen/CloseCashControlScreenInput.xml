@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="CloseCashControlScreenInput" owl="1">
+        <div class="order-row pointer">
+            <div class="col center">
+                <input class="custom_input" t-model="props.line.number_of_coins" type="number"
+                       t-on-keydown="onKeyDown"/>
+            </div>
+            <div class="col center">
+                <input class="custom_input" t-model="props.line.coin_value" type="number" t-on-keydown="focusOut"
+                       t-on-focusout="focusOut"/>
+            </div>
+            <div class="col center">
+              <t t-esc="props.line.number_of_coins"/>
+                *
+                <t t-esc="props.line.coin_value"/>
+                =
+            </div>
+            <div class="col center">
+                <t class="custom_input" t-esc="env.pos.format_currency(props.line.line_total)"/>
+            </div>
+            <div class="col start" t-on-click="trigger('remove-closing-line', props.line)">
+                <i class="fa fa-trash" style="font-size: 20px;"></i>
+            </div>
+        </div>
+    </t>
+
+</templates>

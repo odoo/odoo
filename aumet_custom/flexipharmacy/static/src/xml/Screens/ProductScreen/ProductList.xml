@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ProductListInh" t-inherit="point_of_sale.ProductList" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('product-list')]" position="replace">
+            <div t-if="props.products.length != 0" class="product-list">
+                <t t-foreach="props.products" t-as="product" t-key="product.id">
+                    <t t-if="props.isPackaging">
+                        <ProductItem t-if="product.is_packaging" product="product"/>
+                    </t>
+                    <t t-else="">
+                        <ProductItem product="product"/>
+                    </t>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>

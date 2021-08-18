@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="aspl_view_pos_payment_method_form" model="ir.ui.view">
+            <field name="name">pos.payment.method.form.view.inherit</field>
+            <field name="model">pos.payment.method</field>
+            <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group[@name='Payment methods']" position="after">
+                    <notebook>
+                        <page name='custom_point_of_sale' string="Point of Sale">
+                            <group>
+                                <group>
+                                    <field name="jr_use_for"/>
+                                </group>
+                                <group>
+                                    <field name="shortcut_key"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name='payment_charges' string="Payment Charges">
+                            <group>
+                                <group>
+                                    <field name="apply_charges"/>
+                                    <field name="fees_amount"
+                                           attrs="{'invisible':[('apply_charges' ,'!=',True)],'required':[('apply_charges' ,'=',True)]}"/>
+                                </group>
+                                <group>
+                                    <field name="fees_type"
+                                           attrs="{'invisible':[('apply_charges' ,'!=',True)],'required':[('apply_charges' ,'=',True)]}"/>
+                                    <field name="optional" attrs="{'invisible':[('apply_charges' ,'!=',True)]}"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

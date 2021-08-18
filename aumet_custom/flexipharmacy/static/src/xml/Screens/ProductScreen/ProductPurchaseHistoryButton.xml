@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ProductPurchaseHistoryButton" owl="1">
+        <t t-if="env.pos.config.is_customer_purchase_history">
+            <span t-on-click="trigger('open-customer-purchase-history')"><i class="fa fa-history"/></span>
+        </t>
+    </t>
+</templates>

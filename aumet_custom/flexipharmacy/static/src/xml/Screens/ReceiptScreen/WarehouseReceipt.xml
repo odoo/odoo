@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="WarehouseReceipt" owl="1">
+        <div class="pos-receipt">
+            <div class="pos-left-align" style="font-weight:bold">
+                Product : <t t-esc="props.product"/>
+            </div>
+            <table style="width:100%;">
+                <thead>
+                    <th class="pos-left-align"><br />Name</th>
+                    <th class="pos-left-align"><br />Avl.</th>
+                    <th class="pos-center-align"><br />In.</th>
+                    <th class="pos-right-align"><br />Out.</th>
+                </thead>
+                <tbody>
+                    <t t-foreach="props.warehouse" t-as="record">
+                        <t t-foreach="record.Warehouse_total" t-as="value">
+                            <tr style="border-bottom: 1px solid">
+                                <td class="pos-left-align">
+                                    <t t-esc="record.name"/>
+                                </td>
+                                <td class="pos-center-align" style="text-align: left;">
+                                    <t t-esc="value.qty_available"/>
+                                </td>
+                                <td class="pos-center-align" style="text-align: right;">
+                                    <t t-esc="value.incoming_qty"/>
+                                </td>
+                                <td class="pos-right-align">
+                                    <t t-esc="value.outgoing_qty"/>
+                                </td>
+                            </tr>
+                            <t t-foreach="record.locations" t-as="location">
+                                <tr>
+                                    <td class="pos-left-align">
+                                        <t t-esc="location.name"/>
+                                    </td>
+                                    <td class="pos-center-align" style="text-align: left;">
+                                        <t t-esc="location.qty_available"/>
+                                    </td>
+                                    <td class="pos-center-align" style="text-align: right;">
+                                        <t t-esc="location.incoming_qty"/>
+                                    </td>
+                                    <td class="pos-right-align">
+                                        <t t-esc="location.outgoing_qty"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                        <tr>
+                            <td colspan="4" style="padding-bottom:20px;"/>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+</templates>

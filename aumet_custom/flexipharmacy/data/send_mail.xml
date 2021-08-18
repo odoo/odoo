@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="send_mail_non_moving_stock_report" model="mail.template">
+            <field name="name">Non moving stock mail</field>
+            <field name="model">non.moving.stock</field>
+            <field name="subject">Non Moving Stock Report</field>
+            <field name="auto_delete">False</field>
+            <field name="body_html">
+                <![CDATA[Non Moving Stock Report for last ${object.non_moving_product_days} days.]]></field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderSummaryPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup">
+                    <header class="title drag-handle">
+                        <t t-esc="props.title"/>
+                    </header>
+                    <div class="container_summary_popup">
+                        <div class="title-separator">
+                            <div style="width: fit-content;margin: auto;width: 50%;">
+                                <label class="switch" t-on-click="CurrentSessionCheck">
+                                    <input type="checkbox" id="order_current_session_report" class="checkbox_paid"
+                                           t-model="state.CurrentSession"/>
+                                    <span class="slider round"></span>
+                                </label>
+                                <span style="font-weight:normal;">Current Session Report</span>
+                            </div>
+                        </div>
+                        <div class="summary_main_div">
+                            <div class="title-separator" t-if="!state.CurrentSession">
+                                <div style="width: 100%;margin: auto;height: 11px;border-bottom: 1px solid #a6a5a5;text-align: center;">
+                                    <span style="background-color: #f0eeee;padding: 0 10px;color: #a6a5a5;"> Dates </span>
+                                </div>
+                            </div>
+                            <div class="date_input_container" t-if="!state.CurrentSession">
+                                <div class="summary_date_div">
+                                    <span class="start_date">Start Date </span>
+                                    <input id="order_start_date" type="date" class="date" t-ref="order_start_date"
+                                           t-model="state.StartDate"
+                                           t-att-class="{ blank_validation_input: state.StartDateBlank }"/>
+                                </div>
+                                <div class="summary_date_div">
+                                    <span class="end_date">End Date </span>
+                                    <input id="order_end_date" type="date" class="date" t-ref="order_end_date"
+                                           t-model="state.EndDate"
+                                           t-att-class="{ blank_validation_input: state.EndDateBlank }"/>
+                                </div>
+                                <t t-esc="state.OrderSummaryMsg"/>
+                                <!-- <label id="lbl_set_available"/> -->
+                            </div>
+                            <div class="summary_option_container">
+                                <div class="title-separator">
+                                    <div style="width: 100%;margin: auto;height: 11px;border-bottom: 1px solid #a6a5a5;text-align: center;">
+                                        <span style="background-color: #f0eeee;padding: 0 10px;color: #a6a5a5;"> Summary </span>
+                                    </div>
+                                </div>
+                                <div class="button report-button" t-att-class="{ active: state.OrderSummary }"
+                                     t-on-click="OrderSummaryCheck" style="left: 2%;">
+                                    <span>Order</span>
+                                </div>
+                                <div class="button report-button" t-att-class="{ active: state.CategorySummary }"
+                                     t-on-click="CategorySummaryCheck" style="left: 9%;">
+                                    <span>Category</span>
+                                </div>
+                                <div class="button report-button" t-att-class="{ active: state.PaymentSummary }"
+                                     t-on-click="PaymentSummaryCheck" style="left: 18%;">
+                                    <span>Payment</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="summary_option_container">
+                            <div class="title-separator">
+                                <div style="width: 100%;margin: auto;height: 11px;border-bottom: 1px solid #a6a5a5;text-align: center;">
+                                    <span style="background-color: #f0eeee;padding: 0 10px;color: #a6a5a5;"> Other </span>
+                                </div>
+                            </div>
+                            <div class="summary_contain_div1">
+                                <span style="font-weight: normal;">States</span>
+                                <select class="location_select" style="margin-left: 10px;width: 84%; margin-top: 7px;"
+                                        t-model="state.OrderSelectType" id="states">
+                                   <option value="">Select State</option>
+                                    <option value="new">New</option>
+                                    <option value="paid">Paid</option>
+                                    <option value="done" t-if="!state.CurrentSession">Posted</option>
+                                    <option value="invoiced">Invoiced</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="footer">
+                        <input id="no_of_copies" type="text" t-on-keydown="onInputKeyDownNumberValidation"
+                               t-model="state.OrderNumberReceipt"
+                               style="width: 51px;min-height: 27px !important;height: 50%;padding: 4px;border: solid 1px;font-size: 17px;margin-top: 14px;"/>
+                        <span style="font-weight: normal;">  No.of Copies </span>
+                        <div class="button confirm" t-on-click="confirm">
+                            Print
+                        </div>
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText"/>
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

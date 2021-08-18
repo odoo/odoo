@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="LoginScreen" t-inherit="pos_hr.LoginScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//span[hasclass('login-element')][2]" position="after">
+            <span class="login-or">or</span>
+            <span class="login-element">
+                <img class="login-barcode-img"
+                     src="/flexipharmacy/static/src/img/scan_rfid.png"/>
+                <div class="login-barcode-text">Scan your RFID</div>
+            </span>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="giftCardCreatePopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup">
+                    <header class="title drag-handle">
+                        <t t-esc="props.title"/>
+                    </header>
+                    <div class="div">
+                        <table border="0" align="center" id="table1" style="width: 100%; margin-top: 16px;">
+                        <tr>
+                            <td>Card No. </td>
+                            <td>
+                                <input type="text" t-model="state.CardNumber" t-ref="card_no"
+                                       placeholder="Enter Card no." id="card_no" name="points"
+                                       t-on-keydown="CardNumberValidation"/>
+                            </td>
+                        </tr>
+                            <tr>
+                            <td>Customer </td>
+                                <td>
+                                <input type="text" t-model="state.SelectCustomer" t-ref="select_customer"
+                                       placeholder="Select Customer" id="select_customer" name="points"
+                                       list="searchPartnerList"/>
+
+                                    <datalist id="searchPartnerList">
+                                    <option t-foreach="env.pos.db.get_partners_sorted()" t-as="value"
+                                            t-att-value="value.name" t-att-id="value.id">
+                                        <t t-esc="value.name"/>
+                                    </option>
+                                </datalist>
+                            </td>
+                        </tr>
+                            <tr>
+                            <td>Expire Date </td>
+                                <td>
+                                <input type="date" t-model="state.ExpireDate" t-ref="text_expire_date"
+                                       placeholder="ExpireDate" id="text_expire_date" name="points"/>
+                            </td>
+                        </tr>
+                            <tr id="amount_row">
+                            <td>Amount </td>
+                                <td>
+                                <input type="text" t-model="state.Amount" t-ref="text_amount" placeholder="Amount"
+                                       id="text_amount" name="points" t-on-keydown="AmountValidation"/>
+                            </td>
+                        </tr>
+                            <tr>
+                            <td>Card Type </td>
+                                <td>
+                                <select class="location_select" t-model="state.SelectCardType" style="width: 80%;">
+                                    <option t-foreach="env.pos.card_type" t-as="value" t-att-value="value.id">
+                                        <t t-set="is_custom"
+                                           t-value="is_custom || (value.is_custom &amp;&amp; value.id == state.selected_value)"/>
+                                        <t t-esc="value.name"/>
+                                    </option>
+                                </select>
+                                
+                            </td>
+                        </tr>
+                            <tr>
+                            <td>Paid </td>
+                                <td>
+                                <label class="switch">
+                                    <input type="checkbox" id="checkbox_paid" class="checkbox_paid"
+                                           t-model="state.Paid"/>
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                    <footer class="footer">
+                        <div class="button confirm" t-on-click="confirm">
+                            <t t-esc="props.confirmText"/>
+                        </div>
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText"/>
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

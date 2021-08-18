@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ProductSummaryPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup">
+                    <header class="title drag-handle">
+                        <t t-esc="props.title"/>
+                    </header>
+                    <div class="container_summary_popup" style="height: 285px;">
+                        <div class="title-separator">
+                            <div style="width: fit-content;margin: auto;width: 50%;">
+                                <label class="switch" t-on-click="CurrentSessionCheck">
+                                    <input type="checkbox" id="order_current_session_report" class="checkbox_paid"
+                                           t-model="state.CurrentSession"/>
+                                    <span class="slider round"></span>
+                                </label>
+                                <span style="font-weight:normal;">Current Session Report</span>
+                            </div>
+                        </div>
+                        <div class="summary_main_div">
+                            <div class="title-separator" t-if="!state.CurrentSession">
+                                <div style="width: 90%;margin: auto;height: 11px;border-bottom: 1px solid #a6a5a5;text-align: center;">
+                                    <span style="background-color: #f0eeee;padding: 0 10px;color: #a6a5a5;"> Dates </span>
+                                </div>
+                            </div>
+                            <div class="date_input_container" t-if="!state.CurrentSession">
+                                <div class="summary_date_div">
+                                    <span class="start_date">Start Date </span>
+                                    <input id="start_date" type="date" class="date" t-ref="start_date"
+                                           t-model="state.StartDate"
+                                           t-att-class="{ blank_validation_input: state.StartDateBlank }"/>
+                                </div>
+                                <div class="summary_date_div">
+                                    <span class="end_date">End Date </span>
+                                    <input id="end_date" type="date" class="date" t-model="state.EndDate"
+                                           t-att-class="{ blank_validation_input: state.EndDateBlank }"/>
+                                </div>
+                                <t t-esc="state.ProductSummaryMsg"/>
+                            </div>
+                            <div class="summary_option_container" style="font-weight: normal;width:100%">
+                                <div class="title-separator">
+                                    <div style="width: 90%;margin: auto;height: 11px;border-bottom: 1px solid #a6a5a5;text-align: center;">
+                                        <span style="background-color: #f0eeee;padding: 0 10px;color: #a6a5a5;"> Summary </span>
+                                    </div>
+                                </div>
+                                <div class="button report-button" t-att-class="{ active: state.ProductSummary }"
+                                     t-on-click="ProductSummaryCheck" style="left: 2%;">
+                                    <span>Product</span>
+                                </div>
+                                <div class="button report-button" t-att-class="{ active: state.CategorySummary }"
+                                     t-on-click="CategorySummaryCheck" style="left: 2%;">
+                                    <span>Category</span>
+                                </div>
+                                <div class="button report-button" t-att-class="{ active: state.PaymentSummary }"
+                                     t-on-click="PaymentSummaryCheck" style="left: 2%;">
+                                    <span>Payment</span>
+                                </div>
+                                <div class="button report-button" t-att-class="{ active: state.LocationSummary }"
+                                     t-on-click="LocationSummaryCheck" style="left: 2%;">
+                                    <span>Location</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="footer">
+                        <input id="no_of_summary" type="text" t-on-keydown="onInputKeyDownNumberValidation"
+                               t-model="state.ProdNumberReceipt"
+                               style="width: 51px;min-height: 27px !important;height: 50%;padding: 4px;border: solid 1px;font-size: 17px;margin-top: 14px;"/>
+                        <span style="font-weight: normal;">  No.of Copies </span>
+                        <div class="button confirm" t-on-click="confirm">
+                            Print
+                        </div>
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText"/>
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

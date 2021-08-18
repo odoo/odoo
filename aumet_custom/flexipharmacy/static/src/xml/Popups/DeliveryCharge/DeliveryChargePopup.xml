@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="DeliveryChargePopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup">
+                    <header class="title drag-handle">
+                        <t t-esc="props.title"/>
+                    </header>
+                    <div class="div">
+                        <div class="summary_option_container">
+                            <table border="0" align="center" id="table1" style="width: 100%; margin-top: 16px;">
+                                <tr>
+                                    <td>User</td>
+                                    <td>
+                                        <input type="text" t-model="state.DeliveryUser" t-ref="DeliveryUser"
+                                               placeholder="Select User" id="delivery_user" name="DeliveryUser"
+                                               list="DeliveryUserList"
+                                               t-att-class="{ blank_validation_input: state.DeliveryUserBlank }"/>
+
+                                        <datalist id="DeliveryUserList">
+                                            <option t-foreach="env.pos.users" t-as="value" t-att-value="value.name"
+                                                    t-att-id="value.id">
+                                                <t t-esc="value.name"/>
+                                            </option>
+                                        </datalist>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Delivery Date </td>
+                                    <td>
+                                        <input type="date" t-model="state.DeliveryDate" t-ref="Datetime"
+                                               id="text_expire_date" name="points" style="width: 49%;"
+                                               t-att-class="{ blank_validation_input: state.DeliveryDateBlanke }"/>
+                                        <input type="text" t-model="state.DeliveryTime" t-ref="Datetime"
+                                               placeholder="HH:MM" id="text_expire_date" name="points"
+                                               t-att-class="{ blank_validation_input: state.DeliveryTimeBlanke }"
+                                               style="width: 29%;margin-left: 10px;"/>
+                                    </td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td>Address </td>
+                                    <td>
+                                        <textarea rows="100" t-model="state.CustomerAddress" cols="300"
+                                                  id="recurrent_delivery_add" style="width: 82%;min-height: 76px;"
+                                                  t-att-class="{ blank_validation_input: state.CustomerAddressBlank }"/>
+                                    </td>
+                                </tr>
+                                <tr t-if="state.Msg">
+                                    <td colspan="2"><t t-esc="state.Msg"/></td>
+                                </tr>
+                                
+                            </table>
+                        </div>
+                    </div>
+                    <footer class="footer">
+                        <div class="button confirm" t-on-click="confirm">
+                            <t t-esc="props.confirmText"/>
+                        </div>
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText"/>
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

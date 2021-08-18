@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="GiftVoucherLine" owl="1">
+        <div class="order-row pointer" t-attf-class="client-line {{highlight}}" t-att-data-id="props.gift_voucher.id"
+             t-on-click="trigger('click-voucher', {voucher: props.gift_voucher})">
+            <div class="col start">
+                <t t-esc="props.gift_voucher.voucher_name"/>
+            </div>
+            <div class="col start">
+                <t t-esc="props.gift_voucher.voucher_code"/>
+            </div>
+            <div class="col start">
+                <t t-esc="props.gift_voucher.voucher_amount"/>
+            </div>
+            
+        </div>
+    </t>
+</templates>

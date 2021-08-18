@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pdf_slow_moving_inventory_report" model="ir.actions.report">
+        <field name="name">Slow Moving Inventory Report PDF</field>
+        <field name="model">wizard.slow.moving.inventory</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">flexipharmacy.slow_moving_inv_report_pdf</field>
+        <field name="report_file">flexipharmacy.slow_moving_inv_report_pdf</field>
+        <field name="print_report_name">'Slow Moving Inventory Report PDF'</field>
+        <field name="binding_model_id" ref="model_wizard_slow_moving_inventory"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

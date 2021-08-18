@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderSummaryReceipt" owl="1">
+        <div class="pos-receipt">
+            <t t-if="props.receipt.company.logo">
+                <img class="pos-receipt-logo" t-att-src="props.receipt.company.logo" alt="Logo"/>
+                <br/>
+            </t>
+            <t t-if="!props.receipt.company.logo">
+                <h2 class="pos-receipt-center-align">
+                    <t t-esc="props.receipt.company.name"/>
+                </h2>
+                <br/>
+            </t>
+            <div class="pos-receipt-contact">
+                <t t-if="props.receipt.company.contact_address">
+                    <div><t t-esc="props.receipt.company.contact_address" /></div>
+                </t>
+                <t t-if="props.receipt.company.phone">
+                    <div>Tel:<t t-esc="props.receipt.company.phone"/></div>
+                </t>
+                <t t-if="props.receipt.company.vat">
+                    <div><t t-esc="props.receipt.company.vat_label"/>:
+                        <t t-esc="props.receipt.company.vat"/></div>
+                </t>
+                <t t-if="props.receipt.company.email">
+                    <div><t t-esc="props.receipt.company.email" /></div>
+                </t>
+                <t t-if="props.receipt.company.website">
+                    <div><t t-esc="props.receipt.company.website" /></div>
+                </t>
+                <t t-if="props.receipt.header_html">
+                    <t t-raw="props.receipt.header_html"/>
+                </t>
+                <t t-if="!props.receipt.header_html and props.receipt.header">
+                    <div><t t-esc="props.receipt.header" /></div>
+                </t>
+            </div>
+
+            <div style="font-size: small;margin-top: 15px; margin:auto; width:100%" class="pos-center-align">
+                <t t-if="props.values.start_date">
+                    <table style="width:100%">
+                        <tr>
+                            <td class="pos-left-align"><div><b>Start Date:</b><t t-esc="props.values.start_date"/></div></td>
+                            <td class="pos-right-align"><div ><b>End Date:</b><t t-esc="props.values.end_date"/></div></td>
+                        </tr>
+                    </table>
+                </t>
+            </div>
+            <t t-if="props.OrderReportData">
+                <h3 align="center">Order Summary</h3>
+                <t t-foreach="props.OrderReportData" t-as="each_order">
+                    <h4 align="center" style="text-transform: capitalize" t-if="!props.pos.state">
+                        <t t-esc="each_order"/>
+                    </h4>
+                    <table style="width:100%;">
+                        <thead>
+                            <th style="border-bottom: 1px solid black;" class="pos-left-align"><br />Order Ref</th>
+                            <th style="border-bottom: 1px solid black;" class="pos-right-align"><br />Total</th>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="each_order_value" t-as="each_detail">
+                                <tr>
+                                    <td class="pos-left-align">
+                                        <t t-esc="each_detail_value.order_ref"/>
+                                        <ul style="color:#888;">
+                                            <li>
+                                                <b>
+                                                    <t t-esc="each_detail_value.order_date"/>
+                                                </b>
+                                            </li>
+                                        </ul>
+                                    </td>
+
+                                    <td class="pos-right-align">
+                                        <t t-esc="props.pos.format_currency(each_detail_value.total)"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+            </t>
+            <t t-if="props.CategoryReportData">
+                <h3 align="center">Category Summary</h3>
+                <t t-foreach="props.CategoryReportData" t-as="each_category">
+                    <h4 align="center" style="text-transform: capitalize" t-if="!props.pos.state">
+                        <t t-esc="each_category"/>
+                    </h4>
+                    <table style="width:100%;">
+                        <thead>
+                            <th style="border-bottom: 1px solid black;" class="pos-left-align"><br />Category</th>
+                            <th style="border-bottom: 1px solid black;" class="pos-right-align"><br />Qty</th>
+                            <th style="border-bottom: 1px solid black;" class="pos-right-align"><br />Total</th>
+                        </thead>
+                        <tbody>
+                            <t t-set="total" t-value="0"/>
+                            <t t-foreach="each_category_value" t-as="category_detail">
+                                <tr>
+                                    <td class="pos-left-align">
+                                        <t t-esc="category_detail"/>
+                                    </td>
+                                    <td class="pos-right-align">
+                                        <t t-esc="category_detail_value[0]"/>
+                                    </td>
+                                    <td class="pos-right-align">
+                                        <t t-esc="props.pos.format_currency(category_detail_value[1])"/>
+                                    </td>
+                                    <t t-set="total" t-value="category_detail_value[1]+total"/>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td class="pos-left-align"> <hr/> </td>
+                                <td class="pos-right-align"> <hr/> </td>
+                                <td class="pos-right-align"> <hr/> </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;" class="pos-left-align">
+                                    Total
+                                </td>
+                                <td class="pos-right-align"/>
+                                <td style="font-weight:bold;" class="pos-right-align">
+                                    <t t-esc="props.pos.format_currency(total)"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+            </t>
+            <t t-if="props.PaymentReportData">
+                <h3 align="center">Payment Summary</h3>
+                <t t-foreach="props.PaymentReportData" t-as="payment_detail">
+                    <h4 align="center" style="text-transform: capitalize" t-if="!props.pos.state">
+                        <t t-esc="payment_detail"/>
+                    </h4>
+                    <table style="width:100%;">
+                        <thead>
+                            <th style="border-bottom: 1px solid black;" class="pos-left-align"><br />Payment Method</th>
+                            <th style="border-bottom: 1px solid black;" class="pos-right-align"><br /></th>
+                            <th style="border-bottom: 1px solid black;" class="pos-right-align"><br />Amount</th>
+                        </thead>
+                        <tbody>
+                            <t t-set="total" t-value="0"/>
+                            <t t-foreach="payment_detail_value" t-as="each_payment">
+                                <tr>
+                                    <td class="pos-left-align">
+                                        <t t-esc="each_payment"/>
+                                    </td>
+                                    <td class="pos-right-align"/>
+                                    <td class="pos-right-align">
+                                        <t t-esc="props.pos.format_currency(each_payment_value)"/>
+                                    </td>
+                                    <t t-set="total" t-value="each_payment_value+total"/>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td class="pos-left-align"> <hr/> </td>
+                                <td class="pos-right-align"> <hr/> </td>
+                                <td class="pos-right-align"> <hr/> </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;" class="pos-left-align">
+                                    Total
+                                </td>
+                                <td class="pos-right-align"/>
+                                <td style="font-weight:bold;" class="pos-right-align">
+                                    <t t-esc="props.pos.format_currency(total)"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+            </t>
+            <t t-if="props.pos.config.order_signature">
+                <div style="margin-top: 15%;">
+                    <h4 align="center" style="border-bottom: 1px dotted black;width:50%;margin-left: 25%;"/>
+                    <h4 align="center">Signature</h4>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

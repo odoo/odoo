@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="product_expiry_config_form_view" model="ir.ui.view">
+            <field name="name">product.expiry.config.form.view</field>
+            <field name="model">product.expiry.config</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="no_of_days"/>
+                            <field name="active"/>
+                            <field name="block_color" placeholder="Eg. #FFFFFF / red"/>
+                            <field name="text_color" placeholder="Eg. #FFFFFF / red"/>
+                        </group>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="product_expiry_config_tree_view" model="ir.ui.view">
+            <field name="name">product.expiry.config.form.view</field>
+            <field name="model">product.expiry.config</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="no_of_days"/>
+                    <field name="active"/>
+                    <field name="block_color"/>
+                    <field name="text_color"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_product_expiry_config" model="ir.actions.act_window">
+            <field name="name">Product Expiry Configuration</field>
+            <field name="res_model">product.expiry.config</field>
+            <!-- <field name="view_mode">tree,form</field> -->
+        </record>
+
+        <menuitem id="menu_product_expiry_config" parent="stock.menu_stock_config_settings" sequence="105" action="action_product_expiry_config"/>
+    </data>
+</odoo>

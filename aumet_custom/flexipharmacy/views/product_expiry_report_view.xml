@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+
+        <record id="product_expiry_report_view_form" model="ir.ui.view">
+            <field name="name">product.expiry.report.form</field>
+            <field name="model">product.expiry.report</field>
+            <field name="arch" type="xml">
+                <form string="Product Expiry Report">
+                    <group col="3">
+                        <label for="num_expiry_days" string="Product Expiry In Next" style='width: 114%;'/>
+                        <field name="num_expiry_days" required="True" nolabel='1'/>
+                        <b>
+                            <span>Days</span>
+                        </b>
+                    </group>
+                    <group>
+                        <field name="group_by" widget="radio"/>
+                        <field name="location_ids" widget="many2many_tags"/>
+                        <field name="category_ids" widget="many2many_tags"
+                               attrs="{'invisible':[('group_by','=','location')]}"/>
+                    </group>
+                    <footer>
+                        <button type="object" name="print_pdf_report" string="Print PDF" class="oe_highlight"/>
+                        <button type="object" name="print_xls_report" string="Print XLS" class="oe_highlight"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_expiry_report_action" model="ir.actions.act_window">
+            <field name="name">Product Expiry Report</field>
+            <field name="res_model">product.expiry.report</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="product_expiry_report_action" id="menu_product_expiry_report"
+                  parent="stock.menu_warehouse_report" sequence="151"/>
+
+    </data>
+</odoo>

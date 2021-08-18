@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="delivery_order_kanban_view" model="ir.ui.view">
+        <field name="name">POS Delivery Order Kanban</field>
+        <field name="model">pos.order</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <kanban create="0">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_details">
+                            <div class="row" style="">
+                                <div class="col-md-6">
+                                    <strong>
+                                        <field name="pos_reference"/>
+                                    </strong>
+                                </div>
+                                <div class="col-md-6">
+                                    <span class="pull-right badge badge-info">
+                                        <field name="state"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:10px !important;">
+                                <div class="col-md-4">
+                                    Customer
+                                </div>
+                                <div class="col-md-8">
+                                    <address>
+                                        <field name="partner_id"/>
+                                    </address>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Address
+                                </div>
+                                <div class="col-md-8">
+                                    <address>
+                                        <field name="delivery_address"/>
+                                    </address>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Date
+                                </div>
+                                <div class="col-md-8">
+                                    <field name="delivery_date"/>
+                                    <!-- <field name="delivery_time"/> -->
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Amount
+                                </div>
+                                <div class="col-md-8">
+                                    <field name="amount_total" widget="monetary"
+                                           options="{'currency_field': 'company_currency'}"/>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <span class="col-md-12">
+                                    <button name="check_order_delivery_type" class="btn btn-primary pull-right"
+                                            type="object" states="draft">Make Payment
+                                    </button>
+                                    <button name="check_order_delivery_type" class="btn btn-info pull-right"
+                                            type="object" states="paid,invoiced,done">Delivered
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="pos_order_kanban_search" model="ir.ui.view">
+        <field name="name">pos.order.kanban.search</field>
+        <field name="model">pos.order</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <search string="Delivery">
+                <field name="name" filter_domain="['|', ('name','ilike',self), ('type','ilike',self)]" string="Name"/>
+                <filter invisible="0" string="Today" name="today_delivery"
+                        domain="[('delivery_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_delivery_order_kanban" model="ir.actions.act_window">
+        <field name="name">Delivery Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.order</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="flexipharmacy.delivery_order_kanban_view"/>
+        <field name="search_view_id" ref="pos_order_kanban_search"/>
+        <field name="context">{'search_default_today_delivery':1}</field>
+        <field name="domain">[('delivery_type','=','pending'),('delivery_user_id','=',uid)]</field>
+    </record>
+
+    <menuitem
+            action="action_delivery_order_kanban"
+            id="delivery_order_kanban_menu_id"
+            name="Delivery Order"
+            parent="point_of_sale.menu_point_of_sale"
+            sequence='100'
+            groups="point_of_sale.group_pos_user"/>
+
+</odoo>

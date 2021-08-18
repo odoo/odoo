@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ProductScreenInh" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('leftpane')]" position="after">
+            <div class="middel" t-if="!env.isMobile">
+                <MiddleCustomControlButton/>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('leftpane')]//OrderWidget" position="replace">
+            <t t-if="state.serials">
+                <OrderWidget serials="state.serials"/>
+            </t>
+            <t t-else="">
+                <OrderWidget/>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('rightpane')]" position="replace">
+            <div class="rightpane" t-if="!env.isMobile || mobile_pane === 'right'">
+                <t t-if="state.warehouse_mode and !state.alternate_product and !state.cross_selling_product">
+                    <div class="flex-container">
+                        <WarehouseScreen displayData="state.warehouseData" productName="state.title"/>
+                    </div>
+                </t>
+                <t t-if="state.alternate_product and !state.warehouse_mode and !state.cross_selling_product">
+                    <div class="flex-container">
+                        <AlternateProductScreen line_product="state.line_product"
+                                                productName="state.line_product.display_name"/>
+                    </div>
+                </t>
+                <t t-if="state.cross_selling_product and !state.warehouse_mode and !state.alternate_product">
+                    <div class="flex-container">
+                        <CrossSellingProductScreen line_product="state.line_product"
+                                                   productName="state.line_product.display_name"/>
+                    </div>
+                </t>
+                <t t-if="!state.alternate_product and !state.warehouse_mode and !state.cross_selling_product">
+                    <ProductsWidget t-if="!state.cashControl" isPackaging="state.isPackaging"/>
+                    <t t-if="env.isMobile">
+                        <MobileOrderWidget pane="mobile_pane" t-on-switchpane="switchPane"/>
+                    </t>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>

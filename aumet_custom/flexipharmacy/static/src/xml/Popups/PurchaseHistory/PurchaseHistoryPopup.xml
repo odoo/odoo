@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="PurchaseHistoryPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup">
+                    <header class="title drag-handle">
+                        <div class="header-tab-buttons">
+                            <div class="header-tab"
+                                 t-att-class="{ active: state.ProductPurchaseHistory === 'CartProductPurchaseHistory' }"
+                                 t-on-click="CartProductPurchaseHistory">
+                                Cart Products 
+                            </div>
+                            <div class="header-tab"
+                                 t-att-class="{ active: state.ProductPurchaseHistory === 'LastOrderHistory' }"
+                                 t-on-click="LastOrderHistory">
+                                Last Order 
+                            </div>
+                        </div>
+                        <div class="header-cancel-button" t-on-click="cancel">
+                            X
+                        </div>
+                        <div class="header-print-button" t-on-click="trigger('print-product-and-order-receipt')">
+                            <i class="fa fa-print"/>
+                        </div>
+                    </header>
+                    <div class="div purchase-history">
+                        <div t-if="state.ProductPurchaseHistory === 'CartProductPurchaseHistory' and props.product_history">
+                            <div class="sticky-header-history">
+                                <div class="history-customer-name"> 
+                                    <t t-esc="env.pos.get_order().get_client_name()"/>
+                                </div>
+                            </div>
+                            <t t-foreach="props.product_history" t-as="data">
+                                <div class="product-history-row">
+                                    <div class="history-name-left">
+                                        <t t-esc="env.pos.db.get_product_by_id(data.product_id).display_name"/>
+                                        <ul style="color:#888;">
+                                            <li style="margin-left:10px;font-size: 13px;">
+                                                <b>
+                                                    <t t-esc="data.qty"/>
+                                                </b>
+                                                <t t-esc="data.uom_name"/>
+                                                at
+                                                <t t-esc="env.pos.db.get_product_by_id(data.product_id).list_price"/>
+                                                /
+                                                <t t-esc="data.uom_name"/>
+                                                on
+                                                <b>
+                                                    <t t-esc="data.date_order"/>
+                                                </b>
+                                                from
+                                                <t t-esc="data.name"/>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="history-name-right">
+                                        <t t-esc="env.pos.format_currency(data.price_subtotal_incl,'Product Price')"/>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                        <div t-if="!props.product_history and state.ProductPurchaseHistory === 'CartProductPurchaseHistory'">
+                            <div class="history-customer-name"> 
+                                <div class="no_pop_up">
+                                    Product History Not Found for <t t-esc="env.pos.get_order().get_client_name()"/>.
+                                </div>
+                            </div>
+                        </div>
+                        <div t-if="state.ProductPurchaseHistory === 'LastOrderHistory' and props.last_purchase_history">
+                            <div class="sticky-header-history">
+                                <div class="history-customer-name"> 
+                                    <t t-esc="env.pos.get_order().get_client_name()"/>
+                                </div>
+                                <div class="product-history-row">
+                                    <div class="history-name-left">
+                                        <t t-esc="props.last_order_name"/>
+                                    </div>
+                                    <div class="history-name-right">
+                                        Ordered Date : <t t-esc="props.last_order_date"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <t t-foreach="props.last_purchase_history" t-as="data">
+                                <div class="product-history-row">
+                                    <div class="history-name-left">
+                                        <t t-esc="env.pos.db.get_product_by_id(data.product_id).display_name"/>
+                                        <ul style="color:#888;">
+                                            <li style="margin-left:10px;font-size: 13px;">
+                                                <b>
+                                                    <t t-esc="data.qty"/>
+                                                </b>
+                                                <t t-esc="data.uom_name"/>
+                                                at
+                                                <t t-esc="env.pos.db.get_product_by_id(data.product_id).list_price"/>
+                                                /
+                                                <t t-esc="data.uom_name"/>
+                                                on
+                                                <b>
+                                                    <t t-esc="data.date_order"/>
+                                                </b>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="history-name-right">
+                                        <t t-esc="env.pos.format_currency(data.price_subtotal_incl,'Product Price')"/>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                        <div t-if="!props.last_purchase_history and state.ProductPurchaseHistory === 'LastOrderHistory'">
+                            <div class="history-customer-name"> 
+                                <div class="no_pop_up">
+                                    <t t-esc="env.pos.get_order().get_client_name()"/>
+                                    Is not Have Any Past Order.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

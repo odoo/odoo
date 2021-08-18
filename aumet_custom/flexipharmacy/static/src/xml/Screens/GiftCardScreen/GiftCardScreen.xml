@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="GiftCardScreen" owl="1">
+        <div class="gift_card-screen screen" t-on-activate-edit-mode="activateEditMode">
+            <div class="screen-content">
+                <div class="controls">
+                    <button class="button back" t-on-click="back">
+                        <t t-if="!env.isMobile">
+                            <i class="fa  fa-angle-double-left"></i>
+                            Back
+                        </t>
+                        <t t-else="">
+                            <i class="fa fa-undo"></i>
+                        </t>
+                    </button>
+
+                    <button class="highlight button new-gift_card" role="img" aria-label="Add a Gift Card"
+                            t-on-click="createNewGiftCard"
+                            title="Add a Gift Card">
+
+                        <t t-if="!env.isMobile">
+                            <i class="fa fa-plus" aria-hidden="true"/>
+                            Create
+                        </t>
+                        <t t-else="">
+                            <i class="fa fa-plus"></i>
+                        </t>
+                    </button>
+                    <button class="button reload" role="img" aria-label="Load Newly Create Gift Card"
+                            t-on-click="reloadNewGiftCard"
+                            title="Load Gift Card">
+
+                        <t t-if="!env.isMobile">
+                            <i class="fa fa-refresh" aria-hidden="true"/>
+                        </t>
+                        <t t-else="">
+                            <i class="fa fa-refresh"></i>
+                        </t>
+                    </button>
+                    <SearchBar config="searchBarConfig" placeholder="'Search Gift Card...'"/>
+                </div>
+                <div class="orders">
+                    <div class="header-row">
+                        <div class="col start wide">Card No.</div>
+                        <div class="col start">Customer</div>
+                        <div class="col start">Issue Date</div>
+                        <div class="col start">Expire Date</div>
+                        <div class="col start">Card Amount</div>
+                    </div>
+                    <t t-foreach="filteredGiftCardList" t-as="gift_card" t-key="gift_card.id">
+                        <GiftCardLine gift_card="gift_card"
+                                      selectedCard="state.selectedCard"
+                                      detailIsShown="state.detailIsShown"
+                                      t-on-click-card="clickCard"/>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

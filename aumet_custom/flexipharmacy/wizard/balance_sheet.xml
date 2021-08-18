@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="accounting_report_view_balance_sheet" model="ir.ui.view">
+        <field name="name">Accounting Report</field>
+        <field name="model">accounting.report.profit.loss</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="state" invisible="1"/>
+                <field name="name" invisible="1"/>
+                <group col="4" states="choose">
+                    <field name="account_report_id" domain="[('parent_id','=',False),('balance_sheet','=',True)]"
+                           options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'></field>
+                    <field name="target_move"/>
+                    <field name="enable_filter"/>
+                    <field name="debit_credit" attrs="{'invisible':[('enable_filter','=',True)]}"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                </group>
+                <notebook tabpos="up" colspan="4" states="choose">
+                    <page string="Comparison" name="comparison" attrs="{'invisible': [('enable_filter','=',False)]}">
+                        <group>
+                            <field name="label_filter" attrs="{'required': [('enable_filter', '=', True)]}"/>
+                            <field name="filter_cmp"/>
+                        </group>
+                        <group string="Dates" attrs="{'invisible':[('filter_cmp', '!=', 'filter_date')]}">
+                            <field name="date_from_cmp" attrs="{'required':[('filter_cmp', '=', 'filter_date')]}"/>
+                            <field name="date_to_cmp" attrs="{'required':[('filter_cmp', '=', 'filter_date')]}"/>
+                        </group>
+                    </page>
+                </notebook>
+                <div states="get">
+                    <h2>Report Complete</h2>
+                    <p>Here is the Xls File :
+                        <field name="data" readonly="1" filename="name"/>
+                    </p>
+                </div>
+                <footer states="choose">
+                    <button name="check_report" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                    <button name="print_xls" context="{'from_balance_sheet':True}" string="XLS" type="object"
+                            class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_report_balance_sheet" model="ir.actions.act_window">
+        <field name="name">Balance Sheet</field>
+        <field name="res_model">accounting.report.profit.loss</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="accounting_report_view_balance_sheet"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_account_report_bs"
+              name="Balance Sheet"
+              sequence="5"
+              action="action_report_balance_sheet"
+              parent='account.menu_finance_reports'
+              groups="account.group_account_user"/>
+
+</odoo>

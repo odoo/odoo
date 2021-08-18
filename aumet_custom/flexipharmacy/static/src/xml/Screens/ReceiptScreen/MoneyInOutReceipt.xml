@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="MoneyInOutReceipt" owl="1">
+        <div class="pos-receipt">
+            <div t-if="props.type == 'money_out'">
+                <h3 align="center"> Put Money Out </h3>
+                <div align="center"><t t-esc="props.date"/></div>
+            </div>
+            <div t-if="props.type == 'money_in'">
+                <h3 align="center">Put Money in</h3>
+                <div align="center"><t t-esc="props.date"/></div>
+            </div>
+            <table style="width:100%;">
+                <tbody>
+                    <tr>
+                        <td class="pos-left-align">
+                            <b>Company</b>
+                        </td>
+                        <td class="pos-left-align">
+                            <t t-esc='props.company.name'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pos-left-align">
+                            <b>Cashier</b>
+                        </td>
+                        <td class="pos-left-align">
+                            <t t-esc='props.session.name'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pos-left-align">
+                            <b>Phone</b>
+                        </td>
+                        <td class="pos-left-align">
+                            <t t-esc="props.company.phone"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pos-left-align">
+                            <b>Reason</b>
+                        </td>
+                        <td>
+                            <t t-esc="props.InOutDetail.reason"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pos-left-align">
+                            <b>Amount</b>
+                        </td>
+                        <td class="pos-left-align">
+                            <t t-if="props.pos">
+                                <t t-esc="props.pos.format_currency(props.InOutDetail.amount)"/>
+                            </t>
+                            <t t-else="">
+                                <t t-esc="env.pos.format_currency(props.InOutDetail.amount)"/>
+                            </t>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br/>
+            <br/>
+            <div>
+                Signature : ____________________
+            </div> 
+        </div>
+    </t>
+
+</templates>

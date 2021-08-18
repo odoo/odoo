@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="pos_sales_dashboard">
+    <div t-name="SalesDashboard" style="width:100%">
+        <div class="container-fluid" style="margin-top:5px;">
+            <div class="row">
+                <div class="col-md-4" style="padding-right:0">
+                    <div class="box box-widget widget-user-2" style="margin-top:0">
+                        <div class="widget-user-header bg-yellow" style="height: 118px">
+                            <div class="widget-user-image" id="image_viewer"/>
+
+                            <h5 class="widget-user-desc">Welcome</h5>
+                            <h3 class="welcome-text widget-user-username"/>
+                        </div>
+                        <div class="box-footer no-padding" style="padding-bottom:7px">
+                            <div class="form-group">
+                                <span id="select-year">
+                                    <select class="pos-company form-control pull-left" placeholder="select company">
+                                        <t t-foreach="widget.user_companies" t-as="company">
+                                            <t t-if="widget.company_id[0] == company[0]">
+                                                <option t-att-data-id="company[0]" selected="selected">
+                                                    <t t-esc="company[1]"/>
+                                                </option>
+                                            </t>
+                                            <t t-else="">
+                                                <option t-att-data-id="company[0]">
+                                                    <t t-esc="company[1]"/>
+                                                </option>
+                                            </t>
+                                        </t>
+
+                                    </select>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2"
+                     style="padding-left:5px; padding-right:2px;box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);margin-bottom: 20px;">
+                    <div class="icon bg-aqua">
+                        <center class="pos_session"></center>
+                    </div>
+                    <center style="background:#FFFF">
+                        <div class="content">
+                            <h3 class='active-session'/>
+                            <p style="padding-bottom:10px">
+                                <strong>Active Sessions</strong>
+                            </p>
+                        </div>
+                    </center>
+                </div>
+                <div class="col-md-6">
+                    <div class="row" style="margin-bottom:5px">
+                        <div class="col-md-4" style="padding-left:5px; padding-right:2px">
+                            <div class="info-box">
+                                <div class="icon bg-yellow">
+                                    <i class="fa fa-shopping-bag"/>
+                                </div>
+                                <div class="content">
+                                    <h3 class='today-total-orders'/>
+                                    <p>Today Orders</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="padding-left:5px; padding-right:2px">
+                            <div class="info-box">
+                                <div class="icon product">
+                                    <i class="fa fa-line-chart"/>
+                                </div>
+                                <div class="content">
+                                    <h3 class='today-total-sales'/>
+                                    <p>Today Sales</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="padding-left:5px; padding-right:2px">
+                            <div class="info-box">
+                                <div class="icon bg-aqua">
+                                    <i class="fa fa-cart-arrow-down"/>
+                                </div>
+                                <div class="content">
+                                    <h3 class="today-product-sold"/>
+                                    <p>Today Product Sold</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4" style="padding-left:5px; padding-right:2px">
+                            <div class="info-box">
+                                <div class="icon bg-martina">
+                                    <i class="fa fa-shopping-bag"/>
+                                </div>
+                                <div class="content">
+                                    <h3 class='total-orders'/>
+                                    <p>Total Orders</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="padding-left:5px; padding-right:2px">
+                            <div class="info-box">
+                                <div class="icon bg-rose">
+                                    <i class="fa fa-line-chart"/>
+                                </div>
+                                <div class="content">
+                                    <h3 class="total-sales"/>
+                                    <p>Total Sales</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="padding-left:5px; padding-right:2px">
+                            <div class="info-box">
+                                <div class="icon bg-keppel">
+                                    <i class="fa fa-cart-arrow-down"/>
+                                </div>
+                                <div class="content">
+                                    <h3 class="product-sold"/>
+                                    <p>Total Products Sold</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8" style="padding-right:0">
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Sales Report</h3>
+                            <span class="dmy-btn-group btn-group pull-right">
+                                <button type="button" class="dmy btn btn-secondary active" data-text="today"
+                                        value="today">Today
+                                </button>
+                                <button type="button" class="dmy btn btn-secondary" data-text="month" value="month">This
+                                    Month
+                                </button>
+                                <button type="button" class="dmy btn btn-secondary" data-text="year" value="year">This
+                                    Year
+                                </button>
+                            </span>
+                        </div>
+                        <div class="box-body">
+                            <div class="chart">
+                                <div id="chart_day_month_year" class="day" style="height:338px;"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 pos-info">
+                    <div class="box transparent" style="background:transparent; border:none;margin-">
+                        <div class="box-body">
+                            <div class="info-box bg-aqua">
+                                <span class="info-box-icon">
+                                    <i class="fa fa-users"/>
+                                </span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Top Staff Today</span>
+                                    <span class="info-box-number" id="top_staff_today_amount">0.0</span>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 100%"/>
+                                    </div>
+                                    <span class="progress-description" id="top_staff_today_name">
+                                        No Data Found
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="info-box bg-green">
+                                <span class="info-box-icon">
+                                    <i class="fa fa-clock-o"/>
+                                </span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Top Hours Today</span>
+                                    <span class="info-box-number" id="top_hour_amount"/>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 100%"/>
+                                    </div>
+                                    <span class="progress-description" id="top_hours_hour">
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="info-box bg-red">
+                                <span class="info-box-icon">
+                                    <i class="average-selling-price-icon"/>
+                                </span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Average Selling Price</span>
+                                    <span class="info-box-number" id="average-selling-price"/>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 100%"/>
+                                    </div>
+                                    <span class="progress-description">
+                                        Last 30 Days
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="info-box bg-yellow" style="margin-bottom:0">
+                                <span class="info-box-icon">
+                                    <i class="fa fa-line-chart"/>
+                                </span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Highest Selling Day</span>
+                                    <span class="info-box-number" id="highest_sales_last_30_days"/>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 100%"/>
+                                    </div>
+                                    <span class="progress-description">
+                                        Last 30 Days
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--PAYMENT BY JOURNAL-->
+        <div class="row" style="margin-left: 0; margin-right: 0;">
+            <div class="col-md-12">
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h3 class="box-title">Payment By Journal</h3>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="box-tools">
+                                    <span class="form-group">
+                                        <span class="pull-right">
+                                            <select class="journal-option form-control" placeholder="select option">
+                                            </select>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="chart">
+                                    <div id="journal_pie_chart" style="width: 100%; height:400px;"/>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="chart">
+                                    <div id="journal_line_chart" style="width: 100%; height:400px;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4" style="padding-right:2px">
+                    <div class="box box-warning">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Top 10 Customers</h3>
+                            <div class="box-tools pull-right">
+                                <select class="top_customer_w_m_y form-control pull-left" placeholder="select Month">
+                                    <option data-value="week" selected="selected">This Week</option>
+                                    <option data-value="month">This Month</option>
+                                    <option data-value="year">This Year</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="box-body" style="height:250px">
+                            <div class="table-responsive">
+                                <table class="top-client table no-margin">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Sale By Salesman</h3>
+                            <div class="box-tools pull-right">
+                                <select class="top_salesman_w_m_y form-control pull-left" placeholder="select Month">
+                                    <option data-value="week" selected="selected">This Week</option>
+                                    <option data-value="month">This Month</option>
+                                    <option data-value="year">This Year</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="box-body" style="height:250px">
+                            <div class="table-responsive">
+                                <table class="top_salesperson table no-margin">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4" style="padding-left:0">
+                    <div class="box box-primary">
+                        <div class="box-header with-border" style="padding-right:10px">
+                            <h3 class="box-title">Employee Working Hours</h3>
+                            <div class="box-tools pull-right">
+                            </div>
+                        </div>
+                        <div class="box-body" style="height:250px">
+                            <div class="table-responsive">
+                                <table class="employee_time table no-margin">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Top Items by Sales</h3>
+                            <div class="box-tools pull-right">
+                                <div class="form-group">
+                                    <span class="pull-right">
+                                        <select class="top_items_sales_w_m_y form-control pull-left"
+                                                placeholder="select Month">
+                                            <option data-value="week" selected="selected">This Week</option>
+                                            <option data-value="month">This Month</option>
+                                            <option data-value="year">This Year</option>
+                                        </select>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-body" style="height:288px">
+                            <div class="table-responsive">
+                                <table id="top_items_sold" class="table no-margin"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8" style="padding-left:0">
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Top 5 Categories by Sales</h3>
+                            <div class="box-tools pull-right">
+                                <div class="form-group">
+                                    <span class="pull-right">
+                                        <select class="product-option form-control pull-left"
+                                                placeholder="select option">
+                                            <option select="selected">Price</option>
+                                            <option>Quantity</option>
+                                        </select>
+                                    </span>
+                                    <span class="pull-right">
+                                        <select class="product-order form-control pull-left" placeholder="select order"
+                                                style="margin-left: - 5px;">
+                                            <option select="selected">Top</option>
+                                            <option>Bottom</option>
+                                        </select>
+                                    </span>
+                                    <span class="pull-right">
+                                        <select class="top_product_catg_w_m_y form-control" placeholder="select Month">
+                                            <option data-value="week" selected="selected">This Week</option>
+                                            <option data-value="month">This Month</option>
+                                            <option data-value="year">This Year</option>
+                                        </select>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div id="top_product_category" style="width: 100%; height: 255px;" class="graph-div"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Weekly Sales Details</h3>
+                            <div class="box-tools pull-right">
+                                <div class="form-group">
+                                    <span class="pull-right">
+                                        <select class="week-option form-control pull-left" placeholder="select Week"/>
+                                    </span>
+                                    <span class="pull-right">
+                                        <select class="month-option form-control pull-left" placeholder="select Month">
+                                            <option value="1">January</option>
+                                            <option value="2">February</option>
+                                            <option value="3">March</option>
+                                            <option value="4">April</option>
+                                            <option value="5">May</option>
+                                            <option value="6">June</option>
+                                            <option value="7">July</option>
+                                            <option value="8">August</option>
+                                            <option value="9">September</option>
+                                            <option value="10">October</option>
+                                            <option value="11">November</option>
+                                            <option value="12">December</option>
+                                        </select>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div id="chartweekly" style="width: 100%; height: 400px;" class="graph-div"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--DAILY COMPARE GROSS SALES-->
+        <div class="row" style="margin-left:0; margin-right: 0;">
+            <div class="col-md-12">
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h3 class="box-title">Daily Gross Sales</h3>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="box-tools">
+                                    <span class="form-group">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="chart">
+                                    <div id="daily_gross_sale" style="width: 100%; height:400px;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--WEEKLY COMPARE GROSS SALES-->
+        <div class="row" style="margin-left:0; margin-right: 0;">
+            <div class="col-md-12">
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h3 class="box-title">Weekly Gross Sales</h3>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="box-tools">
+                                    <span class="form-grou pull-right" id="weekly_gross_date">
+
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="chart">
+                                    <div id="weekly_gross_sales_compare_barchart" style="width: 100%; height:400px;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</templates>

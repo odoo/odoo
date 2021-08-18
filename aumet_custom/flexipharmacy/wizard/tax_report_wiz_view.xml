@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tax_report_wiz_view" model="ir.ui.view">
+        <field name="name">Tax Report View</field>
+        <field name="model">tax.report.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Tax Report">
+                <field name="company_id" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="name" invisible="1"/>
+                <group col="4" states="choose">
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                </group>
+                <div states="get">
+                    <h2>Report Complete</h2>
+                    <p>Here is the Xls File :
+                        <field name="data" readonly="1" filename="name"/>
+                    </p>
+                </div>
+                <footer states="choose">
+                    <button name="print_pdf" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                    <button name="print_xls" string="XLS" type="object" class="btn btn-primary"/>
+                    or
+                    <button string="Cancel" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_tax_report_wiz_menu" model="ir.actions.act_window">
+        <field name="name">Tax Report</field>
+        <field name="res_model">tax.report.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="tax_report_wiz_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_action_tax_report_wiz_menu_menu"
+              name="Tax Report" action="action_tax_report_wiz_menu"
+              parent="account.menu_finance_reports" groups="account.group_account_user"/>
+
+</odoo>

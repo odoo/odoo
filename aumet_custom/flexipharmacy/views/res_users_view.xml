@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_users_form_view_inh" model="ir.ui.view">
+            <field name="name">res.users.form.view.ace</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[2]" position='after'>
+                    <page string='Point of Sale'>
+                        <h3>POS Direct Login</h3>
+                        <group>
+                            <group>
+                                <field name="is_pos_direct_login"/>
+                                <field name="default_pos_id"
+                                       attrs="{'required' : [('is_pos_direct_login' ,'!=', False)]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="pin"/>
+                            </group>
+                            <group>
+                                <field name="display_amount_during_close_session"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="access_money_in_out"/>
+                                <field name="access_gift_card"/>
+                                <field name="access_gift_voucher"/>
+                                <field name="access_int_trans_stock"/>
+                                <field name="access_bag_charges"/>
+                                <field name="access_pos_lock"/>
+                                <field name="access_vertical_category"/>
+                                <field name="access_close_session"/>
+                                <field name="access_product_summary"/>
+                                <field name="access_payment_summary"/>
+                                <field name="access_pos_order_note"/>
+                                <field name="access_cross_selling"/>
+                                <field name="access_pos_promotion"/>
+                            </group>
+                            <group>
+                                <field name="access_wallet"/>
+                                <field name="access_default_customer"/>
+                                <field name="access_warehouse_qty"/>
+                                <field name="access_select_sale_person"/>
+                                <field name="access_multi_uom"/>
+                                <field name="access_purchase_history"/>
+                                <field name="access_purchase_order"/>
+                                <field name="access_pos_return"/>
+                                <field name="access_signature"/>
+                                <field name="access_order_summary"/>
+                                <field name="access_audit_report"/>
+                                <field name="access_material_monitor"/>
+                                <field name="access_alternative_product"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="StaticInputLines" owl="1">
+        <div class="order-row pointer" style="opacity:0.2">
+            <div class="col center">
+                <input class="custom_input" t-att-value="props.line.number_of_coins" disabled="True"/>
+            </div>
+            <div class="col center">
+                <input class="custom_input" t-att-value="props.line.coin_value" disabled="True"/>
+            </div>
+            <div class="col center">
+            </div>
+            <div class="col center">
+                <t t-esc="props.line.coin_value * props.line.number_of_coins"/>
+            </div>
+            <div class="col start">
+                <i class="fa fa-trash" style="font-size: 20px;"></i>
+            </div>
+        </div>
+    </t>
+
+</templates>

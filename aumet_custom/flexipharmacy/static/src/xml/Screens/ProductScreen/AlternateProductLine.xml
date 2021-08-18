@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="AlternateProductLine" owl="1">
+        <article class="product" tabindex="0" t-on-keypress="spaceClickProduct"
+                 t-on-click="trigger('click-alternate-product', env.pos.db.get_product_by_id(props.alternate_product_id))"
+                 t-att-data-product-id="props.alternate_product_id"
+                 t-attf-aria-labelledby="article_product_{{props.alternate_product_id}}">
+            <div class="product-img">
+                <img t-att-src="imageUrl"
+                     t-att-alt="env.pos.db.get_product_by_id(props.alternate_product_id).display_name"/>
+                <span class="price-tag">
+                    <t t-esc="env.pos.format_currency(env.pos.db.get_product_by_id(props.alternate_product_id).lst_price)"/>
+                </span>
+            </div>
+            <div class="product-name"
+                 t-attf-id="article_product_{{env.pos.db.get_product_by_id(props.alternate_product_id)}}">
+                <t t-esc="env.pos.db.get_product_by_id(props.alternate_product_id).display_name"/>
+            </div>
+        </article>
+    </t>
+</templates>

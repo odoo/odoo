@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="RefillMedicineScreen" owl="1">
+        <div class="ticket-screen clientlist-screen screen">
+            <div class="screen-content">
+                <t t-if="!state.ViewRefillMedicineOrder">
+                    <div class="controls">
+                         <div class="buttons">
+                             <button class="discard" t-on-click="_closeRefillMedicineScreen">Close</button>
+                         </div>
+                        <button class="button reload" role="img" aria-label="Load Newly Create Refill Medicine"
+                                t-on-click="reloadRefillMedicine"
+                                title="Load Refill Medicine">
+                            <i class="fa fa-refresh" aria-hidden="true"/>
+                        </button>
+                        <div class="buttons">
+                            <button class="highlight" t-on-click="CreateRefillMedicine">Create</button>
+                        </div>
+                        <SearchBar config="searchBarConfig" placeholder="'Search Records...'"/>
+                    </div>
+
+                    <div class="PackLotContent">
+                        <div class="table_head">
+                            <div>Customer</div>
+                            <div>Execution Date</div>
+                            <div>User</div>
+                            <div>Show Order</div>
+                        </div>
+                        <div class='serial-list-contents'>
+                            <t t-foreach="filteredRefillList" t-as="line">
+                                <RefillMedicineScreenLine line="line"/>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+                <t t-if="state.ViewRefillMedicineOrder">
+                    <div class="controls">
+                         <div class="buttons">
+                             <button class="discard" t-on-click="_closeRefillMedicineOrderScreen">
+                                <i class="fa fa-angle-double-left"></i>
+                                 Back
+                             </button>
+                         </div>
+                    </div>
+                    <div class="PackLotContent">
+                        <RefillMedicineOrderScreen order="state.MedicineOrderData"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

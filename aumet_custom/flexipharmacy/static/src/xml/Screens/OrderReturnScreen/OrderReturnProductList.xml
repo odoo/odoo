@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrderReturnProductList" owl="1">
+        <article class="product" tabindex="0"
+                 t-att-data-product_by_id="props.line.product_id"
+                 t-attf-aria-labelledby="article_product_{{env.pos.db.get_product_by_id(props.line.product_id)}}">
+            <div class="product-img" style="padding-left: 5px;">
+                <img t-att-src="imageUrl" t-att-alt="env.pos.db.get_product_by_id(props.line.product_id).display_name"/>
+                <span class="price-tag">
+                    <t t-esc="env.pos.format_currency(props.line.price_unit)"/>
+                </span>
+            </div>
+            <div class="product-name"
+                 t-attf-id="article_product_{{env.pos.db.get_product_by_id(props.line.product_id)}}">
+                <div style="padding-left: 5px;">
+                    <t t-esc="env.pos.db.get_product_by_id(props.line.product_id).display_name"/>
+                </div>
+                <t t-if="state.LotProduct">
+                    <span t-if="state.LotProduct"
+                          style="position: absolute; vertical-align: top; color: white; line-height: 13px; background: #7f82ac; padding: 2px 5px; border-radius: 2px; padding-left: 5px;">
+                        <t t-esc="props.line.operation_lot_name[0].lot_name"/>
+                    </span>
+                    <br/>
+                </t>
+                <div style="height: 31px;margin-top: 4px; margin-bottom: 1px;font-size: 16px; padding-left: 5px;"
+                     t-if="!state.serialProduct">
+                    <span t-on-click="removeQty" t-att-disabled="props.ReturnProduct"><i class="fa fa-minus-circle"/></span>
+                    <input type="text" t-model="props.line.return_qty" t-ref="ProductQty" id="ProductQty"
+                           name="ProductQty" t-att-disabled="props.ReturnProduct"
+                           style="width: 50%;font-size: 18px;margin-left: 9px;margin-right: 9px;padding: 0px;min-height: 0px;text-align: center;"
+                           t-on-keydown="QuantityValidation"/>
+                    <span t-on-click="addQty" t-att-disabled="props.ReturnProduct"><i class="fa fa-plus-circle"/></span>
+                    
+                </div>
+                <div style="height: 31px;margin-top: 4px; margin-bottom: 1px;font-size: 16px; padding-left: 5px;"
+                     t-if="state.serialProduct">
+                    <button style=" width: 86%; font-size: 14px; margin-left: 2px; margin-right: 2px; padding: 5px; min-height: 25px; text-align: center; background-color: #6ec89b;"
+                            t-att-disabled="props.ReturnProduct"
+                            t-on-click="trigger('serialNumberPopup', {operation_lot_name: props.line.operation_lot_name, line:props.line})">
+                        <span>Select Serial</span>
+                    </button>
+                </div>
+                <div style="height: 31px;margin-top: 4px;margin-bottom: 1px;padding-top: 5px;padding-left: 3px;padding-right: 5px;font-size: 13px;background-color: #e2e2e2; margin: -3px;">
+                    <span>Ordered Qty  <b style="float: right;"><t t-esc="props.line.qty"/></b></span>
+                    <br/>
+                    <span>Remaining Qty  <b style="float: right;"><t t-esc="props.line.order_return_qty"/></b></span>
+                    <br/>
+                </div>
+
+            </div>
+        </article>
+    </t>
+</templates>

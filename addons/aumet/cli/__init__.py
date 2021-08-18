@@ -1,1 +1,0 @@
-from . import products_sync

@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="sales_details_pdf_template">
+            <t t-foreach="doc_ids" t-as="doc_id">
+                <t t-call="web.html_container">
+                    <t t-call="web.basic_layout">
+                        <div class="page">
+                            <div align="center"
+                                 style="border:1px solid black;margin:0 auto;padding:0 auto;font-size:25px">
+                                <strong>Sales Summary</strong>
+                            </div>
+                            <t t-if="doc_id.only_summary == True">
+                                <table style="width:100%;margin-top:15px;">
+                                    <tr>
+                                        <td class="text-left">
+                                            Report Date
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="doc_id.get_current_date()"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">
+                                            Report Time
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="doc_id.get_current_time()"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table style="width:100%;margin-top:15px;">
+                                    <tr>
+                                        <td class="text-left">
+                                            Start Date
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="doc_id.start_date"
+                                                  t-field-options='{"format": "dd/M/YYYY"}'/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">
+                                            End Date
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="doc_id.end_date" t-field-options='{"format": "dd/M/YYYY"}'/>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table style="width:100%;margin-top:15px;">
+                                    <tr>
+                                        <td class="text-left">
+                                            Sales
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(doc_id.get_total_sales())"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">
+                                            Total
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(doc_id.get_total_returns())"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">
+                                            Taxes
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="doc_id.get_tax_amount()"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">
+                                            Discount Amount
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="doc_id.get_total_discount()"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">
+                                            Gross Total
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(doc_id.get_total_first())"/>
+                                        </td>
+                                    </tr>
+                                    <t t-if="doc_id.get_user()">
+                                        <tr>
+                                            <td class="text-left">
+                                                Gross Profit
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'{0:.2f}'.format(doc_id.get_gross_total())"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left">
+                                                Net Gross Profit
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'{0:.2f}'.format(doc_id.get_net_gross_total())"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </table>
+                                <table style="width:100%;margin-top:15px;">
+                                    <tr t-foreach="doc_id.get_payments()" t-as="l">
+                                        <t t-if="l.get('name')">
+                                            <td class="text-left">
+                                                <span t-esc="l.get('name')"/>
+                                            </td>
+                                        </t>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(l.get('sum'))"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <t t-if="doc_id.get_product_category()">
+                                    <div class="text-left" style="margin-top:10px !important;">
+                                        Department Sales:
+                                    </div>
+                                    <table style="width:100%;margin-top:15px;">
+                                        <tr t-foreach="doc_id.get_product_category()" t-as="l">
+                                            <td class="text-left">
+                                                <span t-esc="doc_id.get_product_name(l.get('pos_categ_id')) or 'Others'"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'{0:.2f}'.format(l.get('price'))"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td style="width:50%;">
+                                            </td>
+                                            <td style="width:50%; !important" class="text-right">
+                                                ===========
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td style="width:50%;">
+                                            </td>
+                                            <td style="width:50%; !important" class="text-right">
+                                                <span t-esc="'{0:.2f}'.format(doc_id.get_product_cate_total())"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </t>
+                            </t>
+
+
+                            <t t-if="doc_id.only_summary != True">
+                                <table style="width:100%;margin-top:15px;">
+                                    <tr>
+                                        <td class="text-left">
+                                            Report Date time
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="doc_id.get_current_date()"/>
+                                            <span t-esc="doc_id.get_current_time()"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table style="width:100%;">
+                                    <tr>
+                                        <td class="text-left">
+                                            Start Date
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="doc_id.start_date"
+                                                  t-field-options='{"format": "dd/M/YYYY"}'/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">
+                                            End Date
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="doc_id.end_date" t-field-options='{"format": "dd/M/YYYY"}'/>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <t t-foreach="doc_id.get_user_wise_data()" t-as="users_dict">
+                                    <br/>
+                                    <strong>Salesperson :</strong>
+                                    <span t-esc="users_dict"/>
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td class="text-left">
+                                                Sales
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'{0:.2f}'.format(users_dict_value['total_sales'])"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left">
+                                                Total
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'{0:.2f}'.format(users_dict_value['total'])"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left">
+                                                Taxes
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'{0:.2f}'.format(users_dict_value['taxes'])"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left">
+                                                Discount Amount
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="users_dict_value['total_discount']"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left">
+                                                Gross Total
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'{0:.2f}'.format(users_dict_value['gross_total'])"/>
+                                            </td>
+                                        </tr>
+                                        <t t-if="doc_id.get_user()">
+                                            <tr>
+                                                <td class="text-left">
+                                                    Gross Profit
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="'{0:.2f}'.format(users_dict_value['gross_profit'])"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left">
+                                                    Net Gross Profit
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="'{0:.2f}'.format(users_dict_value['net_gross'])"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                    <table style="width:100%;margin-top:15px;">
+                                        <tr t-foreach="users_dict_value['payment']" t-as="l">
+                                            <t t-if="l.get('name')">
+                                                <td class="text-left">
+                                                    <span t-esc="l.get('name')"/>
+                                                </td>
+                                            </t>
+                                            <td class="text-right">
+                                                <span t-esc="l.get('sum')"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <t t-if="users_dict_value['product_category']">
+                                        <div class="text-left" style="margin-top:10px !important;">
+                                            Department Sales:
+                                        </div>
+                                        <table style="width:100%;margin-top:15px;">
+                                            <tr t-foreach="users_dict_value['product_category']" t-as="l">
+                                                <td class="text-left">
+                                                    <span t-esc="doc_id.get_product_name(l.get('pos_categ_id')) or 'Others'"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="'{0:.2f}'.format(l.get('price'))"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table style="width:100%;">
+                                            <tr>
+                                                <td style="width:50%;">
+                                                </td>
+                                                <td style="width:50%; !important" class="text-right">
+                                                    ===========
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table style="width:100%">
+                                            <tr>
+                                                <td style="width:50%;">
+                                                </td>
+                                                <td style="width:50%; !important" class="text-right">
+                                                    <span t-esc="'{0:.2f}'.format(users_dict_value['prod_categ_total'])"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </t>
+                                </t>
+                                <strong>Summary</strong>
+                                <br/>
+                                <table style="width:100%;">
+                                    <tr>
+                                        <td class="text-left">
+                                            Sales
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(doc_id.get_total_sales())"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">
+                                            Total
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(doc_id.get_total_returns())"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">
+                                            Taxes
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(doc_id.get_tax_amount())"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">
+                                            Discount Amount
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(doc_id.get_total_discount())"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">
+                                            Gross Total
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(doc_id.get_total_first())"/>
+                                        </td>
+                                    </tr>
+                                    <t t-if="doc_id.get_user()">
+                                        <tr>
+                                            <td class="text-left">
+                                                Gross Profit
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'{0:.2f}'.format(doc_id.get_gross_total())"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left">
+                                                Net Gross Profit
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'{0:.2f}'.format(doc_id.get_net_gross_total())"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </table>
+                                <table style="width:100%;margin-top:15px;">
+                                    <tr t-foreach="doc_id.get_payments()" t-as="l">
+                                        <t t-if="l.get('name')">
+                                            <td class="text-left">
+                                                <span t-esc="l.get('name')"/>
+                                            </td>
+                                        </t>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(l.get('sum'))"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <t t-if="doc_id.get_product_category()">
+                                    <div class="text-left" style="margin-top:10px !important;">
+                                        Department Sales:
+                                    </div>
+                                    <table style="width:100%;margin-top:15px;">
+                                        <tr t-foreach="doc_id.get_product_category()" t-as="l">
+                                            <td class="text-left">
+                                                <span t-esc="doc_id.get_product_name(l.get('pos_categ_id')) or 'Others'"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'{0:.2f}'.format(l.get('price'))"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td style="width:50%;">
+                                            </td>
+                                            <td style="width:50%; !important" class="text-right">
+                                                ===========
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td style="width:50%;">
+                                            </td>
+                                            <td style="width:50%; !important" class="text-right">
+                                                <span t-esc="'{0:.2f}'.format(doc_id.get_product_cate_total())"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </t>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

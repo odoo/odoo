@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="CustomerScreenButton" owl="1">
+        <div class="oe_status" t-on-click="onClick">
+            <div class="js_connected oe_icon oe_green">
+                <i class="fa fa-fw fa-desktop" role="img" aria-label="Client Screen Connected"
+                   title="Client Screen Connected" ></i>
+            </div>
+        </div>
+        <div class="ticket-button" t-on-click="onClickSync">
+            <div class="with-badge" t-att-badge="count">
+                <i class="fa fa-clock-o" aria-hidden="true"></i>
+            </div>
+        </div>
+    </t>
+</templates>

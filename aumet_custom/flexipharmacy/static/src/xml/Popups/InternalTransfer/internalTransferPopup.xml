@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="internalTransferPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup">
+                    <header class="title drag-handle">
+                        <t t-esc="props.title"/>
+                    </header>
+                    <div class="div">
+                        <div class="transfer_table">
+                            <div class="transfer_table_row">
+                                <div class="label">Picking Type </div>
+                                <div class="field">
+                                    <select class="location_select" t-model="state.PickingType"
+                                            t-att-class="{ blank_validation_input: state.BlankValidationPicking }">
+                                        <option t-foreach="env.pos.stock_pick_typ" t-as="picking_type"
+                                                t-att-value="picking_type.id">
+                                            <t t-esc="picking_type.display_name"/>
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="transfer_table_row">
+                                <div class="label">Source Location </div>
+                                <div class="field">
+                                    <select class="location_select" t-model="state.SourceLocation"
+                                            t-att-class="{ blank_validation_input: state.BlankValidationSource }">
+                                        <option t-foreach="env.pos.stock_location" t-as="source_location"
+                                                t-att-value="source_location.id">
+                                            <t t-esc="source_location.complete_name"/>
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="transfer_table_row">
+                                <div class="label">Dest. Location </div>
+                                <div class="field">
+                                    <select class="location_select" t-model="state.DestLocation"
+                                            t-att-class="{ blank_validation_input: state.BlankValidationDest }">
+                                        <option t-foreach="env.pos.stock_location"
+                                                t-as="dest_location" t-att-value="dest_location.id">
+                                            <t t-esc="dest_location.complete_name"/>
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="transfer_table_row">
+                                <div class="label">State </div>
+                                <div class="field">
+                                    <select class="location_select" t-model="state.stateOfPicking">
+                                        <option value='draft'>Draft</option>
+                                        <option value='confirmed'>Waiting</option>
+                                        <option value='done'>Done</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="transfer_table_row">
+                                <div class="field">
+                                    <t t-esc="state.PickingMsg"/>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="footer">
+                        <div class="button confirm" t-on-click="confirm">
+                            <t t-esc="props.confirmText"/>
+                        </div>
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText"/>
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+</templates>

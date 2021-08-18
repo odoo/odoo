@@ -1,0 +1,48 @@
+<odoo>
+    <data>
+        <record id="slow_moving_inv_report_wizard_form" model="ir.ui.view">
+            <field name="name">wizard.slow.moving.inventory.form</field>
+            <field name="model">wizard.slow.moving.inventory</field>
+            <field name="arch" type="xml">
+                <form string="Slow Moving Inventory">
+                    <group states="choose">
+                        <group>
+                            <field name="avg_month"/>
+                            <field name="categ_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="state" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="avg_on_hand_month"/>
+                            <field name="warehouse_ids" widget="many2many_tags" options="{'no_create': True}"/>
+
+                        </group>
+                    </group>
+                    <group states="choose">
+                        <field name="view_by" class="oe_inline"/>
+                    </group>
+                    <div attrs="{'invisible': ['|', ('view_by', '=', 'pdf'), ('state', '=', 'choose')]}">
+                        <h2>Report Complete</h2>
+                        <p>Here is the Xlsx File :
+                            <field name="file_data" readonly="1" filename="file_name"/>
+                        </p>
+                    </div>
+                    <footer states="choose">
+                        <button string="Print" class="oe_highlight" type="object" name="print_report"/>
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_slow_moving_inv_report_wizard" model="ir.actions.act_window">
+            <field name="name">Slow Moving Inventory</field>
+            <field name="res_model">wizard.slow.moving.inventory</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_slow_moving_inv_report_wizard" id="menu_slow_moving_inv_report_report_wizard"
+                  parent="stock.menu_warehouse_report"/>
+
+    </data>
+</odoo>

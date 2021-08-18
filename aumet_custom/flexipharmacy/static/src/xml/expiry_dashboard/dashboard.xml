@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="ProductExpiryDashboard" name="Product Expiry Dashboard">
+    <div t-name="ProductExpiryDashboard" style="width:100%;height:100%;overflow:auto;" class="ExpiryDashboard">
+        <div class="container-fluid header">
+            <div class="row">
+                <div class="col-md-12 title">
+                    <div class="col-md-9 greetings">
+                        <div class="panel-body1">
+                            <div class="block-header">
+                                <ul class="nav navbar-nav">
+                                <li class="welcome-text" style="width: 239px;white-space: nowrap;">
+                                    <p><br/>
+                                        <small></small>
+                                        <br/>
+                                        <t t-esc="current_user"/>
+                                    </p>
+                                </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <br/>
+                    </div>
+                    <div class="col-md-3 near_expire_product_count" style="float:left;">
+                        <div class="row expired_count">
+                            <div class=" col-sm-10 p-a-3 text-xs-center" style="top: 75%">
+                                <span class="custome_hidden">Today Expiring Product</span>
+                                <h2>
+                                    <span style="cursor:pointer;font-weight: 800;color: white;" id="today_expired_product" data-plugin="counterUp"></span>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid custome_hidden" style="padding-top:20px;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default" id="near_expiry_panel">
+                        <div class="panel-heading">
+                            <h2 class="panel-title">Nearly Expire By Product
+                            <ul class="list-inline panel-actions" style="float: right;padding-top: 13px;">
+                                <li><a href="#" id="panel-fullscreen" role="button" title="Toggle fullscreen"><i class="fa fa-expand"></i></a></li>
+                                <li><a id="panel-toggle" role="button" href="#" title="Toggle slide down and up"><i class="fa fa-chevron-up"></i>
+                                   </a></li>
+                                <li><a id="panel-close" role="button" href="#" title="Toggle close"><i class="fa fa-times"></i>
+                                   </a></li>
+                            </ul>
+                            </h2>
+                        </div>
+                        <div class="panel-body panel-body-product" style="padding: 25px;border: 1px solid lightgrey;background-color:white;">
+                            <div class="my_class">
+                                <div class="readmore-product" style="max-height: none; height: 100%; overflow: hidden;">
+                                    <div class="expert-topic-filters container-fluid" id="collapseOne">
+                                        <div class="row product_expiry_con"/>
+                                    </div>
+                                </div>
+                             </div>
+                        </div>
+                     </div>
+                 </div>
+            </div>
+        </div>
+
+         <div class="container-fluid custome_hidden" style="padding-top:20px;margin-bottom: 10px;">
+            <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;width: 22%;float: left;">
+                <i class="fa fa-calendar"></i>
+                    <span></span>
+                <i class="fa fa-caret-down"></i>
+
+            </div>
+             <div class="btn-group btn-group-sm" style="margin-left:15px;">
+                <button id="display_bar" class="btn btn-secondary fa fa-bar-chart-o o_graph_button active" data-mode="bar" title="Bar" data-original-title="Bar Chart"/>
+                <button id="display_pie" class="btn btn-secondary fa fa-pie-chart o_graph_button" data-mode="pie" title="Pie" data-original-title="Pie Chart"/>
+             </div>
+         </div>
+
+        <div class="container-fluid custome_hidden" style="padding-top:20px;margin-bottom: 10px;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default" id="near_expiry_graph_panel">
+                        <div class="panel-heading">
+                            <h2 class="panel-title" id="aaa"> Expired Product Graph
+                            <ul class="list-inline panel-actions" style="float: right; padding-top: 13px;">
+                                <li><a href="#" id="panel-fullscreen-graph" role="button" title="Toggle fullscreen"><i class="fa fa-expand"></i></a></li>
+                                <li><a id="panel-toggle-graph" role="button" href="#" title="Toggle slide down and up"><i class="fa fa-chevron-up"></i>
+                                   </a></li>
+                                <li><a id="panel-close-graph" role="button" href="#" title="Toggle close"><i class="fa fa-times"></i>
+                                   </a></li>
+                            </ul>
+                            </h2>
+                        </div>
+                        <div class="panel-body panel-body-graph" style="padding: 15px;background-color:white;">
+                            <div class="col-lg-12" id="BarChart_canvas">
+                                <canvas id="product_graph_display"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid custome_hidden" style="padding-top:20px;margin-bottom: 10px;">
+             <div class="row">
+                 <div class="col-md-12">
+                    <div class="panel panel-default" id="near_expiry_category_panel">
+                        <div class="panel-heading">
+                            <h2 class="panel-title">Nearly Expire By Category
+                            <ul class="list-inline panel-actions" style="float: right;padding-top: 13px;">
+                                <li><a href="#" id="panel-fullscreen_category" role="button" title="Toggle fullscreen"><i class="fa fa-expand"></i></a></li>
+                                <li><a id="panel-toggle_category" role="button" href="#" title="Toggle slide down and up"><i class="fa fa-chevron-up"></i>
+                                   </a></li>
+                                <li><a id="panel-close_category" role="button" href="#" title="Toggle close"><i class="fa fa-times"></i>
+                                   </a></li>
+                            </ul>
+                            </h2>
+                        </div>
+                         <div class="panel-body panel-body-category" style="padding: 25px;background-color:white;">
+                             <div class="readmore-category" style="max-height: none; height: 100%; overflow: hidden;">
+                                 <div class="expert-topic-filters container-fluid" id="collapseOne">
+                                     <div>
+                                         <input class="form-control" style="width: 30%;float: right;border-radius: 4px;border: 1px solid lightgray"
+                                                type='text' id='search' placeholder='Search Category'/>
+                                         <br/>
+                                         <span style="position: absolute;margin-top: 8px;right: 45px;z-index: 2;display: block;width: 52px;height: 21px;line-height: 145px;text-align: center;pointer-events: none;" class="fa fa-search form-control-feedback"></span>
+                                     </div>
+                                     
+                                        <div id="categ_div_id" class="row" style="margin-top:20px;">
+
+                                        </div>
+                                     
+                                 </div>
+                             </div>
+                         </div>
+                    </div>
+                 </div>
+             </div>
+        </div>
+
+        <div class="container-fluid custome_hidden" style="padding-top:20px; margin-bottom:20px;">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-default" id="near_expiry_warehouse_panel" style="float: left;width: 100%;">
+                        <div class="panel-heading">
+                                <h2 class="panel-title">Nearly Expire By Warehouse
+                            <ul class="list-inline panel-actions" style="float: right; padding-top: 13px;">
+                                <li><a href="#" id="panel-fullscreen_warehouse" role="button" title="Toggle fullscreen"><i class="fa fa-expand"></i></a></li>
+                                <li><a id="panel-toggle_warehouse" role="button" href="#" title="Toggle slide down and up"><i class="fa fa-chevron-up"></i>
+                                   </a></li>
+                                <li><a id="panel-close_warehouse" role="button" href="#" title="Toggle close"><i class="fa fa-times"></i>
+                                   </a></li>
+                            </ul>
+                            </h2>
+                        </div>
+                        <div class="panel-body panel-body-warehouse" style="padding: 10px;background-color:white;">
+                            <div class="readmore-warehouse" style="max-height: none; height: 100%; overflow: hidden;">
+                                 <div class="expert-topic-filters container-fluid" id="collapseOne">
+                                    <div id="warehouse">
+                                        <input style="width: 50%;float: right;border-radius: 4px;margin-bottom: 10px;border: 1px solid lightgray" id="search"
+                                               name="search" class="form-control search " type="text"
+                                               placeholder="Warehouse..."/>
+                                        <span class="fa fa-search form-control-feedback" style="margin-top: 60px;margin-right: 15px;"></span>
+                                        <table class="table table-striped" id="warehouse-table" style="width:100%;float:left;">
+                                            <thead id="table_head_id" style="width:100%;float:left;">
+                                                <tr role="row" style="width:100%;float:left;">
+                                                    <th class="hide-row" style="width:50%;float:left;">Location Id</th>
+                                                    <th style="width:50%;float:left;">Name<a id="sort" class="sort" role="button" data-sort="warehouse_name"><i class="fa fa-sort-desc" style="padding-left:5px;"></i>
+                                           </a></th>
+                                                    <th style="width:50%;float:left;">Expiry Count</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="list" id="warehouse_expiry_data" style="width:100%;float:left;"/>
+                                        </table>
+                                    </div>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-default" id="near_expiry_location_panel" style="float: left;width: 100%;">
+                        <div class="panel-heading">
+                            <h2 class="panel-title">Nearly Expire By Location
+                            <ul class="list-inline panel-actions" style="float: right;padding-top: 13px;">
+                                <li><a href="#" id="panel-fullscreen_location" role="button" title="Toggle fullscreen"><i class="fa fa-expand"></i></a></li>
+                                <li><a id="panel-toggle_location" role="button" href="#" title="Toggle slide down and up"><i class="fa fa-chevron-up"></i>
+                                   </a></li>
+                                <li><a id="panel-close_location" role="button" href="#" title="Toggle close"><i class="fa fa-times"></i>
+                                   </a></li>
+                            </ul>
+                            </h2>
+                        </div>
+                        <div class="panel-body panel-body-location" style="padding: 10px; background-color:white;">
+                            <div class="readmore-location">
+                                <div id="location" style="height: fit-content; overflow: auto;">
+                                    <input style="width: 50%;float: right;border-radius: 4px;margin-bottom: 10px;border: 1px solid lightgray" id="search"
+                                           name="search" class="form-control search" type="text"
+                                           placeholder="Location..."/>
+                                    <span class="fa fa-search form-control-feedback" style="margin-top: 60px;"></span>
+                                    <table class="table table-striped" id="location-table" style="width:100%;float:left;">
+                                        <thead id="table_head_id" style="width:100%;float:left;">
+                                            <tr role="row" style="width:100%;float:left;">
+                                                <th class="hide-row" style="width:50%;float:left;">Location Id</th>
+                                                <th style="width:50%;float:left;">Name<a id="sort" class="sort" role="button" data-sort="location_name"><i class="fa fa-sort-desc" style="padding-left:5px;"></i>
+                                       </a></th>
+                                                <th style="width:50%;float:left;">Expiry Count</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="list" id="location_expiry_data" style="width:100%;float:left;"/>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</templates>

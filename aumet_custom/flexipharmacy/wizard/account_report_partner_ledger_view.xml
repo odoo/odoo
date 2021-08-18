@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_report_partner_ledger_view"
+                model="ir.ui.view">
+            <field name="name">Partner Ledger Report</field>
+            <field name="model">account.report.partner.ledger</field>
+            <field name="arch" type="xml">
+                <form string="Report">
+                    <field name="company_id" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="name" invisible="1"/>
+                    <group col="4" states="choose">
+                        <field name="target_move" widget="radio"/>
+                        <field name="result_selection"/>
+                    </group>
+                    <group states="choose">
+                        <field name="amount_currency"/>
+                        <newline/>
+                        <field name="reconciled"/>
+                        <newline/>
+                    </group>
+                    <group col="4" states="choose">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group states="choose">
+                        <field name="journal_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                    </group>
+                    <div states="get">
+                        <h2>Report Complete</h2>
+                        <p>
+                            Here is the Xls File :
+                            <field name="data" readonly="1" filename="name"/>
+                        </p>
+                    </div>
+                    <footer states="choose">
+                        <button name="generate_partner_ledger" string="Print"
+                                type="object" default_focus="1" class="oe_highlight"/>
+                        <button name="print_xls" string="XLS" type="object"
+                                class="btn btn-primary"/>
+                        OR
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="action_report_partner_ledger"
+                model="ir.actions.act_window">
+            <field name="name">Partner Ledger Report</field>
+            <field name="res_model">account.report.partner.ledger</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_report_partner_ledger_view"/>
+            <field name="target">new</field>
+        </record>
+        <menuitem id='account_partner_ledger_menu_id'
+                  name='Partner Ledger' parent='account.menu_finance_reports'
+                  action='action_report_partner_ledger' groups="account.group_account_user"/>
+    </data>
+</odoo>

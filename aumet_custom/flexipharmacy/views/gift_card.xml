@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="aspl_gift_card_form" model="ir.ui.view">
+            <field name="name">aspl gift card form</field>
+            <field name="model">aspl.gift.card</field>
+            <field name="arch" type="xml">
+                <form create="0" edit="0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="card_no"/>
+                                <field name="card_value"/>
+                                <field name="customer_id"/>
+                                <field name="card_type"/>
+                            </group>
+                            <group>
+                                <field name="issue_date"/>
+                                <field name="expire_date"/>
+                                <field name="is_active"/>
+                            </group>
+                        </group>
+                        <group>
+                            <notebook>
+                                <page string="Card Use">
+                                    <field name="used_line"
+                                           readonly="1">
+                                        <tree editable="top">
+                                            <field name="card_id"/>
+                                            <field name="pos_order_id"/>
+                                            <field name="order_date"/>
+                                            <field name="amount"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Card Recharge">
+                                    <field name="recharge_line"
+                                           readonly="1">
+                                        <tree editable="top">
+                                            <field name="card_id"/>
+                                            <field name="recharge_date"/>
+                                            <field name="user_id"/>
+                                            <field name="amount"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- giftcard search> -->
+        <record id="view_giftcard_filter" model="ir.ui.view">
+            <field name="name">giftcard search View</field>
+            <field name="model">aspl.gift.card</field>
+            <field name="arch" type="xml">
+                <search string="Search giftcard">
+                    <field name="card_no" string="Card Number"/>
+                    <field name="customer_id" string="Customer"/>
+
+                    <filter name="is_active" string="Active Filter"
+                            domain="[('is_active','=',True)]"/>
+                    <filter name="deactive" string="Dective Filter"
+                            domain="[('is_active','=',False)]"/>
+                    <group string="Group">
+                        <filter name="customer_id" string="Customer"
+                                domain="[]" context="{'group_by':'customer_id'}"/>
+                        <filter name="issue_date" string="Issue Date"
+                                domain="[]" context="{'group_by':'issue_date'}"/>
+                        <filter name="expire_date" string="Expire Date"
+                                domain="[]" context="{'group_by':'expire_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- giftcar use search -->
+        <record id="view_giftcard_use_filter" model="ir.ui.view">
+            <field name="name">giftcard use search View</field>
+            <field name="model">aspl.gift.card.use</field>
+            <field name="arch" type="xml">
+                <search string="Search giftcard">
+                    <field name="card_id" string="Card Number"/>
+                    <field name="customer_id" string="Customer"/>
+                    <group string="Group">
+                        <filter name="customer_id" string="Customer"
+                                domain="[]" context="{'group_by':'customer_id'}"/>
+                        <filter name="order_date" string="Order Date"
+                                domain="[]" context="{'group_by':'order_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- giftcar use recharge -->
+        <record id="view_giftcard_recharge_filter" model="ir.ui.view">
+            <field name="name">giftcard recharge search View</field>
+            <field name="model">aspl.gift.card.recharge</field>
+            <field name="arch" type="xml">
+                <search string="Search giftcard">
+                    <field name="card_id" string="Card Number"/>
+                    <field name="customer_id" string="Customer"/>
+                    <field name="recharge_date" string="Recharge Date"/>
+                    <group string="Group">
+                        <filter name="customer_id" string="Customer"
+                                domain="[]" context="{'group_by':'customer_id'}"/>
+                        <filter name="recharge_date" string="Recharge Date"
+                                domain="[]" context="{'group_by':'recharge_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="aspl_gift_card_tree" model="ir.ui.view">
+            <field name="name">aspl gift card tree</field>
+            <field name="model">aspl.gift.card</field>
+            <field name="arch" type="xml">
+                <tree create="0" edit="0">
+                    <field name="card_no"/>
+                    <field name="card_value"/>
+                    <field name="customer_id"/>
+                    <field name="issue_date"/>
+                    <field name="expire_date"/>
+                    <field name="is_active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="aspl_gift_card_type_tree" model="ir.ui.view">
+            <field name="name">aspl gift card type tree</field>
+            <field name="model">aspl.gift.card.type</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="aspl_gift_card_used_tree" model="ir.ui.view">
+            <field name="name">aspl gift card used tree</field>
+            <field name="model">aspl.gift.card.use</field>
+            <field name="arch" type="xml">
+                <tree create="0">
+                    <field name="card_id"/>
+                    <field name="customer_id"/>
+                    <field name="pos_order_id"/>
+                    <field name="order_date"/>
+                    <field name="amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="aspl_gift_card_exchange_history_tree" model="ir.ui.view">
+            <field name="name">aspl gift card exchange history tree</field>
+            <field name="model">aspl.gift.card.exchange.history</field>
+            <field name="arch" type="xml">
+                <tree create="0">
+                    <field name="old_card_no"/>
+                    <field name="new_card_no"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="aspl_gift_card_recharged_tree" model="ir.ui.view">
+            <field name="name">aspl gift card recharged tree</field>
+            <field name="model">aspl.gift.card.recharge</field>
+            <field name="arch" type="xml">
+                <tree create="0" edit="0">
+                    <field name="card_id"/>
+                    <field name="customer_id"/>
+                    <field name="recharge_date"/>
+                    <field name="user_id"/>
+                    <field name="amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_aspl_gift_card_form" model="ir.actions.act_window">
+            <field name="name">Gift Card</field>
+            <field name="res_model">aspl.gift.card</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_aspl_gift_card_type_form" model="ir.actions.act_window">
+            <field name="name">Gift Card Type</field>
+            <field name="res_model">aspl.gift.card.type</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <record id="action_aspl_gift_card_exchange_history_tree" model="ir.actions.act_window">
+            <field name="name">Gift Card Exchange History</field>
+            <field name="res_model">aspl.gift.card.exchange.history</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <record id="action_aspl_gift_card_used_tree" model="ir.actions.act_window">
+            <field name="name">Gift Card Use</field>
+            <field name="res_model">aspl.gift.card.use</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <record id="action_aspl_gift_card_recharged_tree" model="ir.actions.act_window">
+            <field name="name">Gift Card Recharge</field>
+            <field name="res_model">aspl.gift.card.recharge</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem id="point_of_sale.menu_point_config_product"
+                  name="Configuration" parent="point_of_sale.menu_point_root"
+                  sequence="100" groups="point_of_sale.group_pos_manager"/>
+
+        <menuitem id="aspl_gift_card_main_menu" name="Gift Card"
+                  parent="point_of_sale.menu_point_root"/>
+
+        <menuitem id="aspl_gift_card_details" name="Gift Card"
+                  parent="aspl_gift_card_main_menu" sequence="1"
+                  action="action_aspl_gift_card_form"/>
+
+        <menuitem id="aspl_gift_card_type_details" name="Card Type"
+                  parent="aspl_gift_card_main_menu" sequence="4"
+                  action="action_aspl_gift_card_type_form"/>
+
+        <menuitem id="aspl_gift_card_used_details" name="Used Card"
+                  parent="aspl_gift_card_main_menu" sequence="2"
+                  action="action_aspl_gift_card_used_tree"/>
+
+        <menuitem id="aspl_gift_card_recharged_details" name="Recharged Card"
+                  parent="aspl_gift_card_main_menu" sequence="3"
+                  action="action_aspl_gift_card_recharged_tree"/>
+
+        <menuitem id="aspl_gift_card_exchange_history" name="Exchange Card History" parent="aspl_gift_card_main_menu"
+                  sequence="4" action="action_aspl_gift_card_exchange_history_tree"/>
+    </data>
+</odoo>

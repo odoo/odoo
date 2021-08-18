@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ProductsWidget" t-inherit="point_of_sale.ProductsWidget" t-inherit-mode="extension" owl="1">
+        <xpath expr="//ProductList" position="replace">
+            <ProductList products="productsToDisplay" searchWord="searchWord" isPackaging="props.isPackaging"/>
+            <VerticalProductCategory
+                    t-if="env.pos.config.enable_vertical_category and env.pos.user.access_vertical_category"/>
+        </xpath>
+        <xpath expr="//ProductsWidgetControlPanel" position="replace">
+            <div class="vertical-category-button" isPackaging="props.isPackaging"
+                 t-if="env.pos.config.enable_vertical_category and env.pos.user.access_vertical_category and !props.isPackaging">
+                <div class="VerticalCategoryTitle" t-on-click="trigger('click-product-category')">CATEGORY</div>
+            </div>
+            <ProductsWidgetControlPanel t-if="!props.isPackaging" breadcrumbs="breadcrumbs"
+                                        subcategories="subcategories" t-transition="slide-fade"/>
+        </xpath>
+    </t>
+</templates>

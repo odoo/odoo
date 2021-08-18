@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="custom_assets" inherit_id="point_of_sale.assets">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/flexipharmacy/static/src/css/style.css"/>
+            <link rel="stylesheet" href="/flexipharmacy/static/src/css/side_bar.css"/>
+            <link rel="stylesheet" href="/flexipharmacy/static/src/css/lock_screen.css"/>
+            <link rel="stylesheet" href="/flexipharmacy/static/src/css/pos_reprot.css"/>
+            <link rel="stylesheet" href="/flexipharmacy/static/src/css/screen_style.css"/>
+
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/db.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/models.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/Chrome.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/useSelectEmployee.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/libs/flashcanvas.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/libs/jSignature.min.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/ChromeWidgets/LockPosScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/TicketScreen/TicketScreen.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/Printer.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/PackLotLineScreen/PackLotLineScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/PackLotLineScreen/SinglePackLotLine.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ProductScreen/OrderWidget.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ReceiptScreen/PosSerialReceipt.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/CustomerDisplayWidgets/RightWidget.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/CustomerDisplayWidgets/LeftWidget.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/CustomerDisplayWidgets/CustomerOrderline.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/CustomerDisplayWidgets/VideoSlider.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/CustomerDisplayWidgets/Ratings.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/CustomerDisplayWidgets/PaymentDetail.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/CustomerDisplayWidgets/PaymentLines.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/CustomerDisplayWidgets/Slider/Slider.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/CustomerDisplayWidgets/Slider/SliderContent.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/CustomerDisplayWidgets/Slider/Slide.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/CustomerDisplayWidgets/Slider/Arrow.js"/>
+
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/CustomerScreenPopup/CustomerCreatePopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/CustomerScreenPopup/CustomerFeedbackPopup.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/ChromeWidgets/OpenDetailButton.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/ChromeWidgets/PharmacyDetailSidebar.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/CustomerDisplay.js"/>
+
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/ChromeWidgets/CustomerScreenButton.js"/>
+
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/Popups/IngredientPopup.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/Popups/IngredientsPopupLine.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/SignaturePopup/SignaturePopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/MoneyInOut/MoneyInOutPopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/Wallet/PaymentWalletPopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/loyaltyPoint/loyaltyPopup.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/Popups/Wallet/WalletPopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/GiftCard/giftCardCreatePopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/GiftCard/giftCardCreatePopupConform.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/GiftCard/giftCardRedeemPopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/GiftCard/giftCardRechargePopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/GiftCard/giftCardEditExpirePopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/GiftCard/giftCardExchangePopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/InternalTransfer/internalTransferPopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/PurchaseHistory/ProductHistoryPopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/PurchaseHistory/PurchaseHistoryPopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/ProductDetail/PurchaseOrderCreate.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/GiftVoucher/giftVoucherRedeemPopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/CloseSession/CloseSessionPopup.js"/>
+
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/Reports/AuditReportPopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/Reports/OrderSummaryPopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/Reports/PaymentSummaryPopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/Reports/ProductSummaryPopup.js"/>
+
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/GiftCardScreen/GiftCardScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/GiftCardScreen/GiftCardLine.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/GiftCardScreen/giftCardCreateScreen.js"/>
+
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ProductScreen/CustomControlButtons/MiddleCustomControlButton.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ProductScreen/VerticalProductCategory.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ProductScreen/ProductPurchaseHistoryButton.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ProductScreen/ProductScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ProductScreen/ProductDetailScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ProductScreen/WarehouseScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ProductScreen/OrderlineUom.js"/>
+
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ReceiptScreen/InternalTransferReceipt.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ReceiptScreen/PurchaseHistoryReceipt.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ReceiptScreen/WarehouseReceipt.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ReceiptScreen/OrderSummaryReceipt.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ReceiptScreen/PaymentSummaryReceipt.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ReceiptScreen/ProductSummaryReceipt.js"/>
+
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ClientListScreen/ReferenceClientLine.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ClientListScreen/ReferenceClientListScreen.js"/>
+
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/PaymentScreen/PaymentScreen.js"/>
+
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/GiftVoucherScreen/GiftVoucherLine.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/GiftVoucherScreen/GiftVoucherScreen.js"/>
+
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/OrderReturnScreen/OrderReturnScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/OrderReturnScreen/OrderReturnProductList.js"/>
+
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/ChromeWidgets/SelectUserForOrder.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/ChromeWidgets/UnlockPosScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/LoginScreen/LoginScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/CashControlScreen/CashControlScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ReceiptScreen/MoneyInOutReceipt.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/CashControlScreen/StaticInputLines.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/OrderNote/ProductNotePopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/CashControlScreen/CashControlScreenInput.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/CloseCashControlScreen/CloseCashControlScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/CloseCashControlScreen/CloseCashControlScreenInput.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ProductScreen/AlternateProductScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ProductScreen/AlternateProductLine.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ProductScreen/CrossSellingProductScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ProductScreen/CrossSellingProductScreenLine.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ClientListScreen/CustomerScreen.js"/>
+
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/RefillMedicineScreen/RefillMedicineScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/RefillMedicineScreen/RefillMedicineScreenLine.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/RefillMedicine/CreateRefillMedicinePopup.js"/>
+
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ProductScreen/RefillProductDetailScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/RefillMedicineScreen/RefillMedicineOrderScreen.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/DeliveryCharge/DeliveryChargePopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Popups/OrderReturn/SelectedSerialNumberPopup.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/ProductScreen/NumpadWidget.js"/>
+
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/MaterialMonitorScreen/MateriaItem.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/MaterialMonitorScreen/MaterialList.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/MaterialMonitorScreen/MaterialMonitorControlPanel.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/MaterialMonitorScreen/MaterialMonitordetail.js"/>
+            <script type="text/javascript"
+                    src="/flexipharmacy/static/src/js/Screens/MaterialMonitorScreen/MaterialMonitorScreen.js"/>
+
+
+        </xpath>
+    </template>
+
+    <template id="pharmacy_assets_backend" name="Sales Done Assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/amcharts.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/serial.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/pie.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/export.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/light.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/libs/blob.js/blob.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/libs/fabric.js/fabric.min.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/libs/pdfmake/pdfmake.min.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/libs/pdfmake/vfs_fonts.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/libs/jszip/jszip.min.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/libs/xlsx/xlsx.min.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/libs/FileSaver.js/FileSaver.min.js"/>
+            <link rel="stylesheet" href="/flexipharmacy/static/src/css/export.css"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/dashboard.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/jquery.dataTables.min.js"/>
+            <link rel="stylesheet" href="/flexipharmacy/static/src/css/style.css"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/daterangepicker.js"/>
+
+            <link rel="stylesheet" href="/flexipharmacy/static/src/css/custom.css"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/expiry_dashboard/Chart.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/expiry_dashboard/dashboard.js"/>
+            <!-- <script type="text/javascript" src="/flexipharmacy/static/src/js/expiry_dashboard/daterangepicker.min.js"/> -->
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/expiry_dashboard/list.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/expiry_dashboard/moment.min.js"/>
+            <script type="text/javascript" src="/flexipharmacy/static/src/js/expiry_dashboard/readmore.js"/>
+            
+            <!-- <link rel="stylesheet" href="/flexipharmacy/static/src/css/bootstrap.min.css"/> -->
+            <link rel="stylesheet" href="/flexipharmacy/static/src/css/my_style.css"/>
+            <link rel="stylesheet" href="/flexipharmacy/static/src/css/daterangepicker.css"/>
+        </xpath>
+    </template>
+    <template id="flexipharmacy.index" name="POS Index">&lt;!DOCTYPE html&gt;
+        <html>
+            <head>
+                <title>Customer Display</title>
+
+                <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+                <meta http-equiv="content-type" content="text/html, charset=utf-8"/>
+
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+                <meta name="apple-mobile-web-app-capable" content="yes"/>
+                <meta name="mobile-web-app-capable" content="yes"/>
+
+                <link rel="shortcut icon" sizes="196x196" href="/point_of_sale/static/src/img/touch-icon-196.png"/>
+                <link rel="shortcut icon" sizes="128x128" href="/point_of_sale/static/src/img/touch-icon-128.png"/>
+                <link rel="apple-touch-icon" href="/point_of_sale/static/src/img/touch-icon-iphone.png"/>
+                <link rel="apple-touch-icon" sizes="76x76" href="/point_of_sale/static/src/img/touch-icon-ipad.png"/>
+                <link rel="apple-touch-icon" sizes="120x120"
+                      href="/point_of_sale/static/src/img/touch-icon-iphone-retina.png"/>
+                <link rel="apple-touch-icon" sizes="152x152"
+                      href="/point_of_sale/static/src/img/touch-icon-ipad-retina.png"/>
+
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.css"/>
+
+                <style>body { background: #222; }</style>
+
+                <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+
+                <script type="text/javascript">
+                    var odoo =<t t-raw="json.dumps({
+                            'csrf_token': request.csrf_token(None),
+                            'session_info': session_info,
+                            'login_number': login_number,
+                            'debug': debug,
+                            'config_id': config_id,
+                        })"/>;
+                    document.cookie = "SameSite=None; Secure";
+                </script>
+                <t t-call="point_of_sale.assets_common"/>
+                <t t-call="web.conditional_assets_tests"/>
+                <script type="text/javascript" src="/flexipharmacy/static/src/js/main.js"/>
+            </head>
+            <body>
+                <script src="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.min.js"/>
+                <script type="text/javascript" src="/flexipharmacy/static/src/js/VirtualKeyboard.js"/>
+            </body>
+        </html>
+    </template>
+    <record id="pos_sales_dashboard_id" model="ir.actions.client">
+        <field name="name">Point of sale Dashboard</field>
+        <field name="tag">pos_sales_dashboard</field>
+    </record>
+
+    <menuitem id="menu_point_dashboard" action="flexipharmacy.pos_sales_dashboard_id" name="POS Dashboard"
+              parent="point_of_sale.menu_point_root" sequence="110" groups="flexipharmacy.group_pos_dashboard_manager"/>
+</odoo>

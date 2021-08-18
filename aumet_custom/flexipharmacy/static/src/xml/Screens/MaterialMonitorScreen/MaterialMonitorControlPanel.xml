@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="MaterialMonitorControlPanel" owl="1">
+        <div class="products-widget-control">
+            <div class="vertical-category" t-transition="slide-fade">
+                <!-- <div id="wrapper"> -->
+                <HomeCategoryBreadcrumb subcategories="subcategories" currentCat="breadcrumbs[breadcrumbs.length - 1]"/>
+                <t t-if="selectedCategory and selectedCategory.name">
+                    <t t-if="selectedCategory.parent_id">
+                        <span class="category-simple-button active"
+                              t-on-click="trigger('switch-category', selectedCategory.parent_id[0])">
+                            <t t-esc="selectedCategory.name"/>
+                        </span>
+                    </t>
+                    <t t-else="">
+                        <span class="category-simple-button active" t-on-click="trigger('switch-category', 0)">
+                            <t t-esc="selectedCategory.name"/>
+                        </span>
+                    </t>
+                </t>
+                <t t-foreach="subcategories" t-as="category" t-key="category.id">
+                    <CategorySimpleButton category="category"/>
+                </t>
+            </div>
+            <Portal target="'.pos .search-bar-portal'">
+                <div class="search-box">
+                    <span class="icon"><i class="fa fa-search"></i></span>
+                    <span t-on-click="clearSearch" class="clear-icon">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </span>
+                    <input t-ref="search-word-input" type="text" placeholder="Search Products..."
+                           t-on-keyup="updateSearch"/>
+                </div>
+            </Portal>
+        </div>
+    </t>
+
+</templates>

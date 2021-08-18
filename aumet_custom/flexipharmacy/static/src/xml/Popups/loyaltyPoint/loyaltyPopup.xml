@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="loyaltyPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup">
+                    <header class="title drag-handle">
+                        <t t-esc="props.title"/>
+                    </header>
+                    <div class="loyalty_info">
+                        <table>
+                            <colgroup>
+                                <col width="50%"/>
+                            </colgroup>
+                            <tr>
+                                <td>Your Total Points: </td>
+                                <td><t t-esc="props.remaining_point"/></td>
+                            </tr>
+                            <tr>
+                                <td>1 Point =</td>
+                                <td><t t-esc="env.pos.format_currency(props.amount_per_point)"/></td>
+                            </tr>
+                            <tr>
+                                <td>Redeem Point : </td>
+                                <td><input type="text" class="redeem_loyalty_input" t-model="state.LoyaltyPoints" t-on-keydown="onInputKeyDownNumberVlidation"/></td>
+                            </tr>
+                            <tr>
+                                <td>Point Amount : </td>
+                                <td><t t-esc="state.pointsAmount"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <footer class="footer">
+                        <div class="button confirm" t-on-click="confirm">
+                            <t t-esc="props.confirmText"/>
+                        </div>
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText"/>
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

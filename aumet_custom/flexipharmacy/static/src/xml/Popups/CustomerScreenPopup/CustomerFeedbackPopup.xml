@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="CustomerFeedbackPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-text popup-mg customer-feedback-popup">
+                <header class="title">
+                    Submit Your Feedback
+                </header>
+
+                <main class="body product_configurator_attributes col-lg-4 col-md-6 col-sm-12">
+                    <Ratings currentRating="state.currentRating"/>
+                </main>
+
+                <footer class="footer">
+                    <div class="button highlight confirm" t-on-click="confirm">
+                        Submit
+                    </div>
+                    <div class="button cancel" t-on-click="cancel">
+                        Cancel
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </t>
+</templates>

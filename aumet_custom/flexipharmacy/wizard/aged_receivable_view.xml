@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_aged_receivable_view" model="ir.ui.view">
+        <field name="name">Aged Receivable</field>
+        <field name="model">aged.receivable</field>
+        <field name="arch" type="xml">
+            <form string="Aged Receivable">
+                <field name="state" invisible="1"/>
+                <field name="name" invisible="1"/>
+                <group col="4" states="choose">
+                    <field name="start_date"/>
+                    <field name="period_length"/>
+                    <field name="target_move" widget="radio"/>
+                    <field name='company_id' invisible='1'/>
+                </group>
+                <div states="get">
+                    <h2>Report Complete</h2>
+                    <p>Here is the Xls File :
+                        <field name="data" readonly="1" filename="name"/>
+                    </p>
+                </div>
+                <footer states="choose">
+                    <button name="generate_aged_receivable" string="Print PDF" type="object" default_focus="1"
+                            class="oe_highlight"/>
+                    <button name="generate_account_receivable_xls" class="btn btn-primary" string="XLS" type="object"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_report_aged_receivable" model="ir.actions.act_window">
+        <field name="name">Aged Receivable</field>
+        <field name="res_model">aged.receivable</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id='aspl_account_aged_recievable' name='Aged Receivable' parent='account.menu_finance_reports'
+              action='action_report_aged_receivable'
+              groups="account.group_account_user"/>
+
+</odoo>

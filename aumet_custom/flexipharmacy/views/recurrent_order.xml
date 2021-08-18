@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="pos_recurrent_order_form" model="ir.ui.view">
+            <field name="name">pos recurrent order form</field>
+            <field name="model">pos.recurrent.order</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <!--                        <div class="oe_button_box" name="button_box">-->
+                        <!--                            <field name="active" widget="boolean_toggle"-->
+                        <!--                                   options="{&quot;terminology&quot;: &quot;archive&quot;}"/>-->
+                        <!--                        </div>-->
+                        <group>
+                            <group>
+                                <field name="active" widget="boolean_toggle"/>
+                                <field name="partner_id"/>
+                                <field name="pos_config_id"/>
+                                <field name="pos_user_id"/>
+                                <field name="next_exe_date"/>
+                            </group>
+                            <group>
+                                <field name="interval_days"/>
+                                <field name="is_deliver"/>
+                                <field name="deli_address" attrs="{'invisible':[('is_deliver','=',False)]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <notebook>
+                                <page string="Products">
+                                    <field name="product_line">
+                                        <tree editable="top">
+                                            <field name="product_id"/>
+                                            <field name="qty"/>
+                                            <field name="unit_price"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="pos_recurrent_order_tree" model="ir.ui.view">
+            <field name="name">pos recurrent order tree</field>
+            <field name="model">pos.recurrent.order</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="partner_id"/>
+                    <field name="is_deliver"/>
+                    <field name="next_exe_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_recurrent_order_form" model="ir.actions.act_window">
+            <field name="name">Automatic Refill Medicine</field>
+            <field name="res_model">pos.recurrent.order</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="recurrent_order_menu" name="Automatic Refill Medicine"
+                  parent="point_of_sale.menu_point_root" sequence="1"
+                  action="action_recurrent_order_form"/>
+
+    </data>
+</odoo>

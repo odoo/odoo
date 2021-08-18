@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="PosSerialReceipt" owl="1">
+        <div class="pos-receipt">
+            <div class="serial-receipt-header">
+                Serial/Lot(s) Detail
+            </div>
+            <br/>
+            <div class="pos-left-align">
+                <span style="font-weight:bold">Product Name :</span>
+                <t t-esc="props.receiptData[0].product_id[1]"/>
+            </div>
+            <table style="width:100%;">
+                <thead>
+                    <th class="pos-left-align"><br />Serial/Lot</th>
+                    <th class="pos-left-align"><br />Expiry Date</th>
+                    <th class="pos-right-align"><br />Qty.</th>
+                </thead>
+                <tbody>
+                    <t t-foreach="props.receiptData" t-as="record">
+                        <tr>
+                            <td class="pos-left-align">
+                                <t t-esc="record.name"/>
+                            </td>
+                            <td class="pos-left-align">
+                                <t t-esc="record.expiration_date"/>
+                            </td>
+                            <td class="pos-right-align">
+                                <t t-esc="record.product_qty"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="padding-bottom:7px;"/>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+</templates>

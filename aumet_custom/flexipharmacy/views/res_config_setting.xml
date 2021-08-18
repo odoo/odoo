@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="aspl_res_config_settings_view_form_inh">
+            <field name="name">res.config.settings.form.view.inherit</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]//div[@data-key='stock']" position="inside">
+                    <h2>Product Expiry Email Alert</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="mailsend_check"/>
+                            </div>
+                            <div class="o_setting_right_pane" id="barcode_settings">
+                                <label for="mailsend_check"/>
+                                <div class="text-muted">
+                                    Send Product Expiry Email
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16" attrs="{'invisible': [('mailsend_check','=',False)]}">
+                                        <span>Email notification for product expire in
+                                            <field name="email_notification_days" class="oe_inline" style="width:20% !important"/> days
+                                        </span>
+
+                                    </div>
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16" attrs="{'invisible': [('mailsend_check','=',False)]}">
+                                        <span>Product Expiry Alert Mail Send To The User
+                                            <field name="res_user_ids" class="oe_inline" widget="many2many_tags"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+                <xpath expr="//div[@data-key='point_of_sale']" position="inside">
+                    <h2>Loyalty Points</h2>
+                    <div class="row mt16 o_settings_container" name="pricing_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="loyalty_setting">
+                            <div class="o_setting_left_pane">
+                                <field name="enable_loyalty"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="enable_loyalty"/>
+                                <div class="text-muted" id="enable_wallet">
+                                    POS Loyalty Points
+                                </div>
+                                <div class="content-group mt16"
+                                     attrs="{'invisible' : [('enable_loyalty', '=', False)]}">
+                                    <div class="row mt16">
+                                        <label string="Minimum Order Value" for="min_order_value"
+                                               class="col-md-3 o_light_label"/>
+                                        <field name="min_order_value"
+                                               attrs="{'invisible': [('enable_loyalty', '=', False)], 'required': [('enable_loyalty', '=', True)]}"/>
+                                    </div>
+                                    <div class="row mt16">
+                                        <label string="Point Calculation" for="point_calculation"
+                                               class="col-md-3 o_light_label"/>
+                                        <field name="point_calculation"
+                                               attrs="{'invisible': [('enable_loyalty', '=', False)], 'required': [('enable_loyalty', '=', True)]}"/>
+                                        <label for="point_calculation" string="%"/>
+                                    </div>
+                                    <div class="row mt16">
+                                        <label string="Amount Per Point" for="amount_per_point"
+                                               class="col-md-3 o_light_label"/>
+                                        <field name="amount_per_point"
+                                               attrs="{'invisible': [('enable_loyalty', '=', False)], 'required': [('enable_loyalty', '=', True)]}"/>
+                                    </div>
+                                    <div class="text-muted" id="amount-per-point">
+                                        E.x: Reward Amount = Earned Points * Amount per point
+                                    </div>
+                                    <div class="row mt16">
+                                        <label string="Exclude Category" for="exclude_category"
+                                               class="col-md-3 o_light_label"/>
+                                        <field name="exclude_category" widget="many2many_tags"
+                                               attrs="{'invisible': [('enable_loyalty', '=', False)]}"/>
+                                    </div>
+                                    <div class="row mt16">
+                                        <label string="Exclude Tax" for="exclude_tax"
+                                               class="col-md-3 o_light_label"/>
+                                        <field name="exclude_tax"
+                                               attrs="{'invisible': [('enable_loyalty', '=', False)], 'required': [('enable_loyalty', '=', True)]}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="customer-referral-setting"
+                             attrs="{'invisible': [('enable_loyalty', '=', False)], 'required': [('enable_loyalty', '=', True)]}">
+                            <div class="o_setting_left_pane">
+                                <field name="enable_customer_referral"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="enable_customer_referral"/>
+                                <div class="text-muted" id="enable_referral">
+                                    Customer Referral
+                                </div>
+                                <div class="content-group mt16"
+                                     attrs="{'invisible' : [('enable_customer_referral', '=', False)]}">
+                                    <div class="row mt16">
+                                        <label string="Referral Event" for="referral_event"
+                                               class="col-md-3 o_light_label"/>
+                                        <field name="referral_event"
+                                               attrs="{'invisible':[('enable_customer_referral','=',False)],'required':[('enable_customer_referral','=',True)]}"/>
+                                    </div>
+                                    <div class="row mt16">
+                                        <label string="Referral Points" for="referral_point_calculation"
+                                               class="col-md-3 o_light_label"/>
+                                        <field name="referral_point_calculation"
+                                               attrs="{'invisible':[('enable_customer_referral','=',False)],'required':[('enable_customer_referral','=',True)]}"/>
+                                        <label for="referral_point_calculation" string="%"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Reminder</h2>
+                    <div class="row mt16 o_settings_container" name="pricing_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="birthday_reminder">
+                            <div class="o_setting_left_pane">
+                                <field name="enable_birthday_reminder"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="enable_birthday_reminder"/>
+                                <div class="text-muted" id="enable_wallet">
+                                    Birthday Reminder
+                                </div>
+                                <div class="content-group mt16"
+                                     attrs="{'invisible' : [('enable_birthday_reminder', '=', False)]}">
+                                    <div class="row mt16">
+                                        <label string="Birthday Mail Template" for="birthday_template_id"
+                                               class="col-md-3 o_light_label"/>
+                                        <field name="birthday_template_id"
+                                               attrs="{'invisible': [('enable_birthday_reminder', '=', False)], 'required': [('enable_birthday_reminder', '=', True)]}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="birthday_reminder">
+                            <div class="o_setting_left_pane">
+                                <field name="enable_anniversary_reminder"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="enable_anniversary_reminder"/>
+                                <div class="text-muted" id="enable_wallet">
+                                    Birthday Reminder
+                                </div>
+                                <div class="content-group mt16"
+                                     attrs="{'invisible' : [('enable_anniversary_reminder', '=', False)]}">
+                                    <div class="row mt16">
+                                        <label string="Anniversary Template" for="anniversary_template_id"
+                                               class="col-md-3 o_light_label"/>
+                                        <field name="anniversary_template_id"
+                                               attrs="{'invisible': [('enable_anniversary_reminder', '=', False)], 'required': [('enable_anniversary_reminder', '=', True)]}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Auto Close Session</h2>
+                    <div class="row mt16 o_settings_container" name="pricing_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="birthday_reminder">
+                            <div class="o_setting_left_pane">
+                                <field name="enable_auto_close_session"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="enable_auto_close_session"/>
+                                <div class="text-muted" id="enable_wallet">
+                                    Enable to Close session every day
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+                <xpath expr="//div[@name='barcode_setting_container']" position="after">
+                    <h2>Product Barcode Generate</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="gen_barcode"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="gen_barcode"/>
+                                <div class="content-group" attrs="{'invisible':[('gen_barcode','=',False)]}">
+                                    <div class="mt16">
+                                        <label for="barcode_selection"/>
+                                        <div style="position:absolute;right:16%;top:32px;width:40%;">
+                                            <field name="barcode_selection"
+                                                   attrs="{'required':[('gen_barcode','!=',False)]}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Product Internal Reference</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="gen_internal_ref"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="gen_internal_ref"/>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_config_groups_form" model="ir.ui.view">
+            <field name="name">res.config.settings.groups.view.form.inherit</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]//div[@id='production_lot_info']" position="after">
+                    <h2>Non Moving Stock</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div>
+                                <label for="groups_ids"/>
+                                <field name="groups_ids" widget="many2many_tags"/>
+                                <div class="text-muted">
+                                    Send mail to the users who belong to the groups
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="giftCardCreateScreen" owl="1">
+        <div class="clientlist-screen screen">
+            <div class="screen-content">
+                <div class="top-content custom">
+                    <div class="button" t-on-click="clickNext">
+                        <i class="fa fa-floppy-o"/>
+                        <span> Save</span>
+                    </div>
+                    <div class="button back" t-on-click="back">
+                        Discard
+                        <i class="fa fa-undo"></i>
+                    </div>
+                </div>
+                <section class="full-content custom">
+                    <div class="client-window">
+                        <section class="subwindow collapsed">
+                            <div class="subwindow-container collapsed">
+                               <div class="client-details-contents subwindow-container-fix">
+                                   <section class="client-details edit">
+                                        <div class="client-details-box clearfix">
+                                            <div class="client-detail">
+                                                <span class="label">Card No </span>
+                                                <t t-if="env.pos.config.manual_card_number">
+                                                    <input type="text" class="detail client-name"
+                                                           t-model="state.CardNumber" t-ref="card_no"
+                                                           placeholder="Enter Card no." id="card_no" name="points"
+                                                           t-on-keydown="onInputKeyDownNumberVlidation"/>
+                                                </t>
+                                                <t t-else="">
+                                                   <input type="text" class="detail client-name"
+                                                          t-model="state.CardNumber" t-ref="card_no"
+                                                          placeholder="Enter Card no." id="card_no" name="points"
+                                                          disabled="disabled"/>
+                                                </t>
+                                            </div>
+                                            <div class="client-details-left">
+                                                <div class="client-detail">
+                                                    <span class="label">Customer</span>
+                                                    <input type="text" t-model="state.SelectCustomer"
+                                                           t-ref="select_customer" placeholder="Select Customer"
+                                                           id="select_customer" name="points" list="searchPartnerList"/>
+
+                                                    <datalist id="searchPartnerList">
+                                                        <option t-foreach="env.pos.db.get_partners_sorted()"
+                                                                t-as="value" t-att-value="value.name"
+                                                                t-att-id="value.id">
+                                                            <t t-esc="value.name"/>
+                                                        </option>
+                                                    </datalist>
+                                                </div>
+                                                <div class="client-detail">
+                                                     <span class="label">Amount</span>
+                                                    <input class="detail client-address-zip" t-model="state.Amount"
+                                                           t-ref="text_amount" placeholder="Amount" id="text_amount"
+                                                           name="points" t-on-keydown="onInputKeyDownNumberVlidation"/>
+                                                </div>
+                                            </div>
+                                            <div class="client-details-right">
+                                                <div class="client-detail">
+                                                    <span class="date" style="font-weight:bold">Expire Date</span>
+                                                    <input class="detail client-lang needsclick" type="date"
+                                                           t-model="state.ExpireDate" t-ref="text_expire_date"
+                                                           placeholder="ExpireDate" id="text_expire_date"
+                                                           name="points"/>
+                                                </div>
+                                                <div class="client-detail">
+                                                    <span class="label">Card Type</span>
+                                                    <select class="configurator_select" t-model="state.SelectCardType">
+                                                        <option t-foreach="env.pos.card_type" t-as="value"
+                                                                t-att-value="value.id">
+                                                            <t t-set="is_custom"
+                                                               t-value="is_custom || (value.is_custom &amp;&amp; value.id == state.selected_value)"/>
+                                                            <t t-esc="value.name"/>
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                   </section>
+                               </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+
+</templates>

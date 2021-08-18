@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="sales_details_template">
+            <receipt align='center' width='40' value-thousands-separator=''>
+                <t t-foreach="docs" t-as="doc">
+                    <div size='double-height' style="font-size:20px;" align="center">
+                        Sales Summary
+                    </div>
+                    <div align="center">
+                        ================
+                    </div>
+                    <t t-if="doc.only_summary == True">
+                        <line>
+                            <left>
+                                <pre>Report Date</pre>
+                            </left>
+                            <right t-esc="doc.get_current_date()"/>
+                        </line>
+                        <line>
+                            <left>
+                                <pre>Report Time</pre>
+                            </left>
+                            <right t-esc="doc.get_current_time()"/>
+                        </line>
+                        <br/>
+                        <line>
+                            <left>
+                                <pre>Start Date</pre>
+                            </left>
+                            <right t-esc="doc.start_date"/>
+                        </line>
+                        <line>
+                            <left>
+                                <pre>End Date</pre>
+                            </left>
+                            <right t-esc="doc.end_date"/>
+                        </line>
+                        <line>
+                            <left>
+                                <pre>Sales</pre>
+                            </left>
+                            <right>
+                                <value>
+                                    <t t-esc="'{0:.2f}'.format(doc.get_total_sales())"/>
+                                </value>
+                            </right>
+                        </line>
+                        <line>
+                            <left>
+                                <pre>Returns</pre>
+                            </left>
+                            <right>
+                                <value>
+                                    <t t-esc="'{0:.2f}'.format(doc.get_total_returns())"/>
+                                </value>
+                            </right>
+                        </line>
+                        <line>
+                            <left>
+                                <pre>Taxes</pre>
+                            </left>
+                            <right>
+                                <value>
+                                    <t t-esc="'{0:.2f}'.format(doc.get_tax_amount())"/>
+                                </value>
+                            </right>
+                        </line>
+                        <line>
+                            <left>
+                                <pre>Discount Amount</pre>
+                            </left>
+                            <right>
+                                <value>
+                                    <t t-esc="'{0:.2f}'.format(oc.get_total_discount())"/>
+                                </value>
+                            </right>
+                        </line>
+
+                        <line>
+                            <left>
+                                <pre>Gross Total</pre>
+                            </left>
+                            <right>
+                                <value>
+                                    <t t-esc="'{0:.2f}'.format(doc.get_total_first())"/>
+                                </value>
+                            </right>
+                        </line>
+                        <t t-if="doc.get_user()">
+                            <line>
+                                <left>
+                                    <pre>Gross Profit</pre>
+                                </left>
+                                <right>
+                                    <value>
+                                        <t t-esc='doc.get_gross_total()'/>
+                                    </value>
+                                </right>
+                            </line>
+                            <line>
+                                <left>
+                                    <pre>Net Gross Profit</pre>
+                                </left>
+                                <right>
+                                    <value>
+                                        <t t-esc="'{0:.2f}'.format(doc.get_net_gross_total())"/>
+                                    </value>
+                                </right>
+                            </line>
+                        </t>
+                        <br/>
+                        <t t-foreach="doc.get_payments()" t-as="l">
+                            <line>
+                                <left>
+                                    <pre>
+                                        <t t-esc="l.get('name')"/>
+                                    </pre>
+                                </left>
+                                <right>
+                                    <t t-esc="'{0:.2f}'.format(l.get('sum'))"/>
+                                </right>
+                            </line>
+                        </t>
+                        <br/>
+                        <t t-if="doc.get_product_category()">
+                            <line>
+                                <left>
+                                    Department Sales:
+                                </left>
+                            </line>
+                            <br/>
+                            <t t-foreach="doc.get_product_category()" t-as="l">
+                                <line>
+                                    <left>
+                                        <pre>
+                                            <t t-esc="doc.get_product_name(l.get('pos_categ_id')) or 'Others'"/>
+                                        </pre>
+                                    </left>
+                                    <right>
+                                        <t t-esc="'{0:.2f}'.format(l.get('price'))"/>
+                                    </right>
+                                </line>
+                            </t>
+                            <line>
+                                <right>
+                                    ===========
+                                </right>
+                            </line>
+                            <line>
+                                <right>
+                                    <t t-esc="'{0:.2f}'.format(doc.get_product_cate_total())"/>
+                                </right>
+                            </line>
+                        </t>
+                    </t>
+                    <t t-if="doc.only_summary != True">
+                        <line>
+                            <left>
+                                <pre>Report Date time</pre>
+                            </left>
+                            <right t-esc="doc.get_current_date() + doc.get_current_time()"/>
+                        </line>
+                        <br/>
+                        <line>
+                            <left>
+                                <pre>Start Date</pre>
+                            </left>
+                            <right t-esc="doc.start_date"/>
+                        </line>
+                        <line>
+                            <left>
+                                <pre>End Date</pre>
+                            </left>
+                            <right t-esc="doc.end_date"/>
+                        </line>
+                        <t t-foreach="doc.get_user_wise_data()" t-as="users_dict">
+                            <br/>
+                            <strong>Salesperson :</strong>
+                            <span t-esc="users_dict"/>
+                            <line>
+                                <left>
+                                    <pre>Sales</pre>
+                                </left>
+                                <right>
+                                    <value>
+                                        <t t-esc="'{0:.2f}'.format(users_dict_value['total_sales'])"/>
+                                    </value>
+                                </right>
+                            </line>
+                            <line>
+                                <left>
+                                    <pre>Returns</pre>
+                                </left>
+                                <right>
+                                    <value>
+                                        <t t-esc="'{0:.2f}'.format(users_dict_value['total'])"/>
+                                    </value>
+                                </right>
+                            </line>
+                            <line>
+                                <left>
+                                    <pre>Taxes</pre>
+                                </left>
+                                <right>
+                                    <value>
+                                        <t t-esc="'{0:.2f}'.format(users_dict_value['taxes'])"/>
+                                    </value>
+                                </right>
+                            </line>
+                            <line>
+                                <left>
+                                    <pre>Discount Amount</pre>
+                                </left>
+                                <right>
+                                    <value>
+                                        <t t-esc="'{0:.2f}'.format(users_dict_value['total_discount'])"/>
+                                    </value>
+                                </right>
+                            </line>
+                            <line>
+                                <left>
+                                    <pre>Gross Total</pre>
+                                </left>
+                                <right>
+                                    <value>
+                                        <t t-esc="'{0:.2f}'.format(users_dict_value['gross_total'])"/>
+                                    </value>
+                                </right>
+                            </line>
+                            <t t-if="doc.get_user()">
+                                <line>
+                                    <left>
+                                        <pre>Gross Profit</pre>
+                                    </left>
+                                    <right>
+                                        <value>
+                                            <t t-esc="'{0:.2f}'.format(users_dict_value['gross_profit'])"/>
+                                        </value>
+                                    </right>
+                                </line>
+                                <line>
+                                    <left>
+                                        <pre>Net Gross Profit</pre>
+                                    </left>
+                                    <right>
+                                        <value>
+                                            <t t-esc="'{0:.2f}'.format(doc.get_net_gross_total())"/>
+                                        </value>
+                                    </right>
+                                </line>
+                            </t>
+                            <br/>
+                            <t t-foreach="users_dict_value['payment']" t-as="l">
+                                <line>
+                                    <left>
+                                        <pre>
+                                            <t t-esc="l.get('name')"/>
+                                        </pre>
+                                    </left>
+                                    <right>
+                                        <t t-esc="'{0:.2f}'.format(l.get('sum'))"/>
+                                    </right>
+                                </line>
+                            </t>
+                            <br/>
+                            <t t-if="users_dict_value['product_category']">
+                                <line>
+                                    <left>
+                                        Department Sales:
+                                    </left>
+                                </line>
+                                <br/>
+                                <t t-foreach="users_dict_value['product_category']" t-as="l">
+                                    <line>
+                                        <left>
+                                            <pre>
+                                                <t t-esc="doc.get_product_name(l.get('pos_categ_id')) or 'Others'"/>
+                                            </pre>
+                                        </left>
+                                        <right>
+                                            <t t-esc="'{0:.2f}'.format(l.get('price'))"/>
+                                        </right>
+                                    </line>
+                                </t>
+                                <line>
+                                    <right>
+                                        ===========
+                                    </right>
+                                </line>
+                                <line>
+                                    <right>
+                                        <t t-esc="'{0:.2f}'.format(users_dict_value['prod_categ_total'])"/>
+                                    </right>
+                                </line>
+                            </t>
+                        </t>
+                        <strong>Summary</strong>
+                        <br/>
+                        <line>
+                            <left>
+                                <pre>Sales</pre>
+                            </left>
+                            <right>
+                                <value>
+                                    <t t-esc="'{0:.2f}'.format(doc.get_total_sales())"/>
+                                </value>
+                            </right>
+                        </line>
+                        <line>
+                            <left>
+                                <pre>Returns</pre>
+                            </left>
+                            <right>
+                                <value>
+                                    <t t-esc='doc.get_total_returns()'/>
+                                </value>
+                            </right>
+                        </line>
+                        <line>
+                            <left>
+                                <pre>Taxes</pre>
+                            </left>
+                            <right>
+                                <value>
+                                    <t t-esc="'{0:.2f}'.format(doc.get_tax_amount())"/>
+                                </value>
+                            </right>
+                        </line>
+                        <line>
+                            <left>
+                                <pre>Discount Amount</pre>
+                            </left>
+                            <right>
+                                <value>
+                                    <t t-esc="'{0:.2f}'.format(doc.get_total_discount())"/>
+                                </value>
+                            </right>
+                        </line>
+                        <line>
+                            <left>
+                                <pre>Gross Total</pre>
+                            </left>
+                            <right>
+                                <value>
+                                    <t t-esc="'{0:.2f}'.format(doc.get_total_first())"/>
+                                </value>
+                            </right>
+                        </line>
+                        <t t-if="doc.get_user()">
+                            <line>
+                                <left>
+                                    <pre>Gross Profit</pre>
+                                </left>
+                                <right>
+                                    <value>
+                                        <t t-esc="'{0:.2f}'.format(doc.get_gross_total())"/>
+                                    </value>
+                                </right>
+                            </line>
+                            <line>
+                                <left>
+                                    <pre>Net Gross Profit</pre>
+                                </left>
+                                <right>
+                                    <value>
+                                        <t t-esc="'{0:.2f}'.format(doc.get_net_gross_total())"/>
+                                    </value>
+                                </right>
+                            </line>
+                        </t>
+                        <br/>
+                        <t t-foreach="doc.get_payments()" t-as="l">
+                            <line>
+                                <left>
+                                    <pre>
+                                        <t t-esc="l.get('name')"/>
+                                    </pre>
+                                </left>
+                                <right>
+                                    <t t-esc="l.get('sum')"/>
+                                </right>
+                            </line>
+                        </t>
+                        <br/>
+                        <t t-if="doc.get_product_category()">
+                            <line>
+                                <left>
+                                    Department Sales:
+                                </left>
+                            </line>
+                            <br/>
+                            <t t-foreach="doc.get_product_category()" t-as="l">
+                                <line>
+                                    <left>
+                                        <pre>
+                                            <t t-esc="doc.get_product_name(l.get('pos_categ_id')) or 'Others'"/>
+                                        </pre>
+                                    </left>
+                                    <right>
+                                        <t t-esc="'{0:.2f}'.format(l.get('price'))"/>
+                                    </right>
+                                </line>
+                            </t>
+                            <line>
+                                <right>
+                                    ===========
+                                </right>
+                            </line>
+                            <line>
+                                <right>
+                                    <t t-esc="'{0:.2f}'.format(doc.get_product_cate_total())"/>
+                                </right>
+                            </line>
+                        </t>
+                    </t>
+                </t>
+            </receipt>
+        </template>
+    </data>
+</odoo>

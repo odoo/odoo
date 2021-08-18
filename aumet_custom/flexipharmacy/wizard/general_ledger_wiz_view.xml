@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="general_ledger_report_wiz_view" model="ir.ui.view">
+        <field name="name">Account General Ledger Report View</field>
+        <field name="model">account.general.ledger.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Account General Ledger Report">
+                <field name="company_id" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="name" invisible="1"/>
+                <group col="4" states="choose">
+                    <field name="target_move" widget="radio"/>
+                    <field name="sortby" widget="radio"/>
+                    <field name="display_account" widget="radio"/>
+                    <field name="include_init_balance"/>
+                    <newline/>
+                    <field name="date_from" attrs="{'required': [('include_init_balance', '=', True)]}"/>
+                    <field name="date_to"/>
+                </group>
+                <group states="choose">
+                    <field name="journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                </group>
+                <div states="get">
+                    <h2>Report Complete</h2>
+                    <p>Here is the Xls File :
+                        <field name="data" readonly="1" filename="name"/>
+                    </p>
+                </div>
+                <footer states="choose">
+                    <button name="print_pdf" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                    <button name="print_xls" string="XLS" class="btn btn-primary" type="object"/>
+                    or
+                    <button string="Cancel" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_general_ledger_report_wiz" model="ir.actions.act_window">
+        <field name="name">Account General ledger</field>
+        <field name="res_model">account.general.ledger.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="general_ledger_report_wiz_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_action_general_ledger_report_wiz"
+              name="General Ledger" action="action_general_ledger_report_wiz"
+              parent="account.menu_finance_reports"
+              groups="account.group_account_user"/>
+
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="SinglePackLotLine" owl="1">
+        <div class="flex-container1" style="cursor:pointer;" t-att-class="{active: props.serial.isSelected}">
+            <div><t t-esc="props.serial.name"/></div>
+            <div t-if="props.isSingleItem"><t t-esc="props.serial.location_product_qty"/></div>
+            <div><t t-esc="props.serial.expiration_date or '-'"/></div>
+            <t t-if="props.isSingleItem">
+                <div>
+                    <input class="lot-qty-input" type="number" t-model="props.serial.inputQty"
+                           t-on-keydown="onKeyDown"/>
+                </div>
+            </t>
+            <t t-if="props.serial.isSelected">
+                <div class="lot-icon" t-on-click="onClickPlus(props.serial)">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="lot-icon" t-on-click="onClickPlus(props.serial)">
+                    <i class="fa fa-plus-square" aria-hidden="true"></i>
+                </div>
+            </t>
+
+        </div>
+    </t>
+
+</templates>

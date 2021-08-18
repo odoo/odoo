@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="MoneyInOutPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup">
+                    <header class="title drag-handle">
+                        <t t-esc="props.title"/>
+                    </header>
+                    <div class="div">
+                        <div class="summary_option_container">
+                            <div class="button report-button" t-att-class="{ active: state.MoneyType == 'money_in' }"
+                                 t-on-click="MoneyTypeCheck('money_in')" style="left: 16%;">
+                                    <span>Money IN</span>
+                            </div>
+                            <div class="button report-button" t-att-class="{ active: state.MoneyType == 'money_out' }"
+                                 t-on-click="MoneyTypeCheck('money_out')" style="left: 31%;">
+                                <span>Money Out</span>
+                            </div>
+                        </div>
+                        <p>
+                            <t t-esc="props.body"/>
+                        </p>
+                        <input type="text" t-model="state.inputReason" t-ref="reason" placeholder="Enter Reason"
+                               t-att-class="{ blank_validation_input: state.ReasonBlank }"/>
+                        <input type="number" t-model="state.inputAmount" t-ref="amount" placeholder="Enter Amount"
+                               id="points" name="points" step="any" t-on-keydown="AmountValidation"
+                               t-att-class="{ blank_validation_input: state.AmountBlank }"/>
+
+                    </div>
+                    <footer class="footer">
+                        <div class="button confirm" t-on-click="confirm">
+                            <t t-esc="props.confirmText"/>
+                        </div>
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText"/>
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

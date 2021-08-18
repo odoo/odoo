@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!--        Adding uom id to lines-->
+        <record id="pos_order_line_uom" model="ir.ui.view">
+            <field name="name">UOM for Order-line</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+            <field name="arch" type="xml">
+                <div class="oe_button_box" position="inside">
+                    <button name="action_pos_return_order"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-share-square-o"
+                            attrs="{'invisible':[('pos_return_order', '=', 0)]}">
+                        <field name="pos_return_order" widget="statinfo" string="Return Order"/>
+                    </button>
+                </div>
+
+                <xpath expr="//field[@name='user_id']" position='after'>
+                    <field name="sales_person_id"/>
+                </xpath>
+                <xpath expr="//field[@name='pack_lot_ids']" position='after'>
+                    <!-- <field name="return_pack_lot_ids" widget="many2many_tags"/> -->
+                    <field name="active_ingredients"/>
+                    <!-- <field name="order_return_qty" invisible="0"/> -->
+                </xpath>
+                <xpath expr="//field[@name='lines']/tree/field[@name='qty']" position="after">
+                    <field name="uom_id"/>
+                </xpath>
+                <xpath expr="//field[@name='lines']//tree//field[@name='product_uom_id']" position="attributes">
+                    <field name="product_uom_id" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                    </field>
+                </xpath>
+                <xpath expr="//field[@name='pos_reference']" position="after">
+                    <field name="back_order_reference"/>
+                    <field name="rating" widget="priority" class="mr-3"/>
+                </xpath>
+                <field name="fiscal_position_id" position="after">
+                    <field name="signature" widget="image" options='{"size": [220, 150]}'/>
+                </field>
+                <field name="price_unit" position="before">
+                    <field name="line_note"/>
+                </field>
+                <field name="user_id" position="attributes">
+                    <attribute name="string">Cashier</attribute>
+                </field>
+                <field name="user_id" position="before">
+                    <field name="salesman_id"/>
+                </field>
+                <field name="partner_id" position="after">
+                    <field name="ref_doctor_id"/>
+                </field>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Delivery Details">
+                        <group col="4">
+                            <field name="is_delivery_charge" readonly="1"/>
+                            <field name="delivery_type" readonly="1"/>
+                            <field name="delivery_date" readonly="1"/>
+                            <field name="delivery_user_id" readonly="1"/>
+                            <!-- <field name="delivery_time" readonly="1"/> -->
+                            <field name="delivery_address" readonly="1"/>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//page[@name='products']" position="after">
+                    <page string="Remaining Product" attrs="{'invisible':[('pos_return_order', '=', 0)]}">
+                        <field name="remaining_lines" priority='100'>
+                            <tree>
+                                <field name="full_product_name"/>
+                                <field name="line_note"/>
+                                <field name="return_pack_lot_ids" widget="many2many_tags"/>
+                                <field name="order_return_qty" invisible="0"/>
+                                <field name="uom_id" invisible="0"/>
+                                <field name="price_unit" invisible="0"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_pos_order_tree_inh" model="ir.ui.view">
+            <field name="name">pos.order.tree.inh</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="is_recurrent" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_pos_order_filter_inh" model="ir.ui.view">
+            <field name="name">view.pos.order.filter.inh</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='invoiced']" position="after">
+                    <filter string="Recurrent" name="is_recurrent" domain="[('is_recurrent', '=', True)]"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

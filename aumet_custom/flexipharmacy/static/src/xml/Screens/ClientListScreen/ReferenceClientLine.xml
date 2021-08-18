@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ReferenceClientLine" owl="1">
+        <tr t-attf-class="client-line {{highlight}}" t-att-data-id="props.partner.id"
+            t-on-click="trigger('click-client', {client: props.partner})">
+            <td>
+                <t t-esc="props.partner.name"/>
+            </td>
+            <td t-if="!env.isMobile">
+                <t t-esc="props.partner.address"/>
+            </td>
+            <td t-if="!env.isMobile" style="width: 130px;">
+                <t t-esc="props.partner.phone || ''"/>
+            </td>
+            <td t-if="env.isMobile">
+                <t t-esc="props.partner.zip or ''"/>
+                <span t-if="highlight"><br/></span>
+            </td>
+            <td>
+                <t t-esc="props.partner.email or ''"/>
+                <span t-if="highlight"><br/></span>
+            </td>
+        </tr>
+    </t>
+
+</templates>

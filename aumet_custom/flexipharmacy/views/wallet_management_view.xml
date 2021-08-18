@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="wallet_tree_view" model="ir.ui.view">
+            <field name="name">wallet.tree.view</field>
+            <field name="model">wallet.management</field>
+            <field name="arch" type="xml">
+                <tree create="false">
+                    <field name="customer_id"/>
+                    <field name="order_id"/>
+                    <field name="cashier_id"/>
+                    <field name="type"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_wallet_search" model="ir.ui.view">
+            <field name="name">wallet.search.view</field>
+            <field name="model">wallet.management</field>
+            <field name="arch" type="xml">
+                <search string="Wallet Management">
+                    <field name="customer_id"/>
+                    <field name="cashier_id"/>
+                    <filter string="Change" name="type" domain="[('type','=','change')]"/>
+                    <filter string="Return" name="type" domain="[('type','=','return')]"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Customer" name="customer_id" context="{'group_by':'customer_id'}"/>
+                        <filter string="Cashier" name='cashier_id' context="{'group_by':'cashier_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_wallet_acespritech" model="ir.actions.act_window">
+            <field name="name">Wallet</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wallet.management</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem id="menu_wallet_main" name="Wallet"
+                  parent="point_of_sale.menu_point_root"/>
+        <menuitem action="action_wallet_acespritech" id="pos_wallet_side_menu"
+                  name="Wallet" parent="menu_wallet_main" sequence='1'/>
+
+    </data>
+</odoo>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ReceiptScreen" t-inherit="point_of_sale.ReceiptScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('pos-receipt-container')]" position="replace">
+            <div class="pos-receipt-container">
+                <t t-if="props.check == 'from_warehouse'">
+                    <WarehouseReceipt warehouse="props.receiptData" product="props.productName" t-ref="order-receipt"/>
+                </t>
+                <t t-if="props.check == 'from_internal_transfer'">
+                    <InternalTransferReceipt RecordData="props.receiptData" RecoedLine="props.receiptLineData"
+                                             t-ref="InternalTransfer-receipt"/>
+                </t>
+                <t t-if="props.check == 'from_product_history'">
+                    <PurchaseHistoryReceipt ProductPurchaseHistory="props.ProductPurchaseHistory"
+                                            product_history="props.product_history"
+                                            last_purchase_history="props.last_purchase_history"
+                                            customer_name="props.customer_name" last_order_name='props.last_order_name'
+                                            pos='props.pos' last_order_date="props.last_order_date"
+                                            t-ref="InternalTransfer-receipt"/>
+                </t>
+                <t t-if="props.check == 'from_money_in_out'">
+                    <MoneyInOutReceipt type="props.type" InOutDetail="props.InOutDetail" company="props.company"
+                                       session="props.session" date="props.date"/>
+                </t>
+                <t t-if="props.check == 'from_product_summary'">
+                    <ProductSummaryReceipt ProductSummaryData="props.ProductSummaryData"
+                                           CategorySummaryData="props.CategorySummaryData"
+                                           PaymentSummaryData="props.PaymentSummaryData"
+                                           LocationSummaryData="props.LocationSummaryData" pos='props.pos'
+                                           values="props.values" receipt="props.receipt" t-ref="ProductSummary-receipt"
+                    />
+                </t>
+                <t t-if="props.check == 'from_order_summary'">
+                    <OrderSummaryReceipt OrderReportData="props.OrderReportData"
+                                         CategoryReportData="props.CategoryReportData"
+                                         PaymentReportData="props.PaymentReportData" receipt="props.receipt"
+                                         values="props.values" pos="props.pos" t-ref="OrderSummary-receipt"
+                    />
+                </t>
+                <t t-if="props.check == 'from_payment_summary'">
+                    <PaymentSummaryReceipt JournalReportData="props.JournalReportData"
+                                           SalesReportData="props.SalesReportData"
+                                           TotalSummaryData="props.TotalSummaryData" receipt="props.receipt"
+                                           values="props.values" pos="props.pos" t-ref="PaymentSummary-receipt"/>
+                </t>
+                <t t-if="props.check == 'from-packLot-screen'">
+                    <PosSerialReceipt receiptData="props.receiptData" t-ref="order-receipt"/>
+                </t>
+                <t t-if="!props.check">
+                    <OrderReceipt order="currentOrder" t-ref="order-receipt"/>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('top-content-center')]" position="replace">
+            <t t-if="props.check == 'from-packLot-screen'">
+                <div class="top-content-center">
+                    <h1 t-if="!env.isMobile">
+                    </h1>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="top-content-center">
+                    <h1 t-if="!env.isMobile">
+                        <t t-esc="orderAmountPlusTip"/>
+                    </h1>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('next')]" position="replace">
+            <t t-if="props.check == 'from_warehouse'">
+                <div class="button next" t-att-class="{ highlight: !locked }"
+                     t-on-click="clickBack">
+                    <i class="fa fa-angle-double-left"></i>
+                    Back
+                </div>
+            </t>
+            <t t-else="">
+                <div class="button next" t-att-class="{ highlight: !locked }"
+                     t-on-click="orderDone">
+                        New Order <i class="fa fa-angle-double-right"></i>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

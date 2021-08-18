@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="PurchaseHistoryReceipt" owl="1">
+        <div class="pos-receipt">
+            <t t-if="props.ProductPurchaseHistory === 'CartProductPurchaseHistory'">
+                <br/>
+                <table style="width:100%;">
+                    <thead>
+                        <th class="pos-center-align"><t t-esc="props.customer_name"/></th>
+                    </thead>
+                </table>
+                <table style="width:100%;">
+                    <thead>
+                        <th class="pos-left-align"><br />Product</th>
+                        <th class="pos-right-align"><br />Price</th>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="props.product_history" t-as="data">
+                            <tr>
+                                <td class="pos-left-align">
+                                    <t t-esc="props.pos.db.get_product_by_id(data.product_id).display_name"/>
+                                    <ul style="color:#888;">
+                                        <li>
+                                            <b>
+                                                <t t-esc="data.qty"/>
+                                            </b>
+                                            <t t-esc="props.pos.db.get_product_by_id(data.product_id).uom_id[1]"/>
+                                            at
+                                            <t t-esc="props.pos.db.get_product_by_id(data.product_id).list_price"/>
+                                            /
+                                            <t t-esc="props.pos.db.get_product_by_id(data.product_id).uom_id[1]"/>
+                                            on
+                                            <b>
+                                                <t t-esc="data.date_order"/>
+                                            </b>
+                                            from
+                                            <t t-esc="data.name"/>
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td class="pos-right-align">
+                                    <t t-esc="props.pos.format_currency(data.price_subtotal_incl,'Product Price')"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+                
+            </t>
+            <t t-if="props.ProductPurchaseHistory === 'LastOrderHistory'">
+                <br/>
+                <table style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th class="pos-center-align"><t t-esc="props.customer_name"/></th>
+                        </tr>
+                        <tr>
+                            <th class="pos-center-align">Ordered Name : <t t-esc="props.last_order_name"/></th>
+                        </tr>
+                        <tr>
+                            <th class="pos-center-align">Ordered Date : <t t-esc="props.last_order_date"/></th>
+                        </tr>
+                    </thead>
+                </table>
+                <table style="width:100%;">
+                    <thead>
+                        <th class="pos-left-align"><br />Product</th>
+                        <th class="pos-right-align"><br />Price</th>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="props.last_purchase_history" t-as="data">
+                            <tr>
+                                <td class="pos-left-align">
+                                    <t t-esc="props.pos.db.get_product_by_id(data.product_id).display_name"/>
+                                    <ul style="color:#888;">
+                                        <li>
+                                            <b>
+                                                <t t-esc="data.qty"/>
+                                            </b>
+                                            <t t-esc="props.pos.db.get_product_by_id(data.product_id).uom_id[1]"/>
+                                            at
+                                            <t t-esc="props.pos.db.get_product_by_id(data.product_id).list_price"/>
+                                            /
+                                            <t t-esc="props.pos.db.get_product_by_id(data.product_id).uom_id[1]"/>
+                                            on
+                                            <b>
+                                                <t t-esc="data.date_order"/>
+                                            </b>
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td class="pos-right-align">
+                                    <t t-esc="props.pos.format_currency(data.price_subtotal_incl,'Product Price')"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="CustomerDisplay" owl="1">
+        <div class="customer-screen">
+            <div class="topheader" t-if="state.ready">
+                <div class="pos-branding">
+                    <div class="logo-base">
+                        <img src="/web/binary/company_logo" class="pos-logo"/>
+                    </div>
+                    <div class="customer-name">
+                        <div class="name">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <span t-if="state.cartData.customer_name" style="padding-left: 8px">
+                                <t t-esc="state.cartData.customer_name"></t>
+                            </span>
+                            <span t-else="" style="padding-left: 8px">
+                                Unknown
+                            </span>
+                        </div>
+                    </div>
+                    <div class="create-customer" t-on-click="trigger('click-create-customer')"
+                         t-if="env.pos.config.create_customer">
+                        <div class="button">
+                            <i class="fa fa-user-plus" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-header">
+                    <div class="control-buttons">
+                        <div class="customer-feedback" t-if="env.pos.config.enable_customer_rating">
+                            <div class="button" t-on-click="trigger('click-feedback')">
+                                <i class="fa fa-comment" aria-hidden="true"></i>
+                                <span style="padding-left: 6px">Feedback</span>
+                            </div>
+                        </div>
+                        <div class="slider-toggle">
+                            <div class="button" t-on-click="trigger('click-toggle-slider')">
+                                <i t-if="!state.imageSlider" class="fa fa-picture-o" aria-hidden="true"></i>
+                                <i t-if="state.imageSlider" class="fa fa-video-camera" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="leftpane">
+                    <LeftWidget total="state.cartData.total" tax="state.cartData.tax"
+                                orderNote="state.cartData.order_note" orderLines="state.cartData.orderLines"
+                                t-if="state.ready and state.cartData.orderLines"/>
+                </div>
+                <div class="rightpane" t-ref="rightpane">
+                    <RightWidget t-if="state.ready" cartData="state.cartData" imageSlider="state.imageSlider"
+                                 rightWidth="state.rightWidth"/>
+                </div>
+
+                <!-- Allow popups to be visible at any state of the ui. -->
+                <div t-if="popup.isShown" class="popups">
+                    <t t-component="popup.component" t-props="popupProps"
+                       t-key="popup.name"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

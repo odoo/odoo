@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="GiftCardLine" owl="1">
+        <div class="order-row pointer" t-attf-class="client-line {{highlight}}" t-att-data-id="props.gift_card.id"
+             t-on-click="trigger('click-card', {card: props.gift_card})">
+            <div class="col start">
+                <t t-esc="props.gift_card.card_no"/>
+                <span t-if="highlight">
+                    <br/>
+                    <button class="edit-client-button" t-on-click.stop="trigger('click-exchange')">Exchange</button>
+                </span>
+            </div>
+            <div class="col start">
+                <t t-esc="props.gift_card.customer_id[1] || ''"/>
+            </div>
+            <div class="col start">
+                <t t-esc="props.gift_card.issue_date or ''"/>
+            </div>
+            <div class="col start">
+                <t t-esc="props.gift_card.expire_date or ''"/>
+                <span t-if="highlight">
+                    <br/>
+                    <button class="edit-client-button" t-on-click.stop="trigger('click-extend')">Extend</button>
+                </span>
+            </div>
+            <div class="col start">
+                <t t-esc="env.pos.format_currency(props.gift_card.card_value)"/>
+                <span t-if="highlight">
+                    <br/>
+                    <button class="edit-client-button" t-on-click.stop="trigger('click-recharge')">Recharge</button>
+                </span>
+            </div>
+        </div>
+    </t>
+</templates>

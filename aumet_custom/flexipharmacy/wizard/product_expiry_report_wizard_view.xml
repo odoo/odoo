@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+
+        <record id="report_download_wizard_view_form" model="ir.ui.view">
+            <field name="name">report.download.wizard.form.view</field>
+            <field name="model">report.download.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Download Excel Report">
+                    <group>
+                        <field name="name" invisible="1"/>
+                        <field name="data" filename="name"/>
+                    </group>
+                    <footer>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="report_download_wizard_view_action" model="ir.actions.act_window">
+            <field name="name">report.download.wizard.form</field>
+            <field name="res_model">report.download.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

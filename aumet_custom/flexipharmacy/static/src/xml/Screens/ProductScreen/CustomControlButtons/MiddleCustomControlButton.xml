@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="MiddleCustomControlButton" owl="1">
+        <div class="middle-component">
+            <div class="middle-component-buttons">
+                <button id="EmptyCart" class="custom-control-button" t-on-click="trigger('empty-cart')">
+                    <i class="fa fa-shopping-cart" title="Empty Cart"/>
+                </button>
+
+                <!-- // if Customer History is enable -->
+                <button id="CustomerHistory" class="custom-control-button"
+                        t-if="env.pos.config.is_customer_purchase_history and env.pos.get_order().get_client() and env.pos.user.access_purchase_history"
+                        t-on-click="trigger('open-purchase-history-popup')"
+                        t-att-class="{ disabled: !env.pos.get_order().get_connected() }">
+                    <i class="fa fa-history" title="Customer History"/>
+                </button>
+
+                <!-- // if Internal Stock Transfer is enable -->
+                <button id="MoneyIn" class="custom-control-button"
+                        t-if="env.pos.config.money_in_out and env.pos.user.access_money_in_out"
+                        t-on-click="trigger('create-money-in-out', {type: 'money_in', title:'Money In/Out'})"
+                        t-att-class="{ disabled: !env.pos.get_order().get_connected() }">
+                    <img src="/flexipharmacy/static/src/img/icons/put_money.png" title="Money In/Out"/>
+                </button>
+                <!-- // if Display Stock is enable -->
+                <button id="Warehouse" class="custom-control-button"
+                        t-if="env.pos.config.show_warehouse_qty and env.pos.user.access_warehouse_qty"
+                        t-on-click="trigger('show-warehouse')"
+                        t-att-class="{ disabled: !env.pos.get_order().get_connected() }">
+                    <img src="/flexipharmacy/static/src/img/icons/BlackWarehouse.png" title="Warehouse"/>
+                </button>
+
+                <!-- // if Internal Stock Transfer is enable -->
+                <button id="InternalTransfer" class="custom-control-button"
+                        t-if="env.pos.config.enable_int_trans_stock and env.pos.user.access_int_trans_stock"
+                        t-on-click="trigger('create-internal-transfer')"
+                        t-att-class="{ disabled: !env.pos.get_order().get_connected() }">
+                    <img src="/flexipharmacy/static/src/img/icons/transfer.png" title="Internal Transfer"/>
+                </button>
+
+                <!-- // if Wallet is enable -->
+                <button id="Wallet" class="custom-control-button"
+                        t-if="env.pos.config.enable_wallet and env.pos.get_order().get_client()"
+                        t-on-click="trigger('add_wallet_amount')"
+                        t-att-class="{ disabled: !env.pos.get_order().get_connected() }">
+                    <img src="/flexipharmacy/static/src/img/icons/wallet.png" title="Wallet"/>
+                </button>
+
+                <!-- // if Gift Card is enable -->
+                <button id="GiftCard" class="custom-control-button"
+                        t-if="env.pos.config.enable_gift_card and env.pos.user.access_gift_card"
+                        t-on-click="trigger('open-gift-card-screen')"
+                        t-att-class="{ disabled: !env.pos.get_order().get_connected() }">
+                    <img src="/flexipharmacy/static/src/img/icons/clipart2943916.png" title="Gift Card"/>
+                </button>
+
+                <!-- // if Gift Voucher is enable -->
+                <button id="GiftVoucher" class="custom-control-button"
+                        t-if="env.pos.config.enable_gift_voucher and env.pos.user.access_gift_voucher"
+                        t-on-click="trigger('open-gift-voucher-screen')"
+                        t-att-class="{ disabled: !env.pos.get_order().get_connected() }">
+                    <img src="/flexipharmacy/static/src/img/icons/gift_voucher.png" title="Gift Voucher"/>
+                </button>
+
+                <!-- // if Bag Charges is enable -->
+                <button id="BagCharges" class="custom-control-button"
+                        t-if="env.pos.config.enable_bag_charges and env.pos.user.access_bag_charges"
+                        t-on-click="trigger('apply-bag-charges')"
+                        t-att-class="{ highlight: state.is_packaging_filter }">
+                    <img src="/flexipharmacy/static/src/img/icons/bags.png" title="Bag Charges"/>
+                </button>
+
+                <!-- // if Multi Shop is enable AND Receipt Header is Shop-->
+                <button id="MultiShop" class="custom-control-button" t-if="env.pos.config.enable_multi_shop"
+                        t-on-click="trigger('show-multi-shop-option')"
+                        t-att-class="{ disabled: !env.pos.get_order().get_connected() }">
+                    <img src="/flexipharmacy/static/src/img/icons/store.png" title="Multi Shop"/>
+                </button>
+                <!-- // if Order Return is enable-->
+                <button id="OrderReturn" class="custom-control-button"
+                        t-if="env.pos.config.enable_pos_return and env.pos.user.access_pos_return"
+                        t-on-click="trigger('show-order-return-screen')"
+                        t-att-class="{ disabled: !env.pos.get_order().get_connected() }">
+                    <i class="fa fa-share-square-o" title="Order Return"/>
+                </button>
+                <!-- // if Product Or Order note-->
+                <button id="OrderProductNote" class="custom-control-button"
+                        t-if="env.pos.config.enable_order_note and env.pos.user.access_pos_order_note"
+                        t-on-click="trigger('show-order-note-popup')"
+                        t-att-class="{ highlight: env.pos.get_order().get_order_note(), disabled: !env.pos.get_order().get_connected() }">
+                    <img src="/flexipharmacy/static/src/img/icons/clipart2090813.png" title="Order Note"/>
+                </button>
+
+                <!-- // if Alternative Product-->
+                <button id="OrderProductNote" class="custom-control-button"
+                        t-if="env.pos.config.enable_optional_product and env.pos.user.access_alternative_product"
+                        t-on-click="trigger('show-alternative-product')">
+                    <img src="/flexipharmacy/static/src/img/icons/options.png" title="Alternative Product"/>
+                </button>
+                <!-- // if Cross Selling-->
+                <button id="OrderProductNote" class="custom-control-button"
+                        t-if="env.pos.config.enable_cross_selling and env.pos.user.access_cross_selling"
+                        t-on-click="trigger('show-cross-selling-product')">
+                    <img src="/flexipharmacy/static/src/img/icons/cross_selling.png" title="Cross Selling"/>
+                </button>
+                <!-- // if Delivery Charge-->
+                <button id="DeliveryCharge" class="custom-control-button"
+                        t-if="env.pos.config.enable_delivery_charges and env.pos.user.access_delivery_charges and env.pos.get_order().get_client()"
+                        t-on-click="trigger('add-delivery-charge')"
+                        t-att-class="{ highlight: env.pos.get_order().get_delivery_charge_data().IsDeliveryCharge, disabled: !env.pos.get_order().get_connected() }">
+                    <img src="/flexipharmacy/static/src/img/icons/delivery_charge.png" title="Delivery Charge"/>
+                </button>
+                <!-- // if Material Monitor-->
+                <button id="MaterialMonitor" class="custom-control-button"
+                        t-if="env.pos.config.enable_material_monitor and env.pos.user.access_material_monitor"
+                        t-on-click="trigger('show-material-monitor')"
+                        t-att-class="{ disabled: !env.pos.get_order().get_connected() }">
+                    <i class="fa fa-cubes" title="Material Monitor"/>
+                </button>
+
+            </div>
+        </div>
+    </t>
+</templates>
+

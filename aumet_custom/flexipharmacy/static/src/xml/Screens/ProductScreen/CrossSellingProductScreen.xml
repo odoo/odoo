@@ -1,0 +1,32 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="CrossSellingProductScreen" owl="1">
+        <div class="warehouse-screen">
+            <div class="warehouse-header">
+                <button class="close letter-space" t-on-click="trigger('close-warehouse-screen')"> 
+                    <i class="fa fa-angle-double-left"></i>
+                    <span> Back</span>
+                </button>
+                <span class="title letter-space">
+                    Cross Selling Product for <t t-esc="props.productName"/>
+                </span>
+            </div>
+            <div class="orders">
+                <div class="products-widget">
+                    <div class="product-list-container">
+                        <t t-if="props.line_product.suggestive_product_ids.length > 0">
+                            <t t-foreach="props.line_product.suggestive_product_ids" t-as="suggestive_product_ids"
+                               t-key="suggestive_product_ids">
+                                <CrossSellingProductScreenLine suggestive_product_id="suggestive_product_ids"/>
+                            </t>
+                        </t>
+                        <t t-else="" class="product-list-empty">
+                            <div class="product-list-empty">
+                                <p>There are no Cross Selling Product for <t t-esc="props.productName"/>.</p>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

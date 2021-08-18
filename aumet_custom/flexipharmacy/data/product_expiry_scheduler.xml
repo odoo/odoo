@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="product_state_check" model="ir.cron">
+            <field name="name">Product State Check Scheduler</field>
+            <field name="model_id" ref="model_stock_production_lot"/>
+            <field name="state">code</field>
+            <field name="code">model.product_state_check()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+        </record>
+
+        <!--         <record id="product_expiry" model="ir.cron">
+                    <field name="name">Product Expiry Scheduler</field>
+                    <field name="model_id" ref="model_product_product"/>
+                    <field name="state">code</field>
+                    <field name="code">model.expiry_product_alert()</field>
+                    <field name="interval_number">1</field>
+                    <field name="interval_type">days</field>
+                    <field name="numbercall">-1</field>
+                    <field eval="False" name="doall"/>
+                </record>
+         -->
+    </data>
+</odoo>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="wizard_generate_product_ean13" model="ir.ui.view">
+            <field name="name">generate.product.barcode</field>
+            <field name="model">generate.product.barcode</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="overwrite_ean13"/>
+                        <field name="barcode_selection" required="1"/>
+                    </group>
+                    <footer>
+                        <button name="generate_barcode" type="object" string="Generate" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="Close" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="generate_product_barcode_action" model="ir.actions.act_window">
+            <field name="name">Generate Barcode Number</field>
+            <field name="res_model">generate.product.barcode</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="wizard_generate_product_ean13"/>
+            <field name="binding_model_id" ref="product.model_product_product"/>
+        </record>
+
+        <!-- Generate Internal Reference -->
+        <record id="wizard_generate_product_internal_reference" model="ir.ui.view">
+            <field name="name">generate.product.barcode</field>
+            <field name="model">generate.product.barcode</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="overwrite_internal_ref"/>
+                    </group>
+                    <footer>
+                        <button name="generate_internal_reference" type="object" string="Generate"
+                                class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="Close" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_generate_product_internal_ref" model="ir.actions.act_window">
+            <field name="name">Generate Internal Reference</field>
+            <field name="res_model">generate.product.barcode</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="wizard_generate_product_internal_reference"/>
+            <field name="binding_model_id" ref="product.model_product_product"/>
+        </record>
+
+    </data>
+</odoo>

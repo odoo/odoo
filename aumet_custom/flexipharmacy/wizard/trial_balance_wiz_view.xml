@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="trial_balance_wiz_view" model="ir.ui.view">
+        <field name="name">Trial Balance Wizard View</field>
+        <field name="model">trial.balance.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Trial Balance">
+                <field name="company_id" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="name" invisible="1"/>
+                <group col="4" states="choose">
+                    <field name="target_move" widget="radio"/>
+                    <field name="display_account" widget="radio"/>
+                    <field name="include_init_balance"/>
+                    <newline/>
+                    <field name="date_from" attrs="{'required': [('include_init_balance', '=', True)]}"/>
+                    <field name="date_to"/>
+                </group>
+                <div states="get">
+                    <h2>Report Complete</h2>
+                    <p>Here is the Xls File :
+                        <field name="data" readonly="1" filename="name"/>
+                    </p>
+                </div>
+                <footer states="choose">
+                    <button name="print_pdf" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                    <button name="print_xls" string="XLS" type="object" class="btn btn-primary"/>
+                    or
+                    <button string="Cancel" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_trial_balance_wiz_menu" model="ir.actions.act_window">
+        <field name="name">Trial Balance</field>
+        <field name="res_model">trial.balance.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="trial_balance_wiz_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_action_trial_balance_wiz_menu"
+              name="Trial Balance" action="action_trial_balance_wiz_menu"
+              parent="account.menu_finance_reports" groups="account.group_account_user"/>
+
+
+</odoo>

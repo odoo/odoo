@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="wallet_account_line_tree_view" model="ir.ui.view">
+            <field name="name">wallet.account.line.tree.view</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="date"/>
+                    <field name="account_id"/>
+                    <field name="move_id"/>
+                    <field name="name"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                    <field name="balance"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

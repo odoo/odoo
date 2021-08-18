@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="InternalTransferReceipt" owl="1">
+        <div class="pos-receipt">
+            <t t-foreach="props.RecordData" t-as="transfer">
+                <table style="width:100%;">
+                    <tr>
+                        <td class="pos-left-align">Picking Type:</td>
+                        <td class="pos-right-align"><t t-esc="transfer.picking_type_id[1]"/></td>
+                    </tr>
+                    <tr>
+                        <td class="pos-left-align">Source:</td>
+                        <td class="pos-right-align"><t t-esc="transfer.location_id[1]"/></td>
+                    </tr>
+                    <tr>
+                        <td class="pos-left-align">Destination:</td>
+                        <td class="pos-right-align"><t t-esc="transfer.location_dest_id[1]"/></td>
+                    </tr>
+                    <tr>
+                        <td class="pos-left-align">Date Time:</td>
+                        <td class="pos-right-align"><t t-esc="transfer.scheduled_date"/></td>
+                    </tr>
+                    <tr>
+                        <td class="pos-left-align">State:</td>
+                        <td class="pos-right-align"><t t-esc="transfer.state"/></td>
+                    </tr>
+                    <tr>
+                        <td class="pos-left-align">Transfer Ref:</td>
+                        <td class="pos-right-align"><t t-esc="transfer.name"/></td>
+                    </tr>
+                    <tr>
+                        <td class="pos-left-align">User:</td>
+                        <td class="pos-right-align"><t t-esc="transfer.user_id[1]"/></td>
+                    </tr>
+                </table>
+            </t>
+            <table style="width:100%;">
+                <thead>
+                    <th class="pos-left-align"><br />Product</th>
+                    <th class="pos-right-align"><br />Quantity</th>
+                </thead>
+                <tbody>
+                    <t t-foreach="props.RecoedLine" t-as="line">
+                        <tr>
+                            <td class="pos-left-align">
+                                <t t-esc="line.product.display_name"/>
+                            </td>
+                            <td class="pos-right-align">
+                                <t t-esc="line.quantity"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+</templates>

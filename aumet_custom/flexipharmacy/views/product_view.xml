@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="package_product_template_only_form_view" model="ir.ui.view">
+        <field name="name">package.product.template.form.view</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="sale_ok" position="before">
+                <div>
+                    <field name="is_packaging"/>
+                    <label for="is_packaging"/>
+                </div>
+                <div>
+                    <field name="is_material_monitor"/>
+                    <label for="is_material_monitor"/>
+                </div>
+            </field>
+            <xpath expr="//page[@name='general_information']//field[@name='company_id']" position="after">
+                <field name="material_monitor_qty"/>
+                <field name="active_ingredient_ids" widget="many2many_tags"
+                       attrs="{'invisible':[('available_in_pos','=',False)]}"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Alternative Product">
+                    <group>
+                        <group>
+                            <field name="alternate_product_ids" widget="many2many_tags"
+                                   domain="[('available_in_pos','=',True)]"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Cross Selling">
+                    <group>
+                        <group>
+                            <field name="suggestive_product_ids" widget="many2many_tags"
+                                   domain="[('available_in_pos','=',True)]"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <record id="product_product_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.purchase</field>
+        <field name="model">product.product</field>
+        <field name="priority" eval="25"/>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <div class="oe_button_box" position="inside">
+                <button class="oe_stat_button" name="nearly_expired" icon="fa-building-o" type="object">
+                    <field name="near_expire" widget="statinfo" string="Nearly Expire"/>
+                </button>
+                <button class="oe_stat_button" name="product_expired" type="object" icon="fa-building-o">
+                    <field string="Expired" name="expired" widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

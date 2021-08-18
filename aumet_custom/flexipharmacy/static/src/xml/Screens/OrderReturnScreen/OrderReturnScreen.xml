@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrderReturnScreen" owl="1">
+        <div class="order-return-screen gift_card-screen screen" t-on-activate-edit-mode="activateEditMode">
+            <div class="screen-content">
+                <div class="controls">
+                    <button class="button back" t-on-click="back">
+                        <t t-if="!env.isMobile">
+                            <i class="fa  fa-angle-double-left"></i>
+                            Back
+                        </t>
+                        <t t-else="">
+                            <i class="fa fa-undo"></i>
+                        </t>
+                    </button>
+                    <div class="item search-box">
+                        <span class="icon">
+                            <i class="fa fa-search"/>
+                        </span>
+                        <input type="text" t-on-keydown="onInputKeydown" t-model="orderManagementContext.searchString"
+                               placeholder="Search Order..."/>
+                        <span class="clear" t-on-click="trigger('clear-search')"
+                              t-att-class="{ oe_hidden: !cancel_search }">
+                            <i class="fa fa-remove"/>
+                        </span>
+                    </div>
+
+                    <button class="highlight button new-gift_card" role="img" aria-label="Return Order"
+                            t-on-click="createReturnOrder"
+                            title="Return Order">
+
+                        <t t-if="!env.isMobile">
+                            Process
+                            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                        </t>
+                        <t t-else="">
+                            <i class="fa fa-angle-right"></i>
+                        </t>
+                    </button>
+                </div>
+                <div class="orders">
+                    <div class="products-widget">
+                        <div class="product-list-container">
+                            <div t-if="state.orderlines.length != 0" class="product-list">
+                                <div style="width: 100%; text-align: center;">
+                                    <div style="width: fit-content;margin: auto;width: 20%;">
+                                        <label class="switch" t-on-click="ReturnAllProductQty">
+                                            <input type="checkbox" id="checkbox_paid" class="checkbox_paid"
+                                                   t-model="state.ReturnAllProduct"/>
+                                            <span class="slider round"></span>
+                                        </label>
+                                        <div>Return All Product</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <t t-foreach="state.orderlines" t-as="line" t-key="line.id">
+                                        <OrderReturnProductList line="line" ReturnProduct="state.ReturnAllProduct"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

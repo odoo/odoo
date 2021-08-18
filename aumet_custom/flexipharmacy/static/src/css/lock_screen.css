@@ -1,0 +1,81 @@
+.active_state {
+   position: fixed;
+   width: 100%;
+   height: 100%;
+   z-index: 1000;
+   cursor: not-allowed;
+   background: rgba(25, 22, 22, 0.8);
+}
+
+.active_state:after {
+    content: "";
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    z-index: 9999;
+    background-size: cover;
+}
+
+.unlock_button {
+    width: 100px;
+    height: 80px;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    border-radius: 45px;
+    z-index: 10000;
+}
+
+.fa-unlock-alt{
+    display: block;
+    font-size: 52px;
+    padding-top: 6px;
+    color: rgb(23, 196, 109);
+    margin: auto;
+    border-radius: 45px;
+}
+.lock_button{
+    height: 41px !important;
+    width: 40px;
+    border-radius: 3px;
+    margin-left: 40px !important;
+}
+
+.fa-lock{
+    font-size: 22px !important;
+    margin-left: 4px;
+}
+
+.popup .footer .button{
+    float: right;
+    width: 110px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 2px;
+    margin-top: 10px;
+    margin-right: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border: solid 1px rgba(60,60,60,0.1);
+    background: rgba(0,0,0,0.05);
+}
+.input-button-pass{
+    background: none !important;
+    height: 50px;
+    width: 50px;
+    padding: 0 !important;
+    border-radius: 25px !important;
+    margin: 4px;
+    vertical-align: top;
+    color: #444;
+    font-size: 24px !important;
+}
+.get-input{
+    &:focus {
+        outline: none;
+    }
+}

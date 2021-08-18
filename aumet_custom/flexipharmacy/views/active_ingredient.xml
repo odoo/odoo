@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="active_ingredients_tree" model="ir.ui.view">
+            <field name="name">active ingredient tree</field>
+            <field name="model">active.ingredient</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_active_ingredients">
+            <field name="name">Active Ingredient</field>
+            <field name="res_model">active.ingredient</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem id="main_menu_active" name="Active Ingredient" parent="stock.menu_product_in_config_stock"
+                  action="flexipharmacy.action_view_active_ingredients"/>
+
+    </data>
+</odoo>

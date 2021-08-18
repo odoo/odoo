@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_stock_production_lot_list_inherit" model="ir.ui.view">
+            <field name="name">stock.production.lot.tree</field>
+            <field name="model">stock.production.lot</field>
+            <field name="inherit_id" ref="stock.view_production_lot_tree"/>
+            <field name="arch" type="xml">
+                <field name="create_date" position="after">
+                    <field name="remaining_qty"/>
+                </field>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-danger">expiry_state=='expired'</attribute>
+                    <attribute name="decoration-warning">expiry_state=='near_expired'</attribute>
+                </xpath>
+                <field name="product_id" position="after">
+                    <field name="expiry_state" invisible="1"/>
+                    <field name="state_check" invisible="1"/>
+                    <field name="product_qty"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_stock_production_lot_form_inherit" model="ir.ui.view">
+            <field name="name">stock.production.lot.form</field>
+            <field name="model">stock.production.lot</field>
+            <field name="inherit_id" ref="stock.view_production_lot_form"/>
+            <field name="arch" type="xml">
+                <field name="ref" position="after">
+                    <field name="remaining_qty"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

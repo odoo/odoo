@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!-- <record id="product_expiry_dashboard_action" model="ir.actions.client">
+            <field name="name">Product Expiry Dashboard</field>
+            <field name="tag">open_product_expiry_dashboard</field>
+            <field name="target">fullscreen</field>
+        </record> -->
+        <record id="product_expiry_dashboard" model="ir.actions.client">
+            <field name="name">Product Expiry Dashboard</field>
+            <field name="tag">open_product_expiry_dashboard</field>
+            <field name="target">main</field>
+        </record>
+
+        <menuitem action="product_expiry_dashboard"
+            id="stock_picking_type_menu1"
+            parent="stock.menu_stock_root"
+            sequence="1"
+            name="Product Expiry Dashboard"/>
+    </data>
+</odoo>

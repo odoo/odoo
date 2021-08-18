@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="CustomerCreatePopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-text popup-lg customer-feedback-popup">
+
+                <main class="body product_configurator_attributes col-lg-4 col-md-6 col-sm-12">
+                    <section class="client-details edit">
+                        <input class="detail client-name" name="name"
+                               placeholder="Name" t-on-change="captureChange" t-ref="name"/>
+                        <span class="required">*</span>
+                        <div class="client-details-box clearfix">
+                            <div class="client-details-left">
+                                <div class="client-detail">
+                                    <span class="label">Street</span>
+                                    <input class="detail client-address-street" name="street"
+                                           t-on-change="captureChange"
+                                           placeholder="Street"/>
+                                </div>
+                                <div class="client-detail">
+                                    <span class="label">City</span>
+                                    <input class="detail client-address-city" name="city"
+                                           t-on-change="captureChange"
+                                           placeholder="City"/>
+                                </div>
+                                <div class="client-detail">
+                                    <span class="label">Postcode</span>
+                                    <input class="detail client-address-zip" name="zip"
+                                           t-on-change="captureChange"
+                                           placeholder="ZIP"/>
+                                </div>
+                            </div>
+                            <div class="client-details-right">
+                                <div class="client-detail">
+                                    <span class="label">Email</span>
+                                    <input class="detail client-email" name="email" type="email"
+                                           t-on-change="captureChange" t-ref="email" placeholder="example@email.com"/>
+                                    <span class="required">*</span>
+                                </div>
+                                <div class="client-detail">
+                                    <span class="label">Phone</span>
+                                    <input class="detail client-phone" name="phone" type="tel"
+                                           t-on-change="captureChange" t-ref="phone"/>
+                                    <span class="required">*</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="simple-keyboard"></div>
+                </main>
+
+                <footer class="footer">
+                    <div class="button highlight confirm" t-on-click="confirm">
+                        Confirm
+                    </div>
+                    <div class="button cancel" t-on-click="cancel">
+                        Cancel
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </t>
+</templates>

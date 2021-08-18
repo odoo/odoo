@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="PurchaseOrderCreate" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup">
+                    <header class="title drag-handle">
+                        <t t-esc="props.title"/>
+                    </header>
+                    <div class="div">
+                        <t t-if='props.CreatedPurchaseOrder == "False"'>
+                            <t t-if='props.SelectedProductList.length > 0'>
+                                <input type="text" t-model="state.CustomerName" t-ref="partner_id"
+                                       placeholder="Select Supplier" id="partner_id" name="partner_id"
+                                       style="margin-top:15px;" list="searchPartnerList"
+                                       t-att-class="{ blank_validation_input: state.CustomerNameBlank }"/>
+                                <datalist id="searchPartnerList">
+                                    <option t-foreach="env.pos.db.get_partners_sorted()" t-as="value"
+                                            t-att-value="value.name" t-att-partner_id="value.id">
+                                        <t t-esc="value.name"/>
+                                    </option>
+                                </datalist>
+                                <div style="width: 100%;max-height: 200px;overflow: auto;font-size: 15px; border-bottom:1px solid #6ec89b;border-top:1px solid #6ec89b;">
+                                    <table style="width: 97%;margin: auto;">
+                                        <tr style="color:white;">
+                                            <th class="sticky-header"
+                                                style="border: 1px solid;text-align: left;width: 75%;padding-left:5px;background-color:#6ec89b;">Product</th>
+                                            <th class="sticky-header"
+                                                style="border: 1px solid;text-align: center;width: 20%;background-color:#6ec89b;">Qty</th>
+                                            <th class="sticky-header"
+                                                style="border: 1px solid;text-align: end;width: 5%;background-color:#6ec89b;"></th>
+                                        </tr>
+                                        <t t-foreach="props.SelectedProductList" t-as="product_id" t-key="product_id">
+                                            <tr>
+                                                <td style="text-align: left;width: 75%; padding-left:5px;margin-bottom:5px;margin-top;5px;">
+                                                    <t t-esc='product_id.display_name'/>
+                                                </td>
+                                                <td style="text-align: center;width: 20%;">
+                                                    <input type="text" t-att-model="state.ProductQty"
+                                                           t-att-ref="product_id.id" t-att-id="product_id.id" value="1"
+                                                           t-on-keydown="onInputKeyDownNumberVlidation"
+                                                           style="font-size:15px; min-height:0px;padding-top: 6px;padding-bottom: 6px;margin-bottom:5px;margin-top;5px;"/>
+                                                </td>
+                                                <td style="text-align: end;width: 5%; padding-right:5px;">
+                                                    <div class="delete" t-on-click="DeletePurchaseLine(product_id)">
+                                                        <i class="fa fa-trash" title="Delete"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                </div>
+                            </t>
+                            <t t-if='props.SelectedProductList.length &lt;= 0'>
+                                <p style="font-size:15px;">Please Select Product for Create Purchase Order !</p>
+                            </t>
+                        </t>
+                        <t t-if='props.CreatedPurchaseOrder == "True"'>
+                            <p><t t-esc="props.defination"/>:
+                                <a target="blank" t-att-href="props.url" style="color:#6ec89b">
+                                    <t t-esc="props.order_name"/>
+                                </a>
+                            </p>
+                        </t>
+                    </div>
+                    <footer class="footer">
+                        <table style="margin-left: 5px;font-size: 15px;width: 34%;float: left;"
+                               t-if='props.SelectedProductList.length > 0'>
+                            <tr>
+                                <td class="order-line">
+                                    <div style="margin-top: 11px;">
+                                        <label class="switch">
+                                            <input type="checkbox" t-model="state.SendMail" t-ref="SendMail"
+                                                   id="SendMail"/>
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="margin-top: 0;margin-bottom: 15px;margin-left: 10px;">
+                                        Mail to Supplier
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <t t-if='props.SelectedProductList.length > 0'>
+                            <div class="button confirm" t-on-click="confirm">
+                                <t t-esc="props.confirmText"/>
+                            </div>
+                        </t>
+                        <t t-if='props.CreatedInternalTransfer == "True"'>
+                            <div class="button print" t-on-click="print">
+                                <t t-esc="props.printText"/>
+                            </div>
+                        </t>
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText"/>
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="form_view_non_moving_stock">
+            <field name="name">Non Moving Stock</field>
+            <field name="model">non.moving.stock</field>
+            <field name="arch" type="xml">
+                <form string="Wizard">
+                    <group attrs="{'invisible':[('state','in',['done','sent'])]}">
+                        <div class="col-md-6" style="padding:0px;">
+                            <strong class="col-md-7" style="padding:0px;margin-right:10px;width:150px;float:left">Non
+                                Moving Product in
+                                Last
+                            </strong>
+                            <field name="non_moving_product_days" class="col-md-3" states="new" nolabel="1"
+                                   style="width: 100%;float: left;margin-right: 10px"/>
+                            <strong class="col-md-4" style="padding:0px;margin-right:10px;width:161px;line-height:2">
+                                Days
+                            </strong>
+                        </div>
+                    </group>
+                    <group attrs="{'invisible':[('state','in',['done','sent'])]}">
+                        <field name="warehouse_ids" widget="many2many_tags" options="{'no_create':True}"/>
+                        <field name="group_by_category"/>
+                        <field name="sale_category_ids" widget="many2many_tags"
+                               attrs="{'invisible':[('group_by_category','=',False)]}" options="{'no_create':True}"/>
+                        <field name="report_type" widget="radio"/>
+                        <field name="state" invisible="1"/>
+                    </group>
+                    <group attrs="{'invisible':[('state','in',['new','sent'])]}">
+                        <field name="data" states="done" filename="file_name" readonly="True" download="name"
+                               class="download-binary"/>
+                        <field name="file_name" invisible="1"/>
+                    </group>
+                    <group states="sent">
+                        <field name="send_mail_message" attrs="{'readonly':[('state','=','sent')]}" nolabel="1"/>
+                    </group>
+                    <footer>
+                        <button type="object" name="send_mail" string="Send Mail" class="btn btn-primary" states="new"
+                                context="{'send_mail':True}"/>
+                        <button type="object" name="print_report" string="Print" class="btn btn-primary" states="new"/>
+                        <button type="object" special="cancel" string="Ok" class="btn btn-primary" states="sent"/>
+                        <button type="object" special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_non_moving_stock" model="ir.actions.act_window">
+            <field name="name">Non Moving Stock</field>
+            <field name="res_model">non.moving.stock</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_non_moving_stock" parent="stock.menu_warehouse_report" name="Non Moving Stock"
+                  action="action_non_moving_stock" sequence="151"/>
+
+
+    </data>
+</odoo>

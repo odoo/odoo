@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="pos_earned_loyalty1" model="ir.ui.view">
+            <field name="name">pos_order_reward</field>
+            <field name="model">pos.earn.loyalty</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="order_no"/>
+                    <field name="points"/>
+                    <field name="order_date"/>
+                    <field name="partner_id"/>
+                    <field name="referral_partner_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_pos_earned_loyalty">
+            <field name="name">Earned Points</field>
+            <field name="res_model">pos.earn.loyalty</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem id="main_menu" name="Loyalty Points" parent="point_of_sale.menu_point_root"/>
+        <menuitem id="sub_menu_earned" name="Earned Points" parent="flexipharmacy.main_menu"
+                  action="flexipharmacy.action_view_pos_earned_loyalty"/>
+
+
+        <record id="pos_redeem_loyalty" model="ir.ui.view">
+            <field name="name">pos_order_redeem</field>
+            <field name="model">pos.redeem.loyalty</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="order_no"/>
+                    <field name="order_date"/>
+                    <field name="points"/>
+                    <field name="points_amount"/>
+                    <field name="partner_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_pos_redeem_loyalty">
+            <field name="name">Redeem Points</field>
+            <field name="res_model">pos.redeem.loyalty</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem id="sub_menu_redeem" name="Redeem Points" parent="flexipharmacy.main_menu"
+                  action="flexipharmacy.action_view_pos_redeem_loyalty"/>
+    </data>
+</odoo>

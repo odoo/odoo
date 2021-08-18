@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="front_inventory_session_pdf_document">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <div align="center" style="border:1px solid black;margin:0 auto;padding:0 auto;font-size:25px">
+                        <strong>Inventory Audit Report</strong>
+                    </div>
+                    <table style="width:100%;margin-top:15px;">
+                        <tr>
+                            <td class="text-left">
+                                Point of Sale
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="o.get_pos_name()"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">
+                                Report Date
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="o.get_current_date_x()"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">
+                                Report Time
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="o.get_current_time_x()"/>
+                            </td>
+                        </tr>
+                    </table>
+                    ============================
+                    <t t-if="o.get_inventory_details()">
+                        <t t-set="count" t-value="0"/>
+                        <table class="table">
+                            <tr>
+                                <td>S.No</td>
+                                <td>Product</td>
+                                <td>Sold Quantity</td>
+                                <td>Available Quantity</td>
+                            </tr>
+                            <t t-foreach="o.get_inventory_details()" t-as="inv_detail">
+                                <tr>
+                                    <td>
+                                        <t t-set="count" t-value="count + 1"/>
+                                        <t t-esc="count"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="inv_detail.get('product_id')[1]"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="inv_detail.get('used_qty')"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="inv_detail.get('quantity')"/>
+                                        <t t-esc="inv_detail.get('uom_name')"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </table>
+                    </t>
+                    <t t-if="not o.get_inventory_details()">
+                        <br/>
+                        <center>
+                            <strong>
+                                Records Not Found.
+                            </strong>
+                        </center>
+                    </t>
+                    <br/>
+                    ---------------------- End of Report ---------------------
+                </div>
+            </t>
+        </template>
+
+        <template id="front_inventory_session_pdf_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="flexipharmacy.front_inventory_session_pdf_document"/>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

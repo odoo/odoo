@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//WrappedProductNameLines" position="after">
+            <t t-if="env.pos.config.is_productnote_receipt and line.line_note">
+                <div class="pos-receipt-left-padding">
+                    <span>Note: </span>
+                    <t t-esc="line.line_note"/>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('pos-receipt-order-data')]" position="inside">
+            <t t-if="env.pos.config.is_ordernote_receipt and receipt.order_note !== false">
+                <br/>
+                <div style='text-align:left'>
+                    <span><b>Note:</b>
+                        <t t-esc="receipt.order_note"/></span>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-if='isSimple(line)']//WrappedProductNameLines" position="before">
+            <t t-if="env.pos.get_order().get_print_serial()">
+                <t t-if='line.serial_names'>
+                    <t t-esc='line.serial_names'/>
+                </t>
+            </t>
+            <t t-if="line.selected_ingredients">
+                Contains :
+                <t t-foreach="line.selected_ingredients" t-as="ingredient">
+                    <t t-esc='ingredient.name'/>,
+                </t>
+            </t>
+            <!-- Promotion Code Added -->
+            <t t-if='line.promotion_code'>
+                <i><t t-esc='line.promotion_code'/></i>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-else='']//WrappedProductNameLines" position="before">
+            <t t-if="env.pos.get_order().get_print_serial()">
+                <t t-if='line.serial_names'>
+                    <t t-esc='line.serial_names'/>
+                </t>
+            </t>
+            <t t-if="line.selected_ingredients">
+                Contains :
+                <t t-foreach="line.selected_ingredients" t-as="ingredient">
+                    <t t-esc='ingredient.name'/>,
+                </t>
+            </t>
+            <!-- Promotion Code Added -->
+            <t t-if='line.promotion_code'>
+                <i><t t-esc='line.promotion_code'/></i>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('before-footer')]" position="inside">
+            <t t-if="env.pos.get_order().get_sign()">
+                <div class="pos-receipt">
+                    <br/>
+                    <div style='text-align:right'>
+                        <img style="height: 80px;width:133px;"
+                             t-att-src="'data:image/gif;base64,'+ env.pos.get_order().get_sign()"/>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('before-footer')]" position="inside">
+            <t t-if="env.pos.get_order().get_client() and (props.order.get_earned_reward() || props.order.get_used_points_from_loyalty())">
+                <div class="pos-receipt">
+                    <br/>
+                    <div>-----------------------------------------------------</div>
+                    <div class="pos-center-align">Loyalty Points</div>
+                    <div>-----------------------------------------------------</div>
+                    <table style="width:100%;">
+                        <tbody>
+                            <tr>
+                                <td class="pos-left-align">Your Points : </td>
+                                <td class="pos-right-align"><t t-esc="env.pos.get_order().get_client().remaining_points"/></td>
+                            </tr>
+                            <t t-if="props.order.get_earned_reward()">
+                                <tr>
+                                    <td class="pos-left-align">Points Earned : </td>
+                                    <td class="pos-right-align"><t t-esc="props.order.get_earned_reward()"/></td>
+                                </tr>
+                            </t>
+                            <t t-if="props.order.get_used_points_from_loyalty()">
+                                <tr>
+                                    <td class="pos-left-align">Points Redeemed :</td>
+                                    <td class="pos-right-align"><t t-esc="props.order.get_used_points_from_loyalty()"/></td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td class="pos-left-align">Total Points :</td>
+                                <td class="pos-right-align"><t t-esc="((env.pos.get_order().get_client().remaining_points + props.order.get_earned_reward()) - props.order.get_used_points_from_loyalty())"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+            <t t-if="props.order.get_client() and props.order.get_change_amount_for_wallet()">
+                <div class="pos-receipt">
+                    <div>----------------------------------------------------</div>
+                    <div class="pos-center-align">Wallet</div>
+                    <div>----------------------------------------------------</div>
+                    <t t-if="props.order.get_change_amount_for_wallet() &gt; 0 and props.order.get_client()">
+                        <div>
+                            Credit Amount:
+                            <span class="pos-receipt-right-align">
+                                <t t-esc="props.order.get_change_amount_for_wallet()"/>
+                            </span>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

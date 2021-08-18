@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="PaymentScreenInh" t-inherit="point_of_sale.PaymentScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@class='button back']" position="replace">
+            <div class="button back" t-on-click="payment_back">
+                <i class="fa fa-angle-double-left fa-fw"></i>
+                <span class="back_text">Back</span>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('paymentmethods-container')]" position="replace">
+            <div class="paymentmethods-container">
+                <div class="toggle-serial-print" t-if="env.pos.config.enable_pos_serial">
+                    <table>
+                        <tr>
+                            <span class="print-serial-label">Print Serial On Receipt</span>
+                            <label class="switch">
+                               <input type="checkbox" t-on-click="_serialPrint" t-model="state.serialPrint"/>
+                                <span class="slider round"></span>
+                            </label>
+                        </tr>
+                    </table>
+                </div>
+                <PaymentScreenPaymentLines paymentLines="paymentLines"/>
+                <div class="paymentmethods">
+                    <t t-foreach="env.pos.payment_methods" t-as="paymentMethod"
+                       t-key="paymentMethod.id">
+                        <t t-if="!paymentMethod.jr_use_for">
+                            <PaymentMethodButton paymentMethod="paymentMethod"/>
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('payment-controls')]" position="inside">
+            <t t-if="!env.pos.get_order().get_refund_order()">
+                <div class="pos-signature-controls"
+                     t-if="env.pos.config.enable_signature and env.pos.user.access_signature">
+                    <div class="wallet-controls " style="margin-top: 13px;">
+                        <div class="button" t-on-click="showSignaturePopup"
+                             t-att-class="{ highlight: env.pos.get_order().get_sign() }">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            Sign
+                        </div>
+                    </div>
+                </div>
+                <t t-if="env.pos.config.enable_wallet and env.pos.get_order().get_client() and env.pos.get_order().get_due() > 0 and !is_payment_line.lines_type_wallet and env.pos.user.access_wallet">
+                    <div class="wallet-controls " style="margin-top: 13px;">
+                        <div class="button js_use_wallet" t-on-click="createPaymentLine('wallet')">
+                            <img src="/flexipharmacy/static/src/img/icons/wallet.png" class="fa fa-file-text-o"/>
+                            <div style="margin-left: 15px;">Wallet :
+                                <t t-if="env.pos.get_order().get_client()">
+                                    <span>
+                                        <t t-esc="env.pos.format_currency(state.remaining_wallet_amount)"/>
+                                    </span>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <t t-if="env.pos.config.enable_loyalty and env.pos.get_order().get_client() and env.pos.get_order().get_due() > 0">
+                    <div class="loyalty-controls " style="margin-top: 13px;">
+                        <div class="button jr_use_for" t-on-click="createPaymentLine('LoyaltyPoint')">
+                            <div>
+                                <img src="/flexipharmacy/static/src/img/icons/loyalty_icon.png"
+                                     style="width:20px;float:left;margin-top:25px;margin-left:10px"/>
+                                Loyalty :
+                                <t t-if="env.pos.get_order().get_client()">
+                                    <span>
+                                        <t t-esc="env.pos.get_order().get_client().remaining_points"/>
+                                    </span>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <t t-if="env.pos.config.enable_gift_card and env.pos.get_order().get_client() and env.pos.get_order().get_due() > 0 and !is_payment_line.lines_type_giftcard and env.pos.user.access_gift_card">
+                    <div class="giftCard-controls" style="margin-top: 13px;">
+                        <div class="button js_gift_card" t-on-click="createPaymentLine('giftCard')">
+                            <img src="/flexipharmacy/static/src/img/icons/clipart2943916.png"
+                                 class="fa fa-file-text-o"/>Gift Card
+                        </div>
+                    </div>
+                </t>
+                <t t-if="env.pos.config.enable_gift_voucher and env.pos.get_order().get_due() > 0 and !is_payment_line.lines_type_voucher and env.pos.user.access_gift_voucher">
+                    <div class="giftCard-controls" style="margin-top: 13px;">
+                        <div class="button js_gift_voucher" t-on-click="createPaymentLine('giftVoucher')">
+                            <img src="/flexipharmacy/static/src/img/icons/gift_voucher.png" class="fa fa-file-text-o"/>
+                            Gift Voucher
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('payment-buttons')]" position="inside">
+            <t t-if="!env.pos.get_order().get_refund_order()">
+                <t t-if="env.pos.get_order().get_client() and env.pos.loyalty_config.enable_customer_referral">
+                    <br/>
+                    <div class="customer-button">
+                        <div class="button" t-on-click="selectReferenceClient">
+                            <img src="/flexipharmacy/static/src/img/icons/referral_icon.png"
+                                 style="width:20px;float:left;margin-top:25px;margin-left:10px"/>
+                            <span class="js_customer_name">
+                                <t t-if="env.pos.get_order().get_ref_client()">
+                                    <t t-esc="env.pos.get_order().get_ref_client().name"/>
+                                </t>
+                                <t t-if="!env.pos.get_order().get_ref_client()">
+                                    Reference Customer
+                                </t>
+                            </span>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+    </t>
+</templates>

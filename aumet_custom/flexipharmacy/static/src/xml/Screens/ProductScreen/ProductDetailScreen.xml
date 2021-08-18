@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ProductDetailScreen" owl="1">
+        <div class="product_detail_screen screen" t-on-activate-edit-mode="activateEditMode">
+            <div class="screen-content">
+                <div class="controls">
+                    <button class="button back" t-on-click="trigger('close-screen')">
+                        <t t-if="!env.isMobile">
+                            <i class="fa  fa-angle-double-left"></i>
+                            Back
+                        </t>
+                        <t t-else="">
+                            <i class="fa fa-undo"></i>
+                        </t>
+                    </button>
+
+                    <button class="highlight button" role="img" aria-label="Create Purchase Order"
+                            t-on-click="createNewPurchase" title="Product Image">
+                        <t t-if="!env.isMobile">
+                            <i class="fa fa-shopping-cart" aria-hidden="true"/>
+                            Purchase Order
+                        </t>
+                        <t t-else="">
+                            <i class="fa fa-plus"></i>
+                        </t>
+                    </button>
+                    <SearchBar config="searchBarProductConfig" placeholder="'Search Product...'"/>
+                    <div style='width:auto;'>
+                        <button class="list button back" t-on-click="trigger('list-view')">
+                                <i class="fa fa-list-ul"></i>
+                        </button>
+                        <button class="grid button back highlight" t-on-click="trigger('gride-view')">
+                                <i class="fa fa-th"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="cart" t-if="selectedProductList.length > 0">
+                    <div class="products-widget" style="max-height: 155px;background-color:rgb(110, 200, 155)">
+                        <div class="product-list-container">
+                            <div t-if="env.pos.db.product_by_id.length != 0" class="product-list">
+                                <t t-foreach="selectedProductList" t-as="product_by_id" t-key="product_by_id"
+                                   t-if="selectedProductList">
+                                    <article class="product" tabindex="0" t-on-keypress="spaceClickProduct"
+                                             t-on-click="trigger('click-product', product_by_id)"
+                                             t-att-data-product_by_id="product_by_id"
+                                             t-attf-aria-labelledby="article_product_{{product_by_id}}">
+                                        <div class="product-img">
+                                            <img t-att-src="imageUrl" t-att-alt="product_by_id.id.display_name"/>
+                                            <span class="price-tag">
+                                                <t t-esc="price"/>
+                                            </span>
+                                        </div>
+                                        <div class="product-name" t-attf-id="article_product_{{product_by_id}}">
+                                            <t t-esc="product_by_id.display_name"/>
+                                        </div>
+                                    </article>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="orders">
+                    <div class="header-row" t-if="state.ShowListView">
+                        <div class="col start">Image</div>
+                        <div class="col start wide">Product Name</div>
+                        <div class="col start">Internal Reference</div>
+                        <div class="col start">Sale Price</div>
+                    </div>
+                    <t t-foreach="filteredProductList" t-as="product_by_id" t-key="product_by_id"
+                       t-if="state.ShowListView">
+                        <div
+                                class="order-row pointer"
+                                t-att-data-product_by_id="product_by_id.id"
+                                t-att-class="{ selectedProduct: isSelected}"
+                                t-on-click="trigger('click-product', product_by_id)"
+                                selectedProduct="state.selectedProduct"
+                        >
+                            <div class="col start">
+                                <img t-att-src="imageUrl" t-att-alt="product_by_id.display_name" style="height: 30px;"/>
+                            </div>
+                            <div class="col start wide">
+                                <t t-esc="product_by_id.display_name"/>
+                            </div>
+                            <div class="col start">
+                                <t t-if="product_by_id.default_code" t-esc="product_by_id.default_code"/>
+                            </div>
+                            <div class="col start">
+                                <t t-esc="price"/>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+                <div class="orders">
+                    <div class="products-widget">
+                        <div class="product-list-container">
+                            <div t-if="env.pos.db.product_by_id.length != 0" class="product-list">
+                                <t t-foreach="filteredProductList" t-as="product_by_id" t-key="product_by_id"
+                                   t-if="!state.ShowListView">
+                                    <article class="product" tabindex="0" t-on-keypress="spaceClickProduct"
+                                             t-on-click="trigger('click-product', product_by_id)"
+                                             t-att-data-product_by_id="product_by_id"
+                                             t-attf-aria-labelledby="article_product_{{product_by_id}}">
+                                        <div class="product-img">
+                                            <img t-att-src="imageUrl" t-att-alt="product_by_id.id.display_name"/>
+                                            <span class="price-tag">
+                                                <t t-esc="price"/>
+                                            </span>
+                                        </div>
+                                        <div class="product-name" t-attf-id="article_product_{{product_by_id}}">
+                                            <t t-esc="product_by_id.display_name"/>
+                                        </div>
+                                    </article>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
+

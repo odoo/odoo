@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!--  GIFT Voucher -->
+        <record id="aspl_voucher_form" model="ir.ui.view">
+            <field name="name">aspl voucher form</field>
+            <field name="model">aspl.gift.voucher</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object" name="action_view_redeem_voucher" class="oe_stat_button"
+                                    icon="fa-pencil-square-o">
+                                <field name="redeem_voucher_count" widget="statinfo" string="History"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Voucher Code</span>
+                            <h1>
+                                <field name="voucher_code"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="is_active" widget="boolean_toggle"/>
+                                <field name="voucher_name" class="oe_inline"/>
+                                <field name="voucher_amount"/>
+                                <field name="minimum_purchase" string="Minimum Amount" required="1"/>
+                            </group>
+                            <group>
+                                <field name="expiry_date"/>
+                                <field name="redemption_order"/>
+                                <field name="redemption_customer"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="aspl_voucher_tree" model="ir.ui.view">
+            <field name="name">aspl voucher tree</field>
+            <field name="model">aspl.gift.voucher</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="voucher_name"/>
+                    <field name="voucher_code"/>
+                    <field name="voucher_amount"/>
+                    <field name="minimum_purchase"/>
+                    <field name="expiry_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--  REDEEM VOUCHER -->
+        <record id="aspl_redeem_tree" model="ir.ui.view">
+            <field name="name">aspl redeem tree</field>
+            <field name="model">aspl.gift.voucher.redeem</field>
+            <field name="arch" type="xml">
+                <tree create="0">
+                    <field name="voucher_id"/>
+                    <field name="voucher_code"/>
+                    <field name="order_name"/>
+                    <field name="order_amount"/>
+                    <field name="voucher_amount"/>
+                    <field name="used_date"/>
+                    <field name="user_id"/>
+                    <field name="customer_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="aspl_redeem__voucher_search" model="ir.ui.view">
+            <field name="name">aspl redeem search</field>
+            <field name="model">aspl.gift.voucher.redeem</field>
+            <field name="arch" type="xml">
+                <search string="Gift Voucher Redeem">
+                    <field name="customer_id"/>
+                    <field name="voucher_id"/>
+                    <field name="used_date"/>
+                    <field name="user_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Customer" name="customer_id" context="{'group_by':'customer_id'}"/>
+                        <filter string="Voucher" name="voucher_id" context="{'group_by':'voucher_id'}"/>
+                        <filter string="Redeem Date" name="used_date" context="{'group_by':'used_date'}"/>
+                        <filter string="User" icon="terp-personal" name="user_id" context="{'group_by':'user_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!--  GIFT VOUCHER ACTION -->
+        <record id="action_aspl_voucher_form" model="ir.actions.act_window">
+            <field name="name">Voucher</field>
+            <field name="res_model">aspl.gift.voucher</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!--  REDEEM VOUCHER ACTION -->
+        <record id="action_aspl_redeem_form" model="ir.actions.act_window">
+            <field name="name">Redeem voucher</field>
+            <field name="res_model">aspl.gift.voucher.redeem</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem id="point_of_sale.menu_point_rep" name="Reports" parent="point_of_sale.menu_point_root" sequence="99"
+                  groups="point_of_sale.group_pos_manager"/>
+
+        <menuitem id="aspl_voucher_main_menu" name="Gift Voucher" parent="point_of_sale.menu_point_root" sequence="98"
+                  groups="point_of_sale.group_pos_manager"/>
+
+        <menuitem id="aspl_voucher_details" name="Voucher" parent="aspl_voucher_main_menu" sequence="98"
+                  groups="point_of_sale.group_pos_manager"
+                  action="action_aspl_voucher_form"/>
+
+        <menuitem id="aspl_redeem_details" name="Redeem Voucher" parent="aspl_voucher_main_menu" sequence="99"
+                  groups="point_of_sale.group_pos_manager"
+                  action="action_aspl_redeem_form"/>
+
+    </data>
+</odoo>

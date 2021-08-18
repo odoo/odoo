@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="slow_moving_inv_report_pdf">
+        <t t-call="web.html_container">
+            <t t-foreach="doc_ids" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <center>
+                            <h2>Slow Moving Inventory Report</h2>
+                        </center>
+                        <table class="table table-condensed table-bordered" style="border: 2px solid black;">
+                            <thead>
+                                <tr style="font-weight:bold;">
+                                    <th style="border:1px solid black">Number of Months for Average</th>
+                                    <th style="border:1px solid black">Warehouse</th>
+                                    <th style="border:1px solid black">Categories</th>
+                                    <th style="border:1px solid black">On Hand Months</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="border:1px solid black">
+                                        <t t-if="doc.avg_month">
+                                            <span t-field="doc.avg_month"/>
+                                        </t>
+                                        <t t-else="">
+                                            0
+                                        </t>
+                                    </td>
+                                    <td style="border:1px solid black;width:30%">
+                                        <t t-if="doc.warehouse_ids">
+                                            <t t-foreach="doc.warehouse_ids" t-as="warehouse">
+                                                <span t-field="warehouse.name"/>,
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            All
+                                        </t>
+                                    </td>
+                                    <td style="border:1px solid black;width:30%;">
+                                        <t t-if="doc.categ_ids">
+                                            <t t-foreach="doc.categ_ids" t-as="category">
+                                                <span t-field="category.name"/>,
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            All
+                                        </t>
+                                    </td>
+                                    <td style="border:1px solid black">
+                                        <t t-if="doc.avg_on_hand_month">
+
+                                            <span t-field="doc.avg_on_hand_month"/>
+
+                                        </t>
+                                        <t t-else="">
+                                            0
+                                        </t>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-condensed  table-bordered" style="border: 2px solid black;">
+                            <thead>
+                                <tr style="font-weight:bold;">
+                                    <td style="border:1px solid black;width:20%;">Part #</td>
+                                    <td style="border:1px solid black;width:45%;">Items</td>
+                                    <td style="border:1px solid black;">On Hand</td>
+                                    <td style="border:1px solid black">Cost Price</td>
+                                    <td style="border:1px solid black">Value</td>
+                                    <td style="border:1px solid black">Months of Stock Available</td>
+                                    <td style="border:1px solid black">Average Monthly Transactions</td>
+                                    <td style="border:1px solid black">UOM</td>
+                                </tr>
+                            </thead>
+                            <tbody style="border:solid 1px black">
+                                <t t-foreach="summary_data(doc)" t-as="l">
+                                    <tr>
+                                        <td style="border:1px solid black;width:20%;">
+                                            <span t-esc="[l][0].get('default_code')"/>
+                                        </td>
+                                        <td style="border:1px solid black;width:45%;">
+                                            <span t-esc="[l][0].get('p_name')"/>
+                                        </td>
+                                        <td style="border:1px solid black">
+                                            <span t-esc="[l][0].get('on_hand')"/>
+                                        </td>
+                                        <td style="border:1px solid black;width:20%" class="text-right">
+                                            <span t-esc="[l][0].get('final_cost_price')"/>
+                                            <span t-esc="res_company.currency_id.symbol"/>
+                                        </td>
+                                        <td style="border:1px solid black;width:20%" class="text-right">
+                                            <span t-esc="[l][0].get('value')"/>
+                                            <span t-esc="res_company.currency_id.symbol"/>
+                                        </td>
+                                        <td style="border:1px solid black">
+                                            <span t-esc="[l][0].get('compare_qty')"/>
+                                        </td>
+                                        <td style="border:1px solid black">
+                                            <span t-esc="[l][0].get('avg_qty')"/>
+                                        </td>
+                                        <td style="border:1px solid black">
+                                            <span t-esc="[l][0].get('uom_id')"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

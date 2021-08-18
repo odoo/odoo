@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="non_moving_stock_report" model="ir.actions.report">
+            <field name="name">Non Moving Stock</field>
+            <field name="model">non.moving.stock</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.non_moving_stock_template</field>
+            <field name="report_file">flexipharmacy.non_moving_stock_template</field>
+        </record>
+
+        <record id="product_expiry_report" model="ir.actions.report">
+            <field name="name">Product Expiry Report</field>
+            <field name="model">product.expiry.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.product_exp_report_template</field>
+            <field name="report_file">flexipharmacy.product_exp_report_template</field>
+        </record>
+
+        <record id="pos_z_report" model="ir.actions.report">
+            <field name="name">Z Report</field>
+            <field name="model">pos.session</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.pos_z_report_template</field>
+            <field name="report_file">flexipharmacy.pos_z_report_template</field>
+        </record>
+
+        <record id="report_pos_inventory_session_thermal_front" model="ir.actions.report">
+            <field name="name">Z Report(Thermal)</field>
+            <field name="model">pos.session</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.pos_z_thermal_report_template</field>
+            <field name="print_report_name">'POS Z Report(Thermal)'</field>
+        </record>
+
+        <record id="report_pos_sales" model="ir.actions.report">
+            <field name="name">Z Report</field>
+            <field name="model">pos.session</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.pos_sales_report_template</field>
+            <field name="report_file">flexipharmacy.pos_sales_report_template</field>
+        </record>
+
+        <record id="report_pos_sales_pdf" model="ir.actions.report">
+            <field name="name">Z Report(pdf)</field>
+            <field name="model">pos.session</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.pos_sales_report_pdf_template</field>
+            <field name="report_file">flexipharmacy.pos_sales_report_pdf_template</field>
+        </record>
+
+        <record id="report_pos_sales_thermal_front" model="ir.actions.report">
+            <field name="name">X Report</field>
+            <field name="model">pos.session</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.front_sales_thermal_report_template</field>
+            <field name="report_file">flexipharmacy.front_sales_thermal_report_template</field>
+        </record>
+
+        <record id="report_pos_sales_pdf_front" model="ir.actions.report">
+            <field name="name">X Report(pdf)</field>
+            <field name="model">pos.session</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.front_sales_report_pdf_template</field>
+            <field name="report_file">flexipharmacy.front_sales_report_pdf_template</field>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="report_sales_details_pdf" model="ir.actions.report">
+            <field name="name">Sales Details</field>
+            <field name="model">wizard.sales.details</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.sales_details_pdf_template</field>
+            <field name="report_file">flexipharmacy.sales_details_pdf_template</field>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="report_sales_details_thermal" model="ir.actions.report">
+            <field name="name">Sales Details(Thermal)</field>
+            <field name="model">wizard.sales.details</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.sales_details_template</field>
+            <field name="report_file">flexipharmacy.sales_details_template</field>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="report_pos_inventory_session_pdf_front" model="ir.actions.report">
+            <field name="name">Inventory Report(pdf)</field>
+            <field name="model">pos.session</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.front_inventory_session_pdf_report_template</field>
+            <field name="report_file">flexipharmacy.front_inventory_session_pdf_report_template</field>
+            <field name="print_report_name">'Inventory Report(pdf)'</field>
+        </record>
+
+        <record id="report_pos_inventory_session_thermal_front" model="ir.actions.report">
+            <field name="name">Inventory Report(Thermal)</field>
+            <field name="model">pos.session</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.front_inventory_session_thermal_report_template</field>
+            <field name="report_file">flexipharmacy.sales_details_template</field>
+            <field name="print_report_name">'Inventory Report(Thermal)'</field>
+        </record>
+
+        <record id="report_pos_inventory_location_pdf_front" model="ir.actions.report">
+            <field name="name">Inventory Report(pdf)</field>
+            <field name="model">stock.location</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.front_inventory_location_pdf_report_template</field>
+            <field name="report_file">flexipharmacy.front_inventory_location_pdf_report_template</field>
+            <field name="print_report_name">'Inventory Report(pdf)'</field>
+        </record>
+
+        <record id="report_pos_inventory_location_thermal_front" model="ir.actions.report">
+            <field name="name">Inventory Report(Thermal)</field>
+            <field name="model">stock.location</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">flexipharmacy.front_inventory_location_thermal_report_template</field>
+            <field name="print_report_name">'Inventory Report(Thermal)'</field>
+        </record>
+
+
+        <record id="paperformat_session_receipt_pdf" model="report.paperformat">
+            <field name="name">Session Receipt PDF</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">290</field>
+            <field name="page_width">80</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_left">1</field>
+            <field name="margin_right">1</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+            <field name="report_ids" eval="[(6,0,[ref('flexipharmacy.pos_z_report')])]"/>
+        </record>
+        <record id="paperformat_session_receipt_pdf_pos" model="report.paperformat">
+            <field name="name">Session Receipt PDF</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">297</field>
+            <field name="page_width">80</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_left">1</field>
+            <field name="margin_right">1</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+            <field name="report_ids" eval="[(6,0,[ref('flexipharmacy.report_pos_sales_pdf'),
+                                                  ref('flexipharmacy.report_pos_sales'),
+                                                  ref('flexipharmacy.report_sales_details_pdf'),
+                                                  ref('flexipharmacy.report_sales_details_thermal'),
+                                                  ref('flexipharmacy.report_pos_sales_pdf_front'),
+                                                  ref('flexipharmacy.report_pos_sales_thermal_front'),
+                                                  ref('flexipharmacy.report_pos_inventory_session_pdf_front'),
+                                                  ref('flexipharmacy.report_pos_inventory_location_pdf_front')])]"/>
+
+        </record>
+
+    </data>
+</odoo>

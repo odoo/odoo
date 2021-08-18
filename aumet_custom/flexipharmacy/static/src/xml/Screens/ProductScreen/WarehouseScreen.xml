@@ -1,0 +1,72 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="WarehouseScreen" owl="1">
+        <div class="warehouse-screen">
+            <div class="warehouse-header">
+                <button class="close letter-space" t-on-click="trigger('close-warehouse-screen')"> 
+                    <i class="fa fa-angle-double-left"></i>
+                    <span> Back</span>
+                </button>
+                <span class="title letter-space">
+                    <t t-esc="props.productName"/>
+                </span>
+            </div>
+            <div class="flex-container2 letter-space">
+                <div>Name</div>
+                <div>Available Qty</div>
+                <div>Incoming Qty</div>
+                <div>Outgoing Qty</div>
+                <div t-on-click="trigger('show-warehouse-receipt')" style="cursor:pointer">
+                    <i class="fa fa-print"> </i>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="tabs">
+                        <t t-foreach="props.displayData" t-as="warehouse">
+                            <div class="tab">
+                                <input type="checkbox" t-att-id="'id-' + warehouse.id"/>
+                                <t t-foreach="warehouse.Warehouse_total" t-as="total">
+                                    <label class="tab-label" t-att-for="'id-' + warehouse.id">
+                                        <div class="flex-container1">
+                                            <div>
+                                                <t t-esc="warehouse.name"/>
+                                            </div>
+                                            <div>
+                                                <t t-esc="total.qty_available"/>
+                                            </div>
+                                            <div>
+                                                <t t-esc="total.incoming_qty"/>
+                                            </div>
+                                            <div>
+                                                <t t-esc="total.outgoing_qty"/>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </t>
+                                <div class="tab-content">
+                                    <t t-foreach="warehouse.locations" t-as="location">
+                                        <div class="flex-container-inner">
+                                            <div>
+                                                <t t-esc="location.name"/>
+                                            </div>
+                                            <div>
+                                                <t t-esc="location.qty_available"/>
+                                            </div>
+                                            <div>
+                                                <t t-esc="location.incoming_qty"/>
+                                            </div>
+                                            <div>
+                                                <t t-esc="location.outgoing_qty"/>
+                                            </div>
+                                            <div style="width:115px"> </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

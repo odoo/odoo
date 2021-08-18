@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ProductDetailGridView" owl="1">
+        <article class="product" tabindex="0" t-on-keypress="spaceClickProduct"
+                 t-on-click="trigger('click-product', props.product_by_id)"
+                 t-att-data-product_by_id="props.product_by_id"
+                 t-attf-aria-labelledby="article_product_{{props.product_by_id}}">
+            <div class="product-img">
+                <img t-att-src="imageUrl" t-att-alt="props.product_by_id.id.display_name"/>
+                <span class="price-tag">
+                    <t t-esc="price"/>
+                </span>
+            </div>
+            <div class="product-name" t-attf-id="article_product_{{props.product_by_id}}">
+                <t t-esc="props.product_by_id.display_name"/>
+            </div>
+        </article>
+    </t>
+</templates>

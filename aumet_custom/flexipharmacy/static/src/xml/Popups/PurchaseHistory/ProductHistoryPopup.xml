@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ProductHistoryPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup">
+                    <header class="title drag-handle">
+                        <div class="header-cancel-button" t-on-click="cancel">
+                            X
+                        </div>
+                    </header>
+                    <div class="div popup-sales-person-selection purchase-history">
+                        <t t-foreach="props.product_data" t-as="data">
+                            <div class="product-history-row">
+                                <div class="history-name-left">
+                                    <t t-esc="env.pos.db.get_product_by_id(data.product_id).display_name"/>
+                                    <ul style="color:#888;">
+                                        <li style="margin-left:25px;font-size: 15px;">
+                                            <b>
+                                                <t t-esc="data.qty"/>
+                                            </b>
+                                            <t t-esc="data.uom_name"/>
+                                            at
+                                            <t t-esc="env.pos.db.get_product_by_id(data.product_id).list_price"/>
+                                            /
+                                            <t t-esc="data.uom_name"/>
+                                            on
+                                            <b>
+                                                <t t-esc="data.date_order"/>
+                                            </b>
+                                            from
+                                            <t t-esc="data.name"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="history-name-right">
+                                    <t t-esc="env.pos.format_currency(data.total,'Product Price')"/>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

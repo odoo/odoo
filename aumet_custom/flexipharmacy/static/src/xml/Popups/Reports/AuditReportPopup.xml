@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="AuditReportPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup inventory-report-popup" style="height: 445px;">
+                    <header class="title drag-handle">
+                        <t t-esc="props.title"/>
+                    </header>
+                    <div class="tab">
+                        <button class="tablinks active" value="sessions">Sessions</button>
+                        <button class="tablinks" value="locations">Locations</button>
+                    </div>
+                    <div id="sessions" class="tabcontent">
+                        <div class="scrollable-y touch-scrollable inventory-report-div">
+                            <table class="inventory_report_table">
+                                <t t-if="env.pos.all_pos_session.length &gt; 0">
+                                    <t t-foreach="env.pos.all_pos_session" t-as="session">
+                                        <tr class="session_record">
+                                            <td style="width: 75%;">
+                                                <t t-esc="session.name"/>
+                                            </td>
+                                            <td class="report"
+                                                t-att-title="'Thermal Report of ' + session.name + ' Session'">
+                                                <t t-if="env.pos.config.iface_print_via_proxy">
+                                                    <img class="report_thermal session" t-att-data-id="session.id"
+                                                         src="/flexipharmacy/static/src/img/printer.png"
+                                                         style="width: 30px;"/>
+                                                </t>
+                                            </td>
+                                            <td class="report"
+                                                t-att-title="'PDF Report of ' + session.name + ' Session'"
+                                                style="text-align: right;padding-right: 20px;">
+                                                <img class="report_pdf session"
+                                                     src="/flexipharmacy/static/src/img/pdf.png"
+                                                     t-att-data-id="session.id"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                   <tr class="session_record">
+                                       <td style="text-align: center;color: brown;">
+                                           POS sessions not found.
+                                       </td>
+                                   </tr>
+                                </t>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="locations" class="tabcontent" style="display:none;">
+                        <div class="scrollable-y touch-scrollable inventory-report-div">
+                            <table class="inventory_report_table">
+                                <t t-if="env.pos.all_pos_session.length &gt; 0">
+                                    <t t-foreach="env.pos.all_locations" t-as="location">
+                                        <tr class="location_record">
+                                            <td style="width: 75%;">
+                                                <t t-esc="location.complete_name"/>
+                                            </td>
+                                            <td class="report"
+                                                t-att-title="'Thermal Report of ' + location.name + ' Location'">
+                                                <t t-if="env.pos.config.iface_print_via_proxy">
+                                                    <img class="report_thermal location" t-att-data-id="location.id"
+                                                         src="/flexipharmacy/static/src/img/printer.png"
+                                                         style="width: 30px;"/>
+                                                </t>
+                                            </td>
+                                            <td class="report"
+                                                t-att-title="'PDF Report of ' + location.name + ' Location'"
+                                                style="text-align: right;padding-right: 20px;">
+                                                <img class="report_pdf location"
+                                                     src="/flexipharmacy/static/src/img/pdf.png"
+                                                     t-att-data-id="location.id"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                   <tr class="session_record">
+                                       <td style="text-align: center;color: brown;">
+                                           Locations not found.
+                                       </td>
+                                   </tr>
+                                </t>
+                            </table>
+                        </div>
+                    </div>
+                    <footer class="footer">
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText"/>
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

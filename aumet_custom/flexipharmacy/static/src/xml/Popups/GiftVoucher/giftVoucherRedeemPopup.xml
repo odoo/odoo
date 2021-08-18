@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="giftVoucherRedeemPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup">
+                    <header class="title drag-handle">
+                        <t t-esc="props.title"/>
+                    </header>
+                    <div class="div">
+                        <div class="confirm_card_table">
+                            <div class="payment-method-line">
+                                <span>Due Amount : <t t-esc="env.pos.format_currency(env.pos.get_order().get_due())"/></span>
+                            </div>
+                            <div class="payment-method-line">
+                                <input type="text" t-model="state.GiftVoucherNumber" t-ref="gift_voucher_number"
+                                       placeholder="Enter Voucher Number" id="text_gift_voucher_no"
+                                       t-on-keypress="CheckGiftvoucher" style="font-size: 16px;"/>
+                            </div>
+                            <div class="payment-method-line">
+                                <t t-esc="state.GiftVouchermsg"/>
+                            </div>
+                            <div class="payment-method-line" id="in_balance" style="display:none">
+                                <label style="color:red">Insufficient Balance.</label>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="footer">
+                        <div class="button confirm" t-on-click="confirm" disabled="true">
+                            <t t-esc="props.confirmText"/>
+                        </div>
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText"/>
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

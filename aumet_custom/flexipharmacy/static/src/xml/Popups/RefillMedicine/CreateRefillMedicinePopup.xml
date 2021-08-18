@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="CreateRefillMedicinePopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup create-recurrent-order"
+                     style="height: auto !important;max-height: 700px;max-width: 55%;font-size:16px">
+                     <header class="title drag-handle">
+                         <t t-esc="props.title"/>
+                    </header>
+                    <t t-if='props.SelectedProductList.length > 0'>
+
+                        <div class="create_recurrent_order_css">
+                            <div class="rec_part_01">
+                                <div class="css_rec_order_01">
+                                    <span class="rec_cust">Customer</span>
+                                    <input type="text" t-model="state.selectedCustomer" id="select_recurrent_customer"
+                                           list="searchPartnerList"
+                                           t-att-class="{ blank_validation_input: state.CustomerBlank }"
+                                           t-on-change="changeCustomer"/>
+                                    <datalist id="searchPartnerList">
+                                        <option t-foreach="env.pos.db.get_partners_sorted()" t-as="value"
+                                                t-att-value="value.name" t-att-id="value.id">
+                                            <t t-esc="value.name"/>
+                                        </option>
+                                    </datalist>
+                                </div>
+                                <div class="css_rec_order_02">
+                                    <span class="rec_days">No.of Days</span>
+                                    <input type="text" id="recurrent_interval_dayss"
+                                           t-on-change="changeExecutionDate(state.NoOfDays)" t-model="state.NoOfDays"
+                                           t-on-keydown="onInputKeyDownNumberVlidation"
+                                           t-att-class="{ blank_validation_input: state.NoOfDaysBlank }"/>
+                                </div>
+                                <div class="css_rec_order_03">
+                                    <input t-model="state.isDeliver" type="checkbox" id="recurrent_order_deliver"
+                                           t-on-change="changeCustomer"/>
+                                    <span class="rec_deliver">Is Deliver</span>
+                                </div>
+                            </div>
+                            <div class="rec_part_02">
+                                <div class="css_rec_order_05">
+                                    <span class="rec_exe_date">Execution Date</span>
+                                    <input type="text" id="execution_date" t-model="state.ExecutionDate"
+                                           class="execution_datetime" placeholder="YYYY/MM/DD" disabled="1"/>
+                                </div>
+                                <t t-if="state.isDeliver">
+                                     <div class="del_add">
+                                        <span class="rec_text_add">Delivery Address</span>
+                                     </div>
+                                </t>
+                            </div>
+                            <t t-if="state.isDeliver">
+                                 <div class="del_add">
+                                    <textarea rows="2" t-model="state.DeliveryAddress" cols="300"
+                                              id="recurrent_delivery_add"/>
+                                 </div>
+                            </t>
+                        </div>
+                        <div style="width: 100%;max-height: 200px;overflow: auto;font-size: 15px; border-bottom:1px solid #6ec89b;border-top:1px solid #6ec89b;">
+                            <table style="width: 97%;margin: auto;">
+                                <tr style="color:white;">
+                                    <th class="sticky-header"
+                                        style="border: 1px solid;text-align: left;width: 55%;padding-left:5px;background-color:#6ec89b;">Product</th>
+                                    <th class="sticky-header"
+                                        style="border: 1px solid;text-align: center;width: 20%;background-color:#6ec89b;">Qty</th>
+                                    <th class="sticky-header"
+                                        style="border: 1px solid;text-align: center;width: 20%;background-color:#6ec89b;">Price</th>
+                                    <th class="sticky-header"
+                                        style="border: 1px solid;text-align: end;width: 5%;background-color:#6ec89b;"></th>
+                                </tr>
+                                <t t-foreach="props.SelectedProductList" t-as="product_id" t-key="product_id">
+                                    <tr>
+                                        <td style="text-align: left;width: 55%; padding-left:5px;margin-bottom:5px;margin-top;5px;">
+                                            <t t-esc='product_id.display_name'/>
+                                        </td>
+                                        <td style="text-align: center;width: 20%;" class="product_qty">
+                                            <input type="text" t-att-model="state.ProductQty" t-att-ref="product_id.id"
+                                                   t-att-id="product_id.id" value="1"
+                                                   t-on-keydown="onInputKeyDownNumberVlidation"
+                                                   style="font-size:15px; min-height:0px;padding-top: 6px;padding-bottom: 6px;margin-bottom:5px;margin-top;5px;"/>
+                                        </td>
+                                        <td style="text-align: center;width: 20%;" class="product_price">
+                                            <input type="text" t-att-model="state.ProductPrice"
+                                                   t-att-ref="product_id.id" t-att-id="product_id.id"
+                                                   t-att-value="product_id.lst_price"
+                                                   t-on-keydown="onInputKeyDownNumberVlidation"
+                                                   style="font-size:15px; min-height:0px;padding-top: 6px;padding-bottom: 6px;margin-bottom:5px;margin-top;5px;"/>
+                                        </td>
+                                        <td style="text-align: end;width: 5%; padding-right:5px;">
+                                            <div class="delete" t-on-click="DeletePurchaseLine(product_id)">
+                                                <i class="fa fa-trash" title="Delete"/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                    </t>
+                    <t t-if='props.SelectedProductList.length &lt;= 0'>
+                        <p style="font-size:15px;">Please Select Product !</p>
+                    </t>
+                    <footer class="footer">
+                        <t t-if='props.SelectedProductList.length > 0'>
+                            <div class="button confirm" t-on-click="confirm">
+                                <t t-esc="props.confirmText"/>
+                            </div>
+                        </t>
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText"/>
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+</templates>
