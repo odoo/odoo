@@ -980,7 +980,6 @@ export class ModelManager {
             relFunc(Model.modelName, { inverse: field.fieldName }),
             {
                 fieldName: `_inverse_${Model.modelName}/${field.fieldName}`,
-                modelManager: this,
             }
         ));
         return inverseField;
@@ -1062,7 +1061,6 @@ export class ModelManager {
             for (const [fieldName, fieldData] of Object.entries(Model.fields)) {
                 Model.fields[fieldName] = new ModelField(Object.assign({}, fieldData, {
                     fieldName,
-                    modelManager: this,
                 }));
             }
         }
