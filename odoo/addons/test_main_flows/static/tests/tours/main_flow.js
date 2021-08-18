@@ -969,6 +969,7 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
 ...tour.stepUtils.goBackBreadcrumbsMobile(
         _t('Back to the sale order'),
         undefined,
+        ".breadcrumb-item.active:contains('Timesheets')",
         ".breadcrumb-item.active:contains('the_flow.project')",
         ".breadcrumb-item.active:contains('the_flow.service')"
     ),

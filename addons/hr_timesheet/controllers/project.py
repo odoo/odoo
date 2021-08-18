@@ -20,6 +20,7 @@ class ProjectCustomerPortal(CustomerPortal):
         timesheets_by_subtask = defaultdict(lambda: request.env['account.analytic.line'].sudo())
         for timesheet in subtasks_timesheets:
             timesheets_by_subtask[timesheet.task_id] |= timesheet
+        values['allow_timesheets'] = task.allow_timesheets
         values['timesheets'] = timesheets
         values['timesheets_by_subtask'] = timesheets_by_subtask
         values['is_uom_day'] = request.env['account.analytic.line']._is_timesheet_encode_uom_day()

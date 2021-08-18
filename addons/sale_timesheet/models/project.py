@@ -174,6 +174,13 @@ class Project(models.Model):
             ], limit=1)
             project.sale_line_id = sol or project.sale_line_employee_ids.sale_line_id[:1]  # get the first SOL containing in the employee mappings if no sol found in the search
 
+    def _get_all_sales_orders(self):
+        return super()._get_all_sales_orders() | self.sale_line_employee_ids.sale_line_id.order_id
+
+    @api.depends('sale_line_employee_ids.sale_line_id')
+    def _compute_sale_order_count(self):
+        super()._compute_sale_order_count()
+
     @api.constrains('sale_line_id')
     def _check_sale_line_type(self):
         for project in self.filtered(lambda project: project.sale_line_id):
@@ -279,19 +286,6 @@ class Project(models.Model):
             ],
         })
         return action
-
-    def action_view_all_rating(self):
-        return {
-            'name': _('Rating'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'rating.rating',
-            'view_mode': 'kanban,list,graph,pivot,form',
-            'view_type': 'ir.actions.act_window',
-            'context': {
-                'search_default_rating_last_30_days': True,
-            },
-            'domain': [('consumed', '=', True), ('parent_res_model', '=', 'project.project'), ('parent_res_id', '=', self.id)],
-        }
 
     # ----------------------------
     #  Project Updates

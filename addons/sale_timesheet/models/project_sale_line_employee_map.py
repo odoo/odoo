@@ -10,7 +10,7 @@ class ProjectProductEmployeeMap(models.Model):
 
     project_id = fields.Many2one('project.project', "Project", required=True)
     employee_id = fields.Many2one('hr.employee', "Employee", required=True)
-    sale_line_id = fields.Many2one('sale.order.line', "Sale Order Item", compute="_compute_sale_line_id", store=True, readonly=False,
+    sale_line_id = fields.Many2one('sale.order.line', "Sales Order Item", compute="_compute_sale_line_id", store=True, readonly=False,
         domain="""[
             ('is_service', '=', True),
             ('is_expense', '=', False),

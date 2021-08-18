@@ -15,6 +15,8 @@ STATUS_COLOR = {
     'off_track': 23,  # red / danger
     'on_hold': 4,  # light blue
     False: 0,  # default grey -- for studio
+    # Only used in project.task
+    'to_define': 0,
 }
 
 class ProjectUpdate(models.Model):
@@ -34,7 +36,9 @@ class ProjectUpdate(models.Model):
             if 'description' in fields and not result.get('description'):
                 result['description'] = self._build_description(project)
             if 'status' in fields and not result.get('status'):
-                result['status'] = project.last_update_status
+                # `to_define` is not an option for self.status, here we actually want to default to `on_track`
+                # the goal of `to_define` is for a project to start without an actual status.
+                result['status'] = project.last_update_status if project.last_update_status != 'to_define' else 'on_track'
         return result
 
     name = fields.Char("Title", required=True, tracking=True)

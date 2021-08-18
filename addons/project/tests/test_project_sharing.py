@@ -118,7 +118,7 @@ class TestProjectSharing(TestProjectSharingCommon):
                 Command.create({'partner_id': self.user_portal.partner_id.id}),
             ],
         })
-        with self.get_project_sharing_form_view(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_portal.id}), self.user_portal) as form:
+        with self.get_project_sharing_form_view(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_portal.id, 'default_user_ids': [(4, self.user_portal.id)]}), self.user_portal) as form:
             form.name = 'Test'
             task = form.save()
             self.assertEqual(task.name, 'Test')

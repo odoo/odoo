@@ -34,11 +34,10 @@
             </xpath>
             <xpath expr="//button[@name='%(project.act_project_project_2_project_task_all)d']" position="before">
                 <button class="d-none d-md-inline oe_stat_button"
-                        type="object" name="action_view_so" icon="fa-dollar"
-                        attrs="{'invisible': [('sale_order_id', '=', False)]}"
-                        string="Sales Order"
+                        type="object" name="action_view_sos" icon="fa-dollar"
+                        attrs="{'invisible': [('sale_order_count', '=', 0)]}"
                         groups="sales_team.group_sale_salesman_all_leads">
-                    <field name="sale_order_id" attrs="{'invisible': True}"/> 
+                    <field name="sale_order_count" widget="statinfo" string="Sales Orders"/>
                 </button>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
@@ -53,7 +52,7 @@
         <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_recurring_tasks']" position="before">
+            <xpath expr="//span[@id='start_rating_buttons']" position="before">
                 <button class="d-none d-md-inline oe_stat_button"
                         type="object" name="action_view_so" icon="fa-dollar"
                         attrs="{'invisible': [('sale_order_id', '=', False)]}"
