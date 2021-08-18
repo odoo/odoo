@@ -43,17 +43,10 @@ export class MessagingMenu extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.discuss}
-     */
-    get discuss() {
-        return this.env.messaging && this.env.messaging.discuss;
-    }
-
-    /**
      * @returns {mail.messaging_menu}
      */
     get messagingMenu() {
-        return this.env.messaging && this.env.messaging.messagingMenu;
+        return this.messaging && this.messaging.messagingMenu;
     }
 
     /**
@@ -117,8 +110,8 @@ export class MessagingMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickNewMessage(ev) {
-        if (!this.messagingMenu.messaging.device.isMobile) {
-            this.messagingMenu.messaging.chatWindowManager.openNewMessage();
+        if (!this.messaging.device.isMobile) {
+            this.messaging.chatWindowManager.openNewMessage();
             this.messagingMenu.close();
         } else {
             this.messagingMenu.toggleMobileNewMessage();
@@ -155,7 +148,7 @@ export class MessagingMenu extends Component {
      * @param {integer} ui.item.id
      */
     _onMobileNewMessageInputSelect(ev, ui) {
-        this.messagingMenu.messaging.openChat({ partnerId: ui.item.id });
+        this.messaging.openChat({ partnerId: ui.item.id });
     }
 
     /**

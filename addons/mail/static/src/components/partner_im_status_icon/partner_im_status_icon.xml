@@ -5,7 +5,7 @@
         <span class="o_PartnerImStatusIcon fa-stack"
             t-att-class="{
                 'o-away': partner and partner.im_status === 'away',
-                'o-bot': partner and partner.messaging.partnerRoot === partner,
+                'o-bot': partner and messaging.partnerRoot === partner,
                 'o-has-open-chat': props.hasOpenChat,
                 'o-offline': partner and partner.im_status === 'offline',
                 'o-online': partner and partner.im_status === 'online',
@@ -27,7 +27,7 @@
                 <t t-if="partner.im_status === 'offline'">
                     <i class="o_PartnerImStatusIcon_icon o-offline fa fa-circle-o fa-stack-1x" title="Offline" role="img" aria-label="User is offline"/>
                 </t>
-                <t t-if="partner === partner.messaging.partnerRoot">
+                <t t-if="partner === messaging.partnerRoot">
                     <i class="o_PartnerImStatusIcon_icon o-bot fa fa-heart fa-stack-1x" title="Bot" role="img" aria-label="User is a bot"/>
                 </t>
             </t>

@@ -50,14 +50,14 @@ export class ChatWindowHiddenMenu extends Component {
         }
         this._applyListHeight();
         this._applyOffset();
-        this._wasMenuOpen = this.env.messaging.chatWindowManager.isHiddenMenuOpen;
+        this._wasMenuOpen = this.messaging.chatWindowManager.isHiddenMenuOpen;
     }
 
     /**
      * @private
      */
     _applyListHeight() {
-        const device = this.env.messaging.device;
+        const device = this.messaging.device;
         const height = device.globalWindowInnerHeight / 2;
         this._listRef.el.style['max-height'] = `${height}px`;
     }
@@ -66,10 +66,10 @@ export class ChatWindowHiddenMenu extends Component {
      * @private
      */
     _applyOffset() {
-        const textDirection = this.env.messaging.locale.textDirection;
+        const textDirection = this.messaging.locale.textDirection;
         const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
         const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
-        const offset = this.env.messaging.chatWindowManager.visual.hidden.offset;
+        const offset = this.messaging.chatWindowManager.visual.hidden.offset;
         this.el.style[offsetFrom] = `${offset}px`;
         this.el.style[oppositeFrom] = 'auto';
     }
@@ -89,7 +89,7 @@ export class ChatWindowHiddenMenu extends Component {
         if (this.el.contains(ev.target)) {
             return;
         }
-        this.env.messaging.chatWindowManager.closeHiddenMenu();
+        this.messaging.chatWindowManager.closeHiddenMenu();
     }
 
     /**
@@ -98,9 +98,9 @@ export class ChatWindowHiddenMenu extends Component {
      */
     _onClickToggle(ev) {
         if (this._wasMenuOpen) {
-            this.env.messaging.chatWindowManager.closeHiddenMenu();
+            this.messaging.chatWindowManager.closeHiddenMenu();
         } else {
-            this.env.messaging.chatWindowManager.openHiddenMenu();
+            this.messaging.chatWindowManager.openHiddenMenu();
         }
     }
 
@@ -113,7 +113,7 @@ export class ChatWindowHiddenMenu extends Component {
     _onClickedChatWindow(ev) {
         const chatWindow = ev.detail.chatWindow;
         chatWindow.makeActive();
-        this.env.messaging.chatWindowManager.closeHiddenMenu();
+        this.messaging.chatWindowManager.closeHiddenMenu();
     }
 
 }
