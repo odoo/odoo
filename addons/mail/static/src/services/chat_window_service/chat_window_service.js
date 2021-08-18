@@ -3,9 +3,9 @@
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 import AbstractService from 'web.AbstractService';
-import { bus, serviceRegistry } from 'web.core';
+import { bus } from 'web.core';
 
-const ChatWindowService = AbstractService.extend({
+export const ChatWindowService = AbstractService.extend({
     dependencies: ['messaging'],
     /**
      * @override {web.AbstractService}
@@ -66,7 +66,3 @@ const ChatWindowService = AbstractService.extend({
         await this._mount();
     },
 });
-
-serviceRegistry.add('chat_window', ChatWindowService);
-
-export default ChatWindowService;
