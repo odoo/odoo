@@ -44,7 +44,7 @@ QUnit.test('openChat: display notification for partner without user', async func
         },
     });
 
-    await this.env.messaging.openChat({ partnerId: 14 });
+    await this.messaging.openChat({ partnerId: 14 });
 });
 
 QUnit.test('openChat: display notification for wrong user', async function (assert) {
@@ -69,7 +69,7 @@ QUnit.test('openChat: display notification for wrong user', async function (asse
     });
 
     // user id not in this.data
-    await this.env.messaging.openChat({ userId: 14 });
+    await this.messaging.openChat({ userId: 14 });
 });
 
 QUnit.test('openChat: open new chat for user', async function (assert) {
@@ -88,7 +88,7 @@ QUnit.test('openChat: open new chat for user', async function (assert) {
     );
     assert.notOk(existingChat, 'a chat should not exist with the target partner initially');
 
-    await this.env.messaging.openChat({ partnerId: 14 });
+    await this.messaging.openChat({ partnerId: 14 });
     const chat = this.env.models['mail.thread'].find(thread =>
         thread.channel_type === 'chat' &&
         thread.correspondent &&
@@ -122,7 +122,7 @@ QUnit.test('openChat: open existing chat for user', async function (assert) {
     assert.ok(existingChat, 'a chat should initially exist with the target partner');
     assert.strictEqual(existingChat.threadViews.length, 0, 'the chat should not be displayed in a `mail.thread_view`');
 
-    await this.env.messaging.openChat({ partnerId: 14 });
+    await this.messaging.openChat({ partnerId: 14 });
     assert.ok(existingChat, 'a chat should still exist with the target partner');
     assert.strictEqual(existingChat.id, 10, 'the chat should be the existing chat');
     assert.strictEqual(existingChat.threadViews.length, 1, 'the chat should now be displayed in a `mail.thread_view`');

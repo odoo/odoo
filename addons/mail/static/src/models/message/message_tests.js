@@ -86,9 +86,9 @@ QUnit.test('create', async function (assert) {
         }))
     );
     // from partnerId being in needaction_partner_ids
-    assert.ok(message.threads.includes(this.env.messaging.inbox));
+    assert.ok(message.threads.includes(this.messaging.inbox));
     // from partnerId being in starred_partner_ids
-    assert.ok(message.threads.includes(this.env.messaging.starred));
+    assert.ok(message.threads.includes(this.messaging.starred));
     const attachment = this.env.models['mail.attachment'].findFromIdentifyingData({ id: 750 });
     assert.ok(attachment);
     assert.strictEqual(attachment.filename, "test.txt");

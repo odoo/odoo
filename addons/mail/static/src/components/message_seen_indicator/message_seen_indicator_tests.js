@@ -63,7 +63,7 @@ QUnit.test('rendering when just one has received the message', async function (a
         }),
     });
     const message = this.env.models['mail.message'].insert({
-        author: insert({ id: this.env.messaging.currentPartner.id, display_name: "Demo User" }),
+        author: insert({ id: this.messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
         originThread: link(thread),
@@ -111,7 +111,7 @@ QUnit.test('rendering when everyone have received the message', async function (
         }),
     });
     const message = this.env.models['mail.message'].insert({
-        author: insert({ id: this.env.messaging.currentPartner.id, display_name: "Demo User" }),
+        author: insert({ id: this.messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
         originThread: link(thread),
@@ -160,7 +160,7 @@ QUnit.test('rendering when just one has seen the message', async function (asser
         }),
     });
     const message = this.env.models['mail.message'].insert({
-        author: insert({ id: this.env.messaging.currentPartner.id, display_name: "Demo User" }),
+        author: insert({ id: this.messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
         originThread: link(thread),
@@ -209,7 +209,7 @@ QUnit.test('rendering when just one has seen & received the message', async func
         }),
     });
     const message = this.env.models['mail.message'].insert({
-        author: insert({ id: this.env.messaging.currentPartner.id, display_name: "Demo User" }),
+        author: insert({ id: this.messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
         originThread: link(thread),
@@ -260,7 +260,7 @@ QUnit.test('rendering when just everyone has seen the message', async function (
         }),
     });
     const message = this.env.models['mail.message'].insert({
-        author: insert({ id: this.env.messaging.currentPartner.id, display_name: "Demo User" }),
+        author: insert({ id: this.messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
         originThread: link(thread),

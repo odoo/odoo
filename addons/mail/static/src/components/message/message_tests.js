@@ -285,7 +285,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
     });
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
-        id: this.env.messaging.currentPartner.id,
+        id: this.messaging.currentPartner.id,
         display_name: "Demo User",
     });
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
@@ -351,7 +351,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
     });
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
-        id: this.env.messaging.currentPartner.id,
+        id: this.messaging.currentPartner.id,
         display_name: "Demo User",
     });
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
@@ -416,7 +416,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
     });
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
-        id: this.env.messaging.currentPartner.id,
+        id: this.messaging.currentPartner.id,
         display_name: "Demo User",
     });
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
@@ -499,7 +499,7 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
             {
                 channelId: 11,
                 lastFetchedMessage: insert({ id: 100 }),
-                partnerId: this.env.messaging.currentPartner.id,
+                partnerId: this.messaging.currentPartner.id,
             },
             {
                 channelId: 11,
@@ -538,7 +538,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
 
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
-        id: this.env.messaging.currentPartner.id,
+        id: this.messaging.currentPartner.id,
         display_name: "Demo User",
     });
     const thread = this.env.models['mail.thread'].create({
@@ -570,7 +570,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
         {
             channelId: 11,
             lastSeenMessage: link(lastSeenMessage),
-            partnerId: this.env.messaging.currentPartner.id,
+            partnerId: this.messaging.currentPartner.id,
         },
         {
             channelId: 11,
@@ -604,7 +604,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
 
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
-        id: this.env.messaging.currentPartner.id,
+        id: this.messaging.currentPartner.id,
         display_name: "Demo User"
     });
     const thread = this.env.models['mail.thread'].create({
@@ -614,7 +614,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
             {
                 channelId: 11,
                 lastSeenMessage: insert({ id: 100 }),
-                partnerId: this.env.messaging.currentPartner.id,
+                partnerId: this.messaging.currentPartner.id,
             },
             {
                 channelId: 11,
@@ -671,7 +671,7 @@ QUnit.test('allow attachment delete on authored message', async function (assert
             id: 10,
             name: "BLAH",
         }),
-        author: link(this.env.messaging.currentPartner),
+        author: link(this.messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });
