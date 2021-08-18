@@ -6,11 +6,12 @@ from operator import itemgetter
 
 from markupsafe import Markup
 
-from odoo import http, _
+from odoo import conf, http, _
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
+from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
-from odoo.tools import groupby as groupbyelem
+from odoo.tools import consteq, groupby as groupbyelem
 
 from odoo.osv.expression import OR
 
@@ -88,6 +89,50 @@ class ProjectCustomerPortal(CustomerPortal):
 
         values = self._project_get_page_view_values(project_sudo, access_token, **kw)
         return request.render("project.portal_my_project", values)
+
+    @http.route("/project_sharing/<int:project_id>", type='http', auth="user", methods=['GET'])
+    def get_project_sharing(self, project_id, model='project.project', access_token=None):
+        if not model or model != 'project.project' or not access_token:
+            return request.not_found()
+        project = request.env[model].sudo().browse(project_id)
+        project_validation = project and project.exists() and consteq(project.access_token, access_token) and project.privacy_visibility == 'portal'
+        if not project_validation:
+            return request.not_found()
+        return request.render('project.project_sharing', {'project_id': project.id})
+
+    @http.route("/embed/project/<int:project_id>", type="http", auth="user", methods=['GET'])
+    def render_project_backend_view(self, project_id):
+        project = request.env['project.project'].sudo().browse(project_id)
+
+        if not project.exists():
+            return request.not_found()
+
+        session_info = request.env['ir.http'].session_info()
+        user_context = request.session.get_context() if request.session.uid else {}
+        mods = conf.server_wide_modules or []
+        qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle="project.assets_qweb")
+        lang = user_context.get("lang")
+        translation_hash = request.env['ir.translation'].get_web_translations_hash(mods, lang)
+        cache_hashes = {
+            "qweb": qweb_checksum,
+            "translations": translation_hash,
+        }
+
+        project_company = project.company_id
+        session_info.update(cache_hashes=cache_hashes, action_name='project.project_sharing_project_task_action', project_id=project.id, user_companies={
+            'current_company': project_company.id,
+            'allowed_companies': {
+                project_company.id: {
+                    'id': project_company.id,
+                    'name': project_company.name,
+                },
+            },
+        })
+
+        return request.render(
+            'project.project_sharing_embed',
+            {'session_info': session_info},
+        )
 
     # ------------------------------------------------------------
     # My Task
