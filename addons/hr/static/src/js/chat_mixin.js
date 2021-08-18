@@ -23,11 +23,11 @@ const ChatMixin = {
         return this._super();
     },
 
-    _onOpenChat: function (ev) {
+    async _onOpenChat(ev) {
         ev.preventDefault();
         ev.stopImmediatePropagation();
-        const env = Component.env;
-        env.messaging.openChat({ employeeId: this.state.data.id });
+        const messaging = await Component.env.services.messaging.get();
+        messaging.openChat({ employeeId: this.state.data.id });
         return true;
     },
 };

@@ -16,10 +16,5 @@ Object.assign(env, {
         );
     },
 });
-Object.defineProperty(env, 'messaging', {
-    get() {
-        return this.services.messaging.modelManager.messaging;
-    },
-});
 
 serviceRegistry.add('messaging', MessagingService);

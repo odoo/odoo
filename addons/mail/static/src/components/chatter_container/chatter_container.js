@@ -50,7 +50,7 @@ export class ChatterContainer extends Component {
      * @private
      */
     async _insertFromProps(props) {
-        const messaging = await this.env.services.messaging.modelManager.getMessaging();
+        const messaging = await this.env.services.messaging.get();
         if (this.__owl__.status === 5 /* destroyed */) {
             return;
         }
