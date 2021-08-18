@@ -81,33 +81,4 @@ Object.assign(env, {
     modelManager: new ModelManager(env),
 });
 
-/**
- * Components cannot use web.bus, because they cannot use
- * EventDispatcherMixin, and webclient cannot easily access env.
- * Communication between webclient and components by core.bus
- * (usable by webclient) and messagingBus (usable by components), which
- * the messaging service acts as mediator since it can easily use both
- * kinds of buses.
- */
-env.bus.on(
-    'hide_home_menu',
-    null,
-    () => env.messagingBus.trigger('hide_home_menu')
-);
-env.bus.on(
-    'show_home_menu',
-    null,
-    () => env.messagingBus.trigger('show_home_menu')
-);
-env.bus.on(
-    'will_hide_home_menu',
-    null,
-    () => env.messagingBus.trigger('will_hide_home_menu')
-);
-env.bus.on(
-    'will_show_home_menu',
-    null,
-    () => env.messagingBus.trigger('will_show_home_menu')
-);
-
 serviceRegistry.add('messaging', MessagingService);

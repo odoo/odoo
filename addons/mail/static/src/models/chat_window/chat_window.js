@@ -1,34 +1,12 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
+import { attr, many2one, one2one } from '@mail/model/model_field';
 import { clear, create, link, unlink, update } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
     class ChatWindow extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
-        _created() {
-            const res = super._created(...arguments);
-            this._onShowHomeMenu.bind(this);
-            this._onHideHomeMenu.bind(this);
-
-            this.env.messagingBus.on('hide_home_menu', this, this._onHideHomeMenu);
-            this.env.messagingBus.on('show_home_menu', this, this._onShowHomeMenu);
-            return res;
-        }
-
-        /**
-         * @override
-         */
-        _willDelete() {
-            this.env.messagingBus.off('hide_home_menu', this, this._onHideHomeMenu);
-            this.env.messagingBus.off('show_home_menu', this, this._onShowHomeMenu);
-            return super._willDelete(...arguments);
-        }
 
         //----------------------------------------------------------------------
         // Public
@@ -332,30 +310,6 @@ function factory(dependencies) {
                 nextToFocus = orderedVisible[nextIndex];
             }
             return nextToFocus;
-        }
-
-        //----------------------------------------------------------------------
-        // Handlers
-        //----------------------------------------------------------------------
-
-        /**
-         * @private
-         */
-        async _onHideHomeMenu() {
-            if (!this.threadView) {
-                return;
-            }
-            this.threadView.addComponentHint('home-menu-hidden');
-        }
-
-        /**
-         * @private
-         */
-        async _onShowHomeMenu() {
-            if (!this.threadView) {
-                return;
-            }
-            this.threadView.addComponentHint('home-menu-shown');
         }
 
     }
