@@ -10,10 +10,6 @@ import { nextTick } from '@mail/utils/utils';
 export function addMessagingToEnv(providedEnv = {}) {
     const env = { ...providedEnv };
     /**
-     * Registry of models.
-     */
-    env.models = {};
-    /**
      * Environment keys used in messaging.
      */
     Object.assign(env, {
@@ -34,7 +30,6 @@ export function addMessagingToEnv(providedEnv = {}) {
             return this.messaging.isInitialized;
         },
         messagingCreatedPromise: makeDeferred(),
-        messagingInitializedDeferred: makeDeferred(),
     });
     return env;
 }

@@ -6,6 +6,7 @@ import AbstractService from 'web.AbstractService';
 import { bus, serviceRegistry } from 'web.core';
 
 const DialogService = AbstractService.extend({
+    dependencies: ['messaging'],
     /**
      * @override {web.AbstractService}
      */
