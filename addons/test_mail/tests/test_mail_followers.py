@@ -406,8 +406,8 @@ class AdvancedResponsibleNotifiedTest(TestMailCommon):
         # verify that a mail.mail is attached to it with the correct state ('outgoing')
         mail_notification = mail_message.notification_ids
         self.assertEqual(1, len(mail_notification))
-        self.assertTrue(bool(mail_notification.mail_id))
-        self.assertEqual('outgoing', mail_notification.mail_id.state)
+        self.assertTrue(bool(mail_notification.mail_mail_id))
+        self.assertEqual(mail_notification.mail_mail_id.state, 'outgoing')
 
 
 @tagged('post_install', '-at_install')

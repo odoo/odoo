@@ -31,7 +31,7 @@ class MassSMSCase(SMSCase):
           # TRACE
           'partner': res.partner record (may be empty),
           'number': number used for notification (may be empty, computed based on partner),
-          'state': outgoing / sent / ignored / bounced / exception / opened (outgoing by default),
+          'trace_status': outgoing / sent / cancel / bounce / error / opened (sent by default),
           'record: linked record,
           # SMS.SMS
           'content': optional: if set, check content of sent SMS;
@@ -55,9 +55,9 @@ class MassSMSCase(SMSCase):
         state_mapping = {
             'sent': 'sent',
             'outgoing': 'outgoing',
-            'exception': 'error',
-            'ignored': 'canceled',
-            'bounced': 'error',
+            'error': 'error',
+            'cancel': 'canceled',
+            'bounce': 'error',
         }
         traces = self.env['mailing.trace'].search([
             ('mass_mailing_id', 'in', mailing.ids),
@@ -74,28 +74,28 @@ class MassSMSCase(SMSCase):
         for recipient_info, link_info, record in zip(recipients_info, sms_links_info, records):
             partner = recipient_info.get('partner', self.env['res.partner'])
             number = recipient_info.get('number')
-            state = recipient_info.get('state', 'outgoing')
+            status = recipient_info.get('trace_status', 'outgoing')
             content = recipient_info.get('content', None)
             if number is None and partner:
                 number = partner._sms_get_recipients_info()[partner.id]['sanitized']
 
             trace = traces.filtered(
-                lambda t: t.sms_number == number and t.state == state and (t.res_id == record.id if record else True)
+                lambda t: t.sms_number == number and t.trace_status == status and (t.res_id == record.id if record else True)
             )
             self.assertTrue(len(trace) == 1,
-                            'SMS: found %s notification for number %s, (state: %s) (1 expected)' % (len(trace), number, state))
+                            'SMS: found %s notification for number %s, (status: %s) (1 expected)' % (len(trace), number, status))
             self.assertTrue(bool(trace.sms_sms_id_int))
 
             if check_sms:
-                if state == 'sent':
+                if status == 'sent':
                     if sent_unlink:
                         self.assertSMSIapSent([number], content=content)
                     else:
                         self.assertSMS(partner, number, 'sent', content=content)
-                elif state in state_mapping:
-                    sms_state = state_mapping[state]
-                    error_code = recipient_info['failure_type'] if state in ('exception', 'ignored', 'bounced') else None
-                    self.assertSMS(partner, number, sms_state, error_code=error_code, content=content)
+                elif status in state_mapping:
+                    sms_state = state_mapping[status]
+                    failure_type = recipient_info['failure_type'] if status in ('error', 'cancel', 'bounce') else None
+                    self.assertSMS(partner, number, sms_state, failure_type=failure_type, content=content)
                 else:
                     raise NotImplementedError()
 
@@ -103,7 +103,7 @@ class MassSMSCase(SMSCase):
                 # shortened links are directly included in sms.sms record as well as
                 # in sent sms (not like mails who are post-processed)
                 sms_sent = self._find_sms_sent(partner, number)
-                sms_sms = self._find_sms_sms(partner, number, state_mapping[state])
+                sms_sms = self._find_sms_sms(partner, number, state_mapping[status])
                 for (url, is_shortened, add_link_params) in link_info:
                     if url == 'unsubscribe':
                         url = '%s/sms/%d/%s' % (mailing.get_base_url(), mailing.id, trace.sms_code)

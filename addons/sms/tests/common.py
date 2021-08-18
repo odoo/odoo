@@ -135,7 +135,7 @@ class SMSCase(MockSMS):
         """ Deprecated. Remove in 14.4 """
         return self.assertSMSIapSent(numbers, content=content)
 
-    def assertSMS(self, partner, number, status, error_code=None,
+    def assertSMS(self, partner, number, status, failure_type=None,
                   content=None, fields_values=None):
         """ Find a ``sms.sms`` record, based on given partner, number and status.
 
@@ -143,14 +143,14 @@ class SMSCase(MockSMS):
           if not given;
         :param number: optional number, used to find a ``sms.sms``, notably if
           partner is not given;
-        :param error_code: check error code if SMS is not sent or outgoing;
+        :param failure_type: check failure type if SMS is not sent or outgoing;
         :param content: if given, should be contained in sms body;
         :param fields_values: optional values allowing to check directly some
           values on ``sms.sms`` record;
         """
         sms_sms = self._find_sms_sms(partner, number, status)
-        if error_code:
-            self.assertEqual(sms_sms.error_code, error_code)
+        if failure_type:
+            self.assertEqual(sms_sms.failure_type, failure_type)
         if content is not None:
             self.assertIn(content, sms_sms.body)
         for fname, fvalue in (fields_values or {}).items():
@@ -160,15 +160,15 @@ class SMSCase(MockSMS):
         if status == 'sent':
             self.assertSMSIapSent([sms_sms.number], content=content)
 
-    def assertSMSCanceled(self, partner, number, error_code, content=None, fields_values=None):
+    def assertSMSCanceled(self, partner, number, failure_type, content=None, fields_values=None):
         """ Check canceled SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
-        self.assertSMS(partner, number, 'canceled', error_code=error_code, content=content, fields_values=fields_values)
+        self.assertSMS(partner, number, 'canceled', failure_type=failure_type, content=content, fields_values=fields_values)
 
-    def assertSMSFailed(self, partner, number, error_code, content=None, fields_values=None):
+    def assertSMSFailed(self, partner, number, failure_type, content=None, fields_values=None):
         """ Check failed SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
-        self.assertSMS(partner, number, 'error', error_code=error_code, content=content, fields_values=fields_values)
+        self.assertSMS(partner, number, 'error', failure_type=failure_type, content=content, fields_values=fields_values)
 
     def assertSMSOutgoing(self, partner, number, content=None, fields_values=None):
         """ Check outgoing SMS. Search is done for a pair partner / number where
@@ -229,9 +229,9 @@ class SMSCase(MockSMS):
                 elif state == 'ready':
                     self.assertSMS(partner, number, 'outgoing', content=content)
                 elif state == 'exception':
-                    self.assertSMS(partner, number, 'error', error_code=recipient_info['failure_type'], content=content)
+                    self.assertSMS(partner, number, 'error', failure_type=recipient_info['failure_type'], content=content)
                 elif state == 'canceled':
-                    self.assertSMS(partner, number, 'canceled', error_code=recipient_info['failure_type'], content=content)
+                    self.assertSMS(partner, number, 'canceled', failure_type=recipient_info['failure_type'], content=content)
                 else:
                     raise NotImplementedError('Not implemented')
 

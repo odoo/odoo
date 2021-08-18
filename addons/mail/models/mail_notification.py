@@ -17,7 +17,7 @@ class MailNotification(models.Model):
 
     # origin
     mail_message_id = fields.Many2one('mail.message', 'Message', index=True, ondelete='cascade', required=True)
-    mail_id = fields.Many2one('mail.mail', 'Mail', index=True, help='Optional mail_mail ID. Used mainly to optimize searches.')
+    mail_mail_id = fields.Many2one('mail.mail', 'Mail', index=True, help='Optional mail_mail ID. Used mainly to optimize searches.')
     # recipient
     res_partner_id = fields.Many2one('res.partner', 'Recipient', index=True, ondelete='cascade')
     # status
@@ -34,10 +34,12 @@ class MailNotification(models.Model):
     is_read = fields.Boolean('Is Read', index=True)
     read_date = fields.Datetime('Read Date', copy=False)
     failure_type = fields.Selection(selection=[
-        ("SMTP", "Connection failed (outgoing mail server problem)"),
-        ("RECIPIENT", "Invalid email address"),
-        ("BOUNCE", "Email address rejected by destination"),
-        ("UNKNOWN", "Unknown error"),
+        # generic
+        ("unknown", "Unknown error"),
+        # mail
+        ("mail_email_invalid", "Invalid email address"),
+        ("mail_email_missing", "Missing email addresss"),
+        ("mail_smtp", "Connection failed (outgoing mail server problem)"),
         ], string='Failure type')
     failure_reason = fields.Text('Failure reason', copy=False)
 
@@ -73,7 +75,7 @@ class MailNotification(models.Model):
 
     def format_failure_reason(self):
         self.ensure_one()
-        if self.failure_type != 'UNKNOWN':
+        if self.failure_type != 'unknown':
             return dict(type(self).failure_type.selection).get(self.failure_type, _('No Error'))
         else:
             return _("Unknown error") + ": %s" % (self.failure_reason or '')

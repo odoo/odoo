@@ -81,7 +81,7 @@ class MailMail(models.Model):
         for mail in self:
             if mail.mailing_id:
                 if mail_sent is True and mail.mailing_trace_ids:
-                    mail.mailing_trace_ids.write({'sent': fields.Datetime.now(), 'exception': False})
+                    mail.mailing_trace_ids.set_sent()
                 elif mail_sent is False and mail.mailing_trace_ids:
-                    mail.mailing_trace_ids.write({'exception': fields.Datetime.now(), 'failure_type': failure_type})
+                    mail.mailing_trace_ids.set_failed(failure_type=failure_type)
         return super(MailMail, self)._postprocess_sent_message(success_pids, failure_reason=failure_reason, failure_type=failure_type)
