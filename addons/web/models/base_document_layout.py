@@ -171,7 +171,7 @@ class BaseDocumentLayout(models.TransientModel):
                 wizard.secondary_color = wizard.logo_secondary_color
 
     @api.model
-    def extract_image_primary_secondary_colors(self, logo, white_threshold=225):
+    def extract_image_primary_secondary_colors(self, logo, white_threshold=225, mitigate=175):
         """
         Identifies dominant colors
 
@@ -181,6 +181,7 @@ class BaseDocumentLayout(models.TransientModel):
 
         :param logo: logo to process
         :param white_threshold: arbitrary value defining the maximum value a color can reach
+        :param mitigate: arbitrary value defining the maximum value a band can reach
 
         :return colors: hex values of primary and secondary colors
         """
@@ -211,9 +212,8 @@ class BaseDocumentLayout(models.TransientModel):
 
         if not colors:  # May happen when the whole image is white
             return False, False
-        primary, remaining = tools.average_dominant_color(colors)
-        secondary = tools.average_dominant_color(
-            remaining)[0] if len(remaining) > 0 else primary
+        primary, remaining = tools.average_dominant_color(colors, mitigate=mitigate)
+        secondary = tools.average_dominant_color(remaining, mitigate=mitigate)[0] if remaining else primary
 
         # Lightness and saturation are calculated here.
         # - If both colors have a similar lightness, the most colorful becomes primary

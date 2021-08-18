@@ -216,7 +216,8 @@ class PaletteSelectionScreen extends Component {
         const [color1, color2] = await rpc.query({
             model: 'base.document.layout',
             method: 'extract_image_primary_secondary_colors',
-            args: [img]
+            args: [img],
+            kwargs: {mitigate: 255},
         });
         this.dispatch('setRecommendedPalette', color1, color2);
     }
