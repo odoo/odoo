@@ -18,7 +18,7 @@ const commandProviderRegistry = registry.category("command_provider");
 commandProviderRegistry.add("partner", {
     nameSpace: "@",
     async provide(newEnv, options) {
-        const messaging = await Component.env.services.messaging.modelManager.getMessaging();
+        const messaging = await Component.env.services.messaging.get();
         const suggestions = [];
         await messaging.models['mail.partner'].imSearch({
             callback(partners) {
@@ -45,7 +45,7 @@ commandProviderRegistry.add("partner", {
 commandProviderRegistry.add("channel", {
     nameSpace: "#",
     async provide(newEnv, options) {
-        const messaging = await Component.env.services.messaging.modelManager.getMessaging();
+        const messaging = await Component.env.services.messaging.get();
         const channels = await messaging.models['mail.thread'].searchChannelsToOpen({
             limit: 10,
             searchTerm: options.searchValue,

@@ -6,7 +6,7 @@ export const newMessageService = {
     dependencies: ["command"],
     start(newEnv, { command }) {
         command.add("Message a user", async () => {
-            const messaging = await owl.Component.env.services.messaging.modelManager.getMessaging();
+            const messaging = await owl.Component.env.services.messaging.get();
             if (messaging.discuss.isOpen) {
                 messaging.discuss.update({
                     isAddingChannel: false,
