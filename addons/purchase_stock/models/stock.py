@@ -182,6 +182,7 @@ class ReturnPicking(models.TransientModel):
 class Orderpoint(models.Model):
     _inherit = "stock.warehouse.orderpoint"
 
+<<<<<<< HEAD
     show_supplier = fields.Boolean('Show supplier column', compute='_compute_show_suppplier')
     supplier_id = fields.Many2one(
         'product.supplierinfo', string='Vendor', check_company=True,
@@ -199,6 +200,22 @@ class Orderpoint(models.Model):
             buy_route.append(res['route_id'][0])
         for orderpoint in self:
             orderpoint.show_supplier = orderpoint.route_id.id in buy_route
+=======
+    def _quantity_in_progress(self):
+        res = super(Orderpoint, self)._quantity_in_progress()
+        purchase_lines_in_progress = self.env['purchase.order.line'].search([
+            ('state','in',('draft','sent','to approve')),
+            '|',
+                ('orderpoint_id','in',self.ids),
+                ('move_dest_ids.product_id', 'in', self.mapped('product_id.id'))
+        ])
+        for poline in purchase_lines_in_progress:
+            orderpoints = self.filtered(lambda x: x.product_id == poline.product_id)
+            for orderpoint in orderpoints:
+                if poline.product_uom.category_id == orderpoint.product_uom.category_id:
+                    res[orderpoint.id] += poline.product_uom._compute_quantity(poline.product_qty, orderpoint.product_uom, round=False)
+        return res
+>>>>>>> f921d9c32f6... temp
 
     def action_view_purchase(self):
         """ This function returns an action that display existing
