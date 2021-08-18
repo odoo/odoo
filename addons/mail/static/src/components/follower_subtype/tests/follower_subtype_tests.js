@@ -45,11 +45,11 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
 
     await this.start();
 
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = this.env.models['mail.follower'].create({
+    const follower = this.messaging.models['mail.follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -59,7 +59,7 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
         isActive: true,
         isEditable: true,
     });
-    const followerSubtype = this.env.models['mail.follower_subtype'].create({
+    const followerSubtype = this.messaging.models['mail.follower_subtype'].create({
         id: 1,
         isDefault: true,
         isInternal: false,
@@ -105,11 +105,11 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
 
     await this.start();
 
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = this.env.models['mail.follower'].create({
+    const follower = this.messaging.models['mail.follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -119,7 +119,7 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
         isActive: true,
         isEditable: true,
     });
-    const followerSubtype = this.env.models['mail.follower_subtype'].create({
+    const followerSubtype = this.messaging.models['mail.follower_subtype'].create({
         id: 1,
         isDefault: true,
         isInternal: false,
@@ -162,11 +162,11 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
 
     await this.start();
 
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = this.env.models['mail.follower'].create({
+    const follower = this.messaging.models['mail.follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -176,7 +176,7 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
         isActive: true,
         isEditable: true,
     });
-    const followerSubtype = this.env.models['mail.follower_subtype'].create({
+    const followerSubtype = this.messaging.models['mail.follower_subtype'].create({
         id: 1,
         isDefault: true,
         isInternal: false,

@@ -39,11 +39,11 @@ QUnit.test('command suggestion displayed', async function (assert) {
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    const command = this.env.models['mail.channel_command'].create({
+    const command = this.messaging.models['mail.channel_command'].create({
         methodName: '',
         name: 'whois',
         help: "Displays who it is",
@@ -67,11 +67,11 @@ QUnit.test('command suggestion correct data', async function (assert) {
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    const command = this.env.models['mail.channel_command'].create({
+    const command = this.messaging.models['mail.channel_command'].create({
         methodName: '',
         name: 'whois',
         help: "Displays who it is",
@@ -115,11 +115,11 @@ QUnit.test('command suggestion active', async function (assert) {
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    const command = this.env.models['mail.channel_command'].create({
+    const command = this.messaging.models['mail.channel_command'].create({
         methodName: '',
         name: 'whois',
         help: "Displays who it is",

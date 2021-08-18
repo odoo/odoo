@@ -44,7 +44,7 @@ QUnit.test('base rendering', async function (assert) {
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -96,7 +96,7 @@ QUnit.test('base disabled rendering', async function (assert) {
     assert.expect(8);
 
     await this.start();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.messaging.models['mail.chatter'].create({
         threadModel: 'res.partner',
     });
     await this.createChatterTopbarComponent(chatter);
@@ -152,7 +152,7 @@ QUnit.test('attachment loading is delayed', async function (assert) {
             return this._super(...arguments);
         }
     });
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -194,7 +194,7 @@ QUnit.test('attachment counter while loading attachments', async function (asser
             return this._super(...arguments);
         }
     });
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -236,7 +236,7 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
             return _super();
         },
     });
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -286,7 +286,7 @@ QUnit.test('attachment counter without attachments', async function (assert) {
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -333,7 +333,7 @@ QUnit.test('attachment counter with attachments', async function (assert) {
         }
     );
     await this.start();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -366,7 +366,7 @@ QUnit.test('composer state conserved when clicking on another topbar button', as
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -446,7 +446,7 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
             res_model: 'res.partner',
         },
     );
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.messaging.models['mail.chatter'].create({
         followerIds: [1, 2],
         threadId: 100,
         threadModel: 'res.partner',
@@ -501,7 +501,7 @@ QUnit.test('log note/send message switching', async function (assert) {
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -561,7 +561,7 @@ QUnit.test('log note toggling', async function (assert) {
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -601,7 +601,7 @@ QUnit.test('send message toggling', async function (assert) {
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });

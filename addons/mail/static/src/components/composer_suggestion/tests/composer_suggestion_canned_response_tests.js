@@ -39,11 +39,11 @@ QUnit.test('canned response suggestion displayed', async function (assert) {
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    const cannedResponse = this.env.models['mail.canned_response'].create({
+    const cannedResponse = this.messaging.models['mail.canned_response'].create({
         id: 7,
         source: 'hello',
         substitution: "Hello, how are you?",
@@ -67,11 +67,11 @@ QUnit.test('canned response suggestion correct data', async function (assert) {
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    const cannedResponse = this.env.models['mail.canned_response'].create({
+    const cannedResponse = this.messaging.models['mail.canned_response'].create({
         id: 7,
         source: 'hello',
         substitution: "Hello, how are you?",
@@ -115,11 +115,11 @@ QUnit.test('canned response suggestion active', async function (assert) {
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    const cannedResponse = this.env.models['mail.canned_response'].create({
+    const cannedResponse = this.messaging.models['mail.canned_response'].create({
         id: 7,
         source: 'hello',
         substitution: "Hello, how are you?",

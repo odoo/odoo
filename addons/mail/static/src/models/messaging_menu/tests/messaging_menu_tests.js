@@ -23,7 +23,7 @@ QUnit.test('messaging menu counter should ignore unread messages in channels tha
     assert.expect(1);
 
     await this.start();
-    this.env.models['mail.thread'].create({
+    this.messaging.models['mail.thread'].create({
         id: 31,
         isServerPinned: false,
         model: 'mail.channel',
