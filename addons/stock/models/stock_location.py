@@ -105,7 +105,7 @@ class Location(models.Model):
             for line in outgoing_move_lines:
                 location.forecast_weight -= line.product_id.weight * line.product_qty
 
-    @api.depends('name', 'location_id.complete_name')
+    @api.depends('name', 'location_id.complete_name', 'usage')
     def _compute_complete_name(self):
         for location in self:
             if location.location_id and location.usage != 'view':
