@@ -44,7 +44,7 @@ export class Dialog extends Component {
      * @returns {mail.dialog}
      */
     get dialog() {
-        return this.env.models['mail.dialog'].get(this.props.dialogLocalId);
+        return this.messaging && this.messaging.models['mail.dialog'].get(this.props.dialogLocalId);
     }
 
     //--------------------------------------------------------------------------

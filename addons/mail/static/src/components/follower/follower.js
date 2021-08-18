@@ -14,7 +14,7 @@ export class Follower extends Component {
      * @returns {mail.follower}
      */
     get follower() {
-        return this.env.models['mail.follower'].get(this.props.followerLocalId);
+        return this.messaging && this.messaging.models['mail.follower'].get(this.props.followerLocalId);
     }
 
     //--------------------------------------------------------------------------

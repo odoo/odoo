@@ -18,7 +18,7 @@ export class ChatWindowHeader extends Component {
      * @returns {mail.chat_window}
      */
     get chatWindow() {
-        return this.env.models['mail.chat_window'].get(this.props.chatWindowLocalId);
+        return this.messaging && this.messaging.models['mail.chat_window'].get(this.props.chatWindowLocalId);
     }
 
     /**

@@ -80,7 +80,7 @@ export class AttachmentViewer extends Component {
      * @returns {mail.attachment_viewer}
      */
     get attachmentViewer() {
-        return this.env.models['mail.attachment_viewer'].get(this.props.localId);
+        return this.messaging && this.messaging.models['mail.attachment_viewer'].get(this.props.localId);
     }
 
     /**

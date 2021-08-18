@@ -38,7 +38,7 @@ export class Chatter extends Component {
      * @returns {mail.chatter}
      */
     get chatter() {
-        return this.env.models['mail.chatter'].get(this.props.chatterLocalId);
+        return this.messaging && this.messaging.models['mail.chatter'].get(this.props.chatterLocalId);
     }
 
     /**

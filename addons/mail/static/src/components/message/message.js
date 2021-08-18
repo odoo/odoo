@@ -173,7 +173,7 @@ export class Message extends Component {
      * @returns {mail.message}
      */
     get message() {
-        return this.env.models['mail.message'].get(this.props.messageLocalId);
+        return this.messaging && this.messaging.models['mail.message'].get(this.props.messageLocalId);
     }
     /**
      * @returns {string}
@@ -217,7 +217,7 @@ export class Message extends Component {
      * @returns {mail.thread_view}
      */
     get threadView() {
-        return this.env.models['mail.thread_view'].get(this.props.threadViewLocalId);
+        return this.messaging && this.messaging.models['mail.thread_view'].get(this.props.threadViewLocalId);
     }
 
     /**

@@ -54,7 +54,7 @@ export class Composer extends Component {
      * @returns {mail.composer}
      */
     get composer() {
-        return this.env.models['mail.composer'].get(this.props.composerLocalId);
+        return this.messaging && this.messaging.models['mail.composer'].get(this.props.composerLocalId);
     }
 
     /**

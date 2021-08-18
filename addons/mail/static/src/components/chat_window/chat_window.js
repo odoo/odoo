@@ -52,7 +52,7 @@ export class ChatWindow extends Component {
      * @returns {mail.chat_window}
      */
     get chatWindow() {
-        return this.env.models['mail.chat_window'].get(this.props.chatWindowLocalId);
+        return this.messaging && this.messaging.models['mail.chat_window'].get(this.props.chatWindowLocalId);
     }
 
     /**
@@ -181,7 +181,7 @@ export class ChatWindow extends Component {
      * @param {function} res
      */
     _onAutocompleteSource(req, res) {
-        this.env.models['mail.partner'].imSearch({
+        this.messaging.models['mail.partner'].imSearch({
             callback: (partners) => {
                 const suggestions = partners.map(partner => {
                     return {

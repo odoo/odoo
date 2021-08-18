@@ -45,6 +45,9 @@ export class ChatWindowHiddenMenu extends Component {
      * @private
      */
     _apply() {
+        if (!this.messaging) {
+            return;
+        }
         this._applyListHeight();
         this._applyOffset();
         this._wasMenuOpen = this.env.messaging.chatWindowManager.isHiddenMenuOpen;

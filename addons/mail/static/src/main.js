@@ -21,10 +21,5 @@ Object.defineProperty(env, 'messaging', {
         return this.services.messaging.modelManager.messaging;
     },
 });
-Object.defineProperty(env, 'models', {
-    get() {
-        return this.services.messaging.modelManager.models;
-    },
-});
 
 serviceRegistry.add('messaging', MessagingService);

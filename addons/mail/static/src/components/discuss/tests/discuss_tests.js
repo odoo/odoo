@@ -38,6 +38,18 @@ QUnit.module('discuss_tests.js', {
     },
 });
 
+QUnit.test('messaging not created', async function (assert) {
+    assert.expect(1);
+
+    const messagingBeforeCreationDeferred = makeTestPromise();
+    await this.start({
+        messagingBeforeCreationDeferred,
+        waitUntilMessagingCondition: 'none'
+    });
+    assert.containsOnce(document.body, '.o_Discuss_messagingNotInitialized', "should display messaging not initialized");
+    messagingBeforeCreationDeferred.resolve();
+});
+
 QUnit.test('messaging not initialized', async function (assert) {
     assert.expect(1);
 

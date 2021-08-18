@@ -14,7 +14,7 @@ export class PartnerImStatusIcon extends Component {
      * @returns {mail.partner}
      */
     get partner() {
-        return this.env.models['mail.partner'].get(this.props.partnerLocalId);
+        return this.messaging && this.messaging.models['mail.partner'].get(this.props.partnerLocalId);
     }
 
     //--------------------------------------------------------------------------

@@ -14,14 +14,14 @@ export class MailTemplate extends Component {
      * @returns {mail.activity}
      */
     get activity() {
-        return this.env.models['mail.activity'].get(this.props.activityLocalId);
+        return this.messaging && this.messaging.models['mail.activity'].get(this.props.activityLocalId);
     }
 
     /**
      * @returns {mail.mail_template}
      */
     get mailTemplate() {
-        return this.env.models['mail.mail_template'].get(this.props.mailTemplateLocalId);
+        return this.messaging && this.messaging.models['mail.mail_template'].get(this.props.mailTemplateLocalId);
     }
 
     //--------------------------------------------------------------------------
