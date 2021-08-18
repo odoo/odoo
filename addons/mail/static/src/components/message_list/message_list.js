@@ -110,8 +110,6 @@ export class MessageList extends Component {
         for (const hint of componentHintList) {
             switch (hint.type) {
                 case 'change-of-thread-cache':
-                case 'home-menu-hidden':
-                case 'home-menu-shown':
                     // thread just became visible, the goal is to restore its
                     // saved position if it exists or scroll to the end
                     this._adjustScrollFromModel();

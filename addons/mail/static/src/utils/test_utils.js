@@ -323,12 +323,6 @@ function beforeEach(self) {
 }
 
 function afterEach(self) {
-    if (self.env) {
-        self.env.bus.off('hide_home_menu', null);
-        self.env.bus.off('show_home_menu', null);
-        self.env.bus.off('will_hide_home_menu', null);
-        self.env.bus.off('will_show_home_menu', null);
-    }
     // The components must be destroyed before the widget, because the
     // widget might destroy the models before destroying the components,
     // and the components might still rely on messaging (or other) record(s).
@@ -615,38 +609,7 @@ async function start(param0 = {}) {
             },
         });
     }
-
     testEnv = Component.env;
-
-    /**
-     * Components cannot use web.bus, because they cannot use
-     * EventDispatcherMixin, and webclient cannot easily access env.
-     * Communication between webclient and components by core.bus
-     * (usable by webclient) and messagingBus (usable by components), which
-     * the messaging service acts as mediator since it can easily use both
-     * kinds of buses.
-     */
-    testEnv.bus.on(
-        'hide_home_menu',
-        null,
-        () => testEnv.messagingBus.trigger('hide_home_menu')
-    );
-    testEnv.bus.on(
-        'show_home_menu',
-        null,
-        () => testEnv.messagingBus.trigger('show_home_menu')
-    );
-    testEnv.bus.on(
-        'will_hide_home_menu',
-        null,
-        () => testEnv.messagingBus.trigger('will_hide_home_menu')
-    );
-    testEnv.bus.on(
-        'will_show_home_menu',
-        null,
-        () => testEnv.messagingBus.trigger('will_show_home_menu')
-    );
-
     /**
      * Returns a promise resolved after the expected event is received.
      *
@@ -697,7 +660,6 @@ async function start(param0 = {}) {
         mockServer,
         widget,
     };
-
     const start = async () => {
         messagingBeforeCreationDeferred.then(async () => {
             /**
