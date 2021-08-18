@@ -66,14 +66,14 @@
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
                     <div class="alert alert-info text-center" role="alert"
-                        attrs="{'invisible': ['&amp;','&amp;','&amp;','&amp;','&amp;',('state', '!=', 'in_queue'),('sent', '=', 0),('ignored', '=', 0),('scheduled', '=', 0),('failed', '=', 0),('warning_message', '=', False)]}">
-                        <div class="o_mails_ignored" attrs="{'invisible': [('ignored', '=', 0)]}">
+                        attrs="{'invisible': ['&amp;','&amp;','&amp;','&amp;','&amp;',('state', '!=', 'in_queue'),('sent', '=', 0),('canceled', '=', 0),('scheduled', '=', 0),('failed', '=', 0),('warning_message', '=', False)]}">
+                        <div class="o_mails_canceled" attrs="{'invisible': [('canceled', '=', 0)]}">
                             <button class="btn-link py-0"
-                                    name="action_view_traces_ignored"
+                                    name="action_view_traces_canceled"
                                     type="object">
                                 <strong>
-                                    <field name="ignored" class="oe_inline mr-2"/>
-                                    <span name="ignored_text">emails have been ignored and will not be sent.</span>
+                                    <field name="canceled" class="oe_inline mr-2"/>
+                                    <span name="canceled_text">emails have been canceled and will not be sent.</span>
                                 </strong>
                             </button>
                         </div>
@@ -339,7 +339,7 @@
                 <xpath expr="//div[hasclass('alert-info')]" position="attributes">
                     <attribute name="attrs">{'invisible': ['|',('state', '=', 'draft'),'&amp;','&amp;',('state', '!=', 'in_queue'),('scheduled', '=', 0),('failed', '=', 0)]}</attribute>
                 </xpath>
-                <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_ignored')]" position="replace"/>
+                <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_canceled')]" position="replace"/>
                 <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_sent')]" position="replace"/>
                 <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_failed')]//span[@name='failed_text']" position="replace">
                     <span name="failed_text">email(s) not sent.</span>
@@ -374,10 +374,10 @@
                         type="object" class="oe_stat_button" icon="fa-paper-plane">
                         <field name="sent" widget="statinfo" string="Sent"/>
                     </button>
-                    <button name="action_view_traces_ignored"
+                    <button name="action_view_traces_canceled"
                         attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
                         type="object" class="oe_stat_button" icon="fa-paper-plane-o">
-                        <field name="ignored" widget="statinfo" string="Ignored"/>
+                        <field name="canceled" widget="statinfo" string="Ignored"/>
                     </button>
                 </xpath>
                 <xpath expr="//notebook" position="inside">

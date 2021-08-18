@@ -273,6 +273,11 @@ class SendSMS(models.TransientModel):
             return [r.id for r in records if recipients_info[r.id]['sanitized'] in bl_numbers]
         return []
 
+    def _get_optout_record_ids(self, records, recipients_info):
+        """ Compute opt-outed contacts, not necessarily blacklisted. Void by default
+        as no opt-out mechanism exist in SMS, see SMS Marketing. """
+        return []
+
     def _get_done_record_ids(self, records, recipients_info):
         """ Get a list of already-done records. Order of record set is used to
         spot duplicates so pay attention to it if necessary. """
@@ -300,6 +305,7 @@ class SendSMS(models.TransientModel):
         all_bodies = self._prepare_body_values(records)
         all_recipients = self._prepare_recipient_values(records)
         blacklist_ids = self._get_blacklist_record_ids(records, all_recipients)
+        optout_ids = self._get_optout_record_ids(records, all_recipients)
         done_ids = self._get_done_record_ids(records, all_recipients)
 
         result = {}
@@ -308,23 +314,26 @@ class SendSMS(models.TransientModel):
             sanitized = recipients['sanitized']
             if sanitized and record.id in blacklist_ids:
                 state = 'canceled'
-                error_code = 'sms_blacklist'
+                failure_type = 'sms_blacklist'
+            elif sanitized and record.id in optout_ids:
+                state = 'canceled'
+                failure_type = 'sms_optout'
             elif sanitized and record.id in done_ids:
                 state = 'canceled'
-                error_code = 'sms_duplicate'
+                failure_type = 'sms_duplicate'
             elif not sanitized:
-                state = 'error'
-                error_code = 'sms_number_format' if recipients['number'] else 'sms_number_missing'
+                state = 'canceled'
+                failure_type = 'sms_number_format' if recipients['number'] else 'sms_number_missing'
             else:
                 state = 'outgoing'
-                error_code = ''
+                failure_type = ''
 
             result[record.id] = {
                 'body': all_bodies[record.id],
                 'partner_id': recipients['partner'].id,
                 'number': sanitized if sanitized else recipients['number'],
                 'state': state,
-                'error_code': error_code,
+                'failure_type': failure_type,
             }
         return result
 

@@ -143,7 +143,7 @@ class TestMailMailRace(common.TransactionCase):
         # we need to simulate a mail sent by the cron task, first create mail, message and notification by hand
         mail = self.env['mail.mail'].sudo().create({
             'body_html': '<p>Test</p>',
-            'notification': True,
+            'is_notification': True,
             'state': 'outgoing',
             'recipient_ids': [(4, self.partner.id)]
         })
@@ -153,7 +153,7 @@ class TestMailMailRace(common.TransactionCase):
             'subtype_id': self.ref('mail.mt_comment'),
             'notification_ids': [(0, 0, {
                 'res_partner_id': self.partner.id,
-                'mail_id': mail.id,
+                'mail_mail_id': mail.id,
                 'notification_type': 'email',
                 'is_read': True,
                 'notification_status': 'ready',

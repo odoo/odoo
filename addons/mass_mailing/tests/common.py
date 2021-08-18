@@ -6,9 +6,13 @@ import random
 import re
 import werkzeug
 
+from unittest.mock import patch
+
+from odoo import tools
 from odoo.addons.link_tracker.tests.common import MockLinkTracker
 from odoo.addons.mail.tests.common import MailCase, MailCommon, mail_new_test_user
-from odoo import tools
+from odoo.sql_db import Cursor
+
 
 class MassMailCase(MailCase, MockLinkTracker):
 
@@ -25,7 +29,7 @@ class MassMailCase(MailCase, MockLinkTracker):
             kwargs['delivered'] = len(mailing.mailing_trace_ids)
         for fname in ['scheduled', 'expected', 'sent', 'delivered',
                       'opened', 'replied', 'clicked',
-                      'ignored', 'failed', 'bounced']:
+                      'canceled', 'failed', 'bounced']:
             self.assertEqual(
                 mailing[fname], kwargs.get(fname, 0),
                 'Mailing %s statistics failed: got %s instead of %s' % (fname, mailing[fname], kwargs.get(fname, 0))
@@ -44,7 +48,7 @@ class MassMailCase(MailCase, MockLinkTracker):
             # TRACE
             'partner': res.partner record (may be empty),
             'email': email used when sending email (may be empty, computed based on partner),
-            'state': outgoing / sent / ignored / bounced / exception / opened (sent by default),
+            'trace_status': outgoing / sent / open / reply / bounce / error / cancel (sent by default),
             'record: linked record,
             # MAIL.MAIL
             'content': optional content that should be present in mail.mail body_html;
@@ -67,12 +71,11 @@ class MassMailCase(MailCase, MockLinkTracker):
         # map trace state to email state
         state_mapping = {
             'sent': 'sent',
-            'opened': 'sent',  # opened implies something has been sent
-            'replied': 'sent',  # replied implies something has been sent
-            'ignored': 'cancel',
-            'exception': 'exception',
-            'canceled': 'cancel',
-            'bounced': 'cancel',
+            'open': 'sent',  # opened implies something has been sent
+            'reply': 'sent',  # replied implies something has been sent
+            'error': 'exception',
+            'cancel': 'cancel',
+            'bounce': 'cancel',
         }
 
         traces = self.env['mailing.trace'].search([
@@ -90,40 +93,43 @@ class MassMailCase(MailCase, MockLinkTracker):
         for recipient_info, link_info, record in zip(recipients_info, mail_links_info, records):
             partner = recipient_info.get('partner', self.env['res.partner'])
             email = recipient_info.get('email')
-            state = recipient_info.get('state', 'sent')
+            status = recipient_info.get('trace_status', 'sent')
             record = record or recipient_info.get('record')
             content = recipient_info.get('content')
             if email is None and partner:
                 email = partner.email_normalized
 
             recipient_trace = traces.filtered(
-                lambda t: t.email == email and t.state == state and (t.res_id == record.id if record else True)
+                lambda t: (t.email == email or (not email and not t.email)) and \
+                          t.trace_status == status and \
+                          (t.res_id == record.id if record else True)
             )
             self.assertTrue(
                 len(recipient_trace) == 1,
-                'MailTrace: email %s (recipient %s, state: %s, record: %s): found %s records (1 expected)' % (email, partner, state, record, len(recipient_trace))
+                'MailTrace: email %s (recipient %s, status: %s, record: %s): found %s records (1 expected)' % (email, partner, status, record, len(recipient_trace))
             )
             self.assertTrue(bool(recipient_trace.mail_mail_id_int))
+            if 'failure_type' in recipient_info or status in ('error', 'cancel', 'bounce'):
+                self.assertEqual(recipient_trace.failure_type, recipient_info['failure_type'])
 
             if check_mail:
                 if author is None:
                     author = self.env.user.partner_id
 
+                # mail.mail specific values to check
                 fields_values = {'mailing_id': mailing}
-                if 'failure_type' in recipient_info:
-                    fields_values['failure_type'] = recipient_info['failure_type']
 
                 # specific for partner: email_formatted is used
                 if partner:
-                    if state == 'sent' and sent_unlink:
+                    if status == 'sent' and sent_unlink:
                         self.assertSentEmail(author, [partner])
                     else:
-                        self.assertMailMail(partner, state_mapping[state], author=author, content=content, fields_values=fields_values)
+                        self.assertMailMail(partner, state_mapping[status], author=author, content=content, fields_values=fields_values)
                 # specific if email is False -> could have troubles finding it if several falsy traces
-                elif not email and state in ('ignored', 'canceled', 'bounced'):
-                    self.assertMailMailWId(recipient_trace.mail_mail_id_int, state_mapping[state], content=content, fields_values=fields_values)
+                elif not email and status in ('cancel', 'bounce'):
+                    self.assertMailMailWId(recipient_trace.mail_mail_id_int, state_mapping[status], content=content, fields_values=fields_values)
                 else:
-                    self.assertMailMailWEmails([email], state_mapping[state], author=author, content=content, fields_values=fields_values)
+                    self.assertMailMailWEmails([email], state_mapping[status], author=author, content=content, fields_values=fields_values)
 
             if link_info:
                 trace_mail = self._find_mail_mail_wrecord(record)
@@ -199,15 +205,18 @@ class MassMailCase(MailCase, MockLinkTracker):
         if dt is None:
             dt = datetime.datetime.now() - datetime.timedelta(days=1)
         randomized = random.random()
-        trace = cls.env['mailing.trace'].create({
-            'mass_mailing_id': mailing.id,
-            'model': record._name,
-            'res_id': record.id,
-            'bounced': dt,
-            # TDE FIXME: improve this with a mail-enabled heuristics
-            'email': trace_email,
-            'message_id': '<%5f@gilbert.boitempomils>' % randomized,
-        })
+        # Cursor.now() uses transaction's timestamp and not datetime lib -> freeze_time
+        # is not sufficient
+        with patch.object(Cursor, 'now', lambda *args, **kwargs: dt):
+            trace = cls.env['mailing.trace'].sudo().create({
+                'mass_mailing_id': mailing.id,
+                'model': record._name,
+                'res_id': record.id,
+                'trace_status': 'bounce',
+                # TDE FIXME: improve this with a mail-enabled heuristics
+                'email': trace_email,
+                'message_id': '<%5f@gilbert.boitempomils>' % randomized,
+            })
         return trace
 
 

@@ -47,12 +47,12 @@ class UtmCampaign(models.Model):
             SELECT
                 c.id as campaign_id,
                 COUNT(s.id) AS expected,
-                COUNT(CASE WHEN s.sent is not null THEN 1 ELSE null END) AS sent,
-                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.ignored is not null THEN 1 ELSE null END) AS ignored,
-                COUNT(CASE WHEN s.id is not null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
-                COUNT(CASE WHEN s.opened is not null THEN 1 ELSE null END) AS opened,
-                COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied,
-                COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced
+                COUNT(s.sent_datetime) AS sent,
+                COUNT(s.trace_status) FILTER (WHERE s.trace_status in ('sent', 'open', 'reply')) AS delivered,
+                COUNT(s.trace_status) FILTER (WHERE s.trace_status in ('open', 'reply')) AS open,
+                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'reply') AS reply,
+                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'bounce') AS bounce,
+                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'cancel') AS cancel
             FROM
                 mailing_trace s
             RIGHT JOIN
@@ -75,13 +75,13 @@ class UtmCampaign(models.Model):
             if not stats:
                 vals = default_vals
             else:
-                total = (stats['expected'] - stats['ignored']) or 1
-                delivered = stats['sent'] - stats['bounced']
+                total = (stats['expected'] - stats['cancel']) or 1
+                delivered = stats['sent'] - stats['bounce']
                 vals = {
                     'received_ratio': 100.0 * delivered / total,
-                    'opened_ratio': 100.0 * stats['opened'] / total,
-                    'replied_ratio': 100.0 * stats['replied'] / total,
-                    'bounced_ratio': 100.0 * stats['bounced'] / total
+                    'opened_ratio': 100.0 * stats['open'] / total,
+                    'replied_ratio': 100.0 * stats['reply'] / total,
+                    'bounced_ratio': 100.0 * stats['bounce'] / total
                 }
 
             campaign.update(vals)

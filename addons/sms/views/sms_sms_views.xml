@@ -19,7 +19,7 @@
                         </group>
                         <group>
                             <field name="number" required="1"/>
-                            <field name="error_code" readonly="1" attrs="{'invisible': [('error_code', '=', False)]}"/>
+                            <field name="failure_type" readonly="1" attrs="{'invisible': [('failure_type', '=', False)]}"/>
                         </group>
                     </group>
                     <group>
@@ -38,7 +38,7 @@
                 <field name="number"/>
                 <field name="partner_id"/>
                 <field name="state"/>
-                <field name="error_code"/>
+                <field name="failure_type"/>
             </tree>
         </field>
     </record>
