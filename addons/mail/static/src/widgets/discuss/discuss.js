@@ -31,20 +31,15 @@ const DiscussWidget = AbstractAction.extend({
         this.component = undefined;
 
         this._lastPushStateActiveThread = null;
-    },
-    /**
-     * @override
-     */
-    async willStart() {
-        await this._super(...arguments);
         this.env = Component.env;
-        await this.env.messagingCreatedPromise;
-        const initActiveId = this.options.active_id ||
-            (this.action.context && this.action.context.active_id) ||
-            (this.action.params && this.action.params.default_active_id) ||
-            'mail.box_inbox';
-        this.discuss = this.env.messaging.discuss;
-        this.discuss.update({ initActiveId });
+        this.env.messagingCreatedPromise.then(() => {
+            const initActiveId = this.options.active_id ||
+                (this.action.context && this.action.context.active_id) ||
+                (this.action.params && this.action.params.default_active_id) ||
+                'mail.box_inbox';
+            this.discuss = this.env.messaging.discuss;
+            this.discuss.update({ initActiveId });
+        });
     },
     /**
      * @override {web.AbstractAction}
