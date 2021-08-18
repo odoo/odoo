@@ -5,6 +5,7 @@ import { ModelField } from '@mail/model/model_field';
 import { Listener } from '@mail/model/model_listener';
 import { patchClassMethods, patchInstanceMethods } from '@mail/utils/utils';
 import { link, unlinkAll } from '@mail/model/model_field_command';
+import { makeDeferred } from '@mail/utils/deferred/deferred';
 
 /**
  * Object that manage models and records, notably their update cycle: whenever
@@ -23,6 +24,16 @@ export class ModelManager {
          * The messaging env.
          */
         this.env = env;
+        /**
+         * Promise which becomes resolved when messaging is created. Useful for
+         * waiting before accessing `this.messaging`.
+         */
+        this.messagingCreatedPromise = makeDeferred();
+        /**
+         * Promise which becomes resolved when messaging is initialized. Useful
+         * for waiting before accessing `this.messaging`.
+         */
+        this.messagingInitializedPromise = makeDeferred();
 
         //----------------------------------------------------------------------
         // Various variables that are necessary to handle an update cycle. The
@@ -99,12 +110,36 @@ export class ModelManager {
     }
 
     /**
-     * Called when all JS modules that register or patch models have been
-     * done. This launches generation of models.
+     * Starts the generation of models as soon as all files have been loaded and
+     * starts messaging itself afterwards.
      *
      * @param {Object} values field name/value pairs to give at messaging create
      */
-    start(values) {
+    async start(values) {
+        if (document.readyState === 'loading') {
+            await new Promise(resolve => {
+                /**
+                 * Called when all JS resources are loaded. This is useful in order
+                 * to do some processing after other JS files have been parsed, for
+                 * example new models or patched models that are coming from
+                 * other modules, because some of those patches might need to be
+                 * applied before messaging initialization.
+                 */
+                window.addEventListener('load', resolve);
+            });
+        }
+        /**
+         * All JS resources are loaded, but not necessarily processed.
+         * We assume no messaging-related modules return any Promise,
+         * therefore they should be processed *at most* asynchronously at
+         * "Promise time".
+         */
+        await new Promise(resolve => setTimeout(resolve));
+        /**
+         * Some models require session data, like locale text direction (depends on
+         * fully loaded translation).
+         */
+        await this.env.session.is_bound;
         /**
          * Generate the models.
          */
@@ -113,6 +148,9 @@ export class ModelManager {
          * Create the messaging singleton record.
          */
         this.models['mail.messaging'].create(values);
+        this.messagingCreatedPromise.resolve();
+        await this.messaging.start();
+        this.messagingInitializedPromise.resolve();
     }
 
     //--------------------------------------------------------------------------
@@ -247,6 +285,19 @@ export class ModelManager {
     }
 
     /**
+     * Returns the messaging record once it is initialized. This method should
+     * be considered the main entry point to the messaging system for outside
+     * code.
+     *
+     * @returns {mail.messaging}
+     **/
+    async getMessaging() {
+        await this.messagingCreatedPromise;
+        await this.messagingInitializedPromise;
+        return this.messaging;
+    }
+
+    /**
      * This method creates a record or updates one of provided Model, based on
      * provided data. This method assumes that records are uniquely identifiable
      * per "unique find" criteria from data on Model.
@@ -362,6 +413,10 @@ export class ModelManager {
         for (const Model of Object.values(Models)) {
             for (const fieldName in Model.fields) {
                 const field = Model.fields[fieldName];
+                // 0. Forbidden name.
+                if (fieldName in Model.prototype) {
+                    throw new Error(`Field "${Model.modelName}/${fieldName}" has a forbidden name.`);
+                }
                 // 1. Field type is required.
                 if (!(['attribute', 'relation'].includes(field.fieldType))) {
                     throw new Error(`Field "${Model.modelName}/${fieldName}" has unsupported type ${field.fieldType}.`);
@@ -628,8 +683,6 @@ export class ModelManager {
                 this._messaging = record;
             }
             Object.assign(record, {
-                // The messaging env.
-                env: this.env,
                 // The unique record identifier.
                 localId,
                 // Listeners that are bound to this record, to be notified of
@@ -835,15 +888,9 @@ export class ModelManager {
             if (!generatable) {
                 throw new Error(`Cannot generate following Model: ${toGenerateNames.join(', ')}`);
             }
-            // Make environment accessible from Model.
+            // Make model manager accessible from Model.
             const Model = generatable.factory(Models);
-            Model.env = this.env;
-            const modelManager = this;
-            Object.defineProperty(Model, 'messaging', {
-                get() {
-                    return modelManager.messaging;
-                },
-            });
+            Model.modelManager = this;
             /**
             * Contains all records. key is local id, while value is the record.
             */
@@ -1061,7 +1108,6 @@ export class ModelManager {
          * access to field getter and to prevent field from being written
          * without calling update (which is necessary to process update cycle).
          */
-        const modelManager = this;
         for (const Model of Object.values(Models)) {
             // Object with fieldName/field as key/value pair, for quick access.
             Model.__fieldMap = Model.__combinedFields;
@@ -1074,10 +1120,10 @@ export class ModelManager {
             for (const field of Model.__fieldList) {
                 Object.defineProperty(Model.prototype, field.fieldName, {
                     get() { // this is bound to record
-                        for (const listener of modelManager._listeners) {
-                            modelManager._localIdsObservedByListener.get(listener).add(this.localId);
-                            modelManager._listenersObservingLocalId.get(this.localId).add(listener);
-                            modelManager._listenersObservingFieldOfLocalId.get(this.localId).get(field).add(listener);
+                        for (const listener of this.modelManager._listeners) {
+                            this.modelManager._localIdsObservedByListener.get(listener).add(this.localId);
+                            this.modelManager._listenersObservingLocalId.get(this.localId).add(listener);
+                            this.modelManager._listenersObservingFieldOfLocalId.get(this.localId).get(field).add(listener);
                         }
                         return field.get(this);
                     },
