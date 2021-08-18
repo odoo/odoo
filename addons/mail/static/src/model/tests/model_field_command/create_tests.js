@@ -30,9 +30,9 @@ QUnit.test('create: should create and link a record for an empty x2one field', a
     assert.expect(2);
     await this.start();
 
-    const contact = this.env.models['test.contact'].create({ id: 10 });
+    const contact = this.messaging.models['test.contact'].create({ id: 10 });
     contact.update({ address: create({ id: 20 })});
-    const address = this.env.models['test.address'].findFromIdentifyingData({ id: 20 });
+    const address = this.messaging.models['test.address'].findFromIdentifyingData({ id: 20 });
     assert.strictEqual(
         contact.address,
         address,
@@ -49,13 +49,13 @@ QUnit.test('create: should create and replace a record for a non-empty x2one fie
     assert.expect(3);
     await this.start();
 
-    const contact = this.env.models['test.contact'].create({
+    const contact = this.messaging.models['test.contact'].create({
         id: 10,
         address: create({ id: 10 }),
     });
-    const address10 = this.env.models['test.address'].findFromIdentifyingData({ id: 10 });
+    const address10 = this.messaging.models['test.address'].findFromIdentifyingData({ id: 10 });
     contact.update({ address: create({ id: 20 })});
-    const address20 = this.env.models['test.address'].findFromIdentifyingData({ id: 20 });
+    const address20 = this.messaging.models['test.address'].findFromIdentifyingData({ id: 20 });
     assert.strictEqual(
         contact.address,
         address20,
@@ -77,9 +77,9 @@ QUnit.test('create: should create and link a record for an empty x2many field', 
     assert.expect(3);
     await this.start();
 
-    const contact = this.env.models['test.contact'].create({ id: 10 });
+    const contact = this.messaging.models['test.contact'].create({ id: 10 });
     contact.update({ tasks: create({ id: 10 }) });
-    const task = this.env.models['test.task'].findFromIdentifyingData({ id: 10 });
+    const task = this.messaging.models['test.task'].findFromIdentifyingData({ id: 10 });
     assert.strictEqual(
         contact.tasks.length,
         1,
@@ -101,15 +101,15 @@ QUnit.test('create: should create and add a record for a non-empty x2many field'
     assert.expect(4);
     await this.start();
 
-    const contact = this.env.models['test.contact'].create({
+    const contact = this.messaging.models['test.contact'].create({
         id: 10,
         tasks: create({
             id: 10,
         }),
     });
-    const task10 = this.env.models['test.task'].findFromIdentifyingData({ id: 10 });
+    const task10 = this.messaging.models['test.task'].findFromIdentifyingData({ id: 10 });
     contact.update({ tasks: create({ id: 20 }) });
-    const task20 = this.env.models['test.task'].findFromIdentifyingData({ id: 20 });
+    const task20 = this.messaging.models['test.task'].findFromIdentifyingData({ id: 20 });
     assert.strictEqual(
         contact.tasks.length,
         2,

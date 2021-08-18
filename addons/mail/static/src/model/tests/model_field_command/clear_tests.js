@@ -29,7 +29,7 @@ QUnit.test('clear: should set attribute field undefined if there is no default v
     assert.expect(1);
 
     await this.start();
-    const task = this.env.models['test.task'].create({
+    const task = this.messaging.models['test.task'].create({
         id: 1,
         title: 'test title 1',
     });
@@ -45,7 +45,7 @@ QUnit.test('clear: should set attribute field the default value', async function
     assert.expect(1);
 
     await this.start();
-    const task = this.env.models['test.task'].create({
+    const task = this.messaging.models['test.task'].create({
         id: 1,
         difficulty: 5,
     });
@@ -61,11 +61,11 @@ QUnit.test('clear: should set x2one field undefined if no default value is given
     assert.expect(2);
     await this.start();
 
-    const contact = this.env.models['test.contact'].create({
+    const contact = this.messaging.models['test.contact'].create({
         id: 10,
         address: create({ id: 20 }),
     });
-    const address = this.env.models['test.address'].findFromIdentifyingData({ id: 20 });
+    const address = this.messaging.models['test.address'].findFromIdentifyingData({ id: 20 });
     contact.update({ address: clear() });
     assert.strictEqual(
         contact.address,
@@ -83,7 +83,7 @@ QUnit.test('clear: should set x2one field the default value', async function (as
     assert.expect(1);
     await this.start();
 
-    const contact = this.env.models['test.contact'].create({
+    const contact = this.messaging.models['test.contact'].create({
         favorite: create({ description: 'pingpong' }),
     });
     contact.update({ favorite: clear() });
@@ -98,11 +98,11 @@ QUnit.test('clear: should set x2many field empty array if no default value is gi
     assert.expect(2);
     await this.start();
 
-    const contact = this.env.models['test.contact'].create({
+    const contact = this.messaging.models['test.contact'].create({
         id: 10,
         tasks: create({ id: 20 }),
     });
-    const task = this.env.models['test.task'].findFromIdentifyingData({ id:20 });
+    const task = this.messaging.models['test.task'].findFromIdentifyingData({ id:20 });
     contact.update({ tasks: clear() });
     assert.ok(
         contact.tasks instanceof Array &&
@@ -120,7 +120,7 @@ QUnit.test('clear: should set x2many field the default value', async function (a
     assert.expect(1);
     await this.start();
 
-    const contact = this.env.models['test.contact'].create({
+    const contact = this.messaging.models['test.contact'].create({
         id: 10,
         hobbies: [
             create({ description: 'basketball' }),

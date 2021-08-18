@@ -79,7 +79,7 @@ QUnit.test('openChat: open new chat for user', async function (assert) {
     this.data['res.users'].records.push({ id: 11, partner_id: 14 });
     await this.start();
 
-    const existingChat = this.env.models['mail.thread'].find(thread =>
+    const existingChat = this.messaging.models['mail.thread'].find(thread =>
         thread.channel_type === 'chat' &&
         thread.correspondent &&
         thread.correspondent.id === 14 &&
@@ -89,7 +89,7 @@ QUnit.test('openChat: open new chat for user', async function (assert) {
     assert.notOk(existingChat, 'a chat should not exist with the target partner initially');
 
     await this.messaging.openChat({ partnerId: 14 });
-    const chat = this.env.models['mail.thread'].find(thread =>
+    const chat = this.messaging.models['mail.thread'].find(thread =>
         thread.channel_type === 'chat' &&
         thread.correspondent &&
         thread.correspondent.id === 14 &&
@@ -112,7 +112,7 @@ QUnit.test('openChat: open existing chat for user', async function (assert) {
         public: 'private',
     });
     await this.start();
-    const existingChat = this.env.models['mail.thread'].find(thread =>
+    const existingChat = this.messaging.models['mail.thread'].find(thread =>
         thread.channel_type === 'chat' &&
         thread.correspondent &&
         thread.correspondent.id === 14 &&

@@ -53,7 +53,7 @@ QUnit.test('composer text input: basic rendering when posting a message', async 
     assert.expect(5);
 
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.messaging.models['mail.thread'].create({
         composer: create({ isLog: false }),
         id: 20,
         model: 'res.partner',
@@ -89,7 +89,7 @@ QUnit.test('composer text input: basic rendering when logging note', async funct
     assert.expect(5);
 
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.messaging.models['mail.thread'].create({
         composer: create({ isLog: true }),
         id: 20,
         model: 'res.partner',
@@ -126,7 +126,7 @@ QUnit.test('composer text input: basic rendering when linked thread is a mail.ch
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -161,7 +161,7 @@ QUnit.test('composer text input placeholder should contain channel name when thr
         name: 'General',
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -183,7 +183,7 @@ QUnit.test('composer text input placeholder should contain correspondent name wh
         members: [this.data.currentPartnerId, 7],
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -202,7 +202,7 @@ QUnit.test('add an emoji', async function (assert) {
         id: 20,
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -231,7 +231,7 @@ QUnit.test('add an emoji after some text', async function (assert) {
         id: 20,
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -268,7 +268,7 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
         id: 20,
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -316,7 +316,7 @@ QUnit.test('display canned response suggestions on typing ":"', async function (
         id: 20,
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -355,7 +355,7 @@ QUnit.test('use a canned response', async function (assert) {
         id: 20,
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -407,7 +407,7 @@ QUnit.test('use a canned response some text', async function (assert) {
         id: 20,
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -467,7 +467,7 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
         id: 20,
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -531,7 +531,7 @@ QUnit.test('display channel mention suggestions on typing "#"', async function (
     });
 
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
     });
@@ -566,7 +566,7 @@ QUnit.test('mention a channel', async function (assert) {
         public: "groups",
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
     });
@@ -614,7 +614,7 @@ QUnit.test('mention a channel after some text', async function (assert) {
         public: "groups",
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
     });
@@ -670,7 +670,7 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
         public: "groups",
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
     });
@@ -729,7 +729,7 @@ QUnit.test('display command suggestions on typing "/"', async function (assert) 
 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -767,7 +767,7 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -796,7 +796,7 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -829,7 +829,7 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -868,7 +868,7 @@ QUnit.test('command suggestion should only open if command is the first characte
 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -911,7 +911,7 @@ QUnit.test('add an emoji after a command', async function (assert) {
 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -981,7 +981,7 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
         id: 20,
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1023,7 +1023,7 @@ QUnit.test('mention a partner', async function (assert) {
         id: 20,
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1083,7 +1083,7 @@ QUnit.test('mention a partner after some text', async function (assert) {
         id: 20,
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1152,7 +1152,7 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
         id: 20,
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1223,7 +1223,7 @@ QUnit.test('composer: add an attachment', async function (assert) {
         id: 20,
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1257,7 +1257,7 @@ QUnit.test('composer: drop attachments', async function (assert) {
         id: 20,
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1324,7 +1324,7 @@ QUnit.test('composer: paste attachments', async function (assert) {
         id: 20,
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1367,7 +1367,7 @@ QUnit.test('send message when enter is pressed while holding ctrl key (this shor
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1422,7 +1422,7 @@ QUnit.test('send message when enter is pressed while holding meta key (this shor
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1476,7 +1476,7 @@ QUnit.test('composer text input cleared on message post', async function (assert
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1511,7 +1511,7 @@ QUnit.test('composer with thread typing notification status', async function (as
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1543,7 +1543,7 @@ QUnit.test('current partner notify is typing to other thread members', async fun
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1575,7 +1575,7 @@ QUnit.test('current partner is typing should not translate on textual typing sta
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1614,7 +1614,7 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1652,7 +1652,7 @@ QUnit.test('current partner notify is typing again to other members every 50s of
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1700,7 +1700,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
             return res;
         }
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1789,7 +1789,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
             }
         },
     });
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.messaging.models['mail.thread'].create({
         composer: create({ isLog: false }),
         id: 20,
         model: 'res.partner',
@@ -1841,7 +1841,7 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
         id: 20,
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1894,7 +1894,7 @@ QUnit.test('remove an uploading attachment', async function (assert) {
             return res;
         }
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1951,7 +1951,7 @@ QUnit.test('remove an uploading attachment aborts upload', async function (asser
             return res;
         }
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -1990,7 +1990,7 @@ QUnit.test("Show a default status in the recipient status text when the thread d
     assert.expect(1);
 
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.messaging.models['mail.thread'].create({
         composer: create({ isLog: false }),
         id: 20,
         model: 'res.partner',
@@ -2007,7 +2007,7 @@ QUnit.test("Show a thread name in the recipient status text.", async function (a
     assert.expect(1);
 
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.messaging.models['mail.thread'].create({
         name: "test name",
         composer: create({ isLog: false }),
         id: 20,
@@ -2033,7 +2033,7 @@ QUnit.test('send message only once when button send is clicked twice quickly', a
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -2066,7 +2066,7 @@ QUnit.test('send message only once when enter is pressed twice quickly', async f
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -2111,7 +2111,7 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
             return _super();
         },
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });

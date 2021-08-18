@@ -64,7 +64,7 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
     assert.containsOnce(
         document.body,
         `.o_ThreadPreview[data-thread-local-id="${
-            this.env.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['mail.thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -83,7 +83,7 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
     assert.containsOnce(
         document.body,
         `.o_ThreadPreview[data-thread-local-id="${
-            this.env.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['mail.thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
