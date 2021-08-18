@@ -151,7 +151,7 @@ export class OdooEditor extends EventTarget {
                         return closestElement(selection.anchorNode, 'P, DIV');
                     }
                 },
-                isHintBlacklisted: () => false,
+                isHintWhitelisted: () => true,
                 _t: string => string,
             },
             options,
@@ -1839,7 +1839,7 @@ export class OdooEditor extends EventTarget {
 
         for (const [selector, text] of Object.entries(selectors)) {
             for (const el of this.editable.querySelectorAll(selector)) {
-                if (!this.options.isHintBlacklisted(el)) {
+                if (this.options.isHintWhitelisted(el)) {
                     this._makeHint(el, text);
                 }
             }
