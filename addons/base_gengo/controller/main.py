@@ -12,9 +12,9 @@ class website_gengo(Controller):
     def gengo_callback(self, **post):
         IrTranslationSudo = request.env['ir.translation'].sudo()
         if post and post.get('job') and post.get('pgk'):
-            if post.get('pgk') != request.env['base.gengo.translation'].sudo().get_gengo_key():
+            if post.get('pgk') != request.env['base.gengo.translations'].sudo().get_gengo_key():
                 return Response("Bad authentication", status=104)
-            job = json.loads(post['job'], 'utf-8')
+            job = json.loads(post['job'])
             tid = job.get('custom_data', False)
             if (job.get('status') == 'approved') and tid:
                 term = IrTranslationSudo.browse(int(tid))
@@ -33,10 +33,10 @@ class website_gengo(Controller):
                     #('order_id', "=", term.order_id),
                 ]
 
-                all_ir_tanslations = IrTranslationSudo.search(domain)
+                all_ir_translations = IrTranslationSudo.search(domain)
 
-                if all_ir_tanslations:
-                    all_ir_tanslations.write({
+                if all_ir_translations:
+                    all_ir_translations.write({
                         'state': 'translated',
                         'value': job.get('body_tgt')
                     })
