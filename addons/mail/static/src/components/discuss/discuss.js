@@ -48,7 +48,7 @@ export class Discuss extends Component {
         }
         if (
             this.discuss.thread &&
-            this.discuss.thread === this.discuss.messaging.inbox &&
+            this.discuss.thread === this.messaging.inbox &&
             this.discuss.threadView &&
             this._lastThreadCache === this.discuss.threadView.threadCache.localId &&
             this._lastThreadCounter > 0 && this.discuss.thread.counter === 0
@@ -87,7 +87,7 @@ export class Discuss extends Component {
      * @returns {mail.discuss}
      */
     get discuss() {
-        return this.env.messaging && this.env.messaging.discuss;
+        return this.messaging && this.messaging.discuss;
     }
 
     /**
@@ -222,7 +222,7 @@ export class Discuss extends Component {
             this.discuss.activeMobileNavbarTabId === 'mailbox' &&
             (!this.discuss.thread || this.discuss.thread.model !== 'mailbox')
         ) {
-            this.discuss.update({ thread: link(this.discuss.messaging.inbox) });
+            this.discuss.update({ thread: link(this.messaging.inbox) });
         }
         if (this.discuss.activeMobileNavbarTabId !== 'mailbox') {
             this.discuss.update({ thread: unlink() });

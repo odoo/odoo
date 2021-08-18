@@ -16,7 +16,7 @@ export class NotificationRequest extends Component {
     getHeaderText() {
         return _.str.sprintf(
             this.env._t("%s has a request"),
-            this.env.messaging.partnerRoot.nameOrDisplayName
+            this.messaging.partnerRoot.nameOrDisplayName
         );
     }
 
@@ -32,7 +32,7 @@ export class NotificationRequest extends Component {
      * @param {string} value
      */
     _handleResponseNotificationPermission(value) {
-        this.env.messaging.refreshIsNotificationPermissionDefault();
+        this.messaging.refreshIsNotificationPermissionDefault();
         if (value !== 'granted') {
             this.env.services['bus_service'].sendNotification({
                 message: this.env._t("Odoo will not have the permission to send native notifications on this device."),
@@ -54,8 +54,8 @@ export class NotificationRequest extends Component {
         if (def) {
             def.then(this._handleResponseNotificationPermission.bind(this));
         }
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.messagingMenu.close();
+        if (!this.messaging.device.isMobile) {
+            this.messaging.messagingMenu.close();
         }
     }
 

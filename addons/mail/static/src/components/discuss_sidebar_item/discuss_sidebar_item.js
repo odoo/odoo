@@ -33,7 +33,7 @@ export class DiscussSidebarItem extends Component {
      * @returns {mail.discuss}
      */
     get discuss() {
-        return this.env.messaging && this.env.messaging.discuss;
+        return this.messaging && this.messaging.discuss;
     }
 
     /**
@@ -119,7 +119,7 @@ export class DiscussSidebarItem extends Component {
      */
     async _onClickLeave(ev) {
         ev.stopPropagation();
-        if (this.thread.creator === this.discuss.messaging.currentUser) {
+        if (this.thread.creator === this.messaging.currentUser) {
             await this._askAdminConfirmation();
         }
         this.thread.unsubscribe();

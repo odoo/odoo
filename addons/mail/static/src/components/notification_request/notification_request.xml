@@ -8,14 +8,14 @@
                     <img class="o_NotificationRequest_image rounded-circle" src="/mail/static/src/img/odoobot.png" alt="Avatar of OdooBot"/>
                     <PartnerImStatusIcon
                         class="o_NotificationRequest_partnerImStatusIcon"
-                        t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"
-                        partnerLocalId="env.messaging.partnerRoot.localId"
+                        t-att-class="{ 'o-mobile': messaging.device.isMobile }"
+                        partnerLocalId="messaging.partnerRoot.localId"
                     />
                 </div>
             </div>
             <div class="o_NotificationRequest_content">
                 <div class="o_NotificationRequest_header">
-                    <span class="o_NotificationRequest_name text-truncate" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }">
+                    <span class="o_NotificationRequest_name text-truncate" t-att-class="{ 'o-mobile': messaging.device.isMobile }">
                         <t t-esc="getHeaderText()"/>
                     </span>
                 </div>

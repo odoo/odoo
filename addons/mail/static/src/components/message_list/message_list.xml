@@ -7,19 +7,19 @@
                 <!-- No result messages -->
                 <t t-if="threadView.nonEmptyMessages.length === 0">
                     <div class="o_MessageList_empty o_MessageList_item">
-                        <t t-if="threadView.thread === threadView.messaging.inbox">
+                        <t t-if="threadView.thread === messaging.inbox">
                             <div class="o_MessageList_emptyTitle">
                                 Congratulations, your inbox is empty
                             </div>
                             New messages appear here.
                         </t>
-                        <t t-elif="threadView.thread === threadView.messaging.starred">
+                        <t t-elif="threadView.thread === messaging.starred">
                             <div class="o_MessageList_emptyTitle">
                                 No starred messages
                             </div>
                             You can mark any message as 'starred', and it shows up in this mailbox.
                         </t>
-                        <t t-elif="threadView.thread === threadView.messaging.history">
+                        <t t-elif="threadView.thread === messaging.history">
                             <div class="o_MessageList_emptyTitle o-neutral-face-icon">
                                 No history messages
                             </div>
@@ -49,7 +49,7 @@
                 <t t-set="prev_message" t-value="0"/>
                 <t t-foreach="orderedMessages" t-as="message" t-key="message.localId">
                     <t t-if="message === threadView.thread.messageAfterNewMessageSeparator">
-                        <div class="o_MessageList_separator o_MessageList_separatorNewMessages o_MessageList_item" t-att-class="{ 'o-disable-animation': message.messaging.disableAnimation }" t-transition="fade">
+                        <div class="o_MessageList_separator o_MessageList_separatorNewMessages o_MessageList_item" t-att-class="{ 'o-disable-animation': messaging.disableAnimation }" t-transition="fade">
                             <hr class="o_MessageList_separatorLine o_MessageList_separatorLineNewMessages"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelNewMessages">New messages</span>
                         </div>
                     </t>

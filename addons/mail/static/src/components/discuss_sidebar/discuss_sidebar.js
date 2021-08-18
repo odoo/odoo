@@ -35,7 +35,7 @@ export class DiscussSidebar extends Component {
      * @returns {mail.discuss}
      */
     get discuss() {
-        return this.env.messaging && this.env.messaging.discuss;
+        return this.messaging && this.messaging.discuss;
     }
 
     /**
@@ -52,16 +52,16 @@ export class DiscussSidebar extends Component {
         return this.messaging.models['mail.thread']
             .all(thread => thread.isPinned && thread.model === 'mail.box')
             .sort((mailbox1, mailbox2) => {
-                if (mailbox1 === this.discuss.messaging.inbox) {
+                if (mailbox1 === this.messaging.inbox) {
                     return -1;
                 }
-                if (mailbox2 === this.discuss.messaging.inbox) {
+                if (mailbox2 === this.messaging.inbox) {
                     return 1;
                 }
-                if (mailbox1 === this.discuss.messaging.starred) {
+                if (mailbox1 === this.messaging.starred) {
                     return -1;
                 }
-                if (mailbox2 === this.discuss.messaging.starred) {
+                if (mailbox2 === this.messaging.starred) {
                     return 1;
                 }
                 const mailbox1Name = mailbox1.displayName;

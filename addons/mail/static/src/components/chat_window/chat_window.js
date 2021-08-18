@@ -75,7 +75,7 @@ export class ChatWindow extends Component {
      * @private
      */
     _applyVisibleOffset() {
-        const textDirection = this.chatWindow.messaging.locale.textDirection;
+        const textDirection = this.messaging.locale.textDirection;
         const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
         const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
         this.el.style[offsetFrom] = this.chatWindow.visibleOffset + 'px';
@@ -161,11 +161,11 @@ export class ChatWindow extends Component {
      * @param {integer} ui.item.id
      */
     async _onAutocompleteSelect(ev, ui) {
-        const chat = await this.chatWindow.messaging.getChat({ partnerId: ui.item.id });
+        const chat = await this.messaging.getChat({ partnerId: ui.item.id });
         if (!chat) {
             return;
         }
-        this.chatWindow.messaging.chatWindowManager.openThread(chat, {
+        this.messaging.chatWindowManager.openThread(chat, {
             makeActive: true,
             replaceNewMessage: true,
         });
@@ -206,7 +206,7 @@ export class ChatWindow extends Component {
      */
     _onClickedHeader(ev) {
         ev.stopPropagation();
-        if (this.chatWindow.messaging.device.isMobile) {
+        if (this.messaging.device.isMobile) {
             return;
         }
         if (this.chatWindow.isFolded) {

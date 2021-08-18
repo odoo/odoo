@@ -67,7 +67,7 @@
                         class="o_Composer_textInput"
                         t-att-class="{
                             'o-composer-is-compact': props.isCompact,
-                            'o_Composer_textInput-mobile': composer.messaging.device.isMobile,
+                            'o_Composer_textInput-mobile': messaging.device.isMobile,
                             'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                         }"
                         composerLocalId="composer.localId"
@@ -80,7 +80,7 @@
                         t-key="composer.localId"
                         t-ref="textInput"
                     />
-                    <div class="o_Composer_buttons" t-att-class="{ 'o-composer-is-compact': props.isCompact, 'o-mobile': composer.messaging.device.isMobile }">
+                    <div class="o_Composer_buttons" t-att-class="{ 'o-composer-is-compact': props.isCompact, 'o-mobile': messaging.device.isMobile }">
                         <div class="o_Composer_toolButtons"
                             t-att-class="{
                                 'o-composer-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
@@ -95,7 +95,7 @@
                                     <button class="o_Composer_button o_Composer_buttonEmojis o_Composer_toolButton btn btn-light"
                                         t-att-class="{
                                             'o-open': false and state.displayed,
-                                            'o-mobile': composer.messaging.device.isMobile,
+                                            'o-mobile': messaging.device.isMobile,
                                         }"
                                         t-on-keydown="_onKeydownEmojiButton"
                                     >
@@ -105,11 +105,11 @@
                                         <EmojisPopover t-ref="emojisPopover"/>
                                     </t>
                                 </Popover>
-                                <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip" t-att-class="{ 'o-mobile': composer.messaging.device.isMobile }" title="Add attachment" type="button" t-on-click="_onClickAddAttachment"/>
+                                <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip" t-att-class="{ 'o-mobile': messaging.device.isMobile }" title="Add attachment" type="button" t-on-click="_onClickAddAttachment"/>
                             </div>
                             <t t-if="props.isExpandable">
                                 <div class="o_Composer_secondaryToolButtons">
-                                    <button class="btn btn-light fa fa-expand o_Composer_button o_Composer_buttonFullComposer o_Composer_toolButton" t-att-class="{ 'o-mobile': composer.messaging.device.isMobile }" title="Full composer" type="button" t-on-click="_onClickFullComposer"/>
+                                    <button class="btn btn-light fa fa-expand o_Composer_button o_Composer_buttonFullComposer o_Composer_toolButton" t-att-class="{ 'o-mobile': messaging.device.isMobile }" title="Full composer" type="button" t-on-click="_onClickFullComposer"/>
                                 </div>
                             </t>
                         </div>
@@ -149,9 +149,9 @@
             <t t-if="props.hasSendButton">
                 <button class="o_Composer_actionButton o_Composer_button o_Composer_buttonSend btn btn-primary"
                     t-att-class="{
-                        'fa': composer.messaging.device.isMobile,
-                        'fa-paper-plane-o': composer.messaging.device.isMobile,
-                        'o-last': composer.messaging.device.isMobile or !props.hasDiscardButton,
+                        'fa': messaging.device.isMobile,
+                        'fa-paper-plane-o': messaging.device.isMobile,
+                        'o-last': messaging.device.isMobile or !props.hasDiscardButton,
                         'o-composer-is-compact': props.isCompact,
                         'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                     }"
@@ -159,10 +159,10 @@
                     type="button"
                     t-on-click="_onClickSend"
                 >
-                    <t t-if="!composer.messaging.device.isMobile"><t t-if="composer.isLog">Log</t><t t-else="">Send</t></t>
+                    <t t-if="!messaging.device.isMobile"><t t-if="composer.isLog">Log</t><t t-else="">Send</t></t>
                 </button>
             </t>
-            <t t-if="!composer.messaging.device.isMobile and props.hasDiscardButton">
+            <t t-if="!messaging.device.isMobile and props.hasDiscardButton">
                 <button class="o_Composer_actionButton o-last o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact': props.isCompact, 'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar }" type="button" t-on-click="_onClickDiscard">
                     Discard
                 </button>

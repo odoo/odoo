@@ -66,7 +66,7 @@ export class Attachment extends Component {
         if (this.attachment.fileType !== 'image') {
             return '';
         }
-        if (this.attachment.messaging.isQUnitTest) {
+        if (this.messaging.isQUnitTest) {
             // background-image:url is hardly mockable, and attachments in
             // QUnit tests do not actually exist in DB, so style should not
             // be fetched at all.

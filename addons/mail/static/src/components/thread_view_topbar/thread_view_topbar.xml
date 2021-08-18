@@ -31,10 +31,10 @@
                     </t>
                 </div>
                 <div class="o_ThreadViewTopbar_actions d-flex align-items-center">
-                    <t t-if="threadViewTopBar.thread and threadViewTopBar.thread === threadViewTopBar.messaging.inbox">
+                    <t t-if="threadViewTopBar.thread and threadViewTopBar.thread === messaging.inbox">
                         <button class="o_ThreadViewTopbar_markAllReadButton btn btn-secondary" t-att-disabled="threadViewTopBar.threadView.messages.length === 0" t-on-click="threadViewTopBar.onClickInboxMarkAllAsRead">Mark all read</button>
                     </t>
-                    <t t-if="threadViewTopBar.thread and threadViewTopBar.thread === threadViewTopBar.messaging.starred">
+                    <t t-if="threadViewTopBar.thread and threadViewTopBar.thread === messaging.starred">
                         <button class="o_ThreadViewTopbar_unstarAllButton btn btn-secondary" t-att-disabled="threadViewTopBar.threadView.messages.length === 0" t-on-click="threadViewTopBar.onClickUnstarAll">Unstar all</button>
                     </t>
                     <t t-if="threadViewTopBar.thread and threadViewTopBar.thread.hasInviteFeature">

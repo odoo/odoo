@@ -15,7 +15,7 @@
                             <PartnerImStatusIcon
                                 class="o_ThreadNeedactionPreview_partnerImStatusIcon"
                                 t-att-class="{
-                                    'o-mobile': thread.messaging.device.isMobile,
+                                    'o-mobile': messaging.device.isMobile,
                                 }"
                                 partnerLocalId="thread.correspondent.localId"
                             />
@@ -24,7 +24,7 @@
                 </div>
                 <div class="o_ThreadNeedactionPreview_content">
                     <div class="o_ThreadNeedactionPreview_header">
-                        <span class="o_ThreadNeedactionPreview_name text-truncate" t-att-class="{ 'o-mobile': thread.messaging.device.isMobile }">
+                        <span class="o_ThreadNeedactionPreview_name text-truncate" t-att-class="{ 'o-mobile': messaging.device.isMobile }">
                             <t t-esc="thread.displayName"/>
                         </span>
                         <span class="o_ThreadNeedactionPreview_counter">

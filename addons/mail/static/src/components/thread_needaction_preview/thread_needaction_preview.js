@@ -77,8 +77,8 @@ export class ThreadNeedactionPreview extends Component {
             return;
         }
         this.thread.open();
-        if (!this.thread.messaging.device.isMobile) {
-            this.thread.messaging.messagingMenu.close();
+        if (!this.messaging.device.isMobile) {
+            this.messaging.messagingMenu.close();
         }
     }
 

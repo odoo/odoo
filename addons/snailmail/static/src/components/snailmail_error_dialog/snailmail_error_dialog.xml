@@ -8,9 +8,9 @@
                     <p class="o_SnailmailErrorDialog_contentCredit">
                         The letter could not be sent due to insufficient credits on your IAP account.
                     </p>
-                    <t t-if="message.messaging.snailmail_credits_url">
+                    <t t-if="messaging.snailmail_credits_url">
                         <div class="text-right">
-                            <a class="btn btn-link" t-att-href="message.messaging.snailmail_credits_url" target="_blank">
+                            <a class="btn btn-link" t-att-href="messaging.snailmail_credits_url" target="_blank">
                                 <i class="fa fa-arrow-right"/> Buy credits
                             </a>
                         </div>
@@ -20,9 +20,9 @@
                     <p class="o_SnailmailErrorDialog_contentTrial">
                         You need credits on your IAP account to send a letter.
                     </p>
-                    <t t-if="message.messaging.snailmail_credits_url_trial">
+                    <t t-if="messaging.snailmail_credits_url_trial">
                         <div class="text-right">
-                            <a class="btn btn-link" t-att-href="message.messaging.snailmail_credits_url_trial">
+                            <a class="btn btn-link" t-att-href="messaging.snailmail_credits_url_trial">
                                 <i class="fa fa-arrow-right"/> Buy credits
                             </a>
                         </div>
