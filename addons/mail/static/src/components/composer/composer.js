@@ -79,10 +79,10 @@ export class Composer extends Component {
      * @returns {string}
      */
     get currentPartnerAvatar() {
-        const avatar = this.env.messaging.currentUser
+        const avatar = this.composer.messaging.currentUser
             ? this.env.session.url('/web/image', {
                     field: 'avatar_128',
-                    id: this.env.messaging.currentUser.id,
+                    id: this.composer.messaging.currentUser.id,
                     model: 'res.users',
                 })
             : '/web/static/img/user_menu_avatar.png';
@@ -93,7 +93,7 @@ export class Composer extends Component {
      * Focus the composer.
      */
     focus() {
-        if (this.env.messaging.device.isMobile) {
+        if (this.composer.messaging.device.isMobile) {
             this.el.scrollIntoView();
         }
         this._textInputRef.comp.focus();

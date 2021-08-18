@@ -119,7 +119,7 @@ export class DiscussSidebarItem extends Component {
      */
     async _onClickLeave(ev) {
         ev.stopPropagation();
-        if (this.thread.creator === this.env.messaging.currentUser) {
+        if (this.thread.creator === this.discuss.messaging.currentUser) {
             await this._askAdminConfirmation();
         }
         this.thread.unsubscribe();

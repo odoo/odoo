@@ -37,7 +37,7 @@ patch(Message.prototype, 'snailmail/static/src/components/message/message.js', {
             switch (this.message.notifications[0].failure_type) {
                 case 'sn_credit':
                     // URL only used in this component, not received at init
-                    this.env.messaging.fetchSnailmailCreditsUrl();
+                    this.message.messaging.fetchSnailmailCreditsUrl();
                     this.snailmailState.hasDialog = true;
                     break;
                 case 'sn_error':
@@ -54,7 +54,7 @@ patch(Message.prototype, 'snailmail/static/src/components/message/message.js', {
                     break;
                 case 'sn_trial':
                     // URL only used in this component, not received at init
-                    this.env.messaging.fetchSnailmailCreditsUrlTrial();
+                    this.message.messaging.fetchSnailmailCreditsUrlTrial();
                     this.snailmailState.hasDialog = true;
                     break;
             }

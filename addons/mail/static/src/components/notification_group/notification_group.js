@@ -54,8 +54,8 @@ export class NotificationGroup extends Component {
             return;
         }
         this.group.openDocuments();
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.messagingMenu.close();
+        if (!this.group.messaging.device.isMobile) {
+            this.group.messaging.messagingMenu.close();
         }
     }
 
@@ -65,8 +65,8 @@ export class NotificationGroup extends Component {
      */
     _onClickMarkAsRead(ev) {
         this.group.openCancelAction();
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.messagingMenu.close();
+        if (!this.group.messaging.device.isMobile) {
+            this.group.messaging.messagingMenu.close();
         }
     }
 
