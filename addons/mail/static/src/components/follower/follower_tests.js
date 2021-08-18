@@ -176,7 +176,7 @@ QUnit.test('click on partner follower details', async function (assert) {
         isEditable: true,
         partner: insert({
             email: "bla@bla.bla",
-            id: this.env.messaging.currentPartner.id,
+            id: this.messaging.currentPartner.id,
             name: "François Perusse",
         }),
     });
@@ -282,7 +282,7 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
         isEditable: true,
         partner: insert({
             email: "bla@bla.bla",
-            id: this.env.messaging.currentPartner.id,
+            id: this.messaging.currentPartner.id,
             name: "François Perusse",
         }),
     });

@@ -72,7 +72,7 @@ QUnit.test('out of office message on direct chat with out of office partner', as
         "should have an out of office alert on thread view"
     );
     const formattedDate = returningDate.toDate().toLocaleDateString(
-        this.env.messaging.locale.language.replace(/_/g, '-'),
+        this.messaging.locale.language.replace(/_/g, '-'),
         { day: 'numeric', month: 'short' }
     );
     assert.ok(

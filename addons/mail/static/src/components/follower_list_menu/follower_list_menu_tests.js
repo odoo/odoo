@@ -240,7 +240,7 @@ QUnit.test('click on remove follower', async function (assert) {
                 assert.step('message_unsubscribe');
                 assert.deepEqual(
                     args.args,
-                    [[100], [self.env.messaging.currentPartner.id]],
+                    [[100], [self.messaging.currentPartner.id]],
                     "message_unsubscribe should be called with right argument"
                 );
             }
@@ -258,7 +258,7 @@ QUnit.test('click on remove follower', async function (assert) {
         isEditable: true,
         partner: insert({
             email: "bla@bla.bla",
-            id: this.env.messaging.currentPartner.id,
+            id: this.messaging.currentPartner.id,
             name: "François Perusse",
         }),
     });

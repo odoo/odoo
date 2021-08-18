@@ -38,7 +38,7 @@ QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async func
     await this.start();
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-local-id="${this.env.messaging.inbox.localId}"]`,
+        `.o_Discuss_thread[data-thread-local-id="${this.messaging.inbox.localId}"]`,
         "The Inbox is opened in discuss"
     );
     assert.containsOnce(
@@ -148,7 +148,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-local-id="${this.env.messaging.inbox.localId}"]`,
+        `.o_Discuss_thread[data-thread-local-id="${this.messaging.inbox.localId}"]`,
         "The Inbox is opened in discuss"
     );
     assert.containsOnce(
@@ -172,7 +172,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     // (e.g. from user interaction from another device or browser tab)
     await afterNextRender(() => {
         const notif = [
-            ["dbName", 'res.partner', this.env.messaging.currentPartner.id],
+            ["dbName", 'res.partner', this.messaging.currentPartner.id],
             {
                 channel_type: 'channel',
                 id: 20,
