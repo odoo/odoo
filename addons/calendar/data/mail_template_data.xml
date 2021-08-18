@@ -108,11 +108,11 @@
                 % if object.event_id.videocall_location:
                 <li>Join Video Call: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
                 % endif
+                % if not is_html_empty(object.event_id.description):
+                    <li>Description of the event:
+                    ${object.event_id.description | safe}</li>
+                % endif
             </ul>
-            % if not is_html_empty(object.event_id.description):
-                <p><strong>Description of the event</strong></p>
-                ${object.event_id.description | safe}
-            % endif
         </td>
     </tr></table>
     <br/>
@@ -230,11 +230,11 @@
                 % if object.event_id.videocall_location:
                 <li>Join Video Call: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
                 % endif
+                % if not is_html_empty(object.event_id.description):
+                    <li>Description of the event:
+                    ${object.event_id.description | safe}</li>
+                % endif
             </ul>
-            % if not is_html_empty(object.event_id.description):
-                <p><strong>Description of the event</strong></p>
-                ${object.event_id.description | safe}
-            % endif
         </td>
     </tr></table>
     <br/>
@@ -332,11 +332,11 @@
                 % if object.event_id.videocall_location:
                 <li>Join Video Call: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
                 % endif
+                % if not is_html_empty(object.event_id.description):
+                    <li>Description of the event:
+                    ${object.event_id.description | safe}</li>
+                % endif
             </ul>
-            % if not is_html_empty(object.event_id.description):
-                <p><strong>Description of the event</strong></p>
-                ${object.event_id.description | safe}
-            % endif
         </td>
     </tr></table>
     <br/>
