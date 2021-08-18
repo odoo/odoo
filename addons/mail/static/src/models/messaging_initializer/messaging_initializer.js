@@ -135,7 +135,7 @@ function factory(dependencies) {
                     // (e.g. to know when to display "invited" notification)
                     // Current partner can always be assumed to be a member of
                     // channels received at init.
-                    convertedData.members = link(this.env.messaging.currentPartner);
+                    convertedData.members = link(this.messaging.currentPartner);
                 }
                 const channel = this.env.models['mail.thread'].insert(
                     Object.assign({ model: 'mail.channel' }, convertedData)
@@ -184,8 +184,8 @@ function factory(dependencies) {
             needaction_inbox_counter,
             starred_counter,
         }) {
-            this.env.messaging.inbox.update({ counter: needaction_inbox_counter });
-            this.env.messaging.starred.update({ counter: starred_counter });
+            this.messaging.inbox.update({ counter: needaction_inbox_counter });
+            this.messaging.starred.update({ counter: starred_counter });
         }
 
         /**
@@ -199,8 +199,8 @@ function factory(dependencies) {
                 );
                 // implicit: failures are sent by the server at initialization
                 // only if the current partner is author of the message
-                if (!message.author && this.env.messaging.currentPartner) {
-                    message.update({ author: link(this.env.messaging.currentPartner) });
+                if (!message.author && this.messaging.currentPartner) {
+                    message.update({ author: link(this.messaging.currentPartner) });
                 }
             }));
             this.messaging.notificationGroupManager.computeGroups();

@@ -20,7 +20,7 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'website_livec
                 id: data.id,
                 model: 'mail.channel',
             });
-            this.env.messaging.chatWindowManager.openThread(channel, {
+            this.messaging.chatWindowManager.openThread(channel, {
                 makeActive: true,
             });
             return;

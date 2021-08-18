@@ -51,10 +51,10 @@ registerInstancePatchModel('mail.notification_group', 'snailmail/static/src/mode
                 domain: [['message_ids.snailmail_error', '=', true]],
             },
         });
-        if (this.env.messaging.device.isMobile) {
+        if (this.messaging.device.isMobile) {
             // messaging menu has a higher z-index than views so it must
             // be closed to ensure the visibility of the view
-            this.env.messaging.messagingMenu.close();
+            this.messaging.messagingMenu.close();
         }
     },
 });

@@ -88,7 +88,7 @@ function factory(dependencies) {
                     case 'mail.channel':
                         return this._handleNotificationChannel(id, message);
                     case 'res.partner':
-                        if (id !== this.env.messaging.currentPartner.id) {
+                        if (id !== this.messaging.currentPartner.id) {
                             // ignore broadcast to other partners
                             return;
                         }
@@ -182,7 +182,7 @@ function factory(dependencies) {
          */
         _handleNotificationChannelJoined({ channel: channelData, invited_by_user_id: invitedByUserId }) {
             const channel = this.env.models['mail.thread'].insert(this.env.models['mail.thread'].convertData(channelData));
-            if (invitedByUserId !== this.env.messaging.currentUser.id) {
+            if (invitedByUserId !== this.messaging.currentUser.id) {
                 // Current user was invited by someone else.
                 this.env.services['notification'].notify({
                     message: _.str.sprintf(
@@ -225,7 +225,7 @@ function factory(dependencies) {
             this._notifyThreadViewsMessageReceived(message);
 
             // If the current partner is author, do nothing else.
-            if (message.author === this.env.messaging.currentPartner) {
+            if (message.author === this.messaging.currentPartner) {
                 return;
             }
 
@@ -233,7 +233,7 @@ function factory(dependencies) {
             // shown on the menu, but no notification and no thread open.
             const isChatWithOdooBot = (
                 channel.correspondent &&
-                channel.correspondent === this.env.messaging.partnerRoot
+                channel.correspondent === this.messaging.partnerRoot
             );
             if (!isChatWithOdooBot) {
                 const isOdooFocused = this.env.services['bus_service'].isOdooFocused();
@@ -250,8 +250,8 @@ function factory(dependencies) {
                     channel.markAsFetched();
                 }
                 // open chat on receiving new message if it was not already opened or folded
-                if (channel.channel_type !== 'channel' && !this.env.messaging.device.isMobile && !channel.chatWindow) {
-                    this.env.messaging.chatWindowManager.openThread(channel);
+                if (channel.channel_type !== 'channel' && !this.messaging.device.isMobile && !channel.chatWindow) {
+                    this.messaging.chatWindowManager.openThread(channel);
                 }
             }
 
@@ -300,7 +300,7 @@ function factory(dependencies) {
                     messageId: lastMessage.id,
                 });
             }
-            if (this.env.messaging.currentPartner.id === partner_id) {
+            if (this.messaging.currentPartner.id === partner_id) {
                 channel.update({
                     lastSeenByCurrentPartnerMessageId: last_message_id,
                     pendingSeenMessageId: undefined,
@@ -334,7 +334,7 @@ function factory(dependencies) {
                 id: partner_id,
                 name: partner_name,
             });
-            if (partner === this.env.messaging.currentPartner) {
+            if (partner === this.messaging.currentPartner) {
                 // Ignore management of current partner is typing notification.
                 return;
             }
@@ -362,7 +362,7 @@ function factory(dependencies) {
             const message = this.env.models['mail.message'].insert(
                 this.env.models['mail.message'].convertData(data)
             );
-            this.env.messaging.inbox.update({ counter: increment() });
+            this.messaging.inbox.update({ counter: increment() });
             const originThread = message.originThread;
             if (originThread && message.isNeedaction) {
                 originThread.update({ message_needaction_counter: increment() });
@@ -444,12 +444,12 @@ function factory(dependencies) {
                 // (e.g. to know when to display "invited" notification)
                 // Current partner can always be assumed to be a member of
                 // channels received through this notification.
-                convertedData.members = link(this.env.messaging.currentPartner);
+                convertedData.members = link(this.messaging.currentPartner);
             }
             let channel = this.env.models['mail.thread'].findFromIdentifyingData(convertedData);
             const wasCurrentPartnerMember = (
                 channel &&
-                channel.members.includes(this.env.messaging.currentPartner)
+                channel.members.includes(this.messaging.currentPartner)
             );
 
             channel = this.env.models['mail.thread'].insert(convertedData);
@@ -496,8 +496,8 @@ function factory(dependencies) {
                 );
                 // implicit: failures are sent by the server as notification
                 // only if the current partner is author of the message
-                if (!message.author && this.env.messaging.currentPartner) {
-                    message.update({ author: link(this.env.messaging.currentPartner) });
+                if (!message.author && this.messaging.currentPartner) {
+                    message.update({ author: link(this.messaging.currentPartner) });
                 }
             }
             this.messaging.notificationGroupManager.computeGroups();
@@ -531,7 +531,7 @@ function factory(dependencies) {
                     isNeedaction: false,
                 });
             }
-            const inbox = this.env.messaging.inbox;
+            const inbox = this.messaging.inbox;
             if (needaction_inbox_counter !== undefined) {
                 inbox.update({ counter: needaction_inbox_counter });
             } else {
@@ -553,7 +553,7 @@ function factory(dependencies) {
          * @param {boolean} param0.starred
          */
         _handleNotificationPartnerToggleStar({ message_ids = [], starred }) {
-            const starredMailbox = this.env.messaging.starred;
+            const starredMailbox = this.messaging.starred;
             for (const messageId of message_ids) {
                 const message = this.env.models['mail.message'].findFromIdentifyingData({
                     id: messageId,
@@ -582,7 +582,7 @@ function factory(dependencies) {
                 (lastMessageId, message) => Math.max(lastMessageId, message.id),
                 0
             );
-            const partnerRoot = this.env.messaging.partnerRoot;
+            const partnerRoot = this.messaging.partnerRoot;
             const message = this.env.models['mail.message'].create(Object.assign(convertedData, {
                 author: link(partnerRoot),
                 id: lastMessageId + 0.01,
@@ -638,12 +638,12 @@ function factory(dependencies) {
             // then open a chat for the current user with the new user.
             this.env.services['bus_service'].sendNotification({ message, title, type: 'info' });
             const chat = await this.async(() =>
-                this.env.messaging.getChat({ partnerId: partner_id }
+                this.messaging.getChat({ partnerId: partner_id }
             ));
-            if (!chat || this.env.messaging.device.isMobile) {
+            if (!chat || this.messaging.device.isMobile) {
                 return;
             }
-            this.env.messaging.chatWindowManager.openThread(chat);
+            this.messaging.chatWindowManager.openThread(chat);
         }
 
         /**
@@ -654,7 +654,7 @@ function factory(dependencies) {
          */
         _notifyNewChannelMessageWhileOutOfFocus({ channel, message }) {
             const author = message.author;
-            const messaging = this.env.messaging;
+            const messaging = this.messaging;
             let notificationTitle;
             if (!author) {
                 notificationTitle = this.env._t("New message");

@@ -113,7 +113,7 @@ function factory(dependencies) {
             replaceNewMessage = false
         } = {}) {
             if (notifyServer === undefined) {
-                notifyServer = !this.env.messaging.device.isMobile;
+                notifyServer = !this.messaging.device.isMobile;
             }
             let chatWindow = this.chatWindows.find(chatWindow =>
                 chatWindow.thread === thread

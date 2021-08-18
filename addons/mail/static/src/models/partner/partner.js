@@ -121,7 +121,7 @@ function factory(dependencies) {
             // prefetched partners
             let partners = [];
             const cleanedSearchTerm = cleanSearchTerm(keyword);
-            const currentPartner = this.env.messaging.currentPartner;
+            const currentPartner = this.messaging.currentPartner;
             for (const partner of this.all(partner => partner.active)) {
                 if (partners.length < limit) {
                     if (
@@ -179,9 +179,9 @@ function factory(dependencies) {
             const extraSuggestionList = [];
             for (const partner of partners) {
                 if (
-                    (!partner.active && partner !== this.env.messaging.partnerRoot) ||
+                    (!partner.active && partner !== this.messaging.partnerRoot) ||
                     partner.id <= 0 ||
-                    this.env.messaging.publicPartners.includes(partner)
+                    this.messaging.publicPartners.includes(partner)
                 ) {
                     // ignore archived partners (except OdooBot), temporary
                     // partners (livechat guests), public partners (technical)
@@ -355,7 +355,7 @@ function factory(dependencies) {
          * Opens the most appropriate view that is a profile for this partner.
          */
         async openProfile() {
-            return this.env.messaging.openDocument({
+            return this.messaging.openDocument({
                 id: this.id,
                 model: 'res.partner',
             });
@@ -370,7 +370,7 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeAvatarUrl() {
-            if (this === this.env.messaging.partnerRoot) {
+            if (this === this.messaging.partnerRoot) {
                 return '/mail/static/src/img/odoobot.png';
             }
             return `/web/image/res.partner/${this.id}/avatar_128`;

@@ -89,7 +89,7 @@ function factory(dependencies) {
                 data2.originThread = insert(originThreadData);
             }
             if ('needaction_partner_ids' in data) {
-                data2.isNeedaction = data.needaction_partner_ids.includes(this.env.messaging.currentPartner.id);
+                data2.isNeedaction = data.needaction_partner_ids.includes(this.messaging.currentPartner.id);
             }
             if ('notifications' in data) {
                 data2.notifications = insert(data.notifications.map(notificationData =>
@@ -97,10 +97,10 @@ function factory(dependencies) {
                 ));
             }
             if ('partner_ids' in data) {
-                data2.isCurrentPartnerMentioned = data.partner_ids.includes(this.env.messaging.currentPartner.id);
+                data2.isCurrentPartnerMentioned = data.partner_ids.includes(this.messaging.currentPartner.id);
             }
             if ('starred_partner_ids' in data) {
-                data2.isStarred = data.starred_partner_ids.includes(this.env.messaging.currentPartner.id);
+                data2.isStarred = data.starred_partner_ids.includes(this.messaging.currentPartner.id);
             }
             if ('subject' in data) {
                 data2.subject = data.subject;
@@ -242,7 +242,7 @@ function factory(dependencies) {
          * that Discuss and Inbox are already opened.
          */
         replyTo() {
-            this.env.messaging.discuss.replyToMessage(this);
+            this.messaging.discuss.replyToMessage(this);
         }
 
         /**
@@ -293,8 +293,8 @@ function factory(dependencies) {
         _computeIsCurrentPartnerAuthor() {
             return !!(
                 this.author &&
-                this.env.messaging.currentPartner &&
-                this.env.messaging.currentPartner === this.author
+                this.messaging.currentPartner &&
+                this.messaging.currentPartner === this.author
             );
         }
 
