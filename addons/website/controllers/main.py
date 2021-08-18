@@ -526,11 +526,10 @@ class Website(Home):
         """
         Reloads asset bundles and returns their unique URLs.
         """
-        context = dict(request.context)
         return {
-            'web.assets_common': request.env['ir.qweb']._get_asset_link_urls('web.assets_common', options=context),
-            'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', options=context),
-            'website.assets_editor': request.env['ir.qweb']._get_asset_link_urls('website.assets_editor', options=context),
+            'web.assets_common': request.env['ir.qweb']._get_asset_link_urls('web.assets_common'),
+            'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend'),
+            'website.assets_editor': request.env['ir.qweb']._get_asset_link_urls('website.assets_editor'),
         }
 
     @http.route(['/website/make_scss_custo'], type='json', auth='user', website=True)

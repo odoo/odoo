@@ -192,7 +192,7 @@ class IrQWeb(models.AbstractModel, QWeb):
 
         code = self._flushText(options, indent)
         code.append(self._indent(dedent("""
-            t_call_assets_nodes = self._get_asset_nodes(%(xmlid)s, compile_options, css=%(css)s, js=%(js)s, debug=values.get("debug"), async_load=%(async_load)s, defer_load=%(defer_load)s, lazy_load=%(lazy_load)s, media=%(media)s)
+            t_call_assets_nodes = self._get_asset_nodes(%(xmlid)s, css=%(css)s, js=%(js)s, debug=values.get("debug"), async_load=%(async_load)s, defer_load=%(defer_load)s, lazy_load=%(lazy_load)s, media=%(media)s)
             for index, (tagName, attrs, content) in enumerate(t_call_assets_nodes):
                 if index:
                     yield '\\n        '
@@ -227,42 +227,42 @@ class IrQWeb(models.AbstractModel, QWeb):
     def get_asset_bundle(self, bundle_name, files, env=None, css=True, js=True):
         return AssetsBundle(bundle_name, files, env=env, css=css, js=js)
 
-    def _get_asset_nodes(self, bundle, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
+    def _get_asset_nodes(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
         """Generates asset nodes.
         If debug=assets, the assets will be regenerated when a file which composes them has been modified.
         Else, the assets will be generated only once and then stored in cache.
         """
         if debug and 'assets' in debug:
-            return self._generate_asset_nodes(bundle, options, css, js, debug, async_load, defer_load, lazy_load, media)
+            return self._generate_asset_nodes(bundle, css, js, debug, async_load, defer_load, lazy_load, media)
         else:
-            return self._generate_asset_nodes_cache(bundle, options, css, js, debug, async_load, defer_load, lazy_load, media)
+            return self._generate_asset_nodes_cache(bundle, css, js, debug, async_load, defer_load, lazy_load, media)
 
     @tools.conditional(
         # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
         # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache_context('bundle', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async_load', 'defer_load', 'lazy_load', keys=("website_id",)),
+        tools.ormcache_context('bundle', 'css', 'js', 'debug', 'async_load', 'defer_load', 'lazy_load', keys=("website_id", "lang")),
     )
-    def _generate_asset_nodes_cache(self, bundle, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
-        return self._generate_asset_nodes(bundle, options, css, js, debug, async_load, defer_load, lazy_load, media)
+    def _generate_asset_nodes_cache(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
+        return self._generate_asset_nodes(bundle, css, js, debug, async_load, defer_load, lazy_load, media)
 
-    def _generate_asset_nodes(self, bundle, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
+    def _generate_asset_nodes(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
         nodeAttrs = None
         if css and media:
             nodeAttrs = {
                 'media': media,
             }
-        files, remains = self._get_asset_content(bundle, options, nodeAttrs)
+        files, remains = self._get_asset_content(bundle, nodeAttrs)
         asset = self.get_asset_bundle(bundle, files, env=self.env, css=css, js=js)
         remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] == 'script')]
         return remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
 
-    def _get_asset_link_urls(self, bundle, options):
-        asset_nodes = self._get_asset_nodes(bundle, options, js=False)
+    def _get_asset_link_urls(self, bundle):
+        asset_nodes = self._get_asset_nodes(bundle, js=False)
         return [node[1]['href'] for node in asset_nodes if node[0] == 'link']
 
-    @tools.ormcache_context('bundle', 'options.get("lang", "en_US")', keys=("website_id",))
-    def _get_asset_content(self, bundle, options, nodeAttrs=None):
+    @tools.ormcache_context('bundle', keys=("website_id", "lang"))
+    def _get_asset_content(self, bundle, nodeAttrs=None):
         asset_paths = self.env['ir.asset']._get_asset_paths(bundle=bundle, css=True, js=True)
 
         files = []

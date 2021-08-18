@@ -17,7 +17,7 @@ class LivechatController(http.Controller):
     def livechat_lib(self, ext, **kwargs):
         # _get_asset return the bundle html code (script and link list) but we want to use the attachment content
         bundle = 'im_livechat.external_lib'
-        files, _ = request.env["ir.qweb"]._get_asset_content(bundle, options=request.context)
+        files, _ = request.env["ir.qweb"]._get_asset_content(bundle)
         asset = AssetsBundle(bundle, files)
 
         mock_attachment = getattr(asset, ext)()
