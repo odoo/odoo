@@ -1223,6 +1223,7 @@
                                         <t t-set='contact' t-value="order.partner_id"/>
                                         <t t-set='selected' t-value="1"/>
                                         <t t-set='readonly' t-value="1"/>
+                                        <t t-set='allow_edit' t-value="1"/>
                                     </t>
                                 </div>
                             </div>
@@ -1238,20 +1239,20 @@
                                             <div class="col-md-12 col-lg-12 one_kanban">
                                                 <form action="/shop/address" method="post" class=''>
                                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                                    <a role="button" href="#" class='a-submit btn btn-secondary mb16 btn-block'>
+                                                    <a role="button" href="#" class='a-submit btn btn-secondary mb-2 btn-block'>
                                                         <i class="fa fa-plus-square"/>
                                                         <span>Add an address</span>
                                                     </a>
                                                 </form>
                                             </div>
                                             <t t-foreach="shippings" t-as="ship">
-                                                <div class="col-md-12 col-lg-6 one_kanban">
+                                                <div class="col-md-12 col-lg-6 one_kanban mb-2">
                                                     <t t-call="website_sale.address_kanban">
-                                                        <t t-set="actual_partner" t-value="order.partner_id" />
                                                         <t t-set='contact' t-value="ship"/>
                                                         <t t-set='selected' t-value="order.partner_shipping_id==ship"/>
                                                         <t t-set='readonly' t-value="bool(len(shippings)==1)"/>
                                                         <t t-set='edit_billing' t-value="bool(ship==order.partner_id)"/>
+                                                        <t t-set="allow_edit" t-value="not order.partner_id or (ship.id in order.partner_id.child_ids.ids)" />
                                                     </t>
                                                 </div>
                                             </t>
@@ -1287,7 +1288,7 @@
             </form>
             <div t-attf-class="card #{selected and 'border border-primary' or 'js_change_shipping'}">
                 <div class='card-body' style='min-height: 130px;'>
-                    <a t-if="not actual_partner or (ship.id in actual_partner.child_ids.ids)" href="#" class="btn btn-link float-right p-0 js_edit_address no-decoration" role="button" title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
+                    <a t-if="allow_edit" href="#" class="btn btn-link float-right p-0 js_edit_address no-decoration" role="button" title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
                     <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
                 </div>
                 <div class='card-footer' t-if='not readonly'>
@@ -1476,6 +1477,23 @@
         </xpath>
     </template>
 
+    <template id="address_on_payment" name="Address on payment">
+        <div class="card">
+            <div class="card-body" id="shipping_and_billing">
+                <a class="float-right no-decoration" href="/shop/checkout"><i class="fa fa-edit"/> Edit</a>
+                <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
+                <div>
+                    <b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b>
+                    <span t-esc="order.partner_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
+                </div>
+                <div t-if="not same_shipping and not only_services" groups="sale.group_delivery_invoice_address">
+                    <b>Shipping: </b>
+                    <span t-esc="order.partner_shipping_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
     <template id="payment" name="Payment">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop - Select Payment Acquirer</t>
@@ -1503,13 +1521,8 @@
                             <t t-call="website_sale.cart_summary"/>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
-                            <div class="card">
-                                <div class="card-body" id="shipping_and_billing">
-                                    <a class='float-right no-decoration' href='/shop/checkout'><i class="fa fa-edit"/> Edit</a>
-                                    <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
-                                    <div><b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-esc='order.partner_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
-                                    <div t-if="not same_shipping and not only_services" groups="sale.group_delivery_invoice_address"><b>Shipping: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
-                                </div>
+                            <div id='address_on_payment'>
+                                <t t-call="website_sale.address_on_payment"/>
                             </div>
 
                             <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_payment_1"/>

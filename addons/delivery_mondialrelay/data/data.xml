@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="product_product_delivery_mondialrelay" model="product.product">
+            <field name="name">Mondial Relay</field>
+            <field name="default_code">MR</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="delivery.product_category_deliveries"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">5</field>
+            <field name="invoice_policy">order</field>
+        </record>
+
+        <record id="delivery_carrier_mondialrelay_be_lu" model="delivery.carrier">
+            <field name="name">Mondial Relay</field>
+            <field name="sequence">30</field>
+            <field name="delivery_type">base_on_rule</field>
+            <field name="integration_level">rate</field>
+            <field name="country_ids" eval="[(6, 0, [ref('base.be'), ref('base.lu')])]"/>
+            <field name="product_id" ref="delivery_mondialrelay.product_product_delivery_mondialrelay"/>
+        </record>
+        <record id="delivery_price_rule1" model="delivery.price.rule">
+            <field name="carrier_id" ref="delivery_carrier_mondialrelay_be_lu"/>
+            <field name="max_value" eval="10"/>
+            <field name="list_base_price" eval="4"/>
+        </record>
+        <record id="delivery_price_rule2" model="delivery.price.rule">
+            <field name="carrier_id" ref="delivery_carrier_mondialrelay_be_lu"/>
+            <field name="operator">&gt;=</field>
+            <field name="max_value" eval="10"/>
+            <field name="list_base_price" eval="5"/>
+        </record>
+
+        <record id="delivery_carrier_mondialrelay_fr_nl" model="delivery.carrier">
+            <field name="name">Mondial Relay</field>
+            <field name="sequence">31</field>
+            <field name="delivery_type">base_on_rule</field>
+            <field name="integration_level">rate</field>
+            <field name="country_ids" eval="[(6, 0, [ref('base.fr'), ref('base.nl')])]"/>
+            <field name="product_id" ref="delivery_mondialrelay.product_product_delivery_mondialrelay"/>
+        </record>
+
+        <record id="delivery_price_rule_fr_nl_1" model="delivery.price.rule">
+            <field name="carrier_id" ref="delivery_carrier_mondialrelay_fr_nl"/>
+            <field name="max_value" eval="1"/>
+            <field name="list_base_price" eval="6"/>
+        </record>
+        <record id="delivery_price_rule_fr_nl_2" model="delivery.price.rule">
+            <field name="carrier_id" ref="delivery_carrier_mondialrelay_fr_nl"/>
+            <field name="max_value" eval="10"/>
+            <field name="list_base_price" eval="10"/>
+        </record>
+        <record id="delivery_price_rule_fr_nl_3" model="delivery.price.rule">
+            <field name="carrier_id" ref="delivery_carrier_mondialrelay_fr_nl"/>
+            <field name="operator">&gt;=</field>
+            <field name="max_value" eval="10"/>
+            <field name="list_base_price" eval="20"/>
+        </record>
+
+        <record id="delivery_carrier_mondialrelay_es" model="delivery.carrier">
+            <field name="name">Mondial Relay</field>
+            <field name="sequence">32</field>
+            <field name="delivery_type">base_on_rule</field>
+            <field name="integration_level">rate</field>
+            <field name="country_ids" eval="[(6, 0, [ref('base.es')])]"/>
+            <field name="product_id" ref="delivery_mondialrelay.product_product_delivery_mondialrelay"/>
+        </record>
+
+        <record id="delivery_price_rule_es_1" model="delivery.price.rule">
+            <field name="carrier_id" ref="delivery_carrier_mondialrelay_es"/>
+            <field name="max_value" eval="3"/>
+            <field name="list_base_price" eval="10"/>
+        </record>
+        <record id="delivery_price_rule_es_2" model="delivery.price.rule">
+            <field name="carrier_id" ref="delivery_carrier_mondialrelay_es"/>
+            <field name="max_value" eval="7"/>
+            <field name="list_base_price" eval="15"/>
+        </record>
+        <record id="delivery_price_rule_es_3" model="delivery.price.rule">
+            <field name="carrier_id" ref="delivery_carrier_mondialrelay_es"/>
+            <field name="operator">&gt;=</field>
+            <field name="max_value" eval="10"/>
+            <field name="list_base_price" eval="28"/>
+        </record>
+    </data>
+</odoo>
