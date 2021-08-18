@@ -5,7 +5,7 @@
         <div class="o_DiscussSidebarItem"
             t-att-class="{
                 'o-active': thread and discuss.thread === thread,
-                'o-starred-box': thread and thread === env.messaging.starred,
+                'o-starred-box': thread and thread === thread.messaging.starred,
                 'o-unread': thread and thread.localMessageUnreadCounter > 0,
             }" t-on-click="_onClick" t-att-data-thread-local-id="thread ? thread.localId : undefined" t-att-data-thread-name="thread ? thread.displayName : undefined"
         >

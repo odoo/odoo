@@ -30,7 +30,7 @@
                     <t t-elif="thread.correspondent.im_status === 'away'">
                         <div class="o_ThreadIcon_away fa fa-circle" title="Away"/>
                     </t>
-                    <t t-elif="thread.correspondent === env.messaging.partnerRoot">
+                    <t t-elif="thread.correspondent === thread.messaging.partnerRoot">
                         <div class="o_ThreadIcon_online fa fa-heart" title="Bot"/>
                     </t>
                     <t t-else="" name="noImStatusCondition">
@@ -38,13 +38,13 @@
                     </t>
                 </t>
                 <t t-elif="thread.model === 'mail.box'">
-                    <t t-if="thread === env.messaging.inbox">
+                    <t t-if="thread === thread.messaging.inbox">
                         <div class="o_ThreadIcon_mailboxInbox fa fa-inbox"/>
                     </t>
-                    <t t-elif="thread === env.messaging.starred">
+                    <t t-elif="thread === thread.messaging.starred">
                         <div class="o_ThreadIcon_mailboxStarred fa fa-star-o"/>
                     </t>
-                    <t t-elif="thread === env.messaging.history">
+                    <t t-elif="thread === thread.messaging.history">
                         <div class="o_ThreadIcon_mailboxHistory fa fa-history"/>
                     </t>
                 </t>

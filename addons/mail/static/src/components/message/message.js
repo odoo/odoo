@@ -428,7 +428,7 @@ export class Message extends Component {
      */
     _onClick(ev) {
         if (ev.target.closest('.o_channel_redirect')) {
-            this.env.messaging.openProfile({
+            this.message.messaging.openProfile({
                 id: Number(ev.target.dataset.oeId),
                 model: 'mail.channel',
             });
@@ -438,7 +438,7 @@ export class Message extends Component {
         }
         if (ev.target.tagName === 'A') {
             if (ev.target.dataset.oeId && ev.target.dataset.oeModel) {
-                this.env.messaging.openProfile({
+                this.message.messaging.openProfile({
                     id: Number(ev.target.dataset.oeId),
                     model: ev.target.dataset.oeModel,
                 });
@@ -527,7 +527,7 @@ export class Message extends Component {
         // before the current handler is executed. Indeed because it does a
         // toggle it needs to take into account the value before the click.
         if (this._wasSelected) {
-            this.env.messaging.discuss.clearReplyingToMessage();
+            this.message.messaging.discuss.clearReplyingToMessage();
         } else {
             this.message.replyTo();
         }

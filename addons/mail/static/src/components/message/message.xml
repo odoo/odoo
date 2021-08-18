@@ -8,7 +8,7 @@
                 'o-discussion': message and (message.is_discussion or message.is_notification),
                 'o-has-message-selection': threadView and threadView.threadViewer and threadView.threadViewer.selectedMessage,
                 'o-highlighted': message and message.isHighlighted,
-                'o-mobile': env.messaging.device.isMobile,
+                'o-mobile': message and message.messaging.device.isMobile,
                 'o-not-discussion': message and !(message.is_discussion or message.is_notification),
                 'o-notification': message and message.message_type === 'notification',
                 'o-selected': isSelected,
@@ -27,7 +27,7 @@
                                     class="o_Message_partnerImStatusIcon"
                                     t-att-class="{
                                         'o-message-selected': isSelected,
-                                        'o_Message_partnerImStatusIcon-mobile': env.messaging.device.isMobile,
+                                        'o_Message_partnerImStatusIcon-mobile': message.messaging.device.isMobile,
                                     }"
                                     hasOpenChat="hasAuthorOpenChat"
                                     partnerLocalId="message.author.localId"
@@ -41,7 +41,7 @@
                                 <t t-esc="shortTime"/>
                             </div>
                         </t>
-                        <div class="o_Message_commands o_Message_sidebarCommands o_Message_sidebarItem o-message-squashed" t-att-class="{ 'o-message-selected': isSelected, 'o-mobile': env.messaging.device.isMobile }">
+                        <div class="o_Message_commands o_Message_sidebarCommands o_Message_sidebarItem o-message-squashed" t-att-class="{ 'o-message-selected': isSelected, 'o-mobile': message.messaging.device.isMobile }">
                             <t t-if="message.message_type !== 'notification'">
                                 <div class="o_Message_command o_Message_commandStar fa"
                                     t-att-class="{
@@ -49,7 +49,7 @@
                                         'fa-star-o': !message.isStarred,
                                         'o-message-selected': isSelected,
                                         'o-message-starred': message.isStarred,
-                                        'o-mobile': env.messaging.device.isMobile,
+                                        'o-mobile': message.messaging.device.isMobile,
                                     }" t-on-click="_onClickStar"
                                 />
                             </t>
@@ -114,7 +114,7 @@
                                     </Popover>
                                 </t>
                             </t>
-                            <div class="o_Message_commands o_Message_headerCommands" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }">
+                            <div class="o_Message_commands o_Message_headerCommands" t-att-class="{ 'o-mobile': message.messaging.device.isMobile }">
                                 <t t-if="!message.isTemporary and ((message.message_type !== 'notification' and message.originThread and message.originThread.model === 'mail.channel') or !message.isTransient)">
                                     <span class="o_Message_command o_Message_commandStar o_Message_headerCommand fa"
                                         t-att-class="{
@@ -122,7 +122,7 @@
                                             'fa-star-o': !message.isStarred,
                                             'o-message-selected': isSelected,
                                             'o-message-starred': message.isStarred,
-                                            'o-mobile': env.messaging.device.isMobile,
+                                            'o-mobile': message.messaging.device.isMobile,
                                         }" t-on-click="_onClickStar" title="Mark as Todo"
                                     />
                                 </t>
@@ -130,7 +130,7 @@
                                     <span class="o_Message_command o_Message_commandReply o_Message_headerCommand fa fa-reply"
                                         t-att-class="{
                                             'o-message-selected': isSelected,
-                                            'o-mobile': env.messaging.device.isMobile,
+                                            'o-mobile': message.messaging.device.isMobile,
                                         }" t-on-click="_onClickReply" title="Reply"
                                     />
                                 </t>
@@ -138,7 +138,7 @@
                                     <span class="o_Message_command o_Message_commandMarkAsRead o_Message_headerCommand fa fa-check"
                                         t-att-class="{
                                             'o-message-selected': isSelected,
-                                            'o-mobile': env.messaging.device.isMobile,
+                                            'o-mobile': message.messaging.device.isMobile,
                                         }" t-on-click="_onClickMarkAsRead" title="Mark as Read"
                                     />
                                 </t>
@@ -177,7 +177,7 @@
                             <AttachmentList
                                 class="o_Message_attachmentList"
                                 areAttachmentsDownloadable="true"
-                                areAttachmentsEditable="message.author === env.messaging.currentPartner"
+                                areAttachmentsEditable="message.author === message.messaging.currentPartner"
                                 attachmentLocalIds="message.attachments.map(attachment => attachment.localId)"
                                 attachmentsDetailsMode="props.attachmentsDetailsMode"
                             />

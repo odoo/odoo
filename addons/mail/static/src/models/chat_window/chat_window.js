@@ -36,7 +36,6 @@ function factory(dependencies) {
                 this.thread.notifyFoldStateToServer('closed');
             }
             if (this.exists()) {
-                // notifyFoldStateToServer() might have deleted it already
                 this.delete();
             }
         }
