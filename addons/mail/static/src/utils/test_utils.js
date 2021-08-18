@@ -543,21 +543,6 @@ async function start(param0 = {}) {
                 messagingBus,
             },
             /**
-             * Override to bind the getters on the actual env that is given,
-             * because the env in the scope of this test might only serve as
-             * template and not be the one actually used.
-             *
-             * @override
-             */
-            init(env) {
-                Object.defineProperty(env, 'messaging', {
-                    get() {
-                        return this.services.messaging.modelManager.messaging;
-                    },
-                });
-                this._super(env);
-            },
-            /**
              * Override:
              * - to ensure the test setup is complete before starting otherwise
              *   for example the mock server might not be ready yet at init
