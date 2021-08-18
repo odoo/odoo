@@ -14,7 +14,7 @@
     'category': 'Localization',
     'description': 'Colombian Accounting and Tax Preconfiguration',
     'author': 'David Arnold (XOE Solutions)',
-    'website': 'https://xoe.solutions',
+    'website': 'https://www.odoo.com/colombia',
     'depends': [
         'account',
     ],
@@ -23,8 +23,9 @@
         'data/account.account.template.csv',
         'data/account_chart_template_data.xml',
         'data/account.tax.group.csv',
-        'data/account.tax.template.csv',
+        # 'data/account.tax.template.csv',
         'data/account_chart_template_data.yml',
         'views/res_partner.xml',
     ],
+    'license': 'LGPL-3',
 }
