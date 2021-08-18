@@ -4,7 +4,7 @@
     <t t-name="project.ProjectControlPanelContentBadge" owl="1">
         <t t-tag="isProjectUser ? 'button' : 'span'" class="badge border d-flex p-2 ml-2 bg-white">
             <span t-attf-class="o_status_bubble o_color_bubble_{{data.color}}"/>
-            <span class="font-weight-normal ml-1" t-esc="data.status"/>
+            <span t-att-class="'font-weight-normal ml-1' + (data.color === 0 ? ' text-muted' : '')" t-esc="data.status"/>
         </t>
     </t>
 

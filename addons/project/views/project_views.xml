@@ -197,6 +197,7 @@
                     <field name="name"/>
                     <field name="fold"/>
                     <field name="description"/>
+                    <field name="sequence" widget="handle"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
@@ -288,14 +289,36 @@
                                 </span>
                             </div>
                         </button>
-                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_active', '=', False), ('rating_percentage_satisfaction', '=', -1)]}" class="oe_stat_button oe_read_only" icon="fa-smile-o" groups="project.group_project_rating">
+                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_active', '=', False), ('rating_percentage_satisfaction', '&lt;', 66.6)]}" class="oe_stat_button oe_read_only text-success" icon="fa-smile-o" groups="project.group_project_rating">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="rating_percentage_satisfaction" nolabel="1"/>
                                     %
                                 </span>
-                                <span class="o_stat_text">
-                                    Customer Satisfaction
+                                <span class="o_stat_text text-secondary">
+                                    Satisfaction
+                                </span>
+                            </div>
+                        </button>
+                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', '|', ('rating_active', '=', False), ('rating_percentage_satisfaction', '>=', 66.6), ('rating_percentage_satisfaction', '&lt;', 33.3)]}" class="oe_stat_button oe_read_only text-warning" icon="fa-meh-o" groups="project.group_project_rating">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="rating_percentage_satisfaction" nolabel="1"/>
+                                    %
+                                </span>
+                                <span class="o_stat_text text-secondary">
+                                    Satisfaction
+                                </span>
+                            </div>
+                        </button>
+                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_active', '=', False), '|', ('rating_percentage_satisfaction', '>=', 33.3),  ('rating_percentage_satisfaction', '&lt;', 0)]}" class="oe_stat_button oe_read_only text-danger" icon="fa-frown-o" groups="project.group_project_rating">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="rating_percentage_satisfaction" nolabel="1"/>
+                                    %
+                                </span>
+                                <span class="o_stat_text text-secondary">
+                                    Satisfaction
                                 </span>
                             </div>
                         </button>
@@ -310,6 +333,18 @@
                                     <field name="analytic_account_balance"/>
                                 </span>
                                 <span class="o_stat_text">Gross Margin</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" name="%(project.project_update_all_action)d" type="action" groups="project.group_project_manager">
+                            <div class="pl-4">
+                                <field name="last_update_color" invisible="1"/>
+                                <field name="last_update_status" readonly="1" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button o_project_not_clickable" disabled="disabled" groups="!project.group_project_manager">
+                            <div class="pl-4">
+                                <field name="last_update_color" invisible="1"/>
+                                <field name="last_update_status" readonly="1" widget="status_with_color" options="{'color_field': 'last_update_color', 'no_quick_edit': 1}"/>
                             </div>
                         </button>
                         <button class="oe_stat_button" name="%(project.project_collaborator_action)d" type="action" icon="fa-users" groups="project.group_project_manager">
@@ -615,6 +650,7 @@
                     <field name="last_update_status"/>
                     <field name="tag_ids"/>
                     <progressbar field="last_update_status" colors='{"on_track": "success", "at_risk": "warning", "off_track": "danger", "on_hold": "info"}'/>
+                    <field name="sequence" widget="handle"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon oe_kanban_content oe_kanban_card">
@@ -653,9 +689,6 @@
                                                 </div>
                                                 <div role="menuitem">
                                                     <a name="action_view_tasks" type="object">Tasks</a>
-                                                </div>
-                                                <div role="menuitem" t-if="record.doc_count.raw_value">
-                                                    <a name="attachment_tree_view" type="object">Documents</a>
                                                 </div>
                                             </div>
                                             <div class="col-6 o_kanban_card_manage_section o_kanban_manage_reporting" groups="project.group_project_manager">
@@ -701,7 +734,8 @@
                                         <field name="activity_ids" widget="kanban_activity"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <span t-att-class="'o_status_bubble mx-0 o_color_bubble_' + record.last_update_color.value" t-att-title="record.last_update_status.value"></span>
+                                        <field t-if="record.last_update_status.value &amp;&amp; widget.editable" name="last_update_status" widget="project_state_selection"/>
+                                        <span t-if="record.last_update_status.value &amp;&amp; !widget.editable" t-att-class="'o_status_bubble mx-0 o_color_bubble_' + record.last_update_color.value" t-att-title="record.last_update_status.value"></span>
                                         <field name="user_id" widget="many2one_avatar_user"/>
                                     </div>
                                 </div>
@@ -783,6 +817,8 @@
                     <field name="repeat_show_month" invisible="1" />
                     <field name="recurrence_id" invisible="1" />
                     <field name="allow_task_dependencies" invisible="1" />
+                    <field name="rating_last_value" invisible="1"/>
+                    <field name="rating_count" invisible="1"/>
                     <header>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
                             attrs="{'invisible' : [('user_ids', '!=', [])]}" data-hotkey="q"/>
@@ -794,10 +830,32 @@
                     </div>
                     <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_open_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" string="Parent Task" attrs="{'invisible': [('parent_id', '=', False)]}"/>
-                        <button name="%(rating_rating_action_task)d" type="action" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" icon="fa-smile-o" groups="project.group_project_rating">
-                            <field name="rating_count" string="Rating" widget="statinfo"/>
+                        <!-- Dummy tag for organizing buttons, using position='replace' when inheriting -->
+                        <span id="button_products" invisible="1"/>
+                        <span id="button_worksheet" invisible="1"/>
+                        <!-- Dummy tag used to organize buttons, englobing the 3 buttons modifies the width of the button -->
+                        <span id="start_rating_buttons" invisible="1"/>
+                        <button name="action_open_ratings" type="object" attrs="{'invisible': ['|', ('rating_count', '=', 0), ('rating_percentage_satisfaction', '&lt;', 66.6)]}" class="oe_stat_button text-success" icon="fa-smile-o" groups="project.group_project_rating">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="rating_percentage_satisfaction" widget="integer"/>%</span>
+                                <span class="o_stat_text text-secondary">Satisfaction</span>
+                            </div>
                         </button>
+                        <button name="action_open_ratings" type="object" attrs="{'invisible': ['|', '|', ('rating_count', '=', 0), ('rating_percentage_satisfaction', '>=', 66.6), ('rating_percentage_satisfaction', '&lt;', 33.3)]}" class="oe_stat_button text-warning" icon="fa-meh-o" groups="project.group_project_rating">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="rating_percentage_satisfaction" widget="integer"/>%</span>
+                                <span class="o_stat_text text-secondary">Satisfaction</span>
+                            </div>
+                        </button>
+                        <button name="action_open_ratings" type="object" attrs="{'invisible': ['|', '|', ('rating_count', '=', 0), ('rating_percentage_satisfaction', '>=', 33.3),  ('rating_percentage_satisfaction', '&lt;', 0)]}" class="oe_stat_button text-danger" icon="fa-frown-o" groups="project.group_project_rating">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="rating_percentage_satisfaction" widget="integer"/>%</span>
+                                <span class="o_stat_text text-secondary">Satisfaction</span>
+                            </div>
+                        </button>
+                        <!-- Dummy tag used to organize buttons -->
+                        <span id="end_rating_buttons" invisible="1"/>
+                        <button name="action_open_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" string="Parent Task" attrs="{'invisible': [('parent_id', '=', False)]}"/>
                         <button name="action_recurring_tasks" type="object" attrs="{'invisible': [('recurrence_id', '=', False)]}" class="oe_stat_button" icon="fa-repeat" groups="project.group_project_recurring_tasks">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
@@ -816,6 +874,8 @@
                                 </span>
                             </div>
                         </button>
+                        <!-- Dummy tag used to organize buttons -->
+                        <span id="end_button_box" invisible="1"/>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title pr-0">
@@ -1248,7 +1308,7 @@
             <field name="name">My Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
-            <field name="context">{'search_default_my_tasks': 1, 'search_default_personal_stage': 1, 'all_task': 0}</field>
+            <field name="context">{'search_default_my_tasks': 1, 'search_default_personal_stage': 1, 'all_task': 0, 'default_user_ids': [(4, uid)]}</field>
             <field name="search_view_id" ref="view_task_search_form_extended"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

@@ -39,6 +39,12 @@
             <field name="rated_partner_id" position="attributes">
                 <attribute name="string">Assigned to</attribute>
             </field>
+            <field name="create_date" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+            <field name="feedback" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
             <div name="rating_image_container" position="replace">
                 <field name="rating_text" string="Rating"/>
             </div>
@@ -92,7 +98,7 @@
     </record>
 
     <record id="rating_rating_action_view_project_rating" model="ir.actions.act_window">
-        <field name="name">Rating</field>
+        <field name="name">Ratings</field>
         <field name="res_model">rating.rating</field>
         <field name="view_mode">kanban,tree,graph,pivot,form</field>
         <field name="domain">[('consumed','=',True), ('parent_res_model','=','project.project')]</field>
@@ -102,6 +108,13 @@
                 There are no ratings for this project at the moment
             </p>
         </field>
+    </record>
+
+    <record id="rating_rating_action_view_project_rating_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">kanban</field>
+        <field name="act_window_id" ref="rating_rating_action_view_project_rating"/>
+        <field name="view_id" ref="rating.rating_rating_view_kanban"/>
     </record>
 
     <record id="rating_rating_action_view_project_rating_tree" model="ir.actions.act_window.view">
@@ -133,7 +146,7 @@
     </record>
 
     <record id="rating_rating_action_task" model="ir.actions.act_window">
-        <field name="name">Customer Ratings on Task</field>
+        <field name="name">Ratings</field>
         <field name="res_model">rating.rating</field>
         <field name="view_mode">kanban,tree,pivot,graph,form</field>
         <field name="domain">[('res_model', '=', 'project.task'), ('res_id', '=', active_id), ('consumed', '=', True)]</field>
@@ -145,6 +158,13 @@
                 Let's wait for your customers to manifest themselves.
             </p>
         </field>
+    </record>
+
+    <record id="rating_rating_action_task_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">kanban</field>
+        <field name="act_window_id" ref="rating_rating_action_task"/>
+        <field name="view_id" ref="rating.rating_rating_view_kanban"/>
     </record>
 
     <record id="rating_rating_action_task_tree" model="ir.actions.act_window.view">
