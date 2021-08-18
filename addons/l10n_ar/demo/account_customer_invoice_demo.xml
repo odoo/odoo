@@ -131,6 +131,10 @@
     </record>
 
     <!-- Invoice to ADHOC in USD and vat 21 -->
+    <record id="base.USD" model="res.currency">
+        <field name="active" eval="True"/>
+    </record>
+
     <record id="demo_invoice_10" model="account.move">
         <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
         <field name="invoice_user_id" ref="base.user_demo"/>

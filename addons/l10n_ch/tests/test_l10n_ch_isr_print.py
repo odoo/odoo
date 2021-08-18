@@ -59,7 +59,7 @@ class ISRTest(AccountTestInvoicingCommon):
         })
         invoice_chf.action_post()
         self.assertTrue(self.print_isr(invoice_chf))
-
+        self.env.ref('base.EUR').active = True
         invoice_eur = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
