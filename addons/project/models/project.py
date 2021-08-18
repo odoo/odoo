@@ -14,6 +14,45 @@ from odoo.osv.expression import OR
 from .project_task_recurrence import DAYS, WEEKS
 from .project_update import STATUS_COLOR
 
+
+PROJECT_TASK_READABLE_FIELDS = [
+    'id',
+    'active',
+    'description',
+    'priority',
+    'kanban_state_label',
+    'project_id',
+    'display_project_id',
+    'color',
+    'partner_is_company',
+    'commercial_partner_id',
+    'allow_subtasks',
+    'child_text',
+    'is_closed',
+    'email_from',
+    'create_date',
+    'write_date',
+    'company_id',
+    'displayed_image_id',
+    'display_name',
+    'priority',
+]
+
+PROJECT_TASK_WRITABLE_FIELDS = [
+    'name',
+    'partner_id',
+    'partner_email',
+    'user_id',
+    'date_deadline',
+    'tag_ids',
+    'sequence',
+    'stage_id',
+    'kanban_state',
+    'child_ids',
+    'parent_id',
+]
+
+
 class ProjectTaskType(models.Model):
     _name = 'project.task.type'
     _description = 'Task Stage'
@@ -899,6 +938,14 @@ class Task(models.Model):
     repeat_show_week = fields.Boolean(compute='_compute_repeat_visibility')
     repeat_show_month = fields.Boolean(compute='_compute_repeat_visibility')
 
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return PROJECT_TASK_READABLE_FIELDS | self.SELF_WRITABLE_FIELDS
+
+    @property
+    def SELF_WRITABLE_FIELDS(self):
+        return PROJECT_TASK_WRITABLE_FIELDS
+
     @api.constrains('depend_on_ids')
     def _check_no_cyclic_dependencies(self):
         if not self._check_m2m_recursion('depend_on_ids'):
@@ -1185,6 +1232,22 @@ class Task(models.Model):
     # ------------------------------------------------
     # CRUD overrides
     # ------------------------------------------------
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        fields = super().fields_get(allfields=allfields, attributes=attributes)
+        if not self.env.user.has_group('base.group_portal'):
+            return fields
+        readable_fields = self.SELF_READABLE_FIELDS
+        public_fields = {field_name: description for field_name, description in fields.items() if field_name in readable_fields}
+
+            writable_fields = self.SELF_WRITABLE_FIELDS
+            for field_name, description in public_fields.items():
+                if field_name not in writable_fields and not description.get('readonly', False):
+                    # If the field is not in Writable fields and it is not readonly then we force the readonly to True
+                description['readonly'] = True
+
+        return public_fields
+
     @api.model
     def default_get(self, default_fields):
         vals = super(Task, self).default_get(default_fields)
