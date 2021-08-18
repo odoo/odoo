@@ -60,6 +60,7 @@ class RatingMixin(models.AbstractModel):
     rating_last_image = fields.Binary('Rating Last Image', groups='base.group_user', related='rating_ids.rating_image')
     rating_count = fields.Integer('Rating count', compute="_compute_rating_stats", compute_sudo=True)
     rating_avg = fields.Float("Rating Average", compute='_compute_rating_stats', compute_sudo=True)
+    rating_percentage_satisfaction = fields.Float("Rating Satisfaction", compute='_compute_rating_satisfaction', compute_sudo=True)
 
     @api.depends('rating_ids.rating', 'rating_ids.consumed')
     def _compute_rating_last_value(self):
@@ -76,6 +77,28 @@ class RatingMixin(models.AbstractModel):
         for record in self:
             record.rating_count = mapping.get(record.id, {}).get('rating_count', 0)
             record.rating_avg = mapping.get(record.id, {}).get('rating_avg', 0)
+
+    @api.depends('rating_ids.res_id', 'rating_ids.rating')
+    def _compute_rating_satisfaction(self):
+        """ Compute the rating satisfaction percentage, this is done separately from rating_count and rating_avg
+            since the query is different, to avoid computing if it is not necessary"""
+        domain = expression.AND([self._rating_domain(), [('rating', '>=', RATING_LIMIT_MIN)]])
+        # See `_compute_rating_percentage_satisfaction` above
+        read_group_res = self.env['rating.rating'].read_group(domain, ['res_id', 'rating'], groupby=['res_id', 'rating'], lazy=False)
+        default_grades = {'great': 0, 'okay': 0, 'bad': 0}
+        grades_per_record = {record_id: default_grades.copy() for record_id in self.ids}
+        for group in read_group_res:
+            record_id = group['res_id']
+            rating = group['rating']
+            if rating > RATING_LIMIT_OK:
+                grades_per_record[record_id]['great'] += group['__count']
+            elif rating > RATING_LIMIT_MIN:
+                grades_per_record[record_id]['okay'] += group['__count']
+            else:
+                grades_per_record[record_id]['bad'] += group['__count']
+        for record in self:
+            grade_repartition = grades_per_record.get(record.id, default_grades)
+            record.rating_percentage_satisfaction = grade_repartition['great'] * 100 / sum(grade_repartition.values()) if sum(grade_repartition.values()) else -1
 
     def write(self, values):
         """ If the rated ressource name is modified, we should update the rating res_name too.
