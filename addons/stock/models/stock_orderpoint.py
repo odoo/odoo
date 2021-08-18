@@ -482,14 +482,12 @@ class StockWarehouseOrderpoint(models.Model):
             This is appropriate for batch jobs only.
         """
         self = self.with_company(company_id)
-        orderpoints_noprefetch = self.read(['id'])
-        orderpoints_noprefetch = [orderpoint['id'] for orderpoint in orderpoints_noprefetch]
 
-        for orderpoints_batch in split_every(1000, orderpoints_noprefetch):
+        for orderpoints_batch_ids in split_every(1000, self.ids):
             if use_new_cursor:
                 cr = registry(self._cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))
-            orderpoints_batch = self.env['stock.warehouse.orderpoint'].browse(orderpoints_batch)
+            orderpoints_batch = self.env['stock.warehouse.orderpoint'].browse(orderpoints_batch_ids)
             all_orderpoints_exceptions = []
             while orderpoints_batch:
                 procurements = []
@@ -547,7 +545,7 @@ class StockWarehouseOrderpoint(models.Model):
             if use_new_cursor:
                 cr.commit()
                 cr.close()
-                _logger.info("A batch of 1000 orderpoints is processed and commited")
+                _logger.info("A batch of %d orderpoints is processed and committed", len(orderpoints_batch_ids))
 
         return {}
 

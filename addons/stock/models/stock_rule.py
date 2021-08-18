@@ -532,18 +532,18 @@ class ProcurementGroup(models.Model):
         domain = self._get_moves_to_assign_domain(company_id)
         moves_to_assign = self.env['stock.move'].search(domain, limit=None,
             order='reservation_date, priority desc, date asc')
-        for moves_chunk in split_every(100, moves_to_assign.ids):
+        for moves_chunk in split_every(1000, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk).sudo()._action_assign()
             if use_new_cursor:
                 self._cr.commit()
-                _logger.info("A batch of 100 moves are assigned and commited")
+                _logger.info("A batch of %d moves are assigned and committed", len(moves_chunk))
 
         # Merge duplicated quants
         self.env['stock.quant']._quant_tasks()
 
         if use_new_cursor:
             self._cr.commit()
-            _logger.info("_run_scheduler_tasks is finished and commited")
+            _logger.info("_run_scheduler_tasks is finished and committed")
 
     @api.model
     def run_scheduler(self, use_new_cursor=False, company_id=False):
