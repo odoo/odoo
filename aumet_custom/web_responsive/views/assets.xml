@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2016 LasLabs Inc.
+    @author Dave Lasley <dave@laslabs.com>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+<odoo>
+    <template
+        id="assets_backend"
+        name="Open Mobile Assets"
+        inherit_id="web.assets_backend"
+    >
+        <xpath expr="//link[last()]" position="after">
+            <link
+                rel="stylesheet"
+                href="/web_responsive/static/src/css/web_responsive.scss"
+            />
+            <link
+                rel="stylesheet"
+                href="/web_responsive/static/src/css/search_view_mobile.scss"
+            />
+            <link
+                rel="stylesheet"
+                href="/web_responsive/static/src/css/kanban_view_mobile.scss"
+            />
+        </xpath>
+        <xpath expr="//script[last()]" position="after">
+            <script
+                type="application/javascript"
+                src="/web_responsive/static/src/js/web_responsive.js"
+            />
+            <script
+                type="application/javascript"
+                src="/web_responsive/static/src/js/kanban_renderer_mobile.js"
+            />
+        </xpath>
+    </template>
+</odoo>

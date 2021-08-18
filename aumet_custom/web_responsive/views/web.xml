@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2018 Alexandre Díaz
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+<odoo>
+    <template
+        id="webclient_bootstrap"
+        inherit_id="web.webclient_bootstrap"
+        name="App Drawer - Web Client"
+    >
+        <xpath expr="//t[@t-set='body_classname']" position="attributes">
+            <attribute
+                name="t-value"
+                add="+ ' o_chatter_position_' + (request.env.user.chatter_position or 'normal')"
+                separator=" "
+            />
+        </xpath>
+    </template>
+    <template
+        id="responsive_web_layout"
+        inherit_id="web.layout"
+        name="Responsive Layout"
+    >
+        <xpath expr="//meta[last()]" position="after">
+            <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1, user-scalable=no"
+            />
+        </xpath>
+    </template>
+</odoo>

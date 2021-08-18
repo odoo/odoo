@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2021 Sergey Shebanin
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<templates>
+    <t t-inherit="web.SearchPanel" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('o_search_panel')]" position="inside">
+            <div
+                t-if="device.isMobile"
+                class="o_search_panel_summary"
+                t-on-click.stop="state.mobileSearch = true"
+            >
+                <div class="d-flex flex-wrap align-items-center">
+                    <i class="fa fa-fw fa-filter mr-1" />
+                    <t t-set="filters" t-value="getActiveSummary()" />
+                    <span t-foreach="filters" t-as="filter" class="mx-1">
+                        <i
+                            t-if="filter.icon"
+                            t-attf-class="fa {{ filter.icon }} mr-2"
+                            t-att-style="filter.color and ('color: ' + filter.color)"
+                        />
+                        <t
+                            t-esc="filter.values.join(filter.type == 'category' ? ' / ' : ', ')"
+                        />
+                    </span>
+                    <t t-if="!filters.length">All</t>
+                </div>
+            </div>
+            <div
+                class="o_search_panel_content"
+                t-att-class="device.isMobile ? (state.mobileSearch ? 'o_mobile_search' : 'd-none'): ''"
+            />
+        </xpath>
+        <xpath expr="//div[hasclass('o_search_panel_content')]" position="inside">
+            <div t-if="device.isMobile" class="o_mobile_search_header">
+                <span
+                    class="o_mobile_search_close float-left mt16 mb16 mr8 ml16"
+                    t-on-click.stop="state.mobileSearch = false"
+                >
+                    <i class="fa fa-arrow-left" />
+                    <strong class="float-right ml8">FILTER</strong>
+                </span>
+            </div>
+            <xpath expr="//section" position="move" />
+            <div
+                t-if="device.isMobile"
+                class="btn btn-primary o_mobile_search_show_result fixed-bottom"
+                t-on-click.stop="state.mobileSearch = false"
+            >
+                <t>SEE RESULT</t>
+            </div>
+        </xpath>
+    </t>
+</templates>

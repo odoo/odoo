@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+
+    <t t-name="Chrome" t-inherit="point_of_sale.Chrome" t-inherit-mode="extension" owl="1">
+
+        <xpath expr="//div[hasclass('pos-branding')]/img" position="replace">
+            <img class="pos-logo" t-on-click="trigger('toggle-debug-widget')"
+                         src="/pos_color/static/src/img/aumet-logo.png" alt="Logo" />
+
+        </xpath>
+
+
+    </t>
+</templates>
