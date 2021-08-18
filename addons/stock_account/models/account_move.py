@@ -133,7 +133,10 @@ class AccountMove(models.Model):
 
                 # Compute accounting fields.
                 sign = -1 if move.type == 'out_refund' else 1
-                price_unit = line._stock_account_get_anglo_saxon_price_unit()
+                if move.type == 'out_refund' and move.reversed_entry_id:
+                    price_unit = move.reversed_entry_id.line_ids.filtered(lambda ml: ml.product_id == line.product_id and ml.account_id == debit_interim_account).price_unit
+                else:
+                    price_unit = line._stock_account_get_anglo_saxon_price_unit()
                 balance = sign * line.quantity * price_unit
 
                 # Add interim account line.

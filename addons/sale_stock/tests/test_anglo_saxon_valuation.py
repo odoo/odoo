@@ -1009,6 +1009,51 @@ class TestAngloSaxonValuation(SavepointCase):
         self.assertEqual(cogs_aml.debit, 56)
         self.assertEqual(cogs_aml.credit, 0)
 
+    def test_fifo_delivered_invoice_post_delivery_with_credit_note(self):
+        """Receive at 8 then at 10. Sale order 2@12. Invoice after delivering everything.
+           Issue credit note.
+        """
+        self.product.categ_id.property_cost_method = 'fifo'
+        self.product.invoice_policy = 'delivery'
+        self.product.standard_price = 10
+
+        self._fifo_in_one_eight_one_ten()
+
+        # Create and confirm a sale order for 2@12
+        sale_order = self._so_and_confirm_two_units()
+
+        # Deliver all.
+        sale_order.picking_ids.move_lines.quantity_done = 2
+        sale_order.picking_ids.button_validate()
+
+        # Invoice the sale order.
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
+        invoice.post()
+
+        # Issue credit note
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice.ids).create({
+            'date': invoice.date,
+            'reason': 'no reason',
+            'refund_method': 'refund',
+        })
+        reversal = move_reversal.reverse_moves()
+        reverse_move = self.env['account.move'].browse(reversal['res_id'])
+        reverse_move.post()
+
+        # Check the resulting accounting entries
+        stock_out_aml = invoice.line_ids.filtered(lambda aml: aml.account_id == self.stock_output_account)
+        self.assertEqual(stock_out_aml.debit, 0)
+        self.assertEqual(stock_out_aml.credit, 18)
+        cogs_aml = invoice.line_ids.filtered(lambda aml: aml.account_id == self.expense_account)
+        self.assertEqual(cogs_aml.debit, 18)
+        self.assertEqual(cogs_aml.credit, 0)
+        stock_out_aml_rev = reverse_move.line_ids.filtered(lambda aml: aml.account_id == self.stock_output_account)
+        self.assertEqual(stock_out_aml_rev.debit, 18)
+        self.assertEqual(stock_out_aml_rev.credit, 0)
+        cogs_aml_rev = reverse_move.line_ids.filtered(lambda aml: aml.account_id == self.expense_account)
+        self.assertEqual(cogs_aml_rev.debit, 0)
+        self.assertEqual(cogs_aml_rev.credit, 18)
+
     def test_fifo_delivered_invoice_post_delivery_with_return(self):
         """Receive 2@10. SO1 2@12. Return 1 from SO1. SO2 1@12. Receive 1@20.
         Re-deliver returned from SO1. Invoice after delivering everything."""
