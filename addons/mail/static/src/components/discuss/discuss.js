@@ -27,6 +27,9 @@ export class Discuss extends Component {
     }
 
     mounted() {
+        if (!this.discuss) {
+            return;
+        }
         this.discuss.update({ isOpen: true });
         if (this.discuss.thread) {
             this.trigger('o-push-state-action-manager');
@@ -114,6 +117,9 @@ export class Discuss extends Component {
      * @private
      */
     _updateLocalStoreProps() {
+        if (!this.discuss) {
+            return;
+        }
         /**
          * Locally tracked store props `activeThreadCache`.
          * Useful to set scroll position from last stored one and to display

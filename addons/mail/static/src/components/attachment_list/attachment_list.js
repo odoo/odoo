@@ -14,7 +14,7 @@ export class AttachmentList extends Component {
      * @returns {mail.attachment[]}
      */
     get attachments() {
-        return this.env.models['mail.attachment'].all().filter(attachment =>
+        return this.messaging && this.messaging.models['mail.attachment'].all().filter(attachment =>
             this.props.attachmentLocalIds.includes(attachment.localId)
         );
     }

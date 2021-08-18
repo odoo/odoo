@@ -25,7 +25,7 @@ export function registerMessagingComponent(ComponentClass, { propsCompareDepth =
     const decoratedName = `@messaging ${name}`;
     // Defining the class in an object and immediately taking it out so that it
     // has "decoratedName" as its class name in stack traces and stuff.
-    const MessagingClass = {[decoratedName]: class extends ComponentClass {
+    const MessagingClass = { [decoratedName]: class extends ComponentClass {
         setup(...args) {
             super.setup(...args);
             // useModels must be defined after useRenderedValues, indeed records and
@@ -34,7 +34,10 @@ export function registerMessagingComponent(ComponentClass, { propsCompareDepth =
             useModels();
             useShouldUpdateBasedOnProps({ propsCompareDepth });
         }
-    }}[decoratedName];
+        get messaging() {
+            return this.env.services.messaging.modelManager.messaging;
+        }
+    } }[decoratedName];
     // Create an object whose prototype is the component registry with the values of the original
     // Component.components. This means that trying to get a value from this object will first look
     // into the original Component's components, and fall back on the registry if not found.

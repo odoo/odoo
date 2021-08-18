@@ -975,7 +975,7 @@ QUnit.test('activity click on cancel', async function (assert) {
          * @returns {mail.activity}
          */
         get activity() {
-            return this.env.models['mail.activity'].get(this.props.activityLocalId);
+            return this.messaging.models['mail.activity'].get(this.props.activityLocalId);
         }
     }
     ParentComponent.env = this.env;

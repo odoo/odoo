@@ -18,7 +18,7 @@ patch(components.DiscussSidebar.prototype, 'im_livechat/static/src/components/di
      * @returns {mail.thread[]}
      */
     quickSearchOrderedAndPinnedLivechatList() {
-        const allOrderedAndPinnedLivechats = this.env.models['mail.thread']
+        const allOrderedAndPinnedLivechats = this.messaging.models['mail.thread']
             .all(thread =>
                 thread.channel_type === 'livechat' &&
                 thread.isPinned &&
