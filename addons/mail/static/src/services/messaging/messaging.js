@@ -11,6 +11,7 @@ export default AbstractService.extend({
      */
     init() {
         this._super(...arguments);
+        this.messaging = undefined;
         this._modelManager = new ModelManager(this.env);
         this.env.modelManager = this._modelManager;
     },
@@ -44,8 +45,9 @@ export default AbstractService.extend({
          */
         await this.env.session.is_bound;
         await this.startModelManager();
+        this.messaging = this._modelManager.messaging;
         this.env.messagingCreatedPromise.resolve();
-        await this.env.messaging.start();
+        await this.messaging.start();
     },
     /**
      * Starts the model manager.

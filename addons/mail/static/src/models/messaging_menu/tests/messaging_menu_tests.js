@@ -30,7 +30,7 @@ QUnit.test('messaging menu counter should ignore unread messages in channels tha
         serverMessageUnreadCounter: 1,
     });
     assert.strictEqual(
-        this.env.messaging.messagingMenu.counter,
+        this.messaging.messagingMenu.counter,
         0,
         "messaging menu counter should ignore unread messages in channels that are unpinned"
     );

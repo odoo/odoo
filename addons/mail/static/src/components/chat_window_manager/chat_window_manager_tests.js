@@ -947,10 +947,10 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
         "composer should have 2 total attachments after adding 2 attachments"
     );
 
-    await afterNextRender(() => this.env.messaging.discuss.update({ isOpen: true }));
+    await afterNextRender(() => this.messaging.discuss.update({ isOpen: true }));
     assert.containsNone(document.body, '.o_ChatWindow', "should not have any chat window after opening discuss");
 
-    await afterNextRender(() => this.env.messaging.discuss.update({ isOpen: false }));
+    await afterNextRender(() => this.messaging.discuss.update({ isOpen: false }));
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "XDU for the win !",
@@ -1008,12 +1008,12 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
         },
     });
 
-    await afterNextRender(() => this.env.messaging.discuss.update({ isOpen: true }));
+    await afterNextRender(() => this.messaging.discuss.update({ isOpen: true }));
     assert.containsNone(document.body, '.o_ChatWindow', "should not have any chat window after opening discuss");
 
     await this.afterEvent({
         eventName: 'o-component-message-list-scrolled',
-        func: () => this.env.messaging.discuss.update({ isOpen: false }),
+        func: () => this.messaging.discuss.update({ isOpen: false }),
         message: "should wait until channel 20 restored its scroll to 142 after closing discuss",
         predicate: ({ scrollTop, thread }) => {
             return (
@@ -1932,10 +1932,10 @@ QUnit.test('chat window: composer state conservation on toggle discuss when fold
 
     // fold chat window
     await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
-    await afterNextRender(() => this.env.messaging.discuss.update({ isOpen: true }));
+    await afterNextRender(() => this.messaging.discuss.update({ isOpen: true }));
     assert.containsNone(document.body, '.o_ChatWindow', "should not have any chat window after opening discuss");
 
-    await afterNextRender(() => this.env.messaging.discuss.update({ isOpen: false }));
+    await afterNextRender(() => this.messaging.discuss.update({ isOpen: false }));
     // unfold chat window
     await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
     assert.strictEqual(
@@ -1996,10 +1996,10 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
     });
     // fold chat window
     await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
-    await afterNextRender(() => this.env.messaging.discuss.update({ isOpen: true }));
+    await afterNextRender(() => this.messaging.discuss.update({ isOpen: true }));
     assert.containsNone(document.body, '.o_ChatWindow', "should not have any chat window after opening discuss");
 
-    await afterNextRender(() => this.env.messaging.discuss.update({ isOpen: false }));
+    await afterNextRender(() => this.messaging.discuss.update({ isOpen: false }));
     // unfold chat window
     await this.afterEvent({
         eventName: 'o-component-message-list-scrolled',

@@ -322,6 +322,15 @@ function beforeEach(self) {
         unpatch,
         widget: undefined
     });
+
+    Object.defineProperty(self, 'messaging', {
+        get() {
+            if (!this.env || !this.env.services.messaging) {
+                return undefined;
+            }
+            return this.env.services.messaging.messaging;
+        },
+    });
 }
 
 function afterEach(self) {
@@ -335,6 +344,9 @@ function afterEach(self) {
     if (self.widget) {
         self.widget.destroy();
         self.widget = undefined;
+    }
+    if (self.messaging) {
+        self.messaging.delete();
     }
     self.env = undefined;
     self.unpatch();
@@ -591,9 +603,6 @@ async function start(param0 = {}) {
                 destroyCallbacks.forEach(callback => callback({ widget }));
                 this._super(...arguments);
                 legacyUnpatch(widget);
-                if (testEnv && testEnv.modelManager.messaging) {
-                    testEnv.modelManager.messaging.delete();
-                }
             }
         });
     } else if (hasWebClient) {
@@ -642,9 +651,6 @@ async function start(param0 = {}) {
                 destroyCallbacks.forEach(callback => callback({ widget }));
                 this._super(...arguments);
                 legacyUnpatch(widget);
-                if (testEnv && testEnv.modelManager.messaging) {
-                    testEnv.modelManager.messaging.delete();
-                }
             }
         });
     } else {
@@ -658,9 +664,6 @@ async function start(param0 = {}) {
                 delete widget.destroy;
                 destroyCallbacks.forEach(callback => callback({ widget }));
                 parent.destroy();
-                if (testEnv && testEnv.modelManager.messaging) {
-                    testEnv.modelManager.messaging.delete();
-                }
             },
         });
     }
