@@ -149,7 +149,7 @@ function factory(dependencies) {
          * Opens the most appropriate view that is a profile for this employee.
          */
         async openProfile() {
-            return this.env.messaging.openDocument({
+            return this.messaging.openDocument({
                 id: this.id,
                 model: 'hr.employee.public',
             });

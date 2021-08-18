@@ -94,10 +94,10 @@ function factory(dependencies) {
                     res_id: id,
                 },
             });
-            if (this.env.messaging.device.isMobile) {
+            if (this.messaging.device.isMobile) {
                 // messaging menu has a higher z-index than views so it must
                 // be closed to ensure the visibility of the view
-                this.env.messaging.messagingMenu.close();
+                this.messaging.messagingMenu.close();
             }
         }
 
@@ -134,7 +134,7 @@ function factory(dependencies) {
                 }
                 return channel.openProfile();
             }
-            return this.env.messaging.openDocument({ id, model });
+            return this.messaging.openDocument({ id, model });
         }
 
         /**

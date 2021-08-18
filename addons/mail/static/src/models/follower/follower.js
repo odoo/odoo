@@ -104,7 +104,7 @@ function factory(dependencies) {
                     this.update({ selectedSubtypes: unlink(subtype) });
                 }
             }
-            this._subtypesListDialog = this.env.messaging.dialogManager.open('mail.follower_subtype_list', {
+            this._subtypesListDialog = this.messaging.dialogManager.open('mail.follower_subtype_list', {
                 follower: link(this),
             });
         }

@@ -20,22 +20,24 @@ function factory(dependencies) {
          */
         close({ notifyServer } = {}) {
             if (notifyServer === undefined) {
-                notifyServer = !this.env.messaging.device.isMobile;
+                notifyServer = !this.messaging.device.isMobile;
             }
-            const thread = this.thread;
-            this.delete();
-            // Flux specific: 'closed' fold state should only be saved on the
-            // server when manually closing the chat window. Delete at destroy
-            // or sync from server value for example should not save the value.
-            if (thread && notifyServer) {
-                thread.notifyFoldStateToServer('closed');
-            }
-            if (this.env.device.isMobile && !this.env.messaging.discuss.isOpen) {
+            if (this.env.device.isMobile && !this.messaging.discuss.isOpen) {
                 // If we are in mobile and discuss is not open, it means the
                 // chat window was opened from the messaging menu. In that
                 // case it should be re-opened to simulate it was always
                 // there in the background.
-                this.env.messaging.messagingMenu.update({ isOpen: true });
+                this.messaging.messagingMenu.update({ isOpen: true });
+            }
+            // Flux specific: 'closed' fold state should only be saved on the
+            // server when manually closing the chat window. Delete at destroy
+            // or sync from server value for example should not save the value.
+            if (this.thread && notifyServer) {
+                this.thread.notifyFoldStateToServer('closed');
+            }
+            if (this.exists()) {
+                // notifyFoldStateToServer() might have deleted it already
+                this.delete();
             }
         }
 
@@ -73,7 +75,7 @@ function factory(dependencies) {
          */
         fold({ notifyServer } = {}) {
             if (notifyServer === undefined) {
-                notifyServer = !this.env.messaging.device.isMobile;
+                notifyServer = !this.messaging.device.isMobile;
             }
             this.update({ isFolded: true });
             // Flux specific: manually folding the chat window should save the
@@ -127,7 +129,7 @@ function factory(dependencies) {
          */
         unfold({ notifyServer } = {}) {
             if (notifyServer === undefined) {
-                notifyServer = !this.env.messaging.device.isMobile;
+                notifyServer = !this.messaging.device.isMobile;
             }
             this.update({ isFolded: false });
             // Flux specific: manually opening the chat window should save the

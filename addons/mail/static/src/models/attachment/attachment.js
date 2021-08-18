@@ -86,7 +86,7 @@ function factory(dependencies) {
             if (!attachments.includes(attachment)) {
                 return;
             }
-            this.env.messaging.dialogManager.open('mail.attachment_viewer', {
+            this.messaging.dialogManager.open('mail.attachment_viewer', {
                 attachment: link(attachment),
                 attachments: replace(attachments),
             });

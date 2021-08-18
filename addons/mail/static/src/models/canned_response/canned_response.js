@@ -67,7 +67,7 @@ function factory(dependencies) {
          */
         static searchSuggestions(searchTerm, { thread } = {}) {
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
-            return [this.env.messaging.cannedResponses.filter(cannedResponse =>
+            return [this.messaging.cannedResponses.filter(cannedResponse =>
                 cleanSearchTerm(cannedResponse.source).includes(cleanedSearchTerm)
             )];
         }

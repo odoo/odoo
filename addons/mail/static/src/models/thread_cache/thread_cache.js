@@ -220,13 +220,13 @@ function factory(dependencies) {
          */
         _extendMessageDomain(domain) {
             const thread = this.thread;
-            if (thread === this.env.messaging.inbox) {
+            if (thread === this.messaging.inbox) {
                 return domain.concat([['needaction', '=', true]]);
-            } else if (thread === this.env.messaging.starred) {
+            } else if (thread === this.messaging.starred) {
                 return domain.concat([
-                    ['starred_partner_ids', 'in', [this.env.messaging.currentPartner.id]],
+                    ['starred_partner_ids', 'in', [this.messaging.currentPartner.id]],
                 ]);
-            } else if (thread === this.env.messaging.history) {
+            } else if (thread === this.messaging.history) {
                 return domain.concat([['needaction', '=', false]]);
             } else {
                 // Avoid to load user_notification as these messages are not

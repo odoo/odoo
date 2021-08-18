@@ -12,9 +12,9 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
-            if (this.env.messaging) {
-                if (this === this.env.messaging.currentUser) {
-                    this.env.messaging.update({ currentUser: unlink() });
+            if (this.messaging) {
+                if (this === this.messaging.currentUser) {
+                    this.messaging.update({ currentUser: unlink() });
                 }
             }
             return super._willDelete(...arguments);

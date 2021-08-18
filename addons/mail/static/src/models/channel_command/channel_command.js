@@ -79,7 +79,7 @@ function factory(dependencies) {
                 return [[]];
             }
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
-            return [this.env.messaging.commands.filter(command => {
+            return [this.messaging.commands.filter(command => {
                 if (!cleanSearchTerm(command.name).includes(cleanedSearchTerm)) {
                     return false;
                 }

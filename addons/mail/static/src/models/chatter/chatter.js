@@ -145,7 +145,7 @@ function factory(dependencies) {
                     this.thread.refresh();
                 }
             } else if (!this.thread || !this.thread.isTemporary) {
-                const currentPartner = this.env.messaging.currentPartner;
+                const currentPartner = this.messaging.currentPartner;
                 const message = this.env.models['mail.message'].create({
                     author: link(currentPartner),
                     body: this.env._t("Creating a new record..."),
