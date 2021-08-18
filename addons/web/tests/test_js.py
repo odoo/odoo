@@ -24,7 +24,7 @@ class WebSuite(odoo.tests.HttpCase):
         # redefinied it as a minimal proxy template.
         self.env.ref('web.layout').write({'arch_db': '<t t-name="web.layout"><head><meta charset="utf-8"/><t t-esc="head"/></head></t>'})
 
-        assets = self.env['ir.qweb']._get_asset_content(suite, options={})[0]
+        assets = self.env['ir.qweb']._get_asset_content(suite)[0]
         if len(assets) == 0:
             self.fail("No assets found in the given test suite")
 
