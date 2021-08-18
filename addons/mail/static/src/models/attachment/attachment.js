@@ -136,7 +136,7 @@ function factory(dependencies) {
             if (this.isUploading) {
                 return;
             }
-            const relatedUploadingAttachment = this.env.models['mail.attachment']
+            const relatedUploadingAttachment = this.messaging.models['mail.attachment']
                 .find(attachment =>
                     attachment.filename === this.filename &&
                     attachment.isUploading

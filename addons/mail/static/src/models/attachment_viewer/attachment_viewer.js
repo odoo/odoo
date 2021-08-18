@@ -15,7 +15,7 @@ function factory(dependencies) {
          * Close the attachment viewer by closing its linked dialog.
          */
         close() {
-            const dialog = this.env.models['mail.dialog'].find(dialog => dialog.record === this);
+            const dialog = this.messaging.models['mail.dialog'].find(dialog => dialog.record === this);
             if (dialog) {
                 dialog.delete();
             }

@@ -16,7 +16,7 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'website_livec
         const { info } = data;
         if (info === 'send_chat_request') {
             this._handleNotificationPartnerChannel(data);
-            const channel = this.env.models['mail.thread'].findFromIdentifyingData({
+            const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({
                 id: data.id,
                 model: 'mail.channel',
             });

@@ -20,12 +20,12 @@ function factory(dependencies) {
             if (!modelName) {
                 throw new Error("Dialog should have a link to a model");
             }
-            const Model = this.env.models[modelName];
+            const Model = this.messaging.models[modelName];
             if (!Model) {
                 throw new Error(`No model exists with name ${modelName}`);
             }
             const record = Model.create(recordData);
-            const dialog = this.env.models['mail.dialog'].create({
+            const dialog = this.messaging.models['mail.dialog'].create({
                 manager: link(this),
                 record: link(record),
             });

@@ -13,7 +13,7 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'im_livechat/s
      */
     _handleNotificationChannelTypingStatus(channelId, data) {
         const { partner_id, partner_name } = data;
-        const channel = this.env.models['mail.thread'].findFromIdentifyingData({
+        const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({
             id: channelId,
             model: 'mail.channel',
         });

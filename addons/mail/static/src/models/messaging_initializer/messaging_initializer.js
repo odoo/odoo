@@ -53,7 +53,7 @@ function factory(dependencies) {
                 discuss.openInitThread();
             }
             if (this.messaging.autofetchPartnerImStatus) {
-                this.env.models['mail.partner'].startLoopFetchImStatus();
+                this.messaging.models['mail.partner'].startLoopFetchImStatus();
             }
         }
 
@@ -127,7 +127,7 @@ function factory(dependencies) {
          */
         async _initChannels(channelsData) {
             return executeGracefully(channelsData.map(channelData => () => {
-                const convertedData = this.env.models['mail.thread'].convertData(channelData);
+                const convertedData = this.messaging.models['mail.thread'].convertData(channelData);
                 if (!convertedData.members) {
                     // channel_info does not return all members of channel for
                     // performance reasons, but code is expecting to know at
@@ -137,7 +137,7 @@ function factory(dependencies) {
                     // channels received at init.
                     convertedData.members = link(this.messaging.currentPartner);
                 }
-                const channel = this.env.models['mail.thread'].insert(
+                const channel = this.messaging.models['mail.thread'].insert(
                     Object.assign({ model: 'mail.channel' }, convertedData)
                 );
                 // flux specific: channels received at init have to be
@@ -194,8 +194,8 @@ function factory(dependencies) {
          */
         async _initMailFailures(mailFailuresData) {
             await executeGracefully(mailFailuresData.map(messageData => () => {
-                const message = this.env.models['mail.message'].insert(
-                    this.env.models['mail.message'].convertData(messageData)
+                const message = this.messaging.models['mail.message'].insert(
+                    this.messaging.models['mail.message'].convertData(messageData)
                 );
                 // implicit: failures are sent by the server at initialization
                 // only if the current partner is author of the message
@@ -221,15 +221,15 @@ function factory(dependencies) {
         }) {
             this.messaging.update({
                 currentPartner: insert(Object.assign(
-                    this.env.models['mail.partner'].convertData(current_partner),
+                    this.messaging.models['mail.partner'].convertData(current_partner),
                     {
                         user: insert({ id: currentUserId }),
                     }
                 )),
                 currentUser: insert({ id: currentUserId }),
-                partnerRoot: insert(this.env.models['mail.partner'].convertData(partner_root)),
+                partnerRoot: insert(this.messaging.models['mail.partner'].convertData(partner_root)),
                 publicPartners: insert(public_partners.map(
-                    publicPartner => this.env.models['mail.partner'].convertData(publicPartner)
+                    publicPartner => this.messaging.models['mail.partner'].convertData(publicPartner)
                 ))
             });
         }

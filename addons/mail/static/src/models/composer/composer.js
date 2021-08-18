@@ -70,7 +70,7 @@ function factory(dependencies) {
          * same time.
          */
         focus() {
-            const allComposers = this.env.models['mail.composer'].all();
+            const allComposers = this.messaging.models['mail.composer'].all();
             for (const otherComposer of allComposers) {
                 if (otherComposer !== this && otherComposer.hasFocus) {
                     otherComposer.update({ hasFocus: false });
@@ -234,7 +234,7 @@ function factory(dependencies) {
                         command.execute({ channel: thread, postData });
                     } else {
                         messageId = await this.async(() =>
-                            this.env.models['mail.thread'].performRpcMessagePost({
+                            this.messaging.models['mail.thread'].performRpcMessagePost({
                                 postData,
                                 threadId: thread.id,
                                 threadModel: thread.model,
@@ -251,7 +251,7 @@ function factory(dependencies) {
                         };
                     }
                     messageId = await this.async(() =>
-                        this.env.models['mail.thread'].performRpcMessagePost({
+                        this.messaging.models['mail.thread'].performRpcMessagePost({
                             postData,
                             threadId: thread.id,
                             threadModel: thread.model,
@@ -262,9 +262,9 @@ function factory(dependencies) {
                         method: 'message_format',
                         args: [[messageId]],
                     }, { shadow: true }));
-                    this.env.models['mail.message'].insert(Object.assign(
+                    this.messaging.models['mail.message'].insert(Object.assign(
                         {},
-                        this.env.models['mail.message'].convertData(messageData),
+                        this.messaging.models['mail.message'].convertData(messageData),
                         {
                             originThread: insert({
                                 id: thread.id,
@@ -729,7 +729,7 @@ function factory(dependencies) {
                     // ignore obsolete call
                     return;
                 }
-                const Model = this.env.models[this.suggestionModelName];
+                const Model = this.messaging.models[this.suggestionModelName];
                 const searchTerm = this.suggestionSearchTerm;
                 await this.async(() => Model.fetchSuggestions(searchTerm, { thread: this.thread }));
                 this._updateSuggestionList();
@@ -737,7 +737,7 @@ function factory(dependencies) {
                     this.suggestionSearchTerm &&
                     this.suggestionSearchTerm === searchTerm &&
                     this.suggestionModelName &&
-                    this.env.models[this.suggestionModelName] === Model &&
+                    this.messaging.models[this.suggestionModelName] === Model &&
                     !this.hasSuggestions
                 ) {
                     this.closeSuggestions();
@@ -778,7 +778,7 @@ function factory(dependencies) {
             ) {
                 return;
             }
-            const Model = this.env.models[this.suggestionModelName];
+            const Model = this.messaging.models[this.suggestionModelName];
             const [
                 mainSuggestedRecords,
                 extraSuggestedRecords = [],
