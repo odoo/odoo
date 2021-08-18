@@ -317,8 +317,8 @@ function factory(dependencies) {
                 if (!isAPublic && isBPublic) {
                     return 1;
                 }
-                const isMemberOfA = a.model === 'mail.channel' && a.members.includes(this.env.messaging.currentPartner);
-                const isMemberOfB = b.model === 'mail.channel' && b.members.includes(this.env.messaging.currentPartner);
+                const isMemberOfA = a.model === 'mail.channel' && a.members.includes(this.messaging.currentPartner);
+                const isMemberOfB = b.model === 'mail.channel' && b.members.includes(this.messaging.currentPartner);
                 if (isMemberOfA && !isMemberOfB) {
                     return -1;
                 }
@@ -456,7 +456,7 @@ function factory(dependencies) {
          * @returns {mail.thread} the created channel
          */
         static async performRpcCreateChannel({ name, privacy }) {
-            const device = this.env.messaging.device;
+            const device = this.messaging.device;
             const data = await this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_create',
@@ -487,7 +487,7 @@ function factory(dependencies) {
          * @returns {mail.thread|undefined} the created or existing chat
          */
         static async performRpcCreateChat({ partnerIds, pinForCurrentPartner }) {
-            const device = this.env.messaging.device;
+            const device = this.messaging.device;
             // TODO FIX: potential duplicate chat task-2276490
             const data = await this.env.services.rpc({
                 model: 'mail.channel',
@@ -672,7 +672,7 @@ function factory(dependencies) {
                 method: 'message_subscribe',
                 args: [[this.id]],
                 kwargs: {
-                    partner_ids: [this.env.messaging.currentPartner.id],
+                    partner_ids: [this.messaging.currentPartner.id],
                 },
             }));
             this.refreshFollowers();
@@ -696,7 +696,7 @@ function factory(dependencies) {
                 model: 'mail.channel',
                 method: 'add_members',
                 args: [[this.id]],
-                kwargs: { partner_ids: [this.env.messaging.currentPartner.id] }
+                kwargs: { partner_ids: [this.messaging.currentPartner.id] }
             });
         }
 
@@ -806,22 +806,22 @@ function factory(dependencies) {
          * @param {boolean} [param0.expanded=false]
          */
         async open({ expanded = false } = {}) {
-            const discuss = this.env.messaging.discuss;
+            const discuss = this.messaging.discuss;
             // check if thread must be opened in form view
             if (!['mail.box', 'mail.channel'].includes(this.model)) {
                 if (expanded || discuss.isOpen) {
                     // Close chat window because having the same thread opened
                     // both in chat window and as main document does not look
                     // good.
-                    this.env.messaging.chatWindowManager.closeThread(this);
-                    return this.env.messaging.openDocument({
+                    this.messaging.chatWindowManager.closeThread(this);
+                    return this.messaging.openDocument({
                         id: this.id,
                         model: this.model,
                     });
                 }
             }
             // check if thread must be opened in discuss
-            const device = this.env.messaging.device;
+            const device = this.messaging.device;
             if (
                 (!device.isMobile && (discuss.isOpen || expanded)) ||
                 this.model === 'mail.box'
@@ -829,7 +829,7 @@ function factory(dependencies) {
                 return discuss.openThread(this);
             }
             // thread must be opened in chat window
-            return this.env.messaging.chatWindowManager.openThread(this, {
+            return this.messaging.chatWindowManager.openThread(this, {
                 makeActive: true,
             });
         }
@@ -838,7 +838,7 @@ function factory(dependencies) {
          * Opens the most appropriate view that is a profile for this thread.
          */
         async openProfile() {
-            return this.env.messaging.openDocument({
+            return this.messaging.openDocument({
                 id: this.id,
                 model: this.model,
             });
@@ -949,7 +949,7 @@ function factory(dependencies) {
             this._currentPartnerInactiveTypingTimer.start();
             this._currentPartnerLongTypingTimer.start();
             // Manage typing member relation.
-            const currentPartner = this.env.messaging.currentPartner;
+            const currentPartner = this.messaging.currentPartner;
             const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
                 .filter(localId => localId !== currentPartner.localId);
             newOrderedTypingMemberLocalIds.push(currentPartner.localId);
@@ -1020,7 +1020,7 @@ function factory(dependencies) {
          */
         async unfollow() {
             const currentPartnerFollower = this.followers.find(
-                follower => follower.partner === this.env.messaging.currentPartner
+                follower => follower.partner === this.messaging.currentPartner
             );
             await this.async(() => currentPartnerFollower.remove());
         }
@@ -1049,7 +1049,7 @@ function factory(dependencies) {
             this._currentPartnerInactiveTypingTimer.clear();
             this._currentPartnerLongTypingTimer.clear();
             // Manage typing member relation.
-            const currentPartner = this.env.messaging.currentPartner;
+            const currentPartner = this.messaging.currentPartner;
             const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
                 .filter(localId => localId !== currentPartner.localId);
             this.update({
@@ -1086,7 +1086,7 @@ function factory(dependencies) {
          * Unsubscribe current user from provided channel.
          */
         unsubscribe() {
-            this.env.messaging.chatWindowManager.closeThread(this);
+            this.messaging.chatWindowManager.closeThread(this);
             this.unpin();
         }
 
@@ -1135,7 +1135,7 @@ function factory(dependencies) {
                 return unlink();
             }
             const correspondents = this.members.filter(partner =>
-                partner !== this.env.messaging.currentPartner
+                partner !== this.messaging.currentPartner
             );
             if (correspondents.length === 1) {
                 // 2 members chat
@@ -1214,7 +1214,7 @@ function factory(dependencies) {
          */
         _computeIsCurrentPartnerFollowing() {
             return this.followers.some(follower =>
-                follower.partner && follower.partner === this.env.messaging.currentPartner
+                follower.partner && follower.partner === this.messaging.currentPartner
             );
         }
 
@@ -1233,7 +1233,7 @@ function factory(dependencies) {
         _computeLastCurrentPartnerMessageSeenByEveryone() {
             const otherPartnerSeenInfos =
                 this.partnerSeenInfos.filter(partnerSeenInfo =>
-                    partnerSeenInfo.partner !== this.env.messaging.currentPartner);
+                    partnerSeenInfo.partner !== this.messaging.currentPartner);
             if (otherPartnerSeenInfos.length === 0) {
                 return unlinkAll();
             }
@@ -1250,7 +1250,7 @@ function factory(dependencies) {
             );
             const currentPartnerOrderedSeenMessages =
                 this.orderedNonTransientMessages.filter(message =>
-                    message.author === this.env.messaging.currentPartner &&
+                    message.author === this.messaging.currentPartner &&
                     message.id <= lastMessageSeenByAllId);
 
             if (
@@ -1316,7 +1316,7 @@ function factory(dependencies) {
                     continue;
                 }
                 if (
-                    message.author === this.env.messaging.currentPartner ||
+                    message.author === this.messaging.currentPartner ||
                     message.isTransient
                 ) {
                     lastSeenByCurrentPartnerMessageId = message.id;
@@ -1435,7 +1435,7 @@ function factory(dependencies) {
          */
         _computeOrderedOtherTypingMembers() {
             return replace(this.orderedTypingMembers.filter(
-                member => member !== this.env.messaging.currentPartner
+                member => member !== this.messaging.currentPartner
             ));
         }
 
@@ -1565,19 +1565,19 @@ function factory(dependencies) {
          * @private
          */
         _onServerFoldStateChanged() {
-            if (!this.env.messaging.chatWindowManager) {
+            if (!this.messaging.chatWindowManager) {
                 // avoid crash during destroy
                 return;
             }
-            if (this.env.messaging.device.isMobile) {
+            if (this.messaging.device.isMobile) {
                 return;
             }
             if (this.serverFoldState === 'closed') {
-                this.env.messaging.chatWindowManager.closeThread(this, {
+                this.messaging.chatWindowManager.closeThread(this, {
                     notifyServer: false,
                 });
             } else {
-                this.env.messaging.chatWindowManager.openThread(this, {
+                this.messaging.chatWindowManager.openThread(this, {
                     isFolded: this.serverFoldState === 'folded',
                     notifyServer: false,
                 });

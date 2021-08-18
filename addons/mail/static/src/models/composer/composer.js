@@ -301,7 +301,7 @@ function factory(dependencies) {
             ) {
                 return;
             }
-            if (this.thread.typingMembers.includes(this.env.messaging.currentPartner)) {
+            if (this.thread.typingMembers.includes(this.messaging.currentPartner)) {
                 this.thread.refreshCurrentPartnerIsTyping();
             } else {
                 this.thread.registerCurrentPartnerIsTyping();
@@ -651,7 +651,7 @@ function factory(dependencies) {
         _getCommandFromText(content) {
             if (content.startsWith('/')) {
                 const firstWord = content.substring(1).split(/\s/)[0];
-                return this.env.messaging.commands.find(command => {
+                return this.messaging.commands.find(command => {
                     if (command.name !== firstWord) {
                         return false;
                     }

@@ -229,10 +229,10 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsCurrentPartnerAssignee() {
-            if (!this.assignee || !this.assignee.partner || !this.env.messaging.currentPartner) {
+            if (!this.assignee || !this.assignee.partner || !this.messaging.currentPartner) {
                 return false;
             }
-            return this.assignee.partner === this.env.messaging.currentPartner;
+            return this.assignee.partner === this.messaging.currentPartner;
         }
 
         /**

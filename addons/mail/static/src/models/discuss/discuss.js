@@ -116,7 +116,7 @@ function factory(dependencies) {
          * @param {integer} ui.item.id
          */
         handleAddChatAutocompleteSelect(ev, ui) {
-            this.env.messaging.openChat({ partnerId: ui.item.id });
+            this.messaging.openChat({ partnerId: ui.item.id });
             this.clearIsAddingItem();
         }
 
@@ -187,7 +187,7 @@ function factory(dependencies) {
                 return;
             }
             thread.open();
-            if (this.env.messaging.device.isMobile && thread.channel_type) {
+            if (this.messaging.device.isMobile && thread.channel_type) {
                 this.update({ activeMobileNavbarTabId: thread.channel_type });
             }
         }
@@ -281,7 +281,7 @@ function factory(dependencies) {
                 return false;
             }
             if (
-                this.env.messaging.device.isMobile &&
+                this.messaging.device.isMobile &&
                 (
                     this.activeMobileNavbarTabId !== 'mailbox' ||
                     this.thread.model !== 'mail.box'
