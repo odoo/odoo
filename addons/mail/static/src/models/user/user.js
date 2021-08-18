@@ -68,8 +68,8 @@ function factory(dependencies) {
                     fields,
                 },
             }, { shadow: true });
-            return this.env.models['mail.user'].insert(usersData.map(userData =>
-                this.env.models['mail.user'].convertData(userData)
+            return this.messaging.models['mail.user'].insert(usersData.map(userData =>
+                this.messaging.models['mail.user'].convertData(userData)
             ));
         }
 
@@ -77,7 +77,7 @@ function factory(dependencies) {
          * Fetches the partner of this user.
          */
         async fetchPartner() {
-            return this.env.models['mail.user'].performRpcRead({
+            return this.messaging.models['mail.user'].performRpcRead({
                 ids: [this.id],
                 fields: ['partner_id'],
                 context: { active_test: false },
@@ -107,7 +107,7 @@ function factory(dependencies) {
                 return;
             }
             // in other cases a chat would be valid, find it or try to create it
-            let chat = this.env.models['mail.thread'].find(thread =>
+            let chat = this.messaging.models['mail.thread'].find(thread =>
                 thread.channel_type === 'chat' &&
                 thread.correspondent === this.partner &&
                 thread.model === 'mail.channel' &&
@@ -117,7 +117,7 @@ function factory(dependencies) {
                 // if chat is not pinned then it has to be pinned client-side
                 // and server-side, which is a side effect of following rpc
                 chat = await this.async(() =>
-                    this.env.models['mail.thread'].performRpcCreateChat({
+                    this.messaging.models['mail.thread'].performRpcCreateChat({
                         partnerIds: [this.partner.id],
                     })
                 );

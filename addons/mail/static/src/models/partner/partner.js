@@ -100,8 +100,8 @@ function factory(dependencies) {
                 },
                 { shadow: true },
             );
-            const partners = this.env.models['mail.partner'].insert(suggestedPartners.map(data =>
-                this.env.models['mail.partner'].convertData(data)
+            const partners = this.messaging.models['mail.partner'].insert(suggestedPartners.map(data =>
+                this.messaging.models['mail.partner'].convertData(data)
             ));
             if (isNonPublicChannel) {
                 thread.update({ members: link(partners) });
@@ -172,7 +172,7 @@ function factory(dependencies) {
                 // mentioned partner.
                 partners = thread.members;
             } else {
-                partners = this.env.models['mail.partner'].all();
+                partners = this.messaging.models['mail.partner'].all();
             }
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
             const mainSuggestionList = [];

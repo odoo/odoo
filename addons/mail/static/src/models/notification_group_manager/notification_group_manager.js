@@ -26,7 +26,7 @@ function factory(dependencies) {
                 // and not its kanban/list/form view.
                 const channelId = thread.model === 'mail.channel' ? thread.id : null;
                 const id = `${thread.model}/${channelId}/${notification.notification_type}`;
-                const group = this.env.models['mail.notification_group'].insert({
+                const group = this.messaging.models['mail.notification_group'].insert({
                     id,
                     notification_type: notification.notification_type,
                     res_model: thread.model,

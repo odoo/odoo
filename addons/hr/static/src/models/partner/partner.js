@@ -17,7 +17,7 @@ registerInstancePatchModel('mail.partner', 'hr/static/src/models/partner/partner
      * applicable.
      */
     async checkIsEmployee() {
-        await this.async(() => this.env.models['hr.employee'].performRpcSearchRead({
+        await this.async(() => this.messaging.models['hr.employee'].performRpcSearchRead({
             context: { active_test: false },
             domain: [['user_partner_id', '=', this.id]],
             fields: ['user_id', 'user_partner_id'],

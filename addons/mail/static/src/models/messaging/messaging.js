@@ -51,11 +51,11 @@ function factory(dependencies) {
          */
         async getChat({ partnerId, userId }) {
             if (userId) {
-                const user = this.env.models['mail.user'].insert({ id: userId });
+                const user = this.messaging.models['mail.user'].insert({ id: userId });
                 return user.getChat();
             }
             if (partnerId) {
-                const partner = this.env.models['mail.partner'].insert({ id: partnerId });
+                const partner = this.messaging.models['mail.partner'].insert({ id: partnerId });
                 return partner.getChat();
             }
         }
@@ -111,18 +111,18 @@ function factory(dependencies) {
          */
         async openProfile({ id, model }) {
             if (model === 'res.partner') {
-                const partner = this.env.models['mail.partner'].insert({ id });
+                const partner = this.messaging.models['mail.partner'].insert({ id });
                 return partner.openProfile();
             }
             if (model === 'res.users') {
-                const user = this.env.models['mail.user'].insert({ id });
+                const user = this.messaging.models['mail.user'].insert({ id });
                 return user.openProfile();
             }
             if (model === 'mail.channel') {
-                let channel = this.env.models['mail.thread'].findFromIdentifyingData({ id, model: 'mail.channel' });
+                let channel = this.messaging.models['mail.thread'].findFromIdentifyingData({ id, model: 'mail.channel' });
                 if (!channel) {
                     channel = (await this.async(() =>
-                        this.env.models['mail.thread'].performRpcChannelInfo({ ids: [id] })
+                        this.messaging.models['mail.thread'].performRpcChannelInfo({ ids: [id] })
                     ))[0];
                 }
                 if (!channel) {

@@ -53,14 +53,14 @@ function factory(dependencies) {
             this.clearIsAddingItem();
             if (ui.item.special) {
                 const channel = await this.async(() =>
-                    this.env.models['mail.thread'].performRpcCreateChannel({
+                    this.messaging.models['mail.thread'].performRpcCreateChannel({
                         name,
                         privacy: ui.item.special,
                     })
                 );
                 channel.open();
             } else {
-                const channel = this.env.models['mail.thread'].insert({
+                const channel = this.messaging.models['mail.thread'].insert({
                     id: ui.item.id,
                     model: 'mail.channel',
                 });
@@ -79,7 +79,7 @@ function factory(dependencies) {
          */
         async handleAddChannelAutocompleteSource(req, res) {
             this.update({ addingChannelValue: req.term });
-            const threads = await this.env.models['mail.thread'].searchChannelsToOpen({ limit: 10, searchTerm: req.term });
+            const threads = await this.messaging.models['mail.thread'].searchChannelsToOpen({ limit: 10, searchTerm: req.term });
             const items = threads.map((thread) => {
                 const escapedName = owl.utils.escape(thread.name);
                 return {
@@ -127,7 +127,7 @@ function factory(dependencies) {
          */
         handleAddChatAutocompleteSource(req, res) {
             const value = owl.utils.escape(req.term);
-            this.env.models['mail.partner'].imSearch({
+            this.messaging.models['mail.partner'].imSearch({
                 callback: partners => {
                     const suggestions = partners.map(partner => {
                         return {
@@ -179,7 +179,7 @@ function factory(dependencies) {
             const [model, id] = typeof this.initActiveId === 'number'
                 ? ['mail.channel', this.initActiveId]
                 : this.initActiveId.split('_');
-            const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+            const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
                 id: model !== 'mail.box' ? Number(id) : id,
                 model,
             });

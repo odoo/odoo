@@ -16,7 +16,7 @@ registerInstancePatchModel('mail.messaging', 'hr/static/src/models/messaging/mes
      */
     async getChat({ employeeId }) {
         if (employeeId) {
-            const employee = this.env.models['hr.employee'].insert({ id: employeeId });
+            const employee = this.messaging.models['hr.employee'].insert({ id: employeeId });
             return employee.getChat();
         }
         return this._super(...arguments);
@@ -26,7 +26,7 @@ registerInstancePatchModel('mail.messaging', 'hr/static/src/models/messaging/mes
      */
     async openProfile({ id, model }) {
         if (model === 'hr.employee' || model === 'hr.employee.public') {
-            const employee = this.env.models['hr.employee'].insert({ id });
+            const employee = this.messaging.models['hr.employee'].insert({ id });
             return employee.openProfile();
         }
         return this._super(...arguments);

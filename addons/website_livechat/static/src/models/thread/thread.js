@@ -21,7 +21,7 @@ registerClassPatchModel('mail.thread', 'website_livechat/static/src/models/threa
         const data2 = this._super(data);
         if ('visitor' in data) {
             if (data.visitor) {
-                data2.visitor = insert(this.env.models['website_livechat.visitor'].convertData(data.visitor));
+                data2.visitor = insert(this.messaging.models['website_livechat.visitor'].convertData(data.visitor));
             } else {
                 data2.visitor = unlink();
             }

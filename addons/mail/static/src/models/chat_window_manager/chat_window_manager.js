@@ -91,7 +91,7 @@ function factory(dependencies) {
         openNewMessage() {
             let newMessageChatWindow = this.newMessageChatWindow;
             if (!newMessageChatWindow) {
-                newMessageChatWindow = this.env.models['mail.chat_window'].create({
+                newMessageChatWindow = this.messaging.models['mail.chat_window'].create({
                     manager: link(this),
                 });
             }
@@ -119,7 +119,7 @@ function factory(dependencies) {
                 chatWindow.thread === thread
             );
             if (!chatWindow) {
-                chatWindow = this.env.models['mail.chat_window'].create({
+                chatWindow = this.messaging.models['mail.chat_window'].create({
                     isFolded,
                     manager: link(this),
                     thread: link(thread),
@@ -220,7 +220,7 @@ function factory(dependencies) {
          */
         _computeAllOrderedHidden() {
             return replace(this.visual.hidden.chatWindowLocalIds.map(chatWindowLocalId =>
-                this.env.models['mail.chat_window'].get(chatWindowLocalId)
+                this.messaging.models['mail.chat_window'].get(chatWindowLocalId)
             ));
         }
 
@@ -230,7 +230,7 @@ function factory(dependencies) {
          */
         _computeAllOrderedVisible() {
             return replace(this.visual.visible.map(({ chatWindowLocalId }) =>
-                this.env.models['mail.chat_window'].get(chatWindowLocalId)
+                this.messaging.models['mail.chat_window'].get(chatWindowLocalId)
             ));
         }
 

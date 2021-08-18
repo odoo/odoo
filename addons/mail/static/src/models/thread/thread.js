@@ -126,7 +126,7 @@ function factory(dependencies) {
          * @param {mail.thread} [thread] the concerned thread
          */
         static computeLastCurrentPartnerMessageSeenByEveryone(thread = undefined) {
-            const threads = thread ? [thread] : this.env.models['mail.thread'].all();
+            const threads = thread ? [thread] : this.messaging.models['mail.thread'].all();
             threads.map(localThread => {
                 localThread.update({
                     lastCurrentPartnerMessageSeenByEveryone: localThread._computeLastCurrentPartnerMessageSeenByEveryone(),
@@ -170,7 +170,7 @@ function factory(dependencies) {
                 data2.isServerPinned = data.is_pinned;
             }
             if ('last_message' in data && data.last_message) {
-                const messageData = this.env.models['mail.message'].convertData({
+                const messageData = this.messaging.models['mail.message'].convertData({
                     id: data.last_message.id,
                     model: data2.model,
                     res_id: data2.id,
@@ -178,7 +178,7 @@ function factory(dependencies) {
                 data2.serverLastMessage = insert(messageData);
             }
             if ('last_message_id' in data && data.last_message_id) {
-                const messageData = this.env.models['mail.message'].convertData({
+                const messageData = this.messaging.models['mail.message'].convertData({
                     id: data.last_message_id,
                     model: data2.model,
                     res_id: data2.id,
@@ -211,7 +211,7 @@ function factory(dependencies) {
                     data2.members = [unlinkAll()];
                 } else {
                     data2.members = [insertAndReplace(data.members.map(memberData =>
-                        this.env.models['mail.partner'].convertData(memberData)
+                        this.messaging.models['mail.partner'].convertData(memberData)
                     ))];
                 }
             }
@@ -287,10 +287,10 @@ function factory(dependencies) {
                 },
                 { shadow: true },
             );
-            this.env.models['mail.thread'].insert(channelsData.map(channelData =>
+            this.messaging.models['mail.thread'].insert(channelsData.map(channelData =>
                 Object.assign(
                     { model: 'mail.channel' },
-                    this.env.models['mail.thread'].convertData(channelData),
+                    this.messaging.models['mail.thread'].convertData(channelData),
                 )
             ));
         }
@@ -365,8 +365,8 @@ function factory(dependencies) {
                 method: 'channel_fetch_preview',
                 args: [channelIds],
             }, { shadow: true });
-            this.env.models['mail.message'].insert(channelPreviews.filter(p => p.last_message).map(
-                channelPreview => this.env.models['mail.message'].convertData(channelPreview.last_message)
+            this.messaging.models['mail.message'].insert(channelPreviews.filter(p => p.last_message).map(
+                channelPreview => this.messaging.models['mail.message'].convertData(channelPreview.last_message)
             ));
         }
 
@@ -402,8 +402,8 @@ function factory(dependencies) {
                 method: 'channel_info',
                 args: [ids],
             }, { shadow: true });
-            const channels = this.env.models['mail.thread'].insert(
-                channelInfos.map(channelInfo => this.env.models['mail.thread'].convertData(channelInfo))
+            const channels = this.messaging.models['mail.thread'].insert(
+                channelInfos.map(channelInfo => this.messaging.models['mail.thread'].convertData(channelInfo))
             );
             return channels;
         }
@@ -469,8 +469,8 @@ function factory(dependencies) {
                     }),
                 },
             });
-            return this.env.models['mail.thread'].insert(
-                this.env.models['mail.thread'].convertData(data)
+            return this.messaging.models['mail.thread'].insert(
+                this.messaging.models['mail.thread'].convertData(data)
             );
         }
 
@@ -505,8 +505,8 @@ function factory(dependencies) {
             if (!data) {
                 return;
             }
-            return this.env.models['mail.thread'].insert(
-                this.env.models['mail.thread'].convertData(data)
+            return this.messaging.models['mail.thread'].insert(
+                this.messaging.models['mail.thread'].convertData(data)
             );
         }
 
@@ -615,7 +615,7 @@ function factory(dependencies) {
                 // channel.
                 threads = [thread];
             } else {
-                threads = this.env.models['mail.thread'].all();
+                threads = this.messaging.models['mail.thread'].all();
             }
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
             return [threads.filter(thread =>
@@ -644,7 +644,7 @@ function factory(dependencies) {
             }, { shadow: true }));
             this.update({
                 originThreadAttachments: insertAndReplace(attachmentsData.map(data =>
-                    this.env.models['mail.attachment'].convertData(data)
+                    this.messaging.models['mail.attachment'].convertData(data)
                 )),
             });
             this.update({ areAttachmentsLoaded: true });
@@ -657,7 +657,7 @@ function factory(dependencies) {
             if (this.isTemporary) {
                 return;
             }
-            return this.env.models['mail.thread'].performRpcMailGetSuggestedRecipients({
+            return this.messaging.models['mail.thread'].performRpcMailGetSuggestedRecipients({
                 model: this.model,
                 res_ids: [this.id],
             });
@@ -748,7 +748,7 @@ function factory(dependencies) {
                 return;
             }
             this.update({ pendingSeenMessageId: message.id });
-            return this.env.models['mail.thread'].performRpcChannelSeen({
+            return this.messaging.models['mail.thread'].performRpcChannelSeen({
                 ids: [this.id],
                 lastMessageId: message.id,
             });
@@ -759,7 +759,7 @@ function factory(dependencies) {
          */
         async markNeedactionMessagesAsOriginThreadAsRead() {
             await this.async(() =>
-                this.env.models['mail.message'].markAsRead(this.needactionMessagesAsOriginThread)
+                this.messaging.models['mail.message'].markAsRead(this.needactionMessagesAsOriginThread)
             );
         }
 
@@ -777,7 +777,7 @@ function factory(dependencies) {
             if (!this.uuid) {
                 return;
             }
-            return this.env.models['mail.thread'].performRpcChannelFold(this.uuid, state);
+            return this.messaging.models['mail.thread'].performRpcChannelFold(this.uuid, state);
         }
 
         /**
@@ -791,7 +791,7 @@ function factory(dependencies) {
                 await this.leave();
                 return;
             }
-            await this.env.models['mail.thread'].performRpcChannelPin({
+            await this.messaging.models['mail.thread'].performRpcChannelPin({
                 pinned: this.isPendingPinned,
                 uuid: this.uuid,
             });
@@ -887,8 +887,8 @@ function factory(dependencies) {
                 method: 'activity_format',
                 args: [newActivityIds]
             }, { shadow: true }));
-            const activities = this.env.models['mail.activity'].insert(activitiesData.map(
-                activityData => this.env.models['mail.activity'].convertData(activityData)
+            const activities = this.messaging.models['mail.activity'].insert(activitiesData.map(
+                activityData => this.messaging.models['mail.activity'].convertData(activityData)
             ));
             this.update({ activities: replace(activities) });
         }
@@ -912,7 +912,7 @@ function factory(dependencies) {
             if (followers.length > 0) {
                 this.update({
                     followers: insertAndReplace(followers.map(data =>
-                        this.env.models['mail.follower'].convertData(data))
+                        this.messaging.models['mail.follower'].convertData(data))
                     ),
                 });
             } else {
@@ -1447,7 +1447,7 @@ function factory(dependencies) {
             return [[
                 'replace',
                 this.orderedTypingMemberLocalIds
-                    .map(localId => this.env.models['mail.partner'].get(localId))
+                    .map(localId => this.messaging.models['mail.partner'].get(localId))
                     .filter(member => !!member),
             ]];
         }
