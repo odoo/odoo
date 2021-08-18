@@ -318,7 +318,6 @@
                                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                                     </div>
                                                 </div>
-                                                <field name="comment" placeholder="Internal notes..."/>
                                             </group>
                                             <group colspan="5">
                                                 <field name="email" widget="email"/>
@@ -327,13 +326,16 @@
                                                 <field name="company_id" invisible="1"/>
                                             </group>
                                             <group colspan="1">
-                                                <field name="avatar_128" invisible="1"/>
                                                 <field name="image_1920" widget="image" class="oe_avatar" nolabel="1" options="{'image_preview': 'avatar_128'}"/>
                                             </group>
+                                        </group>
+                                        <group>
+                                            <field name="comment" placeholder="Internal notes..."/>
                                         </group>
                                         <field name="lang" invisible="True"/>
                                         <field name="user_id" invisible="True"/>
                                         <field name="image_128" invisible="1"/>
+                                        <field name="avatar_128" invisible="1"/>
                                     </sheet>
                                 </form>
                             </field>
