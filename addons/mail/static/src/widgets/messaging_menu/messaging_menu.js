@@ -2,13 +2,12 @@
 
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
-import SystrayMenu from 'web.SystrayMenu';
 import Widget from 'web.Widget';
 
 /**
  * Odoo Widget, necessary to instantiate component.
  */
-const MessagingMenuWidget = Widget.extend({
+export const MessagingMenuWidget = Widget.extend({
     template: 'mail.widgets.MessagingMenu',
     /**
      * @override
@@ -35,17 +34,3 @@ const MessagingMenuWidget = Widget.extend({
         this.el.parentNode.removeChild(this.el);
     },
 });
-
-// Systray menu items display order matches order in the list
-// lower index comes first, and display is from right to left.
-// For messagin menu, it should come before activity menu, if any
-// otherwise, it is the next systray item.
-const activityMenuIndex = SystrayMenu.Items.findIndex(SystrayMenuItem =>
-    SystrayMenuItem.prototype.name === 'activity_menu');
-if (activityMenuIndex > 0) {
-    SystrayMenu.Items.splice(activityMenuIndex, 0, MessagingMenuWidget);
-} else {
-    SystrayMenu.Items.push(MessagingMenuWidget);
-}
-
-export default MessagingMenuWidget;

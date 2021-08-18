@@ -33,7 +33,7 @@ export class Discuss extends Component {
         this.discuss.update({ isOpen: true });
         if (this.discuss.thread) {
             this.trigger('o-push-state-action-manager');
-        } else if (this.env.isMessagingInitialized()) {
+        } else if (this.discuss.messaging.isInitialized) {
             this.discuss.openInitThread();
         }
         this._updateLocalStoreProps();

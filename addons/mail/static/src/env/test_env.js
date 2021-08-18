@@ -22,12 +22,6 @@ export function addMessagingToEnv(providedEnv = {}) {
                 },
             }, (env.browser && env.browser.Notification) || {}),
         }, env.browser),
-        isMessagingInitialized() {
-            return (
-                this.services.messaging.modelManager.messaging &&
-                this.services.messaging.modelManager.messaging.isInitialized
-            );
-        },
     });
     return env;
 }

@@ -3,9 +3,9 @@
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 import AbstractService from 'web.AbstractService';
-import { bus, serviceRegistry } from 'web.core';
+import { bus } from 'web.core';
 
-const DialogService = AbstractService.extend({
+export const DialogService = AbstractService.extend({
     dependencies: ['messaging'],
     /**
      * @override {web.AbstractService}
@@ -66,7 +66,3 @@ const DialogService = AbstractService.extend({
         await this._mount();
     }
 });
-
-serviceRegistry.add('dialog', DialogService);
-
-export default DialogService;
