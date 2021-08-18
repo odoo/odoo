@@ -658,7 +658,7 @@ var FileWidget = SearchableMediaWidget.extend({
      * @private
      */
     _onURLInputChange: function () {
-        var inputValue = this.$urlInput.val();
+        const inputValue = this.$urlInput.val().split('?')[0];
         var emptyValue = (inputValue === '');
 
         var isURL = /^.+\..+$/.test(inputValue); // TODO improve
