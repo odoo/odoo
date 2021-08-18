@@ -23,6 +23,10 @@
                     </a>
                 </group>
             </xpath>
+            <field name="display_as" position="before">
+                <field name="authorize_payment_method_type"
+                       attrs="{'invisible': [('provider', '!=', 'authorize')], 'required':[('provider', '=', 'authorize'), ('state', '!=', 'disabled')]}"/>
+            </field>
             <xpath expr="//field[@name='country_ids']" position="after">
                 <label for="authorize_currency_id" string="Currency" attrs="{'invisible': [('provider', '!=', 'authorize')]}"/>
                 <div attrs="{'invisible': [('provider', '!=', 'authorize')]}">
@@ -43,6 +47,7 @@
             <xpath expr='//field[@name="acquirer_ref"]' position='after'>
                 <field name="provider" invisible="1"/>
                 <field name="authorize_profile" attrs="{'invisible':[('provider', '!=', 'authorize')]}"/>
+                <field name="authorize_payment_method_type" attrs="{'invisible': [('provider', '!=', 'authorize')]}"/>
             </xpath>
         </field>
     </record>

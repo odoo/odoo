@@ -4,11 +4,10 @@ import logging
 import pprint
 
 from odoo import _, api, models
-
-from odoo.addons.payment import utils as payment_utils
 from odoo.exceptions import UserError, ValidationError
 
 from .authorize_request import AuthorizeAPI
+from odoo.addons.payment import utils as payment_utils
 
 _logger = logging.getLogger(__name__)
 
@@ -47,11 +46,9 @@ class PaymentTransaction(models.Model):
 
         authorize_API = AuthorizeAPI(self.acquirer_id)
         if self.acquirer_id.capture_manually or self.operation == 'validation':
-            return authorize_API.authorize(self.amount, self.reference, opaque_data=opaque_data)
+            return authorize_API.authorize(self, opaque_data=opaque_data)
         else:
-            return authorize_API.auth_and_capture(
-                self.amount, self.reference, opaque_data=opaque_data
-            )
+            return authorize_API.auth_and_capture(self, opaque_data=opaque_data)
 
     def _send_payment_request(self):
         """ Override of payment to send a payment request to Authorize.
@@ -70,12 +67,10 @@ class PaymentTransaction(models.Model):
 
         authorize_API = AuthorizeAPI(self.acquirer_id)
         if self.acquirer_id.capture_manually:
-            res_content = authorize_API.authorize(self.amount, self.reference, token=self.token_id)
+            res_content = authorize_API.authorize(self, token=self.token_id)
             _logger.info("authorize request response:\n%s", pprint.pformat(res_content))
         else:
-            res_content = authorize_API.auth_and_capture(
-                self.amount, self.reference, token=self.token_id
-            )
+            res_content = authorize_API.auth_and_capture(self, token=self.token_id)
             _logger.info("auth_and_capture request response:\n%s", pprint.pformat(res_content))
 
         # As the API has no redirection flow, we always know the reference of the transaction.
@@ -237,6 +232,7 @@ class PaymentTransaction(models.Model):
                 'partner_id': self.partner_id.id,
                 'acquirer_ref': cust_profile.get('payment_profile_id'),
                 'authorize_profile': cust_profile.get('profile_id'),
+                'authorize_payment_method_type': self.acquirer_id.authorize_payment_method_type,
                 'verified': True,
             })
             self.write({
