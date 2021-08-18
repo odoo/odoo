@@ -6,8 +6,9 @@ import {
     addMessagingToEnv,
     addTimeControlToEnv,
 } from '@mail/env/test_env';
-import { ModelManager } from '@mail/model/model_manager';
 import ChatWindowService from '@mail/services/chat_window_service/chat_window_service';
+import MessagingService from '@mail/services/messaging/messaging';
+import { makeDeferred } from '@mail/utils/deferred/deferred';
 import DialogService from '@mail/services/dialog_service/dialog_service';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 import { nextTick } from '@mail/utils/utils';
@@ -483,7 +484,7 @@ async function start(param0 = {}) {
     } = callbacks;
     const { debug = false } = param0;
     initCallbacks.forEach(callback => callback(param0));
-
+    const testSetupDoneDeferred = makeDeferred();
     let env = Object.assign(providedEnv || {});
     env.session = Object.assign(
         {
@@ -520,6 +521,56 @@ async function start(param0 = {}) {
             _listenHomeMenu: () => {},
         }),
         local_storage: AbstractStorageService.extend({ storage: new RamStorage() }),
+        messaging: MessagingService.extend({
+            /**
+             * Override to bind the getters on the actual env that is given,
+             * because the env in the scope of this test might only serve as
+             * template and not be the one actually used.
+             *
+             * @override
+             */
+            init() {
+                this._super(...arguments);
+                Object.defineProperty(this.env, 'messaging', {
+                    get() {
+                        return this.modelManager.messaging;
+                    },
+                });
+                Object.defineProperty(this.env, 'models', {
+                    get() {
+                        return this.modelManager.models;
+                    },
+                });
+            },
+            /**
+             * Override to control when messaging is created, useful to test
+             * spinners and race conditions.
+             *
+             * @override
+             */
+            async start() {
+                const _super = this._super.bind(this);
+                await messagingBeforeCreationDeferred;
+                await _super();
+            },
+            /**
+             * Override to ensure the test setup is complete before starting
+             * otherwise for example the mock server might not be ready yet.
+             * And also override to give test values to messaging.
+             *
+             * @override
+             */
+            async startModelManager() {
+                await testSetupDoneDeferred;
+                await this._modelManager.start({
+                    autofetchPartnerImStatus: false,
+                    disableAnimation: true,
+                    isQUnitTest: true,
+                    loadingBaseDelayDuration,
+                    messagingBus,
+                });
+            },
+        }),
     }, param0.services);
 
     const kwargs = Object.assign({}, param0, {
@@ -615,18 +666,6 @@ async function start(param0 = {}) {
     }
     // get the final test env after execution of createView/createWebClient/addMockEnvironment
     testEnv = Component.env;
-    const modelManager = new ModelManager(testEnv);
-    Object.assign(testEnv, { modelManager });
-    Object.defineProperty(testEnv, 'messaging', {
-        get() {
-            return this.modelManager.messaging;
-        },
-    });
-    Object.defineProperty(testEnv, 'models', {
-        get() {
-            return this.modelManager.models;
-        },
-    });
     /**
      * Returns a promise resolved after the expected event is received.
      *
@@ -671,51 +710,34 @@ async function start(param0 = {}) {
         await funcRes;
     });
 
+    let waitUntilEventPromise;
+    if (waitUntilEvent) {
+        waitUntilEventPromise = afterEvent({ func: () => testSetupDoneDeferred.resolve(), ...waitUntilEvent, });
+    } else {
+        testSetupDoneDeferred.resolve();
+        waitUntilEventPromise = Promise.resolve();
+    }
+
     const result = {
         afterEvent,
         env: testEnv,
         mockServer,
         widget,
     };
-    const start = async () => {
-        messagingBeforeCreationDeferred.then(async () => {
-            /**
-             * Some models require session data, like locale text direction
-             * (depends on fully loaded translation).
-             */
-            await env.session.is_bound;
-
-            testEnv.modelManager.start({
-                autofetchPartnerImStatus: false,
-                disableAnimation: true,
-                isQUnitTest: true,
-                loadingBaseDelayDuration,
-                messagingBus,
-            });
-            modelManager.messaging.start().then(() =>
-                testEnv.messagingInitializedDeferred.resolve()
-            );
-            testEnv.messagingCreatedPromise.resolve();
-        });
-        if (waitUntilMessagingCondition === 'created') {
-            await testEnv.messagingCreatedPromise;
-        }
-        if (waitUntilMessagingCondition === 'initialized') {
-            await testEnv.messagingInitializedDeferred;
-        }
-
-        if (mountCallbacks.length > 0) {
-            await afterNextRender(async () => {
-                await Promise.all(mountCallbacks.map(callback => callback({ selector, widget })));
-            });
-        }
-        returnCallbacks.forEach(callback => callback(result));
-    };
-    if (waitUntilEvent) {
-        await afterEvent({ func: start, ...waitUntilEvent });
-    } else {
-        await start();
+    if (waitUntilMessagingCondition === 'created') {
+        await testEnv.messagingCreatedPromise;
     }
+    if (waitUntilMessagingCondition === 'initialized') {
+        await testEnv.messagingCreatedPromise;
+        await testEnv.modelManager.messaging.initializedPromise;
+    }
+    if (mountCallbacks.length > 0) {
+        await afterNextRender(async () => {
+            await Promise.all(mountCallbacks.map(callback => callback({ selector, widget })));
+        });
+    }
+    returnCallbacks.forEach(callback => callback(result));
+    await waitUntilEventPromise;
     return result;
 }
 
