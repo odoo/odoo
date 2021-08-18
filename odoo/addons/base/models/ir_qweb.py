@@ -263,13 +263,6 @@ class IrQWeb(models.AbstractModel, QWeb):
 
     @tools.ormcache_context('bundle', 'options.get("lang", "en_US")', keys=("website_id",))
     def _get_asset_content(self, bundle, options, nodeAttrs=None):
-        options = dict(options,
-            inherit_branding=False, inherit_branding_auto=False,
-            edit_translations=False, translatable=False,
-            rendering_bundle=True)
-
-        options['website_id'] = self.env.context.get('website_id')
-
         asset_paths = self.env['ir.asset']._get_asset_paths(bundle=bundle, css=True, js=True)
 
         files = []
