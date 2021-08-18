@@ -2,43 +2,29 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
     'use strict';
 
     const { useListener } = require('web.custom_hooks');
-    const { useContext } = owl.hooks;
     const { isRpcError } = require('point_of_sale.utils');
     const PosComponent = require('point_of_sale.PosComponent');
-    const OrderManagementScreen = require('point_of_sale.OrderManagementScreen');
-    const OrderFetcher = require('point_of_sale.OrderFetcher');
     const Registries = require('point_of_sale.Registries');
-    const contexts = require('point_of_sale.PosContext');
 
     class InvoiceButton extends PosComponent {
         constructor() {
             super(...arguments);
             useListener('click', this._onClick);
-            this.orderManagementContext = useContext(contexts.orderManagement);
-        }
-        get selectedOrder() {
-            return this.orderManagementContext.selectedOrder;
-        }
-        set selectedOrder(value) {
-            this.orderManagementContext.selectedOrder = value;
         }
         get isAlreadyInvoiced() {
-            if (!this.selectedOrder) return false;
-            return Boolean(this.selectedOrder.account_move);
+            if (!this.props.order) return false;
+            return Boolean(this.props.order.account_move);
         }
         get commandName() {
-            if (!this.selectedOrder) {
-                return 'Invoice';
+            if (!this.props.order) {
+                return this.env._t('Invoice');
             } else {
                 return this.isAlreadyInvoiced
-                    ? 'Reprint Invoice'
-                    : this.selectedOrder.isFromClosedSession
-                    ? 'Cannot Invoice'
-                    : 'Invoice';
+                    ? this.env._t('Reprint Invoice')
+                    : this.props.order.isFromClosedSession
+                    ? this.env._t('Cannot Invoice')
+                    : this.env._t('Invoice');
             }
-        }
-        get isHighlighted() {
-            return this.selectedOrder && !this.isAlreadyInvoiced && !this.selectedOrder.isFromClosedSession;
         }
         async _downloadInvoice(orderId) {
             try {
@@ -68,7 +54,7 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
             }
         }
         async _invoiceOrder() {
-            const order = this.selectedOrder;
+            const order = this.props.order;
             if (!order) return;
 
             const orderId = order.backendId;
@@ -93,8 +79,8 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
             // Write to pos.order the selected client.
             if (!order.get_client()) {
                 const { confirmed: confirmedPopup } = await this.showPopup('ConfirmPopup', {
-                    title: 'Need customer to invoice',
-                    body: 'Do you want to open the customer list to select customer?',
+                    title: this.env._t('Need customer to invoice'),
+                    body: this.env._t('Do you want to open the customer list to select customer?'),
                 });
                 if (!confirmedPopup) return;
 
@@ -127,11 +113,7 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
 
             // Part 3: Download invoice.
             await this._downloadInvoice(orderId);
-
-            // Invalidate the cache then fetch the updated order.
-            OrderFetcher.invalidateCache([orderId]);
-            await OrderFetcher.fetch();
-            this.selectedOrder = OrderFetcher.get(this.selectedOrder.backendId);
+            this.trigger('order-invoiced', orderId);
         }
         async _onClick() {
             try {
@@ -149,14 +131,6 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
         }
     }
     InvoiceButton.template = 'InvoiceButton';
-
-    OrderManagementScreen.addControlButton({
-        component: InvoiceButton,
-        condition: function () {
-            return this.env.pos.config.module_account;
-        },
-    });
-
     Registries.Component.add(InvoiceButton);
 
     return InvoiceButton;
