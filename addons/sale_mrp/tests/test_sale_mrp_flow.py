@@ -1755,3 +1755,92 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         check_cogs_entry_values(self.invoice_1, 40)
         # Check that the cost of Good Sold entries for variant 2 are equal to 2 * 10 = 20
         check_cogs_entry_values(self.invoice_2, 20)
+
+    def test_13_so_return_kit(self):
+        """
+        Test that when returning a SO containing only a kit that contains another kit, the
+        SO delivered quantities is set to 0 (with the all-or-nothing policy).
+        Products :
+            Main Kit
+            Nested Kit
+            Screw
+        BoMs :
+            Main Kit BoM (kit), recipe :
+                Nested Kit Bom (kit), recipe :
+                    Screw
+        Business flow :
+            Create those
+            Create a Sales order selling one Main Kit BoM
+            Confirm the sales order
+            Validate the delivery (outgoing) (qty_delivered = 1)
+            Create a return for the delivery
+            Validate return for delivery (ingoing) (qty_delivered = 0)
+        """
+        main_kit_product = self.env['product.product'].create({
+            'name': 'Main Kit',
+            'type': 'product',
+        })
+
+        nested_kit_product = self.env['product.product'].create({
+            'name': 'Nested Kit',
+            'type': 'product',
+        })
+
+        product = self.env['product.product'].create({
+            'name': 'Screw',
+            'type': 'product',
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': nested_kit_product.id,
+            'product_tmpl_id': nested_kit_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [(5, 0), (0, 0, {'product_id': product.id})]
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': main_kit_product.id,
+            'product_tmpl_id': main_kit_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [(5, 0), (0, 0, {'product_id': nested_kit_product.id})]
+        })
+
+        # Create a SO for product Main Kit Product
+        order_form = Form(self.env['sale.order'])
+        order_form.partner_id = self.env.ref('base.res_partner_2')
+        with order_form.order_line.new() as line:
+            line.product_id = main_kit_product
+            line.product_uom_qty = 1
+        order = order_form.save()
+        order.action_confirm()
+        qty_del_not_yet_validated = sum(sol.qty_delivered for sol in order.order_line)
+        self.assertEqual(qty_del_not_yet_validated, 0.0, 'No delivery validated yet')
+
+        # Validate delivery
+        pick = order.picking_ids
+        pick.move_ids.write({'quantity_done': 1})
+        pick.button_validate()
+        qty_del_validated = sum(sol.qty_delivered for sol in order.order_line)
+        self.assertEqual(qty_del_validated, 1.0, 'The order went from warehouse to client, so it has been delivered')
+
+        # 1 was delivered, now create a return
+        stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
+            active_ids=pick.ids, active_id=pick.ids[0], active_model='stock.picking'))
+        return_wiz = stock_return_picking_form.save()
+        for return_move in return_wiz.product_return_moves:
+            return_move.write({
+                'quantity': 1,
+                'to_refund': True
+            })
+        res = return_wiz.create_returns()
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick.move_line_ids.qty_done = 1
+        return_pick.button_validate()  # validate return
+
+        # Delivered quantities to the client should be 0
+        qty_del_return_validated = sum(sol.qty_delivered for sol in order.order_line)
+        self.assertNotEqual(qty_del_return_validated, 1.0, "The return was validated, therefore the delivery from client to"
+                                                           " company was successful, and the client is left without his 1 product.")
+        self.assertEqual(qty_del_return_validated, 0.0, "The return has processed, client doesn't have any quantity anymore")
