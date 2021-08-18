@@ -2271,7 +2271,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skip(
         "the active measure description is the arch string attribute in priority",
         async function (assert) {
             assert.expect(8);
