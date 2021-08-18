@@ -11,6 +11,7 @@ from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import format_amount
 from odoo.osv.expression import OR
+from odoo.tools.misc import get_lang
 
 from .project_task_recurrence import DAYS, WEEKS
 from .project_update import STATUS_COLOR
@@ -144,7 +145,7 @@ class Project(models.Model):
     _description = "Project"
     _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread', 'mail.activity.mixin', 'rating.parent.mixin']
     _order = "sequence, name, id"
-    _rating_satisfaction_days = False  # takes all existing ratings
+    _rating_satisfaction_days = 30  # takes 30 days by default
     _check_company_auto = True
 
     def _compute_attached_docs_count(self):
@@ -173,20 +174,6 @@ class Project(models.Model):
         for project in self:
             project.task_count = result_wo_subtask[project.id]
             project.task_count_with_subtasks = result_with_subtasks[project.id]
-
-    def attachment_tree_view(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
-        action['domain'] = str([
-            '|',
-            '&',
-            ('res_model', '=', 'project.project'),
-            ('res_id', 'in', self.ids),
-            '&',
-            ('res_model', '=', 'project.task'),
-            ('res_id', 'in', self.task_ids.ids)
-        ])
-        action['context'] = "{'default_res_model': '%s','default_res_id': %d}" % (self._name, self.id)
-        return action
 
     def _default_stage_id(self):
         # Since project stages are order by sequence first, this should fetch the one with the lowest sequence number.
@@ -314,8 +301,9 @@ class Project(models.Model):
         ('on_track', 'On Track'),
         ('at_risk', 'At Risk'),
         ('off_track', 'Off Track'),
-        ('on_hold', 'On Hold')
-    ], default='on_track', compute='_compute_last_update_status', store=True)
+        ('on_hold', 'On Hold'),
+        ('to_define', 'Set Status'),
+    ], default='to_define', compute='_compute_last_update_status', store=True, readonly=False, required=True)
     last_update_color = fields.Integer(compute='_compute_last_update_color')
     milestone_ids = fields.One2many('project.milestone', 'project_id')
     milestone_count = fields.Integer(compute='_compute_milestone_count')
@@ -375,7 +363,7 @@ class Project(models.Model):
     @api.depends('last_update_id.status')
     def _compute_last_update_status(self):
         for project in self:
-            project.last_update_status = project.last_update_id.status or 'on_track'
+            project.last_update_status = project.last_update_id.status or 'to_define'
 
     @api.depends('last_update_status')
     def _compute_last_update_color(self):
@@ -451,6 +439,14 @@ class Project(models.Model):
         return project
 
     @api.model
+    def name_create(self, name):
+        res = super().name_create(name)
+        if res:
+            # We create a default stage `new` for projects created on the fly.
+            self.browse(res[0]).type_ids += self.env['project.task.type'].sudo().create({'name': _('New')})
+        return res
+
+    @api.model
     def create(self, vals):
         # Prevent double project creation
         self = self.with_context(mail_create_nosubscribe=True)
@@ -464,6 +460,16 @@ class Project(models.Model):
         if 'is_favorite' in vals:
             vals.pop('is_favorite')
             self._fields['is_favorite'].determine_inverse(self)
+
+        if 'last_update_status' in vals and vals['last_update_status'] != 'to_define':
+            for project in self:
+                # This does not benefit from multi create, this is to allow the default description from being built.
+                # This does seem ok since last_update_status should only be updated on one record at once.
+                self.env['project.update'].with_context(default_project_id=project.id).create({
+                    'name': _('Status Update - ') + fields.Date.today().strftime(get_lang(self.env).date_format),
+                    'status': vals.get('last_update_status'),
+                })
+            vals.pop('last_update_status')
         res = super(Project, self).write(vals) if vals else True
 
         if 'allow_recurring_tasks' in vals and not vals.get('allow_recurring_tasks'):
@@ -604,11 +610,18 @@ class Project(models.Model):
     def action_view_all_rating(self):
         """ return the action to see all the rating of the project and activate default filters"""
         action = self.env['ir.actions.act_window']._for_xml_id('project.rating_rating_action_view_project_rating')
-        action['name'] = _('Ratings of %s') % (self.name,)
+        action['name'] = _('Ratings')
         action_context = ast.literal_eval(action['context']) if action['context'] else {}
         action_context.update(self._context)
-        action_context['search_default_parent_res_name'] = self.name
+        action_context['search_default_rating_last_30_days'] = 1
         action_context.pop('group_by', None)
+        action['domain'] = [('consumed', '=', True), ('parent_res_model', '=', 'project.project'), ('parent_res_id', '=', self.id)]
+        if self.rating_count == 1:
+            action.update({
+                'view_mode': 'form',
+                'views': [(False, 'form')],
+                'res_id': self.rating_ids[0].id, # [0] since rating_ids might be > then rating_count
+            })
         return dict(action, context=action_context)
 
     def action_view_tasks_analysis(self):
@@ -652,7 +665,7 @@ class Project(models.Model):
         self.ensure_one()
         labels = dict(self._fields['last_update_status']._description_selection(self.env))
         return {
-            'status': labels[self.last_update_status],
+            'status': labels.get(self.last_update_status, _('Set Status')),
             'color': self.last_update_color,
         }
 
@@ -955,8 +968,7 @@ class Task(models.Model):
     subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours',
         help="Sum of the time planned of all the sub-tasks linked to this task. Usually less than or equal to the initially planned time of this task.")
     # Tracking of this field is done in the write function
-    user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
-        string='Assignees', default=lambda self: self.env.user)
+    user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id', string='Assignees')
     # User names displayed in project sharing views
     portal_user_names = fields.Char(compute='_compute_portal_user_names', compute_sudo=True, search='_search_portal_user_names')
     # Second Many2many containing the actual personal stage for the current user
@@ -2091,8 +2103,20 @@ class Task(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'project.task',
             'view_mode': 'tree,form,kanban,calendar,pivot,graph,gantt,activity,map',
+            'context': {'create': False},
             'domain': [('recurrence_id', 'in', self.recurrence_id.ids)],
         }
+
+    def action_open_ratings(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('project.rating_rating_action_task')
+        if self.rating_count == 1:
+            action['view_mode'] = 'form'
+            action['res_id'] = self.rating_ids[0].id
+            action['views'] = [[self.env.ref('project.rating_rating_view_form_project').id, 'form']]
+            return action
+        else:
+            return action
 
     def action_stop_recurrence(self):
         tasks = self.env['project.task'].with_context(active_test=False).search([('recurrence_id', 'in', self.recurrence_id.ids)])
@@ -2148,7 +2172,7 @@ class ProjectTags(models.Model):
     def _get_default_color(self):
         return randint(1, 11)
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, translate=True)
     color = fields.Integer(string='Color', default=_get_default_color)
 
     _sql_constraints = [

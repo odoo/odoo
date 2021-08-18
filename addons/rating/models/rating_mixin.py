@@ -98,7 +98,8 @@ class RatingMixin(models.AbstractModel):
                 grades_per_record[record_id]['bad'] += group['__count']
         for record in self:
             grade_repartition = grades_per_record.get(record.id, default_grades)
-            record.rating_percentage_satisfaction = grade_repartition['great'] * 100 / sum(grade_repartition.values()) if sum(grade_repartition.values()) else -1
+            grade_count = sum(grade_repartition.values())
+            record.rating_percentage_satisfaction = grade_repartition['great'] * 100 / grade_count if grade_count else -1
 
     def write(self, values):
         """ If the rated ressource name is modified, we should update the rating res_name too.

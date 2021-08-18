@@ -269,3 +269,9 @@ class AccountAnalyticLine(models.Model):
     def _employee_timesheet_cost(self):
         self.ensure_one()
         return self.employee_id.timesheet_cost or 0.0
+
+    def _get_report_base_filename(self):
+        task_ids = self.task_id
+        if len(task_ids) == 1:
+            return _('Timesheets - %s', task_ids.name)
+        return _('Timesheets')

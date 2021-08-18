@@ -17,6 +17,7 @@ class Project(models.Model):
         "Only applies on tasks without sale order item defined, and if the employee is not in the 'Employee/Sales Order Item Mapping' of the project.")
     sale_order_id = fields.Many2one(string='Sales Order', related='sale_line_id.order_id', help="Sales order to which the project is linked.")
     has_any_so_to_invoice = fields.Boolean('Has SO to Invoice', compute='_compute_has_any_so_to_invoice')
+    sale_order_count = fields.Integer(compute='_compute_sale_order_count')
 
     @api.model
     def _map_tasks_default_valeus(self, task, project):
@@ -45,16 +46,36 @@ class Project(models.Model):
         project_to_invoice.has_any_so_to_invoice = True
         (self - project_to_invoice).has_any_so_to_invoice = False
 
-    def action_view_so(self):
+    def _get_all_sales_orders(self):
         self.ensure_one()
+        return self.sale_order_id | self.task_ids.sale_order_id
+
+    @api.depends('sale_order_id', 'task_ids.sale_order_id')
+    def _compute_sale_order_count(self):
+        for project in self:
+            project.sale_order_count = len(project._get_all_sales_orders())
+
+    def action_view_sos(self):
+        # Opens all the sales orders linked to the project and the project's tasks
+        self.ensure_one()
+        all_sale_orders = self._get_all_sales_orders()
         action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
-            "name": "Sales Order",
-            "views": [[False, "form"]],
+            "name": "Sales Orders",
             "context": {"create": False, "show_sale": True},
-            "res_id": self.sale_order_id.id
         }
+        if len(all_sale_orders) == 1:
+            action_window.update({
+                "res_id": self.sale_order_id.id,
+                "views": [[False, "form"]],
+            })
+        else:
+            action_window.update({
+                "domain": [('id', 'in', all_sale_orders.ids)],
+                "views": [[False, "tree"], [False, "kanban"], [False, "calendar"], [False, "pivot"],
+                           [False, "graph"], [False, "activity"], [False, "form"]],
+            })
         return action_window
 
     def action_create_invoice(self):
@@ -155,7 +176,7 @@ class ProjectTask(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
             "name": "Sales Order",
-            "views": [[False, "tree"], [False, "form"]],
+            "views": [[False, "tree"], [False, "kanban"], [False, "form"]],
             "context": {"create": False, "show_sale": True},
             "domain": [["id", "in", so_ids]],
         }

@@ -419,12 +419,20 @@ class ProjectCustomerPortal(CustomerPortal):
         })
         return request.render("project.portal_my_tasks", values)
 
+    def _show_task_report(self, task_sudo, report_type, download):
+        # This method is to be overriden to report timesheets if the module is installed.
+        # The route should not be called if at least hr_timesheet is not installed
+        raise MissingError(_('There is nothing to report.'))
+
     @http.route(['/my/task/<int:task_id>'], type='http', auth="public", website=True)
-    def portal_my_task(self, task_id, access_token=None, **kw):
+    def portal_my_task(self, task_id, report_type=None, access_token=None, **kw):
         try:
             task_sudo = self._document_check_access('project.task', task_id, access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
+
+        if report_type in ('pdf', 'html', 'text'):
+            return self._show_task_report(task_sudo, report_type, download=kw.get('download'))
 
         # ensure attachment are accessible with access token inside template
         for attachment in task_sudo.attachment_ids:
