@@ -519,13 +519,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
         self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
 
-    def test_03_order_management(self):
-        if hasattr(self.main_pos_config, 'module_pos_restaurant'):
-            self.main_pos_config.module_pos_restaurant = False
-        self.main_pos_config.write({ 'manage_orders': True, 'module_account': True })
-        self.main_pos_config.open_session_cb(check_coa=False)
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'OrderManagementScreenTour', login="accountman")
-
     def test_04_product_configurator(self):
         self.main_pos_config.write({ 'product_configurator': True })
         self.main_pos_config.open_session_cb(check_coa=False)

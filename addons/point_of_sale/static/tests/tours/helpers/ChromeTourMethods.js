@@ -12,19 +12,6 @@ odoo.define('point_of_sale.tour.ChromeTourMethods', function (require) {
                 },
             ];
         }
-        clickOrderManagementButton() {
-            return [
-                {
-                    content: 'check order management button is shown',
-                    trigger: '.pos .pos-rightheader .order-management',
-                    run: () => {},
-                },
-                {
-                    content: 'click order management button',
-                    trigger: '.pos .pos-rightheader .order-management',
-                },
-            ];
-        }
         clickTicketButton() {
             return [
                 {

@@ -85,6 +85,7 @@ odoo.define('pos_restaurant.tour.TipScreen', function (require) {
 
     // finalize order 4 then tip custom amount
     TicketScreen.do.selectOrder('-0004');
+    ProductScreen.check.isShown();
     ProductScreen.check.totalAmountIs('8.0');
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickPaymentMethod('Bank');
@@ -103,12 +104,13 @@ odoo.define('pos_restaurant.tour.TipScreen', function (require) {
     Chrome.do.clickTicketButton();
     TicketScreen.do.selectFilter('Tipping');
     TicketScreen.do.settleTips();
-    TicketScreen.do.selectFilter('All Tickets');
+    TicketScreen.do.selectFilter('Active Orders');
     TicketScreen.check.nthRowContains(2, 'Ongoing');
 
     // tip order2 during payment
     // tip screen should not show after validating payment screen
     TicketScreen.do.selectOrder('-0002');
+    ProductScreen.check.isShown();
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickTipButton();
     NumberPopup.check.isShown();
