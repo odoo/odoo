@@ -415,10 +415,12 @@ class CustomerPortal(Controller):
             raise UserError(_("%s is not the reference of a report", report_ref))
 
         if hasattr(model, 'company_id'):
+            if len(model.company_id) > 1:
+                raise UserError(_('Multi company reports are not supported.'))
             report_sudo = report_sudo.with_company(model.company_id)
 
         method_name = '_render_qweb_%s' % (report_type)
-        report = getattr(report_sudo, method_name)([model.id], data={'report_type': report_type})[0]
+        report = getattr(report_sudo, method_name)(list(model.ids), data={'report_type': report_type})[0]
         reporthttpheaders = [
             ('Content-Type', 'application/pdf' if report_type == 'pdf' else 'text/html'),
             ('Content-Length', len(report)),
