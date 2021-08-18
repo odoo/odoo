@@ -127,7 +127,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
     def _get_asset(self, bundle, env=None):
         env = (env or self.env)
-        files, _ = env['ir.qweb']._get_asset_content(bundle, env.context)
+        files, _ = env['ir.qweb']._get_asset_content(bundle)
         return AssetsBundle(bundle, files, env=env)
 
     def _any_ira_for_bundle(self, extension, lang=None):
@@ -764,7 +764,7 @@ class TestAssetsBundleWithIRAMock(FileTouchable):
         self.patch(IrAttachment, 'unlink', unlink)
 
     def _get_asset(self):
-        files, _ = self.env['ir.qweb']._get_asset_content(self.stylebundle_name, {})
+        files, _ = self.env['ir.qweb']._get_asset_content(self.stylebundle_name)
         return AssetsBundle(self.stylebundle_name, files, env=self.env)
 
     def _bundle(self, asset, should_create, should_unlink):
