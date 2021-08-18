@@ -81,7 +81,7 @@ function factory() {
          * @returns {mail.model[]}
          */
         static all(filterFunc) {
-            return this.env.modelManager.all(this, filterFunc);
+            return this.modelManager.all(this, filterFunc);
         }
 
         /**
@@ -96,7 +96,16 @@ function factory() {
          * @returns {mail.model|mail.model[]} newly created record(s)
          */
         static create(data) {
-            return this.env.modelManager.create(this, data);
+            return this.modelManager.create(this, data);
+        }
+
+        /**
+         * Returns the current env.
+         *
+         * @returns {Object}
+         */
+        static get env() {
+            return this.modelManager.env;
         }
 
         /**
@@ -107,7 +116,7 @@ function factory() {
          * @returns {mail.model|undefined}
          */
         static find(findFunc) {
-            return this.env.modelManager.find(this, findFunc);
+            return this.modelManager.find(this, findFunc);
         }
 
         /**
@@ -120,7 +129,7 @@ function factory() {
          * @returns {mail.model|undefined}
          */
         static findFromIdentifyingData(data) {
-            return this.env.modelManager.findFromIdentifyingData(this, data);
+            return this.modelManager.findFromIdentifyingData(this, data);
         }
 
         /**
@@ -137,7 +146,7 @@ function factory() {
          * @returns {mail.model|undefined}
          */
         static get(localId, { isCheckingInheritance } = {}) {
-            return this.env.modelManager.get(this, localId, { isCheckingInheritance });
+            return this.modelManager.get(this, localId, { isCheckingInheritance });
         }
 
         /**
@@ -150,7 +159,25 @@ function factory() {
          * @returns {mail.model|mail.model[]} created or updated record(s).
          */
         static insert(data) {
-            return this.env.modelManager.insert(this, data);
+            return this.modelManager.insert(this, data);
+        }
+
+        /**
+         * Returns the messaging singleton.
+         *
+         * @returns {mail.messaging}
+         */
+        static get messaging() {
+            return this.modelManager.messaging;
+        }
+
+        /**
+         * Returns all existing models.
+         *
+         * @returns {Object} keys are model name, values are model class.
+         */
+        static get models() {
+            return this.modelManager.models;
         }
 
         /**
@@ -187,7 +214,16 @@ function factory() {
          * This method deletes this record.
          */
         delete() {
-            this.env.modelManager.delete(this);
+            this.modelManager.delete(this);
+        }
+
+        /**
+         * Returns the current env.
+         *
+         * @returns {Object}
+         */
+        get env() {
+            return this.modelManager.env;
         }
 
         /**
@@ -196,7 +232,25 @@ function factory() {
          * @returns {boolean}
          */
         exists() {
-            return this.env.modelManager.exists(this.constructor, this);
+            return this.modelManager.exists(this.constructor, this);
+        }
+
+        /**
+         * Returns the model manager.
+         *
+         * @returns {ModelManager}
+         */
+        get modelManager() {
+            return this.constructor.modelManager;
+        }
+
+        /**
+         * Returns all existing models.
+         *
+         * @returns {Object} keys are model name, values are model class.
+         */
+        get models() {
+            return this.modelManager.models;
         }
 
         /**
@@ -205,7 +259,7 @@ function factory() {
          * @param {Object} [data={}]
          */
         update(data = {}) {
-            this.env.modelManager.update(this, data);
+            this.modelManager.update(this, data);
         }
 
         //----------------------------------------------------------------------
