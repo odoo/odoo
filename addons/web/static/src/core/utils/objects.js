@@ -10,3 +10,7 @@ export function shallowEqual(obj1, obj2) {
         obj1Keys.every((key) => obj1[key] === obj2[key])
     );
 }
+
+export function deepCopy(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
