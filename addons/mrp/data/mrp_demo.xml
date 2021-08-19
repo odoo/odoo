@@ -458,8 +458,8 @@
             <field name="name">Drawer Black</field>
             <field name="categ_id" ref="product.product_category_5"/>
             <field name="tracking">lot</field>
-            <field name="standard_price">2000.0</field>
-            <field name="list_price">2250.0</field>
+            <field name="standard_price">20.0</field>
+            <field name="list_price">24.0</field>
             <field name="type">product</field>
             <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
@@ -474,8 +474,8 @@
             <field name="name">Drawer Case Black</field>
             <field name="categ_id" ref="product.product_category_5"/>
             <field name="tracking">lot</field>
-            <field name="standard_price">800</field>
-            <field name="list_price">850</field>
+            <field name="standard_price">10</field>
+            <field name="list_price">20</field>
             <field name="type">product</field>
             <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
@@ -568,35 +568,35 @@
 
         <!-- BoM -->
 
-        <record id="mrp_bom_laptop_cust" model="mrp.bom">
+        <record id="mrp_bom_drawer" model="mrp.bom">
             <field name="product_tmpl_id" ref="product.product_product_27_product_template"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">1</field>
             <field name="code">PRIM-ASSEM</field>
         </record>
-        <record id="mrp_bom_laptop_cust_line_1" model="mrp.bom.line">
+        <record id="mrp_bom_drawer_line_1" model="mrp.bom.line">
             <field name="product_id" ref="product_product_drawer_drawer"/>
             <field name="product_qty">1</field>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">1</field>
-            <field name="bom_id" ref="mrp_bom_laptop_cust"/>
+            <field name="bom_id" ref="mrp_bom_drawer"/>
         </record>
-        <record id="mrp_bom_laptop_cust_line_2" model="mrp.bom.line">
+        <record id="mrp_bom_drawer_line_2" model="mrp.bom.line">
             <field name="product_id" ref="product_product_drawer_case"/>
             <field name="product_qty">1</field>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">2</field>
-            <field name="bom_id" ref="mrp_bom_laptop_cust"/>
+            <field name="bom_id" ref="mrp_bom_drawer"/>
         </record>
 
-        <record id="mrp_bom_laptop_cust_rout" model="mrp.bom">
+        <record id="mrp_bom_drawer_rout" model="mrp.bom">
             <field name="product_tmpl_id" ref="product.product_product_27_product_template"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">2</field>
             <field name="code">SEC-ASSEM</field>
         </record>
         <record id="mrp_routing_workcenter_1" model="mrp.routing.workcenter">
-            <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
+            <field name="bom_id" ref="mrp_bom_drawer_rout"/>
             <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="name">Long time assembly</field>
             <field name="time_cycle">180</field>
@@ -606,7 +606,7 @@
         </record>
 
         <record id="mrp_routing_workcenter_3" model="mrp.routing.workcenter">
-            <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
+            <field name="bom_id" ref="mrp_bom_drawer_rout"/>
             <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="name">Testing</field>
             <field name="time_cycle">60</field>
@@ -616,7 +616,7 @@
         </record>
 
         <record id="mrp_routing_workcenter_4" model="mrp.routing.workcenter">
-            <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
+            <field name="bom_id" ref="mrp_bom_drawer_rout"/>
             <field name="workcenter_id" ref="mrp_workcenter_1"/>
             <field name="name">Packing</field>
             <field name="time_cycle">30</field>
@@ -624,37 +624,37 @@
             <field name="worksheet_type">pdf</field>
             <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
         </record>
-        <record id="mrp_bom_laptop_cust_rout_line_1" model="mrp.bom.line">
+        <record id="mrp_bom_drawer_rout_line_1" model="mrp.bom.line">
             <field name="product_id" ref="product_product_drawer_drawer"/>
             <field name="product_qty">1</field>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">1</field>
-            <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
+            <field name="bom_id" ref="mrp_bom_drawer_rout"/>
         </record>
-        <record id="mrp_bom_laptop_cust_rout_line_2" model="mrp.bom.line">
+        <record id="mrp_bom_drawer_rout_line_2" model="mrp.bom.line">
             <field name="product_id" ref="product_product_drawer_case"/>
             <field name="product_qty">1</field>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">2</field>
-            <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
+            <field name="bom_id" ref="mrp_bom_drawer_rout"/>
         </record>
 
         <record id="product.product_product_27" model="product.product">
             <field name="type">product</field>
         </record>
-        <record id="mrp_production_laptop_cust" model="mrp.production">
+        <record id="mrp_production_drawer" model="mrp.production">
             <field name="product_id" ref="product.product_product_27"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="product_qty">5</field>
             <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_stock"/>
-            <field name="bom_id" ref="mrp_bom_laptop_cust"/>
+            <field name="bom_id" ref="mrp_bom_drawer"/>
         </record>
 
         <function model="stock.move" name="create">
             <value model="stock.move" eval="
-                obj().env.ref('mrp.mrp_production_laptop_cust')._get_moves_raw_values() +
-                obj().env.ref('mrp.mrp_production_laptop_cust')._get_moves_finished_values()"/>
+                obj().env.ref('mrp.mrp_production_drawer')._get_moves_raw_values() +
+                obj().env.ref('mrp.mrp_production_drawer')._get_moves_finished_values()"/>
         </function>
 
         <!-- Run Scheduler -->
@@ -711,7 +711,7 @@
         <function model="mrp.production" name="action_confirm" eval="[[
             ref('mrp.mrp_production_3'),
             ref('mrp.mrp_production_4'),
-            ref('mrp.mrp_production_laptop_cust'),
+            ref('mrp.mrp_production_drawer'),
         ]]"/>
 
         <function model="mrp.production" name="button_plan">
@@ -719,25 +719,25 @@
         </function>
 
         <function model="mrp.production" name="write">
-            <value eval="[ref('mrp.mrp_production_laptop_cust')]"/>
+            <value eval="[ref('mrp.mrp_production_drawer')]"/>
             <value eval="{'qty_producing': 5, 'lot_producing_id': ref('mrp.lot_product_27_0')}"/>
         </function>
 
         <function model="mrp.production" name="action_assign">
-            <value eval="[ref('mrp.mrp_production_laptop_cust')]"/>
+            <value eval="[ref('mrp.mrp_production_drawer')]"/>
         </function>
 
         <function model="stock.move" name="write">
-            <value model="stock.move" eval="obj().env['stock.move'].search([('raw_material_production_id', '=', obj().env.ref('mrp.mrp_production_laptop_cust').id)]).ids"/>
+            <value model="stock.move" eval="obj().env['stock.move'].search([('raw_material_production_id', '=', obj().env.ref('mrp.mrp_production_drawer').id)]).ids"/>
             <value eval="{'quantity_done': 5}"/>
         </function>
 
         <function model="mrp.production" name="_post_inventory">
-            <value eval="[ref('mrp.mrp_production_laptop_cust')]"/>
+            <value eval="[ref('mrp.mrp_production_drawer')]"/>
         </function>
 
         <function model="mrp.production" name="button_mark_done">
-            <value eval="[ref('mrp.mrp_production_laptop_cust')]"/>
+            <value eval="[ref('mrp.mrp_production_drawer')]"/>
         </function>
 
         <!-- set 'create component' as True for the demo manufacturing picking type
