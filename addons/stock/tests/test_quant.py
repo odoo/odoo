@@ -53,6 +53,11 @@ class StockQuant(TransactionCase):
             'name': 'stock_location',
             'usage': 'internal',
         })
+        cls.stock_subloc3 = cls.env['stock.location'].create({
+            'name': 'subloc3',
+            'usage': 'internal',
+            'location_id': cls.stock_location.id
+        })
         cls.stock_subloc2 = cls.env['stock.location'].create({
             'name': 'subloc2',
             'usage': 'internal',
@@ -632,3 +637,55 @@ class StockQuant(TransactionCase):
         self.assertEqual(quant.quantity, 2)
         self.assertEqual(quant.lot_id.id, lot1.id)
         self.assertEqual(quant.in_date, in_date2)
+
+    def test_closest_removal_strategy_tracked(self):
+        """ Check that the Closest location strategy correctly applies when you have multiple lot received
+        at different locations for a tracked product.
+        """
+        closest_strategy = self.env['product.removal'].search([('method', '=', 'closest')])
+        self.stock_location.removal_strategy_id = closest_strategy
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+        in_date = datetime.now()
+        # Add a product from lot1 in stock_location/subloc2
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_subloc2, 1.0, lot_id=lot1, in_date=in_date)
+        # Add a product from lot2 in stock_location/subloc3
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_subloc3, 1.0, lot_id=lot2, in_date=in_date)
+        # Require one unit of the product
+        quants = self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, 1)
+
+        # Default removal strategy is 'Closest location', so lot1 should be received as it was put in a closer location. (stock_location/subloc2 < stock_location/subloc3)
+        self.assertEqual(quants[0][0].lot_id.id, lot1.id)
+
+    def test_closest_removal_strategy_untracked(self):
+        """ Check that the Closest location strategy correctly applies when you have multiple products received
+        at different locations for untracked products."""
+        closest_strategy = self.env['product.removal'].search([('method', '=', 'closest')])
+        self.stock_location.removal_strategy_id = closest_strategy
+        # Add 2 units of product into stock_location/subloc2
+        self.env['stock.quant'].create({
+            'product_id': self.product.id,
+            'location_id': self.stock_subloc2.id,
+            'quantity': 2.0,
+        })
+        # Add 3 units of product into stock_location/subloc3
+        self.env['stock.quant'].create({
+            'product_id': self.product.id,
+            'location_id': self.stock_subloc3.id,
+            'quantity': 3.0
+        })
+        # Request 3 units of product, with 'Closest location' as removal strategy
+        quants = self.env['stock.quant']._update_reserved_quantity(self.product, self.stock_location, 3)
+
+        # The 2 in stock_location/subloc2 should be taken first, as the location name is smaller alphabetically
+        self.assertEqual(quants[0][0].reserved_quantity, 2)
+        # The last one should then be taken in stock_location/subloc3 since the first location doesn't have enough products
+        self.assertEqual(quants[1][0].reserved_quantity, 1)
