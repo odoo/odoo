@@ -62,6 +62,9 @@
                                 <tfoot>
                                     <tr t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_prod_cost">
                                         <td></td>
+                                        <t t-foreach="range(data.get('extra_column_count', 0))" t-as="index">
+                                            <td/>
+                                        </t>
                                         <td name="td_mrp_bom_f" class="text-right">
                                             <span><t t-if="data['byproducts']" t-esc="data['bom_prod_name']"/></span>
                                         </td>
@@ -77,6 +80,9 @@
                                     <t t-if="data['report_structure'] != 'bom_structure'" t-foreach="data['byproducts']" t-as="byproduct">
                                         <tr class="o_mrp_bom_cost">
                                             <td/>
+                                            <t t-foreach="range(data.get('extra_column_count', 0))" t-as="index">
+                                                <td/>
+                                            </t>
                                             <td name="td_mrp_bom_byproducts_f" class="text-right">
                                                 <span><t t-esc="byproduct['product_name']"/></span>
                                             </td>
@@ -150,6 +156,9 @@
                     <span class="o_mrp_bom_unfoldable fa fa-fw fa-caret-right" t-att-data-function="'get_operations'" role="img" aria-label="Unfold" title="Unfold"/>
                     Operations
                 </td>
+                <t t-foreach="range(data.get('extra_column_count', 0))" t-as="index">
+                    <td/>
+                </t>
                 <td/>
                 <td class="text-right">
                     <span t-esc="data['operations_time']" t-options='{"widget": "float_time"}'/>
@@ -170,6 +179,9 @@
                     <span class="o_mrp_bom_unfoldable fa fa-fw fa-caret-right" t-att-data-function="'get_byproducts'" role="img" aria-label="Unfold" title="Unfold"/>
                     By-Products
                 </td>
+                <t t-foreach="range(data.get('extra_column_count', 0))" t-as="index">
+                    <td/>
+                </t>
                 <td/>
                 <td class="text-right">
                     <span t-esc="data['byproducts_total']"/>
@@ -192,6 +204,9 @@
                   <span t-att-style="space_td"/>
                   <a href="#" t-att-data-res-id="op['operation'].id" t-att-data-model="'mrp.routing.workcenter'" class="o_mrp_bom_action"><t t-esc="op['name']"/></a>
               </td>
+              <t t-foreach="range(data.get('extra_column_count', 0))" t-as="index">
+                  <td/>
+              </t>
               <td/>
               <td class="text-right">
                   <span t-esc="op['duration_expected']" t-options='{"widget": "float_time"}'/>
@@ -215,6 +230,9 @@
                     <span t-att-style="space_td"/>
                     <a href="#" t-att-data-res-id="byproduct['product_id'].id" t-att-data-model="byproduct['product_id']._name" class="o_mrp_bom_action"><t t-esc="byproduct['product_name']"/></a>
                 </td>
+                <t t-foreach="range(data.get('extra_column_count', 0))" t-as="index">
+                    <td/>
+                </t>
                 <td/>
                 <td class="text-right">
                     <span t-esc="byproduct['product_qty']"/>
