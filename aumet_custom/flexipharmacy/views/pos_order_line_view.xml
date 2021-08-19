@@ -63,6 +63,18 @@
                             <field name="delivery_address" readonly="1"/>
                         </group>
                     </page>
+                    <page string="Doctor Commission">
+                        <group col="4">
+                            <field name="commission_calculation"/>
+                            <field name="commission_based_on"/>
+                        </group>
+                        <field name="sale_commission_ids" mode="tree" nolable="1">
+                            <tree editable="bottom">
+                                <field name="doctor_id"/>
+                                <field name="amount"/>
+                            </tree>
+                        </field>
+                    </page>
                 </xpath>
                 <xpath expr="//page[@name='products']" position="after">
                     <page string="Remaining Product" attrs="{'invisible':[('pos_return_order', '=', 0)]}">

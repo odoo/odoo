@@ -20,6 +20,7 @@ from odoo.exceptions import UserError
 
 class WizardSlowMovingInv(models.TransientModel):
     _name = "wizard.slow.moving.inventory"
+    _description = "Slow Moving Inventory"
 
     from_date = fields.Date(string="Start Date", default=datetime.today(), required=True)
     categ_ids = fields.Many2many('product.category', string="Product Category")

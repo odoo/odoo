@@ -27,7 +27,7 @@ odoo.define('flexipharmacy.dashboard', function (require) {
                    res_model: 'stock.production.lot',
                    type: 'ir.actions.act_window',
                    target: 'new',
-                   domain:[['state_check','=','Expired'], ['expiration_date', '<=', expiration_to], ['expiration_date', '>=', expiration_from]],
+                   domain:[['expiration_date', '<=', expiration_to], ['expiration_date', '>=', expiration_from]],
             });
         },
         init: function (parent, params) {

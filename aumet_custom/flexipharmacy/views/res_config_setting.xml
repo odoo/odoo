@@ -175,6 +175,55 @@
                             </div>
                         </div>
                     </div>
+                    <h2>PoS Doctor Commission</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label for="is_doctor_commission" class="col-md-3 o_light_label"
+                                               style="font-weight:bold;"/>
+                                        <field name="is_doctor_commission"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt16 o_settings_container" attrs="{'invisible':[('is_doctor_commission', '=', False)]}">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label for="pos_commission_calculation" class="col-md-3 o_light_label"
+                                               style="font-weight:bold;"/>
+                                        <field name="pos_commission_calculation"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label for="pos_commission_based_on" class="col-md-3 o_light_label"
+                                               style="font-weight:bold;"/>
+                                        <field name="pos_commission_based_on"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label for="pos_commission_with" class="col-md-3 o_light_label"
+                                               style="font-weight:bold;"/>
+                                        <field name="pos_commission_with"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </xpath>
                 <xpath expr="//div[@name='barcode_setting_container']" position="after">
                     <h2>Product Barcode Generate</h2>
@@ -233,5 +282,31 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="pos_account_res_config_settings_form_inherit" model="ir.ui.view">
+            <field name="name">res.config.settings.from</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]/div[@data-key='account']" position="inside">
+                    <h2>PoS Doctor Commission</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label for="pos_account_id" class="col-md-3 o_light_label"
+                                               style="font-weight:bold;"/>
+                                        <field name="pos_account_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+        
     </data>
 </odoo>

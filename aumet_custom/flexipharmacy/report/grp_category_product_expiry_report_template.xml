@@ -38,7 +38,6 @@
                                         <tr>
                                             <th>Lot/Serial number</th>
                                             <th>Product</th>
-                                            <th>Barcode</th>
                                             <th>Location</th>
                                             <th>Internal Ref</th>
                                             <th>Expiry Date</th>
@@ -52,9 +51,6 @@
                                                 </td>
                                                 <td>
                                                     <span t-esc="line.get('product_id')"/>
-                                                </td>
-                                                <td>
-                                                    <span t-esc="line.get('barcode')"/>
                                                 </td>
                                                 <td>
                                                     <span t-esc="line.get('location_name')"/>
@@ -105,7 +101,6 @@
                                         <tr>
                                             <th>Lot/Serial number</th>
                                             <th>Product</th>
-                                            <th>Barcode</th>
                                             <th>Category</th>
                                             <th>Internal Ref</th>
                                             <th>Expiry Date</th>
@@ -119,9 +114,6 @@
                                                 </td>
                                                 <td>
                                                     <span t-esc="line.get('product_id')"/>
-                                                </td>
-                                                <td>
-                                                    <span t-esc="line.get('barcode')"/>
                                                 </td>
                                                 <td>
                                                     <span t-esc="line.get('product_category')"/>

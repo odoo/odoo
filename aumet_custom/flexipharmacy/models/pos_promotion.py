@@ -156,7 +156,7 @@ class DiscountOnAbovePrice(models.Model):
                                       ('free_product', 'Free Product')])
     fix_price_discount = fields.Char("Price Discount")
     product_category_ids = fields.Many2many('pos.category', 'discount_pos_categ_rel', string="Categories")
-    product_brand_ids = fields.Many2many('product.brand', 'product_brand_rel', string="Product Brands")
+    # product_brand_ids = fields.Many2many('product.brand', 'product_brand_rel', string="Product Brands")
     free_product = fields.Many2one('product.product', string="Product")
 
 

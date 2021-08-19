@@ -11,6 +11,7 @@
 import logging
 from odoo import models, fields, api, _
 from datetime import date
+from dateutil.relativedelta import relativedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -25,6 +26,13 @@ class ResPartner(models.Model):
             total += line.credit - line.debit
         self.remaining_wallet_amount = total
 
+    @api.constrains('pos_doctor_commission_ids', 'pos_doctor_commission_ids.commission')
+    def _check_commission_values(self):
+        if self.pos_doctor_commission_ids.filtered(
+                lambda line: line.calculation == 'percentage' and line.commission > 100 or line.commission < 0.0):
+            raise Warning(_('Commission value for Percentage type must be between 0 to 100.'))
+
+
     is_doctor = fields.Boolean("Is Doctor")
     wallet_lines = fields.One2many('wallet.management', 'customer_id', string="Wallet", readonly=True)
     remaining_wallet_amount = fields.Float(compute="_calc_remaining", string="Remaining Amount", readonly=True,
@@ -35,6 +43,42 @@ class ResPartner(models.Model):
     earned_loyalty_ids = fields.One2many('pos.earn.loyalty', 'partner_id', string="Earned Loyalty")
     redeem_loyalty_ids = fields.One2many('pos.redeem.loyalty', 'partner_id', string="Redeem Loyalty")
     remaining_points = fields.Integer(string="Available Points", compute='compute_total_earned')
+
+    pos_doctor_commission_ids = fields.One2many('pos.res.partner.commission', 'partner_comm_id', string="Doctor Commission")
+   # pos_commission_payment_type = fields.Selection([
+   #      ('manually', 'Manually'),
+   #      ('monthly', 'Monthly'),
+   #      ('quarterly', 'Quarterly'),
+   #      ('biyearly', 'Biyearly'),
+   #      ('yearly', 'Yearly')
+   #  ], string='Commission Payment Type ')
+    # pos_next_payment_date = fields.Date(string='Next Payment Date ', store=True)
+    pos_commission_count = fields.Float(string='PoS Commission', compute='_pos_compute_commission')
+    
+    def _pos_compute_commission(self):
+        commission = self.env['pos.doctor.commission'].search([])
+        for customer in self:
+            customer.pos_commission_count = 0
+            for each in commission:
+                if each.doctor_id.id == customer.id:
+                    customer.pos_commission_count += each.amount
+
+    # @api.constrains('is_doctor')
+    # def check_vendor(self):
+    #     if self.is_doctor and not self.supplier:
+    #         raise Warning(_('Supplier Must be Available When Doctor Available'))
+
+    def pos_commission_payment_count(self):
+        return {
+            'name': _('PoS Doctor Commission'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'pos.doctor.commission',
+            'view_id': False,
+            'target': 'current',
+            'type': 'ir.actions.act_window',
+            'domain': [('doctor_id', 'in', [self.id])],
+        }
 
     @api.depends('earned_loyalty_ids', 'redeem_loyalty_ids')
     def compute_total_earned(self):
@@ -71,5 +115,18 @@ class ResPartner(models.Model):
 
                     except Exception as e:
                         _logger.error('Unable to send email for birthday %s', e)
+
+
+class PosResPartnerCommission(models.Model):
+    _name = 'pos.res.partner.commission'
+    _description = "Point of Sale Doctor Commission"
+
+    doctor_id = fields.Many2one('res.partner', string='Doctor', domain="[('is_doctor', '=', True)]")
+    calculation = fields.Selection([
+        ('percentage', 'Percentage'),
+        ('fixed_price', 'Fixed Price')
+    ], string='Calculation')
+    commission = fields.Float(string='Commission')
+    partner_comm_id = fields.Many2one('res.partner')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

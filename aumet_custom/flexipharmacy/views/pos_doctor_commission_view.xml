@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <menuitem name="Doctor Commission" id="main_menu_pos_doctor_commission" parent="point_of_sale.menu_point_root"
+                  sequence="91"/>
+
+        <record id="pos_doctor_commission_view_form" model="ir.ui.view">
+            <field name="name">pos.doctor.commission.form</field>
+            <field name="model">pos.doctor.commission</field>
+            <field name="arch" type="xml">
+                <form string="Doctor Commission" create="false" delete="false" copy="false" edit="false">
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group col="4">
+                            <field name="doctor_id" readonly="1"/>
+                            <field name="name" readonly="1"/>
+                            <field name="commission_date" readonly="1"/>
+                            <field name="amount" readonly="1"/>
+                            <field name="commission_number" readonly="1"/>
+                            <field name="invoice_id" invisible="1"/>
+                            <field name="is_invoice" invisible="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="pos_doctor_commission_view_tree" model="ir.ui.view">
+            <field name="name">pos.doctor.commission.tree</field>
+            <field name="model">pos.doctor.commission</field>
+            <field name="arch" type="xml">
+                <tree string="Doctor Commission" create="false" delete="false">
+                    <field name="doctor_id"/>
+                    <field name="commission_number"/>
+                    <field name="name"/>
+                    <field name="commission_date"/>
+                    <field name="amount"/>
+                    <field name="state"/>
+                    <field name="invoice_id" invisible="1"/>
+                    <field name="is_invoice" invisible="1"/>
+                    <button type="object" string="Cancel" name="cancel_state" attrs="{'invisible':[('state', '!=', 'draft')]}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="pos_doctor_commission_action" model="ir.actions.act_window">
+            <field name="name">Doctor Commission</field>
+            <field name="res_model">pos.doctor.commission</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Doctor Commission" id="menu_pos_doctor_commission" parent="main_menu_pos_doctor_commission"
+                  action="pos_doctor_commission_action" sequence="1"/>
+
+    </data>
+</odoo>

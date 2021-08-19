@@ -7,6 +7,28 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//sheet//notebook" position="inside">
+                    <page string="PoS Doctor Commission" attrs="{'invisible':[('is_doctor', '=', False)]}">
+                        <group>
+                            <group string="Currency">
+                                <field name="currency_id"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//sheet//div[@name='button_box']" position="inside">
+                    <button name="pos_commission_payment_count" type="object" class="oe_stat_button"
+                            icon="fa-pencil-square-o"
+                            attrs="{'invisible':[('is_doctor', '=', False)]}">
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="pos_commission_count" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                            </span>
+                            <span class="o_stat_text">PoS Commission</span>
+                        </div>
+                    </button>
+                </xpath>
                 <xpath expr="//page[@name='internal_notes']" position="after">
                     <page name="Customer Reward" string="Earned Loyalty">
                         <field name="earned_loyalty_ids">

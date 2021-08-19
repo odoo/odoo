@@ -20,5 +20,6 @@ from . import account_financial_report
 from . import general_ledger_wiz
 from . import product_expiry_report_wizard
 from . import slow_moving_inventory_wizard
+from . import pos_doctor_commission_payment
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -51,6 +51,22 @@ class ResConfigSettings(models.TransientModel):
     mailsend_check = fields.Boolean(string="Send Mail")
     email_notification_days = fields.Integer(string="Expiry Alert Days")
     res_user_ids = fields.Many2many('res.users', string='Users')
+    # Doctor commision
+    pos_commission_calculation = fields.Selection([
+        ('product', 'Product'),
+        ('product_category', 'Product Category'),
+        ('doctor', 'Doctor'),
+    ], string='Commission Calculation ')
+    pos_account_id = fields.Many2one('account.account', string='Commission Account ')
+    pos_commission_based_on = fields.Selection([
+        ('product_sell_price', 'Product Sell Price'),
+        ('product_profit_margin', 'Product Profit Margin')
+    ], string='Commission Based On ')
+    pos_commission_with = fields.Selection([
+        ('with_tax', 'Tax Included'),
+        ('without_tax', 'Tax Excluded')
+    ], string='Apply Commission With ')
+    is_doctor_commission = fields.Boolean(string='Doctor Commission ')
 
     @api.onchange('enable_loyalty')
     def _onchange_enable_loyalty(self):
@@ -98,12 +114,19 @@ class ResConfigSettings(models.TransientModel):
 
             'gen_barcode': param_obj.get_param('gen_barcode'),
             'barcode_selection': param_obj.get_param('barcode_selection'),
-            'gen_internal_ref': param_obj.get_param('gen_internal_ref')
+            'gen_internal_ref': param_obj.get_param('gen_internal_ref'),
+            'pos_commission_calculation' : param_obj.get_param('flexipharmacy.pos_commission_calculation'),
+            'pos_commission_based_on' : param_obj.get_param('flexipharmacy.pos_commission_based_on'),
+            'pos_commission_with' : param_obj.get_param('flexipharmacy.pos_commission_with'),
+            'is_doctor_commission' : param_obj.get_param('flexipharmacy.is_doctor_commission'),
         })
         categories = param_obj.get_param('flexipharmacy.exclude_category')
         res.update(
             exclude_category=[(6, 0, literal_eval(categories))] if categories else False,
         )
+        IrDefault = self.env['ir.default'].sudo()
+        pos_account_id = IrDefault.get('res.config.settings', "pos_account_id")
+        res.update({'pos_account_id': pos_account_id or False})
         return res
 
     def set_values(self):
@@ -124,12 +147,18 @@ class ResConfigSettings(models.TransientModel):
         param_obj.sudo().set_param('flexipharmacy.referral_point_calculation', self.referral_point_calculation)
         param_obj.sudo().set_param('flexipharmacy.exclude_category', self.exclude_category.ids)
 
-        param_obj.set_param('gen_barcode', self.gen_barcode)
-        param_obj.set_param('barcode_selection', self.barcode_selection)
-        param_obj.set_param('gen_internal_ref', self.gen_internal_ref)
+        param_obj.sudo().set_param('gen_barcode', self.gen_barcode)
+        param_obj.sudo().set_param('barcode_selection', self.barcode_selection)
+        param_obj.sudo().set_param('gen_internal_ref', self.gen_internal_ref)
+        param_obj.sudo().set_param("flexipharmacy.pos_commission_calculation", self.pos_commission_calculation)
+        param_obj.sudo().set_param("flexipharmacy.pos_commission_based_on", self.pos_commission_based_on)
+        param_obj.sudo().set_param("flexipharmacy.pos_commission_with", self.pos_commission_with)
+        param_obj.sudo().set_param("flexipharmacy.is_doctor_commission", self.is_doctor_commission)
         param_obj.sudo().set_param('flexipharmacy.mailsend_check', self.mailsend_check)
         param_obj.sudo().set_param('flexipharmacy.res_user_ids', self.res_user_ids.ids)
         param_obj.sudo().set_param('flexipharmacy.email_notification_days', self.email_notification_days)
+        IrDefault = self.env['ir.default'].sudo()
+        IrDefault.set('res.config.settings', "pos_account_id", self.pos_account_id.id)
         return super(ResConfigSettings, self).set_values()
 
     @api.model

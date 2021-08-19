@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="pos_category_view_form_inherit" model="ir.ui.view">
+            <field name="name">pos.category.from</field>
+            <field name="model">pos.category</field>
+            <field name="inherit_id" ref="point_of_sale.product_pos_category_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form//sheet" position="inside">
+                    <notebook>
+                        <page string="PoS Doctor Commission">
+                            <group>
+                                <field name="pos_category_comm_ids" nolabel="1" mode="tree">
+                                    <tree editable="bottom">
+                                        <field name="doctor_id"/>
+                                        <field name="calculation"/>
+                                        <field name="commission"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

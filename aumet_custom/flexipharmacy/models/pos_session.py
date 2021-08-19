@@ -127,16 +127,13 @@ class PosSession(models.Model):
 
             if order.is_invoiced:
                 # Combine invoice receivable lines
-                key = order.partner_id.property_account_receivable_id.id
+                key = order.partner_id
                 if self.config_id.cash_rounding:
-                    invoice_receivables[key] = self._update_amounts(invoice_receivables[key],
-                                                                    {'amount': order.amount_paid}, order.date_order)
+                    invoice_receivables[key] = self._update_amounts(invoice_receivables[key], {'amount': order.amount_paid}, order.date_order)
                 else:
-                    invoice_receivables[key] = self._update_amounts(invoice_receivables[key],
-                                                                    {'amount': order.amount_total}, order.date_order)
+                    invoice_receivables[key] = self._update_amounts(invoice_receivables[key], {'amount': order.amount_total}, order.date_order)
                 # side loop to gather receivable lines by account for reconciliation
-                for move_line in order.account_move.line_ids.filtered(
-                        lambda aml: aml.account_id.internal_type == 'receivable' and not aml.reconciled):
+                for move_line in order.account_move.line_ids.filtered(lambda aml: aml.account_id.internal_type == 'receivable' and not aml.reconciled):
                     order_account_move_receivable_lines[move_line.account_id.id] |= move_line
             else:
                 order_taxes = defaultdict(tax_amounts)

@@ -54,6 +54,17 @@
                     <field string="Expired" name="expired" widget="statinfo"/>
                 </button>
             </div>
+            <xpath expr="//notebook" position="inside">
+                <page string="PoS Doctor Commission">
+                    <field name="pos_product_commission_ids" mode="tree" nolable="1">
+                        <tree editable="bottom">
+                            <field name="doctor_id"/>
+                            <field name="calculation"/>
+                            <field name="commission"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
         </field>
     </record>
 </odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="pos_doctor_commission_payment_wizard" model="ir.ui.view">
+            <field name="name">pos.doctor.commission.payment.form</field>
+            <field name="model">pos.doctor.commission.payment</field>
+            <field name="arch" type="xml">
+                <form string="Commission Payment Report">
+                    <group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="doctor_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="end_date"/>
+                        </group>
+                        <footer>
+                            <button string="Print" name="print_report" type="object" class="oe_highlight"/>
+                            or
+                            <button string="Cancel" class="btn-default" special="cancel"/>
+                        </footer>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="pos_doctor_commission_payment_action" model="ir.actions.act_window">
+            <field name="name">Commission Payment Report</field>
+            <field name="res_model">pos.doctor.commission.payment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_pos_report" name="Report" parent="main_menu_pos_doctor_commission"
+                  action="pos_doctor_commission_payment_action" sequence="3"/>
+
+    </data>
+</odoo>

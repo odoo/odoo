@@ -13,6 +13,7 @@ from . import pos_session
 from . import pos_payment_method
 from . import res_users
 from . import pos_order
+from . import pos_doctor_commission
 from . import account_move
 from . import wallet_management
 from . import res_partner
@@ -35,4 +36,7 @@ from . import recurrent_order
 from . import stock_quant
 from . import pos_promotion
 from . import product_expiry_config
+from . import pos_category
+from . import pos_commission_analysis
+from . import pos_commission_payment
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

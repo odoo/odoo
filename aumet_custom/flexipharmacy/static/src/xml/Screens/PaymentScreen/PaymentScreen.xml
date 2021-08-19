@@ -22,7 +22,7 @@
                 </div>
                 <PaymentScreenPaymentLines paymentLines="paymentLines"/>
                 <div class="paymentmethods">
-                    <t t-foreach="env.pos.payment_methods" t-as="paymentMethod"
+                    <t t-foreach="payment_methods_config" t-as="paymentMethod"
                        t-key="paymentMethod.id">
                         <t t-if="!paymentMethod.jr_use_for">
                             <PaymentMethodButton paymentMethod="paymentMethod"/>

@@ -12,7 +12,7 @@ import psycopg2
 import pytz
 from odoo import models, fields, api, tools, _
 from odoo.tools import float_is_zero, float_round
-from datetime import timedelta, datetime, timezone
+from datetime import timedelta, datetime, timezone, date
 from dateutil.tz import tzutc, tzlocal
 import logging
 from odoo.exceptions import UserError
@@ -54,6 +54,13 @@ class PosOrder(models.Model):
         for each in self:
             each.amount_due = (each.amount_total - each.amount_paid) + each.change_amount_for_wallet
 
+    def _commission_calculation(self):
+        return self.env['ir.config_parameter'].sudo().get_param(
+            'flexipharmacy.pos_commission_calculation') or ''
+
+    def commission_based(self):
+        return self.env['ir.config_parameter'].sudo().get_param('flexipharmacy.pos_commission_based_on') or ''
+
     # store wallet amount
     change_amount_for_wallet = fields.Float('Wallet Amount')
     amount_due = fields.Float("Amount Due", compute="_compute_amount_due")
@@ -63,7 +70,6 @@ class PosOrder(models.Model):
     points_amount = fields.Integer('Points Amount', readonly="1")
     ref_reward = fields.Integer('Reference Points', readonly="1")
     ref_customer = fields.Integer('Reference Customer', readonly="1")
-    ref_doctor_id = fields.Many2one('res.partner', string='Reference Doctor', readonly="1")
     back_order_reference = fields.Char('Back Order Receipt', readonly="1")
     salesman_id = fields.Many2one('res.users', string='Salesman')
     is_recurrent = fields.Boolean(string='Recurrent')
@@ -84,9 +90,20 @@ class PosOrder(models.Model):
     rating = fields.Selection(
         [('0', 'No Ratings'), ('1', 'Bad'), ('2', 'Not bad'), ('3', 'Good'), ('4', 'Very Good'), ('5', 'Excellent')],
         'Rating', default='0', index=True)
+    ref_doctor_id = fields.Many2one('res.partner', string='Reference Doctor', readonly="1")
     pos_return_order = fields.Integer(compute='_compute_pos_return_order_count')
-    remaining_lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines',
+    remaining_lines = fields.One2many('pos.order.line', 'order_id', string='Remaining Order Lines',
                                       states={'draft': [('readonly', False)]}, readonly=True, copy=True)
+    sale_commission_ids = fields.One2many('pos.order.commission', 'pos_order_id', string="Doctor Commission")
+    commission_calculation = fields.Selection([
+        ('product', 'Product'),
+        ('product_category', 'Product Category'),
+        ('doctor', 'Doctor'),
+    ], string='Commission Calculation', default=_commission_calculation, readonly=1, store=True)
+    commission_based_on = fields.Selection([
+        ('product_sell_price', 'Product Sell Price'),
+        ('product_profit_margin', 'Product Profit Margin'),
+    ], string='Commission Based On', default=commission_based, readonly=1, store=True)
 
     def _compute_pos_return_order_count(self):
         for order in self:
@@ -833,6 +850,98 @@ class PosOrder(models.Model):
         else:
             return final_data_dict
 
+    @api.model
+    def create(self, values):
+        res = super(PosOrder, self).create(values)
+        member_lst = []
+        tax = res.env['ir.config_parameter'].sudo().get_param('flexipharmacy.pos_commission_with')
+        if res.commission_calculation == 'product':
+            for line in res.lines:
+                for lineid in line.product_id.pos_product_commission_ids:
+                    lines = {'doctor_id': res.ref_doctor_id.id}
+                    if res.commission_based_on == 'product_sell_price':
+                        if tax == 'without_tax':
+                            lines['amount'] = line.price_subtotal * lineid.commission / 100 if lineid.calculation == 'percentage'\
+                                              else lineid.commission * line.qty
+                        else:
+                            lines['amount'] = line.price_subtotal_incl * lineid.commission / 100 if lineid.calculation == 'percentage'\
+                                              else lineid.commission * line.qty
+                    else:
+                        if tax == 'without_tax':
+                            lines['amount'] = (line.price_subtotal - (line.product_id.standard_price * line.qty)) * lineid.commission / 100\
+                                              if lineid.calculation == 'percentage' else lineid.commission * line.qty
+                        else:
+                            lines['amount'] = (line.price_subtotal_incl - (line.product_id.standard_price * line.qty)) * lineid.commission / 100\
+                                              if lineid.calculation == 'percentage' else lineid.commission * line.qty
+                    member_lst.append(lines)
+                    break
+
+        elif res.commission_calculation == 'product_category':
+            for line in res.lines:
+                for lineid in line.product_id.pos_categ_id.pos_category_comm_ids:
+                    lines = {'doctor_id': res.ref_doctor_id.id}
+                    if res.commission_based_on == 'product_sell_price':
+                        if tax == 'without_tax':
+                            lines['amount'] = line.price_subtotal * lineid.commission / 100 if lineid.calculation == 'percentage' else lineid.commission * line.qty
+                        else:
+                            lines['amount'] = line.price_subtotal_incl * lineid.commission / 100 if lineid.calculation == 'percentage' else lineid.commission * line.qty
+                    else:
+                        if tax == 'without_tax':
+                            lines['amount'] = (line.price_subtotal - (
+                                        line.product_id.standard_price * line.qty)) * lineid.commission / 100 \
+                                        if lineid.calculation == 'percentage' else lineid.commission * line.qty
+                        else:
+                            lines['amount'] = (line.price_subtotal_incl - (
+                                        line.product_id.standard_price * line.qty)) * lineid.commission / 100 \
+                                        if lineid.calculation == 'percentage' else lineid.commission * line.qty
+                    member_lst.append(lines)
+                    break
+
+        elif res.commission_calculation == 'doctor':
+            for line in res.lines:
+                for lineid in res.ref_doctor_id.pos_doctor_commission_ids:
+                    lines = {'doctor_id': res.ref_doctor_id.id}
+                    if res.commission_based_on == 'product_sell_price':
+                        if tax == 'without_tax':
+                            lines['amount'] = line.price_subtotal * lineid.commission / 100 \
+                                if lineid.calculation == 'percentage' else lineid.commission * line.qty
+                        else:
+                            lines['amount'] = line.price_subtotal_incl * lineid.commission / 100 \
+                                if lineid.calculation == 'percentage' else lineid.commission * line.qty
+                    else:
+                        if tax == 'without_tax':
+                            lines['amount'] = (line.price_subtotal - (
+                                        line.product_id.standard_price * line.qty)) * lineid.commission / 100 \
+                                        if lineid.calculation == 'percentage' else lineid.commission * line.qty
+                        else:
+                            lines['amount'] = (line.price_subtotal_incl - (
+                                        line.product_id.standard_price * line.qty)) * lineid.commission / 100 if lineid.calculation == 'percentage' else lineid.commission * line.qty
+                    member_lst.append(lines)
+                    break
+
+        user_by = {}
+        for member in member_lst:
+            if member['doctor_id'] in user_by:
+                user_by[member['doctor_id']]['amount'] += member['amount']
+            else:
+                user_by.update({member['doctor_id']: member})
+        member_lst = []
+        for user in user_by:
+            member_lst.append((0, 0, user_by[user]))
+        res.sale_commission_ids = member_lst
+
+        if res.ref_doctor_id:
+            if res.sale_commission_ids.amount > 0:
+                doctor_detail = {'doctor_id': res.ref_doctor_id.id,
+                                'name': res.name,
+                                'commission_date': date.today(),
+                                'state': 'draft',
+                                'amount': res.sale_commission_ids.amount,
+                                'order_id': res.id
+                                }
+                self.env['pos.doctor.commission'].create(doctor_detail)
+        return res
+
 
 class ReturnPosOrderLineLot(models.Model):
     _name = "return.pos.pack.operation.lot"
@@ -908,5 +1017,14 @@ class PosOrderLine(models.Model):
             vals['uom_id'] = vals.get('uom_id') or None
             pass
         return super(PosOrderLine, self).create(vals)
+
+class PosOrderCommission(models.Model):
+    _name = 'pos.order.commission'
+    _description = "Point of Sale Sales Commission"
+
+    doctor_id = fields.Many2one('res.partner', domain="[('is_doctor', '=', True)]", string='Doctor')
+    amount = fields.Float(string='Amount')
+    pos_order_id = fields.Many2one('pos.order')
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

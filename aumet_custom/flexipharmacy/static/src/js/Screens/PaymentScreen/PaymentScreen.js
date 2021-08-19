@@ -16,6 +16,7 @@ odoo.define('flexipharmacy.PaymentScreen', function (require) {
             constructor() {
                 super(...arguments);
                 this.state = useState({ remaining_wallet_amount: 0, serialPrint : false});
+                this.payment_methods_config = this.env.pos.payment_methods.filter(method => this.env.pos.config.payment_method_ids.includes(method.id));
                 this.get_remaining_wallet_amount()
             }
             async connectionCheck(){

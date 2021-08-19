@@ -20,4 +20,5 @@ from . import report_general_ledger
 from . import report_trial_balance
 from . import product_expiry_report_template
 from . import slow_moving_inventory
+from . import report
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

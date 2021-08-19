@@ -25,7 +25,6 @@ class ProductTemplate(models.Model):
     alternate_product_ids = fields.Many2many('product.product', string="Alternative Product")
     suggestive_product_ids = fields.Many2many('product.product', 'cross_selling_products', 'template_id', 'product_id',
                                               string="Cross Selling Product")
-
     active_ingredient_ids = fields.Many2many('active.ingredient', string="Active Ingredient")
     is_material_monitor = fields.Boolean("Material Monitor")
     material_monitor_qty = fields.Float("Alert Stock Qty")
@@ -76,6 +75,13 @@ class ProductProduct(models.Model):
 
     near_expire = fields.Integer(string='Near Expire', compute='check_near_expiry')
     expired = fields.Integer(string='Expired', compute='check_expiry')
+    pos_product_commission_ids = fields.One2many('pos.product.commission', 'product_id', string='Product Commission ')
+
+    @api.constrains('pos_product_commission_ids', 'pos_product_commission_ids.commission')
+    def _check_commission_values(self):
+        if self.pos_product_commission_ids.filtered(
+                lambda line: line.calculation == 'percentage' and line.commission > 100 or line.commission < 0.0):
+            raise Warning(_('Commission value for Percentage type must be between 0 to 100.'))
 
     def broadcast_product_qty_data(self, product_by_id, stock_location_id):
         notifications = []
@@ -330,7 +336,16 @@ class ProductProduct(models.Model):
         return True
 
 
+class PosProductCommission(models.Model):
+    _name = 'pos.product.commission'
+    _description = "Point of Sale Product Commission"
 
-
+    doctor_id = fields.Many2one('res.partner', string='Doctor', domain="[('is_doctor', '=', True)]")
+    calculation = fields.Selection([
+        ('percentage', 'Percentage'),
+        ('fixed_price', 'Fixed Price')
+    ], string='Calculation')
+    commission = fields.Float(string='Commission')
+    product_id = fields.Many2one('product.product')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

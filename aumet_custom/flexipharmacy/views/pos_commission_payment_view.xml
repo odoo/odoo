@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="pos_commission_payment_view_form" model="ir.ui.view">
+            <field name="name">pos.commission.payment.from</field>
+            <field name="model">pos.commission.payment</field>
+            <field name="arch" type="xml">
+                <form string="Commission Payment">
+                    <group>
+                        <field name="doctor_id"/>
+                        <field name="is_invoice_paid"/>
+                    </group>
+                    <group>
+                        <notebook>
+                            <page string="Commission Payment">
+                                <field name="commission_pay_ids" nolable="1" options="{'no_create': True}">
+                                    <tree create="false">
+                                        <field name="doctor_id"/>
+                                        <field name="name"/>
+                                        <field name="commission_date"/>
+                                        <field name="amount"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </group>
+                    <footer>
+                        <button type="object" name="payment" class="oe_highlight" string="Payment"/>
+                        <button type="object" class="oe_highlight" string="Cancel" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="pos_commission_payment_action" model="ir.actions.act_window">
+            <field name="name">Commission Payment</field>
+            <field name="res_model">pos.commission.payment</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Commission Payment" id="menu_pos_commission_payment" parent="main_menu_pos_doctor_commission"
+                  action="pos_commission_payment_action" sequence="2"/>
+
+    </data>
+</odoo>

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+        <record id="pos_doctor_commission_sequence" model="ir.sequence">
+            <field name="name">Point of Sale Doctor Commission Number</field>
+            <field name="code">pos.doctor.commission.number</field>
+            <field name="prefix">COMM/2019/</field>
+            <field name="padding">4</field>
+        </record>
 
         <record id="product_state_check" model="ir.cron">
             <field name="name">Product State Check Scheduler</field>
