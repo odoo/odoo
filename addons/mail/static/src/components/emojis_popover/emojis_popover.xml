@@ -15,7 +15,7 @@
                         <t t-foreach="emojisAllCategories" t-as="category" t-key="category">
                         <div t-on-click="_onClickEmojisCategory(category)" t-att-class="{ 'o_EmojisPopover_categoryIsActive': state.activeCategory === category, 'o_EmojisPopover_categoryWrapper': !env.device.isMobile, 'o_EmojisPopover_categoryWrapperMobile' : env.device.isMobile  }" t-att-title="category" t-att-data-source="category" >
                             <span  t-att-class="{ 'o_EmojisPopover_category': !env.device.isMobile, 'o_EmojisPopover_categoryMobile': env.device.isMobile }" >
-                                <t t-raw="_e(emojisByCategory(category)[0].unicode)"/>
+                                <t t-raw="emojisByCategory(category)[0].svg"/>
                             </span>
                         </div>
                         </t>
@@ -33,7 +33,7 @@
                     <t t-foreach="recentlyUsedEmojis" t-as="emoji" t-key="emoji.unicode">
                     <div class="o_EmojisPopover_emojiWrapper" t-on-click="_onClickEmoji" t-att-title="emoji.sources[0]" t-att-data-source="emoji.sources[0]" t-att-data-unicode="emoji.unicode">
                         <span t-att-class="env.device.isMobile ? 'o_EmojisPopover_emojiMobile' : 'o_EmojisPopover_emoji'" >
-                            <t t-raw="_e(emoji.unicode)"/>
+                            <t t-raw="emoji.svg"/>
                         </span>
                     </div>
                     </t>
@@ -50,7 +50,7 @@
                             <t t-foreach="emojisByCategory(category)" t-as="emoji" t-key="emoji.unicode">
                             <div class="o_EmojisPopover_emojiWrapper" t-on-click="_onClickEmoji" t-att-title="emoji.sources[0]" t-att-data-source="emoji.sources[0]" t-att-data-unicode="emoji.unicode">
                                 <span t-att-class="env.device.isMobile ? 'o_EmojisPopover_emojiMobile' : 'o_EmojisPopover_emoji'" >
-                                    <t t-raw="_e(emoji.unicode)"/>
+                                    <t t-raw="emoji.svg"/>
                                 </span>
                             </div>
                             </t>
@@ -65,7 +65,7 @@
                         <t t-foreach="filteredEmojis" t-as="emoji" t-key="emoji.unicode">
                         <div class="o_EmojisPopover_emojiWrapper" t-on-click="_onClickEmoji" t-att-title="emoji.sources[0]" t-att-data-source="emoji.sources[0]" t-att-data-unicode="emoji.unicode">
                             <span t-att-class="env.device.isMobile ? 'o_EmojisPopover_emojiMobile' : 'o_EmojisPopover_emoji'" >
-                                <t t-raw="_e(emoji.unicode)"/>
+                                <t t-raw="emoji.svg"/>
                             </span>
                         </div>
                         </t>

@@ -22,7 +22,7 @@ export class EmojisPopover extends Component {
         super(...args);
         this.emojisAllCategories = getEmojisCategories();
         useAutofocus();
-        this._e = _e;
+        // this._e = _e;
     }
 
     get EMOJI_SEARCH_PLACEHOLDER() {
