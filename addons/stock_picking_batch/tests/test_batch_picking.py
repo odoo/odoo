@@ -309,28 +309,17 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(self.picking_client_2.state, 'assigned', 'Picking 2 should be ready')
 
         self.picking_client_1.move_lines.quantity_done = 5
-        # There should be a wizard asking to process picking without quantity done
-        immediate_transfer_wizard_dict = self.batch.action_done()
-        self.assertTrue(immediate_transfer_wizard_dict)
-        immediate_transfer_wizard = Form(self.env[(immediate_transfer_wizard_dict.get('res_model'))].with_context(immediate_transfer_wizard_dict['context'])).save()
-        self.assertEqual(len(immediate_transfer_wizard.pick_ids), 1)
-        back_order_wizard_dict = immediate_transfer_wizard.process()
+        # There should be a wizard asking to make a backorder
+        back_order_wizard_dict = self.batch.action_done()
         self.assertTrue(back_order_wizard_dict)
+        self.assertEqual(back_order_wizard_dict.get('res_model'), 'stock.backorder.confirmation')
         back_order_wizard = Form(self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context'])).save()
-        self.assertEqual(len(back_order_wizard.pick_ids), 1)
+        self.assertEqual(len(back_order_wizard.pick_ids), 2)
         back_order_wizard.process()
 
         self.assertEqual(self.picking_client_1.state, 'done', 'Picking 1 should be done')
         self.assertEqual(self.picking_client_1.move_lines.product_uom_qty, 5, 'initial demand should be 5 after picking split')
-        self.assertTrue(self.env['stock.picking'].search([('backorder_id', '=', self.picking_client_1.id)]), 'no back order created')
-
-        quant_A = self.env['stock.quant']._gather(self.productA, self.stock_location)
-        quant_B = self.env['stock.quant']._gather(self.productB, self.stock_location)
-
-        # ensure that quantity for picking has been moved
-        self.assertFalse(sum(quant_A.mapped('quantity')))
-        self.assertFalse(sum(quant_B.mapped('quantity')))
-
+        self.assertFalse(self.picking_client_2.batch_id)
     def test_put_in_pack(self):
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
