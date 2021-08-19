@@ -21,12 +21,14 @@
         <field name="inherit_id" ref="account.view_tax_form"/>
         <field name="arch" type="xml">
         <data>
-            <xpath expr="//page" position="inside">
-                <group>
-                    <field name="l10n_it_vat_due_date"/>
-                    <field name="l10n_it_has_exoneration" readonly="False"/>
-                    <field name="l10n_it_kind_exoneration" attrs="{'invisible': [('l10n_it_has_exoneration', '=', False)]}"/>
-                    <field name="l10n_it_law_reference" attrs="{'invisible': [('l10n_it_has_exoneration', '=', False)]}"/>
+            <xpath expr="//page[@name='advanced_options']" position="inside">
+                <group attrs="{'invisible': [('country_code', '!=', 'IT')]}">
+                    <group>
+                        <field name="l10n_it_vat_due_date"/>
+                        <field name="l10n_it_has_exoneration"/>
+                        <field name="l10n_it_kind_exoneration" attrs="{'invisible': [('l10n_it_has_exoneration', '=', False)]}"/>
+                        <field name="l10n_it_law_reference" attrs="{'invisible': [('l10n_it_has_exoneration', '=', False)]}"/>
+                    </group>
                 </group>
             </xpath>
         </data>
