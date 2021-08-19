@@ -3171,6 +3171,36 @@ options.registry.ConditionalVisibility = options.Class.extend({
 });
 
 options.registry.WebsiteAnimate = options.Class.extend({
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        this.isAnimatedText = this.$target.hasClass('o_animated_text');
+        this.$optionsSection = this.$overlay.data('$optionsSection');
+    },
+    /**
+     * @override
+     */
+    onFocus() {
+        if (this.isAnimatedText) {
+            // For animated text, the animation options must be in the editor
+            // toolbar.
+            const $toolbar = this.options.wysiwyg.toolbar.$el;
+            $toolbar.append(this.$el);
+            this.$optionsSection.addClass('d-none');
+        }
+    },
+    /**
+     * @override
+     */
+    onBlur() {
+        if (this.isAnimatedText) {
+            // For animated text, the options must be returned to their
+            // original location as they were moved in the toolbar.
+            this.$optionsSection.append(this.$el);
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -3215,6 +3245,15 @@ options.registry.WebsiteAnimate = options.Class.extend({
             $scrollingElement[0].classList.remove('o_wanim_overflow_x_hidden');
             this.$target.removeClass('o_animating');
         });
+    },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'no_animation_opt') {
+            return !this.isAnimatedText;
+        }
+        return this._super(...arguments);
     },
 });
 
