@@ -15,7 +15,7 @@
     'category': 'Aumet',
     'version': '0.1',
 
-    'depends': ['base', 'product', 'base_setup', 'point_of_sale', 'purchase', 'web', 'hr'],
+    'depends': ['base', 'product', 'base_setup', 'point_of_sale', 'purchase'],
 
     'data': [
         'data/aumet.scientific_name.csv',
