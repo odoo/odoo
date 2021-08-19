@@ -105,7 +105,7 @@ class AccountMove(models.Model):
             if not partner:
                 elements = tree.xpath('//ram:%s//ram:URIID[@schemeID=\'SMTP\']' % partner_type, namespaces=tree.nsmap)
                 partner = elements and self.env['res.partner'].search([('email', '=', elements[0].text)], limit=1)
-            return partner
+            return partner or self.env["res.partner"]
 
         amount_total_import = None
 
