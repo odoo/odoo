@@ -50,7 +50,6 @@ except ImportError:
 import odoo
 from .service.server import memory_info
 from .service import security, model as service_model
-from .sql_db import flush_env
 from .tools.func import lazy_property
 from .tools import profiler
 from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
@@ -353,8 +352,7 @@ class WebRequest(object):
             if self._cr is not None:
                 # flush here to avoid triggering a serialization error outside
                 # of this context, which would not retry the call
-                flush_env(self._cr)
-                self._cr.precommit.run()
+                self._cr.flush()
             return result
 
         if self.db:
