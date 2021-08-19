@@ -416,7 +416,7 @@ class ir_cron(models.Model):
             of as soon as possible.
         """
         if at is None:
-            at_list = [datetime.utcnow()]
+            at_list = [fields.Datetime.now()]
         elif isinstance(at, datetime):
             at_list = [at]
         else:
