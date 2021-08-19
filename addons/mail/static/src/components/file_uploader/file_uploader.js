@@ -114,7 +114,7 @@ export class FileUploader extends Component {
                 continue;
             }
             try {
-                const response = await this.env.browser.fetch('/web/binary/upload_attachment', {
+                const response = await this.messaging.browser.fetch('/web/binary/upload_attachment', {
                     method: 'POST',
                     body: this._createFormData(file),
                     signal: uploadingAttachment.uploadingAbortController.signal,

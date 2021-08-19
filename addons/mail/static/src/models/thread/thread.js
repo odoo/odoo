@@ -16,8 +16,8 @@ function factory(dependencies) {
         /**
          * @override
          */
-        _willCreate() {
-            const res = super._willCreate(...arguments);
+        _created() {
+            super._created();
             /**
              * Timer of current partner that was currently typing something, but
              * there is no change on the input for 5 seconds. This is used
@@ -26,7 +26,7 @@ function factory(dependencies) {
              * on the composer for some time.
              */
             this._currentPartnerInactiveTypingTimer = new Timer(
-                this.env,
+                this.messaging.browser,
                 () => this.async(() => this._onCurrentPartnerInactiveTypingTimeout()),
                 5 * 1000
             );
@@ -55,7 +55,7 @@ function factory(dependencies) {
              * has stopped typing something.
              */
             this._currentPartnerLongTypingTimer = new Timer(
-                this.env,
+                this.messaging.browser,
                 () => this.async(() => this._onCurrentPartnerLongTypingTimeout()),
                 50 * 1000
             );
@@ -92,11 +92,10 @@ function factory(dependencies) {
              * @see _notifyCurrentPartnerTypingStatus
              */
             this._throttleNotifyCurrentPartnerTypingStatus = throttle(
-                this.env,
+                this.messaging.browser,
                 ({ isTyping }) => this.async(() => this._notifyCurrentPartnerTypingStatus({ isTyping })),
                 2.5 * 1000
             );
-            return res;
         }
 
         /**
@@ -969,7 +968,7 @@ function factory(dependencies) {
          */
         registerOtherMemberTypingMember(partner) {
             const timer = new Timer(
-                this.env,
+                this.messaging.browser,
                 () => this.async(() => this._onOtherMemberLongTypingTimeout(partner)),
                 60 * 1000
             );

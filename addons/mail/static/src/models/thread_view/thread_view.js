@@ -14,7 +14,7 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
-            this.env.browser.clearTimeout(this._loaderTimeout);
+            this.messaging.browser.clearTimeout(this._loaderTimeout);
             return super._willDelete(...arguments);
         }
 
@@ -207,7 +207,7 @@ function factory(dependencies) {
                     this.update({ isPreparingLoading: true });
                     this.async(() =>
                         new Promise(resolve => {
-                            this._loaderTimeout = this.env.browser.setTimeout(resolve, 400);
+                            this._loaderTimeout = this.messaging.browser.setTimeout(resolve, 400);
                         }
                     )).then(() => {
                         const isLoading = this.threadCache
@@ -218,7 +218,7 @@ function factory(dependencies) {
                 }
                 return;
             }
-            this.env.browser.clearTimeout(this._loaderTimeout);
+            this.messaging.browser.clearTimeout(this._loaderTimeout);
             this.update({ isLoading: false, isPreparingLoading: false });
         }
     }

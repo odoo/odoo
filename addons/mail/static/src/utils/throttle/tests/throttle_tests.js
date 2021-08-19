@@ -41,7 +41,7 @@ QUnit.test('single call', async function (assert) {
 
     let hasInvokedFunc = false;
     const throttledFunc = throttle(
-        this.env,
+        this.messaging.browser,
         () => {
             hasInvokedFunc = true;
             return 'func_result';
@@ -89,7 +89,7 @@ QUnit.test('2nd (throttled) call', async function (assert) {
 
     let funcCalledAmount = 0;
     const throttledFunc = throttle(
-        this.env,
+        this.messaging.browser,
         () => {
             funcCalledAmount++;
             return `func_result_${funcCalledAmount}`;
@@ -148,7 +148,7 @@ QUnit.test('throttled call reinvocation', async function (assert) {
 
     let funcCalledAmount = 0;
     const throttledFunc = throttle(
-        this.env,
+        this.messaging.browser,
         () => {
             funcCalledAmount++;
             return `func_result_${funcCalledAmount}`;
@@ -225,7 +225,7 @@ QUnit.test('flush throttled call', async function (assert) {
     });
 
     const throttledFunc = throttle(
-        this.env,
+        this.messaging.browser,
         () => {},
         1000,
     );
@@ -281,7 +281,7 @@ QUnit.test('cancel throttled call', async function (assert) {
     });
 
     const throttledFunc = throttle(
-        this.env,
+        this.messaging.browser,
         () => {},
         1000,
         { silentCancelationErrors: false }
@@ -347,7 +347,7 @@ QUnit.test('clear throttled call', async function (assert) {
     });
 
     const throttledFunc = throttle(
-        this.env,
+        this.messaging.browser,
         () => {},
         1000,
         { silentCancelationErrors: false }

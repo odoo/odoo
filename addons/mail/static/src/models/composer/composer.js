@@ -18,8 +18,8 @@ function factory(dependencies) {
         /**
          * @override
          */
-        _willCreate() {
-            const res = super._willCreate(...arguments);
+        _created() {
+            super._created();
             /**
              * Determines whether there is a mention RPC currently in progress.
              * Useful to queue a new call if there is already one pending.
@@ -30,7 +30,6 @@ function factory(dependencies) {
              * RPC is done, if any.
              */
             this._nextMentionRpcFunction = undefined;
-            return res;
         }
 
         /**

@@ -186,7 +186,7 @@ function factory(dependencies) {
          */
         _prepareAttachmentsLoading() {
             this._isPreparingAttachmentsLoading = true;
-            this._attachmentsLoaderTimeout = this.env.browser.setTimeout(() => {
+            this._attachmentsLoaderTimeout = this.messaging.browser.setTimeout(() => {
                 this.update({ isShowingAttachmentsLoading: true });
                 this._isPreparingAttachmentsLoading = false;
             }, this.messaging.loadingBaseDelayDuration);
@@ -196,7 +196,7 @@ function factory(dependencies) {
          * @private
          */
         _stopAttachmentsLoading() {
-            this.env.browser.clearTimeout(this._attachmentsLoaderTimeout);
+            this.messaging.browser.clearTimeout(this._attachmentsLoaderTimeout);
             this._attachmentsLoaderTimeout = null;
             this._isPreparingAttachmentsLoading = false;
         }

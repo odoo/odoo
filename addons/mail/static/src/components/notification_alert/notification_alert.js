@@ -17,7 +17,7 @@ export class NotificationAlert extends Component {
         if (!this.messaging) {
             return false;
         }
-        const windowNotification = this.env.browser.Notification;
+        const windowNotification = this.messaging.browser.Notification;
         return (
             windowNotification &&
             windowNotification.permission !== "granted" &&

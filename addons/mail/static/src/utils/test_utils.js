@@ -2,10 +2,7 @@
 
 import BusService from 'bus.BusService';
 
-import {
-    addMessagingToEnv,
-    addTimeControlToEnv,
-} from '@mail/env/test_env';
+import { addTimeControlToEnv } from '@mail/env/test_env';
 import { ChatWindowService } from '@mail/services/chat_window_service/chat_window_service';
 import { MessagingService } from '@mail/services/messaging/messaging';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
@@ -17,6 +14,7 @@ import { MessagingMenuWidget } from '@mail/widgets/messaging_menu/messaging_menu
 import { MockModels } from '@mail/../tests/helpers/mock_models';
 
 import AbstractStorageService from 'web.AbstractStorageService';
+import { browser } from "@web/core/browser/browser";
 import RamStorage from 'web.RamStorage';
 import {
     createView,
@@ -24,10 +22,9 @@ import {
     mock,
 } from 'web.test_utils';
 import Widget from 'web.Widget';
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient, getActionManagerServerData } from "@web/../tests/webclient/helpers";
-
 import LegacyRegistry from "web.Registry";
-
 const {
     addMockEnvironment,
     patch: legacyPatch,
@@ -505,11 +502,9 @@ async function start(param0 = {}) {
         },
         env.session
     );
-    env = addMessagingToEnv(env);
     if (hasTimeControl) {
         env = addTimeControlToEnv(env);
     }
-
     const services = Object.assign({}, {
         bus_service: BusService.extend({
             _beep() {}, // Do nothing
@@ -645,6 +640,19 @@ async function start(param0 = {}) {
     }
     // get the final test env after execution of createView/createWebClient/addMockEnvironment
     testEnv = Component.env;
+    patchWithCleanup(browser, {
+        innerHeight: 1080,
+        innerWidth: 1920,
+        fetch: testEnv.browser.fetch,
+        Notification: {
+            permission: 'denied',
+            async requestPermission() {
+                return this.permission;
+            },
+            ...((env.browser && env.browser.Notification) || {}),
+        },
+        ...env.browser,
+    });
     /**
      * Returns a promise resolved after the expected event is received.
      *

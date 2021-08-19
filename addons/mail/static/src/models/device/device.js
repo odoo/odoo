@@ -21,7 +21,7 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
-            window.removeEventListener('resize', this._onResize);
+            this.messaging.browser.removeEventListener('resize', this._onResize);
             return super._willDelete(...arguments);
         }
 
@@ -33,9 +33,7 @@ function factory(dependencies) {
          * Called when messaging is started.
          */
         start() {
-            // TODO FIXME Not using this.env.browser because it's proxified, and
-            // addEventListener does not work on proxified window. task-2234596
-            window.addEventListener('resize', this._onResize);
+            this.messaging.browser.addEventListener('resize', this._onResize);
         }
 
         //----------------------------------------------------------------------
@@ -47,8 +45,8 @@ function factory(dependencies) {
          */
         _refresh() {
             this.update({
-                globalWindowInnerHeight: this.env.browser.innerHeight,
-                globalWindowInnerWidth: this.env.browser.innerWidth,
+                globalWindowInnerHeight: this.messaging.browser.innerHeight,
+                globalWindowInnerWidth: this.messaging.browser.innerWidth,
                 isMobile: this.env.device.isMobile,
                 sizeClass: this.env.device.size_class,
             });
