@@ -41,7 +41,7 @@ QUnit.test('timer does not timeout on initialization', async function (assert) {
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.env,
+            this.messaging.browser,
             () => hasTimedOut = true,
             0
         )
@@ -75,7 +75,7 @@ QUnit.test('timer start (duration: 0ms)', async function (assert) {
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.env,
+            this.messaging.browser,
             () => hasTimedOut = true,
             0
         )
@@ -104,7 +104,7 @@ QUnit.test('timer start observe termination (duration: 0ms)', async function (as
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.env,
+            this.messaging.browser,
             () => {
                 hasTimedOut = true;
                 return 'timeout_result';
@@ -153,7 +153,7 @@ QUnit.test('timer start (duration: 1000s)', async function (assert) {
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.env,
+            this.messaging.browser,
             () => hasTimedOut = true,
             1000 * 1000
         )
@@ -200,7 +200,7 @@ QUnit.test('[no cancelation intercept] timer start then immediate clear (duratio
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.env,
+            this.messaging.browser,
             () => hasTimedOut = true,
             0
         )
@@ -241,7 +241,7 @@ QUnit.test('[no cancelation intercept] timer start then clear before timeout (du
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.env,
+            this.messaging.browser,
             () => hasTimedOut = true,
             1000
         )
@@ -283,7 +283,7 @@ QUnit.test('[no cancelation intercept] timer start then reset before timeout (du
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.env,
+            this.messaging.browser,
             () => hasTimedOut = true,
             1000
         )
@@ -331,7 +331,7 @@ QUnit.test('[with cancelation intercept] timer start then immediate clear (durat
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.env,
+            this.messaging.browser,
             () => hasTimedOut = true,
             0,
             { silentCancelationErrors: false }
@@ -374,7 +374,7 @@ QUnit.test('[with cancelation intercept] timer start then immediate reset (durat
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.env,
+            this.messaging.browser,
             () => hasTimedOut = true,
             0,
             { silentCancelationErrors: false }

@@ -26,7 +26,14 @@ export const browser = Object.assign({}, owl.browser, {
     console: window.console,
     location: window.location,
     history: window.history,
+    get innerHeight() {
+        return window.innerHeight;
+    },
+    get innerWidth() {
+        return window.innerWidth;
+    },
     navigator: navigator,
+    Notification: window.Notification,
     open: window.open.bind(window),
     XMLHttpRequest: window.XMLHttpRequest,
     localStorage,

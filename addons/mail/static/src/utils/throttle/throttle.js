@@ -97,20 +97,15 @@ class _ThrottleFlushedError extends Error {
 class Throttle {
 
     /**
-     * @param {Object} env the OWL env
+     * @param {Object} browser
      * @param {function} func provided function for making throttled version.
      * @param {integer} duration duration of the 'cool down' phase, i.e.
      *   the minimum duration between the most recent function call that has
      *   been made and the following function call (of course, assuming no flush
      *   in-between).
      */
-    constructor(env, func, duration) {
-        /**
-         * Reference to the OWL envirionment. Useful to fine-tune control of
-         * time flow in tests.
-         * @see mail/static/src/utils/test_utils.js:start.hasTimeControl
-         */
-        this.env = env;
+    constructor(browser, func, duration) {
+        this.browser = browser;
         /**
          * Unique id of this throttle function. Useful for the ThrottleError
          * management, in order to determine whether these errors come from
@@ -266,7 +261,7 @@ class Throttle {
         const coolingDownDeferred = makeDeferred();
         this._coolingDownDeferred = coolingDownDeferred;
         this._isCoolingDown = true;
-        const cooldownTimeoutId = this.env.browser.setTimeout(
+        const cooldownTimeoutId = this.browser.setTimeout(
             () => coolingDownDeferred.resolve(),
             this._duration
         );
@@ -283,7 +278,7 @@ class Throttle {
                 unexpectedError = error;
             }
         } finally {
-            this.env.browser.clearTimeout(cooldownTimeoutId);
+            this.browser.clearTimeout(cooldownTimeoutId);
             this._coolingDownDeferred = undefined;
             this._isCoolingDown = false;
         }
@@ -312,7 +307,7 @@ class Throttle {
  * - When a cooldown phase ends, any buffered function call will be performed
  *     and another cooldown phase will follow up.
  *
- * @param {Object} env the OWL env
+ * @param {Object} browser
  * @param {function} func the function to throttle.
  * @param {integer} duration duration, in milliseconds, of the cooling down
  *   phase of the throttling.
@@ -330,12 +325,12 @@ class Throttle {
  *   of the provided function.
  */
 function throttle(
-    env,
+    browser,
     func,
     duration,
     { silentCancelationErrors = true } = {}
 ) {
-    const throttleObj = new Throttle(env, func, duration);
+    const throttleObj = new Throttle(browser, func, duration);
     const callable = async (...args) => {
         try {
             // await is important, otherwise errors are not intercepted.

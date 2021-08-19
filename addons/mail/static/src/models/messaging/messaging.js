@@ -5,6 +5,8 @@ import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_
 import { create } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 
+import { browser } from "@web/core/browser/browser";
+
 const { EventBus } = owl.core;
 
 function factory(dependencies) {
@@ -175,7 +177,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsNotificationPermissionDefault() {
-            const browserNotification = this.env.browser.Notification;
+            const browserNotification = this.messaging.browser.Notification;
             return browserNotification ? browserNotification.permission === 'default' : false;
         }
 
@@ -206,6 +208,13 @@ function factory(dependencies) {
          */
         autofetchPartnerImStatus: attr({
             default: true,
+        }),
+        /**
+         * States the browser object, which contains similar keys to the global
+         * window object but its behavior can be controlled in tests.
+         */
+        browser: attr({
+            default: browser,
         }),
         cannedResponses: one2many('mail.canned_response'),
         chatWindowManager: one2one('mail.chat_window_manager', {

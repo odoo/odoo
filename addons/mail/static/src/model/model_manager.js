@@ -708,12 +708,10 @@ export class ModelManager {
                 this._listenersObservingFieldOfLocalId.get(localId).set(field, new Set());
             }
             /**
-             * 3. Register record and invoke the life-cycle hook `_willCreate.`
-             * After this step the record is in a functioning state and it is
-             * considered existing.
+             * 3. Register record. After this step the record is in a
+             * functioning state and it is considered existing.
              */
             Model.__records[record.localId] = record;
-            record._willCreate();
             /**
              * 4. Write provided data, default data, and register computes.
              */

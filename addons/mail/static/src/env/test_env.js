@@ -2,29 +2,8 @@
 
 import { nextTick } from '@mail/utils/utils';
 
-/**
- * @param {Object} [providedEnv={}]
- * @returns {Object}
- */
-export function addMessagingToEnv(providedEnv = {}) {
-    const env = { ...providedEnv };
-    /**
-     * Environment keys used in messaging.
-     */
-    Object.assign(env, {
-        browser: Object.assign({
-            innerHeight: 1080,
-            innerWidth: 1920,
-            Notification: Object.assign({
-                permission: 'denied',
-                async requestPermission() {
-                    return this.permission;
-                },
-            }, (env.browser && env.browser.Notification) || {}),
-        }, env.browser),
-    });
-    return env;
-}
+import { browser } from "@web/core/browser/browser";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 /**
  * @param {Object} [providedEnv={}]
@@ -32,14 +11,11 @@ export function addMessagingToEnv(providedEnv = {}) {
  */
 export function addTimeControlToEnv(providedEnv = {}) {
     const env = { ...providedEnv };
-    if (!env.browser) {
-        env.browser = {};
-    }
     // list of timeout ids that have timed out.
     let timedOutIds = [];
     // key: timeoutId, value: func + remaining duration
     const timeouts = new Map();
-    Object.assign(env.browser, {
+    patchWithCleanup(browser, {
         clearTimeout: id => {
             timeouts.delete(id);
             timedOutIds = timedOutIds.filter(i => i !== id);
