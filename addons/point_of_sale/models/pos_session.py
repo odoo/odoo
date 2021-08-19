@@ -658,7 +658,7 @@ class PosSession(models.Model):
         split_cash_receivable_vals = defaultdict(list)
         for payment, amounts in split_receivables_cash.items():
             statement = statements_by_journal_id[payment.payment_method_id.cash_journal_id.id]
-            split_cash_statement_line_vals[statement].append(self._get_statement_line_vals(statement, payment.payment_method_id.receivable_account_id, amounts['amount'], date=payment.payment_date, partner=payment.pos_order_id.partner_id))
+            split_cash_statement_line_vals[statement].append(self._get_statement_line_vals(statement, amounts['amount'], payment=payment))
             split_cash_receivable_vals[statement].append(self._get_split_receivable_vals(payment, amounts['amount'], amounts['amount_converted']))
         # handle combine cash payments
         combine_cash_statement_line_vals = defaultdict(list)
@@ -666,7 +666,7 @@ class PosSession(models.Model):
         for payment_method, amounts in combine_receivables_cash.items():
             if not float_is_zero(amounts['amount'] , precision_rounding=self.currency_id.rounding):
                 statement = statements_by_journal_id[payment_method.cash_journal_id.id]
-                combine_cash_statement_line_vals[statement].append(self._get_statement_line_vals(statement, payment_method.receivable_account_id, amounts['amount']))
+                combine_cash_statement_line_vals[statement].append(self._get_statement_line_vals(statement, amounts['amount'], payment_method=payment_method))
                 combine_cash_receivable_vals[statement].append(self._get_combine_receivable_vals(payment_method, amounts['amount'], amounts['amount_converted']))
         # create the statement lines and account move lines
         BankStatementLine = self.env['account.bank.statement.line']
@@ -906,14 +906,22 @@ class PosSession(models.Model):
         partial_args = {'account_id': out_account.id, 'move_id': self.move_id.id}
         return self._credit_amounts(partial_args, amount, amount_converted, force_company_currency=True)
 
-    def _get_statement_line_vals(self, statement, receivable_account, amount, date=False, partner=False):
+    def _get_statement_line_vals(self, statement, amount, payment=False, payment_method=False):
+        date = False
+        receivable_account_id = self.env["account.account"]
+        partner = self.env["res.partner"]
+        if payment:
+            payment_method = payment.payment_method_id
+            partner = payment.pos_order_id.partner_id
+            date = payment.payment_date
+            receivable_account_id = payment_method.receivable_account_id
         return {
             'date': fields.Date.context_today(self, timestamp=date),
             'amount': amount,
             'payment_ref': self.name,
             'statement_id': statement.id,
             'journal_id': statement.journal_id.id,
-            'counterpart_account_id': receivable_account.id,
+            'counterpart_account_id': receivable_account_id.id,
             'partner_id': partner and self.env["res.partner"]._find_accounting_partner(partner).id
         }
 
