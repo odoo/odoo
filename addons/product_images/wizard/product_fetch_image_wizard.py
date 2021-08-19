@@ -47,7 +47,7 @@ class ProductFetchImageWizard(models.TransientModel):
         google_pse_id_is_set = bool(ICP.get_param('google.pse.id'))
         google_custom_search_key_is_set = bool(ICP.get_param('google.custom_search.key'))
         if not (google_pse_id_is_set and google_custom_search_key_is_set):
-            raise google_pse_id_is_set(_(
+            raise UserError(_(
                 "The API Key and Search Engine ID must be set in the General Settings."
             ))
 
