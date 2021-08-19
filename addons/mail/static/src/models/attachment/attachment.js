@@ -102,13 +102,14 @@ function factory(dependencies) {
             if (!this.isUploading) {
                 this.update({ isUnlinkPending: true });
                 try {
-                    await this.async(() => this.env.services.rpc({
-                        model: 'ir.attachment',
-                        method: 'unlink',
-                        args: [this.id],
-                    }, { shadow: true }));
+                    await this.messaging.rpcOrm('ir.attachment', 'unlink', this.id, {}, { silent: false });
+                    if (!this.exists()) {
+                        return;
+                    }
                 } finally {
-                    this.update({ isUnlinkPending: false });
+                    if (this.exists()) {
+                        this.update({ isUnlinkPending: false });
+                    }
                 }
             } else if (this.uploadingAbortController) {
                 this.uploadingAbortController.abort();

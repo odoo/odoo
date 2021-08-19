@@ -43,12 +43,13 @@ function factory(dependencies) {
          * @param {mail.activity} activity
          */
         async send(activity) {
-            await this.async(() => this.env.services.rpc({
-                model: activity.thread.model,
-                method: 'activity_send_mail',
-                args: [[activity.thread.id], this.id],
-            }));
-            activity.thread.refresh();
+            const thread = activity.thread;
+            await this.messaging.rpcOrm(activity.thread.model, 'activity_send_mail', activity.thread.id, {
+                template_id: this.id,
+            }, { silent: false });
+            if (thread.exists()) {
+                thread.refresh();
+            }
         }
 
         //----------------------------------------------------------------------

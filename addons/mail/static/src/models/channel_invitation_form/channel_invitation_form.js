@@ -34,14 +34,12 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         async onClickInvite(ev) {
-            await this.env.services.rpc(({
-                model: 'mail.channel',
-                method: 'add_members',
-                args: [this.thread.id],
-                kwargs: {
-                    partner_ids: this.selectedPartners.map(partner => partner.id),
-                },
-            }));
+            await this.messaging.rpcOrm('mail.channel', 'add_members', this.thread.id, {
+                partner_ids: this.selectedPartners.map(partner => partner.id),
+            }, { silent: false });
+            if (!this.exists()) {
+                return;
+            }
             this.update({
                 searchTerm: "",
                 selectedPartners: unlinkAll(),
@@ -116,17 +114,10 @@ function factory(dependencies) {
             });
             try {
                 const channelId = (this.thread && this.thread.model === 'mail.channel') ? this.thread.id : undefined;
-                const { count, partners: partnersData } = await this.env.services.rpc(
-                    {
-                        model: 'res.partner',
-                        method: 'search_for_channel_invite',
-                        kwargs: {
-                            channel_id: channelId,
-                            search_term: cleanSearchTerm(this.searchTerm),
-                        },
-                    },
-                    { shadow: true }
-                );
+                const { count, partners: partnersData } = await this.messaging.rpcOrmStatic('res.partner', 'search_for_channel_invite', {
+                    channel_id: channelId,
+                    search_term: cleanSearchTerm(this.searchTerm),
+                });
                 this.update({
                     searchResultCount: count,
                     selectablePartners: insertAndReplace(partnersData.map(partnerData => this.messaging.models['mail.partner'].convertData(partnerData))),

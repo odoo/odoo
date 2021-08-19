@@ -312,7 +312,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         mockRPC(route, args) {
             if (args.method === 'channel_fetched') {
                 assert.strictEqual(
-                    args.args[0][0],
+                    args.args[0],
                     100,
                     'channel_fetched is called on the right channel id'
                 );
@@ -331,7 +331,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
                 assert.strictEqual(
                     args.model,
                     'mail.channel',
-                    'channel_seeb is called on the right channel model'
+                    'channel_seen is called on the right channel model'
                 );
                 assert.step('rpc:channel_seen');
             }
@@ -347,15 +347,10 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         thread: link(thread),
     });
     await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
-    await afterNextRender(async () => this.env.services.rpc({
-        route: '/mail/chat_post',
-        params: {
-            context: {
-                mockedUserId: 10,
-            },
-            message_content: "new message",
-            uuid: thread.uuid,
-        },
+    await afterNextRender(async () => this.messaging.rpcRoute('/mail/chat_post', {
+        context: { mockedUserId: 10 },
+        message_content: "new message",
+        uuid: thread.uuid,
     }));
     assert.verifySteps(
         ['rpc:channel_fetch'],
@@ -425,15 +420,10 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
     // simulate receiving a message
     await this.afterEvent({
         eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
-        func: () => this.env.services.rpc({
-            route: '/mail/chat_post',
-            params: {
-                context: {
-                    mockedUserId: 10,
-                },
-                message_content: "<p>fdsfsd</p>",
-                uuid: thread.uuid,
-            },
+        func: () => this.messaging.rpcRoute('/mail/chat_post', {
+            context: { mockedUserId: 10 },
+            message_content: "<p>fdsfsd</p>",
+            uuid: thread.uuid,
         }),
         message: "should wait until last seen by current partner message id changed after receiving a message while thread is focused",
         predicate: ({ thread }) => {
@@ -639,15 +629,10 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
     // simulate receiving a message
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => this.env.services.rpc({
-            route: '/mail/chat_post',
-            params: {
-                context: {
-                    mockedUserId: 42,
-                },
-                message_content: "hu",
-                uuid: thread.uuid,
-            },
+        func: () => this.messaging.rpcRoute('/mail/chat_post', {
+            context: { mockedUserId: 42 },
+            message_content: "hu",
+            uuid: thread.uuid,
         }),
         message: "should wait until new message is received",
         predicate: ({ hint, threadViewer }) => {
@@ -886,15 +871,10 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
     await this.afterEvent({
         eventName: 'o-component-message-list-scrolled',
         func: () =>
-            this.env.services.rpc({
-                route: '/mail/chat_post',
-                params: {
-                    context: {
-                        mockedUserId: 42,
-                    },
-                    message_content: "hello",
-                    uuid: thread.uuid,
-                },
+            this.messaging.rpcRoute('/mail/chat_post', {
+                context: { mockedUserId: 42 },
+                message_content: "hello",
+                uuid: thread.uuid,
             }),
         message: "should wait until channel 20 scrolled after receiving a message",
         predicate: data => threadViewer === data.threadViewer,
@@ -970,15 +950,10 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: () =>
-            this.env.services.rpc({
-                route: '/mail/chat_post',
-                params: {
-                    context: {
-                        mockedUserId: 42,
-                    },
-                    message_content: "hello",
-                    uuid: thread.uuid,
-                },
+            this.messaging.rpcRoute('/mail/chat_post', {
+                context: { mockedUserId: 42 },
+                message_content: "hello",
+                uuid: thread.uuid,
             }),
         message: "should wait until channel 20 processed new message hint",
         predicate: data => threadViewer === data.threadViewer && data.hint.type === 'message-received',
@@ -1796,15 +1771,10 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     // composer is focused by default, we remove that focus
     document.querySelector('.o_ComposerTextInput_textarea').blur();
     // simulate receiving a message
-    await afterNextRender(() => this.env.services.rpc({
-        route: '/mail/chat_post',
-        params: {
-            context: {
-                mockedUserId: 42,
-            },
-            message_content: "test",
-            uuid: 'channel20uuid',
-        },
+    await afterNextRender(() => this.messaging.rpcRoute('/mail/chat_post', {
+        context: { mockedUserId: 42 },
+        message_content: "test",
+        uuid: 'channel20uuid',
     }));
     assert.containsN(
         document.body,
@@ -1829,7 +1799,7 @@ QUnit.test('first unseen message should be directly preceded by the new message 
 QUnit.test('composer should be focused automatically after clicking on the send button [REQUIRE FOCUS]', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({id: 20,});
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,

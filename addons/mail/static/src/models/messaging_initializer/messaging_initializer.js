@@ -40,15 +40,15 @@ function factory(dependencies) {
             });
             const device = this.messaging.device;
             device.start();
-            const context = Object.assign({
-                isMobile: device.isMobile,
-            }, this.env.session.user_context);
             const discuss = this.messaging.discuss;
-            const data = await this.async(() => this.env.services.rpc({
-                route: '/mail/init_messaging',
-                params: { context: context }
-            }, { shadow: true }));
-            await this.async(() => this._init(data));
+            const data = await this.messaging.rpcRoute('/mail/init_messaging');
+            if (!this.exists()) {
+                return;
+            }
+            await this._init(data);
+            if (!this.exists()) {
+                return;
+            }
             if (discuss.isOpen) {
                 discuss.openInitThread();
             }

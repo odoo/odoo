@@ -658,11 +658,7 @@ QUnit.test('Mobile: opening a chat window should not update channel state on the
         '.o_ChatWindow',
         "should have a chat window after clicking on thread preview"
     );
-    const channels = await this.env.services.rpc({
-        model: 'mail.channel',
-        method: 'read',
-        args: [20],
-    }, { shadow: true });
+    const channels = await this.messaging.rpcOrm('mail.channel', 'read', 20);
     assert.strictEqual(
         channels[0].state,
         'closed',
@@ -698,11 +694,7 @@ QUnit.test('Mobile: closing a chat window should not update channel state on the
         '.o_ChatWindow',
         "should not have a chat window after closing it"
     );
-    const channels = await this.env.services.rpc({
-        model: 'mail.channel',
-        method: 'read',
-        args: [20],
-    }, { shadow: true });
+    const channels = await this.messaging.rpcOrm('mail.channel', 'read', 20);
     assert.strictEqual(
         channels[0].state,
         'open',
@@ -735,15 +727,10 @@ QUnit.test("Mobile: chat window shouldn't open automatically after receiving a n
     });
 
     // simulate receiving a message
-    this.env.services.rpc({
-        route: '/mail/chat_post',
-        params: {
-            context: {
-                mockedUserId: 42,
-            },
-            message_content: "hu",
-            uuid: 'channel-10-uuid',
-        },
+    this.messaging.rpcRoute('/mail/chat_post', {
+        context: { mockedUserId: 42 },
+        message_content: "hu",
+        uuid: 'channel-10-uuid',
     });
     await nextAnimationFrame();
     assert.containsNone(
@@ -2169,15 +2156,10 @@ QUnit.test('new message separator is shown in a chat window of a chat on receivi
     await this.start();
 
     // simulate receiving a message
-    await afterNextRender(async () => this.env.services.rpc({
-        route: '/mail/chat_post',
-        params: {
-            context: {
-                mockedUserId: 42,
-            },
-            message_content: "hu",
-            uuid: 'channel-10-uuid',
-        },
+    await afterNextRender(async () => this.messaging.rpcRoute('/mail/chat_post', {
+        context: { mockedUserId: 42 },
+        message_content: "hu",
+        uuid: 'channel-10-uuid',
     }));
     assert.containsOnce(
         document.body,
@@ -2215,15 +2197,10 @@ QUnit.test('new message separator is not shown in a chat window of a chat on rec
     await this.start();
 
     // simulate receiving a message
-    await afterNextRender(async () => this.env.services.rpc({
-        route: '/mail/chat_post',
-        params: {
-            context: {
-                mockedUserId: 42,
-            },
-            message_content: "hu",
-            uuid: 'channel-10-uuid',
-        },
+    await afterNextRender(async () => this.messaging.rpcRoute('/mail/chat_post', {
+        context: { mockedUserId: 42 },
+        message_content: "hu",
+        uuid: 'channel-10-uuid',
     }));
     assert.containsNone(
         document.body,
@@ -2260,15 +2237,10 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
     await this.start();
 
     // simulate receiving a message
-    await afterNextRender(() => this.env.services.rpc({
-        route: '/mail/chat_post',
-        params: {
-            context: {
-                mockedUserId: 42,
-            },
-            message_content: "hu",
-            uuid: 'channel-10-uuid',
-        },
+    await afterNextRender(() => this.messaging.rpcRoute('/mail/chat_post', {
+        context: { mockedUserId: 42 },
+        message_content: "hu",
+        uuid: 'channel-10-uuid',
     }));
     assert.containsOnce(
         document.body,
@@ -2372,15 +2344,10 @@ QUnit.test('chat window should open when receiving a new DM', async function (as
     await this.start();
 
     // simulate receiving the first message on channel 11
-    await afterNextRender(() => this.env.services.rpc({
-        route: '/mail/chat_post',
-        params: {
-            context: {
-                mockedUserId: 11,
-            },
-            message_content: "new message",
-            uuid: 'channel11uuid',
-        },
+    await afterNextRender(() => this.messaging.rpcRoute('/mail/chat_post', {
+        context: { mockedUserId: 11 },
+        message_content: "new message",
+        uuid: 'channel11uuid',
     }));
     assert.containsOnce(
         document.body,
@@ -2412,15 +2379,10 @@ QUnit.test('chat window should remain folded when new message is received', asyn
 
     await this.start();
     // simulate receiving a new message
-    await afterNextRender(async () => this.env.services.rpc({
-        route: '/mail/chat_post',
-        params: {
-            context: {
-                mockedUserId: 42,
-            },
-            message_content: "New Message 2",
-            uuid: 'channel-10-uuid',
-        },
+    await afterNextRender(async () => this.messaging.rpcRoute('/mail/chat_post', {
+        context: { mockedUserId: 42 },
+        message_content: "New Message 2",
+        uuid: 'channel-10-uuid',
     }));
     assert.hasClass(
         document.querySelector(`.o_ChatWindow`),

@@ -231,17 +231,22 @@ QUnit.test('click on "add followers" button', async function (assert) {
 });
 
 QUnit.test('click on remove follower', async function (assert) {
-    assert.expect(6);
+    assert.expect(7);
 
     const self = this;
     await this.start({
         async mockRPC(route, args) {
             if (route.includes('message_unsubscribe')) {
                 assert.step('message_unsubscribe');
+                assert.strictEqual(
+                    args.args[0],
+                    100,
+                    "message_unsubscribe should be called with right thread id"
+                );
                 assert.deepEqual(
-                    args.args,
-                    [[100], [self.messaging.currentPartner.id]],
-                    "message_unsubscribe should be called with right argument"
+                    args.kwargs.partner_ids,
+                    [self.messaging.currentPartner.id],
+                    "message_unsubscribe should be called with right partner ids"
                 );
             }
             return this._super(...arguments);

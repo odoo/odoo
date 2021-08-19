@@ -534,8 +534,7 @@ MockServer.include({
      * @param {integer[]} partner_ids
      */
     _mockMailChannelAddMembers(ids, partner_ids) {
-        const id = ids[0]; // ensure one
-        const channel = this._getRecords('mail.channel', [['id', '=', id]])[0];
+        const channel = this._getRecords('mail.channel', [['id', 'in', ids]])[0];
         // channel.partner not handled here for simplicity
         if (!channel.is_pinned) {
             this._mockWrite('mail.channel', [

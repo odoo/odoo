@@ -712,6 +712,7 @@ export class ModelManager {
              * functioning state and it is considered existing.
              */
             Model.__records[record.localId] = record;
+            this._update(record, { messaging: link(this._messaging) }, { allowWriteReadonly: true });
             /**
              * 4. Write provided data, default data, and register computes.
              */
@@ -724,7 +725,6 @@ export class ModelManager {
                     data2[field.fieldName] = field.default;
                 }
             }
-            data2.messaging = link(this._messaging);
             this._update(record, data2, { allowWriteReadonly: true });
             for (const field of Model.__fieldList) {
                 if (field.compute) {

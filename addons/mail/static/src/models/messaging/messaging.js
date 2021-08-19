@@ -63,6 +63,15 @@ function factory(dependencies) {
         }
 
         /**
+         * Returns all existing models.
+         *
+         * @returns {Object} keys are model name, values are model class.
+         */
+        get models() {
+            return this.modelManager.models;
+        }
+
+        /**
          * Opens a chat with the provided person and returns it.
          *
          * If a chat is not appropriate, a notification is displayed instead.
@@ -147,6 +156,48 @@ function factory(dependencies) {
          */
         refreshIsNotificationPermissionDefault() {
             this.update({ isNotificationPermissionDefault: this._computeIsNotificationPermissionDefault() });
+        }
+
+        /**
+         * Performs RPC on a python record following the given parameters.
+         *
+         * @param {string} model python model name
+         * @param {string} method python method name on given model
+         * @param {integer|integer[]} ids target record(s)
+         * @param {Object} [kwargs={}]
+         * @param {Object} [options={}] options of the RPC
+         * @param {boolean} [options.silent=true] if false displays a visible
+         *  and potentially blocking "loading" spinner while the RPC is pending.
+         */
+        async rpcOrm(model, method, ids, kwargs = {}, { silent = true } = {}) {
+            return this.env.services.rpc({ args: [ids], kwargs, method, model }, { shadow: silent });
+        }
+
+        /**
+         * Performs RPC on a python model following the given parameters.
+         *
+         * @param {string} model python model name
+         * @param {string} method python method name on given model
+         * @param {Object} [kwargs={}]
+         * @param {Object} [options={}] options of the RPC
+         * @param {boolean} [options.silent=false] if true displays a visible
+         *  and potentially blocking "loading" spinner while the RPC is pending.
+         */
+        async rpcOrmStatic(model, method, kwargs = {}, { silent = true } = {}) {
+            return this.env.services.rpc({ kwargs, method, model }, { shadow: silent });
+        }
+
+        /**
+         * Performs RPC on a python route following the given parameters.
+         *
+         * @param {string} route python route name
+         * @param {Object} [params={}] parameters that are sent to the server
+         * @param {Object} [options={}] options of the RPC
+         * @param {boolean} [options.shadow=false] if true displays a visible
+         *  and potentially blocking "loading" spinner while the RPC is pending.
+         */
+        async rpcRoute(route, params = {}, { silent = true } = {}) {
+            return this.env.services.rpc({ params, route }, { shadow: silent });
         }
 
         //----------------------------------------------------------------------

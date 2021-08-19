@@ -258,7 +258,7 @@ QUnit.test('No Price Available', async function (assert) {
 
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'cancel_letter' && args.model === 'mail.message' && args.args[0][0] === 10) {
+            if (args.method === 'cancel_letter' && args.model === 'mail.message' && args.args[0] === 10) {
                 assert.step(args.method);
             }
             return this._super(...arguments);
@@ -345,7 +345,7 @@ QUnit.test('Credit Error', async function (assert) {
 
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'send_letter' && args.model === 'mail.message' && args.args[0][0] === 10) {
+            if (args.method === 'send_letter' && args.model === 'mail.message' && args.args[0] === 10) {
                 assert.step(args.method);
             }
             return this._super(...arguments);
@@ -437,7 +437,7 @@ QUnit.test('Trial Error', async function (assert) {
 
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'send_letter' && args.model === 'mail.message' && args.args[0][0] === 10) {
+            if (args.method === 'send_letter' && args.model === 'mail.message' && args.args[0] === 10) {
                 assert.step(args.method);
             }
             return this._super(...arguments);

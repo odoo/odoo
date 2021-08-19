@@ -129,14 +129,9 @@ QUnit.test('do not add livechat in the sidebar on visitor opening his chat', asy
     );
 
     // simulate livechat visitor opening his chat
-    await this.env.services.rpc({
-        route: '/im_livechat/get_session',
-        params: {
-            context: {
-                mockedUserId: false,
-            },
-            channel_id: 10,
-        },
+    await this.messaging.rpcRoute('/im_livechat/get_session', {
+        context: { mockedUserId: false },
+        channel_id: 10,
     });
     await nextAnimationFrame();
     assert.containsNone(
@@ -174,15 +169,10 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
 
     // simulate livechat visitor typing
     const channel = this.data['mail.channel'].records.find(channel => channel.id === 10);
-    await this.env.services.rpc({
-        route: '/im_livechat/notify_typing',
-        params: {
-            context: {
-                mockedPartnerId: this.publicPartnerId,
-            },
-            is_typing: true,
-            uuid: channel.uuid,
-        },
+    await this.messaging.rpcRoute('/im_livechat/notify_typing', {
+        context: { mockedPartnerId: this.publicPartnerId },
+        is_typing: true,
+        uuid: channel.uuid,
     });
     await nextAnimationFrame();
     assert.containsNone(
@@ -227,15 +217,10 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
 
     // simulate livechat visitor sending a message
     const channel = this.data['mail.channel'].records.find(channel => channel.id === 10);
-    await afterNextRender(async () => this.env.services.rpc({
-        route: '/mail/chat_post',
-        params: {
-            context: {
-                mockedUserId: false,
-            },
-            uuid: channel.uuid,
-            message_content: "new message",
-        },
+    await afterNextRender(async () => this.messaging.rpcRoute('/mail/chat_post', {
+        context: { mockedUserId: false },
+        uuid: channel.uuid,
+        message_content: "new message",
     }));
     assert.containsOnce(
         document.body,

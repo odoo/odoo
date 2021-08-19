@@ -635,15 +635,14 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
 });
 
 QUnit.test('activity with mail template: send mail', async function (assert) {
-    assert.expect(7);
+    assert.expect(6);
 
     await this.start({
         async mockRPC(route, args) {
             if (args.method === 'activity_send_mail') {
                 assert.step('activity_send_mail');
-                assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], 42);
-                assert.strictEqual(args.args[1], 1);
+                assert.strictEqual(args.args[0], 42, "should have correct thread id");
+                assert.strictEqual(args.kwargs.template_id, 1, "should have correct template id");
                 return;
             } else {
                 return this._super(...arguments);
@@ -944,14 +943,13 @@ QUnit.test('activity edition', async function (assert) {
 });
 
 QUnit.test('activity click on cancel', async function (assert) {
-    assert.expect(7);
+    assert.expect(6);
 
     await this.start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/unlink') {
                 assert.step('unlink');
-                assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], 12);
+                assert.strictEqual(args.args[0], 12, "should have correct activity id");
                 return;
             } else {
                 return this._super(...arguments);
