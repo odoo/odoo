@@ -443,6 +443,8 @@ class StockQuant(models.Model):
             return 'in_date ASC, id'
         elif removal_strategy == 'lifo':
             return 'in_date DESC, id DESC'
+        elif removal_strategy == 'closest':
+            return 'location_id ASC, id DESC'
         raise UserError(_('Removal strategy %s not implemented.') % (removal_strategy,))
 
     def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
