@@ -19,3 +19,9 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_mass_mailing_outgoing_mail_server(self):
         if not self.mass_mailing_outgoing_mail_server:
             self.mass_mailing_mail_server_id = False
+
+    def set_values(self):
+        super().set_values()
+        ab_test_cron = self.env.ref('mass_mailing.ir_cron_mass_mailing_ab_testing').sudo()
+        if ab_test_cron and ab_test_cron.active != self.group_mass_mailing_campaign:
+            ab_test_cron.active = self.group_mass_mailing_campaign
