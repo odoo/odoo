@@ -431,12 +431,6 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                 },
                 {
                     'base_line_id': base_lines[0].id,
-                    'tax_line_id': tax_lines[2].id,
-                    'base_amount': -100.0,
-                    'tax_amount': -5.0,
-                },
-                {
-                    'base_line_id': base_lines[0].id,
                     'tax_line_id': tax_lines[0].id,
                     'base_amount': -100.0,
                     'tax_amount': -10.0,
@@ -451,7 +445,96 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                     'base_line_id': base_lines[1].id,
                     'tax_line_id': tax_lines[2].id,
                     'base_amount': -100.0,
-                    'tax_amount': -5.0,
+                    'tax_amount': -10.0,
+                },
+            ],
+        )
+        self.assertTotalAmounts(invoice, tax_details)
+
+    def test_affect_base_amount_5(self):
+        affecting_tax = self.env['account.tax'].create({
+            'name': 'Affecting',
+            'amount': 42,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'include_base_amount': True,
+            'sequence': 0,
+        })
+
+        affected_tax = self.env['account.tax'].create({
+            'name': 'Affected',
+            'amount': 10,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'sequence': 1
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2021-08-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': "affecting",
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'quantity': 1.0,
+                    'price_unit': 100.0,
+                    'tax_ids': affecting_tax.ids,
+                }),
+
+                Command.create({
+                    'name': "affected",
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'quantity': 1.0,
+                    'price_unit': 100.0,
+                    'tax_ids': affected_tax.ids,
+                }),
+
+                Command.create({
+                    'name': "affecting + affected",
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'quantity': 1.0,
+                    'price_unit': 100.0,
+                    'tax_ids': (affecting_tax + affected_tax).ids,
+                }),
+            ]
+        })
+
+        base_lines, tax_lines = self._dispatch_move_lines(invoice)
+        tax_details = self._get_tax_details()
+
+        self.assertTaxDetailsValues(
+            tax_details,
+            [
+                {
+                    'base_line_id': base_lines[0].id,
+                    'tax_line_id': tax_lines[0].id,
+                    'base_amount': -100.0,
+                    'tax_amount': -42.0,
+                },
+                {
+                    'base_line_id': base_lines[1].id,
+                    'tax_line_id': tax_lines[1].id,
+                    'base_amount': -100.0,
+                    'tax_amount': -10.0,
+                },
+                {
+                    'base_line_id': base_lines[2].id,
+                    'tax_line_id': tax_lines[1].id,
+                    'base_amount': -42.0,
+                    'tax_amount': -4.2,
+                },
+                {
+                    'base_line_id': base_lines[2].id,
+                    'tax_line_id': tax_lines[1].id,
+                    'base_amount': -100.0,
+                    'tax_amount': -10.0,
+                },
+                {
+                    'base_line_id': base_lines[2].id,
+                    'tax_line_id': tax_lines[2].id,
+                    'base_amount': -100.0,
+                    'tax_amount': -42.0,
                 },
             ],
         )
