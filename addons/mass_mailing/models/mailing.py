@@ -14,7 +14,7 @@ from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_join
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -104,6 +104,7 @@ class MassMailing(models.Model):
     user_id = fields.Many2one('res.users', string='Responsible', tracking=True,  default=lambda self: self.env.user)
     # mailing options
     mailing_type = fields.Selection([('mail', 'Email')], string="Mailing Type", default="mail", required=True)
+    mailing_type_description = fields.Char('Mailing Type Description', compute="_compute_mailing_type_description")
     reply_to_mode = fields.Selection([
         ('update', 'Recipient Followers'), ('new', 'Specified Email Address')],
         string='Reply-To Mode', compute='_compute_reply_to_mode',
@@ -131,12 +132,21 @@ class MassMailing(models.Model):
         default=_get_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
     contact_list_ids = fields.Many2many('mailing.list', 'mail_mass_mailing_list_rel', string='Mailing Lists')
-    contact_ab_pc = fields.Integer(string='A/B Testing percentage',
-        help='Percentage of the contacts that will be mailed. Recipients will be taken randomly.', default=100)
-    unique_ab_testing = fields.Boolean(string='Allow A/B Testing', default=False,
+    # A/B Testing
+    ab_testing_completed = fields.Boolean(related='campaign_id.ab_testing_completed', store=True)
+    ab_testing_description = fields.Html('A/B Testing Description', compute="_compute_ab_testing_description")
+    ab_testing_enabled = fields.Boolean(string='Allow A/B Testing', default=False,
         help='If checked, recipients will be mailed only once for the whole campaign. '
              'This lets you send different mailings to randomly selected recipients and test '
              'the effectiveness of the mailings, without causing duplicate messages.')
+    ab_testing_mailings_count = fields.Integer(related="campaign_id.ab_testing_mailings_count")
+    ab_testing_pc = fields.Integer(string='A/B Testing percentage',
+        help='Percentage of the contacts that will be mailed. Recipients will be chosen randomly.', default=10)
+    ab_testing_schedule_datetime = fields.Datetime(related="campaign_id.ab_testing_schedule_datetime", readonly=False,
+        default=lambda self: fields.Datetime.now() + relativedelta(days=1))
+    ab_testing_winner_selection = fields.Selection(related="campaign_id.ab_testing_winner_selection",
+        default="opened_ratio", readonly=False, copy=True)
+
     kpi_mail_required = fields.Boolean('KPI mail required', copy=False)
     # statistics data
     mailing_trace_ids = fields.One2many('mailing.trace', 'mass_mailing_id', string='Emails Statistics')
@@ -162,6 +172,12 @@ class MassMailing(models.Model):
         'Warning Message', compute='_compute_warning_message',
         help='Warning message displayed in the mailing form view')
 
+    _sql_constraints = [(
+        'percentage_valid',
+        'CHECK(ab_testing_pc >= 0 AND ab_testing_pc <= 100)',
+        'The A/B Testing Percentage needs to be between 0 and 100%'
+    )]
+
     @api.depends('mail_server_id')
     def _compute_email_from(self):
         user_email = self.env.user.email_formatted
@@ -183,8 +199,8 @@ class MassMailing(models.Model):
     def _compute_total(self):
         for mass_mailing in self:
             total = self.env[mass_mailing.mailing_model_real].search_count(mass_mailing._parse_mailing_domain())
-            if mass_mailing.contact_ab_pc < 100:
-                total = int(total / 100.0 * mass_mailing.contact_ab_pc)
+            if mass_mailing.ab_testing_pc < 100:
+                total = int(total / 100.0 * mass_mailing.ab_testing_pc)
             mass_mailing.total = total
 
     def _compute_clicks_ratio(self):
@@ -333,6 +349,24 @@ class MassMailing(models.Model):
         for mailing in self:
             mailing.render_model = mailing.mailing_model_real
 
+    @api.depends('mailing_type')
+    def _compute_mailing_type_description(self):
+        for mailing in self:
+            mailing.mailing_type_description = dict(self._fields.get('mailing_type').selection).get(mailing.mailing_type)
+
+    @api.depends(lambda self: self._get_ab_testing_description_modifying_fields())
+    def _compute_ab_testing_description(self):
+        mailing_ab_test = self.filtered('ab_testing_enabled')
+        (self - mailing_ab_test).ab_testing_description = False
+        for mailing in mailing_ab_test:
+            mailing.ab_testing_description = self.env['ir.qweb']._render(
+                'mass_mailing.ab_testing_description',
+                mailing._get_ab_testing_description_values()
+            )
+
+    def _get_ab_testing_description_modifying_fields(self):
+        return ['ab_testing_enabled', 'ab_testing_pc', 'ab_testing_schedule_datetime', 'ab_testing_winner_selection', 'campaign_id']
+
     # ------------------------------------------------------
     # ORM
     # ------------------------------------------------------
@@ -340,18 +374,42 @@ class MassMailing(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         now = fields.Datetime.now()
+        ab_testing_cron = self.env.ref('mass_mailing.ir_cron_mass_mailing_ab_testing').sudo()
         for values in vals_list:
             if values.get('subject') and not values.get('name'):
                 values['name'] = "%s %s" % (values['subject'], now)
             if values.get('body_html'):
                 values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
-        return super().create(vals_list)
+            if values.get('ab_testing_schedule_datetime'):
+                at = fields.Datetime.from_string(values['ab_testing_schedule_datetime'])
+                ab_testing_cron._trigger(at=at)
+        mailings = super().create(vals_list)
+        campaign_vals = [
+            mailing._get_default_ab_testing_campaign_values()
+            for mailing in mailings
+            if mailing.ab_testing_enabled and not mailing.campaign_id
+        ]
+        self.env['utm.campaign'].create(campaign_vals)
+        return mailings
 
     def write(self, values):
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+        # When ab_testing_enabled is checked we create a campaign if there is none set.
+        if values.get('ab_testing_enabled') and not values.get('campaign_id'):
+            # Compute the values of the A/B test campaign based on the first mailing
+            values['campaign_id'] = self.env['utm.campaign'].create(self[0]._get_default_ab_testing_campaign_values(values)).id
+        # If ab_testing is already enabled on a mailing and the campaign is removed, we raise a ValidationError
+        if values.get('campaign_id') is False and any(mailing.ab_testing_enabled for mailing in self) and 'ab_testing_enabled' not in values:
+            raise ValidationError(_("A campaign should be set when A/B test is enabled"))
 
-        return super(MassMailing, self).write(values)
+        result = super(MassMailing, self).write(values)
+
+        if self.ab_testing_schedule_datetime:
+            ab_testing_cron = self.env.ref('mass_mailing.ir_cron_mass_mailing_ab_testing').sudo()
+            ab_testing_cron._trigger(at=self.ab_testing_schedule_datetime)
+
+        return result
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -374,13 +432,18 @@ class MassMailing(models.Model):
         if mass_mailing_copy:
             context = dict(self.env.context)
             context['form_view_initial_mode'] = 'edit'
-            return {
+            action = {
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'res_model': 'mailing.mailing',
                 'res_id': mass_mailing_copy.id,
                 'context': context,
             }
+            if self.mailing_type == 'mail':
+                action['views'] = [
+                    (self.env.ref('mass_mailing.mailing_mailing_view_form_full_width').id, 'form'),
+                ]
+            return action
         return False
 
     def action_test(self):
@@ -519,6 +582,109 @@ class MassMailing(models.Model):
                     record.sudo().message_post(body=message % ', '.join(str(list.name) for list in record_lists.mapped('list_id')))
 
     # ------------------------------------------------------
+    # A/B Test
+    # ------------------------------------------------------
+
+    def action_compare_versions(self):
+        self.ensure_one()
+        if not self.campaign_id:
+            raise ValueError(_("No mailing campaign has been found"))
+        action = {
+            'name': _('A/B Tests'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'tree,kanban,form,calendar,graph',
+            'res_model': 'mailing.mailing',
+            'domain': [('campaign_id', '=', self.campaign_id.id), ('ab_testing_enabled', '=', True)],
+        }
+        if self.mailing_type == 'mail':
+            action['views'] = [
+                (False, 'tree'),
+                (False, 'kanban'),
+                (self.env.ref('mass_mailing.mailing_mailing_view_form_full_width').id, 'form'),
+                (False, 'calendar'),
+                (False, 'graph'),
+            ]
+        return action
+
+    def action_send_winner_mailing(self):
+        """Send the winner mailing based on the winner selection field.
+        This action is used in 2 cases:
+            - When the user clicks on a button to send the winner mailing. There is only one mailing in self
+            - When the cron is executed to send winner mailing based on the A/B testing schedule datetime. In this
+            case 'self' contains all the mailing for the campaigns so we just need to take the first to determine the
+            winner.
+        If the winner mailing is computed automatically, we sudo the mailings of the campaign in order to sort correctly
+        the mailings based on the selection that can be used with sub-modules like CRM and Sales
+        """
+        if len(self.campaign_id) != 1:
+            raise ValueError(_("To send the winner mailing the same campaign should be used by the mailings"))
+        if any(mailing.ab_testing_completed for mailing in self):
+            raise ValueError(_("To send the winner mailing the campaign should not have been completed."))
+        final_mailing = self[0]
+        sorted_by = final_mailing._get_ab_testing_winner_selection()['value']
+        if sorted_by != 'manual':
+            ab_testing_mailings = final_mailing._get_ab_testing_siblings_mailings().sudo()
+            selected_mailings = ab_testing_mailings.filtered(lambda m: m.state == 'done').sorted(sorted_by, reverse=True)
+            if selected_mailings:
+                final_mailing = selected_mailings[0]
+            else:
+                raise ValidationError(_("No mailing for this A/B testing campaign has been sent yet! Send one first and try again later."))
+        return final_mailing.action_select_as_winner()
+
+    def action_select_as_winner(self):
+        self.ensure_one()
+        if not self.ab_testing_enabled:
+            raise ValueError(_("A/B test option has not been enabled"))
+        self.campaign_id.write({
+            'ab_testing_completed': True,
+        })
+        final_mailing = self.copy({
+            'ab_testing_pc': 100,
+        })
+        final_mailing.action_launch()
+        action = self.env['ir.actions.act_window']._for_xml_id('mass_mailing.action_ab_testing_open_winner_mailing')
+        action['res_id'] = final_mailing.id
+        if self.mailing_type == 'mail':
+            action['views'] = [
+                (self.env.ref('mass_mailing.mailing_mailing_view_form_full_width').id, 'form'),
+            ]
+        return action
+
+    def _get_ab_testing_description_values(self):
+        self.ensure_one()
+
+        other_ab_testing_mailings = self._get_ab_testing_siblings_mailings().filtered(lambda m: m.id != self.id)
+        other_ab_testing_pc = sum([mailing.ab_testing_pc for mailing in other_ab_testing_mailings])
+        return {
+            'mailing': self,
+            'ab_testing_winner_selection_description': self._get_ab_testing_winner_selection()['description'],
+            'other_ab_testing_pc': other_ab_testing_pc,
+            'remaining_ab_testing_pc': 100 - (other_ab_testing_pc + self.ab_testing_pc),
+        }
+
+    def _get_ab_testing_siblings_mailings(self):
+        return self.campaign_id.mailing_mail_ids.filtered(lambda m: m.ab_testing_enabled)
+
+    def _get_ab_testing_winner_selection(self):
+        ab_testing_winner_selection_description = dict(
+            self._fields.get('ab_testing_winner_selection').related_field.selection
+        ).get(self.ab_testing_winner_selection)
+        return {
+            'value': self.ab_testing_winner_selection,
+            'description': ab_testing_winner_selection_description,
+        }
+
+    def _get_default_ab_testing_campaign_values(self, values=None):
+        values = values or dict()
+        return {
+            'ab_testing_schedule_datetime': values.get('ab_testing_schedule_datetime') or self.ab_testing_schedule_datetime,
+            'ab_testing_winner_selection': values.get('ab_testing_winner_selection') or self.ab_testing_winner_selection,
+            'mailing_mail_ids': self.ids,
+            'name': _('A/B Test: %s', values.get('subject') or self.subject or fields.Datetime.now()),
+            'user_id': values.get('user_id') or self.user_id.id or self.env.user.id,
+        }
+
+    # ------------------------------------------------------
     # Email Sending
     # ------------------------------------------------------
 
@@ -587,12 +753,12 @@ class MassMailing(models.Model):
         else:
             raise UserError(_("Unsupported mass mailing model %s", self.mailing_model_id.name))
 
-        if self.unique_ab_testing:
-            query +="""
+        if self.ab_testing_enabled:
+            query += """
                AND s.campaign_id = %%(mailing_campaign_id)s;
             """
         else:
-            query +="""
+            query += """
                AND s.mass_mailing_id = %%(mailing_id)s
                AND s.model = %%(target_model)s;
             """
@@ -615,25 +781,30 @@ class MassMailing(models.Model):
         res_ids = self.env[self.mailing_model_real].search(mailing_domain).ids
 
         # randomly choose a fragment
-        if self.contact_ab_pc < 100:
+        if self.ab_testing_enabled and self.ab_testing_pc < 100:
             contact_nbr = self.env[self.mailing_model_real].search_count(mailing_domain)
-            topick = int(contact_nbr / 100.0 * self.contact_ab_pc)
-            if self.campaign_id and self.unique_ab_testing:
+            topick = int(contact_nbr / 100.0 * self.ab_testing_pc)
+            if self.campaign_id and self.ab_testing_enabled:
                 already_mailed = self.campaign_id._get_mailing_recipients()[self.campaign_id.id]
             else:
                 already_mailed = set([])
             remaining = set(res_ids).difference(already_mailed)
-            if topick > len(remaining):
+            if topick > len(remaining) or (len(remaining) > 0 and topick == 0):
                 topick = len(remaining)
             res_ids = random.sample(remaining, topick)
         return res_ids
 
     def _get_remaining_recipients(self):
         res_ids = self._get_recipients()
-        already_mailed = self.env['mailing.trace'].search_read([
-            ('model', '=', self.mailing_model_real),
-            ('res_id', 'in', res_ids),
-            ('mass_mailing_id', '=', self.id)], ['res_id'])
+        trace_domain = [('model', '=', self.mailing_model_real)]
+        if self.ab_testing_enabled and self.ab_testing_pc == 100:
+            trace_domain = expression.AND([trace_domain, [('mass_mailing_id', '=', self._get_ab_testing_siblings_mailings().ids)]])
+        else:
+            trace_domain = expression.AND([trace_domain, [
+                ('res_id', 'in', res_ids),
+                ('mass_mailing_id', '=', self.id),
+            ]])
+        already_mailed = self.env['mailing.trace'].search_read(trace_domain, ['res_id'])
         done_res_ids = {record['res_id'] for record in already_mailed}
         return [rid for rid in res_ids if rid not in done_res_ids]
 

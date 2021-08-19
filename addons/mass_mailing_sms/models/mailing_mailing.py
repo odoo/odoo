@@ -46,6 +46,8 @@ class Mailing(models.Model):
         'Send Directly', help='Immediately send the SMS Mailing instead of queuing up. Use at your own risk.')
     # opt_out_link
     sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=False)
+    # A/B Testing
+    ab_testing_sms_winner_selection = fields.Selection(related="campaign_id.ab_testing_sms_winner_selection", default="clicks_ratio", readonly=False, copy=True)
 
     @api.depends('mailing_type')
     def _compute_medium_id(self):
@@ -81,7 +83,6 @@ class Mailing(models.Model):
             for mail in self:
                 mail.sms_has_insufficient_credit = trace_dict[mail.id]['sms_credit']
                 mail.sms_has_unregistered_account = trace_dict[mail.id]['sms_acc']
-
 
     # --------------------------------------------------
     # ORM OVERRIDES
@@ -318,3 +319,47 @@ class Mailing(models.Model):
             res[mailing.id] = body
         res.update(super(Mailing, self - sms_mailings).convert_links())
         return res
+
+    # ------------------------------------------------------
+    # A/B Test Override
+    # ------------------------------------------------------
+
+    def _get_ab_testing_description_modifying_fields(self):
+        fields_list = super()._get_ab_testing_description_modifying_fields()
+        return fields_list + ['ab_testing_sms_winner_selection']
+
+    def _get_ab_testing_description_values(self):
+        values = super()._get_ab_testing_description_values()
+        if self.mailing_type == 'sms':
+            values.update({
+                'ab_testing_winner_selection': self.ab_testing_sms_winner_selection,
+            })
+        return values
+
+    def _get_ab_testing_winner_selection(self):
+        result = super()._get_ab_testing_winner_selection()
+        if self.mailing_type == 'sms':
+            ab_testing_winner_selection_description = dict(
+                self._fields.get('ab_testing_sms_winner_selection').related_field.selection
+            ).get(self.ab_testing_sms_winner_selection)
+            result.update({
+                'value': self.campaign_id.ab_testing_sms_winner_selection,
+                'description': ab_testing_winner_selection_description
+            })
+        return result
+
+    def _get_ab_testing_siblings_mailings(self):
+        mailings = super()._get_ab_testing_siblings_mailings()
+        if self.mailing_type == 'sms':
+            mailings = self.campaign_id.mailing_sms_ids.filtered('ab_testing_enabled')
+        return mailings
+
+    def _get_default_ab_testing_campaign_values(self, values=None):
+        campaign_values = super()._get_default_ab_testing_campaign_values(values)
+        values = values or dict()
+        if self.mailing_type == 'sms':
+            sms_subject = values.get('sms_subject') or self.sms_subject
+            if sms_subject:
+                campaign_values['name'] = _("A/B Test: %s", sms_subject)
+            campaign_values['ab_testing_sms_winner_selection'] = self.ab_testing_sms_winner_selection
+        return campaign_values

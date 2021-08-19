@@ -14,6 +14,10 @@
                     <separator/>
                     <filter name="filter_sent_date" date="sent_date"/>
                     <separator/>
+                    <filter string="A/B Tests" name="filter_ab_test" domain="[('ab_testing_enabled', '=', True)]"/>
+                    <filter string="A/B Tests to review" name="filter_ab_test_to_review"
+                        domain="[('ab_testing_enabled', '=', True), ('ab_testing_winner_selection', '=', 'manual'), ('ab_testing_completed', '=', False)]"/>
+                    <separator/>
                     <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
@@ -30,19 +34,20 @@
             <field name="model">mailing.mailing</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Mailings" sample="1" decoration-info="state in ['draft', 'in_queue']">
-                    <field name="calendar_date" string="Date" widget="date"/>
+                <tree string="Mailings" sample="1">
+                    <field name="calendar_date" string="Date" widget="datetime"/>
                     <field name="subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                     <field name="mailing_model_id" string="Recipients" optional="hide"/>
                     <field name="user_id" widget="many2one_avatar_user"/>
+                    <field name="ab_testing_enabled" string="A/B Test" groups="mass_mailing.group_mass_mailing_campaign"/>
                     <field name="campaign_id" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign" optional="hide"/>
                     <field name="sent"/>
                     <field name="received_ratio" class="d-flex align-items-center pl-0 pl-lg-5" widget="progressbar" string="Delivered (%)"/>
                     <field name="opened_ratio" class="d-flex align-items-center pl-0 pl-lg-5" widget="progressbar" string="Opened (%)"/>
-                    <field name="bounced_ratio" string="Bounced (%)"/>
+                    <field name="bounced_ratio" string="Bounced (%)" optional="hide"/>
                     <field name="clicks_ratio" string="Clicked (%)"/>
                     <field name="replied_ratio" string="Replied (%)"/>
-                    <field name="state" decoration-info="state == 'draft'" decoration-success="state == 'sending' or state == 'done'" widget="badge"/>
+                    <field name="state" decoration-info="state in ['draft', 'in_queue']" decoration-success="state == 'sending' or state == 'done'" widget="badge"/>
                 </tree>
             </field>
         </record>
@@ -231,22 +236,57 @@
                                     <field name="copyvalue"/>
                                 </group>
                             </page>
+                            <page string="A/B Tests" name="ab_testing" groups="mass_mailing.group_mass_mailing_campaign">
+                                <group>
+                                    <group>
+                                        <label for="ab_testing_enabled"/>
+                                        <span class="d-flex">
+                                            <field name="ab_testing_enabled" attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
+                                            <span class="col" attrs="{'invisible': [('ab_testing_enabled', '=', False)]}">
+                                                on <field name="ab_testing_pc" class="col-6 text-center"
+                                                    attrs="{'readonly': [('state', '!=', 'draft')]}"/> %
+                                            </span>
+                                        </span>
+                                        <field name="ab_testing_winner_selection"
+                                            attrs="{'required': [('ab_testing_enabled', '=', True), ('mailing_type', '=', 'mail')], 'invisible': ['|', ('ab_testing_enabled', '=', False), ('mailing_type', '!=', 'mail')], 'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="ab_testing_schedule_datetime"
+                                            attrs="{'required': [('ab_testing_enabled', '=', True), ('ab_testing_winner_selection', '!=', 'manual')], 'readonly': ['|', ('ab_testing_enabled', '=', False), ('state', '!=', 'draft')], 'invisible': ['|', ('ab_testing_enabled', '=', False), ('ab_testing_winner_selection', '=', 'manual')]}"/>
+                                    </group>
+                                    <div>
+                                        <field name="ab_testing_mailings_count" invisible="1"/>
+                                        <field name="ab_testing_completed" invisible="1"/>
+                                        <field name="ab_testing_description" nolabel="1"/>
+                                        <div attrs="{'invisible': ['|', ('ab_testing_mailings_count', '&lt;', 2), ('ab_testing_enabled', '=', False)]}">
+                                            <button name="action_compare_versions" type="object" class="btn btn-link d-block">
+                                                <i class="fa fa-bar-chart"/> Compare Version
+                                            </button>
+                                            <button name="action_duplicate" type="object" class="btn btn-link d-block" attrs="{'invisible': [('ab_testing_completed', '=', True)]}">
+                                                <i class="fa fa-copy"/> Create an Alternative
+                                            </button>
+                                            <button name="action_send_winner_mailing" type="object" class="btn btn-link d-block" attrs="{'invisible': [('ab_testing_completed', '=', True)]}">
+                                                <i class="fa fa-envelope"/> <span name="ab_test_manual" attrs="{'invisible': [('ab_testing_winner_selection', '!=', 'manual')]}">
+                                                    Send this version to remaining recipients
+                                                </span> <span name="ab_test_auto" attrs="{'invisible': [('ab_testing_winner_selection', '=', 'manual')]}">
+                                                    Send Winner Now
+                                                </span>
+                                            </button>
+                                            <button name="action_select_as_winner" type="object" class="btn btn-link d-block"
+                                                attrs="{'invisible': ['|', ('ab_testing_completed', '!=', False), ('ab_testing_winner_selection', '!=', 'manual')]}">
+                                                <i class="fa fa-envelope"/> Send this as winner
+                                            </button>
+                                        </div>
+                                        <button name="action_duplicate" type="object" class="btn btn-primary"
+                                            attrs="{'invisible': ['|', ('ab_testing_mailings_count', '&gt;=', 2), ('ab_testing_enabled', '=', False)]}">
+                                            Create an Alternative Version
+                                        </button>
+                                    </div>
+                                </group>
+                            </page>
                             <page string="Settings" name="settings">
                                 <group>
-                                    <group string="Extra Options">
+                                    <group string="Email Content">
                                         <field class="o_text_overflow" name="preview" string="Preview Text" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
-                                        <label for="schedule_type" string="Schedule"/>
-                                        <div name="schedule_block">
-                                            <div class="row">
-                                                <div class="col-xs-12 col-md-6">
-                                                    <field name="schedule_type"/>
-                                                </div>
-                                                <div class="col-xs-12 col-md-6" attrs="{'invisible': [('schedule_type', '=', 'now')]}">
-                                                    <field name="schedule_date" attrs="{'required': [('schedule_type', '=', 'scheduled')]}" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <field name="user_id" domain="[('share', '=', False)]"/>
+                                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                                         <field name="email_from" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <label for="reply_to"/>
                                         <div name="reply_to_details">
@@ -279,8 +319,7 @@
                                         <field name="campaign_id"
                                             string="Campaign"
                                             groups="mass_mailing.group_mass_mailing_campaign"
-                                            attrs="{'readonly': [('state', 'in', ('sending', 'done'))],
-                                                    'required': [('unique_ab_testing', '=', True)]}"/>
+                                            attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <field name="medium_id"
                                              string="Medium"
                                              required="True"
@@ -293,15 +332,6 @@
                                             class="o_text_overflow"
                                             groups="base.group_no_one"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
-                                        <field name="unique_ab_testing"
-                                            groups="mass_mailing.group_mass_mailing_campaign"
-                                            attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
-                                        <label for="contact_ab_pc" groups="mass_mailing.group_mass_mailing_campaign"/>
-                                        <div name="contact_ab_pc" groups="mass_mailing.group_mass_mailing_campaign">
-                                            <field name="contact_ab_pc"
-                                                class="oe_inline"
-                                                attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/> %
-                                        </div>
                                     </group>
                                     <group string="Advanced" groups="base.group_no_one">
                                         <field name="mail_server_available" invisible="1"/>
@@ -624,6 +654,12 @@
                 send emails<br/> to any contact saved in other Odoo apps.
               </p>
             </field>
+        </record>
+
+        <record id="action_ab_testing_open_winner_mailing" model="ir.actions.act_window">
+            <field name="name">A/B Test Winner</field>
+            <field name="res_model">mailing.mailing</field>
+            <field name="view_mode">form</field>
         </record>
 
         <menuitem name="Mailings" id="mass_mailing_menu"

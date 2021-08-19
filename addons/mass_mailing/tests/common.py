@@ -254,3 +254,15 @@ class MassMailCommon(MailCommon, MassMailCase):
                 (0, 0, {'name': 'Ybrant', 'email': 'ybrant@example.com'}),
             ]
         })
+
+    @classmethod
+    def _create_mailing_list_of_x_contacts(cls, contacts_nbr):
+        """ Shortcut to create a mailing list that contains a defined number
+        of contacts. """
+        return cls.env['mailing.list'].with_context(cls._test_context).create({
+            'name': 'Test List',
+            'contact_ids': [
+                (0, 0, {'name': 'Contact %s' % i, 'email': 'contact%s@example.com' % i})
+                for i in range(contacts_nbr)
+            ],
+        })

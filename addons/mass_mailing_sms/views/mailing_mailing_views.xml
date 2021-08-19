@@ -23,6 +23,8 @@
                 <attribute name="attrs">{'invisible': ['|', ('mailing_type', '!=', 'mail'), ('state', 'in', ('in_queue', 'sending', 'done'))]}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_schedule']" position="before">
+                <field name="sms_force_send" invisible="1"/>
+                <field name="schedule_type" invisible="1"/>
                 <button name="action_put_in_queue" type="object"
                     string="Send" class="oe_highlight" data-hotkey="v"
                     attrs="{'invisible': ['|', '|', ('mailing_type', '=', 'mail'), ('state', 'in', ('in_queue', 'sending', 'done')), ('sms_force_send', '=', True)]}"
@@ -31,12 +33,6 @@
                     string="Send Now" class="oe_highlight" data-hotkey="g"
                     attrs="{'invisible': ['|', '|', '|', ('mailing_type', '=', 'mail'), ('state', 'in', ('in_queue', 'done')), ('schedule_type', '=', 'scheduled'), ('sms_force_send', '!=', True)]}"
                     confirm="This will send SMS to all recipients now. Do you still want to proceed ?"/>
-            </xpath>
-            <xpath expr="//div[@name='schedule_block']/div[hasclass('row')]" position="inside">
-                <div attrs="{'invisible': ['|', '|', ('mailing_type', '=', 'mail'), ('state', 'in', ['in_queue', 'sending', 'done']), ('schedule_type', '=', 'scheduled')]}">
-                    <label for="sms_force_send" string="Skip Queue"/>
-                    <field name="sms_force_send"/>
-                </div>
             </xpath>
             <!-- Headers / Warnings -->
             <xpath expr="//header" position="after">
@@ -154,14 +150,29 @@
                 <attribute name="attrs">{'invisible': ['|', ('mailing_type', '!=', 'mail'),
                     ('mail_server_available', '=', False)], 'readonly': [('state', 'in', ('sending', 'done'))]}</attribute>
             </xpath>
-            <xpath expr="//field[@name='unique_ab_testing']" position="attributes">
-                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            <!-- A/B Testing -->
+            <xpath expr="//field[@name='ab_testing_winner_selection']" position="after">
+                <label for="ab_testing_sms_winner_selection" string="Winner Selection"
+                    attrs="{'invisible': ['|', ('ab_testing_enabled', '=', False), ('mailing_type', '!=', 'sms')]}"/>
+                <field name="ab_testing_sms_winner_selection" nolabel="1"
+                    attrs="{'required': [('ab_testing_enabled', '=', True), ('mailing_type', '=', 'sms')], 'invisible': ['|', ('ab_testing_enabled', '=', False), ('mailing_type', '!=', 'sms')], 'readonly': [('state', '!=', 'draft')]}"/>
             </xpath>
-            <xpath expr="//div[@name='contact_ab_pc']" position="attributes">
-                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            <xpath expr="//field[@name='ab_testing_schedule_datetime']" position="replace">
+                 <field name="ab_testing_schedule_datetime"
+                        attrs="{'required': [('ab_testing_enabled', '=', True), ('ab_testing_winner_selection', '!=', 'manual'), ('ab_testing_sms_winner_selection', '!=', 'manual')], 'readonly': ['|', ('ab_testing_enabled', '=', False), ('state', '!=', 'draft')], 'invisible': ['|', '|', ('ab_testing_enabled', '=', False), ('ab_testing_winner_selection', '=', 'manual'), ('ab_testing_sms_winner_selection', '=', 'manual')]}"/>
             </xpath>
-            <xpath expr="//label[@for='contact_ab_pc']" position="attributes">
-                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            <xpath expr="//span[@name='ab_test_manual']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('ab_testing_winner_selection', '!=', 'manual'),
+                    ('ab_testing_sms_winner_selection', '!=', 'manual')]}</attribute>
+            </xpath>
+            <xpath expr="//span[@name='ab_test_auto']" position="attributes">
+                <attribute name="attrs">{'invisible': [('ab_testing_winner_selection', '=', 'manual'),
+                    ('ab_testing_sms_winner_selection', '=', 'manual')]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_select_as_winner']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('ab_testing_completed', '!=', False), '|',
+                    ('ab_testing_winner_selection', '=', 'manual'),
+                    ('ab_testing_sms_winner_selection', '=', 'manual')]}</attribute>
             </xpath>
         </field>
     </record>
