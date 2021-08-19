@@ -13,6 +13,19 @@ class UtmCampaign(models.Model):
         string='Mass SMS')
     mailing_sms_count = fields.Integer('Number of Mass SMS', compute="_compute_mailing_sms_count")
 
+    # A/B Testing
+    ab_testing_sms_winner_selection = fields.Selection([
+        ('manual', 'Manual'),
+        ('clicks_ratio', 'Highest Click Rate')], string="SMS Winner Selection", default="clicks_ratio")
+
+    @api.depends('mailing_mail_ids', 'mailing_sms_ids')
+    def _compute_ab_testing_total_pc(self):
+        super()._compute_ab_testing_total_pc()
+        for campaign in self:
+            campaign.ab_testing_total_pc += sum([
+                mailing.ab_testing_pc for mailing in campaign.mailing_sms_ids.filtered('ab_testing_enabled')
+            ])
+
     @api.depends('mailing_sms_ids')
     def _compute_mailing_sms_count(self):
         for campaign in self:
@@ -40,3 +53,13 @@ class UtmCampaign(models.Model):
         }
         action['domain'] = [('mailing_type', '=', 'sms')]
         return action
+
+    @api.model
+    def _cron_process_mass_mailing_ab_testing(self):
+        ab_testing_campaign = super()._cron_process_mass_mailing_ab_testing()
+        for campaign in ab_testing_campaign:
+            ab_testing_mailings = campaign.mailing_sms_ids.filtered(lambda m: m.ab_testing_enabled)
+            if not ab_testing_mailings.filtered(lambda m: m.state == 'done'):
+                continue
+            ab_testing_mailings.action_send_winner_mailing()
+        return ab_testing_campaign
