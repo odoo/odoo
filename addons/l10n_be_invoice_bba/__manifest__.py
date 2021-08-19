@@ -31,4 +31,5 @@ Two algorithms are suggested:
     'data': [
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

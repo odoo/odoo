@@ -217,7 +217,8 @@ class MicrosoftSync(models.AbstractModel):
             else:
                 value = self.env['calendar.event']._microsoft_to_odoo_values(recurrent_event, (), default_values)
                 self.env['calendar.event'].browse(recurrent_event.odoo_id(self.env)).with_context(no_mail_to_attendees=True, mail_create_nolog=True).write(dict(value, need_sync_m=False))
-            values[(self.id, value.get('start'), value.get('stop'))] = dict(value, need_sync_m=False)
+            if value.get('start') and value.get('stop'):
+                values[(self.id, value.get('start'), value.get('stop'))] = dict(value, need_sync_m=False)
 
         if (self.id, vals.get('start'), vals.get('stop')) in values:
             base_event_vals = dict(vals)

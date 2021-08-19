@@ -11231,6 +11231,44 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list: resize column headers with max-width', async function (assert) {
+        // This test will ensure that, on resize list header,
+        // the resized element have the correct size and other elements are not resized
+        assert.expect(2);
+        this.data.foo.records[0].foo = "a".repeat(200);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="reference" optional="hide"/>' +
+                '</tree>',
+        });
+
+        // Target handle
+        const th = list.el.getElementsByTagName('th')[1];
+        const thNext = list.el.getElementsByTagName('th')[2];
+        const resizeHandle = th.getElementsByClassName('o_resize')[0];
+        const nextResizeHandle = thNext.getElementsByClassName('o_resize')[0];
+        const thOriginalWidth = th.offsetWidth;
+        const thNextOriginalWidth = thNext.offsetWidth;
+        const thExpectedWidth = Math.floor(thOriginalWidth + thNextOriginalWidth);
+
+        await testUtils.dom.dragAndDrop(resizeHandle, nextResizeHandle, { mousemoveTarget: window, mouseupTarget: window });
+
+        const thFinalWidth = th.offsetWidth;
+        const thNextFinalWidth = thNext.offsetWidth;
+        const thWidthDiff = Math.abs(thExpectedWidth - thFinalWidth)
+
+        assert.ok(thWidthDiff <= 1, "Wrong width on resize");
+        assert.ok(thNextOriginalWidth === thNextFinalWidth, "Width must not have been changed");
+
+        list.destroy();
+    });
+
     QUnit.test('resize column with several x2many lists in form group', async function (assert) {
         assert.expect(3);
 
@@ -11275,6 +11313,47 @@ QUnit.module('Views', {
             "first o2m table is resized and width of table has changed");
         assert.strictEqual(secondTableInititalWidth, form.el.querySelectorAll('thead')[1].offsetWidth,
             "second o2m table should not be impacted on first o2m in group resized");
+
+        form.destroy();
+    });
+
+    QUnit.test('resize column with x2many list with several fields in form notebook', async function (assert) {
+        assert.expect(1);
+
+        this.data.foo.records[0].o2m = [1, 2];
+
+        const form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <form>
+                    <sheet>
+                        <notebook>
+                            <page string="Page 1">
+                                <field name="o2m">
+                                    <tree editable="bottom">
+                                        <field name="display_name"/>
+                                        <field name="display_name"/>
+                                        <field name="display_name"/>
+                                        <field name="display_name"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            res_id: 1,
+        });
+
+        const th = form.el.getElementsByTagName('th')[0];
+        const resizeHandle = th.getElementsByClassName('o_resize')[0];
+        const listInitialWidth = form.el.querySelector('.o_list_view').offsetWidth;
+
+        await testUtils.dom.dragAndDrop(resizeHandle, form.el.getElementsByTagName('th')[1], { position: "right" });
+
+        assert.strictEqual(form.el.querySelector('.o_list_view').offsetWidth, listInitialWidth,
+            "resizing the column should not impact the width of list");
 
         form.destroy();
     });

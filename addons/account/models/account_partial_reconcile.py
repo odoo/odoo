@@ -598,13 +598,20 @@ class AccountPartialReconcile(models.Model):
         moves._post(soft=False)
 
         # Reconcile the tax lines being on a reconcile tax basis transfer account.
-        for line, move_index, sequence in to_reconcile_after:
+        for lines, move_index, sequence in to_reconcile_after:
+
+            # In expenses, all move lines are created manually without any grouping on tax lines.
+            # In that case, 'lines' could be already reconciled.
+            lines = lines.filtered(lambda x: not x.reconciled)
+            if not lines:
+                continue
+
             counterpart_line = moves[move_index].line_ids.filtered(lambda line: line.sequence == sequence)
 
             # When dealing with tiny amounts, the line could have a zero amount and then, be already reconciled.
             if counterpart_line.reconciled:
                 continue
 
-            (line + counterpart_line).reconcile()
+            (lines + counterpart_line).reconcile()
 
         return moves

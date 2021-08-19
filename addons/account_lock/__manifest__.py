@@ -13,4 +13,5 @@
     """,
     'depends': ['account'],
     'data': [],
+    'license': 'LGPL-3',
 }

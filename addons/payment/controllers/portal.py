@@ -115,6 +115,12 @@ class PaymentProcessing(http.Controller):
         return result
 
 class WebsitePayment(http.Controller):
+    @staticmethod
+    def _get_acquirers_compatible_with_current_user(acquirers):
+        # s2s mode will always generate a token, which we don't want for public users
+        valid_flows = ['form'] if request.env.user._is_public() else ['form', 's2s']
+        return [acq for acq in acquirers if acq.payment_flow in valid_flows]
+
     @http.route(['/my/payment_method'], type='http', auth="user", website=True)
     def payment_method(self, **kwargs):
         acquirers = list(request.env['payment.acquirer'].search([
@@ -254,9 +260,7 @@ class WebsitePayment(http.Controller):
         if not acquirers:
             acquirers = env['payment.acquirer'].search(acquirer_domain)
 
-        # s2s mode will always generate a token, which we don't want for public users
-        valid_flows = ['form', 's2s'] if not user._is_public() else ['form']
-        values['acquirers'] = [acq for acq in acquirers if acq.payment_flow in valid_flows]
+        values['acquirers'] = self._get_acquirers_compatible_with_current_user(acquirers)
         if partner_id:
             values['pms'] = request.env['payment.token'].search([
                 ('acquirer_id', 'in', acquirers.ids),

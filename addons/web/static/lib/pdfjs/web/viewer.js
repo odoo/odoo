@@ -263,10 +263,10 @@ function webViewerLoad() {
   // Hide Open Button
   config.toolbar.openFile.setAttribute('hidden', 'true');
   config.secondaryToolbar.openFileButton.setAttribute('hidden', 'true');
-  // Hide Download Button
-  config.toolbar.download.setAttribute('hidden', 'true');
-  config.secondaryToolbar.downloadButton.setAttribute('hidden', 'true');
   if (isAndroid || isIOS) {
+    // Hide Download Button
+    config.toolbar.download.setAttribute('hidden', 'true');
+    config.secondaryToolbar.downloadButton.setAttribute('hidden', 'true');
     // Hide Print Button
     config.toolbar.print.setAttribute('hidden', 'true');
     config.secondaryToolbar.printButton.setAttribute('hidden', 'true');

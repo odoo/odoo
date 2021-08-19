@@ -330,7 +330,6 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
 
     def action_submit_expenses(self):
         sheet = self._create_sheet_from_expenses()
-        sheet.action_submit_sheet()
         return {
             'name': _('New Expense Report'),
             'type': 'ir.actions.act_window',
@@ -461,6 +460,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                 if tax['tax_repartition_line_id']:
                     rep_ln = self.env['account.tax.repartition.line'].browse(tax['tax_repartition_line_id'])
                     base_amount = self.env['account.move']._get_base_amount_to_display(tax['base'], rep_ln)
+                    base_amount = expense.currency_id._convert(base_amount, company_currency, expense.company_id, account_date)
                 else:
                     base_amount = None
 
@@ -945,8 +945,7 @@ class HrExpenseSheet(models.Model):
 
             if not self.env.user in current_managers and not self.user_has_groups('hr_expense.group_hr_expense_user') and self.employee_id.expense_manager_id != self.env.user:
                 raise UserError(_("You can only approve your department expenses"))
-
-        responsible_id = self.user_id.id or self.env.user.id    
+        
         notification = {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -956,14 +955,17 @@ class HrExpenseSheet(models.Model):
                 'sticky': False,  #True/False will display for few seconds if false
             },
         }
-        sheet_to_approve = self.filtered(lambda s: s.state in ['submit', 'draft'])
-        if sheet_to_approve:
-            notification['params'].update({
-                'title': _('The expense reports were successfully approved.'),
-                'type': 'success',
-                'next': {'type': 'ir.actions.act_window_close'},
-            })
-            sheet_to_approve.write({'state': 'approve', 'user_id': responsible_id})
+        filtered_sheet = self.filtered(lambda s: s.state in ['submit', 'draft'])
+        if not filtered_sheet:
+            return notification
+        for sheet in filtered_sheet:
+            sheet.write({'state': 'approve', 'user_id': sheet.user_id.id or self.env.user.id})
+        notification['params'].update({
+            'title': _('The expense reports were successfully approved.'),
+            'type': 'success',
+            'next': {'type': 'ir.actions.act_window_close'},
+        })
+            
         self.activity_update()
         return notification
 

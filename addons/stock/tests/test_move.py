@@ -4538,3 +4538,37 @@ class StockMove(SavepointCase):
         line1_result_package = picking.move_line_ids[0].result_package_id
         line2_result_package = picking.move_line_ids[1].result_package_id
         self.assertNotEqual(line1_result_package, line2_result_package, "Product and Product1 should be in a different package.")
+
+    def test_forecast_availability(self):
+        """ Make an outgoing picking in dozens for a product stored in units.
+        Check that reserved_availabity is expressed in move uom and forecast_availability is in product base uom
+        """
+        # create product
+        product = self.env['product.product'].create({
+            'name': 'Product In Units',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        # make some stock
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location, 36.0)
+        # create picking
+        picking_out = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id})
+        move = self.env['stock.move'].create({
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom': self.uom_dozen.id,
+            'product_uom_qty': 2.0,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id})
+        # confirm
+        picking_out.action_confirm()
+        # check availability
+        picking_out.action_assign()
+        # check reserved_availabity expressed in move uom
+        self.assertEqual(move.reserved_availability, 2)
+        # check forecast_availability expressed in product base uom
+        self.assertEqual(move.forecast_availability, 24)

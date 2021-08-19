@@ -17,4 +17,5 @@ for customization purpose.
         'security/ir.model.access.csv',
         'views/base_import_module_view.xml'
     ],
+    'license': 'LGPL-3',
 }

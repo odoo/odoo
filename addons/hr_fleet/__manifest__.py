@@ -13,4 +13,5 @@
         'wizard/hr_departure_wizard_views.xml'
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }
