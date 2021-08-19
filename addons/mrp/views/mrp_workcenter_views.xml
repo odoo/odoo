@@ -34,13 +34,13 @@
             <field name="arch" type="xml">
                 <tree string="Work Center" multi_edit="1">
                     <field name="sequence" widget="handle"/>
-                    <field name="name"/>
-                    <field name="code"/>
+                    <field name="name" optional="show"/>
+                    <field name="code" optional="show"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}" optional="show"/>
                     <field name="alternative_workcenter_ids" widget="many2many_tags" optional="show"/>
                     <field name="productive_time" optional="hide"/>
-                    <field name="costs_hour"/>
-                    <field name="capacity"/>
+                    <field name="costs_hour" optional="show"/>
+                    <field name="capacity" optional="show"/>
                     <field name="time_efficiency" optional="show"/>
                     <field name="oee_target" optional="show"/>
                     <field name="time_start" optional="hide"/>
