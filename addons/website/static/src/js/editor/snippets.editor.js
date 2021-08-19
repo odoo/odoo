@@ -5,6 +5,9 @@ const {qweb, _t, _lt} = require('web.core');
 const Dialog = require('web.Dialog');
 const weSnippetEditor = require('web_editor.snippet.editor');
 const wSnippetOptions = require('website.editor.snippets.options');
+const OdooEditorLib = require('@web_editor/../lib/odoo-editor/src/utils/utils');
+const getDeepRange = OdooEditorLib.getDeepRange;
+const getTraversedNodes = OdooEditorLib.getTraversedNodes;
 
 const FontFamilyPickerUserValueWidget = wSnippetOptions.FontFamilyPickerUserValueWidget;
 
@@ -13,6 +16,8 @@ weSnippetEditor.SnippetsMenu.include({
         .concat(['/website/static/src/xml/website.editor.xml']),
     events: _.extend({}, weSnippetEditor.SnippetsMenu.prototype.events, {
         'click .o_we_customize_theme_btn': '_onThemeTabClick',
+        'click .o_we_animate_text': '_onAnimateTextClick',
+        'click .o_we_highlight_animated_text': '_onHighlightAnimatedTextClick',
     }),
     custom_events: Object.assign({}, weSnippetEditor.SnippetsMenu.prototype.custom_events, {
         'gmap_api_request': '_onGMapAPIRequest',
@@ -26,6 +31,27 @@ weSnippetEditor.SnippetsMenu.include({
         ['theme-options', _lt("Theme Options")],
         ['website-settings', _lt("Website Settings")],
     ],
+
+    /**
+     * @override
+     */
+    start() {
+        this._super(...arguments);
+        this.$currentAnimatedText = $();
+
+        this.__onSelectionChange = ev => {
+            this._toggleAnimatedTextButton();
+        };
+        this.ownerDocument.addEventListener('selectionchange', this.__onSelectionChange);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.ownerDocument.removeEventListener('selectionchange', this.__onSelectionChange);
+        document.body.classList.remove('o_animated_text_highlighted');
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -158,6 +184,63 @@ weSnippetEditor.SnippetsMenu.include({
         this._super(...arguments);
         this.$('.o_we_customize_theme_btn').toggleClass('active', tab === this.tabs.THEME);
     },
+    /**
+     * Returns the animated text element wrapping the selection if it exists.
+     *
+     * @private
+     * @return {Element|false}
+     */
+    _getAnimatedTextElement() {
+        const editable = this.options.wysiwyg.$editable[0];
+        const animatedTextNode = getTraversedNodes(editable).find(n => n.parentElement.closest(".o_animated_text"));
+        return animatedTextNode ? animatedTextNode.parentElement.closest('.o_animated_text') : false;
+    },
+    /**
+     * @override
+     */
+    _addToolbar() {
+        this._super(...arguments);
+        this.$('#o_we_editor_toolbar_container > we-title > span').after($(`
+            <div class="btn fa fa-fw fa-2x o_we_highlight_animated_text d-none
+                ${$('body').hasClass('o_animated_text_highlighted') ? 'fa-eye text-success' : 'fa-eye-slash'}"
+                title="${_t('Highlight Animated Text')}"
+                aria-label="Highlight Animated Text"/>
+        `));
+        this._toggleAnimatedTextButton();
+        this._toggleHighlightAnimatedTextButton();
+    },
+    /**
+     * Activates the button to animate text if the selection is in an
+     * animated text element or deactivates the button if not.
+     * 
+     * @private
+     */
+    _toggleAnimatedTextButton() {
+        if (!this._isValidSelection(window.getSelection())) {
+            return;
+        }
+        const animatedText = this._getAnimatedTextElement();
+        this.$('.o_we_animate_text').toggleClass('active', !!animatedText);
+        this.$currentAnimatedText = animatedText ? $(animatedText) : $();
+    },
+    /**
+     * Displays the button that allows to highlight the animated text if there
+     * is animated text in the page.
+     * 
+     * @private
+     */
+    _toggleHighlightAnimatedTextButton() {
+        const $animatedText = this.getEditableArea().find('.o_animated_text');
+        this.$('#o_we_editor_toolbar_container .o_we_highlight_animated_text').toggleClass('d-none', !$animatedText.length);
+    },
+    /**
+     * @private
+     * @param {Node} node
+     * @return {Boolean}
+     */
+    _isValidSelection(sel) {
+        return sel.rangeCount && [...this.getEditableArea()].some(el => el.contains(sel.anchorNode));
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -232,6 +315,64 @@ weSnippetEditor.SnippetsMenu.include({
             }
             throw e;
         }
+    },
+    /**
+     * @private
+     */
+    _onAnimateTextClick(ev) {
+        const sel = window.getSelection();
+        if (!this._isValidSelection(sel)) {
+            return;
+        }
+        const editable = this.options.wysiwyg.$editable[0];
+        const range = getDeepRange(editable, { splitText: true, select: true, correctTripleClick: true });
+        if (this.$currentAnimatedText.length) {
+            this.$currentAnimatedText.contents().unwrap();
+            this.options.wysiwyg.odooEditor.historyResetLatestComputedSelection();
+            this._toggleHighlightAnimatedTextButton();
+            ev.target.classList.remove('active');
+            this.options.wysiwyg.odooEditor.historyStep();
+        } else {
+            if (sel.getRangeAt(0).collapsed) {
+                return;
+            }
+            const animatedTextEl = document.createElement('span');
+            animatedTextEl.classList.add('o_animated_text', 'o_animate', 'o_animate_preview', 'o_anim_fade_in');
+            let $snippet = null;
+            try {
+                range.surroundContents(animatedTextEl);
+                $snippet = $(animatedTextEl);
+            } catch (e) {
+                // This try catch is needed because 'surroundContents' may
+                // fail when the range has partially selected a non-Text node.
+                if (range.commonAncestorContainer.textContent === range.toString()) {
+                    const $commonAncestor = $(range.commonAncestorContainer);
+                    $commonAncestor.wrapInner(animatedTextEl);
+                    $snippet = $commonAncestor.find('.o_animated_text');
+                }
+            }
+            if ($snippet) {
+                $snippet[0].normalize();
+                this.trigger_up('activate_snippet', {
+                    $snippet: $snippet,
+                    previewMode: false,
+                });
+                this.options.wysiwyg.odooEditor.historyStep();
+            } else {
+                this.displayNotification({
+                    message: _t("The current text selection cannot be animated. Try clearing the format and try again."),
+                    type: 'danger',
+                    sticky: true,
+                });
+            }
+        }
+    },
+    /**
+     * @private
+     */
+    _onHighlightAnimatedTextClick(ev) {
+        $('body').toggleClass('o_animated_text_highlighted');
+        $(ev.target).toggleClass('fa-eye fa-eye-slash').toggleClass('text-success');
     },
 });
 
