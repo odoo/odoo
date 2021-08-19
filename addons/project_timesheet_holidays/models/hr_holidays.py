@@ -66,7 +66,8 @@ class Holidays(models.Model):
         for holiday in self.filtered(
                 lambda request: request.holiday_type == 'employee' and
                                 request.holiday_status_id.timesheet_project_id and
-                                request.holiday_status_id.timesheet_task_id):
+                                request.holiday_status_id.timesheet_task_id and
+                                request.holiday_status_id.timesheet_project_id.sudo().company_id == (request.holiday_status_id.company_id or self.env.company)):
             holiday._timesheet_create_lines()
 
         return super(Holidays, self)._validate_leave_request()
