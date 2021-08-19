@@ -102,7 +102,7 @@ class MockEmail(common.BaseCase):
         cls.alias_bounce = 'bounce.test'
         cls.default_from = 'notifications'
         cls.env['ir.config_parameter'].set_param('mail.bounce.alias', cls.alias_bounce)
-        cls.env.company.write({'alias_domain': cls.alias_domain})
+        cls.env.cr.execute('UPDATE res_company SET alias_domain = %s WHERE id = %s', (cls.alias_domain, cls.env.company.id))
         cls.env['ir.config_parameter'].set_param('mail.catchall.alias', cls.alias_catchall)
         cls.env['ir.config_parameter'].set_param('mail.default.from', cls.default_from)
         cls.mailer_daemon_email = formataddr(('MAILER-DAEMON', '%s@%s' % (cls.alias_bounce, cls.alias_domain)))
