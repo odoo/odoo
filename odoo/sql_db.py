@@ -63,28 +63,18 @@ from inspect import currentframe
 
 
 def flush_env(cr, *, clear=True):
-    """ Retrieve and flush an environment corresponding to the given cursor.
-        Also clear the environment if ``clear`` is true.
-    """
-    env_to_flush = None
-    for env in list(Environment.envs):
-        # don't flush() on another cursor or with a RequestUID
-        if env.cr is cr and (isinstance(env.uid, int) or env.uid is None):
-            env_to_flush = env
-            if env.uid is not None:
-                break               # prefer an environment with a real uid
+    warnings.warn("Since Odoo 15.0, use cr.flush() instead of flush_env(cr).",
+                  DeprecationWarning, stacklevel=2)
+    cr.flush()
+    if clear:
+        cr.clear()
 
-    if env_to_flush is not None:
-        env_to_flush['base'].flush()
-        if clear:
-            env_to_flush.clear()    # clear remaining new records to compute
 
 def clear_env(cr):
-    """ Retrieve and clear an environment corresponding to the given cursor """
-    for env in list(Environment.envs):
-        if env.cr is cr:
-            env.clear()
-            break
+    warnings.warn("Since Odoo 15.0, use cr.clear() instead of clear_env(cr).",
+                  DeprecationWarning, stacklevel=2)
+    cr.clear()
+
 
 import re
 re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$')
@@ -110,24 +100,44 @@ class BaseCursor:
         self.prerollback = tools.Callbacks()
         self.postrollback = tools.Callbacks()
 
+    def flush(self):
+        """ Flush an environment corresponding to self, and run precommit hooks. """
+        env_to_flush = None
+        for env in list(Environment.envs):
+            # don't flush() on another cursor or with a RequestUID
+            if env.cr is self and (isinstance(env.uid, int) or env.uid is None):
+                env_to_flush = env
+                if env.uid is not None:
+                    break               # prefer an environment with a real uid
+
+        if env_to_flush is not None:
+            env_to_flush['base'].flush()
+
+        self.precommit.run()
+
+    def clear(self):
+        """ Clear an environment corresponding to self, and clear precommit hooks. """
+        for env in list(Environment.envs):
+            if env.cr is self:
+                env.clear()
+                break
+        self.precommit.clear()
+
     @contextmanager
     @check
     def savepoint(self, flush=True):
         """context manager entering in a new savepoint"""
         name = uuid.uuid1().hex
         if flush:
-            flush_env(self, clear=False)
-            self.precommit.run()
+            self.flush()
         self.execute('SAVEPOINT "%s"' % name)
         try:
             yield
             if flush:
-                flush_env(self, clear=False)
-                self.precommit.run()
+                self.flush()
         except Exception:
             if flush:
-                clear_env(self)
-                self.precommit.clear()
+                self.clear()
             self.execute('ROLLBACK TO SAVEPOINT "%s"' % name)
             raise
         else:
@@ -455,9 +465,9 @@ class Cursor(BaseCursor):
     @check
     def commit(self):
         """ Perform an SQL `COMMIT` """
-        flush_env(self)
-        self.precommit.run()
+        self.flush()
         result = self._cnx.commit()
+        self.clear()
         self._now = None
         self.prerollback.clear()
         self.postrollback.clear()
@@ -467,8 +477,7 @@ class Cursor(BaseCursor):
     @check
     def rollback(self):
         """ Perform an SQL `ROLLBACK` """
-        clear_env(self)
-        self.precommit.clear()
+        self.clear()
         self.postcommit.clear()
         self.prerollback.run()
         result = self._cnx.rollback()
@@ -536,9 +545,9 @@ class TestCursor(BaseCursor):
     @check
     def commit(self):
         """ Perform an SQL `COMMIT` """
-        flush_env(self)
-        self.precommit.run()
+        self.flush()
         self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
+        self.clear()
         self.prerollback.clear()
         self.postrollback.clear()
         self.postcommit.clear()         # TestCursor ignores post-commit hooks
@@ -546,8 +555,7 @@ class TestCursor(BaseCursor):
     @check
     def rollback(self):
         """ Perform an SQL `ROLLBACK` """
-        clear_env(self)
-        self.precommit.clear()
+        self.clear()
         self.postcommit.clear()
         self.prerollback.run()
         self._cursor.execute('ROLLBACK TO SAVEPOINT "%s"' % self._savepoint)
