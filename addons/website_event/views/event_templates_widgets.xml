@@ -25,7 +25,7 @@
             <h6 class="o_wevent_sidebar_title">
                 <t t-if="country">
                     <i class="fa fa-flag mr-2"/>Events: <span t-esc="country.name"/>
-                    <img class="img-fluid" t-att-src="website.image_url(country, 'image')" alt=""/>
+                    <img class="img-fluid" t-att-src="country.image_url" alt=""/>
                 </t>
                 <t t-else="">
                     <i class="fa fa-globe mr-2"/>Upcoming Events
