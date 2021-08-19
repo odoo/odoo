@@ -88,55 +88,55 @@ class TestBurndownChart(TransactionCase):
         self.set_create_date('project_task', task_f.id, datetime(current_year - 1, 12, 20))
 
         # Precommit to have the records in db and allow to rollback at the end of test
-        self.env.cr.precommit.run()
+        self.env.cr.flush()
 
         with freeze_time('%s-02-10' % (current_year - 1)):
             (task_a + task_b).write({'stage_id': in_progress_stage.id})
-            self.env.cr.precommit.run()
+            self.env.cr.flush()
 
         with freeze_time('%s-02-20' % (current_year - 1)):
             task_c.write({'stage_id': in_progress_stage.id})
-            self.env.cr.precommit.run()
+            self.env.cr.flush()
 
         with freeze_time('%s-03-15' % (current_year - 1)):
             (task_d + task_e).write({'stage_id': in_progress_stage.id})
-            self.env.cr.precommit.run()
+            self.env.cr.flush()
 
         with freeze_time('%s-04-10' % (current_year - 1)):
             (task_a + task_b).write({'stage_id': testing_stage.id})
-            self.env.cr.precommit.run()
+            self.env.cr.flush()
 
         with freeze_time('%s-05-12' % (current_year - 1)):
             task_c.write({'stage_id': testing_stage.id})
-            self.env.cr.precommit.run()
+            self.env.cr.flush()
 
         with freeze_time('%s-06-25' % (current_year - 1)):
             task_d.write({'stage_id': testing_stage.id})
-            self.env.cr.precommit.run()
+            self.env.cr.flush()
 
         with freeze_time('%s-07-25' % (current_year - 1)):
             task_e.write({'stage_id': testing_stage.id})
-            self.env.cr.precommit.run()
+            self.env.cr.flush()
 
         with freeze_time('%s-08-01' % (current_year - 1)):
             task_a.write({'stage_id': done_stage.id})
-            self.env.cr.precommit.run()
+            self.env.cr.flush()
 
         with freeze_time('%s-09-10' % (current_year - 1)):
             task_b.write({'stage_id': done_stage.id})
-            self.env.cr.precommit.run()
+            self.env.cr.flush()
 
         with freeze_time('%s-10-05' % (current_year - 1)):
             task_c.write({'stage_id': done_stage.id})
-            self.env.cr.precommit.run()
+            self.env.cr.flush()
 
         with freeze_time('%s-11-25' % (current_year - 1)):
             task_d.write({'stage_id': done_stage.id})
-            self.env.cr.precommit.run()
+            self.env.cr.flush()
 
         with freeze_time('%s-12-12' % (current_year - 1)):
             task_e.write({'stage_id': done_stage.id})
-            self.env.cr.precommit.run()
+            self.env.cr.flush()
 
         read_group_result = self.env['project.task.burndown.chart.report'].with_context(fill_temporal=True).read_group([('project_id', '=', project.id), ('display_project_id', '!=', False)], ['date', 'stage_id', 'nb_tasks'], ['date:month', 'stage_id'], lazy=False)
         read_group_result_dict = {(res['date:month'], res['stage_id'][0]): res['nb_tasks'] for res in read_group_result}

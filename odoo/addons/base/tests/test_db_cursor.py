@@ -117,32 +117,33 @@ class TestCursorHooks(common.TransactionCase):
         super().setUp()
         self.log = []
 
-    def prepare_hooks(self, cr, precommit_msg, postcommit_msg, prerollback_msg, postrollback_msg):
-        cr.precommit.add(partial(self.log.append, precommit_msg))
-        cr.postcommit.add(partial(self.log.append, postcommit_msg))
-        cr.prerollback.add(partial(self.log.append, prerollback_msg))
-        cr.postrollback.add(partial(self.log.append, postrollback_msg))
+    def prepare_hooks(self, cr):
+        self.log.clear()
+        cr.precommit.add(partial(self.log.append, 'preC'))
+        cr.postcommit.add(partial(self.log.append, 'postC'))
+        cr.prerollback.add(partial(self.log.append, 'preR'))
+        cr.postrollback.add(partial(self.log.append, 'postR'))
+        self.assertEqual(self.log, [])
 
-    def test_hooks(self):
+    def test_hooks_on_cursor(self):
         cr = self.registry.cursor()
 
         # check hook on commit()
-        self.prepare_hooks(cr, 'C1a', 'C1b', 'R1a', 'R1b')
-        self.assertEqual(self.log, [])
+        self.prepare_hooks(cr)
         cr.commit()
-        self.assertEqual(self.log, ['C1a', 'C1b'])
+        self.assertEqual(self.log, ['preC', 'postC'])
 
-        # check hook on rollback()
-        self.prepare_hooks(cr, 'C2a', 'C2b', 'R2a', 'R2b')
-        self.assertEqual(self.log, ['C1a', 'C1b'])
+        # check hook on flush(), then on rollback()
+        self.prepare_hooks(cr)
+        cr.flush()
+        self.assertEqual(self.log, ['preC'])
         cr.rollback()
-        self.assertEqual(self.log, ['C1a', 'C1b', 'R2a', 'R2b'])
+        self.assertEqual(self.log, ['preC', 'preR', 'postR'])
 
         # check hook on close()
-        self.prepare_hooks(cr, 'C3a', 'C3b', 'R3a', 'R3b')
-        self.assertEqual(self.log, ['C1a', 'C1b', 'R2a', 'R2b'])
+        self.prepare_hooks(cr)
         cr.close()
-        self.assertEqual(self.log, ['C1a', 'C1b', 'R2a', 'R2b', 'R3a', 'R3b'])
+        self.assertEqual(self.log, ['preR', 'postR'])
 
     def test_hooks_on_testcursor(self):
         self.registry.enter_test_mode(self.cr)
@@ -151,19 +152,18 @@ class TestCursorHooks(common.TransactionCase):
         cr = self.registry.cursor()
 
         # check hook on commit(); post-commit hooks are ignored
-        self.prepare_hooks(cr, 'C1a', 'C1b', 'R1a', 'R1b')
-        self.assertEqual(self.log, [])
+        self.prepare_hooks(cr)
         cr.commit()
-        self.assertEqual(self.log, ['C1a'])
+        self.assertEqual(self.log, ['preC'])
 
-        # check hook on rollback()
-        self.prepare_hooks(cr, 'C2a', 'C2b', 'R2a', 'R2b')
-        self.assertEqual(self.log, ['C1a'])
+        # check hook on flush(), then on rollback()
+        self.prepare_hooks(cr)
+        cr.flush()
+        self.assertEqual(self.log, ['preC'])
         cr.rollback()
-        self.assertEqual(self.log, ['C1a', 'R2a', 'R2b'])
+        self.assertEqual(self.log, ['preC', 'preR', 'postR'])
 
         # check hook on close()
-        self.prepare_hooks(cr, 'C3a', 'C3b', 'R3a', 'R3b')
-        self.assertEqual(self.log, ['C1a', 'R2a', 'R2b'])
+        self.prepare_hooks(cr)
         cr.close()
-        self.assertEqual(self.log, ['C1a', 'R2a', 'R2b', 'R3a', 'R3b'])
+        self.assertEqual(self.log, ['preR', 'postR'])
