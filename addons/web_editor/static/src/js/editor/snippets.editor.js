@@ -118,7 +118,10 @@ var SnippetEditor = Widget.extend({
         }
 
         var _animationsCount = 0;
-        var postAnimationCover = _.throttle(() => this.cover(), 100);
+        var postAnimationCover = _.throttle(() => {
+            this.toggleOverlayVisibility(true);
+            this.cover();
+        }, 100);
         this.$target.on('transitionstart.snippet_editor, animationstart.snippet_editor', () => {
             // We cannot rely on the fact each transition/animation start will
             // trigger a transition/animation end as the element may be removed
