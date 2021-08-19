@@ -1003,7 +1003,7 @@ class Field(MetaField('DummyField', (object,), {})):
             except psycopg2.OperationalError:
                 _schema.error("Unable to add index for %s", self)
         else:
-            sql.drop_index(model._cr, indexname, model._table)
+            _schema.info("Keep unexpected index %s on table %s", indexname, model._table)
 
     def update_db_related(self, model):
         """ Compute a stored related field directly in SQL. """
