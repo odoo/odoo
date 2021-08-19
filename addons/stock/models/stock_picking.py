@@ -947,7 +947,7 @@ class Picking(models.Model):
             'view_id': view.id,
             'target': 'new',
             'res_id': wiz.id,
-            'context': self.env.context,
+            'context': dict(self.env.context),
         }
 
     def action_toggle_is_locked(self):
