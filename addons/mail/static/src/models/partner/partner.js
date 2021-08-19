@@ -92,18 +92,14 @@ function factory(dependencies) {
             if (isNonPublicChannel) {
                 kwargs.channel_id = thread.id;
             }
-            const suggestedPartners = await this.env.services.rpc(
-                {
-                    model: 'res.partner',
-                    method: 'get_mention_suggestions',
-                    kwargs,
-                },
-                { shadow: true },
-            );
+            const suggestedPartners = await this.messaging.rpcOrmStatic('res.partner', 'get_mention_suggestions', kwargs);
+            if (!this.messaging) {
+                return;
+            }
             const partners = this.messaging.models['mail.partner'].insert(suggestedPartners.map(data =>
                 this.messaging.models['mail.partner'].convertData(data)
             ));
-            if (isNonPublicChannel) {
+            if (isNonPublicChannel && thread.exists()) {
                 thread.update({ members: link(partners) });
             }
         }
@@ -135,14 +131,10 @@ function factory(dependencies) {
                 }
             }
             if (!partners.length) {
-                const partnersData = await this.env.services.rpc(
-                    {
-                        model: 'res.partner',
-                        method: 'im_search',
-                        args: [keyword, limit]
-                    },
-                    { shadow: true }
-                );
+                const partnersData = await this.messaging.rpcOrmStatic('res.partner', 'im_search', { name: keyword, limit });
+                if (!this.messaging) {
+                    return;
+                }
                 const newPartners = this.insert(partnersData.map(
                     partnerData => this.convertData(partnerData)
                 ));
@@ -214,14 +206,13 @@ function factory(dependencies) {
          * applicable.
          */
         async checkIsUser() {
-            const userIds = await this.async(() => this.env.services.rpc({
-                model: 'res.users',
-                method: 'search',
-                args: [[['partner_id', '=', this.id]]],
-                kwargs: {
-                    context: { active_test: false },
-                },
-            }, { shadow: true }));
+            const userIds = await this.messaging.rpcOrmStatic('res.users', 'search', {
+                args: [['partner_id', '=', this.id]],
+                context: { active_test: false },
+            });
+            if (!this.exists()) {
+                return;
+            }
             this.update({ hasCheckedUser: true });
             if (userIds.length > 0) {
                 this.update({ user: insert({ id: userIds[0] }) });
@@ -397,12 +388,12 @@ function factory(dependencies) {
             if (partnerIds.length === 0) {
                 return;
             }
-            const dataList = await this.env.services.rpc({
-                route: '/longpolling/im_status',
-                params: {
-                    partner_ids: partnerIds,
-                },
-            }, { shadow: true });
+            const dataList = await this.messaging.rpcRoute('/longpolling/im_status', {
+                partner_ids: partnerIds,
+            });
+            if (!this.messaging) {
+                return;
+            }
             this.insert(dataList);
         }
 

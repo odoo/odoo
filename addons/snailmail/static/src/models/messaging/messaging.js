@@ -9,24 +9,23 @@ const { attr } = require('@mail/model/model_field');
 
 registerInstancePatchModel('mail.messaging', 'snailmail/static/src/models/messaging/messaging.js', {
     async fetchSnailmailCreditsUrl() {
-        const snailmail_credits_url = await this.async(() => this.env.services.rpc({
-            model: 'iap.account',
-            method: 'get_credits_url',
-            args: ['snailmail'],
-        }));
-        this.update({
-            snailmail_credits_url,
+        const snailmail_credits_url = await this.messaging.rpcOrmStatic('iap.account', 'get_credits_url', {
+            service_name: 'snailmail',
         });
+        if (!this.exists()) {
+            return;
+        }
+        this.update({ snailmail_credits_url });
     },
     async fetchSnailmailCreditsUrlTrial() {
-        const snailmail_credits_url_trial = await this.async(() => this.env.services.rpc({
-            model: 'iap.account',
-            method: 'get_credits_url',
-            args: ['snailmail', '', 0, true],
-        }));
-        this.update({
-            snailmail_credits_url_trial,
+        const snailmail_credits_url_trial = await this.messaging.rpcOrm('iap.account', 'get_credits_url', {
+            service_name: 'snailmail',
+            trial: true,
         });
+        if (!this.exists()) {
+            return;
+        }
+        this.update({ snailmail_credits_url_trial });
     },
 });
 

@@ -91,7 +91,7 @@ QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async 
         async mockRPC(route, args) {
             if (args.method === 'action_unfollow') {
                 assert.step('action_unfollow');
-                assert.deepEqual(args.args[0], [20],
+                assert.deepEqual(args.args[0], 20,
                     "The right id is sent to the server to remove"
                 );
             }

@@ -59,15 +59,10 @@ function factory(dependencies) {
          * @param {integer[]} param0.ids
          */
         static async performRpcRead({ context, fields, ids }) {
-            const usersData = await this.env.services.rpc({
-                model: 'res.users',
-                method: 'read',
-                args: [ids],
-                kwargs: {
-                    context,
-                    fields,
-                },
-            }, { shadow: true });
+            const usersData = await this.messaging.rpcOrm('res.users', 'read', ids, { context, fields });
+            if (!this.messaging) {
+                return;
+            }
             return this.messaging.models['mail.user'].insert(usersData.map(userData =>
                 this.messaging.models['mail.user'].convertData(userData)
             ));

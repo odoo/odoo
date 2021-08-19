@@ -1902,15 +1902,10 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
     // composer is focused by default, we remove that focus
     document.querySelector('.o_ComposerTextInput_textarea').blur();
     // simulate receiving a message
-    await afterNextRender(async () => this.env.services.rpc({
-        route: '/mail/chat_post',
-        params: {
-            context: {
-                mockedUserId: 42,
-            },
-            message_content: "hu",
-            uuid: 'randomuuid',
-        },
+    await afterNextRender(async () => this.messaging.rpcRoute('/mail/chat_post', {
+        context: { mockedUserId: 42 },
+        message_content: "hu",
+        uuid: 'randomuuid',
     }));
 
     assert.containsN(
@@ -2572,7 +2567,7 @@ QUnit.test('toggle_star message', async function (assert) {
             if (args.method === 'toggle_message_starred') {
                 assert.step('rpc:toggle_message_starred');
                 assert.strictEqual(
-                    args.args[0][0],
+                    args.args[0],
                     100,
                     "should have message Id in args"
                 );

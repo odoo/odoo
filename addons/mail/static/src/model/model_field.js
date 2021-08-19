@@ -477,7 +477,7 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationCreate(record, data, options) {
-        const OtherModel = record.models[this.to];
+        const OtherModel = record.modelManager.models[this.to];
         const other = record.modelManager._create(OtherModel, data);
         return this._setRelationLink(record, other, options);
     }
@@ -495,7 +495,7 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationInsert(record, data, options) {
-        const OtherModel = record.models[this.to];
+        const OtherModel = record.modelManager.models[this.to];
         const other = record.modelManager._insert(OtherModel, data);
         return this._setRelationLink(record, other, options);
     }
@@ -512,7 +512,7 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationInsertAndReplace(record, data, options) {
-        const OtherModel = record.models[this.to];
+        const OtherModel = record.modelManager.models[this.to];
         const newValue = record.modelManager._insert(OtherModel, data);
         return this._setRelationReplace(record, newValue, options);
     }

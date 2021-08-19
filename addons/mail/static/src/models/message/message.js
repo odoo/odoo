@@ -125,11 +125,7 @@ function factory(dependencies) {
          * @param {Array[]} domain
          */
         static async markAllAsRead(domain) {
-            await this.env.services.rpc({
-                model: 'mail.message',
-                method: 'mark_all_as_read',
-                kwargs: { domain },
-            });
+            await this.messaging.rpcOrmStatic('mail.message', 'mark_all_as_read', { domain }, { silent: false });
         }
 
         /**
@@ -145,11 +141,7 @@ function factory(dependencies) {
          * @param {mail.message[]} messages
          */
         static async markAsRead(messages) {
-            await this.env.services.rpc({
-                model: 'mail.message',
-                method: 'set_message_done',
-                args: [messages.map(message => message.id)]
-            });
+            await this.messaging.rpcOrm('mail.message', 'set_message_done', messages.map(message => message.id), {}, { silent: false });
         }
 
         /**
@@ -162,15 +154,7 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         static async performRpcMessageFetch(domain, limit, context) {
-            const messagesData = await this.env.services.rpc({
-                model: 'mail.message',
-                method: 'message_fetch',
-                kwargs: {
-                    context,
-                    domain,
-                    limit,
-                },
-            }, { shadow: true });
+            const messagesData = await this.messaging.rpcOrmStatic('mail.message', 'message_fetch', { context, domain, limit });
             if (!this.messaging) {
                 return;
             }
@@ -198,10 +182,7 @@ function factory(dependencies) {
          * Unstar all starred messages of current user.
          */
         static async unstarAll() {
-            await this.env.services.rpc({
-                model: 'mail.message',
-                method: 'unstar_all',
-            });
+            await this.messaging.rpcOrm('mail.message', 'unstar_all', {}, { silent: false });
         }
 
         /**
@@ -209,11 +190,7 @@ function factory(dependencies) {
          * partner Inbox.
          */
         async markAsRead() {
-            await this.async(() => this.env.services.rpc({
-                model: 'mail.message',
-                method: 'set_message_done',
-                args: [[this.id]]
-            }));
+            await this.messaging.rpcOrm('mail.message', 'set_message_done', this.id, {}, { silent: false });
         }
 
         /**
@@ -249,11 +226,7 @@ function factory(dependencies) {
          * Toggle the starred status of the provided message.
          */
         async toggleStar() {
-            await this.async(() => this.env.services.rpc({
-                model: 'mail.message',
-                method: 'toggle_message_starred',
-                args: [[this.id]]
-            }));
+            await this.messaging.rpcOrm('mail.message', 'toggle_message_starred', this.id, {}, { silent: false });
         }
 
         //----------------------------------------------------------------------

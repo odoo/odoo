@@ -2,8 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one } from '@mail/model/model_field';
-import { clear, insert, link, unlink, unlinkAll } from '@mail/model/model_field_command';
-
+import { clear, insert, unlink, unlinkAll } from '@mail/model/model_field_command';
 function factory(dependencies) {
 
     class Activity extends dependencies['mail.model'] {
@@ -17,11 +16,10 @@ function factory(dependencies) {
          * Delete the record from database and locally.
          */
         async deleteServerRecord() {
-            await this.async(() => this.env.services.rpc({
-                model: 'mail.activity',
-                method: 'unlink',
-                args: [[this.id]],
-            }));
+            await this.messaging.rpcOrm('mail.activity', 'unlink', this.id, {}, { silent: false });
+            if (!this.exists()) {
+                return;
+            }
             this.delete();
         }
 
@@ -146,11 +144,10 @@ function factory(dependencies) {
         }
 
         async fetchAndUpdate() {
-            const [data] = await this.async(() => this.env.services.rpc({
-                model: 'mail.activity',
-                method: 'activity_format',
-                args: [this.id],
-            }, { shadow: true }));
+            const [data] = await this.messaging.rpcOrm('mail.activity', 'activity_format', this.id);
+            if (!this.exists) {
+                return;
+            }
             let shouldDelete = false;
             if (data) {
                 this.update(this.constructor.convertData(data));
@@ -171,15 +168,13 @@ function factory(dependencies) {
          */
         async markAsDone({ attachments = [], feedback = false }) {
             const attachmentIds = attachments.map(attachment => attachment.id);
-            await this.async(() => this.env.services.rpc({
-                model: 'mail.activity',
-                method: 'action_feedback',
-                args: [[this.id]],
-                kwargs: {
-                    attachment_ids: attachmentIds,
-                    feedback,
-                },
-            }));
+            await this.messaging.rpcOrm('mail.activity', 'action_feedback', this.id, {
+                attachment_ids: attachmentIds,
+                feedback,
+            }, { silent: false });
+            if (!this.exists()) {
+                return;
+            }
             this.thread.refresh();
             this.delete();
         }
@@ -190,12 +185,12 @@ function factory(dependencies) {
          * @returns {Object}
          */
         async markAsDoneAndScheduleNext({ feedback }) {
-            const action = await this.async(() => this.env.services.rpc({
-                model: 'mail.activity',
-                method: 'action_feedback_schedule_next',
-                args: [[this.id]],
-                kwargs: { feedback },
-            }));
+            const action = await this.messaging.rpcOrm('mail.activity', 'action_feedback_schedule_next', this.id, {
+                feedback,
+            }, { silent: false });
+            if (!this.exists()) {
+                return;
+            }
             this.thread.refresh();
             const thread = this.thread;
             this.delete();

@@ -37,14 +37,12 @@ QUnit.module('activity_tests.js', {
 });
 
 QUnit.test('grant course access', async function (assert) {
-    assert.expect(8);
+    assert.expect(6);
 
     await this.start({
         async mockRPC(route, args) {
             if (args.method === 'action_grant_access') {
-                assert.strictEqual(args.args.length, 1);
-                assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], 100);
+                assert.strictEqual(args.args[0], 100);
                 assert.strictEqual(args.kwargs.partner_id, 5);
                 assert.step('access_grant');
             }
@@ -77,14 +75,12 @@ QUnit.test('grant course access', async function (assert) {
 });
 
 QUnit.test('refuse course access', async function (assert) {
-    assert.expect(8);
+    assert.expect(6);
 
     await this.start({
         async mockRPC(route, args) {
             if (args.method === 'action_refuse_access') {
-                assert.strictEqual(args.args.length, 1);
-                assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], 100);
+                assert.strictEqual(args.args[0], 100);
                 assert.strictEqual(args.kwargs.partner_id, 5);
                 assert.step('access_refuse');
             }

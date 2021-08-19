@@ -157,15 +157,6 @@ function factory() {
         }
 
         /**
-         * Returns all existing models.
-         *
-         * @returns {Object} keys are model name, values are model class.
-         */
-        static get models() {
-            return this.modelManager.models;
-        }
-
-        /**
          * Perform an async function and wait until it is done. If the record
          * is deleted, it raises a RecordDeletedError.
          *
@@ -227,15 +218,6 @@ function factory() {
          */
         get modelManager() {
             return this.constructor.modelManager;
-        }
-
-        /**
-         * Returns all existing models.
-         *
-         * @returns {Object} keys are model name, values are model class.
-         */
-        get models() {
-            return this.modelManager.models;
         }
 
         /**

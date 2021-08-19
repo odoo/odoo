@@ -249,18 +249,18 @@ function factory(dependencies) {
                             mail_post_autofollow: true,
                         };
                     }
-                    messageId = await this.async(() =>
-                        this.messaging.models['mail.thread'].performRpcMessagePost({
-                            postData,
-                            threadId: thread.id,
-                            threadModel: thread.model,
-                        })
-                    );
-                    const [messageData] = await this.async(() => this.env.services.rpc({
-                        model: 'mail.message',
-                        method: 'message_format',
-                        args: [[messageId]],
-                    }, { shadow: true }));
+                    messageId = await this.messaging.models['mail.thread'].performRpcMessagePost({
+                        postData,
+                        threadId: thread.id,
+                        threadModel: thread.model,
+                    });
+                    if (!this.messaging) {
+                        return;
+                    }
+                    const [messageData] = await this.messaging.rpcOrm('mail.message', 'message_format', messageId);
+                    if (!thread.exists()) {
+                        return;
+                    }
                     this.messaging.models['mail.message'].insert(Object.assign(
                         {},
                         this.messaging.models['mail.message'].convertData(messageData),
@@ -273,15 +273,23 @@ function factory(dependencies) {
                     );
                     thread.loadNewMessages();
                 }
-                for (const threadView of this.thread.threadViews) {
+                if (!thread.exists()) {
+                    return;
+                }
+                for (const threadView of thread.threadViews) {
                     // Reset auto scroll to be able to see the newly posted message.
                     threadView.update({ hasAutoScrollOnMessageReceived: true });
                 }
                 thread.refreshFollowers();
                 thread.fetchAndUpdateSuggestedRecipients();
+                if (!this.exists()) {
+                    return;
+                }
                 this._reset();
             } finally {
-                this.update({ isPostingMessage: false });
+                if (this.exists()) {
+                    this.update({ isPostingMessage: false });
+                }
             }
         }
 

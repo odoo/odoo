@@ -128,15 +128,13 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
 });
 
 QUnit.test('activity mark done popover mark done without feedback', async function (assert) {
-    assert.expect(7);
+    assert.expect(5);
 
     await this.start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
                 assert.step('action_feedback');
-                assert.strictEqual(args.args.length, 1);
-                assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], 12);
+                assert.strictEqual(args.args[0], 12, "should have correct activity id");
                 assert.strictEqual(args.kwargs.attachment_ids.length, 0);
                 assert.notOk(args.kwargs.feedback);
                 return;
@@ -164,15 +162,13 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
 });
 
 QUnit.test('activity mark done popover mark done with feedback', async function (assert) {
-    assert.expect(7);
+    assert.expect(5);
 
     await this.start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
                 assert.step('action_feedback');
-                assert.strictEqual(args.args.length, 1);
-                assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], 12);
+                assert.strictEqual(args.args[0], 12, "should have correct activity id");
                 assert.strictEqual(args.kwargs.attachment_ids.length, 0);
                 assert.strictEqual(args.kwargs.feedback, 'This task is done');
                 return;
@@ -203,7 +199,7 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
 });
 
 QUnit.test('activity mark done popover mark done and schedule next', async function (assert) {
-    assert.expect(6);
+    assert.expect(4);
 
     const bus = new Bus();
     bus.on('do-action', null, payload => {
@@ -214,9 +210,7 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
                 assert.step('action_feedback_schedule_next');
-                assert.strictEqual(args.args.length, 1);
-                assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], 12);
+                assert.strictEqual(args.args[0], 12, "should have correct activity id");
                 assert.strictEqual(args.kwargs.feedback, 'This task is done');
                 return false;
             }

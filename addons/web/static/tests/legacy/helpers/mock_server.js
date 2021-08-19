@@ -1708,7 +1708,8 @@ var MockServer = Class.extend({
         const { context } = kwargs;
         const active_test =
           context && "active_test" in context ? context.active_test : true;
-        return this._getRecords(model, args[0], { active_test }).map(r => r.id).slice(0, limit);
+        const domain = args[0] || kwargs.args;
+        return this._getRecords(model, domain, { active_test }).map(r => r.id).slice(0, limit);
     },
     /**
      * Simulate a 'search_count' operation

@@ -11,11 +11,8 @@ registerInstancePatchModel('mail.messaging_initializer', 'mail_bot/static/src/mo
      * @private
      */
     async _initializeOdooBot() {
-        const data = await this.async(() => this.env.services.rpc({
-            model: 'mail.channel',
-            method: 'init_odoobot',
-        }));
-        if (!data) {
+        const data = await this.messaging.rpcOrmStatic('mail.channel', 'init_odoobot');
+        if (!data || !this.exists()) {
             return;
         }
         this.env.session.odoobot_initialized = true;
@@ -25,8 +22,10 @@ registerInstancePatchModel('mail.messaging_initializer', 'mail_bot/static/src/mo
      * @override
      */
     async start() {
-        await this.async(() => this._super());
-
+        await this._super();
+        if (!this.exists()) {
+            return;
+        }
         if ('odoobot_initialized' in this.env.session && !this.env.session.odoobot_initialized) {
             this._initializeOdooBot();
         }

@@ -60,14 +60,11 @@ QUnit.test('should open chat window on send chat request to website visitor', as
         res_id: 11,
     });
     intercept(this.widget, 'execute_action', payload => {
-        this.env.services.rpc({
-            route: '/web/dataset/call_button',
-            params: {
-                args: [payload.data.env.resIDs],
-                kwargs: { context: payload.data.env.context },
-                method: payload.data.action_data.name,
-                model: payload.data.env.model,
-            }
+        this.messaging.rpcRoute('/web/dataset/call_button', {
+            args: [payload.data.env.resIDs],
+            kwargs: { context: payload.data.env.context },
+            method: payload.data.action_data.name,
+            model: payload.data.env.model,
         });
     });
 

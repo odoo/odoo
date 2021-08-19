@@ -63,16 +63,16 @@ function factory(dependencies) {
          * Remove this follower from its related thread.
          */
         async remove() {
-            const partner_ids = [];
-            partner_ids.push(this.partner.id);
-            await this.async(() => this.env.services.rpc({
-                model: this.followedThread.model,
-                method: 'message_unsubscribe',
-                args: [[this.followedThread.id], partner_ids]
-            }));
             const followedThread = this.followedThread;
-            this.delete();
-            followedThread.fetchAndUpdateSuggestedRecipients();
+            await this.messaging.rpcOrm(this.followedThread.model, 'message_unsubscribe', this.followedThread.id, {
+                'partner_ids': [this.partner.id],
+            }, { silent: false });
+            if (this.exists()) {
+                this.delete();
+            }
+            if (followedThread.exists()) {
+                followedThread.fetchAndUpdateSuggestedRecipients();
+            }
         }
 
         /**
@@ -88,10 +88,12 @@ function factory(dependencies) {
          * Show (editable) list of subtypes of this follower.
          */
         async showSubtypes() {
-            const subtypesData = await this.async(() => this.env.services.rpc({
-                route: '/mail/read_subscription_data',
-                params: { follower_id: this.id },
-            }));
+            const subtypesData = await this.messaging.rpcRoute('/mail/read_subscription_data', {
+                follower_id: this.id,
+            }, { silent: false });
+            if (!this.exists()) {
+                return;
+            }
             this.update({ subtypes: unlinkAll() });
             for (const data of subtypesData) {
                 const subtype = this.messaging.models['mail.follower_subtype'].insert(
@@ -131,16 +133,14 @@ function factory(dependencies) {
                 if (this.partner) {
                     kwargs.partner_ids = [this.partner.id];
                 }
-                await this.async(() => this.env.services.rpc({
-                    model: this.followedThread.model,
-                    method: 'message_subscribe',
-                    args: [[this.followedThread.id]],
-                    kwargs,
-                }));
+                await this.messaging.rpcOrm(this.followedThread.model, 'message_subscribe', this.followedThread.id, kwargs, { silent: false });
                 this.env.services['notification'].notify({
                     type: 'success',
                     message: this.env._t("The subscription preferences were successfully applied."),
                 });
+                if (!this.exists()) {
+                    return;
+                }
             }
             this.closeSubtypes();
         }
