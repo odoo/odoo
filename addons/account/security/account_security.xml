@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <data noupdate="0">
+    <!--
+        There are 4 groups
+        The way the groups work is different when `account_accountant` is installed or not.
+
+        Invoicing only:
+        ```
+         group_account_invoice ⇨ group_account_manager   (only those two should be used)
+                               ⬂
+        group_account_readonly ⇨ group_account_user      (those two are only visible in debug)
+        ```
+
+        Invoicing + Accounting:
+        ```
+         group_account_invoice ⬂
+        group_account_readonly ⇨ group_account_user ⇨ group_account_manager
+        ```
+        `group_account_user` is almost (a bit more than) the sum of `group_account_invoice` and `group_account_readonly`
+        `group_account_manager` is the king (except when Consolidation is installed, then there is a super-king)
+
+        `group_account_invoice` can create/edit invoices, refunds, payments, etc but cannot see accounting related stuff (journal entries, reports, reconciliation,...)
+        `group_account_readonly` can see (and only see) everything, including the journal entries, advanced configuration, reports
+        `group_account_user`  is the accountant: he can do everything except advanced config (accounting periods for instance)
+        `group_account_manager` can edit some config that `group_account_user` cannot do
+
+        When you have only Invoicing installed, only `group_account_invoice` and `group_account_manager` should be used. The others are giving a shallow access to Accounting features, but we want to remove that.
+    -->
 
     <record model="ir.module.category" id="base.module_category_accounting_accounting">
         <field name="description">Helps you handle your accounting needs, if you are not an accountant, we suggest you to install only the Invoicing.</field>
