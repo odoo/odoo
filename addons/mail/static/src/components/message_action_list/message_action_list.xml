@@ -15,6 +15,7 @@
                     }" title="Mark as Todo" t-on-click="messageActionList.onClickToggleStar"/>
                 <span t-if="messageActionList.hasReplyIcon" class="o_MessageActionList_action o_MessageActionList_actionReply p-2 fa fa-lg fa-reply" title="Reply" t-on-click="messageActionList.onClickReplyTo"/>
                 <span t-if="messageActionList.hasMarkAsReadIcon" class="o_MessageActionList_action o_MessageActionList_actionMarkRead p-2 fa fa-lg fa-check" title="Mark as Read" t-on-click="messageActionList.onClickMarkAsRead"/>
+                <span t-if="messageActionList.message.canBeMarkedUnread" class="o_MessageActionList_action o_MessageActionList_actionMarkUnread p-2 fa fa-lg fa-eraser" title="Mark as Unread" t-on-click="messageActionList.onClickMarkAsUnread()"/>
                 <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionEdit p-2 fa fa-lg fa-pencil" title="Edit" t-on-click="messageActionList.onClickEdit"/>
                 <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionDelete p-2 fa fa-lg fa-trash" title="Delete" t-on-click="messageActionList.onClickDelete"/>
                 <DeleteMessageConfirmDialog t-if="messageActionList.showDeleteConfirm" messageActionListLocalId="messageActionList.localId"/>

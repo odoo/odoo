@@ -780,7 +780,6 @@ class Channel(models.Model):
             # find the channel partner state, if logged user
             if self.env.user and self.env.user.partner_id:
                 info['message_needaction_counter'] = channel.message_needaction_counter
-                info['message_unread_counter'] = channel.message_unread_counter
                 partner_channel = channel_partners.filtered(lambda pc: pc.partner_id == self.env.user.partner_id)
                 if partner_channel:
                     partner_channel = partner_channel[0]
@@ -790,6 +789,7 @@ class Channel(models.Model):
                     info['custom_channel_name'] = partner_channel.custom_channel_name
                     info['is_pinned'] = partner_channel.is_pinned
                     info['last_interest_dt'] = partner_channel.last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+                    info['message_unread_counter'] = partner_channel.message_unread_counter
                     if partner_channel.rtc_inviting_session_id:
                         info['rtc_inviting_session'] = {'id': partner_channel.rtc_inviting_session_id.id}
             # add members info

@@ -19,6 +19,7 @@ function factory(dependencies) {
             this.onClickDelete = this.onClickDelete.bind(this);
             this.onClickEdit = this.onClickEdit.bind(this);
             this.onClickMarkAsRead = this.onClickMarkAsRead.bind(this);
+            this.onClickMarkAsUnread = this.onClickMarkAsUnread.bind(this);
             this.onReactionPopoverOpened = this.onReactionPopoverOpened.bind(this);
             this.onReactionPopoverClosed = this.onReactionPopoverClosed.bind(this);
             this.onClickReplyTo = this.onClickReplyTo.bind(this);
@@ -68,6 +69,14 @@ function factory(dependencies) {
          */
         onClickMarkAsRead(ev) {
             this.message.markAsRead();
+        }
+
+        /**
+         * @private
+         * @param {MouseEvent} ev
+         */
+        onClickMarkAsUnread(ev) {
+            this.message.markAsUnread();
         }
 
         /**

@@ -177,24 +177,12 @@ class MailThread(models.AbstractModel):
 
     def _compute_message_unread(self):
         partner_id = self.env.user.partner_id.id
-        res = dict.fromkeys(self.ids, 0)
-        if self.ids:
-            # search for unread messages, directly in SQL to improve performances
-            self._cr.execute(""" SELECT msg.res_id FROM mail_message msg
-                                 RIGHT JOIN mail_channel_partner cp
-                                 ON (cp.channel_id = msg.res_id AND cp.partner_id = %s AND
-                                    (cp.seen_message_id IS NULL OR cp.seen_message_id < msg.id))
-                                 WHERE msg.model = %s AND msg.res_id = ANY(%s) AND
-                                        msg.message_type != 'user_notification' AND
-                                       (msg.author_id IS NULL OR msg.author_id != %s) AND
-                                       (msg.message_type not in ('notification', 'user_notification') OR msg.model != 'mail.channel')""",
-                             (partner_id, self._name, list(self.ids), partner_id,))
-            for result in self._cr.fetchall():
-                res[result[0]] += 1
-
-        for record in self:
-            record.message_unread_counter = res.get(record._origin.id, 0)
-            record.message_unread = bool(record.message_unread_counter)
+        for thread in self:
+            channel_partner = None
+            if self._name == 'mail.channel':
+                channel_partner = self.env['mail.channel.partner'].search([('channel_id', '=', self.id), ('partner_id', '=', partner_id)], limit=1).exists()
+            thread.message_unread_counter = channel_partner.message_unread_counter if channel_partner else 0
+            thread.message_unread = bool(thread.message_unread_counter)
 
     def _compute_message_needaction(self):
         res = dict.fromkeys(self.ids, 0)

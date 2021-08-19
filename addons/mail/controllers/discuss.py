@@ -379,6 +379,15 @@ class DiscussController(http.Controller):
             ]).write({})  # update write_date
         return {'rtcSessions': channel_partner_sudo._rtc_sync_sessions(check_rtc_session_ids=check_rtc_session_ids)}
 
+    @http.route('/mail/message/mark_unread', methods=['POST'], type='json', auth='public')
+    def mail_message_mark_unread(self, message_id):
+        guest = request.env['mail.guest']._get_guest_from_request(request)
+        message_sudo = guest.env['mail.message'].browse(message_id).sudo().exists()
+        if not message_sudo or message_sudo.model != 'mail.channel':
+            raise NotFound()
+        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=message_sudo.res_id)
+        channel_partner_sudo.mark_message_unread(message_id=message_sudo.id)
+
     # --------------------------------------------------------------------------
     # Chatter API
     # --------------------------------------------------------------------------

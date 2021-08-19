@@ -28,26 +28,6 @@ function factory(dependencies) {
             }
         }
 
-        /**
-         * @static
-         * @param {mail.thread} [channel] the concerned thread
-         */
-        static recomputeSeenValues(channel = undefined) {
-            const indicatorFindFunction = channel ? localIndicator => localIndicator.thread === channel : undefined;
-            const indicators = this.messaging.models['mail.message_seen_indicator'].all(indicatorFindFunction);
-            for (const indicator of indicators) {
-                indicator.update({
-                    hasEveryoneSeen: indicator._computeHasEveryoneSeen(),
-                    hasSomeoneFetched: indicator._computeHasSomeoneFetched(),
-                    hasSomeoneSeen: indicator._computeHasSomeoneSeen(),
-                    isMessagePreviousToLastCurrentPartnerMessageSeenByEveryone:
-                        indicator._computeIsMessagePreviousToLastCurrentPartnerMessageSeenByEveryone(),
-                    partnersThatHaveFetched: indicator._computePartnersThatHaveFetched(),
-                    partnersThatHaveSeen: indicator._computePartnersThatHaveSeen(),
-                });
-            }
-        }
-
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------

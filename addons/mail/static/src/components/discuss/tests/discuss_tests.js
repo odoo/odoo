@@ -1175,7 +1175,7 @@ QUnit.test('open channel from active_id as channel id', async function (assert) 
 
 QUnit.test('basic rendering of message', async function (assert) {
     // AKU TODO: should be in message-only tests
-    assert.expect(15);
+    assert.expect(16);
 
     // channel expected to be rendered, with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
@@ -1254,8 +1254,8 @@ QUnit.test('basic rendering of message', async function (assert) {
     );
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_MessageActionList_action`).length,
-        3,
-        "should have 3 actions in action list of message"
+        4,
+        "should have 4 actions in action list of message"
     );
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_MessageActionList_actionStar`).length,
@@ -1271,6 +1271,11 @@ QUnit.test('basic rendering of message', async function (assert) {
         message,
         '.o_MessageActionList_actionReply',
         "should have action to reply to message"
+    );
+    assert.containsOnce(
+        message,
+        '.o_MessageActionList_actionMarkUnread',
+        "should have action to mark message unread"
     );
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_Message_content`).length,
@@ -3658,6 +3663,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
             id: 126,
             model: 'mail.channel',
             res_id: 20,
+            body: "not empty",
         };
         const notifications = [[['my-db', 'mail.channel', 20], messageData]];
         this.widget.call('bus_service', 'trigger', 'notification', notifications);
@@ -3696,6 +3702,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
             id: 126,
             model: 'mail.channel',
             res_id: 10,
+            body: "not empty",
         };
         const notifications = [[['my-db', 'mail.channel', 10], messageData]];
         this.widget.call('bus_service', 'trigger', 'notification', notifications);
@@ -3747,6 +3754,7 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
             id: 126,
             model: 'mail.channel',
             res_id: 20,
+            body: "not empty",
         };
         const notifications1 = [[['my-db', 'mail.channel', 20], messageData1]];
         this.widget.call('bus_service', 'trigger', 'notification', notifications1);
@@ -3759,6 +3767,7 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
             id: 127,
             model: 'mail.channel',
             res_id: 10,
+            body: "not empty",
         };
         const notifications2 = [[['my-db', 'mail.channel', 10], messageData2]];
         this.widget.call('bus_service', 'trigger', 'notification', notifications2);
@@ -3771,6 +3780,7 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
             id: 128,
             model: 'mail.channel',
             res_id: 10,
+            body: "not empty",
         };
         const notifications3 = [[['my-db', 'mail.channel', 10], messageData3]];
         this.widget.call('bus_service', 'trigger', 'notification', notifications3);

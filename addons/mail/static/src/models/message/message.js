@@ -239,6 +239,19 @@ function factory(dependencies) {
         }
 
         /**
+         * Mark this message as unread, so that the "New messages" indicator is
+         * displayed before it.
+         */
+        async markAsUnread() {
+            await this.env.services.rpc({
+                route: '/mail/message/mark_unread',
+                params: {
+                    message_id: this.id,
+                }
+            });
+        }
+
+        /**
          * Opens the view that allows to resend the message in case of failure.
          */
         openResendAction() {
@@ -344,6 +357,16 @@ function factory(dependencies) {
                 return this.message_type === 'comment';
             }
             return this.is_note;
+        }
+
+        /**
+         * @returns {boolean}
+         */
+        _computeCanBeMarkedUnread() {
+            if (!this.originThread || this.originThread.model !== 'mail.channel') {
+                return false;
+            }
+            return !this.messaging.isCurrentUserGuest && !this.isTemporary && !this.isTransient;
         }
 
         /**
@@ -583,6 +606,13 @@ function factory(dependencies) {
          */
         canBeDeleted: attr({
             compute: '_computeCanBeDeleted',
+        }),
+        /**
+         * Whether this message can be marked as unread.
+         */
+        canBeMarkedUnread: attr({
+            compute: '_computeCanBeMarkedUnread',
+            default: false,
         }),
         /**
          * Whether this message can be starred/unstarred.

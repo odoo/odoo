@@ -4,7 +4,7 @@
 from werkzeug.exceptions import NotFound
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
 
 
@@ -30,6 +30,20 @@ class ChannelPartner(models.Model):
     # RTC
     rtc_session_ids = fields.One2many(string="RTC Sessions", comodel_name='mail.channel.rtc.session', inverse_name='channel_partner_id')
     rtc_inviting_session_id = fields.Many2one('mail.channel.rtc.session', string='Ringing session')
+    message_unread_counter = fields.Integer('Unread Messages Counter', compute='_compute_message_unread_counter', help="Number of unread messages")
+
+    @api.depends('channel_id.message_ids', 'seen_message_id')
+    def _compute_message_unread_counter(self):
+        unread_domain = [
+            ('model', '=', 'mail.channel'),
+            ('res_id', '=', self.channel_id.id),
+            ('message_type', 'not in', ('notification', 'user_notification')),
+            # FIXME: The empty body check should probably also account for stuff like whitespace only, empty p, br, ...
+            '|', ('body', '!=', ''), ('attachment_ids', '!=', False),
+        ]
+        if self.seen_message_id:
+            unread_domain.append(('id', '>', self.seen_message_id.id))
+        self.message_unread_counter = self.env['mail.message'].search_count(unread_domain)
 
     def name_get(self):
         return [(record.id, record.partner_id.name or record.guest_id.name) for record in self]
@@ -103,6 +117,28 @@ class ChannelPartner(models.Model):
         if guest:
             return guest.env['mail.channel.partner'].sudo().search([('channel_id', '=', channel_id), ('guest_id', '=', guest.id)], limit=1)
         return self.env['mail.channel.partner'].sudo()
+
+    def mark_message_unread(self, message_id):
+        """
+        Marks a given message as unread.
+        """
+        message = self.env['mail.message'].browse(message_id)
+        if self.channel_id.id != message.res_id:
+            raise UserError(_("Cannot mark a message as unread in a different channel than the one in which it is posted"))
+        current_channel_message_domain = [('model', '=', 'mail.channel'), ('res_id', '=', message.res_id)]
+        prev_message = self.env['mail.message'].search(current_channel_message_domain + [('id', '<', message.id)], order="id DESC", limit=1)
+        prev_message_id = prev_message.id if prev_message else False
+        self.seen_message_id = prev_message_id
+        self.env['bus.bus'].sendone((self._cr.dbname, 'mail.channel', message.res_id), {
+            'type': 'mail.message_unread',
+            'payload': {
+                'channel_id': message.res_id,
+                'channel_unread_counter': self.message_unread_counter,
+                'last_seen_message_id': prev_message_id,
+                'partner_id': self.partner_id.id,
+                'last_message_id': self.env['mail.message'].search(current_channel_message_domain, order="id DESC", limit=1).id,
+            }
+        })
 
     # --------------------------------------------------------------------------
     # RTC (voice/video)

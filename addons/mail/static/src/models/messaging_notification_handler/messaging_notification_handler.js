@@ -93,6 +93,8 @@ function factory(dependencies) {
                             return this._handleNotificationChannelUpdate(message.payload);
                         case 'mail.guest_update':
                             return this.messaging.models['mail.guest'].insert(message.payload);
+                        case 'mail.message_unread':
+                            return this._handleNotificationMessageUnread(message.payload);
                         case 'mail.message_update':
                             return this.messaging.models['mail.message'].insert(message.payload);
                         case 'mail.rtc_session_update':
@@ -398,12 +400,6 @@ function factory(dependencies) {
                     lastSeenByCurrentPartnerMessageId: last_message_id,
                     pendingSeenMessageId: undefined,
                 });
-            }
-            if (shouldComputeSeenIndicators) {
-                // FIXME force the computing of thread values (cf task-2261221)
-                this.messaging.models['mail.thread'].computeLastCurrentPartnerMessageSeenByEveryone(channel);
-                // FIXME force the computing of message values (cf task-2261221)
-                this.messaging.models['mail.message_seen_indicator'].recomputeSeenValues(channel);
             }
         }
 
@@ -746,6 +742,45 @@ function factory(dependencies) {
                 // read the cache might become empty even though there are more
                 // messages on the server.
                 inbox.cache.update({ hasToLoadMessages: true });
+            }
+        }
+
+        /**
+         * @private
+         * @param {Object} param0
+         * @param {number} param0.last_seen_message_id
+         * @param {number} param0.partner_id
+         * @param {number} param0.channel_id
+         * @param {number} param0.channel_unread_counter
+         * @param {number} param0.last_message_id
+         */
+        _handleNotificationMessageUnread({ last_seen_message_id, partner_id, channel_id, channel_unread_counter, last_message_id }) {
+            const channel = this.messaging.models['mail.thread'].insert({
+                id: channel_id,
+                model: 'mail.channel',
+            });
+            let lastSeenMessage;
+            if (last_seen_message_id) {
+                lastSeenMessage = this.messaging.models['mail.message'].insert({ id: last_seen_message_id });
+            }
+            this.messaging.models['mail.thread_partner_seen_info'].insert({
+                thread: insert({ id: channel.id, model: 'mail.channel' }),
+                lastSeenMessage: lastSeenMessage ? link(lastSeenMessage) : unlink(),
+                partner: insert({ id: partner_id }),
+            });
+            if (lastSeenMessage) {
+                this.messaging.models['mail.message_seen_indicator'].insert({
+                    thread: insert({ id: channel.id, model: 'mail.channel' }),
+                    message: link(lastSeenMessage),
+                });
+            }
+            if (this.messaging.currentPartner && this.messaging.currentPartner.id === partner_id) {
+                channel.update({
+                    lastSeenByCurrentPartnerMessageId: last_seen_message_id,
+                    pendingSeenMessageId: undefined,
+                    serverLastMessage: insert({ id: last_message_id }),
+                    serverMessageUnreadCounter: channel_unread_counter,
+                });
             }
         }
 

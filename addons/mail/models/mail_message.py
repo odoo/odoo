@@ -1086,8 +1086,6 @@ class Message(models.Model):
             if issubclass(self.pool[model], self.pool['mail.thread']):
                 self.env[model].invalidate_cache(fnames=[
                     'message_ids',
-                    'message_unread',
-                    'message_unread_counter',
                     'message_needaction',
                     'message_needaction_counter',
                 ], ids=[res_id])

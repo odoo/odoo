@@ -162,19 +162,6 @@ function factory(dependencies) {
 
         /**
          * @static
-         * @param {mail.thread} [thread] the concerned thread
-         */
-        static computeLastCurrentPartnerMessageSeenByEveryone(thread = undefined) {
-            const threads = thread ? [thread] : this.messaging.models['mail.thread'].all();
-            threads.map(localThread => {
-                localThread.update({
-                    lastCurrentPartnerMessageSeenByEveryone: localThread._computeLastCurrentPartnerMessageSeenByEveryone(),
-                });
-            });
-        }
-
-        /**
-         * @static
          * @param {Object} data
          * @return {Object}
          */
@@ -1554,42 +1541,6 @@ function factory(dependencies) {
         }
 
         /**
-         * Adjusts the last seen message received from the server to consider
-         * the following messages also as read if they are either transient
-         * messages or messages from the current partner.
-         *
-         * @private
-         * @returns {integer}
-         */
-        _computeLastSeenByCurrentPartnerMessageId() {
-            const firstMessage = this.orderedMessages[0];
-            if (
-                firstMessage &&
-                this.lastSeenByCurrentPartnerMessageId &&
-                this.lastSeenByCurrentPartnerMessageId < firstMessage.id
-            ) {
-                // no deduction can be made if there is a gap
-                return this.lastSeenByCurrentPartnerMessageId;
-            }
-            let lastSeenByCurrentPartnerMessageId = this.lastSeenByCurrentPartnerMessageId;
-            for (const message of this.orderedMessages) {
-                if (message.id <= this.lastSeenByCurrentPartnerMessageId) {
-                    continue;
-                }
-                if (
-                    (message.author && this.messaging.currentPartner && message.author === this.messaging.currentPartner) ||
-                    (message.guestAuthor && this.messaging.currentGuest && message.guestAuthor === this.messaging.currentGuest) ||
-                    message.isTransient
-                ) {
-                    lastSeenByCurrentPartnerMessageId = message.id;
-                    continue;
-                }
-                return lastSeenByCurrentPartnerMessageId;
-            }
-            return lastSeenByCurrentPartnerMessageId;
-        }
-
-        /**
          * @private
          * @returns {mail.message|undefined}
          */
@@ -1635,7 +1586,7 @@ function factory(dependencies) {
             }
             // Include all the messages that are known locally but the server
             // didn't take into account.
-            return this.orderedMessages.reduce((total, message) => {
+            return this.orderedNonEmptyMessages.reduce((total, message) => {
                 if (message.id <= countFromId) {
                     return total;
                 }
@@ -1662,17 +1613,10 @@ function factory(dependencies) {
             if (this.localMessageUnreadCounter === 0) {
                 return unlink();
             }
-            const index = this.orderedMessages.findIndex(message =>
-                message.id === this.lastSeenByCurrentPartnerMessageId
+            const message = this.orderedNonEmptyMessages.find(message =>
+                message.id > this.lastSeenByCurrentPartnerMessageId && !message.isTransient
             );
-            if (index === -1) {
-                return unlink();
-            }
-            const message = this.orderedMessages[index + 1];
-            if (!message) {
-                return unlink();
-            }
-            return link(message);
+            return message && message !== this.orderedMessages[0] ? link(message) : unlink();
         }
 
         /**
@@ -1697,6 +1641,14 @@ function factory(dependencies) {
          */
         _computeOrderedMessages() {
             return replace(this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
+        }
+
+        /**
+         * @private
+         * @returns {mail.message[]}
+         */
+        _computeOrderedNonEmptyMessages() {
+            return replace(this.orderedMessages.filter(m => !m.isEmpty));
         }
 
         /**
@@ -2236,10 +2188,7 @@ function factory(dependencies) {
          * even if corresponding message is deleted. It is basically used to know which
          * messages are before or after it.
          */
-        lastSeenByCurrentPartnerMessageId: attr({
-            compute: '_computeLastSeenByCurrentPartnerMessageId',
-            default: 0,
-        }),
+        lastSeenByCurrentPartnerMessageId: attr(),
         /**
          * Local value of message unread counter, that means it is based on initial server value and
          * updated with interface updates.
@@ -2329,6 +2278,14 @@ function factory(dependencies) {
          */
         orderedMessages: many2many('mail.message', {
             compute: '_computeOrderedMessages',
+        }),
+        /**
+         * All messages ordered like they are displayed. This field does not
+         * contain empty messages (messages with no body or attachments) because
+         * they are not displayed.
+         */
+        orderedNonEmptyMessages: many2many('mail.message', {
+            compute: '_computeOrderedNonEmptyMessages',
         }),
         /**
          * All messages ordered like they are displayed. This field does not
