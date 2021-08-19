@@ -487,7 +487,7 @@ body.editor_enable.editor_has_snippets {
             @extend %we-generic-button;
         }
 
-        #removeFormat, #oe-table-delete-table {
+        #removeFormat, #oe-table-delete-table, .o_we_highlight_animated_text {
             @extend %we-generic-link;
         }
 
@@ -496,9 +496,9 @@ body.editor_enable.editor_has_snippets {
             background: transparent;
             margin-top: $o-we-sidebar-content-field-spacing;
             padding: 0 $o-we-sidebar-content-padding-base 0 $o-we-sidebar-content-indent;
-            grid-template-areas: "typo typo style colors" "size align list link" "options options options options";
+            grid-template-areas: "typo typo style colors" "size align list link" "options options options options" "options2 options2 options2 options2";
             grid-template-columns: 1fr 1fr 1fr 1fr;
-            grid-template-rows: minmax($o-we-sidebar-content-field-height, auto) minmax($o-we-sidebar-content-field-height, auto) auto ;
+            grid-template-rows: minmax($o-we-sidebar-content-field-height, auto) minmax($o-we-sidebar-content-field-height, auto) auto auto ;
             row-gap: $o-we-sidebar-content-field-spacing;
             column-gap: $o-we-sidebar-content-field-multi-spacing;
             width: 100%;
@@ -565,9 +565,14 @@ body.editor_enable.editor_has_snippets {
                 input::placeholder {
                     font-style: italic;
                 }
+                we-input:not(.o_we_small_input) {
+                    &, div, input {
+                        width: 100% !important;
+                    }
+                }
 
-                we-input, we-input div, we-input input {
-                    width: 100% !important;
+                & + we-customizeblock-option {
+                    grid-area: options2;
                 }
             }
 
