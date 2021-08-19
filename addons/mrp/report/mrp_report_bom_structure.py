@@ -62,6 +62,7 @@ class ReportBomStructure(models.AbstractModel):
             'bom_id': bom_id,
             'currency': self.env.company.currency_id,
             'operations': lines,
+            'extra_column_count': self._get_extra_column_count()
         }
         return self.env.ref('mrp.report_mrp_operation_line')._render({'data': values})
 
@@ -99,7 +100,8 @@ class ReportBomStructure(models.AbstractModel):
             'bom_uom_name': bom_uom_name,
             'bom_qty': bom_quantity,
             'is_variant_applied': self.env.user.user_has_groups('product.group_product_variant') and len(bom_product_variants) > 1,
-            'is_uom_applied': self.env.user.user_has_groups('uom.group_uom')
+            'is_uom_applied': self.env.user.user_has_groups('uom.group_uom'),
+            'extra_column_count': self._get_extra_column_count()
         }
 
     def _get_bom(self, bom_id=False, product_id=False, line_qty=False, line_id=False, level=False):
@@ -147,6 +149,7 @@ class ReportBomStructure(models.AbstractModel):
         lines['bom_cost'] = lines['total'] * lines['cost_share']
         lines['byproducts_cost'] = sum(byproduct['bom_cost'] for byproduct in byproducts)
         lines['byproducts_total'] = sum(byproduct['product_qty'] for byproduct in byproducts)
+        lines['extra_column_count'] = self._get_extra_column_count()
         return lines
 
     def _get_bom_lines(self, bom, bom_quantity, product, line_id, level):
@@ -326,4 +329,8 @@ class ReportBomStructure(models.AbstractModel):
         pdf_lines = get_sub_lines(bom, product_id, qty, False, 1)
         data['components'] = []
         data['lines'] = pdf_lines
+        data['extra_column_count'] = self._get_extra_column_count()
         return data
+
+    def _get_extra_column_count(self):
+        return 0
