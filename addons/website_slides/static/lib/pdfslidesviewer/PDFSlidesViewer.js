@@ -34,7 +34,7 @@ var PDFSlidesViewer = (function(){
          * @see http://en.wikipedia.org/wiki/Cross-origin_resource_sharing.
          * this is equivalent to the use_cors option in openerpframework.js
          */
-        window.PDFJS.disableWorker = disableWorker || false;
+	 /*window.PDFJS.disableWorker = disableWorker || false;*/
     };
 
     /**
@@ -44,7 +44,7 @@ var PDFSlidesViewer = (function(){
     PDFSlidesViewer.prototype.loadDocument = function(url) {
         var self = this;
         var pdf_url = url || this.pdf_url;
-        return window.PDFJS.getDocument(pdf_url).then(function (file_content) {
+        return pdfjsLib.getDocument(pdf_url).promise.then(function (file_content) {
             self.pdf = file_content;
             self.pdf_page_total = file_content.numPages;
             return file_content;
