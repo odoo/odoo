@@ -11,4 +11,5 @@
         'views/website_sale_coupon_delivery_templates.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

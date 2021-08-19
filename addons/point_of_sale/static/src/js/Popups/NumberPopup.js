@@ -1,5 +1,7 @@
 odoo.define('point_of_sale.NumberPopup', function(require) {
     'use strict';
+    var core = require('web.core');
+    var _t = core._t;
 
     const { useState } = owl;
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
@@ -62,9 +64,9 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
     }
     NumberPopup.template = 'NumberPopup';
     NumberPopup.defaultProps = {
-        confirmText: 'Ok',
-        cancelText: 'Cancel',
-        title: 'Confirm ?',
+        confirmText: _t('Ok'),
+        cancelText: _t('Cancel'),
+        title: _t('Confirm ?'),
         body: '',
         cheap: false,
         startingValue: null,

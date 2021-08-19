@@ -51,4 +51,5 @@ Spanish charts of accounts (PGCE 2008).
     'demo': [
         'demo/demo_company.xml',
     ],
+    'license': 'LGPL-3',
 }

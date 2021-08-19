@@ -178,9 +178,9 @@
                             <field name="id" invisible="1"/>
                         </group>
                         <group>
-                            <field name="date_order" attrs="{'invisible': [('state','=','purchase')]}"/>
-                            <label for="date_approve" attrs="{'invisible': [('state','!=','purchase')]}"/>
-                            <div name="date_approve" attrs="{'invisible': [('state','!=','purchase')]}" class="o_row">
+                            <field name="date_order" attrs="{'invisible': [('state','in',('purchase','done'))]}"/>
+                            <label for="date_approve" attrs="{'invisible': [('state','not in',('purchase','done'))]}"/>
+                            <div name="date_approve" attrs="{'invisible': [('state','not in',('purchase','done'))]}" class="o_row">
                                 <field name="date_approve"/>
                                 <field name="mail_reception_confirmed" invisible="1"/>
                                 <span class="text-muted" attrs="{'invisible': [('mail_reception_confirmed','=', False)]}">(confirmed by vendor)</span>

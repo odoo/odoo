@@ -13,6 +13,7 @@
 # Linas Versada <linaskrisiukenas@gmail.com>, 2021
 # Arunas Vaitekunas <vaitekunas@gmail.com>, 2021
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2021
+# Jonas Zinkevicius <jozi@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: grupoda2 <dmitrijus.ivanovas@gmail.com>, 2021\n"
+"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2021\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,11 +70,13 @@ msgid ""
 "Add members to automatically assign their documents to this sales team. You "
 "can only be member of one team."
 msgstr ""
+"Pridėti narius, kad jų dokumentai būtų automatiškai priskirti šiai pardavimų"
+" komandai. Jūs galite būti tik vienos komandos nariu."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administratorius"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
@@ -105,13 +108,13 @@ msgstr "Didelis gražus mygtukas :)"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_tag
 msgid "CRM Tag"
-msgstr ""
+msgstr "CRM Žyma"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Cannot delete default team \"%s\""
-msgstr ""
+msgstr "Negalite ištrinti pagrindinės pardavimų komandos \"%s\""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
@@ -152,7 +155,7 @@ msgstr "Kontaktas"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
 msgid "Create new tags for your opportunities"
-msgstr ""
+msgstr "Sukurti naujas žymas jūsų galimybėms"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
@@ -160,6 +163,8 @@ msgid ""
 "Create tags that fit your business (product structure, sales type, etc.) to "
 "better manage and track your opportunities."
 msgstr ""
+"Sukurkite jūsų verslą atitinkančias žymas (produkto struktūrą, pardavimų "
+"tipą ir pan.), kad galėtumėte geriau valdyti ir stebėti savo galimybes."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
@@ -193,7 +198,7 @@ msgstr "Skydelio grafiko duomenys"
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_pipelines_act
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid "Define a new sales team"
-msgstr ""
+msgstr "Apibrėžti pardavimų komandą"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor5
@@ -281,6 +286,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
 msgstr ""
+"Jei nustatyta, ši pardavimų komanda bus naudojama su šiuo partneriu "
+"susijusiems pardavimams ir užduotims."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -389,7 +396,7 @@ msgstr "Pardavimų komanda"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Sales Team name..."
-msgstr ""
+msgstr "Pardavimų komandos vardas..."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
@@ -499,6 +506,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
+"Naudokite pardavimų komandas pardavimo skyriams organizuoti.\n"
+"Kiekviena komanda dirbs su atskiru pardavimų piltuvėliu."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
@@ -528,7 +537,7 @@ msgstr "Svetainė"
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team
 msgid "eBay"
-msgstr ""
+msgstr "eBay"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads

@@ -466,7 +466,7 @@
                         <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-att-value="widget.data.text"/>
                     </div>
                 </div>
-                <div t-attf-class="form-group row o_url_input#{widget.isButton ? ' d-none' : ''}">
+                <div id="o_url_input" t-attf-class="form-group row o_url_input#{widget.isButton ? ' d-none' : ''}">
                     <label class="col-form-label col-md-3" for="o_link_dialog_url_input">URL or Email</label>
                     <div class="col-md-9">
                         <input type="text" name="url" class="form-control" id="o_link_dialog_url_input" required="required"/>

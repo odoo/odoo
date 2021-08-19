@@ -38,7 +38,7 @@ class CouponGenerate(models.TransientModel):
                 del context
                 template = self.env.ref('coupon.mail_template_sale_coupon', raise_if_not_found=False)
                 if template:
-                    email_values = {'email_to': partner.email, 'email_from': self.env.user.email or '', 'subject': subject}
+                    email_values = {'email_from': self.env.user.email or '', 'subject': subject}
                     template.send_mail(coupon.id, email_values=email_values, notif_layout='mail.mail_notification_light')
 
     @api.depends('partners_domain')

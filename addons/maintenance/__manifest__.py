@@ -23,4 +23,5 @@
     'demo': ['data/maintenance_demo.xml'],
     'installable': True,
     'application': True,
+    'license': 'LGPL-3',
 }

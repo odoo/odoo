@@ -175,16 +175,18 @@ class ProfitabilityAnalysis(models.Model):
                                     0.0 AS amount_untaxed_invoiced,
                                     AAL.date AS line_date
                                 FROM project_project P
-                                    LEFT JOIN account_analytic_account AA ON P.analytic_account_id = AA.id
-                                    LEFT JOIN account_analytic_line AAL ON AAL.account_id = AA.id
-                                WHERE AAL.amount > 0.0 AND AAL.project_id IS NULL AND P.active = 't' AND P.allow_timesheets = 't'
-                                    AND NOT EXISTS (
-                                        SELECT SOL.id
-                                        FROM sale_order_line SOL
-                                        JOIN sale_order_line_invoice_rel SOINV ON SOINV.order_line_id = SOL.id AND SOINV.invoice_line_id = AAL.move_id -- AAL.move_id is an account.move.line id
-                                        WHERE SOL.qty_delivered_method IN ('timesheet', 'manual')
-                                            OR (SOL.qty_delivered_method = 'analytic' AND SOL.invoice_status != 'no')
-                                    )
+                                    JOIN account_analytic_account AA ON P.analytic_account_id = AA.id
+                                    JOIN account_analytic_line AAL ON AAL.account_id = AA.id
+                                    JOIN product_product PP ON PP.id = AAL.product_id
+                                    JOIN product_template PT ON PT.id = PP.product_tmpl_id
+                                    LEFT JOIN sale_order_line_invoice_rel SOINV ON SOINV.invoice_line_id = AAL.move_id
+                                    LEFT JOIN sale_order_line SOL ON SOINV.order_line_id = SOL.id
+                                WHERE AAL.amount > 0.0 AND AAL.project_id IS NULL AND P.active = 't'
+                                    AND P.allow_timesheets = 't'
+                                    AND PT.service_type = 'manual' -- default value or Milestone service for services products
+                                    AND PT.service_tracking = 'no' -- default value or not a tracking service for services products
+                                    AND (SOL.id IS NULL
+                                        OR (SOL.is_expense IS NOT TRUE AND SOL.is_downpayment IS NOT TRUE))
 
                                 UNION ALL
 

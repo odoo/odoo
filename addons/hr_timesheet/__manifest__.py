@@ -46,4 +46,5 @@ up a management by affair.
     'application': False,
     'auto_install': False,
     'post_init_hook': 'create_internal_project',
+    'license': 'LGPL-3',
 }

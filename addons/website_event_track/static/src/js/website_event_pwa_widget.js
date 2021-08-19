@@ -121,6 +121,8 @@ odoo.define("website_event_track.website_event_pwa_widget", function (require) {
                     action: "prefetch-assets",
                     urls: assetsUrls,
                 });
+            }).catch(function (error) {
+                console.error("Service worker ready failed, error:", error);
             });
             var currentPageUrl = window.location.href;
             var childrenPagesUrls = Array.from(document.querySelectorAll('a[href^="' + this._getScope() + '/"]')).map(function (el) {
@@ -131,6 +133,8 @@ odoo.define("website_event_track.website_event_pwa_widget", function (require) {
                     action: "prefetch-pages",
                     urls: childrenPagesUrls.concat(currentPageUrl),
                 });
+            }).catch(function (error) {
+                console.error("Service worker ready failed, error:", error);
             });
         },
 

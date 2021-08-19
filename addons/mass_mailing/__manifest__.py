@@ -51,4 +51,5 @@
         'static/src/xml/*.xml',
     ],
     'application': True,
+    'license': 'LGPL-3',
 }

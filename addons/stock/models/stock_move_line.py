@@ -29,9 +29,10 @@ class StockMoveLine(models.Model):
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_qty = fields.Float(
-        'Real Reserved Quantity', digits=0,
+        'Real Reserved Quantity', digits=0, copy=False,
         compute='_compute_product_qty', inverse='_set_product_qty', store=True)
-    product_uom_qty = fields.Float('Reserved', default=0.0, digits='Product Unit of Measure', required=True)
+    product_uom_qty = fields.Float(
+        'Reserved', default=0.0, digits='Product Unit of Measure', required=True, copy=False)
     qty_done = fields.Float('Done', default=0.0, digits='Product Unit of Measure', copy=False)
     package_id = fields.Many2one(
         'stock.quant.package', 'Source Package', ondelete='restrict',
@@ -616,7 +617,7 @@ class StockMoveLine(models.Model):
             # As the move's state is not computed over the move lines, we'll have to manually
             # recompute the moves which we adapted their lines.
             move_to_recompute_state = self.env['stock.move']
-            to_unlink_candidates = set()
+            to_unlink_candidate_ids = set()
 
             rounding = self.product_uom_id.rounding
             for candidate in outdated_candidates:
@@ -626,7 +627,7 @@ class StockMoveLine(models.Model):
                         move_to_recompute_state |= candidate.move_id
                         candidate.product_uom_qty = 0.0
                     else:
-                        to_unlink_candidates.add(candidate.id)
+                        to_unlink_candidate_ids.add(candidate.id)
                     if float_is_zero(quantity, precision_rounding=rounding):
                         break
                 else:
@@ -638,7 +639,7 @@ class StockMoveLine(models.Model):
                     candidate.product_uom_qty = self.product_id.uom_id._compute_quantity(quantity_split, candidate.product_uom_id, rounding_method='HALF-UP')
                     move_to_recompute_state |= candidate.move_id
                     break
-            self.env['stock.move.line'].browse(to_unlink_candidates).unlink()
+            self.env['stock.move.line'].browse(to_unlink_candidate_ids).unlink()
             move_to_recompute_state._recompute_state()
 
     def _should_bypass_reservation(self, location):

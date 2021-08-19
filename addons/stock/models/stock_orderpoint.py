@@ -13,7 +13,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import add, float_compare, frozendict, split_every
+from odoo.tools import add, float_compare, frozendict, split_every, format_date
 
 _logger = logging.getLogger(__name__)
 
@@ -128,6 +128,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_json_popover(self):
+        FloatConverter = self.env['ir.qweb.field.float']
         for orderpoint in self:
             if not orderpoint.product_id or not orderpoint.location_id:
                 orderpoint.json_lead_days_popover = False
@@ -137,21 +138,21 @@ class StockWarehouseOrderpoint(models.Model):
                 'title': _('Replenishment'),
                 'icon': 'fa-area-chart',
                 'popoverTemplate': 'stock.leadDaysPopOver',
-                'lead_days_date': fields.Date.to_string(orderpoint.lead_days_date),
+                'lead_days_date': format_date(self.env, orderpoint.lead_days_date),
                 'lead_days_description': lead_days_description,
-                'today': fields.Date.to_string(fields.Date.today()),
+                'today': format_date(self.env, fields.Date.today()),
                 'trigger': orderpoint.trigger,
-                'qty_forecast': orderpoint.qty_forecast,
-                'qty_to_order': orderpoint.qty_to_order,
-                'product_min_qty': orderpoint.product_min_qty,
-                'product_max_qty': orderpoint.product_max_qty,
+                'qty_forecast': FloatConverter.value_to_html(orderpoint.qty_forecast, {'decimal_precision': 'Product Unit of Measure'}),
+                'qty_to_order': FloatConverter.value_to_html(orderpoint.qty_to_order, {'decimal_precision': 'Product Unit of Measure'}),
+                'product_min_qty': FloatConverter.value_to_html(orderpoint.product_min_qty, {'decimal_precision': 'Product Unit of Measure'}),
+                'product_max_qty': FloatConverter.value_to_html(orderpoint.product_max_qty, {'decimal_precision': 'Product Unit of Measure'}),
                 'product_uom_name': orderpoint.product_uom_name,
                 'virtual': orderpoint.trigger == 'manual' and orderpoint.create_uid.id == SUPERUSER_ID,
             })
 
     @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_lead_days(self):
-        for orderpoint in self:
+        for orderpoint in self.with_context(bypass_delay_description=True):
             if not orderpoint.product_id or not orderpoint.location_id:
                 orderpoint.lead_days_date = False
                 continue

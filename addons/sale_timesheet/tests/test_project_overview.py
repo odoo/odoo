@@ -20,6 +20,16 @@ class TestSaleProject(TestReporting):
             'price_unit': self.product_delivery_timesheet2.list_price,
             'order_id': self.sale_order_2.id,
         })
+        so_line_deliver_no_task = self.env['sale.order.line'].create({
+            'name': self.product_delivery_manual1.name,
+            'product_id': self.product_delivery_manual1.id,
+            'product_uom_qty': 50,
+            'product_uom': self.product_delivery_manual1.uom_id.id,
+            'price_unit': self.product_delivery_manual1.list_price,
+            'order_id': self.sale_order_2.id,
+        })
+        so_line_deliver_no_task.write({'qty_delivered': 1.0})
+
         self.sale_order_2.action_confirm()
         project_so = self.so_line_order_project.project_id
         # log timesheet for billable time
@@ -87,7 +97,7 @@ class TestSaleProject(TestReporting):
            'product_id': self.product_expense.id,
            'product_uom_id': self.product_expense.uom_id.id,
         })
-        
+
         view_id = self.env.ref('sale_timesheet.project_timesheet_action_client_timesheet_plan').id
         vals = self.env['project.project']._qweb_prepare_qcontext(view_id, [['id', '=', project_so.id]])
 
@@ -100,6 +110,7 @@ class TestSaleProject(TestReporting):
         project_rate_total = project_rate_non_billable + project_rate_non_billable_project + project_rate_billable_time + project_rate_billable_fixed
         project_invoiced = self.so_line_order_project.price_unit * self.so_line_order_project.product_uom_qty * timesheet1.unit_amount
         project_timesheet_cost = timesheet2.amount + timesheet3.amount + timesheet4.amount + timesheet5.amount + timesheet1.amount
+        project_other_revenues = invoice.invoice_line_ids.search([('product_id', '=', self.product_delivery_manual1.id)])
 
         self.assertEqual(float_compare(vals['dashboard']['time']['non_billable'], timesheet5.unit_amount, precision_rounding=rounding), 0, "The hours non-billable should be the one from the SO2 line, as we are in ordered quantity")
         self.assertEqual(float_compare(vals['dashboard']['time']['non_billable_project'], timesheet2.unit_amount, precision_rounding=rounding), 0, "The hours non-billable-project should be the one from the SO2 line, as we are in ordered quantity")
@@ -114,6 +125,6 @@ class TestSaleProject(TestReporting):
         self.assertEqual(float_compare(vals['dashboard']['profit']['invoiced'], project_invoiced, precision_rounding=rounding), 0, "The amount invoiced should be the one from the SO2 line, as we are in ordered quantity")
         self.assertEqual(float_compare(vals['dashboard']['profit']['cost'], project_timesheet_cost, precision_rounding=rounding), 0, "The amount cost should be the one from the SO2 line, as we are in ordered quantity")
         self.assertEqual(float_compare(vals['dashboard']['profit']['expense_cost'], expense.amount, precision_rounding=rounding), 0, "The amount expense-cost should be the one from the SO2 line, as we are in ordered quantity")
-        self.assertEqual(float_compare(vals['dashboard']['profit']['other_revenues'], other_revenues.amount, precision_rounding=rounding), 0, "The amount of the other revenues should be equal to the created other_revenues account analytic line")
-        self.assertEqual(float_compare(vals['dashboard']['profit']['total'], project_invoiced + project_timesheet_cost + expense.amount + other_revenues.amount, precision_rounding=rounding), 0, "The total amount should be the sum of the SO2 line and the created other_revenues account analytic line")
+        self.assertEqual(float_compare(vals['dashboard']['profit']['other_revenues'], other_revenues.amount + project_other_revenues.price_total, precision_rounding=rounding), 0, "The amount of the other revenues should be equal to the corresponding account move line and the one from the SO line")
+        self.assertEqual(float_compare(vals['dashboard']['profit']['total'], project_invoiced + project_timesheet_cost + expense.amount + other_revenues.amount + project_other_revenues.price_total, precision_rounding=rounding), 0, "The total amount should be the sum of the SO2 line and the created other_revenues account analytic line")
         self.assertEqual(float_compare(vals['repartition_employee_max'], 11.0, precision_rounding=rounding), 0, "The amount of repartition-employee-max should be the one from SO2 line")

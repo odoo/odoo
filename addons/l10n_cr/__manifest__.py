@@ -65,4 +65,5 @@ please go to http://translations.launchpad.net/openerp-costa-rica.
     'demo': [
         'demo/demo_company.xml',
     ],
+    'license': 'LGPL-3',
 }

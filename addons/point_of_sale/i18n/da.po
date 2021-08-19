@@ -14,10 +14,10 @@
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2021
-# Mads Søndergaard <mads@vkdata.dk>, 2021
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Sanne Kristensen <sanne@vkdata.dk>, 2021
+# Mads Søndergaard, 2021
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2021
 # Mads Søndergaard, 2021
 # 
 msgid ""
@@ -793,6 +793,13 @@ msgstr "BYTTEPENGE"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
+#, python-format
+msgid "Change Customer"
+msgstr "Skift kunde"
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/EditListPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductConfiguratorPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
@@ -1165,6 +1172,13 @@ msgstr "Konfigurer mindst ét Point of Sale."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.closing_balance_confirm
 msgid "Confirm"
 msgstr "Bekræft"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/NumberPopup.js:0
+#, python-format
+msgid "Confirm ?"
+msgstr "Bekræft ?"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1808,7 +1822,7 @@ msgstr "Email Kvittering"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Email sent."
-msgstr ""
+msgstr "Email afsendt."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1954,7 +1968,7 @@ msgstr "Bogføringsgrupper"
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Fiscal data module error"
-msgstr ""
+msgstr "Finansdata modulfejl"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_follower_ids
@@ -2272,7 +2286,7 @@ msgstr "Ugyldig handling"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Invalid email."
-msgstr ""
+msgstr "Ugyldig email."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2693,7 +2707,7 @@ msgstr "Skærmfod"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Mine Aktiviteter Deadline"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -4186,7 +4200,7 @@ msgstr "Afrundingsmetode"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Rounding error in payment lines"
-msgstr ""
+msgstr "Afrundingsfejl i betalingslinjer"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4206,7 +4220,7 @@ msgstr "SMS leveringsfejl"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "SN"
-msgstr ""
+msgstr "SN"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
@@ -4377,7 +4391,7 @@ msgstr "Send pr. e-mail"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Sending email failed. Please try again."
-msgstr ""
+msgstr "Kunne ikke sende emailen. Prøv venligst igen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -4885,6 +4899,8 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
 msgstr ""
+"Mængden for dine betalingslinjer skal være afrundet for at validere "
+"transaktionen."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4898,7 +4914,7 @@ msgstr "Standardprislisten skal være inkluderet i de tilgængelige prislister."
 #, python-format
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
-msgstr ""
+msgstr "Finansdata modulet stødte på en fejl under modtagelse af din ordre."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -5824,7 +5840,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
-msgstr ""
+msgstr "Du kan ikke lukke PoS når ordre stadig er i kladde"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0

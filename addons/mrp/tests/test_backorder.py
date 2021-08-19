@@ -280,6 +280,38 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), nb_product_todo, f'You should have the {nb_product_todo} final product in stock')
         self.assertEqual(len(production.procurement_group_id.mrp_production_ids), nb_product_todo)
 
+    def test_backorder_name(self):
+        def produce_one(mo):
+            mo_form = Form(mo)
+            mo_form.qty_producing = 1
+            mo = mo_form.save()
+            action = mo.button_mark_done()
+            backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+            backorder.save().action_backorder()
+            return mo.procurement_group_id.mrp_production_ids[-1]
+
+        default_picking_type_id = self.env['mrp.production']._get_default_picking_type()
+        default_picking_type = self.env['stock.picking.type'].browse(default_picking_type_id)
+        mo_sequence = default_picking_type.sequence_id
+
+        mo_sequence.prefix = "WH-MO-"
+        initial_mo_name = mo_sequence.prefix + str(mo_sequence.number_next_actual).zfill(mo_sequence.padding)
+
+        production = self.generate_mo(qty_final=5)[0]
+        self.assertEqual(production.name, initial_mo_name)
+
+        backorder = produce_one(production)
+        self.assertEqual(production.name, initial_mo_name + "-001")
+        self.assertEqual(backorder.name, initial_mo_name + "-002")
+
+        backorder.backorder_sequence = 998
+
+        for seq in [998, 999, 1000]:
+            new_backorder = produce_one(backorder)
+            self.assertEqual(backorder.name, initial_mo_name + "-" + str(seq))
+            self.assertEqual(new_backorder.name, initial_mo_name + "-" + str(seq + 1))
+            backorder = new_backorder
+
 
 class TestMrpWorkorderBackorder(SavepointCase):
     @classmethod

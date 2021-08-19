@@ -259,6 +259,9 @@ msgid ""
 "    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \n"
 "    or # <b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>Bilješke dnevnika</b> za unutarnje komunikacije <i>(ljudi koji slijede ovaj zadatak neće biti obaviješteni\n"
+"    o bilješki koju bilježite, osim ako ih niste posebno označili).</i>. Koristi @ <b>spominje</b> kolegu \n"
+"    ili # <b>spominje</b> cijeli tim."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -432,7 +435,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">u ponavljanju</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -627,7 +630,7 @@ msgstr "Svi zadaci"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
 msgid "Allow Sub-tasks"
-msgstr ""
+msgstr "Dopusti podzadatke"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_internal_user_ids
@@ -1166,6 +1169,9 @@ msgid ""
 "made status messages for each step of the workflow. It helps to document "
 "your workflow: what should be done at which step."
 msgstr ""
+"Prilagodite kako se zadaci imenuju prema projektu i izradite prilagođene "
+"poruke o statusu za svaki korak tijeka rada. Pomaže u dokumentiranju vašeg "
+"tijeka rada: što treba učiniti u kojem koraku."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
@@ -1176,31 +1182,31 @@ msgstr "Dnevno"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_month__date
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_month__date
 msgid "Date of the Month"
-msgstr ""
+msgstr "Datum mjeseca"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_year__date
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_year__date
 msgid "Date of the Year"
-msgstr ""
+msgstr "Datum godine"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_weekday
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_weekday
 msgid "Day Of The Week"
-msgstr ""
+msgstr "Dan u tjednu"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_month__day
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_month__day
 msgid "Day of the Month"
-msgstr ""
+msgstr "Dan u mjesecu"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_year__day
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_year__day
 msgid "Day of the Year"
-msgstr ""
+msgstr "Dan u godini"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -1250,6 +1256,11 @@ msgid ""
 "- Invited portal and all internal users: employees may see everything.   Portal users may see project and tasks followed by\n"
 "   them or by someone of their company."
 msgstr ""
+"Definira vidljivost zadataka projekta:\n"
+"- Pozvani interni korisnici: zaposlenici mogu vidjeti samo praćeni projekt i zadatke.\n"
+"- Svi interni korisnici: zaposlenici mogu vidjeti sve projekte i zadatke.\n"
+"- Pozvani portal i svi interni korisnici: zaposlenici mogu vidjeti sve. Korisnici portala mogu vidjeti projekt i zadatke koje vode\n"
+"  oni ili netko iz njihove tvrtke."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1262,7 +1273,7 @@ msgstr "Obriši"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "Delete Project"
-msgstr ""
+msgstr "Izbriši projekt"
 
 #. module: project
 #: code:addons/project/models/project.py:0

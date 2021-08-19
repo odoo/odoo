@@ -15,4 +15,5 @@ Visitors can join public mail channels managed in the Discuss app in order to ge
         'views/snippets/snippets.xml',
         'views/website_mail_channel_templates.xml',
     ],
+    'license': 'LGPL-3',
 }

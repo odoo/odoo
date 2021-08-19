@@ -991,12 +991,12 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(inv_2.state, 'cancel', 'A drafted invoice state should be cancelled')
 
     def test_15_cancel_delivery(self):
+        """ Suppose the option "Lock Confirmed Sales" enabled and a product with the invoicing
+        policy set to "Delivered quantities". When cancelling the delivery of such a product, the
+        invoice status of the associated SO should be 'Nothing to Invoice'
         """
-        Suppose the option "Lock Confirmed Sales" enabled and a product with the invoicing policy set to "Delivered
-        quantities". When cancelling the delivery of such a product, the invoice status of the associated SO should be
-        'Nothing to Invoice'
-        """
-        self.env['ir.config_parameter'].set_param('sale.auto_done_setting', True)
+        group_auto_done = self.env['ir.model.data'].xmlid_to_object('sale.group_auto_done_setting')
+        self.env.user.groups_id = [(4, group_auto_done.id)]
 
         product = self.product_a
         partner = self.partner_a
@@ -1014,6 +1014,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             'pricelist_id': self.env.ref('product.list0').id,
         })
         so.action_confirm()
+        self.assertEqual(so.state, 'done')
         so.picking_ids.action_cancel()
 
         self.assertEqual(so.invoice_status, 'no')

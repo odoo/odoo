@@ -23,4 +23,5 @@ certification flow including purchase, certification, failure and success.
         'views/assets.xml',
     ],
     'installable': True,
+    'license': 'LGPL-3',
 }

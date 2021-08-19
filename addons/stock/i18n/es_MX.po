@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2021
+# Lucia Pacheco <lpo@odoo.com>, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # 
 msgid ""
@@ -361,8 +362,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-caret-right\" role=\"img\" aria-label=\"Unfold\" "
 "title=\"Unfold\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-caret-right\" role=\"img\" aria-label=\"Desdoblar\" "
-"title=\"Desdoblar\"/>"
+"<i class=\"fa fa-fw fa-caret-right\" role=\"img\" aria-label=\"Desplegar\" "
+"title=\"Desplegar\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -402,7 +403,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">On Hand</span>"
-msgstr "<span class=\"o_stat_text\">A mano</span>"
+msgstr "<span class=\"o_stat_text\">A la mano</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -524,7 +525,7 @@ msgstr "<strong>Cant min:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On Hand Quantity</strong>"
-msgstr "<strong>Cantidad disponible</strong>"
+msgstr "<strong>Cantidad a la mano</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -1780,7 +1781,7 @@ msgstr "Ruta de salida a seguir predeterminada"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_inventory__prefill_counted_quantity__counted
 msgid "Default to stock on hand"
-msgstr "Predeterminado a existencias disponible"
+msgstr "Predeterminado a existencias a la mano"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_inventory__prefill_counted_quantity__zero
@@ -1978,7 +1979,7 @@ msgstr "Descripción para traslados internos"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Receipts"
-msgstr "Descripción para recibos"
+msgstr "Descripción para recepciones"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
@@ -2370,7 +2371,7 @@ msgstr "Entrega esperada"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Expected Receipt"
-msgstr "Recibo esperado"
+msgstr "Recepción esperado"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_product_expiry
@@ -2425,7 +2426,7 @@ msgstr "Grupo de aprovisionamiento fijo"
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
 #, python-format
 msgid "Fold"
-msgstr "Doblar"
+msgstr "Plegar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__message_follower_ids
@@ -2492,7 +2493,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"Cantidad pronosticada (calculada como cantidad disponible - saliente + entrante)\n"
+"Cantidad pronosticada (calculada como cantidad a la mano- saliente + entrante)\n"
 "En un contexto de una sola ubicación de existencias, esto incluye los artículos almacenados en esta ubicación, o cualquier ubicación secundaria.\n"
 "En un contexto de un solo almacén, esto incluye los artículos almacenados en la ubicación de existencias de ese almacén, o cualquier almacén secundario.\n"
 "En cualquier otro caso, esto incluye los artículos almacenados en cualquier ubicación de existencias de tipo 'Interna'."
@@ -2505,7 +2506,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"Cantidad pronosticada (calculada como cantidad disponible - cantidad reservada)\n"
+"Cantidad pronosticada (calculada como cantidad a la mano- cantidad reservada)\n"
 "En un contexto con una única ubicación de existencias, esto incluye artículos almacenados en esta ubicación, o cualquiera de sus ubicaciones secundarias.\n"
 "En un contexto con un único almacén, esto incluye artículos almacenados en la ubicación de existencias de este almacén, o cualquiera almacén secundario.\n"
 "De lo contrario, esto incluye artículos almacenados en cualquier ubicación de existencias con tipo 'interno'."
@@ -2554,7 +2555,7 @@ msgstr "Cantidad pronosticada"
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__in
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_search
 msgid "Forecasted Receipts"
-msgstr "Recibos pronosticados"
+msgstr "Recepciones pronosticadas"
 
 #. module: stock
 #. openerp-web
@@ -2570,7 +2571,7 @@ msgstr "Reporte pronosticado"
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__forecast
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_search
 msgid "Forecasted Stock"
-msgstr "Existencias pronosticados"
+msgstr "Existencias pronosticadas"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
@@ -2645,7 +2646,7 @@ msgstr "Producciones futuras"
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Future Receipts"
-msgstr "Recibos futuras"
+msgstr "Recepciones futuras"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3229,7 +3230,7 @@ msgstr "Pérdida de inventario"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Inventory On Hand"
-msgstr "Inventario disponible"
+msgstr "Inventario a la mano"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_type_action
@@ -3494,7 +3495,7 @@ msgstr "Última actualización el"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_line__inventory_date
 msgid "Last date at which the On Hand Quantity has been computed."
-msgstr "Última fecha en que se calculó la cantidad disponible."
+msgstr "Última fecha en que se calculó la cantidad a la mano."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__late
@@ -3986,7 +3987,7 @@ msgstr "Nuevo movimiento:"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__new_quantity
 msgid "New Quantity on Hand"
-msgstr "Nueva cantidad disponible"
+msgstr "Nueva cantidad a la mano"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_form
@@ -4195,12 +4196,12 @@ msgstr "Número de mensajes sin leer"
 #: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree
 msgid "On Hand"
-msgstr "Disponible"
+msgstr "A la mano"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "On Hand Quantity"
-msgstr "Cantidad disponible"
+msgstr "Cantidad a la mano"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__available_quantity
@@ -4208,13 +4209,13 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer, in the default "
 "unit of measure of the product"
 msgstr ""
-"Cantidad disponible que no se ha reservado en un traslado, en la unidad de "
+"Cantidad a la mano que no se ha reservado en un traslado, en la unidad de "
 "medida predeterminada del producto"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
 msgid "On hand:"
-msgstr "Disponible:"
+msgstr "A la mano:"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:0
@@ -5215,7 +5216,7 @@ msgstr "Múltiplo de la cantidad"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Quantity On Hand"
-msgstr "Cantidad disponible"
+msgstr "Cantidad a la mano"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__reserved_availability
@@ -5340,12 +5341,12 @@ msgstr "Cantidad reservada real"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
 msgid "Receipt"
-msgstr "Recibo"
+msgstr "Recepción"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__reception_route_id
 msgid "Receipt Route"
-msgstr "Ruta de recibo"
+msgstr "Ruta de recepción"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -5353,7 +5354,7 @@ msgstr "Ruta de recibo"
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
-msgstr "Recibos"
+msgstr "Recepciones"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5406,7 +5407,7 @@ msgstr "Cant. recibida"
 #. module: stock
 #: model:ir.actions.server,name:stock.model_stock_inventory_line_action_recompute_quantity
 msgid "Recompute On Hand Quantity"
-msgstr "Recalcule la cantidad disponible"
+msgstr "Recalcular la cantidad a la mano"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__name
@@ -6368,7 +6369,7 @@ msgstr "Análisis de los movimientos de existencias"
 #: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #, python-format
 msgid "Stock On Hand"
-msgstr "Existencias disponibles"
+msgstr "Existencias a la mano"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
@@ -6844,7 +6845,7 @@ msgid ""
 "reordering rules will be triggered."
 msgstr ""
 "Se reservarán las existencias para operaciones que están esperando "
-"disponibilidad y se lanzarán las reglas de reabastecimiento."
+"disponibilidad y se activarán las reglas de reabastecimiento."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_warehouse_id
@@ -6987,8 +6988,8 @@ msgid ""
 "This note is added to receipt orders (e.g. where to store the product in the"
 " warehouse)."
 msgstr ""
-"Esta nota se agrega a las órdenes de recibo (por ejemplo, dónde almacenar el"
-" producto en el almacén)."
+"Esta nota se agrega a las órdenes de recepción (por ejemplo, dónde almacenar"
+" el producto en el almacén)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -7278,7 +7279,7 @@ msgstr "Ubicaciones de tránsito"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__trigger
 msgid "Trigger"
-msgstr "Activador"
+msgstr "Activar"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__make_to_order
@@ -7338,7 +7339,7 @@ msgstr "Conector con USPS"
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
 #, python-format
 msgid "Unfold"
-msgstr "Desdoblar"
+msgstr "Desplegar"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot__name
@@ -7498,7 +7499,7 @@ msgid ""
 "                a manufacturing order or a transfer."
 msgstr ""
 "Use este asistente para reabastecer sus existencias.\n"
-"                Dependiendo de la configuración de su producto, iniciar un reabastecimiento puede provocar una solicitud de presupuesto,\n"
+"                Dependiendo de la configuración de su producto, iniciar un reabastecimiento puede activar una solicitud de presupuesto,\n"
 "                una orden de fabricación o una transferencia."
 
 #. module: stock
@@ -7514,7 +7515,7 @@ msgstr "Usado por"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence
 msgid "Used to order the 'All Operations' kanban view"
-msgstr "Usado para ordenar la vista kanban de 'Todas la operaciones'"
+msgstr "Usado para ordenar la vista de kanban de 'Todas la operaciones'"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_user

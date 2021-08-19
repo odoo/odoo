@@ -2881,7 +2881,7 @@ msgstr "취소된 청구서"
 msgid ""
 "Cannot create an invoice of type %(move_type)s with a journal having "
 "%(journal_type)s as type."
-msgstr ""
+msgstr "전표에 %(journal_type)s유형을 가지고 있을 경우 %(move_type)s유형의 청구서를 생성할 수 없습니다. "
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -3778,7 +3778,7 @@ msgstr "첫 번째 현금 올림 생성"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "Create your first invoice."
-msgstr ""
+msgstr "첫번째 청구서를 생성합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_uid
@@ -6623,6 +6623,12 @@ msgid ""
 msgstr "분개 생성 이후 세금이 수정 된 것 같습니다. 대신 신용 전표를 수동으로 생성해야 합니다."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "It was previously '%(previous)s' and it is now '%(now)s'."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "JRNL/2016/00001"
 msgstr ""
@@ -7183,7 +7189,7 @@ msgstr "배치"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sale_activity_user_id
 msgid "Leave empty to assign the Salesperson of the invoice."
-msgstr ""
+msgstr "청구서의 영업담당자를 할당하기 위해 비워둡니다."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_ledgers
@@ -7440,7 +7446,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Match Invoice/bill with"
-msgstr ""
+msgstr "청구서/공급업체 청구서 연결"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__match_regex
@@ -10317,6 +10323,11 @@ msgid ""
 "\n"
 "Only PDF and XML files will be interpreted by Odoo"
 msgstr ""
+"각각의 청구서별 이메일을 따로 전송합니다.\n"
+"\n"
+"모든 파일 확장이 허용됩니다.\n"
+"\n"
+"PDF와 XML파일이 Odoo에서 허용됩니다. "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
@@ -11914,7 +11925,7 @@ msgstr "이 기간에 사용된 날짜는 반드시 양수여야 합니다."
 #: model:ir.model.fields,help:account.field_account_move__invoice_origin
 #: model:ir.model.fields,help:account.field_account_payment__invoice_origin
 msgid "The document(s) that generated the invoice."
-msgstr "청구서을 생성한 문서"
+msgstr "청구서을 생성한 문서(들)"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -11977,7 +11988,7 @@ msgstr ""
 msgid ""
 "The following invoice(s) will not be sent by email, because the customers "
 "don't have email address."
-msgstr "고객에게 이메일 주소가 없으므로 다음 청구서을 이메일로 보내지 않습니다."
+msgstr "고객에게 이메일 주소가 없으므로 다음 청구서(들)을 이메일로 보내지 않습니다."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -12385,11 +12396,43 @@ msgid ""
 msgstr "순서 필드를 사용하여 세금 라인을 적용한 순서를 지정합니다."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The sequence format has changed."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid ""
 "The sequence regex should at least contain the seq grouping keys. For instance:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will never restart.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every month.\n"
+"The year detected here is '%(year)s' and the month is '%(month)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every year.\n"
+"The year detected here is '%(year)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
 
 #. module: account
@@ -13588,6 +13631,18 @@ msgid ""
 msgstr "참조 유형마다 다른 모델을 선택할 수 있습니다. 기본 설정은 Odoo 참조입니다."
 
 #. module: account
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"You can not archive a journal containing draft journal entries.\n"
+"\n"
+"To proceed:\n"
+"1/ click on the top-right button 'Journal Entries' from this journal form\n"
+"2/ then filter on 'Draft' entries\n"
+"3/ select them all and post or delete them through the action menu"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid ""
@@ -14193,7 +14248,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
 msgid "invoice(s) that will not be sent"
-msgstr "발송되지 않을 청구서"
+msgstr "발송되지 않을 청구서(들)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree

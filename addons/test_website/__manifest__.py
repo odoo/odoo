@@ -22,4 +22,5 @@ models which only purpose is to run tests.""",
     ],
     'installable': True,
     'application': False,
+    'license': 'LGPL-3',
 }

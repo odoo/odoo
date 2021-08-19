@@ -14,4 +14,5 @@
         'wizard/account_fr_fec_view.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

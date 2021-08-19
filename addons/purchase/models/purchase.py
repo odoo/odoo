@@ -28,9 +28,10 @@ class PurchaseOrder(models.Model):
                 line._compute_amount()
                 amount_untaxed += line.price_subtotal
                 amount_tax += line.price_tax
+            currency = order.currency_id or order.partner_id.property_purchase_currency_id or self.env.company.currency_id
             order.update({
-                'amount_untaxed': order.currency_id.round(amount_untaxed),
-                'amount_tax': order.currency_id.round(amount_tax),
+                'amount_untaxed': currency.round(amount_untaxed),
+                'amount_tax': currency.round(amount_tax),
                 'amount_total': amount_untaxed + amount_tax,
             })
 
@@ -551,7 +552,7 @@ class PurchaseOrder(models.Model):
             'move_type': move_type,
             'narration': self.notes,
             'currency_id': self.currency_id.id,
-            'invoice_user_id': self.user_id and self.user_id.id,
+            'invoice_user_id': self.user_id and self.user_id.id or self.env.user.id,
             'partner_id': partner_invoice_id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id.get_fiscal_position(partner_invoice_id)).id,
             'payment_reference': self.partner_ref or '',
@@ -1136,7 +1137,7 @@ class PurchaseOrderLine(models.Model):
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom.id,
             'quantity': self.qty_to_invoice,
-            'price_unit': self.currency_id._convert(self.price_unit, aml_currency, self.company_id, date),
+            'price_unit': self.currency_id._convert(self.price_unit, aml_currency, self.company_id, date, round=False),
             'tax_ids': [(6, 0, self.taxes_id.ids)],
             'analytic_account_id': self.account_analytic_id.id,
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],

@@ -75,7 +75,7 @@ class SurveyUserInput(models.Model):
                 score_percentage = (score_total / total_possible_score) * 100
                 user_input.scoring_percentage = round(score_percentage, 2) if score_percentage > 0 else 0
 
-    @api.depends('scoring_percentage', 'survey_id.scoring_success_min')
+    @api.depends('scoring_percentage', 'survey_id')
     def _compute_scoring_success(self):
         for user_input in self:
             user_input.scoring_success = user_input.scoring_percentage >= user_input.survey_id.scoring_success_min

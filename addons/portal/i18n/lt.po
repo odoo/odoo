@@ -13,6 +13,7 @@
 # Linas Versada <linaskrisiukenas@gmail.com>, 2021
 # Gailius Kazlauskas <gailius@vialaurea.lt>, 2021
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2021
+# Jonas Zinkevicius <jozi@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: grupoda2 <dmitrijus.ivanovas@gmail.com>, 2021\n"
+"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2021\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +40,7 @@ msgstr "vėluoja %d dienų"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "%s is not the reference of a report"
-msgstr ""
+msgstr "%s nėra ataskaitos nuoroda"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -52,16 +53,18 @@ msgid ""
 "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
 msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
-msgstr ""
+msgstr "Redaguoti saugumo parametrus"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -273,7 +276,7 @@ msgstr "Prieigos įspėjimas"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "Account Security"
-msgstr ""
+msgstr "Paskyros sauga"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -301,7 +304,7 @@ msgstr "Pridėti papildomą turinį, rodomą laiške"
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid "An access token must be provided for each attachment."
-msgstr ""
+msgstr "Kiekvienam priedui turi būti pateiktas prieigos simbolis (token)."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -345,13 +348,15 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Išdavus Jūsų paskyrai skirtą (-us) dokumentą (-us), įmonės pavadinimo "
+"keitimas yra neleidžiamas. Dėl šio veiksmo susisiekite su mumis tiesiogiai."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Check failed"
-msgstr ""
+msgstr "Patikra nepavyko"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -412,7 +417,7 @@ msgstr "Kontaktai"
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
 msgid "Could not save file <strong>%s</strong>"
-msgstr ""
+msgstr "Failas <strong>%s</strong> negalėjo būti išsaugotas"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -446,6 +451,8 @@ msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
 msgstr ""
+"Šiuo metu prieinamas visiems, matantiems šį dokumentą, spauskite čia, jei "
+"norite apriboti prieigą ir suteikti ją tik vidiniams darbuotojams."
 
 #. module: portal
 #. openerp-web
@@ -455,6 +462,8 @@ msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
 msgstr ""
+"Šiuo metu jis skirtas tik vidaus darbuotojams, tačiau spustelėkite, jei "
+"norite, kad juo galėtų naudotis visi, žiūrintys šį dokumentą."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -527,14 +536,14 @@ msgstr "El. pašto diskusija"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Employees Only"
-msgstr ""
+msgstr "Tik darbuotojams"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Forgot password?"
-msgstr ""
+msgstr "Pamiršote slaptažodį?"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard
@@ -545,7 +554,7 @@ msgstr "Suteikti portalo prieigą"
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 msgid "Grant portal access"
-msgstr ""
+msgstr "Suteikti prieeigą prie portalo"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_http
@@ -586,7 +595,7 @@ msgstr ""
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid report type: %s"
-msgstr ""
+msgstr "Netinkamas ataskaitos timas: %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
@@ -654,6 +663,8 @@ msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
 msgstr ""
+"Modelis %(model_name)s nepalaiko simbolinio parašo (token), kadangi jis "
+"neturi %(field_name)s laukelio."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -668,7 +679,7 @@ msgstr "Vardas"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "New Password:"
-msgstr ""
+msgstr "Naujas slaptažodis:"
 
 #. module: portal
 #. openerp-web
@@ -706,12 +717,12 @@ msgstr "Slaptažodis"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password Updated!"
-msgstr ""
+msgstr "Slaptažodis atnaujintas!"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password:"
-msgstr ""
+msgstr "Slaptažodis:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -723,7 +734,7 @@ msgstr "Telefonas"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Please confirm your password to continue"
-msgstr ""
+msgstr "Norėdami tęsti, patvirtinkite savo slaptažodį"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
@@ -800,7 +811,7 @@ msgstr "Saugumas"
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Security Control"
-msgstr ""
+msgstr "Saugumo patikra"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_token
@@ -883,41 +894,41 @@ msgstr "Gatvė"
 #: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
 msgid "Thank You!"
-msgstr ""
+msgstr "Ačiū!"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "The attachment %s cannot be removed because it is linked to a message."
-msgstr ""
+msgstr "Priedas %s negali būti pašalintas, nes yra susietas su pranešimu."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
-msgstr ""
+msgstr "Priedas %s negali būti pašalintas, nes jis nėra laukimo būsenoje."
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid ""
 "The attachment %s does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Priedas %s neegzistuoja arba neturite prieigos teisių. "
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Priedas neegzistuoja arba neturite jo prieeigos teisių."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The document does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Dokumentas neegzistuoja arba neturite jo prieeigos teisių."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -943,7 +954,7 @@ msgstr "Šiuo metu nėra komentarų."
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "This document does not exist."
-msgstr ""
+msgstr "Šis dokumentas neegzistuoja."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -958,6 +969,8 @@ msgid ""
 "This is necessary for security-related changes. The authorization will last "
 "for a few minutes."
 msgstr ""
+"Tai yra būtina atliekant su saugumu susijusius pakeitimus. Autorizavimas "
+"truks kelias minutes."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -1001,7 +1014,7 @@ msgstr "PVM kodas"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Verify New Password:"
-msgstr ""
+msgstr "Patvirtinkite naują slaptažodį:"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_view
@@ -1180,7 +1193,7 @@ msgstr "odoo"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
-msgstr ""
+msgstr "slaptažodis"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details

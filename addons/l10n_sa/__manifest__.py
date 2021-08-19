@@ -25,4 +25,5 @@ In future this module will include some payroll rules for ME .
         'demo/demo_company.xml',
     ],
     'post_init_hook': 'load_translations',
+    'license': 'LGPL-3',
 }

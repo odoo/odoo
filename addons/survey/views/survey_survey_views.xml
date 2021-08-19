@@ -170,7 +170,9 @@
                 <field name="success_count"/>
                 <field name="success_ratio"/>
                 <field name="answer_score_avg"/>
-                <button name="certification" icon="fa-trophy" title="Certification" aria-label="Certification" attrs="{'invisible': [('certification', '=', False)]}"/>
+                <button name="certification" type="button" disabled="disabled"
+                    icon="fa-trophy" title="Certification" aria-label="Certification"
+                    attrs="{'invisible': [('certification', '=', False)]}"/>
                 <!-- Tweak as icons aren't directly supported in xml -->
             </tree>
         </field>

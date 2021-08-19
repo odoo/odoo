@@ -26,6 +26,7 @@
 # AndreaNichil <Andrea.nichil@gmail.com>, 2021
 # Cécile Collart <cco@odoo.com>, 2021
 # Vortex Storm <vortexstorm@protonmail.com>, 2021
+# BigBlu <paolo.moroni@air-srl.com>, 2021
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
@@ -255,7 +256,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<b>Post Exchange difference entries in:</b>"
-msgstr ""
+msgstr "Registrare le voci relative alla differenza dopo lo scambio in:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -1278,12 +1279,12 @@ msgstr "Gruppo imposta conto"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report
 msgid "Account Tax Report"
-msgstr "Dichiarazione IVA contabilità"
+msgstr "Resoconto fiscale contabilità"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report_line
 msgid "Account Tax Report Line"
-msgstr "Riga dichiarazione IVA contabilità"
+msgstr "Riga resoconto fiscale contabilità"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -2518,7 +2519,7 @@ msgstr "ACQ"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__trust__bad
 msgid "Bad Debtor"
-msgstr "Cattivo pagatore"
+msgstr "Cattivo debitore"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__balance
@@ -3342,8 +3343,8 @@ msgid ""
 "Check this box to negate the absolute value of the balance of the lines "
 "associated with this tag in tax report computation."
 msgstr ""
-"Selezionare la casella per rendere negativo, nel calcolo della dichiarazione"
-" IVA, il valore assoluto del saldo delle righe associate all'etichetta."
+"Selezionare la casella per rendere negativo, nel calcolo del resoconto "
+"fiscale, il valore assoluto del saldo delle righe associate all'etichetta."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
@@ -4370,7 +4371,7 @@ msgstr "Personalizza la struttura."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cut-Off"
-msgstr "Ripartizione"
+msgstr "Separazione"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -6122,7 +6123,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "terms without removing it."
 msgstr ""
-"Se il campo attivo è impostato a Falso, consente di nascondere i termini di "
+"Se il campo Attivo è impostato a falso, consente di nascondere i termini di "
 "pagamento senza rimuoverli."
 
 #. module: account
@@ -6317,7 +6318,7 @@ msgstr "Controllo inalterabilità"
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
 #: model:ir.model.fields,field_description:account.field_account_payment__secure_sequence_number
 msgid "Inalteralbility No Gap Sequence #"
-msgstr ""
+msgstr "N. sequenza di inalterabilità senza spazi vuoti"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__inbound
@@ -6909,6 +6910,12 @@ msgid ""
 msgstr ""
 "Sembra che, dalla creazione della registrazione contabile, le imposte siano "
 "state modificate. La nota di credito deve invece essere creata manualmente."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "It was previously '%(previous)s' and it is now '%(now)s'."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -8176,7 +8183,7 @@ msgstr "Nessuno"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__trust__normal
 msgid "Normal Debtor"
-msgstr "Normale debitore"
+msgstr "Debitore normale"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__not_contains
@@ -8436,7 +8443,7 @@ msgstr "Al termine, premi continua."
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once everything is as you want it, validate."
-msgstr ""
+msgstr "Quando tutto è come desideri, valida."
 
 #. module: account
 #. openerp-web
@@ -8668,7 +8675,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.report,name:account.action_account_original_vendor_bill
 msgid "Original Bills"
-msgstr "Fatture fornitore originali"
+msgstr "Fatture fornitore di origine"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
@@ -10506,7 +10513,7 @@ msgstr ""
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Securisation of %s - %s"
-msgstr ""
+msgstr "Protezione di %s - %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -10696,6 +10703,11 @@ msgid ""
 "\n"
 "Only PDF and XML files will be interpreted by Odoo"
 msgstr ""
+"Invia una e-mail separata per ciascuna fattura.\n"
+"\n"
+"È accettata qualsiasi estensione dei file.\n"
+"\n"
+"Odoo interpreta solo file PDF e XML"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
@@ -10770,7 +10782,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sequence_override_regex
 msgid "Sequence Override Regex"
-msgstr ""
+msgstr "Espressione regolare per sostituzione sequenza"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__sequence_prefix
@@ -10792,7 +10804,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__secure_sequence_id
 msgid "Sequence to use to ensure the securisation of data"
-msgstr ""
+msgstr "Sequenza da utilizzare per garantire la protezione dei dati"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__tax_scope__service
@@ -11507,17 +11519,17 @@ msgstr "Modello di riga ripartizione imposta"
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__report_id
 #: model:ir.ui.menu,name:account.menu_configure_tax_report
 msgid "Tax Report"
-msgstr "Dichiarazione IVA"
+msgstr "Resoconto fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__tax_report_line_ids
 msgid "Tax Report Lines"
-msgstr "Righe dichiarazione IVA"
+msgstr "Righe resoconto fiscale"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_configure_tax_report
 msgid "Tax Reports"
-msgstr "Dichiarazioni IVA"
+msgstr "Resoconti fiscali"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_scope
@@ -12561,6 +12573,11 @@ msgid ""
 "- optional journal items, all sharing the same account.\n"
 "\n"
 msgstr ""
+"La registrazione contabile %s ha raggiunto uno stato non valido relativo al proprio pagamento.\n"
+"Affinchè sia coerente, la registrazione deve contenere sempre:\n"
+"- una voce contabile riguardante il conto del pagamento o degli incassi in sospeso\n"
+"- una voce contabile riguardante un conto corrente o passivo\n"
+"- voci contabili opzionali, con tutte lo stesso conto in comune\n"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12923,11 +12940,43 @@ msgstr ""
 "le righe imposta"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The sequence format has changed."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid ""
 "The sequence regex should at least contain the seq grouping keys. For instance:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will never restart.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every month.\n"
+"The year detected here is '%(year)s' and the month is '%(month)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every year.\n"
+"The year detected here is '%(year)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
 
 #. module: account
@@ -12995,7 +13044,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_report_line_ids
 msgid "The tax report lines using this tag"
-msgstr "Righe della dichiarazione IVA che usano l'etichetta"
+msgstr "Righe del resoconto fiscale che usano l'etichetta"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__invoice_tax_id
@@ -14198,6 +14247,18 @@ msgid ""
 msgstr ""
 "È possibile scegliere modelli diversi per ciascun tipo di riferimento. Il "
 "predefinito è il riferimento Odoo."
+
+#. module: account
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"You can not archive a journal containing draft journal entries.\n"
+"\n"
+"To proceed:\n"
+"1/ click on the top-right button 'Journal Entries' from this journal form\n"
+"2/ then filter on 'Draft' entries\n"
+"3/ select them all and post or delete them through the action menu"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0

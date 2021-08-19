@@ -93,4 +93,5 @@ You could use this simplified accounting in case you work with an (external) acc
     'application': True,
     'auto_install': False,
     'post_init_hook': '_account_post_init',
+    'license': 'LGPL-3',
 }

@@ -25,7 +25,18 @@ $-seen-urls: ();
 
     // 2) The values in the $theme-colors map are already printed by Bootstrap.
 
-    // 3) The values in the $colors map are also printed by Bootstrap.
+    // 3) The values in the $colors map are also printed by Bootstrap. However,
+    // we have color variables which can contain a reference to a color
+    // combination and that is the info we want in that case. As a stable fix,
+    // we'll leave the original variable untouched but print a prefixed version
+    // of the variable with the correct reference value.
+    // TODO adapt in master
+    @each $key in ('menu', 'header-boxed', 'footer', 'copyright') {
+        $-value: map-get($o-color-palette, $key);
+        @if type-of($-value) == 'number' {
+            @include print-variable('bugfixed-#{$key}', $-value);
+        }
+    }
 
     // 4) The Odoo values map, $o-website-values, must be printed.
     @each $key, $value in $o-website-values {
@@ -1416,4 +1427,11 @@ $ribbon-padding: 100px;
     // value of "align-self" is "strech". We put this code here to
     // avoid having to create a new scss file in a stable version.
     align-self: flex-start;
+}
+
+// Bottom fixed element (e.g. livechat button)
+.modal-open .o_bottom_fixed_element, .o_bottom_fixed_element_hidden {
+    // Prevent bottom fixed elements from hidding buttons and
+    // hide them if a modal is open.
+    display: none !important;
 }

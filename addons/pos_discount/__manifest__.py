@@ -23,4 +23,5 @@ discount to a customer.
         'static/src/xml/DiscountButton.xml',
     ],
     'installable': True,
+    'license': 'LGPL-3',
 }

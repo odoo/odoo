@@ -34,6 +34,13 @@ class StockRule(models.Model):
     _order = "sequence, id"
     _check_company_auto = True
 
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if 'company_id' in fields_list and not res['company_id']:
+            res['company_id'] = self.env.company.id
+        return res
+
     name = fields.Char(
         'Name', required=True, translate=True,
         help="This field will fill the packing origin and the name of its moves")

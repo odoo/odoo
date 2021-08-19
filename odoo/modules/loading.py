@@ -363,6 +363,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
     models_to_check = set()
 
     with db.cursor() as cr:
+        # prevent endless wait for locks on schema changes (during online
+        # installs) if a concurrent transaction has accessed the table;
+        # connection settings are automatically reset when the connection is
+        # borrowed from the pool
+        cr.execute("SET SESSION lock_timeout = '15s'")
         if not odoo.modules.db.is_initialized(cr):
             if not update_module:
                 _logger.error("Database %s not initialized, you can force it with `-i base`", cr.dbname)
