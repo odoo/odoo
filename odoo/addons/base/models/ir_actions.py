@@ -17,6 +17,32 @@ import logging
 from pytz import timezone
 
 _logger = logging.getLogger(__name__)
+_server_action_logger = _logger.getChild("server_action_safe_eval")
+
+
+class LoggerProxy:
+    """ Proxy of the `_logger` element in order to be used in server actions.
+    We purposefully restrict its method as it will be executed in `safe_eval`.
+    """
+    @staticmethod
+    def log(level, message, *args, stack_info=False, exc_info=False):
+        _server_action_logger.log(level, message, *args, stack_info=stack_info, exc_info=exc_info)
+
+    @staticmethod
+    def info(message, *args, stack_info=False, exc_info=False):
+        _server_action_logger.info(message, *args, stack_info=stack_info, exc_info=exc_info)
+
+    @staticmethod
+    def warning(message, *args, stack_info=False, exc_info=False):
+        _server_action_logger.warning(message, *args, stack_info=stack_info, exc_info=exc_info)
+
+    @staticmethod
+    def error(message, *args, stack_info=False, exc_info=False):
+        _server_action_logger.error(message, *args, stack_info=stack_info, exc_info=exc_info)
+
+    @staticmethod
+    def exception(message, *args, stack_info=False, exc_info=True):
+        _server_action_logger.exception(message, *args, stack_info=stack_info, exc_info=exc_info)
 
 
 class IrActions(models.Model):
@@ -610,6 +636,7 @@ class IrActionsServer(models.Model):
             'records': records,
             # helpers
             'log': log,
+            '_logger': LoggerProxy,
         })
         return eval_context
 
