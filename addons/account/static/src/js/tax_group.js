@@ -29,42 +29,62 @@ odoo.define('account.tax_group', function (require) {
          * @param {Float} deltaAmount
          */
         _changeTaxValueByTaxGroup: function (taxGroupId, deltaAmount) {
-            var self = this;
+            const self = this;
+            const {limit, id, count} = self.record.data.line_ids;
+            let offset = count - limit;
             // Search for the first tax line with the same tax group and modify its value
-            var line_id = self.record.data.line_ids.data.find(elem => elem.data.tax_group_id && elem.data.tax_group_id.data.id === taxGroupId);
 
-            var debitAmount = 0;
-            var creditAmount = 0;
-            var amount_currency = 0;
-            if (line_id.data.currency_id) { // If multi currency enable
-                if (this.record.data.move_type === "in_invoice") {
-                    amount_currency = line_id.data.amount_currency - deltaAmount;
+            function applyChange(line_id){
+                let debitAmount = 0;
+                let creditAmount = 0;
+                let amount_currency = 0;
+                if (line_id.data.currency_id) { // If multi currency enable
+                    if (self.record.data.move_type === "in_invoice") {
+                        amount_currency = line_id.data.amount_currency - deltaAmount;
+                    } else {
+                        amount_currency = line_id.data.amount_currency + deltaAmount;
+                    }
                 } else {
-                    amount_currency = line_id.data.amount_currency + deltaAmount;
-                }
-            } else {
-                var balance = line_id.data.price_subtotal;
-                balance -= deltaAmount;
-                if (this.record.data.move_type === "in_invoice") { // For vendor bill
-                    if (balance > 0) {
-                        debitAmount = balance;
-                    } else if (balance < 0) {
-                        creditAmount = -balance;
-                    }
-                } else { // For refund
-                    if (balance > 0) {
-                        creditAmount = balance;
-                    } else if (balance < 0) {
-                        debitAmount = -balance;
+                    let balance = line_id.data.price_subtotal;
+                    balance -= deltaAmount;
+                    if (self.record.data.move_type === "in_invoice") { // For vendor bill
+                        if (balance > 0) {
+                            debitAmount = balance;
+                        } else if (balance < 0) {
+                            creditAmount = -balance;
+                        }
+                    } else { // For refund
+                        if (balance > 0) {
+                            creditAmount = balance;
+                        } else if (balance < 0) {
+                            debitAmount = -balance;
+                        }
                     }
                 }
+
+                // Trigger ORM
+                self.trigger_up('field_changed', {
+                    dataPointID: self.record.id,
+                    changes: { line_ids: { operation: "UPDATE", id: line_id.id, data: { amount_currency: amount_currency, debit: debitAmount, credit: creditAmount } } }, // account.move change
+                    initialEvent: { dataPointID: line_id.id, changes: { amount_currency: amount_currency, debit: debitAmount, credit: creditAmount }, }, // account.move.line change
+                });
             }
-            // Trigger ORM
-            self.trigger_up('field_changed', {
-                dataPointID: self.record.id,
-                changes: { line_ids: { operation: "UPDATE", id: line_id.id, data: { amount_currency: amount_currency, debit: debitAmount, credit: creditAmount } } }, // account.move change
-                initialEvent: { dataPointID: line_id.id, changes: { amount_currency: amount_currency, debit: debitAmount, credit: creditAmount }, }, // account.move.line change
-            });
+
+            let line_id = self.record.data.line_ids.data.find(elem => elem.data.tax_group_id && elem.data.tax_group_id.data.id === taxGroupId);
+
+            if (line_id){
+                applyChange(line_id);
+            } else {
+                self.trigger_up('load', {
+                    id,
+                    limit,
+                    offset,
+                    on_success: value => {
+                        line_id = value.data.find(elem => elem.data.tax_group_id && elem.data.tax_group_id.data.id === taxGroupId);
+                        applyChange(line_id);
+                    },
+                });
+            }
         },
 
         /**
