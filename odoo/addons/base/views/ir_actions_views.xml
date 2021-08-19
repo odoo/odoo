@@ -331,13 +331,16 @@
                                     <h3>Help with Python expressions</h3>
                                     <p>Various fields may use Python code or Python expressions. The following variables can be used:</p>
                                     <ul>
-                                        <li><code>env</code>: Odoo Environment on which the action is triggered</li>
-                                        <li><code>model</code>: Odoo Model of the record on which the action is triggered; is a void recordset</li>
+                                        <li><code>env</code>: environment on which the action is triggered</li>
+                                        <li><code>model</code>: model of the record on which the action is triggered; is a void recordset</li>
                                         <li><code>record</code>: record on which the action is triggered; may be be void</li>
                                         <li><code>records</code>: recordset of all records on which the action is triggered in multi mode; may be void</li>
                                         <li><code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>timezone</code>: useful Python libraries</li>
-                                        <li><code>log(message, level='info')</code>:logging function to record debug information in <code>ir.logging</code> table</li>
-                                        <li><code>UserError</code>: Warning Exception to use with <code>raise</code></li>
+                                        <li><code>float_compare()</code>: utility function to compare floats based on a specific precision</li>
+                                        <li><code>log(message, level='info')</code>: logging function to record debug information in <code>ir.logging</code> table</li>
+                                        <li><code>_logger.info(message)</code>: logger to emit messages in server logs</li>
+                                        <li><code>UserError</code>: exception class for raising user-facing warning messages</li>
+                                        <li><code>Command</code>: x2many commands namespace</li>
                                         <li>To return an action, assign: <code>action = {...}</code></li>
                                     </ul>
                                     <div attrs="{'invisible': [('state', '!=', 'code')]}">
