@@ -13,7 +13,8 @@
                             </t>
                         </div>
                         <div class="subpads">
-                            <ActionpadWidget client="client"/>
+                            <t t-set="_actionName">Payment</t>
+                            <ActionpadWidget client="client" actionName="_actionName" />
                             <NumpadWidget activeMode="state.numpadMode" />
                         </div>
                     </div>

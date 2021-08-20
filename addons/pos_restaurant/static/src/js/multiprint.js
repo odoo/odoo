@@ -91,7 +91,7 @@ models.Orderline = models.Orderline.extend({
         if (this.pos.config.iface_printers && quantity !== this.quantity && this.printable()) {
             this.mp_dirty = true;
         }
-        _super_orderline.set_quantity.apply(this,arguments);
+        return _super_orderline.set_quantity.apply(this,arguments);
     },
     can_be_merged_with: function(orderline) {
         return (!this.mp_skip) &&

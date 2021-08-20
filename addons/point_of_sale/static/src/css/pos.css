@@ -720,6 +720,10 @@ td {
     border-color: #bfbfbf;
     transition: all 150ms linear;
 }
+.pos .actionpad .button.pay .pay-circle.highlight {
+    color: white;
+    background-color: #6ec89b;
+}
 .pos .actionpad .button:hover {
     background: #efefef;
 }
@@ -2200,6 +2204,20 @@ td {
     font-style:normal;
 }
 
+.pos .order .orderline .to-refund-highlight {
+    font-weight: bold;
+    color: #6ec89b;
+}
+
+.pos .order .orderline .refund-note {
+    margin-top: 2px;
+}
+
+.pos .order .orderline .refund-note span.order-link {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 /* ------ ORDER NOTES ------- */
 
 .pos .order .orderline-note {
@@ -3333,12 +3351,30 @@ td {
     align-items: center;
 }
 
+.ticket-screen .filter ul.options li.indented {
+    text-indent: 1em;
+}
+
 .ticket-screen .pos-search-bar .filter ul.options li:hover {
     background-color: #DDD;
 }
 
 .ticket-screen .pos-search-bar .search {
     display: flex;
+}
+
+.ticket-screen .order-container .header-note {
+    text-align: start;
+    padding: 15px;
+    color: grey;
+    padding-bottom: 20px;
+    border-bottom: solid 1px lightgrey;
+    transition: all 300ms linear;
+}
+
+.ticket-screen .order-container .header-note.highlight {
+    color: red;
+    transition: all 300ms linear;
 }
 
 .ticket-button {

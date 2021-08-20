@@ -9,7 +9,7 @@ import pytz
 import re
 
 from odoo import api, fields, models, tools, _
-from odoo.tools import float_is_zero, float_round, float_repr
+from odoo.tools import float_is_zero, float_round, float_repr, float_compare
 from odoo.exceptions import ValidationError, UserError
 from odoo.http import request
 from odoo.osv.expression import AND
@@ -287,6 +287,25 @@ class PosOrder(models.Model):
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
     is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
     tip_amount = fields.Float(string='Tip Amount', digits=0, readonly=True)
+    refund_orders_count = fields.Integer('Number of Refund Orders', compute='_compute_refund_related_fields')
+    is_refunded = fields.Boolean(compute='_compute_refund_related_fields')
+    refunded_order_ids = fields.Many2many('pos.order', compute='_compute_refund_related_fields')
+    has_refundable_lines = fields.Boolean('Has Refundable Lines', compute='_compute_has_refundable_lines')
+    refunded_orders_count = fields.Integer(compute='_compute_refund_related_fields')
+
+    @api.depends('lines.refund_orderline_ids', 'lines.refunded_orderline_id')
+    def _compute_refund_related_fields(self):
+        for order in self:
+            order.refund_orders_count = len(order.mapped('lines.refund_orderline_ids.order_id'))
+            order.is_refunded = order.refund_orders_count > 0
+            order.refunded_order_ids = order.mapped('lines.refunded_orderline_id.order_id')
+            order.refunded_orders_count = len(order.refunded_order_ids)
+
+    @api.depends('lines.refunded_qty', 'lines.qty')
+    def _compute_has_refundable_lines(self):
+        digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for order in self:
+            order.has_refundable_lines = any([float_compare(line.qty, line.refunded_qty, digits) > 0 for line in order.lines])
 
     @api.depends('account_move')
     def _compute_is_invoiced(self):
@@ -396,7 +415,7 @@ class PosOrder(models.Model):
     @api.model
     def _complete_values_from_session(self, session, values):
         if values.get('state') and values['state'] == 'paid':
-            values['name'] = session.config_id.sequence_id._next()
+            values['name'] = self._compute_order_name()
         values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
         values.setdefault('fiscal_position_id', session.config_id.default_fiscal_position_id.id)
         values.setdefault('company_id', session.config_id.company_id.id)
@@ -405,8 +424,14 @@ class PosOrder(models.Model):
     def write(self, vals):
         for order in self:
             if vals.get('state') and vals['state'] == 'paid' and order.name == '/':
-                vals['name'] = order.config_id.sequence_id._next()
+                vals['name'] = self._compute_order_name()
         return super(PosOrder, self).write(vals)
+
+    def _compute_order_name(self):
+        if len(self.refunded_order_ids) != 0:
+            return ','.join(self.refunded_order_ids.mapped('name')) + _(' REFUND')
+        else:
+            return self.session_id.config_id.sequence_id._next()
 
     def action_stock_picking(self):
         self.ensure_one()
@@ -424,6 +449,24 @@ class PosOrder(models.Model):
             'context': "{'move_type':'out_invoice'}",
             'type': 'ir.actions.act_window',
             'res_id': self.account_move.id,
+        }
+
+    def action_view_refund_orders(self):
+        return {
+            'name': _('Refund Orders'),
+            'view_mode': 'tree,form',
+            'res_model': 'pos.order',
+            'type': 'ir.actions.act_window',
+            'domain': [('id', 'in', self.mapped('lines.refund_orderline_ids.order_id').ids)],
+        }
+
+    def action_view_refunded_orders(self):
+        return {
+            'name': _('Refunded Orders'),
+            'view_mode': 'tree,form',
+            'res_model': 'pos.order',
+            'type': 'ir.actions.act_window',
+            'domain': [('id', 'in', self.refunded_order_ids.ids)],
         }
 
     def _is_pos_order_paid(self):
@@ -849,6 +892,14 @@ class PosOrderLine(models.Model):
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
     full_product_name = fields.Char('Full Product Name')
     customer_note = fields.Char('Customer Note', help='This is a note destined to the customer')
+    refund_orderline_ids = fields.One2many('pos.order.line', 'refunded_orderline_id', 'Refund Order Lines', help='Orderlines in this field are the lines that refunded this orderline.')
+    refunded_orderline_id = fields.Many2one('pos.order.line', 'Refunded Order Line', help='If this orderline is a refund, then the refunded orderline is specified in this field.')
+    refunded_qty = fields.Float('Refunded Quantity', compute='_compute_refund_qty', help='Number of items refunded in this orderline.')
+
+    @api.depends('refund_orderline_ids')
+    def _compute_refund_qty(self):
+        for orderline in self:
+            orderline.refunded_qty = -sum(orderline.mapped('refund_orderline_ids.qty'))
 
     def _prepare_refund_data(self, refund_order, PosOrderLineLot):
         """
@@ -866,12 +917,13 @@ class PosOrderLine(models.Model):
         self.ensure_one()
         return {
             'name': self.name + _(' REFUND'),
-            'qty': -self.qty,
+            'qty': -(self.qty - self.refunded_qty),
             'order_id': refund_order.id,
             'price_subtotal': -self.price_subtotal,
             'price_subtotal_incl': -self.price_subtotal_incl,
             'pack_lot_ids': PosOrderLineLot,
-            'is_total_cost_computed': False
+            'is_total_cost_computed': False,
+            'refunded_orderline_id': self.id,
         }
 
     @api.model
@@ -954,6 +1006,7 @@ class PosOrderLine(models.Model):
             'id': orderline.id,
             'pack_lot_ids': [[0, 0, lot] for lot in orderline.pack_lot_ids.export_for_ui()],
             'customer_note': orderline.customer_note,
+            'refunded_qty': orderline.refunded_qty,
         }
 
     def export_for_ui(self):

@@ -18,6 +18,9 @@ odoo.define('point_of_sale.ActionpadWidget', function(require) {
         }
     }
     ActionpadWidget.template = 'ActionpadWidget';
+    ActionpadWidget.defaultProps = {
+        isActionButtonHighlighted: false,
+    }
 
     Registries.Component.add(ActionpadWidget);
 

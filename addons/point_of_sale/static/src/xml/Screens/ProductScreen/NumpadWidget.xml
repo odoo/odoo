@@ -28,7 +28,7 @@
                 }" t-att-disabled="!hasPriceControlRights"
                     t-on-click="changeMode('price')">Price</button>
             <br />
-            <button class="input-button numpad-minus" t-on-click="sendInput('-')">+/-</button>
+            <button class="input-button numpad-minus" t-att-class="{ 'disabled-mode': props.disableSign }" t-on-click="sendInput('-')">+/-</button>
             <button class="input-button number-char" t-on-click="sendInput('0')">0</button>
             <button class="input-button number-char" t-on-click="sendInput(decimalSeparator)">
                 <t t-esc="decimalSeparator" />
