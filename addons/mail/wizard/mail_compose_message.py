@@ -285,7 +285,8 @@ class MailComposer(models.TransientModel):
         reply_to_value = dict.fromkeys(res_ids, None)
         if mass_mail_mode and not self.no_auto_thread:
             records = self.env[self.model].browse(res_ids)
-            reply_to_value = self.env['mail.thread']._notify_get_reply_to_on_records(default=self.email_from, records=records)
+            default_reply_to = rendered_values.get('reply-to') or rendered_values.get('email-from') or self.email_from
+            reply_to_value = self.env['mail.thread']._notify_get_reply_to_on_records(default=default_reply_to, records=records)
 
         blacklisted_rec_ids = []
         if mass_mail_mode and hasattr(self.env[self.model], "_primary_email"):
