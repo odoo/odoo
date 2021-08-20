@@ -76,6 +76,7 @@ class AccountDebitNote(models.TransientModel):
             'name': _('Debit Notes'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
+            'context': {'default_type': default_values['type']},
             }
         if len(new_moves) == 1:
             action.update({
