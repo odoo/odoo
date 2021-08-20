@@ -957,8 +957,11 @@ class MassMailing(models.Model):
     def send_mail(self, res_ids=None):
         author_id = self.env.user.partner_id.id
 
+        # If no recipient is passed, we don't want to use the recipients of the first
+        # mailing for all the others
+        initial_res_ids = res_ids
         for mailing in self:
-            if not res_ids:
+            if not initial_res_ids:
                 res_ids = mailing.get_remaining_recipients()
             if not res_ids:
                 raise UserError(_('There is no recipients selected.'))
