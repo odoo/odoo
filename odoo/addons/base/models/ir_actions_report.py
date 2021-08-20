@@ -595,7 +595,7 @@ class IrActionsReport(models.Model):
             website=website,
             web_base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
         )
-        return view_obj._render_template(template, values)
+        return view_obj._render_template(template, values).encode()
 
     def _post_pdf(self, save_in_attachment, pdf_content=None, res_ids=None):
         '''Merge the existing attachments by adding one by one the content of the attachments
