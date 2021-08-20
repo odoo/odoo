@@ -1837,7 +1837,9 @@ class AccountMove(models.Model):
         """
         self._compute_tax_country_id() # We need to ensure this field has been computed, as we use it in our check
         for record in self:
-            if record.line_ids.tax_ids and record.line_ids.tax_ids.country_id != record.tax_country_id:
+            amls = record.line_ids
+            impacted_countries = amls.tax_ids.country_id | amls.tax_line_id.country_id | amls.tax_tag_ids.country_id
+            if impacted_countries and impacted_countries != record.tax_country_id:
                 raise ValidationError(_("This entry contains some tax from an unallowed country. Please check its fiscal position and your tax configuration."))
 
     # -------------------------------------------------------------------------
