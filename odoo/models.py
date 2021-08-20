@@ -5608,8 +5608,8 @@ Fields:
         if fnames is None:
             # flush everything
             self.recompute()
-            while self.env.all.towrite:
-                model_name, id_vals = self.env.all.towrite.popitem()
+            while self.env.transaction.towrite:
+                model_name, id_vals = self.env.transaction.towrite.popitem()
                 process(self.env[model_name], id_vals)
         else:
             # flush self's model if any of the fields must be flushed
@@ -5618,7 +5618,7 @@ Fields:
             # check whether any of 'records' must be flushed
             if records is not None:
                 fnames = set(fnames)
-                towrite = self.env.all.towrite.get(self._name)
+                towrite = self.env.transaction.towrite.get(self._name)
                 if not towrite or all(
                     fnames.isdisjoint(towrite.get(record.id, ()))
                     for record in records
@@ -5642,10 +5642,10 @@ Fields:
             for model_name, fields in model_fields.items():
                 if any(
                     field.name in vals
-                    for vals in self.env.all.towrite.get(model_name, {}).values()
+                    for vals in self.env.transaction.towrite.get(model_name, {}).values()
                     for field in fields
                 ):
-                    id_vals = self.env.all.towrite.pop(model_name)
+                    id_vals = self.env.transaction.towrite.pop(model_name)
                     process(self.env[model_name], id_vals)
 
             # missing for one2many fields, flush their inverse

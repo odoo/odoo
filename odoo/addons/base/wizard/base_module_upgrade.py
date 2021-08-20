@@ -70,7 +70,7 @@ class BaseModuleUpgrade(models.TransientModel):
 
         # terminate transaction before re-creating cursor below
         self._cr.commit()
-        api.Environment.reset()
+        self._cr.reset()
         odoo.modules.registry.Registry.new(self._cr.dbname, update_module=True)
 
         return {'type': 'ir.actions.act_window_close'}

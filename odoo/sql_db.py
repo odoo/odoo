@@ -24,7 +24,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ
 from psycopg2.pool import PoolError
 from werkzeug import urls
 
-from odoo.api import Environment
+from odoo.api import Environment, Transaction
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
@@ -67,7 +67,7 @@ def flush_env(cr, *, clear=True):
         Also clear the environment if ``clear`` is true.
     """
     env_to_flush = None
-    for env in list(Environment.envs):
+    for env in list(cr.transaction):
         # don't flush() on another cursor or with a RequestUID
         if env.cr is cr and (isinstance(env.uid, int) or env.uid is None):
             env_to_flush = env
@@ -81,7 +81,7 @@ def flush_env(cr, *, clear=True):
 
 def clear_env(cr):
     """ Retrieve and clear an environment corresponding to the given cursor """
-    for env in list(Environment.envs):
+    for env in list(cr.transaction):
         if env.cr is cr:
             env.clear()
             break
@@ -109,6 +109,7 @@ class BaseCursor:
         self.postcommit = tools.Callbacks()
         self.prerollback = tools.Callbacks()
         self.postrollback = tools.Callbacks()
+        self.transaction = Transaction()
 
     @contextmanager
     @check
@@ -150,6 +151,8 @@ class BaseCursor:
             self.commit()
         self.close()
 
+    def reset(self):
+        self.transaction = Transaction()
 
 class Cursor(BaseCursor):
     """Represents an open transaction to the PostgreSQL DB backend,

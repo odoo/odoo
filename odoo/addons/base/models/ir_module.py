@@ -597,7 +597,7 @@ class Module(models.Model):
         function(self)
 
         self._cr.commit()
-        api.Environment.reset()
+        self._cr.reset()
         modules.registry.Registry.new(self._cr.dbname, update_module=True)
 
         self._cr.commit()

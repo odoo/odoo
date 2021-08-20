@@ -71,37 +71,36 @@ class Registry(Mapping):
         """ Create and return a new registry for the given database name. """
         t0 = time.time()
         with cls._lock:
-            with odoo.api.Environment.manage():
-                registry = object.__new__(cls)
-                registry.init(db_name)
+            registry = object.__new__(cls)
+            registry.init(db_name)
 
-                # Initializing a registry will call general code which will in
-                # turn call Registry() to obtain the registry being initialized.
-                # Make it available in the registries dictionary then remove it
-                # if an exception is raised.
-                cls.delete(db_name)
-                cls.registries[db_name] = registry
+            # Initializing a registry will call general code which will in
+            # turn call Registry() to obtain the registry being initialized.
+            # Make it available in the registries dictionary then remove it
+            # if an exception is raised.
+            cls.delete(db_name)
+            cls.registries[db_name] = registry
+            try:
+                registry.setup_signaling()
+                # This should be a method on Registry
                 try:
-                    registry.setup_signaling()
-                    # This should be a method on Registry
-                    try:
-                        odoo.modules.load_modules(registry._db, force_demo, status, update_module)
-                    except Exception:
-                        odoo.modules.reset_modules_state(db_name)
-                        raise
+                    odoo.modules.load_modules(registry._db, force_demo, status, update_module)
                 except Exception:
-                    _logger.error('Failed to load registry')
-                    del cls.registries[db_name]
+                    odoo.modules.reset_modules_state(db_name)
                     raise
+            except Exception:
+                _logger.error('Failed to load registry')
+                del cls.registries[db_name]
+                raise
 
-                # load_modules() above can replace the registry by calling
-                # indirectly new() again (when modules have to be uninstalled).
-                # Yeah, crazy.
-                registry = cls.registries[db_name]
+            # load_modules() above can replace the registry by calling
+            # indirectly new() again (when modules have to be uninstalled).
+            # Yeah, crazy.
+            registry = cls.registries[db_name]
 
-            registry._init = False
-            registry.ready = True
-            registry.registry_invalidated = bool(update_module)
+        registry._init = False
+        registry.ready = True
+        registry.registry_invalidated = bool(update_module)
 
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
         return registry
@@ -257,10 +256,10 @@ class Registry(Mapping):
         lazy_property.reset_all(self)
         self.registry_invalidated = True
 
-        if env.all.tocompute:
+        if env.transaction.tocompute:
             _logger.error(
                 "Remaining fields to compute before setting up registry: %s",
-                env.all.tocompute, stack_info=True,
+                env.transaction.tocompute, stack_info=True,
             )
 
         # add manual models

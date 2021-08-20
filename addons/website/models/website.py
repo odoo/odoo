@@ -396,7 +396,7 @@ class Website(models.Model):
                 modules.button_immediate_install()
                 # Force to refresh env after install of modules
                 self._cr.commit()
-                api.Environment.reset()
+                self._cr.reset()
                 self.env = api.Environment(modules._cr, modules._uid, modules._context)
 
             self.env['website'].browse(website.id).configurator_set_menu_links(menu_company, module_data)
@@ -463,7 +463,7 @@ class Website(models.Model):
 
         # Force to refresh env after install of module
         self._cr.commit()
-        api.Environment.reset()
+        self._cr.reset()
         self.env = api.Environment(theme._cr, theme._uid, theme._context)
 
         website.configurator_done = True

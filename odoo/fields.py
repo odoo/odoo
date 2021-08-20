@@ -1015,7 +1015,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # update towrite
         if self.store:
-            towrite = records.env.all.towrite[self.model_name]
+            towrite = records.env.transaction.towrite[self.model_name]
             record = records[:1]
             write_value = self.convert_to_write(cache_value, record)
             column_value = self.convert_to_column(write_value, record)
@@ -1218,7 +1218,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Process the pending computations of ``self`` on ``records``. This
         should be called only if ``self`` is computed and stored.
         """
-        to_compute_ids = records.env.all.tocompute.get(self)
+        to_compute_ids = records.env.transaction.tocompute.get(self)
         if not to_compute_ids:
             return
 
@@ -1615,7 +1615,7 @@ class _String(Field):
 
         # update towrite if modifying the source
         if update_column:
-            towrite = records.env.all.towrite[self.model_name]
+            towrite = records.env.transaction.towrite[self.model_name]
             for rid in real_recs._ids:
                 # cache_value is already in database format
                 towrite[rid][self.name] = cache_value
@@ -2835,7 +2835,7 @@ class Many2one(_Relational):
 
         # update towrite
         if self.store:
-            towrite = records.env.all.towrite[self.model_name]
+            towrite = records.env.transaction.towrite[self.model_name]
             for record in records.filtered('id'):
                 # cache_value is already in database format
                 towrite[record.id][self.name] = cache_value

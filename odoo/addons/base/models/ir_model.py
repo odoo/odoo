@@ -787,7 +787,7 @@ class IrModelFields(models.Model):
         # DLE P16: if there are pending towrite of the field we currently try to unlink, pop them out from the towrite queue
         # test `test_unlink_with_dependant`
         for record in self:
-            for record_values in self.env.all.towrite[record.model].values():
+            for record_values in self.env.transaction.towrite[record.model].values():
                 record_values.pop(record.name, None)
         # remove fields from registry, and check that views are not broken
         fields = [self.env[record.model]._pop_field(record.name) for record in self]

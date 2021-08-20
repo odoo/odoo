@@ -475,32 +475,6 @@ class Environment(Mapping):
         names to new api models. It also holds a cache for records, and a data
         structure to manage recomputations.
     """
-    _local = Local()
-
-    @classproperty
-    def envs(cls):
-        return getattr(cls._local, 'environments', ())
-
-    @classmethod
-    @contextmanager
-    def manage(cls):
-        """ Context manager for a set of environments. """
-        if hasattr(cls._local, 'environments'):
-            yield
-        else:
-            try:
-                cls._local.environments = Environments()
-                yield
-            finally:
-                release_local(cls._local)
-
-    @classmethod
-    def reset(cls):
-        """ Clear the set of environments.
-            This may be useful when recreating a registry inside a transaction.
-        """
-        cls._local.environments = Environments()
-
     def __new__(cls, cr, uid, context, su=False):
         if uid == SUPERUSER_ID:
             su = True
@@ -508,8 +482,8 @@ class Environment(Mapping):
         args = (cr, uid, context, su)
 
         # if env already exists, return it
-        env, envs = None, cls.envs
-        for env in envs:
+        transaction = cr.transaction
+        for env in transaction:
             if env.args == args:
                 return env
 
@@ -518,17 +492,21 @@ class Environment(Mapping):
         args = (cr, uid, frozendict(context), su)
         self.cr, self.uid, self.context, self.su = self.args = args
         self.registry = Registry(cr.dbname)
-        self.cache = envs.cache
+        #self.cache = transaction.cache
         self._cache_key = {}                    # memo {field: cache_key}
-        self._protected = envs.protected        # proxy to shared data structure
-        self.all = envs
-        envs.add(self)
+        self._protected = transaction.protected        # proxy to shared data structure
+        self.transaction = transaction
+        transaction.add(self)
+        self.cache = self.transaction.cache # proxy to cache, to remove?
         return self
 
+    
+    def reset(self):
+        
+        self.cr.reset()
     #
     # Mapping methods
     #
-
     def __contains__(self, model_name):
         """ Test whether the given model exists. """
         return model_name in self.registry
@@ -690,34 +668,32 @@ class Environment(Mapping):
             This may be useful when recovering from a failed ORM operation.
         """
         lazy_property.reset_all(self)
-        self.cache.invalidate()
-        self.all.tocompute.clear()
-        self.all.towrite.clear()
+        self.transaction.clear()
 
     @contextmanager
-    def clear_upon_failure(self):
+    def clear_upon_failure(self):  # TODO move to transaction 
         """ Context manager that clears the environments (caches and fields to
             recompute) upon exception.
         """
         tocompute = {
             field: set(ids)
-            for field, ids in self.all.tocompute.items()
+            for field, ids in self.transaction.tocompute.items()
         }
         towrite = {
             model: {
                 record_id: dict(values)
                 for record_id, values in id_values.items()
             }
-            for model, id_values in self.all.towrite.items()
+            for model, id_values in self.transaction.towrite.items()
         }
         try:
             yield
         except Exception:
             self.clear()
-            self.all.tocompute.update(tocompute)
+            self.transaction.tocompute.update(tocompute)
             for model, id_values in towrite.items():
                 for record_id, values in id_values.items():
-                    self.all.towrite[model][record_id].update(values)
+                    self.transaction.towrite[model][record_id].update(values)
             raise
 
     def is_protected(self, field, record):
@@ -749,40 +725,40 @@ class Environment(Mapping):
         finally:
             protected.popmap()
 
-    def fields_to_compute(self):
+    def fields_to_compute(self): # TODO move to transaction
         """ Return a view on the field to compute. """
-        return self.all.tocompute.keys()
+        return self.transaction.tocompute.keys()
 
     def records_to_compute(self, field):
         """ Return the records to compute for ``field``. """
-        ids = self.all.tocompute.get(field, ())
+        ids = self.transaction.tocompute.get(field, ())
         return self[field.model_name].browse(ids)
 
     def is_to_compute(self, field, record):
         """ Return whether ``field`` must be computed on ``record``. """
-        return record.id in self.all.tocompute.get(field, ())
+        return record.id in self.transaction.tocompute.get(field, ())
 
     def not_to_compute(self, field, records):
         """ Return the subset of ``records`` for which ``field`` must not be computed. """
-        ids = self.all.tocompute.get(field, ())
+        ids = self.transaction.tocompute.get(field, ())
         return records.browse(id_ for id_ in records._ids if id_ not in ids)
 
     def add_to_compute(self, field, records):
         """ Mark ``field`` to be computed on ``records``. """
         if not records:
             return records
-        self.all.tocompute[field].update(records._ids)
+        self.transaction.tocompute[field].update(records._ids)
 
     def remove_to_compute(self, field, records):
         """ Mark ``field`` as computed on ``records``. """
         if not records:
             return
-        ids = self.all.tocompute.get(field, None)
+        ids = self.transaction.tocompute.get(field, None)
         if ids is None:
             return
         ids.difference_update(records._ids)
         if not ids:
-            del self.all.tocompute[field]
+            del self.transaction.tocompute[field]
 
     @contextmanager
     def norecompute(self):
@@ -822,7 +798,7 @@ class Environment(Mapping):
             return result
 
 
-class Environments(object):
+class Transaction(object):
     """ A common object for all environments in a request. """
     def __init__(self):
         self.envs = WeakSet()                   # weak set of environments
@@ -839,6 +815,11 @@ class Environments(object):
     def __iter__(self):
         """ Iterate over environments. """
         return iter(self.envs)
+
+    def clear(self):
+        self.cache.invalidate()
+        self.tocompute.clear()
+        self.towrite.clear()
 
 
 # sentinel value for optional parameters

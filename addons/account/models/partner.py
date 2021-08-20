@@ -518,7 +518,7 @@ class ResPartner(models.Model):
                     """).format(field=sql.Identifier(field))
                     self.env.cr.execute(query, {'partner_ids': tuple(self.ids), 'n': n})
                     for partner in self:
-                        self.env.cache.remove(partner, partner._fields[field])
+                        self.env.transaction.cache.remove(partner, partner._fields[field])
             except DatabaseError as e:
                 if e.pgcode == '55P03':
                     _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')

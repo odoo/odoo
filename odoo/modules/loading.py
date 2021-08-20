@@ -537,7 +537,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 # modules to remove next time
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
-                api.Environment.reset()
+                cr.reset()
                 registry = odoo.modules.registry.Registry.new(
                     cr.dbname, force_demo, status, update_module
                 )
