@@ -775,7 +775,7 @@ export class MockServer {
                 if (aggregateFunction === "day") {
                     return date.toFormat("yyyy-MM-dd");
                 } else if (aggregateFunction === "week") {
-                    return `W${date.toFormat("WW yyyy")}`;
+                    return `W${date.toFormat("WW kkkk")}`;
                 } else if (aggregateFunction === "quarter") {
                     return `Q${date.toFormat("q yyyy")}`;
                 } else if (aggregateFunction === "year") {
@@ -837,6 +837,9 @@ export class MockServer {
                     } else if (aggregateFunction === "year") {
                         startDate = parseDate(val, { format: "y" });
                         endDate = startDate.plus({ years: 1 });
+                    } else if (aggregateFunction === "quarter") {
+                        startDate = parseDate(val, { format: "q yyyy" });
+                        endDate = startDate.plus({ quarters: 1 });
                     } else {
                         startDate = parseDate(val, { format: "MMMM yyyy" });
                         endDate = startDate.plus({ months: 1 });
