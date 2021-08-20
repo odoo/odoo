@@ -28,11 +28,28 @@ class ProjectShareWizard(models.TransientModel):
 
     partner_ids = fields.Many2many(compute="_compute_partner_ids", readonly=False, store=True, required=False)
     line_ids = fields.One2many('project.share.wizard.line', 'project_share_id')
+    has_access_changed = fields.Boolean(compute='_compute_has_access_changed')
 
     @api.depends('line_ids.user_id')
     def _compute_partner_ids(self):
         for project_share_wizard in self:
             project_share_wizard.partner_ids |= project_share_wizard.line_ids.user_id.partner_id
+
+    @api.depends('line_ids.user_id', 'line_ids.access_mode')
+    def _compute_has_access_changed(self):
+        project_sharing_access_read = self.env['project.sharing.access'].search_read([('project_id', '=', self.res_id)], ['user_id', 'access_mode'])
+        project_sharing_access_dict = {res['user_id'][0]: res['access_mode'] for res in project_sharing_access_read}
+        for project_share in self:
+            if len(project_share.line_ids) != len(project_sharing_access_dict):
+                project_share.has_access_changed = True
+                continue
+            has_access_changed = False
+            for line in project_share.line_ids:
+                access_mode = project_sharing_access_dict.get(line.user_id.id)
+                if not access_mode or access_mode != line.access_mode:
+                    has_access_changed = True
+                    break
+            project_share.has_access_changed = has_access_changed
 
     def action_send_mail_and_confirm_access(self):
         if not self.partner_ids:
