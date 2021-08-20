@@ -14,6 +14,7 @@ class MrpProduction(models.Model):
         'stock.move.line', string="Detail Component", readonly=False,
         inverse='_inverse_move_line_raw_ids', compute='_compute_move_line_raw_ids'
     )
+    subcontracting_has_been_recorded = fields.Boolean("Has been recorded?", copy=False)
 
     @api.depends('move_raw_ids.move_line_ids')
     def _compute_move_line_raw_ids(self):
@@ -36,13 +37,20 @@ class MrpProduction(models.Model):
 
     def subcontracting_record_component(self):
         self.ensure_one()
-        assert self.env.context.get('subcontract_move_id')
+        if not self._get_subcontract_move():
+            raise UserError(_("This MO isn't related to a subcontracted move"))
         if float_is_zero(self.qty_producing, precision_rounding=self.product_uom_id.rounding):
             return {'type': 'ir.actions.act_window_close'}
         for sml in self.move_raw_ids.move_line_ids:
             if sml.tracking != 'none' and not sml.lot_id:
                 raise UserError(_('You must enter a serial number for each line of %s') % sml.product_id.name)
+        consumption_issues = self._get_consumption_issues()
+        if consumption_issues:
+            return self._action_generate_consumption_wizard(consumption_issues)
+
         self._update_finished_move()
+        self.subcontracting_has_been_recorded = True
+
         quantity_issues = self._get_quantity_produced_issues()
         if quantity_issues:
             backorder = self._generate_backorder_productions(close_mo=False)
@@ -54,23 +62,21 @@ class MrpProduction(models.Model):
             backorder._set_qty_producing()
 
             self.product_qty = self.qty_producing
-            subcontract_move_id = self.env['stock.move'].browse(self.env.context.get('subcontract_move_id'))
-            action = subcontract_move_id._action_record_components()
-            action.update({'res_id': backorder.id})
+            action = self._get_subcontract_move()._action_record_components()
+            action['res_id'] = backorder.id
             return action
         return {'type': 'ir.actions.act_window_close'}
 
     def _pre_button_mark_done(self):
-        if self.env.context.get('subcontract_move_id'):
+        if self._get_subcontract_move():
             return True
         return super()._pre_button_mark_done()
 
     def _update_finished_move(self):
         """ After producing, set the move line on the subcontract picking. """
         self.ensure_one()
-        subcontract_move_id = self.env.context.get('subcontract_move_id')
+        subcontract_move_id = self._get_subcontract_move()
         if subcontract_move_id:
-            subcontract_move_id = self.env['stock.move'].browse(subcontract_move_id)
             quantity = self.qty_producing
             if self.lot_producing_id:
                 move_lines = subcontract_move_id.move_line_ids.filtered(lambda ml: ml.lot_id == self.lot_producing_id or not ml.lot_id)
@@ -138,3 +144,15 @@ class MrpProduction(models.Model):
             return True
 
         return self.filtered(filter_in)
+
+    def _has_been_recorded(self):
+        self.ensure_one()
+        if self.state in ('cancel', 'done'):
+            return True
+        return self.subcontracting_has_been_recorded
+
+    def _has_tracked_component(self):
+        return any(m.has_tracking != 'none' for m in self.move_raw_ids)
+
+    def _get_subcontract_move(self):
+        return self.move_finished_ids.move_dest_ids.filtered(lambda m: m.is_subcontract)
