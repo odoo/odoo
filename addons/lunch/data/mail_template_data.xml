@@ -44,12 +44,22 @@
         Here is, today orders for ${order['company_name']}:
         </p>
 
+        % if sites:
+            <br/>
+            <p>Location</p>
+            % for site in sites
+                <p>${site['name']} : ${site['address']}</p>
+            % endfor
+            <br/>
+        % endif
+
         <table>
             <thead>
                 <tr style="background-color:rgb(233,232,233);">
                     <th style="width: 100%; min-width: 96px; font-size: 13px;"><strong>Product</strong></th>
                     <th style="width: 100%; min-width: 96px; font-size: 13px;"><strong>Comments</strong></th>
                     <th style="width: 100%; min-width: 96px; font-size: 13px;"><strong>Person</strong></th>
+                    <th style="width: 100%; min-width: 96px; font-size: 13px;"><strong>Site</strong></th>
                     <th style="width: 100%; min-width: 96px; font-size: 13px;" align="center"><strong>Qty</strong></th>
                     <th style="width: 100%; min-width: 96px; font-size: 13px;" align="center"><strong>Price</strong></th>
                 </tr>
@@ -67,11 +77,13 @@
                     % endif
                     </td>
                     <td style="width: 100%; font-size: 13px;" valign="top">${line['username']}</td>
+                    <td style="width: 100%; font-size: 13px;" valign="top">${line['site']}</td>
                     <td style="width: 100%; font-size: 13px;" valign="top" align="right">${line['quantity']}</td>
                     <td style="width: 100%; font-size: 13px;" valign="top" align="right">${format_amount(line['price'], currency)}</td>
                 </tr>
                 % endfor
                 <tr>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>

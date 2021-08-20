@@ -236,6 +236,9 @@ class LunchSupplier(models.Model):
             'amount_total': sum(order.price for order in orders),
         }
 
+        sites = orders.mapped('user_id.last_lunch_location_id').sorted(lambda x: x.name)
+        orders_per_site = orders.sorted(lambda x: x.user_id.last_lunch_location_id.id)
+
         email_orders = [{
             'product': order.product_id.name,
             'note': order.note,
@@ -243,10 +246,16 @@ class LunchSupplier(models.Model):
             'price': order.price,
             'toppings': order.display_toppings,
             'username': order.user_id.name,
-        } for order in orders]
+            'site': order.user_id.last_lunch_location_id.name,
+        } for order in orders_per_site]
+
+        email_sites = [{
+            'name': site.name,
+            'address': site.address,
+        } for site in sites]
 
         self.env.ref('lunch.lunch_order_mail_supplier').with_context(
-            order=order, lines=email_orders
+            order=order, lines=email_orders, sites=email_sites
         ).send_mail(self.id)
 
         orders.action_confirm()
