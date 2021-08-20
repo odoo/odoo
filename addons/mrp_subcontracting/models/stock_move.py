@@ -18,12 +18,16 @@ class StockMove(models.Model):
 
     def _compute_show_subcontracting_details_visible(self):
         """ Compute if the action button in order to see moves raw is visible """
+        self.show_subcontracting_details_visible = False
         for move in self:
-            if move.is_subcontract and move._has_tracked_subcontract_components() and\
-                    not float_is_zero(move.quantity_done, precision_rounding=move.product_uom.rounding):
-                move.show_subcontracting_details_visible = True
-            else:
-                move.show_subcontracting_details_visible = False
+            if not move.is_subcontract:
+                continue
+            if float_is_zero(move.quantity_done, precision_rounding=move.product_uom.rounding):
+                continue
+            productions = move._get_subcontract_production()
+            if not productions or (productions[:1].consumption == 'strict' and not productions[:1]._has_tracked_component()):
+                continue
+            move.show_subcontracting_details_visible = True
 
     def _compute_show_details_visible(self):
         """ If the move is subcontract and the components are tracked. Then the
@@ -33,7 +37,7 @@ class StockMove(models.Model):
         for move in self:
             if not move.is_subcontract:
                 continue
-            if not move._has_tracked_subcontract_components():
+            if not move._get_subcontract_production()._has_tracked_component():
                 continue
             move.show_details_visible = True
         return res
@@ -69,10 +73,10 @@ class StockMove(models.Model):
         subcontracted product. Otherwise use standard behavior.
         """
         self.ensure_one()
-        if self._has_components_to_record():
+        if self._subcontrating_can_be_record():
             return self._action_record_components()
         action = super(StockMove, self).action_show_details()
-        if self.is_subcontract and self._has_tracked_subcontract_components():
+        if self.is_subcontract and self._get_subcontract_production():
             action['views'] = [(self.env.ref('stock.view_stock_move_operations').id, 'form')]
             action['context'].update({
                 'show_lots_m2o': self.has_tracking != 'none',
@@ -82,10 +86,10 @@ class StockMove(models.Model):
 
     def action_show_subcontract_details(self):
         """ Display moves raw for subcontracted product self. """
-        moves = self.move_orig_ids.production_id.move_raw_ids
+        moves = self._get_subcontract_production().move_raw_ids
         tree_view = self.env.ref('mrp_subcontracting.mrp_subcontracting_move_tree_view')
         form_view = self.env.ref('mrp_subcontracting.mrp_subcontracting_move_form_view')
-        ctx = dict(self._context, search_default_by_product=True, subcontract_move_id=self.id)
+        ctx = dict(self._context, search_default_by_product=True)
         return {
             'name': _('Raw Materials for %s') % (self.product_id.display_name),
             'type': 'ir.actions.act_window',
@@ -141,7 +145,7 @@ class StockMove(models.Model):
 
     def _action_record_components(self):
         self.ensure_one()
-        production = self.move_orig_ids.production_id[-1:]
+        production = self._get_subcontract_production()[-1:]
         view = self.env.ref('mrp_subcontracting.mrp_production_subcontracting_form_view')
         return {
             'name': _('Subcontract'),
@@ -152,7 +156,7 @@ class StockMove(models.Model):
             'view_id': view.id,
             'target': 'new',
             'res_id': production.id,
-            'context': dict(self.env.context, subcontract_move_id=self.id),
+            'context': self.env.context,
         }
 
     def _get_subcontract_bom(self):
@@ -166,20 +170,17 @@ class StockMove(models.Model):
         )
         return bom
 
-    def _has_components_to_record(self):
-        """ Returns true if the move has still some tracked components to record. """
-        self.ensure_one()
-        if not self.is_subcontract:
-            return False
-        rounding = self.product_uom.rounding
-        production = self.move_orig_ids.production_id[-1:]
-        return self._has_tracked_subcontract_components() and\
-            float_compare(production.qty_produced, production.product_uom_qty, precision_rounding=rounding) < 0 and\
-            float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) < 0
+    def _subcontrating_should_be_record(self):
+        return self._get_subcontract_production().filtered(lambda p: not p._has_been_recorded() and p._has_tracked_component())
+
+    def _subcontrating_can_be_record(self):
+        return self._get_subcontract_production().filtered(lambda p: not p._has_been_recorded() and p.consumption != 'strict')
+
+    def _get_subcontract_production(self):
+        return self.filtered(lambda m: m.is_subcontract).move_orig_ids.production_id
 
     def _has_tracked_subcontract_components(self):
-        self.ensure_one()
-        return any(m.has_tracking != 'none' for m in self.move_orig_ids.production_id.move_raw_ids)
+        return any(m.has_tracking != 'none' for m in self._get_subcontract_production().move_raw_ids)
 
     def _prepare_extra_move_vals(self, qty):
         vals = super(StockMove, self)._prepare_extra_move_vals(qty)
@@ -192,7 +193,7 @@ class StockMove(models.Model):
         return vals
 
     def _should_bypass_set_qty_producing(self):
-        if self.env.context.get('subcontract_move_id'):
+        if (self.production_id | self.raw_material_production_id)._get_subcontract_move():
             return False
         return super()._should_bypass_set_qty_producing()
 
