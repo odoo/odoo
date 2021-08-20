@@ -17,21 +17,15 @@ export function useUpdate({ func }) {
         onChange: () => component.render(),
     });
     function onUpdate() {
-        if (modelManager) {
-            modelManager.startListening(listener);
-        }
+        modelManager.startListening(listener);
         func();
-        if (modelManager) {
-            modelManager.stopListening(listener);
-        }
+        modelManager.stopListening(listener);
     }
     onMounted(onUpdate);
     onPatched(onUpdate);
     const __destroy = component.__destroy;
     component.__destroy = parent => {
-        if (modelManager) {
-            modelManager.removeListener(listener);
-        }
+        modelManager.removeListener(listener);
         __destroy.call(component, parent);
     };
 }

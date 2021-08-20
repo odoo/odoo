@@ -11,6 +11,8 @@ import {
     parseAndTransform,
 } from '@mail/js/utils';
 
+import { url } from "@web/core/utils/urls";
+
 function factory(dependencies) {
 
     class Composer extends dependencies['mail.model'] {
@@ -195,7 +197,7 @@ function factory(dependencies) {
                     this.thread.loadNewMessages();
                 },
             };
-            await this.env.bus.trigger('do-action', { action, options });
+            await owl.Component.env.bus.trigger('do-action', { action, options });
         }
 
         /**
@@ -257,7 +259,7 @@ function factory(dependencies) {
                     if (!this.messaging) {
                         return;
                     }
-                    const [messageData] = await this.messaging.rpcOrm('mail.message', 'message_format', messageId);
+                    const [messageData] = await this.env.services.orm.call('mail.message', 'message_format', [[messageId]]);
                     if (!thread.exists()) {
                         return;
                     }
@@ -637,7 +639,7 @@ function factory(dependencies) {
                 });
                 body = body.replace(text, placeholder);
             }
-            const baseHREF = this.env.session.url('/web');
+            const baseHREF = url('/web');
             for (const mention of mentions) {
                 const href = `href='${baseHREF}#model=${mention.model}&id=${mention.id}'`;
                 const attClass = `class='${mention.class}'`;

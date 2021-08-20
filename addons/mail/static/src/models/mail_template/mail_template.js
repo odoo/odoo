@@ -29,7 +29,7 @@ function factory(dependencies) {
                     force_email: true,
                 },
             };
-            this.env.bus.trigger('do-action', {
+            owl.Component.env.bus.trigger('do-action', {
                 action,
                 options: {
                     on_close: () => {
@@ -44,9 +44,9 @@ function factory(dependencies) {
          */
         async send(activity) {
             const thread = activity.thread;
-            await this.messaging.rpcOrm(activity.thread.model, 'activity_send_mail', activity.thread.id, {
+            await this.env.services.orm.call(activity.thread.model, 'activity_send_mail', [[activity.thread.id]], {
                 template_id: this.id,
-            }, { silent: false });
+            });
             if (thread.exists()) {
                 thread.refresh();
             }

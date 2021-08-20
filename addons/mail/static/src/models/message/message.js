@@ -125,7 +125,7 @@ function factory(dependencies) {
          * @param {Array[]} domain
          */
         static async markAllAsRead(domain) {
-            await this.messaging.rpcOrmStatic('mail.message', 'mark_all_as_read', { domain }, { silent: false });
+            await this.env.services.orm.call('mail.message', 'mark_all_as_read', [], { domain });
         }
 
         /**
@@ -141,7 +141,7 @@ function factory(dependencies) {
          * @param {mail.message[]} messages
          */
         static async markAsRead(messages) {
-            await this.messaging.rpcOrm('mail.message', 'set_message_done', messages.map(message => message.id), {}, { silent: false });
+            await this.env.services.orm.call('mail.message', 'set_message_done', [messages.map(message => message.id)]);
         }
 
         /**
@@ -150,11 +150,10 @@ function factory(dependencies) {
          * @static
          * @param {Array[]} domain
          * @param {integer} [limit]
-         * @param {Object} [context]
          * @returns {mail.message[]}
          */
-        static async performRpcMessageFetch(domain, limit, context) {
-            const messagesData = await this.messaging.rpcOrmStatic('mail.message', 'message_fetch', { context, domain, limit });
+        static async performRpcMessageFetch(domain, limit) {
+            const messagesData = await this.env.services.orm.silent.call('mail.message', 'message_fetch', [], { domain, limit });
             if (!this.messaging) {
                 return;
             }
@@ -182,7 +181,7 @@ function factory(dependencies) {
          * Unstar all starred messages of current user.
          */
         static async unstarAll() {
-            await this.messaging.rpcOrm('mail.message', 'unstar_all', {}, { silent: false });
+            await this.env.services.orm.call('mail.message', 'unstar_all');
         }
 
         /**
@@ -190,14 +189,14 @@ function factory(dependencies) {
          * partner Inbox.
          */
         async markAsRead() {
-            await this.messaging.rpcOrm('mail.message', 'set_message_done', this.id, {}, { silent: false });
+            await this.env.services.orm.call('mail.message', 'set_message_done', [this.id]);
         }
 
         /**
          * Opens the view that allows to resend the message in case of failure.
          */
         openResendAction() {
-            this.env.bus.trigger('do-action', {
+            owl.Component.env.bus.trigger('do-action', {
                 action: 'mail.mail_resend_message_action',
                 options: {
                     additional_context: {
@@ -226,7 +225,7 @@ function factory(dependencies) {
          * Toggle the starred status of the provided message.
          */
         async toggleStar() {
-            await this.messaging.rpcOrm('mail.message', 'toggle_message_starred', this.id, {}, { silent: false });
+            await this.env.services.orm.call('mail.message', 'toggle_message_starred', [this.id]);
         }
 
         //----------------------------------------------------------------------

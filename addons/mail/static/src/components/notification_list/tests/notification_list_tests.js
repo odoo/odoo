@@ -26,7 +26,7 @@ QUnit.module('notification_list_tests.js', {
             });
         };
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
@@ -122,7 +122,7 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
             record_name: 'Channel 2019',
             res_id: 100,
         };
-        this.widget.call('bus_service', 'trigger', 'notification', [
+        owl.Component.env.services.bus_service.trigger('notification', [
             [['my-db', 'mail.channel', 100], messageData]
         ]);
     });

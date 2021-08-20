@@ -8,6 +8,7 @@ const notReadyError = new Error(
 );
 
 export const localization = {
+    code: notReadyError,
     dateFormat: notReadyError,
     dateTimeFormat: notReadyError,
     timeFormat: notReadyError,

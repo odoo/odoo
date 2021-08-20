@@ -23,7 +23,7 @@ QUnit.module('chatter_suggested_recipients_tests.js', {
             });
         };
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
@@ -390,7 +390,6 @@ QUnit.test("suggested recipients should not be notified when posting an internal
                     "message_post should not contain suggested recipients when posting an internal note"
                 );
             }
-            return this._super(...arguments);
         },
     });
     const chatter = this.messaging.models['mail.chatter'].create({

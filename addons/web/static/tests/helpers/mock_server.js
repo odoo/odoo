@@ -33,6 +33,7 @@ export class MockServer {
         this.menus = data.menus || null;
         this.archs = data.views || {};
         this.debug = options.debug || false;
+        this.data = data;
         Object.entries(this.models).forEach(([modelName, model]) => {
             if (!("id" in model.fields)) {
                 model.fields.id = { string: "ID", type: "integer" };
@@ -377,7 +378,7 @@ export class MockServer {
         return values;
     }
 
-    _performRPC(route, args) {
+    async _performRPC(route, args) {
         // Check if there is an handler in the mockRegistry: either specific for this model
         // (with key 'model/method'), or global (with key 'method')
         // This allows to mock routes/methods defined outside web.
@@ -436,6 +437,8 @@ export class MockServer {
                 return Promise.resolve(
                     this.mockSearchPanelSelectMultiRange(args.model, args.args, args.kwargs)
                 );
+            case "unlink":
+                return this.mockUnlink(args.model, args.args);
             case "web_search_read":
                 return Promise.resolve(this.mockWebSearchRead(args.model, args.args, args.kwargs));
             case "read_group":
@@ -941,6 +944,15 @@ export class MockServer {
             context: kwargs.context,
         });
         return result.records;
+    }
+
+    mockUnlink(modelName, args, kwargs) {
+        const model = this.models[modelName];
+        const ids = args[0];
+        for (const id of ids) {
+            const index = model.records.find((r) => r.id === id);
+            model.records.splice(index, 1);
+        }
     }
 
     mockWebSearchRead(modelName, args, kwargs) {

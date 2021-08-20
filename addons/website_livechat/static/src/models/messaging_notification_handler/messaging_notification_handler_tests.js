@@ -22,7 +22,7 @@ QUnit.module('messaging_notification_handler_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, {
                 data: this.data,
             }, params));
@@ -44,7 +44,6 @@ QUnit.test('should open chat window on send chat request to website visitor', as
     });
     await this.start({
         data: this.data,
-        hasChatWindow: true,
         hasView: true,
         // View params
         View: FormView,
@@ -60,7 +59,7 @@ QUnit.test('should open chat window on send chat request to website visitor', as
         res_id: 11,
     });
     intercept(this.widget, 'execute_action', payload => {
-        this.messaging.rpcRoute('/web/dataset/call_button', {
+        this.env.services.rpc('/web/dataset/call_button', {
             args: [payload.data.env.resIDs],
             kwargs: { context: payload.data.env.context },
             method: payload.data.action_data.name,

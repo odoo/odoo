@@ -23,7 +23,7 @@ QUnit.module('attachment_tests.js', {
             });
         };
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
@@ -107,7 +107,6 @@ QUnit.test('simplest layout + deletable', async function (assert) {
                     "should fetch image with 200x200 pixels ratio");
                 assert.step('fetch_image');
             }
-            return this._super(...arguments);
         },
     });
     const attachment = this.messaging.models['mail.attachment'].create({
@@ -519,9 +518,7 @@ QUnit.test('auto layout with image', async function (assert) {
 QUnit.test('view attachment', async function (assert) {
     assert.expect(3);
 
-    await this.start({
-        hasDialog: true,
-    });
+    await this.start();
     const attachment = this.messaging.models['mail.attachment'].create({
         filename: "test.png",
         id: 750,
@@ -555,7 +552,7 @@ QUnit.test('view attachment', async function (assert) {
 QUnit.test('close attachment viewer', async function (assert) {
     assert.expect(3);
 
-    await this.start({ hasDialog: true });
+    await this.start();
     const attachment = this.messaging.models['mail.attachment'].create({
         filename: "test.png",
         id: 750,
@@ -597,9 +594,8 @@ QUnit.test('clicking on the delete attachment button multiple times should do th
         async mockRPC(route, args) {
             if (args.method === "unlink" && args.model === "ir.attachment") {
                 assert.step('attachment_unlink');
-                return;
+                return 'This should be added to mock server.';
             }
-            return this._super(...arguments);
         },
     });
     const attachment = this.messaging.models['mail.attachment'].create({
@@ -638,7 +634,7 @@ QUnit.test('[technical] does not crash when the viewer is closed before image lo
      */
     assert.expect(1);
 
-    await this.start({ hasDialog: true });
+    await this.start();
     const attachment = this.messaging.models['mail.attachment'].create({
         filename: "test.png",
         id: 750,

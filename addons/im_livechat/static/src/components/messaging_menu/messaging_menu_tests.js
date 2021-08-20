@@ -14,10 +14,9 @@ QUnit.module('messaging_menu_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             let { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
-                hasMessagingMenu: true,
             }));
             this.env = env;
             this.widget = widget;

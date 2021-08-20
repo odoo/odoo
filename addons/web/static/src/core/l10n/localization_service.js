@@ -44,6 +44,7 @@ export const localizationService = {
         const grouping = JSON.parse(userLocalization.grouping);
 
         Object.assign(localization, {
+            code: userLocalization.code,
             dateFormat,
             timeFormat,
             dateTimeFormat,

@@ -17,8 +17,8 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
-            if (this.env.services['bus_service']) {
-                this.env.services['bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);
+            if (owl.Component.env.services['bus_service']) {
+                owl.Component.env.services['bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);
             }
             return super._willDelete(...arguments);
         }
@@ -28,7 +28,7 @@ function factory(dependencies) {
          */
         async start() {
             this._handleGlobalWindowFocus = this._handleGlobalWindowFocus.bind(this);
-            this.env.services['bus_service'].on('window_focus', null, this._handleGlobalWindowFocus);
+            owl.Component.env.services['bus_service'].on('window_focus', null, this._handleGlobalWindowFocus);
             await this.async(() => this.initializer.start());
             this.notificationHandler.start();
             this.update({ isInitialized: true });
@@ -97,7 +97,7 @@ function factory(dependencies) {
          * @param {string} param0.model
          */
         async openDocument({ id, model }) {
-            this.env.bus.trigger('do-action', {
+            owl.Component.env.bus.trigger('do-action', {
                 action: {
                     type: 'ir.actions.act_window',
                     res_model: model,
@@ -137,10 +137,10 @@ function factory(dependencies) {
                     ))[0];
                 }
                 if (!channel) {
-                    this.env.services['notification'].notify({
-                        message: this.env._t("You can only open the profile of existing channels."),
-                        type: 'warning',
-                    });
+                    this.env.services.notification.add(
+                        this.env._t("You can only open the profile of existing channels."),
+                        { type: 'warning' },
+                    );
                     return;
                 }
                 return channel.openProfile();
@@ -156,48 +156,6 @@ function factory(dependencies) {
          */
         refreshIsNotificationPermissionDefault() {
             this.update({ isNotificationPermissionDefault: this._computeIsNotificationPermissionDefault() });
-        }
-
-        /**
-         * Performs RPC on a python record following the given parameters.
-         *
-         * @param {string} model python model name
-         * @param {string} method python method name on given model
-         * @param {integer|integer[]} ids target record(s)
-         * @param {Object} [kwargs={}]
-         * @param {Object} [options={}] options of the RPC
-         * @param {boolean} [options.silent=true] if false displays a visible
-         *  and potentially blocking "loading" spinner while the RPC is pending.
-         */
-        async rpcOrm(model, method, ids, kwargs = {}, { silent = true } = {}) {
-            return this.env.services.rpc({ args: [ids], kwargs, method, model }, { shadow: silent });
-        }
-
-        /**
-         * Performs RPC on a python model following the given parameters.
-         *
-         * @param {string} model python model name
-         * @param {string} method python method name on given model
-         * @param {Object} [kwargs={}]
-         * @param {Object} [options={}] options of the RPC
-         * @param {boolean} [options.silent=false] if true displays a visible
-         *  and potentially blocking "loading" spinner while the RPC is pending.
-         */
-        async rpcOrmStatic(model, method, kwargs = {}, { silent = true } = {}) {
-            return this.env.services.rpc({ kwargs, method, model }, { shadow: silent });
-        }
-
-        /**
-         * Performs RPC on a python route following the given parameters.
-         *
-         * @param {string} route python route name
-         * @param {Object} [params={}] parameters that are sent to the server
-         * @param {Object} [options={}] options of the RPC
-         * @param {boolean} [options.shadow=false] if true displays a visible
-         *  and potentially blocking "loading" spinner while the RPC is pending.
-         */
-        async rpcRoute(route, params = {}, { silent = true } = {}) {
-            return this.env.services.rpc({ params, route }, { shadow: silent });
         }
 
         //----------------------------------------------------------------------

@@ -254,13 +254,11 @@ function factory(dependencies) {
             if (extraDomain) {
                 domain = extraDomain.concat(domain);
             }
-            const context = this.env.session.user_context;
             let messages;
             try {
                 messages = await this.messaging.models['mail.message'].performRpcMessageFetch(
                     domain,
                     limit,
-                    context,
                 );
             } catch (e) {
                 if (this.exists()) {
@@ -345,7 +343,12 @@ function factory(dependencies) {
             if (!this.hasToLoadMessages) {
                 return;
             }
-            const fetchedMessages = await this._loadMessages();
+            let fetchedMessages;
+            try {
+                fetchedMessages = await this._loadMessages();
+            } catch (e) {
+                return;
+            }
             for (const threadView of this.threadViews) {
                 threadView.addComponentHint('messages-loaded', { fetchedMessages });
             }

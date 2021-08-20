@@ -27,6 +27,7 @@ FormRenderer.include({
         this._chatterContainerTarget = undefined;
         // Do not load chatter in form view dialogs
         this._isFromFormViewDialog = params.isFromFormViewDialog;
+        ChatterContainerWrapperComponent.env = owl.Component.env.wowlEnv;
     },
     /**
      * @override

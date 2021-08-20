@@ -16,7 +16,7 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeLanguage() {
-            return this.env._t.database.parameters.code;
+            return owl.Component.env._t.database.parameters.code;
         }
 
         /**
@@ -24,7 +24,7 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeTextDirection() {
-            return this.env._t.database.parameters.direction;
+            return owl.Component.env._t.database.parameters.direction;
         }
 
     }

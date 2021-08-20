@@ -30,7 +30,7 @@ QUnit.module('attachment_box_tests.js', {
             });
         };
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
@@ -96,7 +96,6 @@ QUnit.test('base non-empty rendering', async function (assert) {
             if (route.includes('ir.attachment/search_read')) {
                 assert.step('ir.attachment/search_read');
             }
-            return this._super(...arguments);
         },
     });
     const thread = this.messaging.models['mail.thread'].create({
@@ -208,9 +207,7 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
 QUnit.test('view attachments', async function (assert) {
     assert.expect(7);
 
-    await this.start({
-        hasDialog: true,
-    });
+    await this.start();
     const thread = this.messaging.models['mail.thread'].create({
         attachments: [
             insert({

@@ -55,7 +55,7 @@ function factory(dependencies) {
          * @param {integer[]} param0.ids
          */
         static async performRpcRead({ context, fields, ids }) {
-            const employeesData = await this.messaging.rpcOrm('hr.employee.public', 'read', ids, { context, fields });
+            const employeesData = await this.env.services.orm.read('hr.employee.public', ids, fields, context);
             if (!this.messaging) {
                 return;
             }
@@ -74,7 +74,7 @@ function factory(dependencies) {
          * @param {string[]} param0.fields
          */
         static async performRpcSearchRead({ context, domain, fields }) {
-            const employeesData = await this.messaging.rpcOrmStatic('hr.employee.public', 'search_read', { context, domain, fields });
+            const employeesData = await this.env.services.orm.searchRead('hr.employee.public', domain, fields, {}, context);
             if (!this.messaging) {
                 return;
             }
@@ -108,10 +108,10 @@ function factory(dependencies) {
             }
             // prevent chatting with non-users
             if (!this.user) {
-                this.env.services['notification'].notify({
-                    message: this.env._t("You can only chat with employees that have a dedicated user."),
-                    type: 'info',
-                });
+                this.env.services.notification.add(
+                    this.env._t("You can only chat with employees that have a dedicated user."),
+                    { type: 'info' },
+                );
                 return;
             }
             return this.user.getChat();

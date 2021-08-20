@@ -26,12 +26,13 @@ QUnit.module('chatter_topbar_tests.js', {
             });
         };
 
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+        this.start = async (params = {}) => {
+            const { advanceTime, env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
             this.widget = widget;
+            return { advanceTime };
         };
     },
     afterEach() {
@@ -142,14 +143,13 @@ QUnit.test('attachment loading is delayed', async function (assert) {
     assert.expect(4);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start({
+    const { advanceTime } = await this.start({
         hasTimeControl: true,
         loadingBaseDelayDuration: 100,
         async mockRPC(route) {
             if (route.includes('ir.attachment/search_read')) {
                 await makeTestPromise(); // simulate long loading
             }
-            return this._super(...arguments);
         }
     });
     const chatter = this.messaging.models['mail.chatter'].create({
@@ -174,7 +174,7 @@ QUnit.test('attachment loading is delayed', async function (assert) {
         "attachments button should not have a loader yet"
     );
 
-    await afterNextRender(async () => this.env.testUtils.advanceTime(100));
+    await afterNextRender(async () => advanceTime(100));
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar_buttonAttachmentsCountLoader`).length,
         1,
@@ -191,7 +191,6 @@ QUnit.test('attachment counter while loading attachments', async function (asser
             if (route.includes('ir.attachment/search_read')) {
                 await makeTestPromise(); // simulate long loading
             }
-            return this._super(...arguments);
         }
     });
     const chatter = this.messaging.models['mail.chatter'].create({
@@ -229,11 +228,9 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
     const attachmentPromise = makeTestPromise();
     await this.start({
         async mockRPC(route) {
-            const _super = this._super.bind(this, ...arguments); // limitation of class.js
             if (route.includes('ir.attachment/search_read')) {
                 await attachmentPromise;
             }
-            return _super();
         },
     });
     const chatter = this.messaging.models['mail.chatter'].create({

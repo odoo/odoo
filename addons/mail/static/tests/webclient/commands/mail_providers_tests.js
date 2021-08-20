@@ -41,10 +41,8 @@ QUnit.module('mail', {}, function () {
         );
 
         const { widget: webClient } = await start({
-                data: this.data,
-                hasChatWindow: true,
-                hasWebClient: true,
-            });
+            data: this.data,
+        });
         triggerHotkey("control+k");
         await nextTick();
 
@@ -83,10 +81,8 @@ QUnit.module('mail', {}, function () {
             members: [this.data.currentPartnerId],
         });
         const { widget: webClient } = await start({
-                data: this.data,
-                hasChatWindow: true,
-                hasWebClient: true,
-            });
+            data: this.data,
+        });
         triggerHotkey("control+k");
         await nextTick();
 

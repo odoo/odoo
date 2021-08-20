@@ -22,7 +22,7 @@ QUnit.module('thread_preview_tests.js', {
             });
         };
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
@@ -48,12 +48,10 @@ QUnit.test('mark as read', async function (assert) {
     });
 
     await this.start({
-        hasChatWindow: true,
         async mockRPC(route, args) {
             if (route.includes('channel_seen')) {
                 assert.step('channel_seen');
             }
-            return this._super(...arguments);
         },
     });
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({

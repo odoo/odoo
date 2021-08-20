@@ -24,7 +24,7 @@ QUnit.module('thread_needaction_preview_tests.js', {
             });
         };
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { afterEvent, env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
@@ -55,8 +55,6 @@ QUnit.test('mark as read', async function (assert) {
         res_partner_id: this.data.currentPartnerId,
     });
     await this.start({
-        hasChatWindow: true,
-        hasMessagingMenu: true,
         async mockRPC(route, args) {
             if (route.includes('mark_all_as_read')) {
                 assert.step('mark_all_as_read');
@@ -69,7 +67,6 @@ QUnit.test('mark as read', async function (assert) {
                     "should mark all as read the correct thread"
                 );
             }
-            return this._super(...arguments);
         },
     });
     await afterNextRender(() => this.afterEvent({
@@ -117,8 +114,6 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
         res_partner_id: this.data.currentPartnerId,
     });
     await this.start({
-        hasChatWindow: true,
-        hasMessagingMenu: true,
         async mockRPC(route, args) {
             if (route.includes('mark_all_as_read')) {
                 assert.step('mark_all_as_read');
@@ -131,7 +126,6 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
                     "should mark all as read the correct thread"
                 );
             }
-            return this._super(...arguments);
         },
     });
     await afterNextRender(() => this.afterEvent({
@@ -199,8 +193,6 @@ QUnit.test('click on expand from chat window should close the chat window and op
     });
     await this.start({
         env: { bus },
-        hasChatWindow: true,
-        hasMessagingMenu: true,
     });
     await afterNextRender(() => this.afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
@@ -262,8 +254,6 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
         res_partner_id: this.data.currentPartnerId,
     });
     await this.start({
-        hasChatWindow: true,
-        hasMessagingMenu: true,
         async mockRPC(route, args) {
             if (route.includes('channel_fold')) {
                 const message = "should not call channel_fold when opening a non-channel chat window";
@@ -271,7 +261,6 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
                 console.error(message);
                 throw Error(message);
             }
-            return this._super(...arguments);
         },
     });
     await afterNextRender(() => this.afterEvent({
@@ -332,10 +321,7 @@ QUnit.test('preview should display last needaction message preview even if there
         notification_type: 'inbox',
         res_partner_id: this.data.currentPartnerId,
     });
-    await this.start({
-        hasChatWindow: true,
-        hasMessagingMenu: true,
-    });
+    await this.start();
     await afterNextRender(() => this.afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
@@ -375,10 +361,7 @@ QUnit.test('chat window header should not have unread counter for non-channel th
         notification_type: 'inbox',
         res_partner_id: this.data.currentPartnerId,
     });
-    await this.start({
-        hasChatWindow: true,
-        hasMessagingMenu: true,
-    });
+    await this.start();
     await afterNextRender(() => this.afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),

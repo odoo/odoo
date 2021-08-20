@@ -59,7 +59,7 @@ function factory(dependencies) {
          * @param {integer[]} param0.ids
          */
         static async performRpcRead({ context, fields, ids }) {
-            const usersData = await this.messaging.rpcOrm('res.users', 'read', ids, { context, fields });
+            const usersData = await this.env.services.orm.silent.read('res.users', ids, fields, context);
             if (!this.messaging) {
                 return;
             }
@@ -95,10 +95,10 @@ function factory(dependencies) {
                 // - Validity of id is not verified at insert.
                 // - There is no bus notification in case of user delete from
                 //   another tab or by another user.
-                this.env.services['notification'].notify({
-                    message: this.env._t("You can only chat with existing users."),
-                    type: 'warning',
-                });
+                this.env.services.notification.add(
+                    this.env._t("You can only chat with existing users."),
+                    { type: 'warning' },
+                );
                 return;
             }
             // in other cases a chat would be valid, find it or try to create it
@@ -108,7 +108,7 @@ function factory(dependencies) {
                 thread.model === 'mail.channel' &&
                 thread.public === 'private'
             );
-            if (!chat ||!chat.isPinned) {
+            if (!chat || !chat.isPinned) {
                 // if chat is not pinned then it has to be pinned client-side
                 // and server-side, which is a side effect of following rpc
                 chat = await this.async(() =>
@@ -118,10 +118,10 @@ function factory(dependencies) {
                 );
             }
             if (!chat) {
-                this.env.services['notification'].notify({
-                    message: this.env._t("An unexpected error occurred during the creation of the chat."),
-                    type: 'warning',
-                });
+                this.env.services.notification.add(
+                    this.env._t("An unexpected error occurred during the creation of the chat."),
+                    { type: 'warning' },
+                );
                 return;
             }
             return chat;
@@ -160,10 +160,10 @@ function factory(dependencies) {
                 // - Validity of id is not verified at insert.
                 // - There is no bus notification in case of user delete from
                 //   another tab or by another user.
-                this.env.services['notification'].notify({
-                    message: this.env._t("You can only open the profile of existing users."),
-                    type: 'warning',
-                });
+                this.env.services.notification.add(
+                    this.env._t("You can only open the profile of existing users."),
+                    { type: 'warning' },
+                );
                 return;
             }
             return this.partner.openProfile();

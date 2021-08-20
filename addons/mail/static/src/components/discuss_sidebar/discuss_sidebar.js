@@ -207,7 +207,7 @@ export class DiscussSidebar extends Component {
      */
     _onClickChannelTitle(ev) {
         ev.stopPropagation();
-        return this.env.bus.trigger('do-action', {
+        return owl.Component.env.bus.trigger('do-action', {
             action: {
                 name: this.env._t("Public Channels"),
                 type: 'ir.actions.act_window',

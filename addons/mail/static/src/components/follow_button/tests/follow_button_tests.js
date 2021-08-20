@@ -23,7 +23,7 @@ QUnit.module('follow_button_tests.js', {
             });
         };
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
@@ -173,7 +173,6 @@ QUnit.test('click on "follow" button', async function (assert) {
             } else if (route.includes('mail/read_followers')) {
                 assert.step('rpc:mail/read_followers');
             }
-            return this._super(...arguments);
         },
     });
     const thread = this.messaging.models['mail.thread'].create({
@@ -228,7 +227,6 @@ QUnit.test('click on "unfollow" button', async function (assert) {
             if (route.includes('message_unsubscribe')) {
                 assert.step('rpc:message_unsubscribe');
             }
-            return this._super(...arguments);
         },
     });
     const thread = this.messaging.models['mail.thread'].create({

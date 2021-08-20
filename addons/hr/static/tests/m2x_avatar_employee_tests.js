@@ -61,7 +61,6 @@ QUnit.module('hr', {}, function () {
         assert.expect(11);
 
         const { widget: list } = await start({
-            hasChatWindow: true,
             hasView: true,
             View: ListView,
             model: 'foo',
@@ -221,7 +220,6 @@ QUnit.module('hr', {}, function () {
         assert.expect(8);
 
         const { widget: form } = await start({
-            hasChatWindow: true,
             hasView: true,
             View: FormView,
             model: 'foo',
@@ -266,7 +264,6 @@ QUnit.module('hr', {}, function () {
         assert.expect(10);
 
         const { widget: list } = await start({
-            hasChatWindow: true,
             hasView: true,
             View: ListView,
             model: 'foo',
@@ -384,7 +381,6 @@ QUnit.module('hr', {}, function () {
         this.data['hr.employee.public'].records[0].user_id = false;
         this.data['hr.employee.public'].records[0].user_partner_id = false;
         const { widget: form } = await start({
-            hasChatWindow: true,
             hasView: true,
             View: FormView,
             model: 'foo',

@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
-import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { getMessagingComponent, registerMessagingComponent } from '@mail/utils/messaging_component';
+
+import { registry } from '@web/core/registry';
 
 const { Component } = owl;
 
@@ -12,3 +14,8 @@ Object.assign(ChatWindowManager, {
 });
 
 registerMessagingComponent(ChatWindowManager);
+
+registry.category('main_components').add('mail.chat_window_manager', {
+    Component: getMessagingComponent('ChatWindowManager'),
+    props: {},
+});

@@ -72,7 +72,7 @@ export class ChatterTopbar extends Component {
             },
             res_id: false,
         };
-        return this.env.bus.trigger('do-action', {
+        return owl.Component.env.bus.trigger('do-action', {
             action,
             options: {
                 on_close: () => {

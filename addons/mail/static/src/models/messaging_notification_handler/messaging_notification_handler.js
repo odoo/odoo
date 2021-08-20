@@ -14,9 +14,9 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
-            if (this.env.services['bus_service']) {
-                this.env.services['bus_service'].off('notification');
-                this.env.services['bus_service'].stopPolling();
+            if (owl.Component.env.services['bus_service']) {
+                owl.Component.env.services['bus_service'].off('notification');
+                owl.Component.env.services['bus_service'].stopPolling();
             }
             return super._willDelete(...arguments);
         }
@@ -30,8 +30,8 @@ function factory(dependencies) {
          * the current users. This includes pinned channels for instance.
          */
         start() {
-            this.env.services.bus_service.onNotification(null, notifs => this._handleNotifications(notifs));
-            this.env.services.bus_service.startPolling();
+            owl.Component.env.services.bus_service.onNotification(null, notifs => this._handleNotifications(notifs));
+            owl.Component.env.services.bus_service.startPolling();
         }
 
         //----------------------------------------------------------------------
@@ -184,13 +184,13 @@ function factory(dependencies) {
             const channel = this.messaging.models['mail.thread'].insert(this.messaging.models['mail.thread'].convertData(channelData));
             if (invitedByUserId !== this.messaging.currentUser.id) {
                 // Current user was invited by someone else.
-                this.env.services['notification'].notify({
-                    message: _.str.sprintf(
+                this.env.services.notification.add(
+                    _.str.sprintf(
                         this.env._t("You have been invited to #%s"),
                         channel.name
                     ),
-                    type: 'info',
-                });
+                    { type: 'info' },
+                );
             }
         }
 
@@ -236,7 +236,7 @@ function factory(dependencies) {
                 channel.correspondent === this.messaging.partnerRoot
             );
             if (!isChatWithOdooBot) {
-                const isOdooFocused = this.env.services['bus_service'].isOdooFocused();
+                const isOdooFocused = owl.Component.env.services['bus_service'].isOdooFocused();
                 // Notify if out of focus
                 if (!isOdooFocused && channel.isChatChannel) {
                     this._notifyNewChannelMessageWhileOutOfFocus({
@@ -393,11 +393,13 @@ function factory(dependencies) {
             } else if (type === 'mark_as_read') {
                 return this._handleNotificationPartnerMarkAsRead(data);
             } else if (type === 'simple_notification') {
-                this.env.services['notification'].notify({
-                    message: data.message,
-                    sticky: data.sticky,
-                    type: data.warning ? 'warning' : 'danger',
-                });
+                this.env.services.notification.add(
+                    data.message,
+                    {
+                        sticky: data.sticky,
+                        type: data.warning ? 'warning' : 'danger',
+                    }
+                );
             } else if (type === 'toggle_star') {
                 return this._handleNotificationPartnerToggleStar(data);
             } else if (info === 'transient_message') {
@@ -458,13 +460,13 @@ function factory(dependencies) {
                 data.info !== 'creation' &&
                 !wasCurrentPartnerMember
             ) {
-                this.env.services['notification'].notify({
-                    message: _.str.sprintf(
+                this.env.services.notification.add(
+                    _.str.sprintf(
                         this.env._t("You have been invited to: %s"),
                         channel.name
                     ),
-                    type: 'info',
-                });
+                    { type: 'info' },
+                );
             }
             // a new thread with unread messages could have been added
         }
@@ -619,10 +621,7 @@ function factory(dependencies) {
             // We assume that arriving here the server has effectively
             // unpinned the channel
             channel.update({ isServerPinned: false });
-            this.env.services['notification'].notify({
-                message,
-                type: 'info',
-            });
+            this.env.services.notification.add(message, { type: 'info' });
         }
 
         /**
@@ -636,7 +635,7 @@ function factory(dependencies) {
             // If the current user invited a new user, and the new user is
             // connecting for the first time while the current user is present
             // then open a chat for the current user with the new user.
-            this.env.services['bus_service'].sendNotification({ message, title, type: 'info' });
+            owl.Component.env.services['bus_service'].sendNotification({ message, title, type: 'info' });
             const chat = await this.async(() =>
                 this.messaging.getChat({ partnerId: partner_id }
             ));
@@ -679,7 +678,7 @@ function factory(dependencies) {
                 }
             }
             const notificationContent = htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE);
-            this.env.services['bus_service'].sendNotification({
+            owl.Component.env.services['bus_service'].sendNotification({
                 message: notificationContent,
                 title: notificationTitle,
                 type: 'info',

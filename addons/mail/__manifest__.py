@@ -73,14 +73,10 @@
             'mail/static/src/widgets/*/*.js',
             'mail/static/src/widgets/*/*.scss',
         ],
-        'web.assets_backend_prod_only': [
-            'mail/static/src/main.js',
-        ],
         'web.assets_tests': [
             'mail/static/tests/tours/**/*',
         ],
         'web.tests_assets': [
-            'mail/static/src/env/test_env.js',
             'mail/static/src/utils/test_utils.js',
             'mail/static/tests/helpers/mock_models.js',
             'mail/static/tests/helpers/mock_server.js',
@@ -103,7 +99,6 @@
         'web.assets_qweb': [
             'mail/static/src/xml/*.xml',
             'mail/static/src/components/*/*.xml',
-            'mail/static/src/widgets/*/*.xml',
         ],
     },
     'license': 'LGPL-3',

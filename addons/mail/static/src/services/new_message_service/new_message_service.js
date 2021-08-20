@@ -3,10 +3,10 @@
 import { registry } from "@web/core/registry";
 
 export const newMessageService = {
-    dependencies: ["command"],
-    start(newEnv, { command }) {
+    dependencies: ["command", "messaging"],
+    start(env, { command }) {
         command.add("Message a user", async () => {
-            const messaging = await owl.Component.env.services.messaging.get();
+            const messaging = await env.services.messaging.get();
             if (messaging.discuss.isOpen) {
                 messaging.discuss.update({
                     isAddingChannel: false,

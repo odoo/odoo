@@ -14,12 +14,13 @@ QUnit.module('throttle_tests.js', {
         beforeEach(this);
         this.throttles = [];
 
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+        this.start = async (params = {}) => {
+            const { advanceTime, env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
             this.widget = widget;
+            return { advanceTime };
         };
     },
     afterEach() {
@@ -35,7 +36,7 @@ QUnit.module('throttle_tests.js', {
 QUnit.test('single call', async function (assert) {
     assert.expect(6);
 
-    await this.start({
+    const { advanceTime } = await this.start({
         hasTimeControl: true,
     });
 
@@ -55,7 +56,7 @@ QUnit.test('single call', async function (assert) {
         "func should not have been invoked on immediate throttle initialization"
     );
 
-    await this.env.testUtils.advanceTime(0);
+    await advanceTime(0);
     assert.notOk(
         hasInvokedFunc,
         "func should not have been invoked from throttle initialization after 0ms"
@@ -83,7 +84,7 @@ QUnit.test('single call', async function (assert) {
 QUnit.test('2nd (throttled) call', async function (assert) {
     assert.expect(8);
 
-    await this.start({
+    const { advanceTime } = await this.start({
         hasTimeControl: true,
     });
 
@@ -126,13 +127,13 @@ QUnit.test('2nd (throttled) call', async function (assert) {
         "inner function of throttle should not have been immediately invoked after 2nd call immediately after 1st call (throttled with 1s internal clock)"
     );
 
-    await this.env.testUtils.advanceTime(999);
+    await advanceTime(999);
     assert.verifySteps(
         [],
         "inner function of throttle should not have been invoked after 999ms of 2nd call (throttled with 1s internal clock)"
     );
 
-    await this.env.testUtils.advanceTime(1);
+    await advanceTime(1);
     assert.verifySteps(
         ['throttle_observed_invoke_2'],
         "inner function of throttle should not have been invoked after 1s of 2nd call (throttled with 1s internal clock)"
@@ -142,7 +143,7 @@ QUnit.test('2nd (throttled) call', async function (assert) {
 QUnit.test('throttled call reinvocation', async function (assert) {
     assert.expect(11);
 
-    await this.start({
+    const { advanceTime } = await this.start({
         hasTimeControl: true,
     });
 
@@ -189,7 +190,7 @@ QUnit.test('throttled call reinvocation', async function (assert) {
         "inner function of throttle should not have been immediately invoked after 2nd call immediately after 1st call (throttled with 1s internal clock)"
     );
 
-    await this.env.testUtils.advanceTime(999);
+    await advanceTime(999);
     assert.verifySteps(
         [],
         "inner function of throttle should not have been invoked after 999ms of 2nd call (throttled with 1s internal clock)"
@@ -210,7 +211,7 @@ QUnit.test('throttled call reinvocation', async function (assert) {
         "2nd throttle call should have been canceled from 3rd throttle call (reinvoked before cooling down phase has ended)"
     );
 
-    await this.env.testUtils.advanceTime(1);
+    await advanceTime(1);
     assert.verifySteps(
         ['throttle_observed_invoke_2'],
         "inner function of throttle should have been invoked after 1s of 1st call (throttled with 1s internal clock, 3rd throttle call re-use timer of 2nd throttle call)"
@@ -220,7 +221,7 @@ QUnit.test('throttled call reinvocation', async function (assert) {
 QUnit.test('flush throttled call', async function (assert) {
     assert.expect(9);
 
-    await this.start({
+    const { advanceTime } = await this.start({
         hasTimeControl: true,
     });
 
@@ -245,7 +246,7 @@ QUnit.test('flush throttled call', async function (assert) {
         "inner function of throttle should not have been immediately invoked after 2nd call immediately after 1st call (throttled with 1s internal clock)"
     );
 
-    await this.env.testUtils.advanceTime(10);
+    await advanceTime(10);
     assert.verifySteps(
         [],
         "inner function of throttle should not have been invoked after 10ms of 2nd call (throttled with 1s internal clock)"
@@ -260,13 +261,13 @@ QUnit.test('flush throttled call', async function (assert) {
 
     throttledFunc().then(() => assert.step('throttle_observed_invoke_3'));
     await nextTick();
-    await this.env.testUtils.advanceTime(999);
+    await advanceTime(999);
     assert.verifySteps(
         [],
         "inner function of throttle should not have been invoked after 999ms of 3rd call (throttled with 1s internal clock)"
     );
 
-    await this.env.testUtils.advanceTime(1);
+    await advanceTime(1);
     assert.verifySteps(
         ['throttle_observed_invoke_3'],
         "inner function of throttle should not have been invoked after 999ms of 3rd call (throttled with 1s internal clock)"
@@ -276,7 +277,7 @@ QUnit.test('flush throttled call', async function (assert) {
 QUnit.test('cancel throttled call', async function (assert) {
     assert.expect(10);
 
-    await this.start({
+    const { advanceTime } = await this.start({
         hasTimeControl: true,
     });
 
@@ -312,7 +313,7 @@ QUnit.test('cancel throttled call', async function (assert) {
         "inner function of throttle should not have been immediately invoked after 2nd call immediately after 1st call (throttled with 1s internal clock)"
     );
 
-    await this.env.testUtils.advanceTime(500);
+    await advanceTime(500);
     assert.verifySteps(
         [],
         "inner function of throttle should not have been invoked after 500ms of 2nd call (throttled with 1s internal clock)"
@@ -332,7 +333,7 @@ QUnit.test('cancel throttled call', async function (assert) {
         "3rd throttle function call should not have invoked inner function yet (cancel reuses inner clock of throttle)"
     );
 
-    await this.env.testUtils.advanceTime(500);
+    await advanceTime(500);
     assert.verifySteps(
         ['throttle_observed_invoke_3'],
         "3rd throttle function call should have invoke inner function after 500ms (cancel reuses inner clock of throttle which was at 500ms in, throttle set at 1ms)"
@@ -342,7 +343,7 @@ QUnit.test('cancel throttled call', async function (assert) {
 QUnit.test('clear throttled call', async function (assert) {
     assert.expect(9);
 
-    await this.start({
+    const { advanceTime } = await this.start({
         hasTimeControl: true,
     });
 
@@ -378,7 +379,7 @@ QUnit.test('clear throttled call', async function (assert) {
         "inner function of throttle should not have been immediately invoked after 2nd call immediately after 1st call (throttled with 1s internal clock)"
     );
 
-    await this.env.testUtils.advanceTime(500);
+    await advanceTime(500);
     assert.verifySteps(
         [],
         "inner function of throttle should not have been invoked after 500ms of 2nd call (throttled with 1s internal clock)"

@@ -42,7 +42,7 @@ QUnit.module('thread_view_tests.js', {
             await createRootMessagingComponent(this, "ThreadView", { props, target });
         };
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { afterEvent, env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
@@ -311,9 +311,9 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
     await this.start({
         mockRPC(route, args) {
             if (args.method === 'channel_fetched') {
-                assert.strictEqual(
+                assert.deepEqual(
                     args.args[0],
-                    100,
+                    [100],
                     'channel_fetched is called on the right channel id'
                 );
                 assert.strictEqual(
@@ -335,7 +335,6 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
                 );
                 assert.step('rpc:channel_seen');
             }
-            return this._super(...arguments);
         }
     });
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
@@ -347,7 +346,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         thread: link(thread),
     });
     await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
-    await afterNextRender(async () => this.messaging.rpcRoute('/mail/chat_post', {
+    await afterNextRender(async () => this.env.services.rpc('/mail/chat_post', {
         context: { mockedUserId: 10 },
         message_content: "new message",
         uuid: thread.uuid,
@@ -404,7 +403,6 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
                 );
                 assert.step('rpc:channel_seen');
             }
-            return this._super(...arguments);
         }
     });
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
@@ -420,7 +418,7 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
     // simulate receiving a message
     await this.afterEvent({
         eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
-        func: () => this.messaging.rpcRoute('/mail/chat_post', {
+        func: () => this.env.services.rpc('/mail/chat_post', {
             context: { mockedUserId: 10 },
             message_content: "<p>fdsfsd</p>",
             uuid: thread.uuid,
@@ -629,7 +627,7 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
     // simulate receiving a message
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => this.messaging.rpcRoute('/mail/chat_post', {
+        func: () => this.env.services.rpc('/mail/chat_post', {
             context: { mockedUserId: 42 },
             message_content: "hu",
             uuid: thread.uuid,
@@ -871,7 +869,7 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
     await this.afterEvent({
         eventName: 'o-component-message-list-scrolled',
         func: () =>
-            this.messaging.rpcRoute('/mail/chat_post', {
+            this.env.services.rpc('/mail/chat_post', {
                 context: { mockedUserId: 42 },
                 message_content: "hello",
                 uuid: thread.uuid,
@@ -950,7 +948,7 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: () =>
-            this.messaging.rpcRoute('/mail/chat_post', {
+            this.env.services.rpc('/mail/chat_post', {
                 context: { mockedUserId: 42 },
                 message_content: "hello",
                 uuid: thread.uuid,
@@ -1771,7 +1769,7 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     // composer is focused by default, we remove that focus
     document.querySelector('.o_ComposerTextInput_textarea').blur();
     // simulate receiving a message
-    await afterNextRender(() => this.messaging.rpcRoute('/mail/chat_post', {
+    await afterNextRender(() => this.env.services.rpc('/mail/chat_post', {
         context: { mockedUserId: 42 },
         message_content: "test",
         uuid: 'channel20uuid',
@@ -1836,7 +1834,6 @@ QUnit.test('failure on loading messages should display error', async function (a
             if (args.method === 'message_fetch') {
                 throw new Error();
             }
-            return this._super(...arguments);
         },
     });
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
@@ -1870,7 +1867,6 @@ QUnit.test('failure on loading messages should prompt retry button', async funct
             if (args.method === 'message_fetch') {
                 throw new Error();
             }
-            return this._super(...arguments);
         },
     });
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
@@ -1918,7 +1914,6 @@ QUnit.test('failure on loading more messages should not alter message list displ
                     throw new Error();
                 }
             }
-            return this._super(...arguments);
         },
     });
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
@@ -1969,7 +1964,6 @@ QUnit.test('failure on loading more messages should display error and prompt ret
                     throw new Error();
                 }
             }
-            return this._super(...arguments);
         },
     });
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
@@ -2029,7 +2023,6 @@ QUnit.test('Retry loading more messages on failed load more messages should load
                     throw new Error();
                 }
             }
-            return this._super(...arguments);
         },
     });
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({

@@ -28,7 +28,7 @@ QUnit.module('notification_list_notification_group_tests.js', {
             });
         };
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
@@ -200,7 +200,7 @@ QUnit.test('grouped notifications by document', async function (assert) {
             notification_type: 'email', // expected failure type for email message
         }
     );
-    await this.start({ hasChatWindow: true });
+    await this.start();
     await this.createNotificationListComponent();
 
     assert.containsOnce(
@@ -376,9 +376,7 @@ QUnit.test('different mail.channel are not grouped', async function (assert) {
             notification_type: 'email', // expected failure type for email message
         }
     );
-    await this.start({
-        hasChatWindow: true, // needed to assert thread.open
-    });
+    await this.start();
     await this.createNotificationListComponent();
     assert.containsN(
         document.body,

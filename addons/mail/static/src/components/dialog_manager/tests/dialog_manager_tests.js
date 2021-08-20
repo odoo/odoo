@@ -15,9 +15,8 @@ QUnit.module('dialog_manager_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign(
-                { hasDialog: true },
                 params,
                 { data: this.data }
             ));

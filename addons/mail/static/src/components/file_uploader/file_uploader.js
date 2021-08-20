@@ -161,10 +161,7 @@ export class FileUploader extends Component {
         for (const fileData of filesData) {
             const { error, filename, id, mimetype, name, size } = fileData;
             if (error || !id) {
-                this.env.services['notification'].notify({
-                    type: 'danger',
-                    message: error,
-                });
+                this.env.services.notification.add(error, { type: 'danger' });
                 const relatedUploadingAttachments = this.messaging.models['mail.attachment']
                     .find(attachment =>
                         attachment.filename === filename &&

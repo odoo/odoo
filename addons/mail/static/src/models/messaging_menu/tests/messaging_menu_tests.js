@@ -9,7 +9,7 @@ QUnit.module('messaging_menu_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env } = await start({ data: this.data, ...params });
             this.env = env;
         };

@@ -22,7 +22,7 @@ QUnit.module('thread_icon_tests.js', {
             });
         };
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
@@ -71,7 +71,7 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
             partner_name: this.messaging.publicPartners[0].name,
         };
         const notification = [[false, 'mail.channel', 20], typingData];
-        this.widget.call('bus_service', 'trigger', 'notification', [notification]);
+        owl.Component.env.services.bus_service.trigger('notification', [notification]);
     });
     assert.containsOnce(
         document.body,

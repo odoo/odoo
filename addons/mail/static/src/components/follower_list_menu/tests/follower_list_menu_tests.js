@@ -26,7 +26,7 @@ QUnit.module('follower_list_menu_tests.js', {
             });
         };
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
@@ -238,9 +238,9 @@ QUnit.test('click on remove follower', async function (assert) {
         async mockRPC(route, args) {
             if (route.includes('message_unsubscribe')) {
                 assert.step('message_unsubscribe');
-                assert.strictEqual(
+                assert.deepEqual(
                     args.args[0],
-                    100,
+                    [100],
                     "message_unsubscribe should be called with right thread id"
                 );
                 assert.deepEqual(
@@ -249,7 +249,6 @@ QUnit.test('click on remove follower', async function (assert) {
                     "message_unsubscribe should be called with right partner ids"
                 );
             }
-            return this._super(...arguments);
         },
     });
     const thread = this.messaging.models['mail.thread'].create({
