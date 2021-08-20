@@ -417,11 +417,11 @@ class IrAttachment(models.Model):
         """Override read_group to add res_field=False in domain if not present."""
         if not fields:
             raise AccessError(_("Sorry, you must provide fields to read on attachments"))
+        groupby = [groupby] if isinstance(groupby, str) else groupby
         if any('(' in field for field in fields + groupby):
             raise AccessError(_("Sorry, the syntax 'name:agg(field)' is not available for attachments"))
         if not any(item[0] in ('id', 'res_field') for item in domain):
             domain.insert(0, ('res_field', '=', False))
-        groupby = [groupby] if isinstance(groupby, str) else groupby
         allowed_fields = self._read_group_allowed_fields()
         fields_set = set(field.split(':')[0] for field in fields + groupby)
         if not self.env.is_system() and (not fields or fields_set.difference(allowed_fields)):
