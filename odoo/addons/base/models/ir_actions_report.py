@@ -772,13 +772,6 @@ class IrActionsReport(models.Model):
         # https://github.com/wkhtmltopdf/wkhtmltopdf/issues/2083
         context['debug'] = False
 
-        # The test cursor prevents the use of another environment while the current
-        # transaction is not finished, leading to a deadlock when the report requests
-        # an asset bundle during the execution of test scenarios. In this case, return
-        # the html version.
-        if isinstance(self.env.cr, TestCursor):
-            return self_sudo.with_context(context)._render_qweb_html(res_ids, data=data)[0]
-
         save_in_attachment = OrderedDict()
         # Maps the streams in `save_in_attachment` back to the records they came from
         stream_record = dict()
