@@ -1,7 +1,7 @@
 odoo.define('point_of_sale.Chrome', function(require) {
     'use strict';
 
-    const { useState, useRef, useContext } = owl.hooks;
+    const { useState, useRef, useContext, useExternalListener } = owl.hooks;
     const { debounce } = owl.utils;
     const { loadCSS } = require('web.ajax');
     const { useListener } = require('web.custom_hooks');
@@ -28,6 +28,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
     class Chrome extends PopupControllerMixin(PosComponent) {
         constructor() {
             super(...arguments);
+            useExternalListener(window, 'beforeunload', this._onBeforeUnload);
             useListener('show-main-screen', this.__showScreen);
             useListener('toggle-debug-widget', debounce(this._toggleDebugWidget, 100));
             useListener('show-temp-screen', this.__showTempScreen);
@@ -136,6 +137,9 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 };
                 this.env.pos = new models.PosModel(posModelDefaultAttributes);
                 await this.env.pos.ready;
+                // Load the saved `env.pos.toRefundLines` from localStorage when
+                // the PosModel is ready.
+                Object.assign(this.env.pos.toRefundLines, this.env.pos.db.load('TO_REFUND_LINES') || {});
                 this._buildChrome();
                 this._closeOtherTabs();
                 this.env.pos.set(
@@ -314,6 +318,13 @@ odoo.define('point_of_sale.Chrome', function(require) {
         _onCloseNotification() {
             this.state.notification.isShown = false;
             this.state.notification.message = '';
+        }
+        /**
+         * Save `env.pos.toRefundLines` in localStorage on beforeunload - closing the
+         * browser, reloading or going to other page.
+         */
+        _onBeforeUnload() {
+            this.env.pos.db.save('TO_REFUND_LINES', this.env.pos.toRefundLines);
         }
 
         // TO PASS AS PARAMETERS //

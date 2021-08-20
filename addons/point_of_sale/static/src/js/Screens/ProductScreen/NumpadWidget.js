@@ -5,7 +5,9 @@ odoo.define('point_of_sale.NumpadWidget', function (require) {
     const Registries = require('point_of_sale.Registries');
 
     /**
-     * @prop {'quantiy' | 'price' | 'discount'} activeMode
+     * @prop {'quantity' | 'price' | 'discount'} activeMode
+     * @prop {Array<'quantity' | 'price' | 'discount'>} disabledModes
+     * @prop {boolean} disableSign
      * @event set-numpad-mode - triggered when mode button is clicked
      * @event numpad-click-input - triggered when numpad button is clicked
      *
@@ -30,10 +32,13 @@ odoo.define('point_of_sale.NumpadWidget', function (require) {
         }
         get hasPriceControlRights() {
             const cashier = this.env.pos.get('cashier') || this.env.pos.get_cashier();
-            return !this.env.pos.config.restrict_price_control || cashier.role == 'manager';
+            return (
+                (!this.env.pos.config.restrict_price_control || cashier.role == 'manager') &&
+                !this.props.disabledModes.includes('price')
+            );
         }
         get hasManualDiscount() {
-            return this.env.pos.config.manual_discount;
+            return this.env.pos.config.manual_discount && !this.props.disabledModes.includes('discount');
         }
         changeMode(mode) {
             if (!this.hasPriceControlRights && mode === 'price') {
@@ -52,6 +57,10 @@ odoo.define('point_of_sale.NumpadWidget', function (require) {
         }
     }
     NumpadWidget.template = 'NumpadWidget';
+    NumpadWidget.defaultProps = {
+        disabledModes: [],
+        disableSign: false,
+    }
 
     Registries.Component.add(NumpadWidget);
 

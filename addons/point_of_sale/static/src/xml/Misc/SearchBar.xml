@@ -28,12 +28,13 @@
                     <i class="fa fa-chevron-down" aria-hidden="true"></i>
                 </span>
                 <span>
-                    <t t-esc="props.config.filter.options.get(state.selectedFilter)" />
+                    <t t-esc="props.config.filter.options.get(state.selectedFilter).text" />
                 </span>
                 <ul t-if="state.showFilterOptions" class="options">
                     <t t-foreach="filterOptionsList" t-as="key" t-key="key">
-                        <li t-on-click="trigger('select-filter', key)">
-                            <t t-esc="props.config.filter.options.get(key)"></t>
+                        <t t-set="_option" t-value="props.config.filter.options.get(key)" />
+                        <li t-on-click="trigger('select-filter', key)" t-att-class="{ indented: _option.indented }">
+                            <t t-esc="_option.text"></t>
                         </li>
                     </t>
                 </ul>
