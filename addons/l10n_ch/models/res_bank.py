@@ -5,8 +5,11 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.tools.misc import mod10r
+from odoo.tools.image import image_data_uri
+import base64
 
 import werkzeug.urls
+import werkzeug.exceptions
 
 def _is_l10n_ch_postal(account_ref):
     """ Returns True iff the string account_ref is a valid postal account number,
@@ -85,8 +88,7 @@ class ResPartnerBank(models.Model):
         else:
             return ''
 
-    @api.model
-    def build_swiss_code_url(self, amount, currency_name, not_used_anymore_1, debtor_partner, not_used_anymore_2, structured_communication, free_communication):
+    def build_swiss_code_vals(self, amount, currency_name, not_used_anymore_1, debtor_partner, not_used_anymore_2, structured_communication, free_communication):
         comment = ""
         if free_communication:
             comment = (free_communication[:137] + '...') if len(free_communication) > 140 else free_communication
@@ -137,9 +139,22 @@ class ResPartnerBank(models.Model):
             comment,                                              # Unstructured Message
             'EPD',                                                # Mandatory trailer part
         ]
+        return qr_code_vals
 
+    @api.model
+    def build_swiss_code_url(self, amount, currency_name, not_used_anymore_1, debtor_partner, not_used_anymore_2, structured_communication, free_communication):
+        qr_code_vals = self.build_swiss_code_vals(amount, currency_name, not_used_anymore_1, debtor_partner, not_used_anymore_2, structured_communication, free_communication)
         return '/report/barcode/?type=%s&value=%s&width=%s&height=%s&humanreadable=1' % ('QR_quiet', werkzeug.urls.url_quote_plus('\n'.join(qr_code_vals)), 256, 256)
 
+    @api.model
+    def build_swiss_code_base64(self, amount, currency_name, not_used_anymore_1, debtor_partner, not_used_anymore_2, structured_communication, free_communication):
+        qr_code_vals = self.build_swiss_code_vals(amount, currency_name, not_used_anymore_1, debtor_partner, not_used_anymore_2, structured_communication, free_communication)
+        try:
+            barcode = self.env['ir.actions.report'].barcode('QR_quiet', '\n'.join(qr_code_vals), width=256, height=256, humanreadable=1)
+        except (ValueError, AttributeError):
+            raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
+
+        return image_data_uri(base64.b64encode(barcode))
 
     def _get_partner_address_lines(self, partner):
         """ Returns a tuple of two elements containing the address lines to use

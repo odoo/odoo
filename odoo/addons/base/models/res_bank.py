@@ -7,8 +7,11 @@ from collections.abc import Iterable
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import pycompat
+from odoo.tools.image import image_data_uri
+import base64
 
 import werkzeug.urls
+import werkzeug.exceptions
 
 def sanitize_account_number(acc_number):
     if acc_number:
@@ -127,14 +130,27 @@ class ResPartnerBank(models.Model):
             pos += 1
         return super(ResPartnerBank, self)._search(args, offset, limit, order, count=count, access_rights_uid=access_rights_uid)
 
-    @api.model
-    def build_qr_code_url(self, amount, comment):
+    def build_qr_code_vals(self, amount, comment):
         communication = ""
         if comment:
             communication = (comment[:137] + '...') if len(comment) > 140 else comment
-        qr_code_string = 'BCD\n001\n1\nSCT\n%s\n%s\n%s\nEUR%s\n\n\n%s' % (self.bank_bic, self.company_id.name, self.acc_number, amount, communication)
-        qr_code_url = '/report/barcode/?type=%s&value=%s&width=%s&height=%s&humanreadable=1' % ('QR', werkzeug.url_quote_plus(qr_code_string), 128, 128)
+        qr_code_vals = 'BCD\n001\n1\nSCT\n%s\n%s\n%s\nEUR%s\n\n\n%s' % (self.bank_bic, self.company_id.name, self.acc_number, amount, communication)
+        return qr_code_vals
+
+    @api.model
+    def build_qr_code_url(self, amount, comment):
+        qr_code_url = '/report/barcode/?type=%s&value=%s&width=%s&height=%s&humanreadable=1' % ('QR',
+            werkzeug.url_quote_plus(self.build_qr_code_vals(amount, comment)), 128, 128)
         return qr_code_url
+
+    @api.model
+    def build_qr_code_base64(self, amount, comment):
+        try:
+            barcode = self.env['ir.actions.report'].barcode('QR', self.build_qr_code_vals(amount, comment), width=128, height=128, humanreadable=1)
+        except (ValueError, AttributeError):
+            raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
+
+        return image_data_uri(base64.b64encode(barcode))
 
     @api.multi
     def _validate_qr_code_arguments(self):

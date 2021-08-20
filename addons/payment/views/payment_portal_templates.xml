@@ -106,7 +106,7 @@
                                 <div t-if="(tx.acquirer_id.qr_code == True) and (tx.currency_id.name == 'EUR')">
                                     <div t-if="tx.acquirer_id.journal_id.bank_account_id.qr_code_valid">
                                         <h3>Or scan me with your banking app.</h3>
-                                        <img class="border border-dark rounded" t-att-src="tx.acquirer_id.journal_id.bank_account_id.build_qr_code_url(tx.amount,tx.reference)"/>
+                                        <img class="border border-dark rounded" t-att-src="tx.acquirer_id.journal_id.bank_account_id.build_qr_code_base64(tx.amount,tx.reference)"/>
                                     </div>
                                     <div t-if="(tx.acquirer_id.journal_id.bank_account_id.qr_code_valid == False)">
                                         <h3>The SEPA QR Code informations are not set correctly.</h3>
@@ -145,7 +145,7 @@
             <div t-if="(payment_tx_id.acquirer_id.qr_code == True) and (payment_tx_id.currency_id.name == 'EUR')">
                 <div t-if="payment_tx_id.acquirer_id.journal_id.bank_account_id.qr_code_valid">
                     <h3>Or scan me with your banking app.</h3>
-                    <img class="border border-dark rounded" t-att-src="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_url(payment_tx_id.amount,payment_tx_id.reference)"/>
+                    <img class="border border-dark rounded" t-att-src="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_base64(payment_tx_id.amount,payment_tx_id.reference)"/>
                 </div>
                 <div t-if="(payment_tx_id.acquirer_id.journal_id.bank_account_id.qr_code_valid == False)">
                     <h3>The SEPA QR Code informations are not set correctly.</h3>
