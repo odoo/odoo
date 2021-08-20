@@ -43,6 +43,20 @@ var config = {
          */
         size_class: null,
         /**
+         * Mobile OS (Android) device detection using userAgent.
+         * This flag doesn't depend on the size/resolution of the screen.
+         *
+         * @return Boolean
+         */
+        isAndroid: isAndroid,
+        /**
+         * Mobile OS (iOS) device detection using userAgent.
+         * This flag doesn't depend on the size/resolution of the screen.
+         *
+         * @return Boolean
+         */
+        isIOS: isIOS,
+        /**
          * A frequent use case is to have a different render in 'mobile' mode,
          * meaning when the screen is small.  This flag (boolean) is true when
          * the size is XS/VSM/SM. It is also updated dynamically.
