@@ -6,8 +6,11 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import mod10r
+from odoo.tools.image import image_data_uri
+import base64
 
 import werkzeug.urls
+import werkzeug.exceptions
 
 ISR_SUBSCRIPTION_CODE = {'CHF': '01', 'EUR': '03'}
 CLEARING = "09000"
@@ -224,8 +227,8 @@ class ResPartnerBank(models.Model):
             'EPD',                                                # Mandatory trailer part
         ]
 
-    @api.model
-    def build_swiss_code_url(self, amount, currency_name, not_used_anymore_1, debtor_partner, not_used_anymore_2, structured_communication, free_communication):
+
+    def _build_swiss_code_vals(self, amount, currency_name, debtor_partner, structured_communication, free_communication):
         comment = ""
         if free_communication:
             comment = (free_communication[:137] + '...') if len(free_communication) > 140 else free_communication
@@ -240,10 +243,23 @@ class ResPartnerBank(models.Model):
             reference_type = 'QRR'
             reference = structured_communication
 
-        qr_code_vals = self._prepare_swiss_code_url_vals(amount, currency_name, debtor_partner, reference_type, reference, comment)
+        return self._prepare_swiss_code_url_vals(amount, currency_name, debtor_partner, reference_type, reference, comment)
 
+    @api.model
+    def build_swiss_code_url(self, amount, currency_name, not_used_anymore_1, debtor_partner, not_used_anymore_2, structured_communication, free_communication):
+        qr_code_vals = self._build_swiss_code_vals(amount, currency_name, debtor_partner, structured_communication, free_communication)
         # use quiet to remove blank around the QR and make it easier to place it
         return '/report/barcode/?type=%s&value=%s&width=%s&height=%s&quiet=1' % ('QR', werkzeug.urls.url_quote_plus('\n'.join(qr_code_vals)), 256, 256)
+
+    @api.model
+    def build_swiss_code_base64(self, amount, currency_name, not_used_anymore_1, debtor_partner, not_used_anymore_2, structured_communication, free_communication):
+        qr_code_vals = self._build_swiss_code_vals(amount, currency_name, debtor_partner, structured_communication, free_communication)
+        try:
+            barcode = self.env['ir.actions.report'].barcode('QR', '\n'.join(qr_code_vals), width=256, height=256, quiet=1)
+        except (ValueError, AttributeError):
+            raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
+
+        return image_data_uri(base64.b64encode(barcode))
 
     def _get_partner_address_lines(self, partner):
         """ Returns a tuple of two elements containing the address lines to use
