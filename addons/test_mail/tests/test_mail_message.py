@@ -80,7 +80,7 @@ class TestMessageValues(TestMailCommon):
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
         # no alias domain -> author
-        self.env.cr.execute('UPDATE res_company SET alias_domain = %s WHERE id = %s', ('', self.env.company.id))
+        self.env.company.write({'alias_domain': ''})
 
         msg = self.Message.create({})
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
@@ -88,7 +88,7 @@ class TestMessageValues(TestMailCommon):
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
         # no alias catchall, no alias -> author
-        self.env.cr.execute('UPDATE res_company SET alias_domain = %s WHERE id = %s', (self.alias_domain, self.env.company.id))
+        self.env.company.write({'alias_domain': self.alias_domain})
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.alias')]).unlink()
 
         msg = self.Message.create({})
@@ -109,7 +109,7 @@ class TestMessageValues(TestMailCommon):
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
         # no alias domain -> author
-        self.env.cr.execute('UPDATE res_company SET alias_domain = %s WHERE id = %s', ('', self.env.company.id))
+        self.env.company.write({'alias_domain': ''})
 
         msg = self.Message.create({
             'model': 'mail.test.container',
@@ -120,7 +120,7 @@ class TestMessageValues(TestMailCommon):
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
         # no catchall -> don't care, alias
-        self.env.cr.execute('UPDATE res_company SET alias_domain = %s WHERE id = %s', (self.alias_domain, self.env.company.id))
+        self.env.company.write({'alias_domain': self.alias_domain})
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.alias')]).unlink()
 
         msg = self.Message.create({
@@ -344,7 +344,7 @@ class TestMessageAccess(TestMailCommon):
 
     def test_mail_message_access_create_reply(self):
         # TDE FIXME: should it really work ? not sure - catchall makes crash (aka, post will crash also)
-        self.env.cr.execute('UPDATE res_company SET alias_domain = %s WHERE id = %s', ('', self.env.company.id))
+        self.env.company.alias_domain = ''
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
         self.env['mail.message'].with_user(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test', 'parent_id': self.message.id})
 

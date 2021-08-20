@@ -474,7 +474,7 @@ class EmailConfigCase(TransactionCase):
         """Email from setting is respected."""
         # ICP setting is more important
         ICP = self.env["ir.config_parameter"].sudo()
-        self.env.cr.execute('UPDATE res_company SET alias_domain = %s WHERE id = %s', ('example.org', self.env.company.id))
+        self.env.company.write({"alias_domain": "example.org"})
         ICP.set_param("mail.default.from", "icp")
         message = self.env["ir.mail_server"].build_email(
             False, "recipient@example.com", "Subject",

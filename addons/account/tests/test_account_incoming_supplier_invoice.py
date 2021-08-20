@@ -12,7 +12,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
-        cls.env.cr.execute('UPDATE res_company SET alias_domain = %s WHERE id = %s', ('test-company.odoo.com', cls.env.company.id))
+        cls.env.company.write({'alias_domain': 'test-company.odoo.com'})
 
         cls.internal_user = cls.env['res.users'].create({
             'name': 'Internal User',

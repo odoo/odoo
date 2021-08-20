@@ -98,7 +98,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         # remove the notifications email to simulate a mis-configured Odoo database
         # so we do not have the choice, we have to spoof the FROM
         # (otherwise we can not send the email)
-        self.env.cr.execute('UPDATE res_company SET alias_domain = %s WHERE id = %s', ('', self.env.company.id))
+        self.env.company.alias_domain = False
         with mute_logger('odoo.addons.base.models.ir_mail_server'):
             mail_server, mail_from = self.env['ir.mail_server']._find_mail_server(email_from='test@unknown_domain.com')
             self.assertEqual(mail_server.from_filter, False, 'No notifications email set, must be forced to spoof the FROM')
@@ -184,7 +184,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         )
 
         # Test that the mail from / recipient envelop are encoded using IDNA
-        self.env.cr.execute('UPDATE res_company SET alias_domain = %s WHERE id = %s', ('ééééééé.com', self.env.company.id))
+        self.env.company.alias_domain = 'ééééééé.com'
         with self.mock_smtplib_connection():
             message = self._build_email(mail_from='test@ééééééé.com')
             IrMailServer.send_email(message)
