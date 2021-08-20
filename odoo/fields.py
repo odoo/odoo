@@ -1002,7 +1002,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
             except psycopg2.OperationalError:
                 _schema.error("Unable to add index for %s", self)
-        else:
+        elif sql.index_exists(model._cr, indexname):
             _schema.info("Keep unexpected index %s on table %s", indexname, model._table)
 
     def update_db_related(self, model):
