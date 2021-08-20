@@ -214,7 +214,7 @@ class MailTemplate(models.Model):
                         result, format = res
 
                     # TODO in trunk, change return format to binary to match message_post expected format
-                    result = base64.b64encode(result.encode())
+                    result = base64.b64encode(result)
                     if not report_name:
                         report_name = 'report.' + report_service
                     ext = "." + format
