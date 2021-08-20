@@ -16,6 +16,11 @@ if (debugParam !== undefined) {
     debug = debugParam === 'assets' ? 'assets' : true;
 }
 
+var maxTouchPoints = navigator.maxTouchPoints || 1;
+var isAndroid = /Android/i.test(navigator.userAgent);
+var isIOS = /(iPad|iPhone|iPod)/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && maxTouchPoints > 1);
+var isOtherMobileDevice = /(webOS|BlackBerry|Windows Phone)/i.test(navigator.userAgent);
+
 var config = {
     /**
      * debug can be either a boolean, or the special value 'assets'
@@ -39,6 +44,20 @@ var config = {
          */
         size_class: null,
         /**
+         * Mobile OS (Android) device detection using userAgent.
+         * This flag doesn't depend on the size/resolution of the screen.
+         *
+         * @return Boolean
+         */
+        isAndroid: isAndroid,
+        /**
+         * Mobile OS (iOS) device detection using userAgent.
+         * This flag doesn't depend on the size/resolution of the screen.
+         *
+         * @return Boolean
+         */
+        isIOS: isIOS,
+        /**
          * A frequent use case is to have a different render in 'mobile' mode,
          * meaning when the screen is small.  This flag (boolean) is true when
          * the size is XS/VSM/SM. It is also updated dynamically.
@@ -46,6 +65,14 @@ var config = {
          * @type Boolean
          */
         isMobile: null,
+        /**
+         * Mobile device detection using userAgent.
+         * This flag doesn't depend on the size/resolution of the screen.
+         * It targets mobile devices which suggests that there is a virtual keyboard.
+         *
+         * @return {boolean}
+         */
+        isMobileDevice: isAndroid || isIOS || isOtherMobileDevice,
         /**
          * Mapping between the numbers 0,1,2,3,4,5,6 and some descriptions
          */
