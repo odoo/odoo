@@ -103,10 +103,13 @@ class AccountMoveReversal(models.TransientModel):
             action.update({
                 'view_mode': 'form',
                 'res_id': moves_to_redirect.id,
+                'context':{'default_type':  moves_to_redirect.type},
             })
         else:
             action.update({
                 'view_mode': 'tree,form',
                 'domain': [('id', 'in', moves_to_redirect.ids)],
             })
+            if len(set(moves_to_redirect.mapped('type'))) == 1:
+                action['context'] = {'default_type':  moves_to_redirect.mapped('type').pop()}
         return action
