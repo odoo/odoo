@@ -3,6 +3,16 @@
 import AbstractField from 'web.AbstractField';
 import fieldRegistry from 'web.field_registry';
 
+// temporary for OnNoResultReturned bug
+import {registry} from "@web/core/registry";
+import {UncaughtCorsError} from "@web/core/errors/error_service";
+const errorHandlerRegistry = registry.category("error_handlers");
+
+function corsIgnoredErrorHandler(env, error) {
+    if (error instanceof UncaughtCorsError) {
+        return true;
+    }
+}
 
 var MondialRelayWidget = AbstractField.extend({
     resetOnAnyFieldChange: true,
@@ -58,6 +68,17 @@ var MondialRelayWidget = AbstractField.extend({
                     'country': RelaySelected.Pays,
                 });
                 this._setValue(values);
+            },
+            OnNoResultReturned: () => {
+                // HACK while Mondial Relay fix his bug
+                // disable corsErrorHandler for 10 seconds
+                // If code postal not valid, it will crash with Cors Error:
+                // Cannot read property 'on' of undefined at u.MR_FitBounds
+                const randInt = Math.floor(Math.random() * 100);
+                errorHandlerRegistry.add("corsIgnoredErrorHandler" + randInt, corsIgnoredErrorHandler, {sequence: 10});
+                setTimeout(function () {
+                    errorHandlerRegistry.remove("corsIgnoredErrorHandler" + randInt);
+                }, 10000);
             },
         };
         this.$el.show();
