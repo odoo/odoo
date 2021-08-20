@@ -151,6 +151,7 @@
             'point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetPricelistButton.js',
             'point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetFiscalPositionButton.js',
             'point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/ProductInfoButton.js',
+            'point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/RefundButton.js',
             'point_of_sale/static/src/js/ChromeWidgets/ClientScreenButton.js',
             'point_of_sale/static/src/js/Misc/NumberBuffer.js',
             'point_of_sale/static/src/js/Misc/MobileOrderWidget.js',

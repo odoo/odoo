@@ -13,6 +13,7 @@ var core = require('web.core');
 var field_utils = require('web.field_utils');
 var time = require('web.time');
 var utils = require('web.utils');
+var { Gui } = require('point_of_sale.Gui');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -77,6 +78,26 @@ exports.PosModel = Backbone.Model.extend({
         // validation (order paid then sent to the backend).
         this.validated_orders_name_server_id_map = {};
 
+        // Record<orderlineId, { 'qty': number, 'orderline': { qty: number, refundedQty: number, orderUid: string }, 'destinationOrderUid': string }>
+        this.toRefundLines = {};
+        this.TICKET_SCREEN_STATE = {
+            syncedOrders: {
+                currentPage: 1,
+                cache: {},
+                toShow: [],
+                nPerPage: 80,
+                totalCount: null,
+            },
+            ui: {
+                selectedSyncedOrderId: null,
+                searchDetails: this.getDefaultSearchDetails(),
+                filter: null,
+                // maps the order's backendId to it's selected orderline
+                selectedOrderlineIds: {},
+                highlightHeaderNote: false,
+            },
+        };
+
         // Extract the config id from the url.
         var given_config = new RegExp('[\?&]config_id=([^&#]*)').exec(window.location.href);
         this.config_id = given_config && given_config[1] && parseInt(given_config[1]) || false;
@@ -109,6 +130,12 @@ exports.PosModel = Backbone.Model.extend({
         this.ready = this.load_server_data().then(function(){
             return self.after_load_server_data();
         });
+    },
+    getDefaultSearchDetails: function() {
+        return {
+            fieldName: 'RECEIPT_NUMBER',
+            searchTerm: '',
+        };
     },
     after_load_server_data: function(){
         this.load_orders();
@@ -749,6 +776,13 @@ exports.PosModel = Backbone.Model.extend({
             // or when we intentionally delete the only concurrent order
             this.add_new_order({ silent: true });
         }
+        // Remove the link between the refund orderlines when deleting an order
+        // that contains a refund.
+        for (const line of removed_order.get_orderlines()) {
+            if (line.refunded_orderline_id) {
+                delete this.toRefundLines[line.refunded_orderline_id];
+            }
+        }
     },
 
     // returns the user who is currently the cashier for this point of sale
@@ -1027,9 +1061,35 @@ exports.PosModel = Backbone.Model.extend({
         }).catch(function(error){
             self.set_synch(self.get('failed') ? 'error' : 'disconnected');
             throw error;
+        }).finally(function() {
+            self._after_flush_orders(orders);
         });
     },
-
+    /**
+     * Hook method after _flush_orders resolved or rejected.
+     * It aims to:
+     *   - remove the refund orderlines from toRefundLines
+     *   - invalidate cache of refunded synced orders
+     */
+    _after_flush_orders: function(orders) {
+        const refundedOrderIds = new Set();
+        for (const order of orders) {
+            for (const line of order.data.lines) {
+                const refundDetail = this.toRefundLines[line[2].refunded_orderline_id];
+                if (!refundDetail) continue;
+                // Collect the backend id of the refunded orders.
+                refundedOrderIds.add(refundDetail.orderline.orderBackendId);
+                // Reset the refund detail for the orderline.
+                delete this.toRefundLines[refundDetail.orderline.id];
+            }
+        }
+        this._invalidateSyncedOrdersCache([...refundedOrderIds]);
+    },
+    _invalidateSyncedOrdersCache: function(ids) {
+        for (const id of ids) {
+            delete this.TICKET_SCREEN_STATE.syncedOrders.cache[id];
+        }
+    },
     set_synch: function(status, pending) {
         if (['connected', 'connecting', 'error', 'disconnected'].indexOf(status) === -1) {
             console.error(status, ' is not a known connection state.');
@@ -1285,6 +1345,14 @@ exports.PosModel = Backbone.Model.extend({
     },
 
     electronic_payment_interfaces: {},
+
+    isProductQtyZero: function(qty) {
+        return utils.float_is_zero(qty, this.env.pos.dp['Product Unit of Measure']);
+    },
+
+    formatProductQty: function(qty) {
+        return field_utils.format.float(qty, { digits: [true, this.dp['Product Unit of Measure']] });
+    },
 
     format_currency: function(amount, precision) {
         var currency =
@@ -1639,6 +1707,8 @@ exports.Orderline = Backbone.Model.extend({
             this.pack_lot_lines.add(pack_lot_line);
         }
         this.set_customer_note(json.customer_note);
+        this.refunded_qty = json.refunded_qty;
+        this.refunded_orderline_id = json.refunded_orderline_id;
     },
     clone: function(){
         var orderline = new exports.Orderline({},{
@@ -1742,13 +1812,41 @@ exports.Orderline = Backbone.Model.extend({
     // sets the quantity of the product. The quantity will be rounded according to the
     // product's unity of measure properties. Quantities greater than zero will not get
     // rounded to zero
+    // Return true if successfully set the quantity, otherwise, return false.
     set_quantity: function(quantity, keep_price){
         this.order.assert_editable();
         if(quantity === 'remove'){
+            if (this.refunded_orderline_id in this.pos.toRefundLines) {
+                delete this.pos.toRefundLines[this.refunded_orderline_id];
+            }
             this.order.remove_orderline(this);
-            return;
+            return true;
         }else{
             var quant = typeof(quantity) === 'number' ? quantity : (field_utils.parse.float('' + quantity) || 0);
+            if (this.refunded_orderline_id in this.pos.toRefundLines) {
+                const toRefundDetail = this.pos.toRefundLines[this.refunded_orderline_id];
+                const maxQtyToRefund = toRefundDetail.orderline.qty - toRefundDetail.orderline.refundedQty
+                if (quant > 0) {
+                    Gui.showPopup('ErrorPopup', {
+                        title: _t('Positive quantity not allowed'),
+                        body: _t('Only a negative quantity is allowed for this refund line. Click on +/- to modify the quantity to be refunded.')
+                    });
+                    return false;
+                } else if (quant == 0) {
+                    toRefundDetail.qty = 0;
+                } else if (-quant <= maxQtyToRefund) {
+                    toRefundDetail.qty = -quant;
+                } else {
+                    Gui.showPopup('ErrorPopup', {
+                        title: _t('Greater than allowed'),
+                        body: _.str.sprintf(
+                            _t('The requested quantity to be refunded is higher than the refundable quantity of %s.'),
+                            this.pos.formatProductQty(maxQtyToRefund)
+                        ),
+                    });
+                    return false;
+                }
+            }
             var unit = this.get_unit();
             if(unit){
                 if (unit.rounding) {
@@ -1772,6 +1870,7 @@ exports.Orderline = Backbone.Model.extend({
             this.order.fix_tax_included_price(this);
         }
         this.trigger('change', this);
+        return true;
     },
     // return the quantity of product
     get_quantity: function(){
@@ -1890,6 +1989,7 @@ exports.Orderline = Backbone.Model.extend({
             full_product_name: this.get_full_product_name(),
             price_extra: this.get_price_extra(),
             customer_note: this.get_customer_note(),
+            refunded_orderline_id: this.refunded_orderline_id
         };
     },
     //used to create a json of the ticket, to be sent to the printer
@@ -3036,6 +3136,9 @@ exports.Order = Backbone.Model.extend({
             this.is_tipped = true;
             this.tip_amount = options.price;
         }
+        if (options.refunded_orderline_id) {
+            orderline.refunded_orderline_id = options.refunded_orderline_id;
+        }
     },
     get_selected_orderline: function(){
         return this.selected_orderline;
@@ -3491,6 +3594,14 @@ exports.Order = Backbone.Model.extend({
     },
     is_to_ship: function(){
         return this.to_ship;
+    },
+    getHasRefundLines: function() {
+        for (const line of this.get_orderlines()) {
+            if (line.refunded_orderline_id) {
+                return true;
+            }
+        }
+        return false;
     },
 });
 
