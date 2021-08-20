@@ -82,6 +82,11 @@ def get_db_name():
     # the command-line, this will break when installing another
     # database from XML-RPC).
     if not db and hasattr(threading.current_thread(), 'dbname'):
+        # Force POST value that is set as 8069 by dynamic value
+        # to avoid dead test of Odoo
+        global PORT
+        PORT = odoo.tools.config['http_port']
+
         return threading.current_thread().dbname
     return db
 
