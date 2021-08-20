@@ -78,6 +78,7 @@ class MailComposer(models.TransientModel):
             result.update(self.get_record_data(result))
 
         filtered_result = dict((fname, result[fname]) for fname in result if fname in fields)
+        filtered_result['create_uid'] = self.env.user.id
         return filtered_result
 
     # content
