@@ -79,6 +79,7 @@ class Registry(Mapping):
             # Make it available in the registries dictionary then remove it
             # if an exception is raised.
             cls.delete(db_name)
+            # pylint: disable=unsupported-assignment-operation
             cls.registries[db_name] = registry
             try:
                 registry.setup_signaling()
@@ -90,6 +91,7 @@ class Registry(Mapping):
                     raise
             except Exception:
                 _logger.error('Failed to load registry')
+                # pylint: disable=unsupported-delete-operation
                 del cls.registries[db_name]
                 raise
 

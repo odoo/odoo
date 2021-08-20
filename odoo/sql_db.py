@@ -24,7 +24,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ
 from psycopg2.pool import PoolError
 from werkzeug import urls
 
-from odoo.api import Environment, Transaction
+from odoo.api import Transaction
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
@@ -61,31 +61,6 @@ from datetime import timedelta
 import threading
 from inspect import currentframe
 
-
-def flush_env(cr, *, clear=True):
-    """ Retrieve and flush an environment corresponding to the given cursor.
-        Also clear the environment if ``clear`` is true.
-    """
-    env_to_flush = None
-    for env in list(cr.transaction):
-        # don't flush() on another cursor or with a RequestUID
-        if env.cr is cr and (isinstance(env.uid, int) or env.uid is None):
-            env_to_flush = env
-            if env.uid is not None:
-                break               # prefer an environment with a real uid
-
-    if env_to_flush is not None:
-        env_to_flush['base'].flush()
-        if clear:
-            env_to_flush.clear()    # clear remaining new records to compute
-
-def clear_env(cr):
-    """ Retrieve and clear an environment corresponding to the given cursor """
-    for env in list(cr.transaction):
-        if env.cr is cr:
-            env.clear()
-            break
-
 import re
 re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$')
 re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$')
@@ -117,17 +92,17 @@ class BaseCursor:
         """context manager entering in a new savepoint"""
         name = uuid.uuid1().hex
         if flush:
-            flush_env(self, clear=False)
+            self.transaction.flush(clear=False)
             self.precommit.run()
         self.execute('SAVEPOINT "%s"' % name)
         try:
             yield
             if flush:
-                flush_env(self, clear=False)
+                self.transaction.flush(clear=False)
                 self.precommit.run()
         except Exception:
             if flush:
-                clear_env(self)
+                self.transaction.clear()
                 self.precommit.clear()
             self.execute('ROLLBACK TO SAVEPOINT "%s"' % name)
             raise
@@ -152,7 +127,7 @@ class BaseCursor:
         self.close()
 
     def reset(self):
-        self.transaction = Transaction()
+        self.transaction = Transaction()  # or maybe reset transaction?  self.transaction.reset() or self.transaction = self.transaction.reset()
 
 class Cursor(BaseCursor):
     """Represents an open transaction to the PostgreSQL DB backend,
@@ -458,7 +433,7 @@ class Cursor(BaseCursor):
     @check
     def commit(self):
         """ Perform an SQL `COMMIT` """
-        flush_env(self)
+        self.transaction.flush()
         self.precommit.run()
         result = self._cnx.commit()
         self._now = None
@@ -470,7 +445,7 @@ class Cursor(BaseCursor):
     @check
     def rollback(self):
         """ Perform an SQL `ROLLBACK` """
-        clear_env(self)
+        self.transaction.clear()
         self.precommit.clear()
         self.postcommit.clear()
         self.prerollback.run()
@@ -539,7 +514,7 @@ class TestCursor(BaseCursor):
     @check
     def commit(self):
         """ Perform an SQL `COMMIT` """
-        flush_env(self)
+        self.transaction.flush()
         self.precommit.run()
         self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
         self.prerollback.clear()
@@ -549,7 +524,7 @@ class TestCursor(BaseCursor):
     @check
     def rollback(self):
         """ Perform an SQL `ROLLBACK` """
-        clear_env(self)
+        self.transaction.clear()
         self.precommit.clear()
         self.postcommit.clear()
         self.prerollback.run()

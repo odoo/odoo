@@ -500,10 +500,9 @@ class Environment(Mapping):
         self.cache = self.transaction.cache # proxy to cache, to remove?
         return self
 
-    
     def reset(self):
-        
         self.cr.reset()
+
     #
     # Mapping methods
     #
@@ -671,7 +670,7 @@ class Environment(Mapping):
         self.transaction.clear()
 
     @contextmanager
-    def clear_upon_failure(self):  # TODO move to transaction 
+    def clear_upon_failure(self):  # TODO move to transaction
         """ Context manager that clears the environments (caches and fields to
             recompute) upon exception.
         """
@@ -820,6 +819,24 @@ class Transaction(object):
         self.cache.invalidate()
         self.tocompute.clear()
         self.towrite.clear()
+
+    def flush(self, clear=True):
+        """ Retrieve and flush an environment corresponding to the given cursor.
+            Also clear the environment if ``clear`` is true.
+        """
+        env_to_flush = None
+        for env in self:
+            # don't flush() with a RequestUID
+            # ???
+            if isinstance(env.uid, int) or env.uid is None:
+                env_to_flush = env
+                if env.uid is not None:
+                    break               # prefer an environment with a real uid
+
+        if env_to_flush is not None:
+            env_to_flush['base'].flush()
+            if clear:
+                env_to_flush.clear()    # clear remaining new records to compute
 
 
 # sentinel value for optional parameters

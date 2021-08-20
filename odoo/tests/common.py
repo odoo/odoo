@@ -5,6 +5,7 @@ helpers and classes to write tests.
 
 """
 import base64
+import copy
 import collections
 import difflib
 import functools
@@ -719,7 +720,10 @@ class TransactionCase(BaseCase):
         self._savepoint_id = next(savepoint_seq)
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
         self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
-
+        #self._cache_save = copy.deepcopy(self.env.transaction.cache._data)
+        #def restore_cache():
+        #    self.env.transaction.cache._data = self._cache_save
+        #self.addCleanup(restore_cache)
         self.patch(self.registry['res.partner'], '_get_gravatar_image', lambda *a: False)
 
 
