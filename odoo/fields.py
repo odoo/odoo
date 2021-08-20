@@ -873,8 +873,22 @@ class Field(MetaField('DummyField', (object,), {})):
                 model.flush([self.name])
                 model.pool.post_constraint(apply_required, model, self.name)
 
+<<<<<<< HEAD
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
+=======
+            :param model: an instance of the field's model
+            :param column: the column's configuration (dict) if it exists, or ``None``
+        """
+        indexname = '%s_%s_index' % (model._table, self.name)
+        if self.index:
+            try:
+                sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
+            except psycopg2.OperationalError:
+                _schema.error("Unable to add index for %s", self)
+        elif sql.index_exists(model._cr, indexname):
+            _schema.info("Keep unexpected index %s on table %s", indexname, model._table)
+>>>>>>> afe7d7757ff... temp
 
     def update_db_related(self, model):
         """ Compute a stored related field directly in SQL. """
