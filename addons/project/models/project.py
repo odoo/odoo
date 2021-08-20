@@ -1350,6 +1350,44 @@ class Task(models.Model):
         self._ensure_fields_are_accessible(fields)
         return super(Task, self).read(fields=fields, load=load)
 
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        fields_list = ([f.split(':')[0] for f in fields] or [])
+        if groupby:
+            fields_list += [groupby] if isinstance(groupby, str) else groupby
+        if domain:
+            fields_list += [term[0].split('.')[0] for term in domain if isinstance(term, (tuple, list))]
+        self._ensure_fields_are_accessible(fields_list)
+        return super(Task, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        fields_list = {term[0] for term in args if isinstance(term, (tuple, list))}
+        self._ensure_fields_are_accessible(fields_list)
+        return super(Task, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+
+    def mapped(self, func):
+        # Note: This will protect the filtered method too
+        if func and isinstance(func, str):
+            fields_list = func.split('.')
+            self._ensure_fields_are_accessible(fields_list)
+        return super(Task, self).mapped(func)
+
+    def filtered_domain(self, domain):
+        fields_list = [term[0] for term in domain if isinstance(term, (tuple, list))]
+        self._ensure_fields_are_accessible(fields_list)
+        return super(Task, self).filtered_domain(domain)
+
+    def copy_data(self, default=None):
+        defaults = super().copy_data(default=default)
+        return [{k: v for k, v in default.items() if k in self.SELF_READABLE_FIELDS} for default in defaults]
+
+    @api.model
+    def _ensure_portal_user_can_write(self, fields):
+        for field in fields:
+            if field not in self.SELF_WRITABLE_FIELDS:
+                raise AccessError(_('You have not write access of %s field.') % field)
+
     @api.model_create_multi
     def create(self, vals_list):
         is_portal_user = self.env.user.has_group('base.group_portal')
