@@ -43,7 +43,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         # Nothing should be tracked
         self.assertTrue(all(m.product_uom_qty == m.reserved_availability for m in picking_receipt.move_lines))
         self.assertEqual(picking_receipt.state, 'assigned')
-        self.assertFalse(picking_receipt.display_action_record_components)
+        self.assertEqual(picking_receipt.display_action_record_components, 'hide')
 
         # Check the created manufacturing order
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
@@ -128,7 +128,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt.action_confirm()
 
         # Nothing should be tracked
-        self.assertFalse(picking_receipt.display_action_record_components)
+        self.assertEqual(picking_receipt.display_action_record_components, 'hide')
 
         # Pickings should directly be created
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
@@ -196,7 +196,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt.action_confirm()
 
         # Nothing should be tracked
-        self.assertFalse(picking_receipt.display_action_record_components)
+        self.assertEqual(picking_receipt.display_action_record_components, 'hide')
 
         # Pickings should directly be created
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
@@ -392,7 +392,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         picking_receipt.move_lines.quantity_done = 3.0
         picking_receipt._action_done()
-        mo = picking_receipt._get_subcontracted_productions()
+        mo = picking_receipt._get_subcontract_production()
         move_comp1 = mo.move_raw_ids.filtered(lambda m: m.product_id == self.comp1)
         move_comp3 = mo.move_raw_ids.filtered(lambda m: m.product_id == comp3)
         self.assertEqual(sum(move_comp1.mapped('product_uom_qty')), 3.0)
@@ -625,6 +625,7 @@ class TestSubcontractingTracking(TransactionCase):
         })
         bom_form = Form(self.env['mrp.bom'])
         bom_form.type = 'subcontract'
+        bom_form.consumption = 'strict'
         bom_form.subcontractor_ids.add(self.subcontractor_partner1)
         bom_form.product_tmpl_id = self.finished_product.product_tmpl_id
         with bom_form.bom_line_ids.new() as bom_line:
@@ -649,7 +650,7 @@ class TestSubcontractingTracking(TransactionCase):
         picking_receipt.action_confirm()
 
         # We should be able to call the 'record_components' button
-        self.assertTrue(picking_receipt.display_action_record_components)
+        self.assertEqual(picking_receipt.display_action_record_components, 'mandatory')
 
         # Check the created manufacturing order
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom_tracked.id)])
@@ -698,7 +699,7 @@ class TestSubcontractingTracking(TransactionCase):
         mo.subcontracting_record_component()
 
         # We should not be able to call the 'record_components' button
-        self.assertFalse(picking_receipt.display_action_record_components)
+        self.assertEqual(picking_receipt.display_action_record_components, 'hide')
 
         picking_receipt.button_validate()
         self.assertEqual(mo.state, 'done')
@@ -727,7 +728,7 @@ class TestSubcontractingTracking(TransactionCase):
         picking_receipt.action_confirm()
 
         # We shouldn't be able to call the 'record_components' button
-        self.assertFalse(picking_receipt.display_action_record_components)
+        self.assertEqual(picking_receipt.display_action_record_components, 'hide')
 
         wh = picking_receipt.picking_type_id.warehouse_id
         lot_names_finished = [f"subtracked_{i}" for i in range(nb_finished_product)]
@@ -774,7 +775,7 @@ class TestSubcontractingTracking(TransactionCase):
         picking_receipt.action_confirm()
 
         # We should be able to call the 'record_components' button
-        self.assertTrue(picking_receipt.display_action_record_components)
+        self.assertEqual(picking_receipt.display_action_record_components, 'mandatory')
 
         # Check the created manufacturing order
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom_tracked.id)])
@@ -818,7 +819,7 @@ class TestSubcontractingTracking(TransactionCase):
             mo.subcontracting_record_component()
 
         # We should not be able to call the 'record_components' button
-        self.assertFalse(picking_receipt.display_action_record_components)
+        self.assertEqual(picking_receipt.display_action_record_components, 'hide')
 
         picking_receipt.button_validate()
         self.assertEqual(mo.state, 'done')

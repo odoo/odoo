@@ -3,7 +3,8 @@
 
 from datetime import timedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_compare
 from dateutil.relativedelta import relativedelta
 
@@ -11,21 +12,23 @@ from dateutil.relativedelta import relativedelta
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    display_action_record_components = fields.Boolean(compute='_compute_display_action_record_components')
+    display_action_record_components = fields.Selection(
+        [('hide', 'Hide'), ('facultative', 'Facultative'), ('mandatory', 'Mandatory')],
+        compute='_compute_display_action_record_components')
 
-    @api.depends('state')
+    @api.depends('state', 'move_lines')
     def _compute_display_action_record_components(self):
+        self.display_action_record_components = 'hide'
         for picking in self:
-            # Hide if not encoding state
-            if picking.state in ('draft', 'cancel', 'done'):
-                picking.display_action_record_components = False
+            # Hide if not encoding state or it is not a subcontracting picking
+            if picking.state in ('draft', 'cancel', 'done') or not picking._is_subcontract():
                 continue
-            if not picking._is_subcontract():
-                picking.display_action_record_components = False
+            subconctracted_moves = picking.move_lines.filtered(lambda m: m.is_subcontract)
+            if subconctracted_moves._subcontrating_should_be_record():
+                picking.display_action_record_components = 'mandatory'
                 continue
-            # Hide if all tracked product move lines are already recorded.
-            picking.display_action_record_components = any(
-                move._has_components_to_record() for move in picking.move_lines)
+            if subconctracted_moves._subcontrating_can_be_record():
+                picking.display_action_record_components = 'facultative'
 
     # -------------------------------------------------------------------------
     # Action methods
@@ -34,13 +37,13 @@ class StockPicking(models.Model):
         res = super(StockPicking, self)._action_done()
 
         for move in self.move_lines.filtered(lambda move: move.is_subcontract):
-            # Auto set qty_producing/lot_producing_id of MO if there isn't tracked component
-            # If there is tracked component, the flow use subcontracting_record_component instead
-            if move._has_tracked_subcontract_components():
-                continue
-            production = move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))[-1:]
+            # Auto set qty_producing/lot_producing_id of MO wasn't recorded
+            # manually (if the flexible + record_component or has tracked component)
+            production = move._get_subcontract_production().filtered(lambda p: not p._has_been_recorded())
             if not production:
                 continue
+            if len(production) > 1:
+                raise UserError("It shouldn't happen to have multiple production to record for the same subconctracted move")
             # Manage additional quantities
             quantity_done_move = move.product_uom._compute_quantity(move.quantity_done, production.product_uom_id)
             if float_compare(production.product_qty, quantity_done_move, precision_rounding=production.product_uom_id.rounding) == -1:
@@ -63,11 +66,11 @@ class StockPicking(models.Model):
                     production = backorder
 
         for picking in self:
-            productions_to_done = picking._get_subcontracted_productions()._subcontracting_filter_to_done()
+            productions_to_done = picking._get_subcontract_production()._subcontracting_filter_to_done()
             production_ids_backorder = []
             if not self.env.context.get('cancel_backorder'):
                 production_ids_backorder = productions_to_done.filtered(lambda mo: mo.state == "progress").ids
-            productions_to_done.with_context(subcontract_move_id=True, mo_ids_to_backorder=production_ids_backorder).button_mark_done()
+            productions_to_done.with_context(mo_ids_to_backorder=production_ids_backorder).button_mark_done()
             # For concistency, set the date on production move before the date
             # on picking. (Traceability report + Product Moves menu item)
             minimum_date = min(picking.move_line_ids.mapped('date'))
@@ -78,9 +81,16 @@ class StockPicking(models.Model):
 
     def action_record_components(self):
         self.ensure_one()
-        for move in self.move_lines:
-            if move._has_components_to_record():
+        move_subcontracted = self.move_lines.filtered(lambda m: m.is_subcontract)
+        for move in move_subcontracted:
+            production = move._subcontrating_should_be_record()
+            if production:
                 return move._action_record_components()
+        for move in move_subcontracted:
+            production = move._subcontrating_can_be_record()
+            if production:
+                return move._action_record_components()
+        raise UserError(_("Nothing to record"))
 
     # -------------------------------------------------------------------------
     # Subcontract helpers
@@ -89,8 +99,8 @@ class StockPicking(models.Model):
         self.ensure_one()
         return self.picking_type_id.code == 'incoming' and any(m.is_subcontract for m in self.move_lines)
 
-    def _get_subcontracted_productions(self):
-        return self.move_lines.filtered(lambda move: move.is_subcontract).move_orig_ids.production_id
+    def _get_subcontract_production(self):
+        return self.move_lines._get_subcontract_production()
 
     def _get_warehouse(self, subcontract_move):
         return subcontract_move.warehouse_id or self.picking_type_id.warehouse_id or subcontract_move.move_dest_ids.picking_type_id.warehouse_id

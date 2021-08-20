@@ -57,7 +57,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt.move_lines.quantity_done = 1.0
         picking_receipt._action_done()
 
-        mo = picking_receipt._get_subcontracted_productions()
+        mo = picking_receipt._get_subcontract_production()
         # Finished is made of 1 comp1 and 1 comp2.
         # Cost of comp1 = 10
         # Cost of comp2 = 20

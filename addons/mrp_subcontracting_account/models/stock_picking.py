@@ -10,7 +10,7 @@ class StockPicking(models.Model):
 
     def action_view_stock_valuation_layers(self):
         action = super(StockPicking, self).action_view_stock_valuation_layers()
-        subcontracted_productions = self._get_subcontracted_productions()
+        subcontracted_productions = self._get_subcontract_production()
         if not subcontracted_productions:
             return action
         domain = action['domain']
