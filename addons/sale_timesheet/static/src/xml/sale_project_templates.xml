@@ -12,7 +12,7 @@
     </t>
 
     <t t-name="sale_timesheet.ProfitabilitySection" owl="1">
-        <t t-if="state.data.user.is_project_manager &amp;&amp; state.data.profitability_items.data.length > 0">
+        <t t-if="state.data.user.is_project_user &amp;&amp; state.data.profitability_items.data.length > 0">
             <t t-set="profitability_items" t-value="state.data.profitability_items"/>
             <div class="o_rightpanel_section" name="profitability">
                 <div class="o_rightpanel_header">

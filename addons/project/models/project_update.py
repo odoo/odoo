@@ -8,9 +8,9 @@ from werkzeug.urls import url_encode
 from odoo import api, fields, models
 
 STATUS_COLOR = {
-    'on_track': 10,  # green
+    'on_track': 20,  # green / success
     'at_risk': 2,  # orange
-    'off_track': 1,  # red
+    'off_track': 23,  # red / danger
     'on_hold': 4,  # light blue
 }
 
@@ -71,7 +71,7 @@ class ProjectUpdate(models.Model):
     @api.model
     def create(self, vals):
         update = super().create(vals)
-        update.project_id.last_update_id = update
+        update.project_id.sudo().last_update_id = update
         return update
 
     # ---------------------------------

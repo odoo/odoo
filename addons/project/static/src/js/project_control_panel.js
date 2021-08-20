@@ -32,7 +32,7 @@ export class ProjectControlPanel extends ControlPanel {
                 method: 'get_last_update_or_default',
                 args: [this.project_id],
             });
-            this.is_project_manager = await session.user_has_group('project.group_project_manager');
+            this.is_project_user = await session.user_has_group('project.group_project_user');
         }
     }
 

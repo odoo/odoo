@@ -663,7 +663,7 @@ class Project(models.Model):
 
     def _get_user_values(self):
         return {
-            'is_project_manager': self.user_has_groups('project.group_project_manager'),
+            'is_project_user': self.user_has_groups('project.group_project_user'),
         }
 
     def _get_tasks_analysis(self):
