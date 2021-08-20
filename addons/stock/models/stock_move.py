@@ -1763,6 +1763,15 @@ class StockMove(models.Model):
         """
         self.move_line_ids = self._set_quantity_done_prepare_vals(qty)
 
+    def _set_quantities_to_reservation(self):
+        for move in self:
+            if move.state not in ('partially_available', 'assigned'):
+                continue
+            for move_line in move.move_line_ids:
+                if move.has_tracking != 'none' and not (move_line.lot_id or move_line.lot_name):
+                    continue
+                move_line.qty_done = move_line.product_uom_qty
+
     def _adjust_procure_method(self):
         """ This method will try to apply the procure method MTO on some moves if
         a compatible MTO route is found. Else the procure method will be set to MTS
