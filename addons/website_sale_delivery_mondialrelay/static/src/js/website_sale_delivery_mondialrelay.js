@@ -6,6 +6,16 @@ import {qweb as QWeb} from "web.core";
 
 const WebsiteSaleDeliveryWidget = publicWidget.registry.websiteSaleDelivery;
 
+// temporary for OnNoResultReturned bug
+import {registry} from "@web/core/registry";
+import {UncaughtCorsError} from "@web/core/errors/error_service";
+const errorHandlerRegistry = registry.category("error_handlers");
+
+function corsIgnoredErrorHandler(env, error) {
+    if (error instanceof UncaughtCorsError) {
+        return true;
+    }
+}
 
 WebsiteSaleDeliveryWidget.include({
     xmlDependencies: (WebsiteSaleDeliveryWidget.prototype.xmlDependencies || []).concat([
@@ -67,6 +77,17 @@ WebsiteSaleDeliveryWidget.include({
                 OnParcelShopSelected: (RelaySelected) => {
                     this.lastRelaySelected = RelaySelected;
                     this.$modal_mondialrelay.find('#btn_confirm_relay').removeClass('disabled');
+                },
+                OnNoResultReturned: () => {
+                    // HACK while Mondial Relay fix his bug
+                    // disable corsErrorHandler for 10 seconds
+                    // If code postal not valid, it will crash with Cors Error:
+                    // Cannot read property 'on' of undefined at u.MR_FitBounds
+                    const randInt = Math.floor(Math.random() * 100);
+                    errorHandlerRegistry.add("corsIgnoredErrorHandler" + randInt, corsIgnoredErrorHandler, {sequence: 10});
+                    setTimeout(function () {
+                        errorHandlerRegistry.remove("corsIgnoredErrorHandler" + randInt);
+                    }, 10000);
                 },
             };
             this.$modal_mondialrelay.find('#o_zone_widget').MR_ParcelShopPicker(params);
