@@ -25,7 +25,7 @@ class TestProjectUpdateAccessRights(TestProjectCommon):
     def test_project_update_user_can_read(self):
         self.project_update_1.with_user(self.env.user).name
 
-    @users('Project user', 'Base user')
+    @users('Base user')
     def test_project_update_user_no_write(self):
         with self.assertRaises(AccessError, msg="%s should not be able to write in the project update" % self.env.user.name):
             self.project_update_1.with_user(self.env.user).name = "Test write"
@@ -34,13 +34,7 @@ class TestProjectUpdateAccessRights(TestProjectCommon):
     def test_project_update_admin_can_write(self):
         self.project_update_1.with_user(self.env.user).name = "Test write"
 
-    @users('Project user')
-    def test_project_update_user_project_owner_cannot_write(self):
-        self.project_pigs.user_id = self.env.user
-        with self.assertRaises(AccessError, msg="%s, who owns the project, should not be able to write in the project update" % self.env.user.name):
-            self.project_update_1.with_user(self.env.user).name = "Test write"
-
-    @users('Project user', 'Base user')
+    @users('Base user')
     def test_project_update_user_no_unlink(self):
         with self.assertRaises(AccessError, msg="%s should not be able to unlink in the project update" % self.env.user.name):
             self.project_update_1.with_user(self.env.user).unlink()
@@ -48,9 +42,3 @@ class TestProjectUpdateAccessRights(TestProjectCommon):
     @users('Project admin')
     def test_project_update_admin_unlink(self):
         self.project_update_1.with_user(self.env.user).unlink()
-
-    @users('Project user')
-    def test_project_update_user_project_owner_no_unlink(self):
-        self.project_pigs.user_id = self.env.user
-        with self.assertRaises(AccessError, msg="%s should not be able to unlink the project update even if project owner" % self.env.user.name):
-            self.project_update_1.with_user(self.env.user).unlink()
