@@ -408,15 +408,16 @@ class IrActionsServer(models.Model):
     _order = 'sequence,name'
 
     DEFAULT_PYTHON_CODE = """# Available variables:
-#  - env: Odoo Environment on which the action is triggered
-#  - model: Odoo Model of the record on which the action is triggered; is a void recordset
+#  - env: environment on which the action is triggered
+#  - model: model of the record on which the action is triggered; is a void recordset
 #  - record: record on which the action is triggered; may be void
 #  - records: recordset of all records on which the action is triggered in multi-mode; may be void
 #  - time, datetime, dateutil, timezone: useful Python libraries
-#  - float_compare: Odoo function to compare floats based on specific precisions
+#  - float_compare: utility function to compare floats based on specific precision
 #  - log: log(message, level='info'): logging function to record debug information in ir.logging table
-#  - UserError: Warning Exception to use with raise
-#  - Command: x2Many commands namespace
+#  - _logger: _logger.info(message): logger to emit messages in server logs
+#  - UserError: exception class for raising user-facing warning messages
+#  - Command: x2many commands namespace
 # To return an action, assign: action = {...}\n\n\n\n"""
 
     type = fields.Char(default='ir.actions.server')
