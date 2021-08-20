@@ -124,6 +124,25 @@
             </field>
         </record>
 
+        <record id="view_account_analytic_line_filter" model="ir.ui.view">
+            <field name="name">account.analytic.line.select</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Analytic Lines">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="account_id"/>
+                    <field name="tag_ids"/>
+                    <filter string="Date" name="date" date="date"/>
+                    <group string="Group By..." expand="0" name="groupby">
+                        <filter string="Analytic Account" name="account_id" context="{'group_by': 'account_id'}"/>
+                        <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
+                        <filter string="Category" name='category' context="{'group_by': 'category'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="account_analytic_line_action">
             <field name="context">{'search_default_group_date': 1, 'default_account_id': active_id}</field>
             <field name="domain">[('account_id','=', active_id)]</field>
@@ -131,6 +150,7 @@
             <field name="res_model">account.analytic.line</field>
             <field name="view_mode">tree,form,graph,pivot</field>
             <field name="view_id" ref="view_account_analytic_line_tree"/>
+            <field name="search_view_id" ref="view_account_analytic_line_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
                 No activity yet on this account
@@ -311,25 +331,6 @@
                     </group>
                 </sheet>
                 </form>
-            </field>
-        </record>
-
-        <record id="view_account_analytic_line_filter" model="ir.ui.view">
-            <field name="name">account.analytic.line.select</field>
-            <field name="model">account.analytic.line</field>
-            <field name="arch" type="xml">
-                <search string="Search Analytic Lines">
-                    <field name="name"/>
-                    <field name="date"/>
-                    <field name="account_id"/>
-                    <field name="tag_ids"/>
-                    <filter string="Date" name="date" date="date"/>
-                    <group string="Group By..." expand="0" name="groupby">
-                        <filter string="Analytic Account" name="account_id" context="{'group_by': 'account_id'}"/>
-                        <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
-                        <filter string="Category" name='category' context="{'group_by': 'category'}"/>
-                    </group>
-                </search>
             </field>
         </record>
 
