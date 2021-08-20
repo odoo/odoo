@@ -93,7 +93,7 @@ class StockPicking(models.Model):
         return self.move_lines.filtered(lambda move: move.is_subcontract).move_orig_ids.production_id
 
     def _get_warehouse(self, subcontract_move):
-        return subcontract_move.warehouse_id or self.picking_type_id.warehouse_id
+        return subcontract_move.warehouse_id or self.picking_type_id.warehouse_id or subcontract_move.move_dest_ids.picking_type_id.warehouse_id
 
     def _prepare_subcontract_mo_vals(self, subcontract_move, bom):
         subcontract_move.ensure_one()
