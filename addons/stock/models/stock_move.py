@@ -897,7 +897,7 @@ class StockMove(models.Model):
         warehouse = self.location_dest_id.warehouse_id
         forecast_availability = self.product_id.with_context(warehouse=warehouse.id, to_date=self.date).virtual_available
         if self.state == 'draft':
-            forecast_availability += self.product_uom_qty
+            forecast_availability += self.product_qty
         return forecast_availability
 
     @api.onchange('product_id', 'picking_type_id')
