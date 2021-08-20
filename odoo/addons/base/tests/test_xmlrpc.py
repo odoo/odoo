@@ -62,6 +62,15 @@ class TestXMLRPC(common.HttpCase):
         [x] = self.xmlrpc('res.users', 'read', r.id, ['signature'])
         self.assertEqual(x['signature'], sig)
 
+    def test_xmlrpc_frozendict_marshalling(self):
+        """ Test that the marshalling of a frozendict object works properly over XMLRPC """
+        ctx = self.xmlrpc_object.execute(
+            common.get_db_name(), self.admin_uid, 'admin',
+            'res.users', 'context_get',
+        )
+        self.assertEqual(ctx['lang'], 'en_US')
+        self.assertEqual(ctx['tz'], 'Europe/Brussels')
+
     def test_jsonrpc_read_group(self):
         self._json_call(
             common.get_db_name(), self.admin_uid, 'admin',
