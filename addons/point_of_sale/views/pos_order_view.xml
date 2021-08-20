@@ -10,11 +10,14 @@
                     <button name="action_pos_order_invoice" string="Invoice" type="object"
                             attrs="{'invisible': ['|', ('invoice_group', '=', False), ('state','!=','paid')]}"/>
                     <button name="refund" string="Return Products" type="object"
-                        attrs="{'invisible':[('state','=','draft')]}"/>
+                        attrs="{'invisible':['|', ('state','=','draft'), ('has_refundable_lines', '=', False)]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" />
+                    <field name="has_refundable_lines" invisible="1" />
+                    <field name="refunded_orders_count" invisible="1" />
                 </header>
                 <sheet>
                 <field name="failed_pickings" invisible="1"/>
+                <field name="is_refunded" invisible="1"/>
                 <div class="oe_button_box" name="button_box">
                     <button name="action_stock_picking"
                         type="object"
@@ -30,6 +33,20 @@
                         class="oe_stat_button"
                         icon="fa-pencil-square-o"
                         attrs="{'invisible':[('state','!=','invoiced')]}">
+                    </button>
+                    <button name="action_view_refund_orders"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-undo"
+                        attrs="{'invisible':[('is_refunded', '=', False)]}">
+                        <field name="refund_orders_count" widget="statinfo" string="Refunds" />
+                    </button>
+                    <button name="action_view_refunded_orders"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-shopping-cart "
+                        attrs="{'invisible':[('refunded_orders_count', '=', 0)]}">
+                        <field name="refunded_orders_count" widget="statinfo" string="Refunded Orders" />
                     </button>
                 </div>
                 <group col="4" colspan="4" name="order_fields">
@@ -61,6 +78,7 @@
                                 <field name="price_subtotal" widget="monetary" force_save="1"/>
                                 <field name="price_subtotal_incl" widget="monetary" force_save="1"/>
                                 <field name="currency_id" invisible="1"/>
+                                <field name="refunded_qty" optional="hide" />
                             </tree>
                             <form string="Order lines">
                                 <group col="4">

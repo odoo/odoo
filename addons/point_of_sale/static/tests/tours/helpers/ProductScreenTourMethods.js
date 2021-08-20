@@ -82,7 +82,7 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
 
         clickPayButton() {
             return [
-                { content: 'click pay button', trigger: '.actionpad .button.pay' },
+                { content: 'click pay button', trigger: '.product-screen .actionpad .button.pay' },
                 {
                     content: 'now in payment screen',
                     trigger: '.pos-content .payment-screen',
@@ -132,6 +132,13 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                     trigger: '.control-buttons .control-button span:contains("Customer Note")',
                 }
             ]
+        }
+        clickRefund() {
+            return [
+                {
+                    trigger: '.control-button:contains("Refund")',
+                },
+            ];
         }
     }
 

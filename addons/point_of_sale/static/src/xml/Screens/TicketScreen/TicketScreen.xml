@@ -79,15 +79,18 @@
                 </div>
                 <div class="leftpane">
                     <t t-set="_selectedSyncedOrder" t-value="getSelectedSyncedOrder()" />
-                    <OrderDetails order="_selectedSyncedOrder" />
+                    <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />
+                    <OrderDetails order="_selectedSyncedOrder" selectedOrderlineId="_selectedOrderlineId" highlightHeaderNote="_state.ui.highlightHeaderNote" />
                     <div class="pads">
                         <div class="control-buttons">
                             <InvoiceButton t-if="env.pos.config.module_account" order="_selectedSyncedOrder" />
                             <ReprintReceiptButton order="_selectedSyncedOrder" />
                         </div>
                         <div class="subpads">
-                            <ActionpadWidget client="getSelectedClient()" />
-                            <NumpadWidget />
+                            <!-- We set so that the term 'Refund' is translated. -->
+                            <t t-set="_actionName">Refund</t>
+                            <ActionpadWidget client="getSelectedClient()" actionName="_actionName" actionToTrigger="'do-refund'" isActionButtonHighlighted="getHasItemsToRefund()" />
+                            <NumpadWidget disabledModes="['price', 'discount']" activeMode="_selectedOrderlineId and 'quantity'" disableSign="true" />
                         </div>
                     </div>
                 </div>

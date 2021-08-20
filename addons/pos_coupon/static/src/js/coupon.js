@@ -1037,7 +1037,7 @@ odoo.define('pos_coupon.pos', function (require) {
             _orderline_super.init_from_JSON.apply(this, [json]);
         },
         set_quantity: function (quantity, keep_price) {
-            _orderline_super.set_quantity.apply(this, [quantity, keep_price]);
+            const result = _orderline_super.set_quantity.apply(this, [quantity, keep_price]);
             // This function removes an order line if we set the quantity to 'remove'
             // We extend its functionality so that if a reward line is removed,
             // other reward lines from the same program are also deleted.
@@ -1052,6 +1052,7 @@ odoo.define('pos_coupon.pos', function (require) {
                     Gui.showNotification('Other reward lines from the same program were also removed.');
                 }
             }
+            return result;
         },
     });
 });

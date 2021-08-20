@@ -19,7 +19,7 @@ odoo.define('point_of_sale.SearchBar', function (require) {
      * @prop {{
      *  config: {
      *      searchFields: Map<string, string>,
-     *      filter: { show: boolean, options: Map<string, string> }
+     *      filter: { show: boolean, options: Map<string, { text: string, indented: boolean? }> }
      *  },
      *  placeholder: string,
      * }}

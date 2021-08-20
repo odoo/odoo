@@ -112,8 +112,8 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                 const result = super._getOrderStates();
                 if (this.env.pos.config.set_tip_after_payment) {
                     result.delete('PAYMENT');
-                    result.set('OPEN', this.env._t('Open'));
-                    result.set('TIPPING', this.env._t('Tipping'));
+                    result.set('OPEN', { text: this.env._t('Open'), indented: true });
+                    result.set('TIPPING', { text: this.env._t('Tipping'), indented: true });
                 }
                 return result;
             }

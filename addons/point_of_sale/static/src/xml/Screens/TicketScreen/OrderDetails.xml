@@ -20,9 +20,12 @@
                         </div>
                     </t>
                     <t t-else="">
+                        <div class="header-note" t-att-class="{ highlight: props.highlightHeaderNote }">
+                            Select the product(s) to refund and set the quantity
+                        </div>
                         <ul class="orderlines">
                             <t t-foreach="orderlines" t-as="orderline" t-key="orderline.id">
-                                <OrderlineDetails line="orderline" />
+                                <OrderlineDetails line="orderline" isSelected="orderline.id == props.selectedOrderlineId" />
                             </t>
                         </ul>
                         <!-- Not using OrderSummary because we don't need it's overrides in this view. -->

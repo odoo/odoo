@@ -75,6 +75,39 @@ odoo.define('point_of_sale.tour.TicketScreenTourMethods', function (require) {
                 },
             ];
         }
+        clickOrderline(name) {
+            return [
+                {
+                    trigger: `.ticket-screen .orderline:not(:has(.selected)) .product-name:contains("${name}")`,
+                },
+                {
+                    trigger: `.ticket-screen .orderline.selected .product-name:contains("${name}")`,
+                    run: () => {},
+                },
+            ];
+        }
+        pressNumpad(key) {
+            let trigger;
+            if ('.0123456789'.includes(key)) {
+                trigger = `.numpad .number-char:contains("${key}")`;
+            } else if (key === 'Backspace') {
+                trigger = `.numpad .numpad-backspace`;
+            } else if (key === '+/-') {
+                trigger = `.numpad .numpad-minus`;
+            }
+            return [
+                {
+                    trigger,
+                },
+            ];
+        }
+        confirmRefund() {
+            return [
+                {
+                    trigger: '.ticket-screen .button.pay',
+                },
+            ];
+        }
     }
 
     class Check {
@@ -110,6 +143,13 @@ odoo.define('point_of_sale.tour.TicketScreenTourMethods', function (require) {
             return [
                 {
                     trigger: '.ticket-screen:not(:has(.order-empty))',
+                },
+            ];
+        }
+        filterIs(name) {
+            return [
+                {
+                    trigger: `.ticket-screen .pos-search-bar .filter span:contains("${name}")`,
                     run: () => {},
                 },
             ];
@@ -122,11 +162,17 @@ odoo.define('point_of_sale.tour.TicketScreenTourMethods', function (require) {
                 },
             ];
         }
-        filterIs(name) {
+        toRefundTextContains(text) {
             return [
                 {
-                    trigger: `.ticket-screen .filter:contains("${name}")`,
-                    run: () => {},
+                    trigger: `.ticket-screen .to-refund-highlight:contains("${text}")`,
+                },
+            ];
+        }
+        refundedNoteContains(text) {
+            return [
+                {
+                    trigger: `.ticket-screen .refund-note:contains("${text}")`,
                 },
             ];
         }
