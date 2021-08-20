@@ -96,6 +96,10 @@ class StockMove(models.Model):
             'context': ctx
         }
 
+    def _set_quantities_to_reservation(self):
+        move_untouchable = self.filtered(lambda m: m.is_subcontract and m._get_subcontract_production()._has_tracked_component())
+        return super(StockMove, self - move_untouchable)._set_quantities_to_reservation()
+
     def _action_cancel(self):
         for move in self:
             if move.is_subcontract:
