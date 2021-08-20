@@ -3166,6 +3166,39 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location, lot_id=lot1, package_id=package1), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location, lot_id=lot2, package_id=package1), 1.0)
 
+    def test_edit_done_move_line_14(self):
+        """ Test that editing a done stock move line with a different UoM from its stock move correctly
+        updates the quant when its qty and/or its UoM is edited. Also check that we don't allow editing
+        a done stock move's UoM.
+        """
+        move1 = self.env['stock.move'].create({
+            'name': 'test_edit_moveline',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 12.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.product_uom_id = self.uom_dozen
+        move1.move_line_ids.qty_done = 1
+        move1._action_done()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 12.0)
+
+        move1.move_line_ids.qty_done = 2
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 24.0)
+        self.assertEqual(move1.product_uom_qty, 24.0)
+        self.assertEqual(move1.product_qty, 24.0)
+
+        move1.move_line_ids.product_uom_id = self.uom_unit
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 2.0)
+        self.assertEqual(move1.product_uom_qty, 2.0)
+        self.assertEqual(move1.product_qty, 2.0)
+
+        with self.assertRaises(UserError):
+            move1.product_uom = self.uom_dozen
+
     def test_immediate_validate_1(self):
         """ In a picking with a single available move, clicking on validate without filling any
         quantities should open a wizard asking to process all the reservation (so, the whole move).

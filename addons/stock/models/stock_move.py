@@ -392,6 +392,8 @@ class StockMove(models.Model):
         # FIXME: pim fix your crap
         receipt_moves_to_reassign = self.env['stock.move']
         move_to_recompute_state = self.env['stock.move']
+        if 'product_uom' in vals and any(move.product_uom.id != vals['product_uom'] and move.state == 'done' for move in self):
+            raise UserError(_('You cannot change the UoM for a stock move that has been set to \'Done\'.'))
         if 'product_uom_qty' in vals:
             move_to_unreserve = self.env['stock.move']
             for move in self.filtered(lambda m: m.state not in ('done', 'draft') and m.picking_id):
