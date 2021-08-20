@@ -27,9 +27,10 @@
                     </field>
                 </group>
                 <footer>
-                    <button string="Confirm Access" name="action_confirm_access" attrs="{'invisible': ['|', ('access_warning', '!=', ''), ('line_ids', '=', [])]}" type="object" class="btn-primary" data-hotkey="v"/>
-                    <button string="Send" name="action_send_mail" attrs="{'invisible': ['|', ('access_warning', '!=', ''), ('line_ids', '!=', [])]}" type="object" class="btn-primary" data-hotkey="q"/>
-                    <button string="Send &amp; Confirm" name="action_send_mail_and_confirm_access" attrs="{'invisible': ['|', ('access_warning', '!=', ''), ('line_ids', '=', [])]}" type="object" class="btn-primary" data-hotkey="q"/>
+                    <field name="has_access_changed" invisible="1" />
+                    <button string="Confirm Access" name="action_confirm_access" attrs="{'invisible': ['|', ('access_warning', '!=', ''), ('has_access_changed', '=', False)]}" type="object" class="btn-primary" data-hotkey="v"/>
+                    <button string="Send" name="action_send_mail" attrs="{'invisible': ['|', ('access_warning', '!=', ''), ('has_access_changed', '=', True)]}" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Send &amp; Confirm" name="action_send_mail_and_confirm_access" attrs="{'invisible': ['|', ('access_warning', '!=', ''), ('has_access_changed', '=', False)]}" type="object" class="btn-primary" data-hotkey="q"/>
                     <button string="Cancel" class="btn-default" special="cancel" data-hotkey="z" />
                 </footer>
             </form>
