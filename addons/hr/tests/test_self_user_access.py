@@ -100,6 +100,11 @@ class TestSelfAccessRights(TestHrCommon):
             for k, v in self.env['res.users']._fields.items()
             if v.groups == 'hr.group_hr_user' and k in self.env['res.users'].SELF_READABLE_FIELDS
         ])
+        self.self_writable_fields_user = OrderedDict([
+            (k, v)
+            for k, v in self.env['res.users']._fields.items()
+            if v.groups == 'hr.group_hr_user' and k in self.env['res.users'].SELF_WRITEABLE_FIELDS
+        ])
 
     # Read hr.employee #
     def testReadSelfEmployee(self):
@@ -138,7 +143,7 @@ class TestSelfAccessRights(TestHrCommon):
 
     def testWriteSelfUserEmployee(self):
         self.env['ir.config_parameter'].set_param('hr.hr_employee_self_edit', True)
-        for f, v in self.self_protected_fields_user.items():
+        for f, v in self.self_writable_fields_user.items():
             val = None
             if v.type == 'char' or v.type == 'text':
                 val = '0000' if f == 'pin' else 'dummy'
