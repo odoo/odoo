@@ -16,7 +16,7 @@ class LunchController(http.Controller):
 
         infos = self._make_infos(user, order=False)
 
-        lines = self._get_current_lines(user.id)
+        lines = self._get_current_lines(user)
         if lines:
             lines = [{'id': line.id,
                       'product': (line.product_id.id, line.product_id.name, float_repr(float_round(line.product_id.price, 2), 2)),
@@ -40,7 +40,7 @@ class LunchController(http.Controller):
         self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
-        lines = self._get_current_lines(user.id)
+        lines = self._get_current_lines(user)
         lines.action_cancel()
         lines.unlink()
 
@@ -49,7 +49,7 @@ class LunchController(http.Controller):
         self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
-        lines = self._get_current_lines(user.id)
+        lines = self._get_current_lines(user)
         if lines:
             lines = lines.filtered(lambda line: line.state == 'new')
 
@@ -122,8 +122,10 @@ class LunchController(http.Controller):
         if (user_id and request.env.uid != user_id and not request.env.user.has_group('lunch.group_lunch_manager')):
             raise AccessError(_('You are trying to impersonate another user, but this can only be done by a lunch manager'))
 
-    def _get_current_lines(self, user_id):
-        return request.env['lunch.order'].search([('user_id', '=', user_id), ('date', '=', fields.Date.today()), ('state', '!=', 'cancelled')])
+    def _get_current_lines(self, user):
+        return request.env['lunch.order'].search(
+            [('user_id', '=', user.id), ('date', '=', fields.Date.context_today(user)), ('state', '!=', 'cancelled')]
+            )
 
     def _get_state(self, lines):
         """
