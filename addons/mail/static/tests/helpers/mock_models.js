@@ -76,7 +76,7 @@ export class MockModels {
                     is_minimized: { string: "isMinimized", type: "boolean", default: false },
                     // In python this belongs to mail.channel.partner. Here for simplicity.
                     is_pinned: { string: "isPinned", type: "boolean", default: true },
-                    members: { string: "Members", type: 'many2many', relation: 'res.partner', default() { return [this.currentPartnerId]; } },
+                    members: { string: "Members", type: 'many2many', relation: 'res.partner', default() { return [this.data.currentPartnerId]; } },
                     message_unread_counter: { string: "# unread messages", type: 'integer' },
                     name: { string: "Name", type: "char", required: true },
                     public: { string: "Public", type: "boolean", default: 'groups' },
@@ -86,6 +86,11 @@ export class MockModels {
                     // naive and non RFC-compliant UUID, good enough for the
                     // string comparison that are done with it during tests
                     uuid: { string: "UUID", type: "char", required: true, default() { return _.uniqueId('mail.channel_uuid-'); } },
+                },
+                records: [],
+            },
+            'mail.compose.message': {
+                fields: {
                 },
                 records: [],
             },
@@ -106,7 +111,7 @@ export class MockModels {
             'mail.message': {
                 fields: {
                     attachment_ids: { string: "Attachments", type: 'many2many', relation: 'ir.attachment', default: [] },
-                    author_id: { string: "Author", type: 'many2one', relation: 'res.partner', default() { return this.currentPartnerId; } },
+                    author_id: { string: "Author", type: 'many2one', relation: 'res.partner', default() { return this.data.currentPartnerId; } },
                     body: { string: "Contents", type: 'html', default: "<p></p>" },
                     date: { string: "Date", type: 'datetime', default() { return moment.utc().format("YYYY-MM-DD HH:mm:ss"); } },
                     email_from: { string: "From", type: 'char' },
@@ -179,6 +184,11 @@ export class MockModels {
                 },
                 records: [],
             },
+            'mail.wizard.invite': {
+                fields: {
+                },
+                records: [],
+            },
             'res.country': {
                 fields: {
                     code: { string: "Code", type: 'char' },
@@ -222,7 +232,7 @@ export class MockModels {
                     email_cc: { type: 'char' },
                     partner_ids: {
                         string: "Related partners",
-                        type: 'many2one',
+                        type: 'many2many',
                         relation: 'res.partner'
                     },
                 },

@@ -9,7 +9,7 @@ QUnit.module('messaging_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
@@ -29,16 +29,20 @@ QUnit.test('openChat: display notification for partner without user', async func
     await this.start({
         services: {
             notification: {
-                notify(notification) {
-                    assert.ok(
-                        true,
-                        "should display a toast notification after failing to open chat"
-                    );
-                    assert.strictEqual(
-                        notification.message,
-                        "You can only chat with partners that have a dedicated user.",
-                        "should display the correct information in the notification"
-                    );
+                start() {
+                    return {
+                        add(message) {
+                            assert.ok(
+                                true,
+                                "should display a toast notification after failing to open chat"
+                            );
+                            assert.strictEqual(
+                                message,
+                                "You can only chat with partners that have a dedicated user.",
+                                "should display the correct information in the notification"
+                            );
+                        },
+                    };
                 },
             },
         },
@@ -53,16 +57,20 @@ QUnit.test('openChat: display notification for wrong user', async function (asse
     await this.start({
         services: {
             notification: {
-                notify(notification) {
-                    assert.ok(
-                        true,
-                        "should display a toast notification after failing to open chat"
-                    );
-                    assert.strictEqual(
-                        notification.message,
-                        "You can only chat with existing users.",
-                        "should display the correct information in the notification"
-                    );
+                start() {
+                    return {
+                        add(message) {
+                            assert.ok(
+                                true,
+                                "should display a toast notification after failing to open chat"
+                            );
+                            assert.strictEqual(
+                                message,
+                                "You can only chat with existing users.",
+                                "should display the correct information in the notification"
+                            );
+                        },
+                    };
                 },
             },
         },

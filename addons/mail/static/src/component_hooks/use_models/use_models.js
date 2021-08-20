@@ -16,19 +16,13 @@ export function useModels() {
     });
     const __render = component.__render;
     component.__render = fiber => {
-        if (modelManager) {
-            modelManager.startListening(listener);
-        }
+        modelManager.startListening(listener);
         __render.call(component, fiber);
-        if (modelManager) {
-            modelManager.stopListening(listener);
-        }
+        modelManager.stopListening(listener);
     };
     const __destroy = component.__destroy;
     component.__destroy = parent => {
-        if (modelManager) {
-            modelManager.removeListener(listener);
-        }
+        modelManager.removeListener(listener);
         __destroy.call(component, parent);
     };
     modelManager.messagingCreatedPromise.then(() => {

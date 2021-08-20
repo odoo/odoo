@@ -92,7 +92,7 @@ function factory(dependencies) {
             if (isNonPublicChannel) {
                 kwargs.channel_id = thread.id;
             }
-            const suggestedPartners = await this.messaging.rpcOrmStatic('res.partner', 'get_mention_suggestions', kwargs);
+            const suggestedPartners = await this.env.services.orm.silent.call('res.partner', 'get_mention_suggestions', [], kwargs);
             if (!this.messaging) {
                 return;
             }
@@ -131,7 +131,7 @@ function factory(dependencies) {
                 }
             }
             if (!partners.length) {
-                const partnersData = await this.messaging.rpcOrmStatic('res.partner', 'im_search', { name: keyword, limit });
+                const partnersData = await this.env.services.orm.silent.call('res.partner', 'im_search', [], { name: keyword, limit });
                 if (!this.messaging) {
                     return;
                 }
@@ -206,10 +206,7 @@ function factory(dependencies) {
          * applicable.
          */
         async checkIsUser() {
-            const userIds = await this.messaging.rpcOrmStatic('res.users', 'search', {
-                args: [['partner_id', '=', this.id]],
-                context: { active_test: false },
-            });
+            const userIds = await this.env.services.orm.silent.search('res.users', [['partner_id', '=', this.id]], {}, { active_test: false });
             if (!this.exists()) {
                 return;
             }
@@ -232,10 +229,10 @@ function factory(dependencies) {
             }
             // prevent chatting with non-users
             if (!this.user) {
-                this.env.services['notification'].notify({
-                    message: this.env._t("You can only chat with partners that have a dedicated user."),
-                    type: 'info',
-                });
+                this.env.services.notification.add(
+                    this.env._t("You can only chat with partners that have a dedicated user."),
+                    { type: 'info' },
+                );
                 return;
             }
             return this.user.getChat();
@@ -388,9 +385,9 @@ function factory(dependencies) {
             if (partnerIds.length === 0) {
                 return;
             }
-            const dataList = await this.messaging.rpcRoute('/longpolling/im_status', {
+            const dataList = await this.env.services.rpc('/longpolling/im_status', {
                 partner_ids: partnerIds,
-            });
+            }, { silent: true });
             if (!this.messaging) {
                 return;
             }
@@ -452,6 +449,10 @@ function factory(dependencies) {
          */
         hasCheckedUser: attr({
             default: false,
+        }),
+        followings: one2many('mail.follower', {
+            inverse: 'partner',
+            isCausal: true,
         }),
         id: attr({
             required: true,

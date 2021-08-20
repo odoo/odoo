@@ -25,6 +25,7 @@ const NotificationAlertWidget = Widget.extend(WidgetAdapterMixin, {
     async start() {
         await this._super(...arguments);
 
+        NotificationAlertWrapper.env = owl.Component.env.wowlEnv;
         this.component = new NotificationAlertWrapper(
             this,
             getMessagingComponent("NotificationAlert"),

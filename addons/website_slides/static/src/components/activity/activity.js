@@ -17,18 +17,18 @@ patch(components.Activity.prototype, 'website_slides/static/src/components/activ
      * @private
      */
     async _onGrantAccess(ev) {
-        await this.messaging.rpcOrm('slide.channel', 'action_grant_access', this.activity.thread.id, {
+        await this.env.services.orm.call('slide.channel', 'action_grant_access', [this.activity.thread.id], {
             partner_id: this.activity.requestingPartner.id,
-        }, { silent: false });
+        });
         this.trigger('reload');
     },
     /**
      * @private
      */
     async _onRefuseAccess(ev) {
-        await this.messaging.rpcOrm('slide.channel', 'action_refuse_access', this.activity.thread.id, {
+        await this.env.services.orm.call('slide.channel', 'action_refuse_access', [this.activity.thread.id], {
             partner_id: this.activity.requestingPartner.id
-        }, { silent: false });
+        });
         this.trigger('reload');
     },
 });

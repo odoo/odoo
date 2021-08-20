@@ -19,7 +19,7 @@ function factory(dependencies) {
             if (this.notification_type !== 'email') {
                 return;
             }
-            this.env.bus.trigger('do-action', {
+            owl.Component.env.bus.trigger('do-action', {
                 action: 'mail.mail_resend_cancel_action',
                 options: {
                     additional_context: {
@@ -106,7 +106,7 @@ function factory(dependencies) {
             if (this.notification_type !== 'email') {
                 return;
             }
-            this.env.bus.trigger('do-action', {
+            owl.Component.env.bus.trigger('do-action', {
                 action: {
                     name: this.env._t("Mail Failures"),
                     type: 'ir.actions.act_window',

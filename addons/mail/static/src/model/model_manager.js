@@ -136,11 +136,6 @@ export class ModelManager {
          */
         await new Promise(resolve => setTimeout(resolve));
         /**
-         * Some models require session data, like locale text direction (depends on
-         * fully loaded translation).
-         */
-        await this.env.session.is_bound;
-        /**
          * Generate the models.
          */
         this.models = this._generateModels();

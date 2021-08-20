@@ -26,7 +26,7 @@ const ChatMixin = {
     async _onOpenChat(ev) {
         ev.preventDefault();
         ev.stopImmediatePropagation();
-        const messaging = await Component.env.services.messaging.get();
+        const messaging = await Component.env.wowlEnv.services.messaging.get();
         messaging.openChat({ employeeId: this.state.data.id });
         return true;
     },

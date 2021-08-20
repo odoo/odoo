@@ -2,6 +2,8 @@
 
 import { registerInstancePatchModel } from '@mail/model/model_core';
 
+import { session } from '@web/session';
+
 registerInstancePatchModel('mail.messaging_initializer', 'mail_bot/static/src/models/messaging_initializer/messaging_initializer.js', {
     //--------------------------------------------------------------------------
     // Private
@@ -11,11 +13,11 @@ registerInstancePatchModel('mail.messaging_initializer', 'mail_bot/static/src/mo
      * @private
      */
     async _initializeOdooBot() {
-        const data = await this.messaging.rpcOrmStatic('mail.channel', 'init_odoobot');
+        const data = await this.env.services.orm.silent.call('mail.channel', 'init_odoobot');
         if (!data || !this.exists()) {
             return;
         }
-        this.env.session.odoobot_initialized = true;
+        session.odoobot_initialized = true;
     },
 
     /**
@@ -26,7 +28,7 @@ registerInstancePatchModel('mail.messaging_initializer', 'mail_bot/static/src/mo
         if (!this.exists()) {
             return;
         }
-        if ('odoobot_initialized' in this.env.session && !this.env.session.odoobot_initialized) {
+        if ('odoobot_initialized' in session && !session.odoobot_initialized) {
             this._initializeOdooBot();
         }
     },

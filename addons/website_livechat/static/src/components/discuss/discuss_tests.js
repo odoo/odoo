@@ -14,7 +14,7 @@ QUnit.module('discuss_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
                 data: this.data,

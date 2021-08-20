@@ -25,7 +25,7 @@ QUnit.module('composer_tests.js', {
             await afterNextRender(() => this.component.mount(this.widget.el));
         };
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));

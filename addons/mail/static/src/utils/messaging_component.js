@@ -35,7 +35,7 @@ export function registerMessagingComponent(ComponentClass, { propsCompareDepth =
             useShouldUpdateBasedOnProps({ propsCompareDepth });
         }
         get messaging() {
-            return this.env.services.messaging.modelManager.messaging;
+            return this.env.services.messaging.messaging;
         }
     } }[decoratedName];
     // Create an object whose prototype is the component registry with the values of the original

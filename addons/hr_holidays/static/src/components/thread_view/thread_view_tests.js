@@ -26,7 +26,7 @@ QUnit.module('thread_view_tests.js', {
             await createRootMessagingComponent(this, "ThreadView", { props, target });
         };
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { afterEvent, env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));

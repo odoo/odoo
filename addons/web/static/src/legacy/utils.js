@@ -139,6 +139,7 @@ export function makeLegacySessionService(legacyEnv, session) {
 }
 
 export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
+    Object.assign(legacyEnv, { wowlEnv });
     // rpc
     legacyEnv.session.rpc = (...args) => {
         let rejection;

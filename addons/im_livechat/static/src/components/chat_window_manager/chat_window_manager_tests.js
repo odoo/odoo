@@ -14,9 +14,8 @@ QUnit.module('chat_window_manager_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { afterEvent, env, widget } = await start(Object.assign(
-                { hasChatWindow: true, hasMessagingMenu: true },
                 params,
                 { data: this.data }
             ));
@@ -53,7 +52,7 @@ QUnit.test('closing a chat window with no message from admin side unpins it', as
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     await afterNextRender(() => document.querySelector(`.o_NotificationList_preview`).click());
     await afterNextRender(() => document.querySelector(`.o_ChatWindowHeader_commandClose`).click());
-    const channels = await this.messaging.rpcOrm('mail.channel', 'read', 10);
+    const channels = await this.env.services.orm.read('mail.channel', [10]);
     assert.strictEqual(
         channels[0].is_pinned,
         false,

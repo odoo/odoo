@@ -63,11 +63,10 @@ export class MessageList extends Component {
     }
 
     willPatch() {
-        const lastMessageRef = this.lastMessageRef;
+        if (!this._getScrollableElement()) {
+            return;
+        }
         this._willPatchSnapshot = {
-            isLastMessageVisible:
-                lastMessageRef &&
-                lastMessageRef.isBottomVisible({ offset: 10 }),
             scrollHeight: this._getScrollableElement().scrollHeight,
             scrollTop: this._getScrollableElement().scrollTop,
         };

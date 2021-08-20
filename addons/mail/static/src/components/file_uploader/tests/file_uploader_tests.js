@@ -27,7 +27,7 @@ QUnit.module('file_uploader_tests.js', {
             });
         };
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));

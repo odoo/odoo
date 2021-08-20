@@ -23,12 +23,13 @@ QUnit.module('thread_textual_typing_status_tests.js', {
             });
         };
 
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+        this.start = async (params = {}) => {
+            const { advanceTime, env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
             this.widget = widget;
+            return { advanceTime };
         };
     },
     async afterEach() {
@@ -66,7 +67,7 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
             partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
-        this.widget.call('bus_service', 'trigger', 'notification', [notification]);
+        owl.Component.env.services.bus_service.trigger('notification', [notification]);
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -105,7 +106,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
             partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
-        this.widget.call('bus_service', 'trigger', 'notification', [notification]);
+        owl.Component.env.services.bus_service.trigger('notification', [notification]);
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -122,7 +123,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
             partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
-        this.widget.call('bus_service', 'trigger', 'notification', [notification]);
+        owl.Component.env.services.bus_service.trigger('notification', [notification]);
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -139,7 +140,7 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
         id: 20,
         members: [this.data.currentPartnerId, 17],
     });
-    await this.start({
+    const { advanceTime } = await this.start({
         hasTimeControl: true,
     });
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
@@ -163,7 +164,7 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
             partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
-        this.widget.call('bus_service', 'trigger', 'notification', [notification]);
+        owl.Component.env.services.bus_service.trigger('notification', [notification]);
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -171,7 +172,7 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
         "Should display that demo user is typing"
     );
 
-    await afterNextRender(() => this.env.testUtils.advanceTime(60 * 1000));
+    await afterNextRender(() => advanceTime(60 * 1000));
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
         "",
@@ -187,7 +188,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
         id: 20,
         members: [this.data.currentPartnerId, 17],
     });
-    await this.start({
+    const { advanceTime } = await this.start({
         hasTimeControl: true,
     });
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
@@ -211,7 +212,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
             partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
-        this.widget.call('bus_service', 'trigger', 'notification', [notification]);
+        owl.Component.env.services.bus_service.trigger('notification', [notification]);
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -220,7 +221,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
     );
 
     // simulate receive typing notification from demo "is typing" again after 50s.
-    await this.env.testUtils.advanceTime(50 * 1000);
+    await advanceTime(50 * 1000);
     const typingData = {
         info: 'typing_status',
         is_typing: true,
@@ -228,8 +229,8 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
         partner_name: "Demo",
     };
     const notification = [[false, 'mail.channel', 20], typingData];
-    this.widget.call('bus_service', 'trigger', 'notification', [notification]);
-    await this.env.testUtils.advanceTime(50 * 1000);
+    owl.Component.env.services.bus_service.trigger('notification', [notification]);
+    await advanceTime(50 * 1000);
     await nextAnimationFrame();
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -237,7 +238,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
         "Should still display that demo user is typing after 100 seconds (refreshed is typing status at 50s => (100 - 50) = 50s < 60s after assuming no-longer typing)"
     );
 
-    await afterNextRender(() => this.env.testUtils.advanceTime(11 * 1000));
+    await afterNextRender(() => advanceTime(11 * 1000));
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
         "",
@@ -279,7 +280,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             partner_name: "Other10",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
-        this.widget.call('bus_service', 'trigger', 'notification', [notification]);
+        owl.Component.env.services.bus_service.trigger('notification', [notification]);
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -296,7 +297,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             partner_name: "Other11",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
-        this.widget.call('bus_service', 'trigger', 'notification', [notification]);
+        owl.Component.env.services.bus_service.trigger('notification', [notification]);
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -313,7 +314,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             partner_name: "Other12",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
-        this.widget.call('bus_service', 'trigger', 'notification', [notification]);
+        owl.Component.env.services.bus_service.trigger('notification', [notification]);
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -330,7 +331,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             partner_name: "Other10",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
-        this.widget.call('bus_service', 'trigger', 'notification', [notification]);
+        owl.Component.env.services.bus_service.trigger('notification', [notification]);
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -347,7 +348,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             partner_name: "Other10",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
-        this.widget.call('bus_service', 'trigger', 'notification', [notification]);
+        owl.Component.env.services.bus_service.trigger('notification', [notification]);
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,

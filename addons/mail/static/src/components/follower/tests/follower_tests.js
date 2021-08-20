@@ -26,7 +26,7 @@ QUnit.module('follower_tests.js', {
             });
         };
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
@@ -213,12 +213,10 @@ QUnit.test('click on edit follower', async function (assert) {
         res_model: 'res.partner',
     });
     await this.start({
-        hasDialog: true,
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');
             }
-            return this._super(...arguments);
         },
     });
     const thread = this.messaging.models['mail.thread'].create({
@@ -255,7 +253,6 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start({
-        hasDialog: true,
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');
@@ -268,7 +265,6 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
                     res_model: 'res.partner'
                 }];
             }
-            return this._super(...arguments);
         },
     });
     const thread = this.messaging.models['mail.thread'].create({

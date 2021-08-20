@@ -9,6 +9,8 @@ import {
     markEventHandled,
 } from '@mail/utils/utils';
 
+import { url } from "@web/core/utils/urls";
+
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
@@ -80,7 +82,7 @@ export class Composer extends Component {
      */
     get currentPartnerAvatar() {
         const avatar = this.messaging.currentUser
-            ? this.env.session.url('/web/image', {
+            ? url('/web/image', {
                     field: 'avatar_128',
                     id: this.messaging.currentUser.id,
                     model: 'res.users',
@@ -161,10 +163,10 @@ export class Composer extends Component {
     async _postMessage() {
         if (!this.composer.canPostMessage) {
             if (this.composer.hasUploadingAttachment) {
-                this.env.services['notification'].notify({
-                    message: this.env._t("Please wait while the file is uploading."),
-                    type: 'warning',
-                });
+                this.env.services.notification.add(
+                    this.env._t("Please wait while the file is uploading."),
+                    { type: 'warning' },
+                );
             }
             return;
         }
@@ -197,7 +199,7 @@ export class Composer extends Component {
      */
     _onClickAddAttachment() {
         this._fileUploaderRef.comp.openBrowserFileUploader();
-        if (!this.env.device.isMobile) {
+        if (!this.messaging.device.isMobile) {
             this.focus();
         }
     }
@@ -288,7 +290,7 @@ export class Composer extends Component {
         ev.stopPropagation();
         this._textInputRef.comp.saveStateInStore();
         this.composer.insertIntoTextInput(ev.detail.unicode);
-        if (!this.env.device.isMobile) {
+        if (!this.messaging.device.isMobile) {
             this.focus();
         }
     }

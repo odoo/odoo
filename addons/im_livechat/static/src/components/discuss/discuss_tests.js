@@ -15,7 +15,7 @@ QUnit.module('discuss_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
                 data: this.data,
@@ -129,7 +129,7 @@ QUnit.test('do not add livechat in the sidebar on visitor opening his chat', asy
     );
 
     // simulate livechat visitor opening his chat
-    await this.messaging.rpcRoute('/im_livechat/get_session', {
+    await this.env.services.rpc('/im_livechat/get_session', {
         context: { mockedUserId: false },
         channel_id: 10,
     });
@@ -169,7 +169,7 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
 
     // simulate livechat visitor typing
     const channel = this.data['mail.channel'].records.find(channel => channel.id === 10);
-    await this.messaging.rpcRoute('/im_livechat/notify_typing', {
+    await this.env.services.rpc('/im_livechat/notify_typing', {
         context: { mockedPartnerId: this.publicPartnerId },
         is_typing: true,
         uuid: channel.uuid,
@@ -217,7 +217,7 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
 
     // simulate livechat visitor sending a message
     const channel = this.data['mail.channel'].records.find(channel => channel.id === 10);
-    await afterNextRender(async () => this.messaging.rpcRoute('/mail/chat_post', {
+    await afterNextRender(async () => this.env.services.rpc('/mail/chat_post', {
         context: { mockedUserId: false },
         uuid: channel.uuid,
         message_content: "new message",

@@ -9,7 +9,10 @@ import {
     start,
 } from '@mail/utils/test_utils';
 
+import { browser } from "@web/core/browser/browser";
 import { file, dom } from 'web.test_utils';
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
+
 const { createFile, inputFiles } = file;
 const { triggerEvent } = dom;
 
@@ -20,9 +23,8 @@ QUnit.module('chat_window_manager_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { afterEvent, env, widget } = await start(Object.assign(
-                { hasChatWindow: true, hasMessagingMenu: true },
                 params,
                 { data: this.data }
             ));
@@ -251,19 +253,15 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
         { is_minimized: true },
     );
     const imSearchDef = makeDeferred();
+    patchWithCleanup(browser, {
+        innerWidth: 1920,
+    });
     await this.start({
-        env: {
-            browser: {
-                innerWidth: 1920,
-            },
-        },
         async mockRPC(route, args) {
-            const res = await this._super(...arguments);
             if (args.method === 'im_search') {
                 imSearchDef.resolve();
             }
-            return res;
-        }
+        },
     });
     assert.containsN(
         document.body,
@@ -367,11 +365,9 @@ QUnit.test('new message chat window should close on selecting the user if chat w
     const imSearchDef = makeDeferred();
     await this.start({
         async mockRPC(route, args) {
-            const res = await this._super(...arguments);
             if (args.method === 'im_search') {
                 imSearchDef.resolve();
             }
-            return res;
         },
     });
 
@@ -413,11 +409,9 @@ QUnit.test('new message autocomplete should automatically select first result', 
     const imSearchDef = makeDeferred();
     await this.start({
         async mockRPC(route, args) {
-            const res = await this._super(...arguments);
             if (args.method === 'im_search') {
                 imSearchDef.resolve();
             }
-            return res;
         },
     });
 
@@ -533,7 +527,6 @@ QUnit.test('chat window: fold', async function (assert) {
             if (args.method === 'channel_fold') {
                 assert.step(`rpc:${args.method}/${args.kwargs.state}`);
             }
-            return this._super(...arguments);
         },
     });
     // Open Thread
@@ -587,7 +580,6 @@ QUnit.test('chat window: open / close', async function (assert) {
             if (args.method === 'channel_fold') {
                 assert.step(`rpc:channel_fold/${args.kwargs.state}`);
             }
-            return this._super(...arguments);
         },
     });
     assert.containsNone(
@@ -658,7 +650,7 @@ QUnit.test('Mobile: opening a chat window should not update channel state on the
         '.o_ChatWindow',
         "should have a chat window after clicking on thread preview"
     );
-    const channels = await this.messaging.rpcOrm('mail.channel', 'read', 20);
+    const channels = await this.env.services.orm.read('mail.channel', [20]);
     assert.strictEqual(
         channels[0].state,
         'closed',
@@ -694,7 +686,7 @@ QUnit.test('Mobile: closing a chat window should not update channel state on the
         '.o_ChatWindow',
         "should not have a chat window after closing it"
     );
-    const channels = await this.messaging.rpcOrm('mail.channel', 'read', 20);
+    const channels = await this.env.services.orm.read('mail.channel', [20]);
     assert.strictEqual(
         channels[0].state,
         'open',
@@ -727,7 +719,7 @@ QUnit.test("Mobile: chat window shouldn't open automatically after receiving a n
     });
 
     // simulate receiving a message
-    this.messaging.rpcRoute('/mail/chat_post', {
+    this.env.services.rpc('/mail/chat_post', {
         context: { mockedUserId: 42 },
         message_content: "hu",
         uuid: 'channel-10-uuid',
@@ -752,7 +744,6 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
             if (args.method === 'channel_fold') {
                 assert.step(`rpc:channel_fold/${args.kwargs.state}`);
             }
-            return this._super(...arguments);
         },
     });
     assert.containsOnce(
@@ -847,13 +838,10 @@ QUnit.test('focus next visible chat window when closing current chat window with
         { is_minimized: true, state: 'open' },
         { is_minimized: true, state: 'open' }
     );
-    await this.start({
-        env: {
-            browser: {
-                innerWidth: 1920,
-            },
-        },
+    patchWithCleanup(browser, {
+        innerWidth: 1920,
     });
+    await this.start();
     assert.containsN(
         document.body,
         '.o_ChatWindow .o_ComposerTextInput_textarea',
@@ -1037,13 +1025,10 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     // 2 channels are expected to be found in the messaging menu, each with a
     // random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 10 }, { id: 20 });
-    await this.start({
-        env: {
-            browser: {
-                innerWidth: 1920, // enough to fit at least 2 chat windows
-            },
-        },
+    patchWithCleanup(browser, {
+        innerWidth: 1920,
     });
+    await this.start();
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     await afterNextRender(() =>
         document.querySelector(`
@@ -1264,13 +1249,10 @@ QUnit.test('open 2 folded chat windows: check shift operations are available', a
         state: 'folded',
     };
     this.data['mail.channel'].records.push(channel, chat);
-    await this.start({
-        env: {
-            browser: {
-                innerWidth: 900,
-            },
-        },
+    patchWithCleanup(browser, {
+        innerWidth: 900, // enough to fit 2 chat windows but not 3
     });
+    await this.start();
 
     assert.containsN(
         document.body,
@@ -1382,13 +1364,10 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     // 3 channels are expected to be found in the messaging menu, each with a
     // random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 1 }, { id: 2 }, { id: 3 });
-    await this.start({
-        env: {
-            browser: {
-                innerWidth: 900, // enough to fit 2 chat windows but not 3
-            },
-        },
+    patchWithCleanup(browser, {
+        innerWidth: 900, // enough to fit 2 chat windows but not 3
     });
+    await this.start();
 
     // open, from systray menu, chat windows of channels with Id 1, 2, then 3
     await afterNextRender(() =>
@@ -1650,13 +1629,10 @@ QUnit.test('chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]', as
             state: 'open',
         }
     );
-    await this.start({
-        env: {
-            browser: {
-                innerWidth: 1920,
-            },
-        },
+    patchWithCleanup(browser, {
+        innerWidth: 1920,
     });
+    await this.start();
     assert.containsN(
         document.body,
         '.o_ChatWindow .o_ComposerTextInput_textarea',
@@ -2049,12 +2025,10 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
             state: 'open',
         },
     ];
+    patchWithCleanup(browser, {
+        innerWidth: 900,
+    });
     await this.start({
-        env: {
-            browser: {
-                innerWidth: 900,
-            },
-        },
         mockRPC(route, args) {
             if (args.method === 'message_fetch') {
                 // domain should be like [['message_type', '=', 'user_notification'], ['model', '=', 'mail.channel'], ['res_id', '=', X]] with X the channel id
@@ -2065,7 +2039,6 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
                 assert.strictEqual(channel_id_field, "res_id", "messages should be fetched channel per channel using res_id field");
                 assert.step(`rpc:message_fetch:${channel_id}`);
             }
-            return this._super(...arguments);
         },
     });
 
@@ -2156,7 +2129,7 @@ QUnit.test('new message separator is shown in a chat window of a chat on receivi
     await this.start();
 
     // simulate receiving a message
-    await afterNextRender(async () => this.messaging.rpcRoute('/mail/chat_post', {
+    await afterNextRender(async () => this.env.services.rpc('/mail/chat_post', {
         context: { mockedUserId: 42 },
         message_content: "hu",
         uuid: 'channel-10-uuid',
@@ -2197,7 +2170,7 @@ QUnit.test('new message separator is not shown in a chat window of a chat on rec
     await this.start();
 
     // simulate receiving a message
-    await afterNextRender(async () => this.messaging.rpcRoute('/mail/chat_post', {
+    await afterNextRender(async () => this.env.services.rpc('/mail/chat_post', {
         context: { mockedUserId: 42 },
         message_content: "hu",
         uuid: 'channel-10-uuid',
@@ -2237,7 +2210,7 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
     await this.start();
 
     // simulate receiving a message
-    await afterNextRender(() => this.messaging.rpcRoute('/mail/chat_post', {
+    await afterNextRender(() => this.env.services.rpc('/mail/chat_post', {
         context: { mockedUserId: 42 },
         message_content: "hu",
         uuid: 'channel-10-uuid',
@@ -2344,7 +2317,7 @@ QUnit.test('chat window should open when receiving a new DM', async function (as
     await this.start();
 
     // simulate receiving the first message on channel 11
-    await afterNextRender(() => this.messaging.rpcRoute('/mail/chat_post', {
+    await afterNextRender(() => this.env.services.rpc('/mail/chat_post', {
         context: { mockedUserId: 11 },
         message_content: "new message",
         uuid: 'channel11uuid',
@@ -2379,7 +2352,7 @@ QUnit.test('chat window should remain folded when new message is received', asyn
 
     await this.start();
     // simulate receiving a new message
-    await afterNextRender(async () => this.messaging.rpcRoute('/mail/chat_post', {
+    await afterNextRender(async () => this.env.services.rpc('/mail/chat_post', {
         context: { mockedUserId: 42 },
         message_content: "New Message 2",
         uuid: 'channel-10-uuid',

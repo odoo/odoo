@@ -2,7 +2,9 @@
 
 import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
 
+import { browser } from "@web/core/browser/browser";
 import FormView from 'web.FormView';
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module('mail', {}, function () {
 QUnit.module('widgets', {}, function () {
@@ -11,7 +13,7 @@ QUnit.module('notification_alert_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             let { widget } = await start(Object.assign({
                 data: this.data,
                 hasView: true,
@@ -38,15 +40,15 @@ QUnit.skip('notification_alert widget: display blocked notification alert', asyn
     // is good for rendering... task-227947
     assert.expect(1);
 
-    await this.start({
-        env: {
-            browser: {
-                Notification: {
-                    permission: 'denied',
-                },
+    patchWithCleanup(browser, {
+        Notification: {
+            permission: 'denied',
+            async requestPermission() {
+                return this.permission;
             },
         },
     });
+    await this.start();
 
     assert.containsOnce(
         document.body,
@@ -58,15 +60,15 @@ QUnit.skip('notification_alert widget: display blocked notification alert', asyn
 QUnit.test('notification_alert widget: no notification alert when granted', async function (assert) {
     assert.expect(1);
 
-    await this.start({
-        env: {
-            browser: {
-                Notification: {
-                    permission: 'granted',
-                },
+    patchWithCleanup(browser, {
+        Notification: {
+            permission: 'granted',
+            async requestPermission() {
+                return this.permission;
             },
         },
     });
+    await this.start();
 
     assert.containsNone(
         document.body,
@@ -78,15 +80,15 @@ QUnit.test('notification_alert widget: no notification alert when granted', asyn
 QUnit.test('notification_alert widget: no notification alert when default', async function (assert) {
     assert.expect(1);
 
-    await this.start({
-        env: {
-            browser: {
-                Notification: {
-                    permission: 'default',
-                },
+    patchWithCleanup(browser, {
+        Notification: {
+            permission: 'default',
+            async requestPermission() {
+                return this.permission;
             },
         },
     });
+    await this.start();
 
     assert.containsNone(
         document.body,

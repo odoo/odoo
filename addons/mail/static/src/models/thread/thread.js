@@ -9,6 +9,8 @@ import Timer from '@mail/utils/timer/timer';
 import { cleanSearchTerm } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
 
+import { url } from "@web/core/utils/urls";
+
 function factory(dependencies) {
 
     class Thread extends dependencies['mail.model'] {
@@ -278,7 +280,7 @@ function factory(dependencies) {
          *  result in the context of given thread
          */
         static async fetchSuggestions(searchTerm, { thread } = {}) {
-            const channelsData = await this.messaging.rpcOrmStatic('mail.channel', 'get_mention_suggestions', { search: searchTerm });
+            const channelsData = await this.env.services.orm.silent.call('mail.channel', 'get_mention_suggestions', [], { search: searchTerm });
             if (!this.messaging) {
                 return;
             }
@@ -355,7 +357,7 @@ function factory(dependencies) {
             if (channelIds.length === 0) {
                 return;
             }
-            const channelPreviews = await this.messaging.rpcOrm('mail.channel', 'channel_fetch_preview', channelIds);
+            const channelPreviews = await this.env.services.orm.silent.call('mail.channel', 'channel_fetch_preview', [channelIds]);
             if (!this.messaging) {
                 return;
             }
@@ -372,7 +374,7 @@ function factory(dependencies) {
          * @param {string} state
          */
         static async performRpcChannelFold(uuid, state) {
-            return this.messaging.rpcOrmStatic('mail.channel', 'channel_fold', { state, uuid });
+            return this.env.services.orm.silent.call('mail.channel', 'channel_fold', [], { state, uuid });
         }
 
         /**
@@ -384,7 +386,7 @@ function factory(dependencies) {
          * @returns {mail.thread[]}
          */
         static async performRpcChannelInfo({ ids }) {
-            const channelInfos = await this.messaging.rpcOrm('mail.channel', 'channel_info', ids);
+            const channelInfos = await this.env.services.orm.silent.call('mail.channel', 'channel_info', [ids]);
             if (!this.messaging) {
                 return;
             }
@@ -403,7 +405,7 @@ function factory(dependencies) {
          * @param {integer[]} param0.lastMessageId
          */
         static async performRpcChannelSeen({ ids, lastMessageId }) {
-            return this.messaging.rpcOrm('mail.channel', 'channel_seen', ids, { last_message_id: lastMessageId });
+            return this.env.services.orm.silent.call('mail.channel', 'channel_seen', [ids], { last_message_id: lastMessageId });
         }
 
         /**
@@ -415,7 +417,7 @@ function factory(dependencies) {
          * @param {string} param0.uuid
          */
         static async performRpcChannelPin({ pinned = false, uuid }) {
-            return this.messaging.rpcOrmStatic('mail.channel', 'channel_pin', { pinned, uuid });
+            return this.env.services.orm.silent.call('mail.channel', 'channel_pin', [], { pinned, uuid });
         }
 
         /**
@@ -428,7 +430,7 @@ function factory(dependencies) {
          * @returns {mail.thread} the created channel
          */
         static async performRpcCreateChannel({ name, privacy }) {
-            const data = await this.messaging.rpcOrmStatic('mail.channel', 'channel_create', { name, privacy }, { silent: false });
+            const data = await this.env.services.orm.call('mail.channel', 'channel_create', [], { name, privacy });
             if (!this.messaging) {
                 return;
             }
@@ -451,10 +453,10 @@ function factory(dependencies) {
          */
         static async performRpcCreateChat({ partnerIds, pinForCurrentPartner }) {
             // TODO FIX: potential duplicate chat task-2276490
-            const data = await this.messaging.rpcOrmStatic('mail.channel', 'channel_get', {
+            const data = await this.env.services.orm.call('mail.channel', 'channel_get', [], {
                 partners_to: partnerIds,
                 pin: pinForCurrentPartner,
-            }, { silent: false });
+            });
             if (!data || !this.messaging) {
                 return;
             }
@@ -474,7 +476,7 @@ function factory(dependencies) {
          * @return {integer} the posted message id
          */
         static async performRpcMessagePost({ postData, threadId, threadModel }) {
-            return this.messaging.rpcOrm(threadModel, 'message_post', threadId, postData, { silent: false });
+            return this.env.services.orm.call(threadModel, 'message_post', [threadId], postData);
         }
 
         /**
@@ -486,7 +488,7 @@ function factory(dependencies) {
          * @param {integer[]} param0.res_id
          */
         static async performRpcMailGetSuggestedRecipients({ model, res_ids }) {
-            const data = await this.messaging.rpcRoute('/mail/get_suggested_recipients', { model, res_ids });
+            const data = await this.env.services.rpc('/mail/get_suggested_recipients', { model, res_ids }, { silent: true });
             if (!this.messaging) {
                 return;
             }
@@ -523,7 +525,7 @@ function factory(dependencies) {
                 ['name', 'ilike', searchTerm],
             ];
             const fields = ['channel_type', 'name'];
-            const channelsData = await this.messaging.rpcOrmStatic("mail.channel", "search_read", { domain, fields, limit });
+            const channelsData = await this.env.services.orm.silent.searchRead("mail.channel", domain, fields, { limit });
             if (!this.messaging) {
                 return;
             }
@@ -572,14 +574,12 @@ function factory(dependencies) {
          * with these attachments, which are used by attachment box in the chatter.
          */
         async fetchAttachments() {
-            const attachmentsData = await this.messaging.rpcOrmStatic('ir.attachment', 'search_read', {
-                domain: [
-                    ['res_id', '=', this.id],
-                    ['res_model', '=', this.model],
-                ],
-                fields: ['id', 'name', 'mimetype'],
-                order: [{ name: 'id', asc: false }],
-            });
+            const attachmentsData = await this.env.services.orm.silent.searchRead(
+                'ir.attachment',
+                [['res_id', '=', this.id], ['res_model', '=', this.model]],
+                ['id', 'name', 'mimetype'],
+                { order: 'id desc' },
+            );
             if (!this.exists()) {
                 return;
             }
@@ -608,9 +608,9 @@ function factory(dependencies) {
          * Add current user to provided thread's followers.
          */
         async follow() {
-            await this.messaging.rpcOrm(this.model, 'message_subscribe', this.id, {
+            await this.env.services.orm.call(this.model, 'message_subscribe', [this.id], {
                 partner_ids: [this.messaging.currentPartner.id],
-            }, { silent: false });
+            });
             if (!this.exists()) {
                 return;
             }
@@ -631,16 +631,16 @@ function factory(dependencies) {
          * Joins this thread. Only makes sense on channels of type channel.
          */
         async join() {
-            await this.messaging.rpcOrm('mail.channel', 'add_members', this.id, {
+            await this.env.services.orm.call('mail.channel', 'add_members', [[this.id]], {
                 partner_ids: [this.messaging.currentPartner.id],
-            }, { silent: false });
+            });
         }
 
         /**
          * Leaves this thread. Only makes sense on channels of type channel.
          */
         async leave() {
-            await this.messaging.rpcOrm('mail.channel', 'action_unfollow', this.id, {}, { silent: false });
+            await this.env.services.orm.call('mail.channel', 'action_unfollow', [this.id]);
         }
 
         /**
@@ -654,7 +654,7 @@ function factory(dependencies) {
          * Mark the specified conversation as fetched.
          */
         async markAsFetched() {
-            await this.messaging.rpcOrm('mail.channel', 'channel_fetched', this.id);
+            await this.env.services.orm.silent.call('mail.channel', 'channel_fetched', [[this.id]]);
         }
 
         /**
@@ -805,11 +805,11 @@ function factory(dependencies) {
                 return;
             }
             // A bit "extreme", may be improved
-            const [{ activity_ids: newActivityIds }] = await this.messaging.rpcOrm(this.model, 'read', this.id, { fields: ['activity_ids'] });
+            const [{ activity_ids: newActivityIds }] = await this.env.services.orm.silent.read(this.model, [this.id], ['activity_ids']);
             if (!this.exists()) {
                 return;
             }
-            const activitiesData = await this.messaging.rpcOrm('mail.activity', 'activity_format', newActivityIds);
+            const activitiesData = await this.env.services.orm.silent.call('mail.activity', 'activity_format', [newActivityIds]);
             if (!this.exists()) {
                 return;
             }
@@ -827,10 +827,10 @@ function factory(dependencies) {
                 this.update({ followers: unlinkAll() });
                 return;
             }
-            const { followers } = await this.messaging.rpcRoute('/mail/read_followers', {
+            const { followers } = await this.env.services.rpc('/mail/read_followers', {
                 res_id: this.id,
                 res_model: this.model,
-            });
+            }, { silent: true });
             if (!this.exists()) {
                 return;
             }
@@ -917,7 +917,7 @@ function factory(dependencies) {
          * @param {string} newName
          */
         async rename(newName) {
-            return this.messaging.rpcOrm('mail.channel', 'channel_rename', this.id, { name: newName }, { silent: false });
+            return this.env.services.orm.call('mail.channel', 'channel_rename', [this.id], { name: newName });
         }
 
         /**
@@ -928,7 +928,7 @@ function factory(dependencies) {
          * @param {string} newName
          */
         async setCustomName(newName) {
-            return this.messaging.rpcOrm('mail.channel', 'channel_set_custom_name', this.id, { name: newName }, { silent: false });
+            return this.env.services.orm.call('mail.channel', 'channel_set_custom_name', [this.id], { name: newName });
         }
 
         /**
@@ -1419,7 +1419,7 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeUrl() {
-            const baseHref = this.env.session.url('/web');
+            const baseHref = url('/web');
             if (this.model === 'mail.channel') {
                 return `${baseHref}#action=mail.action_discuss&active_id=${this.model}_${this.id}`;
             }
@@ -1437,7 +1437,7 @@ function factory(dependencies) {
                 isTyping !== this._currentPartnerLastNotifiedIsTyping
             ) {
                 if (this.model === 'mail.channel') {
-                    await this.messaging.rpcOrm('mail.channel', 'notify_typing', this.id, { is_typing: isTyping });
+                    await this.env.services.orm.silent.call('mail.channel', 'notify_typing', [[this.id]], { is_typing: isTyping });
                     if (!this.exists()) {
                         return;
                     }
@@ -1514,7 +1514,7 @@ function factory(dependencies) {
                     default_res_id: this.id,
                 },
             };
-            this.env.bus.trigger('do-action', {
+            owl.Component.env.bus.trigger('do-action', {
                 action,
                 options: {
                     on_close: async () => {

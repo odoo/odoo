@@ -122,9 +122,9 @@ export function makeMockXHR(response, sendCb, def) {
 
 export function makeMockFetch(mockRPC) {
     const _rpc = buildMockRPC(mockRPC);
-    return async (input) => {
-        let route = typeof input === "string" ? input : input.url;
-        let params;
+    return async (resource, init) => {
+        let route = typeof resource === "string" ? resource : resource.url;
+        let params = init;
         if (route.includes("load_menus")) {
             const routeArray = route.split("/");
             params = {
@@ -140,8 +140,11 @@ export function makeMockFetch(mockRPC) {
         } catch (e) {
             status = 500;
         }
-        const blob = new Blob([JSON.stringify(res || {})], { type: "application/json" });
-        return new Response(blob, { status });
+        if (route.includes("load_menus")) {
+            const blob = new Blob([JSON.stringify(res || {})], { type: "application/json" });
+            return new Response(blob, { status });
+        }
+        return new Response(res, { status });
     };
 }
 

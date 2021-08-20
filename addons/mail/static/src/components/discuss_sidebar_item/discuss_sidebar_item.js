@@ -140,7 +140,7 @@ export class DiscussSidebarItem extends Component {
      */
     _onClickSettings(ev) {
         ev.stopPropagation();
-        return this.env.bus.trigger('do-action', {
+        return owl.Component.env.bus.trigger('do-action', {
             action: {
                 type: 'ir.actions.act_window',
                 res_model: this.thread.model,

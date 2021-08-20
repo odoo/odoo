@@ -2,6 +2,8 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
+import { url } from "@web/core/utils/urls";
+
 const { Component, useState } = owl;
 
 export class Attachment extends Component {
@@ -36,7 +38,7 @@ export class Attachment extends Component {
         if (this.attachment.isUploading) {
             return '';
         }
-        return this.env.session.url('/web/content', {
+        return url('/web/content', {
             id: this.attachment.id,
             download: true,
         });

@@ -17,7 +17,7 @@ QUnit.module('model_field_command', {}, function () {
 QUnit.module('set_tests.js', {
     beforeEach() {
         beforeEach(this);
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));

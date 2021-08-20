@@ -102,7 +102,7 @@ function factory(dependencies) {
             if (!this.isUploading) {
                 this.update({ isUnlinkPending: true });
                 try {
-                    await this.messaging.rpcOrm('ir.attachment', 'unlink', this.id, {}, { silent: false });
+                    await this.env.services.orm.silent.unlink('ir.attachment', [this.id]);
                     if (!this.exists()) {
                         return;
                     }

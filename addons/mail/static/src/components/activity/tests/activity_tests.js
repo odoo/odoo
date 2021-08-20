@@ -33,7 +33,7 @@ QUnit.module('activity_tests.js', {
             });
         };
 
-        this.start = async params => {
+        this.start = async (params = {}) => {
             const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
@@ -641,11 +641,9 @@ QUnit.test('activity with mail template: send mail', async function (assert) {
         async mockRPC(route, args) {
             if (args.method === 'activity_send_mail') {
                 assert.step('activity_send_mail');
-                assert.strictEqual(args.args[0], 42, "should have correct thread id");
+                assert.deepEqual(args.args[0], [42], "should have correct thread id");
                 assert.strictEqual(args.kwargs.template_id, 1, "should have correct template id");
-                return;
-            } else {
-                return this._super(...arguments);
+                return 'This should be added to mock server.';
             }
         },
     });
@@ -949,10 +947,8 @@ QUnit.test('activity click on cancel', async function (assert) {
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/unlink') {
                 assert.step('unlink');
-                assert.strictEqual(args.args[0], 12, "should have correct activity id");
-                return;
-            } else {
-                return this._super(...arguments);
+                assert.deepEqual(args.args[0], [12], "should have correct activity id");
+                return 'This should be added to mock server.';
             }
         },
     });
@@ -1093,6 +1089,10 @@ QUnit.test('activity mark done popover click on discard', async function (assert
 QUnit.test('data-oe-id & data-oe-model link redirection on click', async function (assert) {
     assert.expect(7);
 
+    this.data['some.model'] = {
+        fields: {},
+        records: [],
+    };
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.strictEqual(
@@ -1112,7 +1112,10 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
         );
         assert.step('do-action:openFormView_some.model_250');
     });
-    await this.start({ env: { bus } });
+    await this.start({ env: { bus }, archs: {
+        'some.model,false,form': '<form/>',
+        'some.model,false,search': '<search/>',
+    } });
     const activity = this.messaging.models['mail.activity'].create({
         canWrite: true,
         category: 'not_upload_file',

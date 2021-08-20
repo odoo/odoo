@@ -204,7 +204,7 @@ function factory(dependencies) {
             });
             this.focus();
             if (!this.isOpen) {
-                this.env.bus.trigger('do-action', {
+                owl.Component.env.bus.trigger('do-action', {
                     action: 'mail.action_discuss',
                     options: {
                         active_id: this.threadToActiveId(this),

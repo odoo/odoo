@@ -16,7 +16,7 @@ function factory(dependencies) {
          * Delete the record from database and locally.
          */
         async deleteServerRecord() {
-            await this.messaging.rpcOrm('mail.activity', 'unlink', this.id, {}, { silent: false });
+            await this.env.services.orm.unlink('mail.activity', [this.id]);
             if (!this.exists()) {
                 return;
             }
@@ -137,14 +137,14 @@ function factory(dependencies) {
                 },
                 res_id: this.id,
             };
-            this.env.bus.trigger('do-action', {
+            owl.Component.env.bus.trigger('do-action', {
                 action,
                 options: { on_close: () => this.fetchAndUpdate() },
             });
         }
 
         async fetchAndUpdate() {
-            const [data] = await this.messaging.rpcOrm('mail.activity', 'activity_format', this.id);
+            const [data] = await this.env.services.orm.silent.call('mail.activity', 'activity_format', [[this.id]]);
             if (!this.exists) {
                 return;
             }
@@ -168,10 +168,10 @@ function factory(dependencies) {
          */
         async markAsDone({ attachments = [], feedback = false }) {
             const attachmentIds = attachments.map(attachment => attachment.id);
-            await this.messaging.rpcOrm('mail.activity', 'action_feedback', this.id, {
+            await this.env.services.orm.call('mail.activity', 'action_feedback', [[this.id]], {
                 attachment_ids: attachmentIds,
                 feedback,
-            }, { silent: false });
+            });
             if (!this.exists()) {
                 return;
             }
@@ -185,9 +185,12 @@ function factory(dependencies) {
          * @returns {Object}
          */
         async markAsDoneAndScheduleNext({ feedback }) {
-            const action = await this.messaging.rpcOrm('mail.activity', 'action_feedback_schedule_next', this.id, {
-                feedback,
-            }, { silent: false });
+            const action = await this.env.services.orm.call(
+                'mail.activity',
+                'action_feedback_schedule_next',
+                [[this.id]],
+                { feedback },
+            );
             if (!this.exists()) {
                 return;
             }
@@ -198,7 +201,7 @@ function factory(dependencies) {
                 thread.refreshActivities();
                 return;
             }
-            this.env.bus.trigger('do-action', {
+            owl.Component.env.bus.trigger('do-action', {
                 action,
                 options: {
                     on_close: () => {

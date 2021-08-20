@@ -41,7 +41,7 @@ function factory(dependencies) {
             const device = this.messaging.device;
             device.start();
             const discuss = this.messaging.discuss;
-            const data = await this.messaging.rpcRoute('/mail/init_messaging');
+            const data = await this.env.services.rpc('/mail/init_messaging', {}, { silent: true });
             if (!this.exists()) {
                 return;
             }

@@ -47,8 +47,9 @@ function factory(dependencies) {
             this.update({
                 globalWindowInnerHeight: this.messaging.browser.innerHeight,
                 globalWindowInnerWidth: this.messaging.browser.innerWidth,
-                isMobile: this.env.device.isMobile,
-                sizeClass: this.env.device.size_class,
+                isMobile: owl.Component.env.device.isMobile,
+                sizeClass: owl.Component.env.device.size_class,
+                SIZES: owl.Component.env.device.SIZES,
             });
         }
     }
@@ -66,6 +67,7 @@ function factory(dependencies) {
          * attribute.
          */
         sizeClass: attr(),
+        SIZES: attr(),
     };
 
     Device.modelName = 'mail.device';

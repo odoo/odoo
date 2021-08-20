@@ -164,7 +164,7 @@ class Partner(models.Model):
         query.limit = int(limit)
         return {
             'count': self.env['res.partner'].search_count(domain),
-            'partners': [p.mail_partner_format() for p in self.env['res.partner'].browse(query)],
+            'partners': list(self.env['res.partner'].browse(query).mail_partner_format().values()),
         }
 
     @api.model
