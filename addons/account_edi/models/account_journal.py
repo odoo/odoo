@@ -29,11 +29,12 @@ class AccountJournal(models.Model):
             res = super().write(vals)
             diff_edi_format_ids = old_edi_format_ids - self.edi_format_ids
             documents = self.env['account.edi.document'].search([
-                ('move_id.journal_id', 'in', self.ids),
+                ('edi_type', 'in', ('invoice', 'payment')),
                 ('edi_format_id', 'in', diff_edi_format_ids.ids),
-                ('state', 'in', ('to_cancel', 'to_send')),
+                ('state', 'in', ('to_cancel', 'to_send', 'sent')),
             ])
-            if documents:
+            journals = self.env['account.move'].sudo().browse(documents.mapped('res_id')).journal_id
+            if any(journal.id in self.ids for journal in journals):
                 raise UserError(_('Cannot deactivate (%s) on this journal because not all documents are synchronized', ', '.join(documents.edi_format_id.mapped('display_name'))))
             return res
         else:
@@ -58,7 +59,7 @@ class AccountJournal(models.Model):
                     move.journal_id,
                     ARRAY_AGG(doc.edi_format_id) AS edi_format_ids
                 FROM account_edi_document doc
-                JOIN account_move move ON move.id = doc.move_id
+                JOIN account_move move ON move.id = doc.res_id
                 WHERE doc.state IN ('to_cancel', 'to_send')
                 AND move.journal_id IN %s
                 GROUP BY move.journal_id

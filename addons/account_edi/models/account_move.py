@@ -11,7 +11,7 @@ class AccountMove(models.Model):
 
     edi_document_ids = fields.One2many(
         comodel_name='account.edi.document',
-        inverse_name='move_id')
+        inverse_name='res_id')
     edi_state = fields.Selection(
         selection=[('to_send', 'To Send'), ('sent', 'Sent'), ('to_cancel', 'To Cancel'), ('cancelled', 'Cancelled')],
         string="Electronic invoicing",
@@ -99,7 +99,7 @@ class AccountMove(models.Model):
             for doc in move.edi_document_ids:
                 if doc.edi_format_id._needs_web_services() \
                         and doc.state in ('sent', 'to_cancel') \
-                        and move.is_invoice(include_receipts=True) \
+                        and doc.edi_type == 'invoice' \
                         and doc.edi_format_id._is_required_for_invoice(move):
                     move.show_reset_to_draft_button = False
                     break
@@ -115,7 +115,7 @@ class AccountMove(models.Model):
 
             move.edi_show_cancel_button = any([doc.edi_format_id._needs_web_services()
                                                and doc.state == 'sent'
-                                               and move.is_invoice(include_receipts=True)
+                                               and doc.edi_type == 'invoice'
                                                and doc.edi_format_id._is_required_for_invoice(move)
                                               for doc in move.edi_document_ids])
 
@@ -126,7 +126,7 @@ class AccountMove(models.Model):
         for move in self:
             move.edi_show_abandon_cancel_button = any(doc.edi_format_id._needs_web_services()
                                                       and doc.state == 'to_cancel'
-                                                      and move.is_invoice(include_receipts=True)
+                                                      and doc.edi_type == 'invoice'
                                                       and doc.edi_format_id._is_required_for_invoice(move)
                                                       for doc in move.edi_document_ids)
 
@@ -373,8 +373,10 @@ class AccountMove(models.Model):
                         })
                     else:
                         edi_document_vals_list.append({
+                            'edi_type': 'payment',
                             'edi_format_id': edi_format.id,
-                            'move_id': payment.id,
+                            'res_id': payment.id,
+                            'res_model': 'account.move',
                             'state': 'to_send',
                         })
                 elif existing_edi_document:
@@ -398,7 +400,7 @@ class AccountMove(models.Model):
                 is_edi_needed = move.is_invoice(include_receipts=False) and edi_format._is_required_for_invoice(move)
 
                 if is_edi_needed:
-                    errors = edi_format._check_move_configuration(move)
+                    errors = edi_format._check_record_configuration(move, 'invoice')
                     if errors:
                         raise UserError(_("Invalid invoice configuration:\n\n%s") % '\n'.join(errors))
 
@@ -410,14 +412,16 @@ class AccountMove(models.Model):
                         })
                     else:
                         edi_document_vals_list.append({
+                            'edi_type': 'invoice',
                             'edi_format_id': edi_format.id,
-                            'move_id': move.id,
+                            'res_id': move.id,
+                            'res_model': 'account.move',
                             'state': 'to_send',
                         })
 
         self.env['account.edi.document'].create(edi_document_vals_list)
         posted.edi_document_ids._process_documents_no_web_services()
-        self.env.ref('account_edi.ir_cron_edi_network')._trigger()
+        self.env.ref('edi.ir_cron_edi_network')._trigger()
         return posted
 
     def button_cancel(self):
@@ -428,7 +432,7 @@ class AccountMove(models.Model):
         self.edi_document_ids.filtered(lambda doc: doc.state != 'sent').write({'state': 'cancelled', 'error': False, 'blocking_level': False})
         self.edi_document_ids.filtered(lambda doc: doc.state == 'sent').write({'state': 'to_cancel', 'error': False, 'blocking_level': False})
         self.edi_document_ids._process_documents_no_web_services()
-        self.env.ref('account_edi.ir_cron_edi_network')._trigger()
+        self.env.ref('edi.ir_cron_edi_network')._trigger()
 
         return res
 
@@ -457,7 +461,7 @@ class AccountMove(models.Model):
                 if doc.edi_format_id._needs_web_services() \
                         and doc.attachment_id \
                         and doc.state == 'sent' \
-                        and move.is_invoice(include_receipts=True) \
+                        and doc.edi_type == 'invoice' \
                         and doc.edi_format_id._is_required_for_invoice(move):
                     to_cancel_documents |= doc
                     is_move_marked = True
@@ -474,7 +478,7 @@ class AccountMove(models.Model):
             is_move_marked = False
             for doc in move.edi_document_ids:
                 if doc.state == 'to_cancel' \
-                        and move.is_invoice(include_receipts=True) \
+                        and doc.edi_type == 'invoice' \
                         and doc.edi_format_id._is_required_for_invoice(move):
                     documents |= doc
                     is_move_marked = True

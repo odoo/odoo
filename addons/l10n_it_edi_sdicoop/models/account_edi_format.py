@@ -96,12 +96,12 @@ class AccountEdiFormat(models.Model):
         """
         return invoice.is_sale_document() and invoice.country_code == 'IT'
 
-    def _support_batching(self, move=None, state=None, company=None):
+    def _support_batching(self, rec, edi_type, state, company):
         # OVERRIDE
         if self.code == 'fattura_pa':
-            return state == 'to_send' and move.is_invoice()
+            return state == 'to_send' and rec.is_invoice()
 
-        return super()._support_batching(move=move, state=state, company=company)
+        return super()._support_batching(rec, edi_type, state, company)
 
     def _l10n_it_post_invoices_step_1(self, invoices):
         ''' Send the invoices to the proxy.

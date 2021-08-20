@@ -29,7 +29,7 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
         to_process = edi_docs._prepare_jobs()
         self.assertEqual(len(to_process), 2)
 
-        with patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._support_batching', return_value=True):
+        with patch('odoo.addons.edi.models.account_edi_format.AccountEdiFormat._support_batching', return_value=True):
             to_process = edi_docs._prepare_jobs()
             self.assertEqual(len(to_process), 1)
 
@@ -41,19 +41,19 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
         edi_docs |= self.create_edi_document(other_edi, 'to_send')
         edi_docs |= self.create_edi_document(other_edi, 'to_send')
 
-        with patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._support_batching', return_value=True):
+        with patch('odoo.addons.edi.models.account_edi_format.AccountEdiFormat._support_batching', return_value=True):
             to_process = edi_docs._prepare_jobs()
             self.assertEqual(len(to_process), 2)
 
     @patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._post_invoice_edi', return_value={})
     def test_warning_is_retried(self, patched):
-        with patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._needs_web_services',
+        with patch('odoo.addons.edi.models.account_edi_format.AccountEdiFormat._needs_web_services',
                    new=lambda edi_format: True):
             edi_docs = self.create_edi_document(self.edi_format, 'to_send')
             edi_docs.error = 'Test Error'
             edi_docs.blocking_level = 'warning'
 
-            edi_docs.move_id.action_process_edi_web_services()
+            self.env[edi_docs.res_model].browse(edi_docs.mapped('res_id')).action_process_edi_web_services()
             patched.assert_called_once()
 
     def test_edi_flow(self):
@@ -69,7 +69,7 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
             self.assertEqual(doc.state, 'cancelled')
 
     def test_edi_flow_two_steps(self):
-        with self.mock_edi(_post_invoice_edi_method=_mocked_post_two_steps,
+        with self.mock_edi(_post_edi_method=_mocked_post_two_steps,
                            _needs_web_services_method=_generate_mocked_needs_web_services(True)):
             doc = self.invoice._get_edi_document(self.edi_format)
             self.assertFalse(doc)
@@ -101,7 +101,7 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
 
     def test_edi_flow_request_cancel_failed(self):
         with self.mock_edi(_needs_web_services_method=_generate_mocked_needs_web_services(True),
-                           _cancel_invoice_edi_method=_mocked_cancel_failed):
+                           _cancel_edi_method=_mocked_cancel_failed):
             self.assertEqual(self.invoice.state, 'draft')
             self.invoice.action_post()
             doc = self.invoice._get_edi_document(self.edi_format)
@@ -132,7 +132,7 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
             self.assertIsNotNone(doc.error)
 
     def test_edi_flow_two_step_cancel_with_call_off_request(self):
-        def _mock_cancel(edi_format, invoices):
+        def _mock_cancel(edi_format, invoices, edi_type):
             invoices_no_ref = invoices.filtered(lambda i: not i.ref)
             if len(invoices_no_ref) == len(invoices):  # first step
                 invoices_no_ref.ref = 'test_ref_cancel'
@@ -148,8 +148,8 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
             return not bool(invoice.ref)
 
         with self.mock_edi(_needs_web_services_method=_generate_mocked_needs_web_services(True),
-                           _is_required_for_invoice_method=_is_needed_for_invoice,
-                           _cancel_invoice_edi_method=_mock_cancel):
+                           _is_required_for_record_method=_is_needed_for_invoice,
+                           _cancel_edi_method=_mock_cancel):
             self.invoice.action_post()
             doc = self.invoice._get_edi_document(self.edi_format)
             doc._process_documents_web_services(with_commit=False)
@@ -172,35 +172,38 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
             self.assertEqual(doc.state, 'sent')
 
     def test_batches(self):
-        def _get_batch_key_method(edi_format, move, state):
+        def _get_batch_key_method(edi_format, move, edi_type, state):
             return (move.ref)
 
         with self.mock_edi(_get_batch_key_method=_get_batch_key_method,
                            _support_batching_method=_generate_mocked_support_batching(True)):
             edi_docs = self.env['account.edi.document']
             doc1 = self.create_edi_document(self.edi_format, 'to_send')
+            move1 = self.env[doc1.res_model].browse(doc1.res_id)
             edi_docs |= doc1
             doc2 = self.create_edi_document(self.edi_format, 'to_send')
+            move2 = self.env[doc2.res_model].browse(doc2.res_id)
             edi_docs |= doc2
             doc3 = self.create_edi_document(self.edi_format, 'to_send')
+            move3 = self.env[doc3.res_model].browse(doc3.res_id)
             edi_docs |= doc3
 
             to_process = edi_docs._prepare_jobs()
             self.assertEqual(len(to_process), 1)
 
-            doc1.move_id.ref = 'batch1'
-            doc2.move_id.ref = 'batch2'
-            doc3.move_id.ref = 'batch3'
+            move1.ref = 'batch1'
+            move2.ref = 'batch2'
+            move3.ref = 'batch3'
 
             to_process = edi_docs._prepare_jobs()
             self.assertEqual(len(to_process), 3)
 
-            doc2.move_id.ref = 'batch1'
+            move2.ref = 'batch1'
             to_process = edi_docs._prepare_jobs()
             self.assertEqual(len(to_process), 2)
 
     def test_cron_triggers(self):
-        with self.capture_triggers('account_edi.ir_cron_edi_network') as capt, \
+        with self.capture_triggers('edi.ir_cron_edi_network') as capt, \
          self.mock_edi(_needs_web_services_method=_generate_mocked_needs_web_services(True)):
             self.invoice._get_edi_document(self.edi_format)
             self.invoice.action_post()
@@ -208,7 +211,7 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
 
     def test_cron_self_trigger(self):
         # Process single job by CRON call (and thus, disable the auto-commit).
-        edi_cron = self.env.ref('account_edi.ir_cron_edi_network')
+        edi_cron = self.env.ref('edi.ir_cron_edi_network')
         edi_cron.code = 'model._cron_process_documents_web_services(job_count=1)'
 
         # Create invoices.
@@ -220,10 +223,10 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
         } for i in range(4)])
 
-        with self.capture_triggers('account_edi.ir_cron_edi_network') as capt, \
+        with self.capture_triggers('edi.ir_cron_edi_network') as capt, \
              self.mock_edi(_needs_web_services_method=_generate_mocked_needs_web_services(True)):
             invoices.action_post()
 
-            self.env.ref('account_edi.ir_cron_edi_network').method_direct_trigger()
+            self.env.ref('edi.ir_cron_edi_network').method_direct_trigger()
             self.assertEqual(len(capt.records), 2, "Not all records have been processed in this run, the cron should "
                                                    "re-trigger itself to process some more later")

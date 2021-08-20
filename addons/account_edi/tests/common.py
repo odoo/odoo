@@ -5,7 +5,6 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 from contextlib import contextmanager
 from unittest.mock import patch
-from unittest import mock
 
 import base64
 
@@ -15,61 +14,61 @@ def _generate_mocked_needs_web_services(needs_web_services):
 
 
 def _generate_mocked_support_batching(support_batching):
-    return lambda edi_format, move, state, company: support_batching
+    return lambda edi_format, rec, edi_type, state, company: support_batching
 
 
-def _mocked_get_batch_key(edi_format, move, state):
+def _mocked_get_batch_key(edi_format, rec, edi_type, state):
     return ()
 
 
-def _mocked_check_move_configuration_success(edi_format, move):
+def _mocked_check_record_configuration_success(edi_format, rec, edi_type):
     return []
 
 
-def _mocked_check_move_configuration_fail(edi_format, move):
+def _mocked_check_record_configuration_fail(edi_format, move, edi_type):
     return ['Fake error (mocked)']
 
 
-def _mocked_post(edi_format, invoices):
+def _mocked_post(edi_format, recs, edi_type):
     res = {}
-    for invoice in invoices:
+    for rec in recs:
         attachment = edi_format.env['ir.attachment'].create({
             'name': 'mock_simple.xml',
             'datas': base64.encodebytes(b"<?xml version='1.0' encoding='UTF-8'?><Invoice/>"),
             'mimetype': 'application/xml'
         })
-        res[invoice] = {'success': True, 'attachment': attachment}
+        res[rec] = {'success': True, 'attachment': attachment}
     return res
 
 
-def _mocked_post_two_steps(edi_format, invoices):
+def _mocked_post_two_steps(edi_format, recs, edi_type):
     # For this test, we use the field ref to know if the first step is already done or not.
     # Typically, a technical field for the reference of the upload to the web-service will
     # be saved on the invoice.
-    invoices_no_ref = invoices.filtered(lambda i: not i.ref)
-    if len(invoices_no_ref) == len(invoices):  # first step
-        invoices_no_ref.ref = 'test_ref'
-        return {invoice: {} for invoice in invoices}
-    elif len(invoices_no_ref) == 0:  # second step
+    recs_no_ref = recs.filtered(lambda i: not i.ref)
+    if len(recs_no_ref) == len(recs):  # first step
+        recs_no_ref.ref = 'test_ref'
+        return {invoice: {} for invoice in recs}
+    elif len(recs_no_ref) == 0:  # second step
         res = {}
-        for invoice in invoices:
+        for rec in recs:
             attachment = edi_format.env['ir.attachment'].create({
                 'name': 'mock_simple.xml',
                 'datas': base64.encodebytes(b"<?xml version='1.0' encoding='UTF-8'?><Invoice/>"),
                 'mimetype': 'application/xml'
             })
-            res[invoice] = {'success': True, 'attachment': attachment}
+            res[rec] = {'success': True, 'attachment': attachment}
         return res
     else:
         raise ValueError('wrong use of "_mocked_post_two_steps"')
 
 
-def _mocked_cancel_success(edi_format, invoices):
-    return {invoice: {'success': True} for invoice in invoices}
+def _mocked_cancel_success(edi_format, recs, edi_type):
+    return {rec: {'success': True} for rec in recs}
 
 
-def _mocked_cancel_failed(edi_format, invoices):
-    return {invoice: {'error': 'Faked error (mocked)'} for invoice in invoices}
+def _mocked_cancel_failed(edi_format, recs, edi_type):
+    return {rec: {'error': 'Faked error (mocked)'} for rec in recs}
 
 
 class AccountEdiTestCommon(AccountTestInvoicingCommon):
@@ -95,40 +94,38 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
 
     @contextmanager
     def mock_edi(self,
-                 _is_required_for_invoice_method=lambda edi_format, invoice: True,
-                 _is_required_for_payment_method=lambda edi_format, invoice: True,
+                 _is_required_for_record_method=lambda edi_format, invoice: True,
                  _support_batching_method=_generate_mocked_support_batching(False),
                  _get_batch_key_method=_mocked_get_batch_key,
                  _needs_web_services_method=_generate_mocked_needs_web_services(False),
-                 _check_move_configuration_method=_mocked_check_move_configuration_success,
-                 _post_invoice_edi_method=_mocked_post,
-                 _cancel_invoice_edi_method=_mocked_cancel_success,
-                 _post_payment_edi_method=_mocked_post,
-                 _cancel_payment_edi_method=_mocked_cancel_success,
+                 _check_move_configuration_method=_mocked_check_record_configuration_success,
+                 _post_edi_method=_mocked_post,
+                 _cancel_edi_method=_mocked_cancel_success,
                  ):
 
         try:
-            with patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._is_required_for_invoice',
-                       new=_is_required_for_invoice_method), \
+            with patch('odoo.addons.edi.models.account_edi_format.AccountEdiFormat._is_required_for_record',
+                       new=_is_required_for_record_method), \
+                 patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._is_required_for_invoice',
+                       new=_is_required_for_record_method), \
                  patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._is_required_for_payment',
-                       new=_is_required_for_payment_method), \
-                 patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._needs_web_services',
+                       new=_is_required_for_record_method), \
+                 patch('odoo.addons.edi.models.account_edi_format.AccountEdiFormat._needs_web_services',
                        new=_needs_web_services_method), \
-                 patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._support_batching',
+                 patch('odoo.addons.edi.models.account_edi_format.AccountEdiFormat._support_batching',
                        new=_support_batching_method), \
-                 patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._get_batch_key',
+                 patch('odoo.addons.edi.models.account_edi_format.AccountEdiFormat._get_batch_key',
                        new=_get_batch_key_method), \
-                 patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._check_move_configuration',
+                 patch('odoo.addons.edi.models.account_edi_format.AccountEdiFormat._check_record_configuration',
                        new=_check_move_configuration_method), \
-                 patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._post_invoice_edi',
-                       new=_post_invoice_edi_method), \
-                 patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._cancel_invoice_edi',
-                       new=_cancel_invoice_edi_method), \
-                 patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._post_payment_edi',
-                       new=_post_payment_edi_method), \
-                 patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._cancel_payment_edi',
-                       new=_cancel_payment_edi_method):
-
+                 patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._post_edi',
+                       new=_post_edi_method), \
+                 patch('odoo.addons.edi.models.account_edi_format.AccountEdiFormat._post_edi',
+                       new=_post_edi_method), \
+                 patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._cancel_edi',
+                       new=_cancel_edi_method), \
+                 patch('odoo.addons.edi.models.account_edi_format.AccountEdiFormat._cancel_edi',
+                       new=_cancel_edi_method):
                 yield
         finally:
             pass
@@ -192,8 +189,10 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
         """
         move = move or self.init_invoice(move_type or 'out_invoice', products=self.product_a)
         return self.env['account.edi.document'].create({
+            'edi_type': 'invoice',
             'edi_format_id': edi_format.id,
-            'move_id': move.id,
+            'res_id': move.id,
+            'res_model': 'account.move',
             'state': state
         })
 

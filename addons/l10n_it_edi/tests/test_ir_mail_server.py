@@ -73,7 +73,9 @@ class PecMailServerTests(AccountEdiTestCommon):
         })
         cls.edi_document = cls.env['account.edi.document'].create({
             'edi_format_id': cls.edi_format.id,
-            'move_id': cls.invoice.id,
+            'res_id': cls.invoice.id,
+            'res_model': 'account.move',
+            'edi_type': 'invoice',
             'attachment_id': cls.attachment.id,
             'state': 'sent'
         })
