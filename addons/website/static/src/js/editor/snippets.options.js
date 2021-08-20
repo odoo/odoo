@@ -3041,11 +3041,11 @@ options.registry.ConditionalVisibility = options.Class.extend({
      *
      * @private
      */
-     _updateCSSSelectors() {
+    _updateCSSSelectors() {
         // There are 2 data attributes per option:
         // - One that stores the current records selected
         // - Another that stores the value of the rule "Hide for / Visible for"
-        let visibilityId = '';
+        const visibilityIDParts = [];
         const onlyAttributes = [];
         const hideAttributes = [];
         const target = this.$target[0];
@@ -3068,11 +3068,12 @@ options.registry.ConditionalVisibility = options.Class.extend({
                 }
                 // Create a visibilityId based on the options name and their
                 // values. eg : hide for en_US(id:1) -> lang1h
-                visibilityId += attribute.attributeName.replace('data-', '')
-                + records.reduce((acc, record) => acc += record.id, '')
-                + (hideFor ? 'h' : 'o');
+                const type = attribute.attributeName.replace('data-', '');
+                const valueIDs = records.map(record => record.id).sort();
+                visibilityIDParts.push(`${type}_${hideFor ? 'h' : 'o'}_${valueIDs.join('_')}`);
             }
         }
+        const visibilityId = visibilityIDParts.join('_');
         // Creates CSS selectors based on those attributes, the reducers
         // combine the attributes' values.
         let selectors = '';
