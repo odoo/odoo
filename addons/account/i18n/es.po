@@ -21,6 +21,7 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # Cécile Collart <cco@odoo.com>, 2021
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
+# Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021\n"
+"Last-Translator: Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1126,7 +1127,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account__currency_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__currency_id
 msgid "Account Currency"
-msgstr "Divisa de la cuenta"
+msgstr "Moneda de la cuenta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__account_dest_id
@@ -1558,7 +1559,7 @@ msgstr "Acciones"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate Other Currencies"
-msgstr "Activar otras divisas"
+msgstr "Activar otras monedas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1983,7 +1984,7 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the credit "
 "line foreign currency."
 msgstr ""
-"Monto siempre positivo afectado por este emparejamiento expresado en divisa "
+"Monto siempre positivo afectado por este emparejamiento expresado en moneda "
 "extranjera de la línea de crédito."
 
 #. module: account
@@ -1993,7 +1994,7 @@ msgid ""
 "line foreign currency."
 msgstr ""
 "Importe siempre positivo afectado por este emparejamiento expresado en "
-"divisa extranjera de la línea de débito."
+"moneda extranjera de la línea de débito."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount
@@ -2016,7 +2017,7 @@ msgstr "Importe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_currency
 msgid "Amount Currency"
-msgstr "Divisa del importe"
+msgstr "Moneda del importe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual
@@ -2092,7 +2093,7 @@ msgstr "Tipo de importe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__amount_currency
 msgid "Amount in Currency"
-msgstr "Importe en divisa"
+msgstr "Importe en moneda"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_amount
@@ -2102,7 +2103,7 @@ msgstr "Monto a pagar (moneda de la empresa)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_amount_currency
 msgid "Amount to Pay (foreign currency)"
-msgstr "Monto a pagar (divisa extranjera)"
+msgstr "Monto a pagar (moneda extranjera)"
 
 #. module: account
 #. openerp-web
@@ -2244,7 +2245,7 @@ msgstr "Distribución analítica"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
 msgid "Analytic Items"
-msgstr "Elementos analíticos"
+msgstr "Apuntes analíticos"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
@@ -2909,7 +2910,7 @@ msgstr "Por categoría de producto"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_report_salespersons
 msgid "By Salespersons"
-msgstr "Por vendedores"
+msgstr "Por comerciales"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__active
@@ -4107,7 +4108,7 @@ msgstr "Crédito"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_amount_currency
 msgid "Credit Amount Currency"
-msgstr "Divisa del monto del crédito"
+msgstr "Moneda del monto del crédito"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_credit_card
@@ -4173,7 +4174,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_currency_form
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Currencies"
-msgstr "Divisas"
+msgstr "Monedas"
 
 #. module: account
 #: model:ir.model,name:account.model_res_currency
@@ -4213,30 +4214,30 @@ msgstr "Diario de intercambio de moneda"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Currency exchange rate difference"
-msgstr "Diferencia en tasa de cambio de divisa"
+msgstr "Diferencia en tasa de cambio de moneda"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Currency exchange rate difference (cash basis)"
-msgstr "Diferencia de tipo de cambio de divisa (base de efectivo)"
+msgstr "Diferencia de tipo de cambio de moneda (base de efectivo)"
 
 #. module: account
 #: code:addons/account/models/res_bank.py:0
 #, python-format
 msgid "Currency must always be provided in order to generate a QR-code"
-msgstr "La divisa siempre debe proporcionarse para generar un código QR"
+msgstr "La moneda siempre debe proporcionarse para generar un código QR"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_currency_id
 msgid "Currency of the credit journal item."
-msgstr "Divisa del artículo del diario de crédito."
+msgstr "Moneda del apunte contable de crédito."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_currency_id
 msgid "Currency of the debit journal item."
-msgstr "Divisa del artículo del diario de débito."
+msgstr "Moneda del apunte contable de débito."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -4504,7 +4505,7 @@ msgstr "Débito"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_amount_currency
 msgid "Debit Amount Currency"
-msgstr "Divisa del monto de débito"
+msgstr "Moneda del monto de débito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_move_id
@@ -4649,7 +4650,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash"
 msgstr ""
-"Definir la acuñación más pequeña de la divisa utilizada para pagar en "
+"Definir la acuñación más pequeña de la moneda utilizada para pagar en "
 "efectivo"
 
 #. module: account
@@ -5294,7 +5295,7 @@ msgstr "Diferencia de cambio"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__currency_exchange_journal_id
 msgid "Exchange Gain or Loss Journal"
-msgstr "Diario de pérdidas y ganancias por cambio de divisa"
+msgstr "Diario de pérdidas y ganancias por cambio de moneda"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__exchange_move_id
@@ -5655,7 +5656,7 @@ msgstr "Forzar el impuesto a ser manejado como un impuesto precio incluido."
 #: model:ir.model.fields,help:account.field_account_account__currency_id
 msgid "Forces all moves for this account to have this account currency."
 msgstr ""
-"Obliga a todos los movimientos de esta cuenta a tener la divisa de esta "
+"Obliga a todos los movimientos de esta cuenta a tener la moneda de esta "
 "cuenta."
 
 #. module: account
@@ -5667,7 +5668,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__foreign_currency_id
 msgid "Foreign Currency"
-msgstr "Divisa Extranjera"
+msgstr "Moneda Extranjera"
 
 #. module: account
 #: code:addons/account/report/account_journal.py:0
@@ -6983,7 +6984,7 @@ msgstr "Diario"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__currency_id
 msgid "Journal Currency"
-msgstr "Divisa del diario"
+msgstr "Moneda del diario"
 
 #. module: account
 #. openerp-web
@@ -7506,7 +7507,7 @@ msgstr "Diseño"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sale_activity_user_id
 msgid "Leave empty to assign the Salesperson of the invoice."
-msgstr "Mantén vacío para asignar al vendedor de la factura."
+msgstr "Deje vacío para asignar al comercial de la factura."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_ledgers
@@ -7677,12 +7678,12 @@ msgstr "Adjuntos principales"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__currency_id
 msgid "Main currency of the company."
-msgstr "Divisa principal de la empresa."
+msgstr "Moneda principal de la compañía."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Main currency of your company"
-msgstr "Divisa principal de tu empresa"
+msgstr "Moneda principal de tu compañía"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_management_menu
@@ -7950,7 +7951,7 @@ msgstr "Falta el modelo activo \"active_model\" en este contexto."
 #: code:addons/account/models/account_partial_reconcile.py:0
 #, python-format
 msgid "Missing foreign currencies on partials having ids: %s"
-msgstr "Divisas extranjeras faltantes en parciales con IDs: %s"
+msgstr "Monedas extranjeras faltantes en parciales con IDs: %s"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_accountable_required_fields
@@ -8006,7 +8007,7 @@ msgstr "Tipo de Movimiento"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Multi-Currencies"
-msgstr "Multi-divisas"
+msgstr "Multi-Moneda"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8699,7 +8700,7 @@ msgstr "Facturas originales"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Original Currency"
-msgstr "Divisa original"
+msgstr "Moneda original"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
@@ -9546,7 +9547,7 @@ msgid ""
 "Print Report with the currency column if the currency differs from the "
 "company currency."
 msgstr ""
-"Imprimir reporte con la columna de divisa si la divisa difiere de la divisa "
+"Imprimir informe con la columna de moneda si la moneda difiere de la moneda "
 "de la empresa."
 
 #. module: account
@@ -9879,7 +9880,7 @@ msgstr "Partes de conciliación"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Record transactions in foreign currencies"
-msgstr "Registrar transacciones en divisas extranjeras"
+msgstr "Registrar transacciones en monedas extranjeras"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -10127,7 +10128,7 @@ msgstr "Importe residual"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__amount_residual_currency
 msgid "Residual Amount in Currency"
-msgstr "Importe residual en divisa"
+msgstr "Importe residual en moneda"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -10172,7 +10173,7 @@ msgstr "Restringir el uso de impuestos a un tipo de producto."
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
 msgstr ""
-"Restringir que las proposiciones tengan la misma divisa que la línea de "
+"Restringir que las proposiciones tengan la misma moneda que la línea de "
 "extracto."
 
 #. module: account
@@ -10402,13 +10403,13 @@ msgstr "Impuesto de venta"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Salesperson"
-msgstr "Vendedor"
+msgstr "Comercial"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_same_currency
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_same_currency
 msgid "Same Currency Matching"
-msgstr "Misma divisa igualada"
+msgstr "Misma moneda igualada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__sample_bill_preview
@@ -11096,7 +11097,7 @@ msgstr "Algunas veces llamado BIC o Swift"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_currency_id
 msgid "Source Currency"
-msgstr "Divisa de origen"
+msgstr "Moneda de origen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
@@ -12084,7 +12085,7 @@ msgid ""
 "performed with the transfer."
 msgstr ""
 "Campo técnico. Usado para indicar si mostrar o no la sugerencia de "
-"conversión de divisa. La sugerencia informa que un cambio de moneda ocurrirá"
+"conversión de moneda. La sugerencia informa que un cambio de moneda ocurrirá"
 " con la transferencia."
 
 #. module: account
@@ -12308,7 +12309,7 @@ msgid ""
 "The amount expressed in an optional other currency if it is a multi-currency"
 " entry."
 msgstr ""
-"La cantidad expresada en una divisa alternativa si se trata de un asiento "
+"La cantidad expresada en una moneda alternativa si se trata de un asiento "
 "multi-divisa."
 
 #. module: account
@@ -12355,7 +12356,7 @@ msgid ""
 msgstr ""
 "El importe que queda por conciliar en esta línea de estado de cuenta "
 "(firmado de acuerdo con el saldo de sus líneas de movimiento), expresado en "
-"su divisa. Este es un uso de campo técnico para acelerar la aplicación de "
+"su moneda. Este es un uso de campo técnico para acelerar la aplicación de "
 "modelos de conciliación."
 
 #. module: account
@@ -12463,7 +12464,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
 msgid "The currency used to enter statement"
-msgstr "La divisa utilizada para introducir extractos."
+msgstr "La moneda utilizada para introducir extractos."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12601,7 +12602,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The foreign currency must be different than the journal one: %s"
-msgstr "La divisa extranjera debe ser diferente a la del diario: %s"
+msgstr "La moneda extranjera debe ser diferente a la del diario: %s"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -12610,7 +12611,7 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account "
 "'%(account)s' must be the same."
 msgstr ""
-"La divisa extranjera establecida en el diario '%(journal)s' y la cuenta "
+"La moneda extranjera establecida en el diario '%(journal)s' y la cuenta "
 "'%(account)s' debe ser la misma."
 
 #. module: account
@@ -12691,7 +12692,7 @@ msgid ""
 "To be consistent, the journal items must share the same currency."
 msgstr ""
 "El asiento de diario %s alcanzó un estado no válido en relación con su pago.\n"
-"Para ser coherente, los elementos del diario deben compartir la misma divisa."
+"Para ser coherente, los elementos del diario deben compartir la misma moneda."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12819,7 +12820,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
 msgid "The optional other currency if it is a multi-currency entry."
-msgstr "La divisa alternativa si se trata de un apunte multi-divisa."
+msgstr "La moneda alternativa si se trata de un asiento multi-moneda."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__quantity
@@ -12890,7 +12891,7 @@ msgstr "El pago que creó este asiento"
 #: model:ir.model.fields,help:account.field_account_payment_register__currency_id
 #: model:ir.model.fields,help:account.field_account_payment_register__source_currency_id
 msgid "The payment's currency."
-msgstr "Divisa del pago."
+msgstr "Moneda del pago."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -13023,15 +13024,15 @@ msgid ""
 "The residual amount on a journal item expressed in its currency (possibly "
 "not the company currency)."
 msgstr ""
-"El importe residual en un apunte contable en su divisa (probablemente "
-"diferente de la utilizada por la empresa)."
+"El importe residual en un apunte contable expresado en su moneda "
+"(probablemente diferente de la utilizada por la compañía)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual
 msgid ""
 "The residual amount on a journal item expressed in the company currency."
 msgstr ""
-"El importe residual en un apunte contable expresado en la divisa de la "
+"El importe residual en un apunte contable expresado en la moneda de la "
 "compañía."
 
 #. module: account
@@ -13040,7 +13041,7 @@ msgid ""
 "The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing\n"
 "                        the loss of any pre-existing foreign currency amount."
 msgstr ""
-"La cuenta destino seleccionada está configurada para usar una divisa específica. Cada entrada transferida se convertirá a esta divisa, lo que provocará\n"
+"La cuenta destino seleccionada está configurada para usar una moneda específica. Cada entrada transferida se convertirá a esta moneda, lo que provocará\n"
 "                        la pérdida de cualquier monto en moneda extranjera preexistente."
 
 #. module: account
@@ -14082,7 +14083,7 @@ msgstr "Usuarios"
 #: model:ir.model.fields,help:account.field_res_partner__currency_id
 #: model:ir.model.fields,help:account.field_res_users__currency_id
 msgid "Utility field to express amount currency"
-msgstr "Campo de utilidad para expresar la divisa del importe."
+msgstr "Campo de utilidad para expresar la moneda del importe."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
@@ -14343,7 +14344,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report__amount_currency
 #: model:ir.model.fields,field_description:account.field_account_print_journal__amount_currency
 msgid "With Currency"
-msgstr "Con divisa"
+msgstr "Con moneda"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
@@ -14606,8 +14607,8 @@ msgid ""
 "You can't provide an amount in foreign currency without specifying a foreign"
 " currency."
 msgstr ""
-"No puedes proporcionar una cantidad en divisa extranjera sin especificar una"
-" divisa extranjera."
+"No puedes proporcionar una cantidad en moneda extranjera sin especificar una"
+" moneda extranjera."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -14676,7 +14677,7 @@ msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
 msgstr ""
-"No puedes cambiar la divisa de la compañía ya que contiene asientos "
+"No puedes cambiar la moneda de la compañía ya que contiene asientos "
 "contables"
 
 #. module: account
@@ -14843,7 +14844,7 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
 msgstr ""
-"No puedes reducir el número de decimales de una divisa que ya se ha "
+"No puedes reducir el número de decimales de una moneda que ya se ha "
 "utilizado para realizar asientos contables."
 
 #. module: account
@@ -14886,7 +14887,7 @@ msgid ""
 "entries having a different foreign currency."
 msgstr ""
 "No puedes establecer una divisa en esta cuenta porque ya tiene algunos "
-"asientos de diario que tienen una divisa extranjera diferente."
+"asientos de diario que tienen una moneda extranjera diferente."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
