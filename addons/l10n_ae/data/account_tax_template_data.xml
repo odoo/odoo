@@ -17,7 +17,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
+                'account_id': ref('uae_account_201017'),
                 'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_dubai')],
             }),
         ]"/>
@@ -30,7 +30,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
+                'account_id': ref('uae_account_201017'),
                 'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_dubai')],
             }),
         ]"/>
@@ -52,7 +52,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
+                'account_id': ref('uae_account_201017'),
                 'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_abu_dhabi')],
             }),
         ]"/>
@@ -65,7 +65,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
+                'account_id': ref('uae_account_201017'),
                 'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_abu_dhabi')],
             }),
         ]"/>
@@ -87,7 +87,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
+                'account_id': ref('uae_account_201017'),
                 'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_sharjah')],
             }),
         ]"/>
@@ -100,7 +100,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
+                'account_id': ref('uae_account_201017'),
                 'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_sharjah')],
             }),
         ]"/>
@@ -122,7 +122,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
+                'account_id': ref('uae_account_201017'),
                 'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_ajman')],
             }),
         ]"/>
@@ -135,7 +135,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
+                'account_id': ref('uae_account_201017'),
                 'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_ajman')],
             }),
         ]"/>
@@ -157,7 +157,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
+                'account_id': ref('uae_account_201017'),
                 'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_umm_al_quwain')],
             }),
         ]"/>
@@ -170,7 +170,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
+                'account_id': ref('uae_account_201017'),
                 'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_umm_al_quwain')],
             }),
         ]"/>
@@ -192,7 +192,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
+                'account_id': ref('uae_account_201017'),
                 'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_ras_al_khaima')],
             }),
         ]"/>
@@ -205,7 +205,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
+                'account_id': ref('uae_account_201017'),
                 'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_ras_al_khaima')],
             }),
         ]"/>
@@ -227,7 +227,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
+                'account_id': ref('uae_account_201017'),
                 'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_fujairah')],
             }),
         ]"/>
@@ -240,7 +240,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
+                'account_id': ref('uae_account_201017'),
                 'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_fujairah')],
             }),
         ]"/>
@@ -346,38 +346,40 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_dubai')],
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base')]
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
-                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+                'account_id': ref('uae_account_104041'),
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
-                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_dubai')],
+                'account_id': ref('uae_account_201017'),
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_dubai')],
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base')]
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
-                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+                'account_id': ref('uae_account_104041'),
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
-                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_dubai')],
+                'account_id': ref('uae_account_201017'),
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
             }),
         ]"/>
     </record>
@@ -392,38 +394,40 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_abu_dhabi')],
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base')]
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
-                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+                'account_id': ref('uae_account_104041'),
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
-                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_abu_dhabi')],
+                'account_id': ref('uae_account_201017'),
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_abu_dhabi')],
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base')]
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
-                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+                'account_id': ref('uae_account_104041'),
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
-                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_abu_dhabi')],
+                'account_id': ref('uae_account_201017'),
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
             }),
         ]"/>
     </record>
@@ -438,38 +442,40 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_sharjah')],
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base')]
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
-                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+                'account_id': ref('uae_account_104041'),
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
-                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_sharjah')],
+                'account_id': ref('uae_account_201017'),
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_sharjah')],
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base')]
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
-                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+                'account_id': ref('uae_account_104041'),
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
-                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_sharjah')],
+                'account_id': ref('uae_account_201017'),
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
             }),
         ]"/>
     </record>
@@ -484,38 +490,40 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_ajman')],
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base')]
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
-                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+                'account_id': ref('uae_account_104041'),
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
-                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_ajman')],
+                'account_id': ref('uae_account_201017'),
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_ajman')],
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base')]
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
-                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+                'account_id': ref('uae_account_104041'),
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
-                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_ajman')],
+                'account_id': ref('uae_account_201017'),
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
             }),
         ]"/>
     </record>
@@ -530,38 +538,40 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_umm_al_quwain')],
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base')]
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
-                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+                'account_id': ref('uae_account_104041'),
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
-                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_umm_al_quwain')],
+                'account_id': ref('uae_account_201017'),
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_umm_al_quwain')],
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base')]
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
-                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+                'account_id': ref('uae_account_104041'),
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
-                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_umm_al_quwain')],
+                'account_id': ref('uae_account_201017'),
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
             }),
         ]"/>
     </record>
@@ -576,38 +586,40 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_ras_al_khaima')],
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base')]
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
-                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+                'account_id': ref('uae_account_104041'),
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
-                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_ras_al_khaima')],
+                'account_id': ref('uae_account_201017'),
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_ras_al_khaima')],
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base')]
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
-                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+                'account_id': ref('uae_account_104041'),
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
-                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_ras_al_khaima')],
+                'account_id': ref('uae_account_201017'),
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
             }),
         ]"/>
     </record>
@@ -622,38 +634,40 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_fujairah')],
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base')]
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
-                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+                'account_id': ref('uae_account_104041'),
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
-                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_fujairah')],
+                'account_id': ref('uae_account_201017'),
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_fujairah')],
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base')]
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
-                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+                'account_id': ref('uae_account_104041'),
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3785'),
-                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_fujairah')],
+                'account_id': ref('uae_account_201017'),
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
             }),
         ]"/>
     </record>
@@ -673,7 +687,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
+                'account_id': ref('uae_account_201017'),
                 'plus_report_line_ids': [ref('tax_report_line_tax_refund_tourist_vat')],
             }),
         ]"/>
@@ -686,7 +700,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
+                'account_id': ref('uae_account_201017'),
                 'minus_report_line_ids': [ref('tax_report_line_tax_refund_tourist_vat')],
             }),
         ]"/>
@@ -709,7 +723,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
+                'account_id': ref('uae_account_104041'),
                 'plus_report_line_ids': [ref('tax_report_line_standard_rated_expense_vat')],
             }),
         ]"/>
@@ -722,7 +736,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
+                'account_id': ref('uae_account_104041'),
                 'minus_report_line_ids': [ref('tax_report_line_standard_rated_expense_vat')],
             }),
         ]"/>
@@ -801,6 +815,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('uae_account_104041'),
                 'plus_report_line_ids': [ref('tax_report_line_import_uae_vat')],
             }),
         ]"/>
@@ -813,6 +828,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('uae_account_104041'),
                 'minus_report_line_ids': [ref('tax_report_line_import_uae_vat')],
             }),
         ]"/>
@@ -828,36 +844,40 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base')]
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
-                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
+                'account_id': ref('uae_account_201017'),
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
+                'account_id': ref('uae_account_104041'),
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base')]
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
-                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
+                'account_id': ref('uae_account_201017'),
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('uae_account_3726'),
+                'account_id': ref('uae_account_104041'),
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
             }),
         ]"/>
     </record>
