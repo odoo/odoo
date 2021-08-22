@@ -73,6 +73,9 @@
             'mail/static/src/widgets/*/*.js',
             'mail/static/src/widgets/*/*.scss',
         ],
+        'web.assets_backend_prod_only': [
+            'mail/static/src/main.js',
+        ],
         'web.assets_tests': [
             'mail/static/tests/tours/**/*',
         ],

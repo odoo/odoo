@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     nextAnimationFrame,
-    start,
 } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
@@ -13,63 +11,34 @@ import Bus from 'web.Bus';
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss', {}, function () {
-QUnit.module('discuss_inbox_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+QUnit.module('discuss_inbox_tests.js', { beforeEach });
 
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                autoOpenDiscuss: true,
-                data: this.data,
-                hasDiscuss: true,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
-    },
-});
-
-QUnit.skip('reply: discard on pressing escape', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('reply: discard on pressing escape', async function (assert) {
     assert.expect(9);
 
     // partner expected to be found by mention
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         email: "testpartnert@odoo.com",
         id: 11,
         name: "TestPartner",
     });
     // message expected to be found in inbox
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         id: 100,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
+        needaction_partner_ids: [this.serverData.currentPartnerId],
         res_id: 20,
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 100,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
-        },
-    });
+    const { openDiscuss } = await this.start();
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -158,37 +127,25 @@ QUnit.skip('reply: discard on pressing escape', async function (assert) {
     );
 });
 
-QUnit.skip('reply: discard on discard button click', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('reply: discard on discard button click', async function (assert) {
     assert.expect(4);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         id: 100,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
+        needaction_partner_ids: [this.serverData.currentPartnerId],
         res_id: 20,
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 100,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
-        },
-    });
+    const { openDiscuss } = await this.start();
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -219,37 +176,25 @@ QUnit.skip('reply: discard on discard button click', async function (assert) {
     );
 });
 
-QUnit.skip('reply: discard on reply button toggle', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('reply: discard on reply button toggle', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         id: 100,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
+        needaction_partner_ids: [this.serverData.currentPartnerId],
         res_id: 20,
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 100,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
-        },
-    });
+    const { openDiscuss } = await this.start();
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -275,37 +220,25 @@ QUnit.skip('reply: discard on reply button toggle', async function (assert) {
     );
 });
 
-QUnit.skip('reply: discard on click away', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('reply: discard on click away', async function (assert) {
     assert.expect(7);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         id: 100,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
+        needaction_partner_ids: [this.serverData.currentPartnerId],
         res_id: 20,
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 100,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
-        },
-    });
+    const { openDiscuss } = await this.start();
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -362,26 +295,25 @@ QUnit.skip('reply: discard on click away', async function (assert) {
     );
 });
 
-QUnit.skip('"reply to" composer should log note if message replied to is a note', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('"reply to" composer should log note if message replied to is a note', async function (assert) {
     assert.expect(6);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         id: 100,
         is_discussion: false,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
+        needaction_partner_ids: [this.serverData.currentPartnerId],
         res_id: 20,
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 100,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
+    const { openDiscuss } = await this.start({
         async mockRPC(route, args) {
             if (args.method === 'message_post') {
                 assert.step('message_post');
@@ -397,18 +329,8 @@ QUnit.skip('"reply to" composer should log note if message replied to is a note'
                 );
             }
         },
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
-        },
     });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -433,26 +355,25 @@ QUnit.skip('"reply to" composer should log note if message replied to is a note'
     assert.verifySteps(['message_post']);
 });
 
-QUnit.skip('"reply to" composer should send message if message replied to is not a note', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('"reply to" composer should send message if message replied to is not a note', async function (assert) {
     assert.expect(6);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         id: 100,
         is_discussion: true,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
+        needaction_partner_ids: [this.serverData.currentPartnerId],
         res_id: 20,
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 100,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
+    const { openDiscuss } = await this.start({
         async mockRPC(route, args) {
             if (args.method === 'message_post') {
                 assert.step('message_post');
@@ -468,18 +389,8 @@ QUnit.skip('"reply to" composer should send message if message replied to is not
                 );
             }
         },
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
-        },
     });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -504,25 +415,25 @@ QUnit.skip('"reply to" composer should send message if message replied to is not
     assert.verifySteps(['message_post']);
 });
 
-QUnit.skip('error notifications should not be shown in Inbox', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('error notifications should not be shown in Inbox', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         id: 100,
         model: 'mail.channel',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
+        needaction_partner_ids: [this.serverData.currentPartnerId],
         res_id: 20,
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 100, // id of related message
         notification_status: 'exception',
         notification_type: 'email',
-        res_partner_id: this.data.currentPartnerId, // must be for current partner
+        res_partner_id: this.serverData.currentPartnerId, // must be for current partner
     });
-    await this.start();
+    const { openDiscuss } = await this.start();
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -540,37 +451,25 @@ QUnit.skip('error notifications should not be shown in Inbox', async function (a
     );
 });
 
-QUnit.skip('show subject of message in Inbox', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('show subject of message in Inbox', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         id: 100,
         model: 'mail.channel', // random existing model
         needaction: true, // message_fetch domain
-        needaction_partner_ids: [this.data.currentPartnerId], // not needed, for consistency
+        needaction_partner_ids: [this.serverData.currentPartnerId], // not needed, for consistency
         subject: "Salutations, voyageur", // will be asserted in the test
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 100,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
-        },
-    });
+    const { openDiscuss } = await this.start();
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -588,42 +487,25 @@ QUnit.skip('show subject of message in Inbox', async function (assert) {
     );
 });
 
-QUnit.skip('show subject of message in history', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('show subject of message in history', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         history_partner_ids: [3], // not needed, for consistency
         id: 100,
         model: 'mail.channel', // random existing model
         subject: "Salutations, voyageur", // will be asserted in the test
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         is_read: true,
         mail_message_id: 100,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
-        discuss: {
-            params: {
-                default_active_id: 'mail.box_history',
-            },
-        },
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until history displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'history'
-                );
-            },
-        },
-    });
+    const { openDiscuss } = await this.start();
+    await openDiscuss({ activeId: 'mail.box_history' });
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -641,8 +523,7 @@ QUnit.skip('show subject of message in history', async function (assert) {
     );
 });
 
-QUnit.skip('click on (non-channel/non-partner) origin thread link should redirect to form view', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('click on (non-channel/non-partner) origin thread link should redirect to form view', async function (assert) {
     assert.expect(9);
 
     const bus = new Bus();
@@ -663,8 +544,8 @@ QUnit.skip('click on (non-channel/non-partner) origin thread link should redirec
         );
         assert.strictEqual(
             payload.action.res_model,
-            'some.model',
-            "action should open view with model 'some.model' (model of message origin thread)"
+            'res.fake',
+            "action should open view with model 'res.fake' (model of message origin thread)"
         );
         assert.strictEqual(
             payload.action.res_id,
@@ -672,38 +553,28 @@ QUnit.skip('click on (non-channel/non-partner) origin thread link should redirec
             "action should open view with id 10 (id of message origin thread)"
         );
     });
-    this.data['some.model'] = { fields: {}, records: [{ id: 10 }] };
-    this.data['mail.message'].records.push({
+    this.serverData.models['res.fake'].records.push({ id: 10 });
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         id: 100,
-        model: 'some.model',
+        model: 'res.fake',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
+        needaction_partner_ids: [this.serverData.currentPartnerId],
         record_name: "Some record",
         res_id: 10,
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 100,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
-        env: {
+    const { openDiscuss } = await this.start({
+        legacyEnv: {
             bus,
         },
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
-        },
     });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -724,11 +595,10 @@ QUnit.skip('click on (non-channel/non-partner) origin thread link should redirec
     assert.verifySteps(['do-action'], "should have made an action on click on origin thread (to open form view)");
 });
 
-QUnit.skip('subject should not be shown when subject is the same as the thread name', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('subject should not be shown when subject is the same as the thread name', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         id: 100,
         model: 'mail.channel',
@@ -736,29 +606,18 @@ QUnit.skip('subject should not be shown when subject is the same as the thread n
         needaction: true,
         subject: "Salutations, voyageur",
     });
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         id: 100,
         name: "Salutations, voyageur",
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 100,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
-        },
-    });
+    const { openDiscuss } = await this.start();
+    await openDiscuss();
     assert.containsNone(
         document.body,
         '.o_Message_subject',
@@ -766,11 +625,10 @@ QUnit.skip('subject should not be shown when subject is the same as the thread n
     );
 });
 
-QUnit.skip('subject should not be shown when subject is the same as the thread name and both have the same prefix', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('subject should not be shown when subject is the same as the thread name and both have the same prefix', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         id: 100,
         model: 'mail.channel',
@@ -778,29 +636,18 @@ QUnit.skip('subject should not be shown when subject is the same as the thread n
         needaction: true,
         subject: "Re: Salutations, voyageur",
     });
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         id: 100,
         name: "Re: Salutations, voyageur",
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 100,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
-        },
-    });
+    const { openDiscuss } = await this.start();
+    await openDiscuss();
     assert.containsNone(
         document.body,
         '.o_Message_subject',
@@ -808,11 +655,10 @@ QUnit.skip('subject should not be shown when subject is the same as the thread n
     );
 });
 
-QUnit.skip('subject should not be shown when subject differs from thread name only by the "Re:" prefix', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('subject should not be shown when subject differs from thread name only by the "Re:" prefix', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         id: 100,
         model: 'mail.channel',
@@ -820,29 +666,18 @@ QUnit.skip('subject should not be shown when subject differs from thread name on
         needaction: true,
         subject: "Re: Salutations, voyageur",
     });
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         id: 100,
         name: "Salutations, voyageur",
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 100,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
-        },
-    });
+    const { openDiscuss } = await this.start();
+    await openDiscuss();
     assert.containsNone(
         document.body,
         '.o_Message_subject',
@@ -850,11 +685,10 @@ QUnit.skip('subject should not be shown when subject differs from thread name on
     );
 });
 
-QUnit.skip('subject should not be shown when subject differs from thread name only by the "Fw:" and "Re:" prefix', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('subject should not be shown when subject differs from thread name only by the "Fw:" and "Re:" prefix', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         id: 100,
         model: 'mail.channel',
@@ -862,29 +696,18 @@ QUnit.skip('subject should not be shown when subject differs from thread name on
         needaction: true,
         subject: "Fw: Re: Salutations, voyageur",
     });
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         id: 100,
         name: "Salutations, voyageur",
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 100,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
-        },
-    });
+    const { openDiscuss } = await this.start();
+    await openDiscuss();
     assert.containsNone(
         document.body,
         '.o_Message_subject',
@@ -892,11 +715,10 @@ QUnit.skip('subject should not be shown when subject differs from thread name on
     );
 });
 
-QUnit.skip('subject should be shown when the thread name has an extra prefix compared to subject', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('subject should be shown when the thread name has an extra prefix compared to subject', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         id: 100,
         model: 'mail.channel',
@@ -904,29 +726,18 @@ QUnit.skip('subject should be shown when the thread name has an extra prefix com
         needaction: true,
         subject: "Salutations, voyageur",
     });
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         id: 100,
         name: "Re: Salutations, voyageur",
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 100,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
-        },
-    });
+    const { openDiscuss } = await this.start();
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_Message_subject',
@@ -934,11 +745,10 @@ QUnit.skip('subject should be shown when the thread name has an extra prefix com
     );
 });
 
-QUnit.skip('subject should not be shown when subject differs from thread name only by the "fw:" prefix and both contain another common prefix', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('subject should not be shown when subject differs from thread name only by the "fw:" prefix and both contain another common prefix', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         id: 100,
         model: 'mail.channel',
@@ -946,29 +756,18 @@ QUnit.skip('subject should not be shown when subject differs from thread name on
         needaction: true,
         subject: "fw: re: Salutations, voyageur",
     });
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         id: 100,
         name: "Re: Salutations, voyageur",
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 100,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
-        },
-    });
+    const { openDiscuss } = await this.start();
+    await openDiscuss();
     assert.containsNone(
         document.body,
         '.o_Message_subject',
@@ -976,11 +775,10 @@ QUnit.skip('subject should not be shown when subject differs from thread name on
     );
 });
 
-QUnit.skip('subject should not be shown when subject differs from thread name only by the "Re: Re:" prefix', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('subject should not be shown when subject differs from thread name only by the "Re: Re:" prefix', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         body: "not empty",
         id: 100,
         model: 'mail.channel',
@@ -988,29 +786,18 @@ QUnit.skip('subject should not be shown when subject differs from thread name on
         needaction: true,
         subject: "Re: Re: Salutations, voyageur",
     });
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         id: 100,
         name: "Salutations, voyageur",
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 100,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
-        },
-    });
+    const { openDiscuss } = await this.start();
+    await openDiscuss();
     assert.containsNone(
         document.body,
         '.o_Message_subject',

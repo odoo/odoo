@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
-import { afterEach, beforeEach, nextTick, start } from '@mail/utils/test_utils';
+import { beforeEach, nextTick } from '@mail/utils/test_utils';
 import Timer from '@mail/utils/timer/timer';
+
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 
 const { TimerClearedError } = Timer;
 
@@ -10,39 +12,29 @@ QUnit.module('utils', {}, function () {
 QUnit.module('timer', {}, function () {
 QUnit.module('timer_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
         this.timers = [];
-
-        this.start = async (params) => {
-            const { advanceTime, env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-            return { advanceTime };
-        };
-    },
-    afterEach() {
         // Important: tests should cleanly intercept cancelation errors that
         // may result from this teardown.
-        for (const timer of this.timers) {
-            timer.clear();
-        }
-        afterEach(this);
+        registerCleanup(() => {
+            for (const t of this.timers) {
+                t.clear();
+            }
+        });
     },
 });
 
 QUnit.test('timer does not timeout on initialization', async function (assert) {
     assert.expect(3);
 
-    const { advanceTime } = await this.start({
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
     });
 
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.messaging.browser,
+            messaging.browser,
             () => hasTimedOut = true,
             0
         )
@@ -69,14 +61,14 @@ QUnit.test('timer does not timeout on initialization', async function (assert) {
 QUnit.test('timer start (duration: 0ms)', async function (assert) {
     assert.expect(2);
 
-    const { advanceTime } = await this.start({
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
     });
 
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.messaging.browser,
+            messaging.browser,
             () => hasTimedOut = true,
             0
         )
@@ -98,14 +90,14 @@ QUnit.test('timer start (duration: 0ms)', async function (assert) {
 QUnit.test('timer start observe termination (duration: 0ms)', async function (assert) {
     assert.expect(6);
 
-    const { advanceTime } = await this.start({
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
     });
 
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.messaging.browser,
+            messaging.browser,
             () => {
                 hasTimedOut = true;
                 return 'timeout_result';
@@ -147,14 +139,14 @@ QUnit.test('timer start observe termination (duration: 0ms)', async function (as
 QUnit.test('timer start (duration: 1000s)', async function (assert) {
     assert.expect(5);
 
-    const { advanceTime } = await this.start({
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
     });
 
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.messaging.browser,
+            messaging.browser,
             () => hasTimedOut = true,
             1000 * 1000
         )
@@ -194,14 +186,14 @@ QUnit.test('timer start (duration: 1000s)', async function (assert) {
 QUnit.test('[no cancelation intercept] timer start then immediate clear (duration: 0ms)', async function (assert) {
     assert.expect(4);
 
-    const { advanceTime } = await this.start({
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
     });
 
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.messaging.browser,
+            messaging.browser,
             () => hasTimedOut = true,
             0
         )
@@ -235,14 +227,14 @@ QUnit.test('[no cancelation intercept] timer start then immediate clear (duratio
 QUnit.test('[no cancelation intercept] timer start then clear before timeout (duration: 1000ms)', async function (assert) {
     assert.expect(4);
 
-    const { advanceTime } = await this.start({
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
     });
 
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.messaging.browser,
+            messaging.browser,
             () => hasTimedOut = true,
             1000
         )
@@ -277,14 +269,14 @@ QUnit.test('[no cancelation intercept] timer start then clear before timeout (du
 QUnit.test('[no cancelation intercept] timer start then reset before timeout (duration: 1000ms)', async function (assert) {
     assert.expect(5);
 
-    const { advanceTime } = await this.start({
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
     });
 
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.messaging.browser,
+            messaging.browser,
             () => hasTimedOut = true,
             1000
         )
@@ -325,14 +317,14 @@ QUnit.test('[no cancelation intercept] timer start then reset before timeout (du
 QUnit.test('[with cancelation intercept] timer start then immediate clear (duration: 0ms)', async function (assert) {
     assert.expect(5);
 
-    const { advanceTime } = await this.start({
+    const { messaging } = await this.start({
         hasTimeControl: true,
     });
 
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.messaging.browser,
+            messaging.browser,
             () => hasTimedOut = true,
             0,
             { silentCancelationErrors: false }
@@ -368,14 +360,14 @@ QUnit.test('[with cancelation intercept] timer start then immediate clear (durat
 QUnit.test('[with cancelation intercept] timer start then immediate reset (duration: 0ms)', async function (assert) {
     assert.expect(9);
 
-    const { advanceTime } = await this.start({
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
     });
 
     let hasTimedOut = false;
     this.timers.push(
         new Timer(
-            this.messaging.browser,
+            messaging.browser,
             () => hasTimedOut = true,
             0,
             { silentCancelationErrors: false }

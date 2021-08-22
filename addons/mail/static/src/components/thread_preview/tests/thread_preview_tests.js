@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
-    start,
 } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -13,48 +11,37 @@ QUnit.module('components', {}, function () {
 QUnit.module('thread_preview', {}, function () {
 QUnit.module('thread_preview_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createThreadPreviewComponent = async props => {
             await createRootMessagingComponent(this, "ThreadPreview", {
                 props,
-                target: this.widget.el,
+                target: this.webClient.el,
             });
         };
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('mark as read', async function (assert) {
     assert.expect(8);
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         id: 11,
         message_unread_counter: 1,
     });
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         id: 100,
         model: 'mail.channel',
         res_id: 11,
     });
 
-    await this.start({
+    const { messaging } = await this.start({
         async mockRPC(route, args) {
             if (route.includes('channel_seen')) {
                 assert.step('channel_seen');
             }
         },
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });

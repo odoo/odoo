@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
-    start,
 } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
@@ -15,46 +13,34 @@ QUnit.module('components', {}, function () {
 QUnit.module('thread_needaction_preview', {}, function () {
 QUnit.module('thread_needaction_preview_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createThreadNeedactionPreviewComponent = async props => {
             await createRootMessagingComponent(this, "ThreadNeedactionPreview", {
                 props,
-                target: this.widget.el
+                target: this.webClient.el
             });
         };
-
-        this.start = async (params = {}) => {
-            const { afterEvent, env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.afterEvent = afterEvent;
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('mark as read', async function (assert) {
     assert.expect(5);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         id: 21,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
+        needaction_partner_ids: [this.serverData.currentPartnerId],
         res_id: 11,
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 21,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
+    const { afterEvent } = await this.start({
         async mockRPC(route, args) {
             if (route.includes('mark_all_as_read')) {
                 assert.step('mark_all_as_read');
@@ -69,7 +55,7 @@ QUnit.test('mark as read', async function (assert) {
             }
         },
     });
-    await afterNextRender(() => this.afterEvent({
+    await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
         message: "should wait until inbox loaded initial needaction messages",
@@ -100,20 +86,20 @@ QUnit.test('mark as read', async function (assert) {
 QUnit.test('click on preview should mark as read and open the thread', async function (assert) {
     assert.expect(6);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         id: 21,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
+        needaction_partner_ids: [this.serverData.currentPartnerId],
         res_id: 11,
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 21,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
+    const { afterEvent } = await this.start({
         async mockRPC(route, args) {
             if (route.includes('mark_all_as_read')) {
                 assert.step('mark_all_as_read');
@@ -128,7 +114,7 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
             }
         },
     });
-    await afterNextRender(() => this.afterEvent({
+    await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
         message: "should wait until inbox loaded initial needaction messages",
@@ -178,23 +164,23 @@ QUnit.test('click on expand from chat window should close the chat window and op
             "should redirect to the model of the thread"
         );
     });
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         id: 21,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
+        needaction_partner_ids: [this.serverData.currentPartnerId],
         res_id: 11,
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 21,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
-        env: { bus },
+    const { afterEvent } = await this.start({
+        legacyEnv: { bus },
     });
-    await afterNextRender(() => this.afterEvent({
+    await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
         message: "should wait until inbox loaded initial needaction messages",
@@ -240,20 +226,20 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
     // window, because there is no server sync of fold state for them.
     assert.expect(3);
 
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         id: 21,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
+        needaction_partner_ids: [this.serverData.currentPartnerId],
         res_id: 11,
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 21,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start({
+    const { afterEvent } = await this.start({
         async mockRPC(route, args) {
             if (route.includes('channel_fold')) {
                 const message = "should not call channel_fold when opening a non-channel chat window";
@@ -263,7 +249,7 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
             }
         },
     });
-    await afterNextRender(() => this.afterEvent({
+    await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
         message: "should wait until inbox loaded initial needaction messages",
@@ -295,34 +281,34 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
 QUnit.test('preview should display last needaction message preview even if there is a more recent message that is not needaction in the thread', async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         id: 11,
         name: "Stranger",
     });
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         author_id: 11,
         body: "I am the oldest but needaction",
         id: 21,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
+        needaction_partner_ids: [this.serverData.currentPartnerId],
         res_id: 11,
     });
-    this.data['mail.message'].records.push({
-        author_id: this.data.currentPartnerId,
+    this.serverData.models['mail.message'].records.push({
+        author_id: this.serverData.currentPartnerId,
         body: "I am more recent",
         id: 22,
         model: 'res.partner',
         res_id: 11,
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 21,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start();
-    await afterNextRender(() => this.afterEvent({
+    const { afterEvent } = await this.start();
+    await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
         message: "should wait until inbox loaded initial needaction messages",
@@ -345,24 +331,24 @@ QUnit.test('preview should display last needaction message preview even if there
 QUnit.test('chat window header should not have unread counter for non-channel thread', async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
+    this.serverData.models['res.partner'].records.push({ id: 11 });
+    this.serverData.models['mail.message'].records.push({
         author_id: 11,
         body: 'not empty',
         id: 21,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
+        needaction_partner_ids: [this.serverData.currentPartnerId],
         res_id: 11,
     });
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 21,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: this.serverData.currentPartnerId,
     });
-    await this.start();
-    await afterNextRender(() => this.afterEvent({
+    const { afterEvent } = await this.start();
+    await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
         message: "should wait until inbox loaded initial needaction messages",

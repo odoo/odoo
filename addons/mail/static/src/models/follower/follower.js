@@ -133,7 +133,7 @@ function factory(dependencies) {
                 if (this.partner) {
                     kwargs.partner_ids = [this.partner.id];
                 }
-                await this.env.services.orm.call(this.followedThread.model, 'message_subscribe', [this.followedThread.id], kwargs);
+                await this.env.services.orm.call(this.followedThread.model, 'message_subscribe', [[this.followedThread.id]], kwargs);
                 this.env.services.notification.add(
                     this.env._t("The subscription preferences were successfully applied."),
                     { type: 'success' },

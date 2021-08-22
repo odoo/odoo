@@ -12,9 +12,9 @@ patch(MockModels, 'snailmail/static/tests/helpers/mock_models.js', {
     /**
      * @override
      */
-    generateData() {
+    generateServerData() {
         const data = this._super(...arguments);
-        Object.assign(data, {
+        Object.assign(data.models, {
             'snailmail.letter': {
                 fields: {
                     message_id: { string: 'Snailmail Status Message', type: 'many2one', relation: 'mail.message' },

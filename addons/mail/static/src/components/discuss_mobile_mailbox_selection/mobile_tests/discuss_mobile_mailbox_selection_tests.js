@@ -1,10 +1,8 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
-    start,
 } from '@mail/utils/test_utils';
 
 import { browser } from "@web/core/browser/browser";
@@ -13,41 +11,17 @@ import { patchWithCleanup } from "@web/../tests/helpers/utils";
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss_mobile_mailbox_selection', {}, function () {
-QUnit.module('discuss_mobile_mailbox_selection_tests.js', {
-    beforeEach() {
-        beforeEach(this);
-
-        this.start = async (params = {}) => {
-            patchWithCleanup(browser, {
-                innerHeight: 640,
-                innerWidth: 360,
-            });
-            const { env, widget } = await start(Object.assign(
-                {
-                    autoOpenDiscuss: true,
-                    data: this.data,
-                    env: {
-                        device: {
-                            isMobile: true,
-                        },
-                    },
-                    hasDiscuss: true,
-                },
-                params,
-            ));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
-    },
-});
+QUnit.module('discuss_mobile_mailbox_selection_tests.js', { beforeEach });
 
 QUnit.test('select another mailbox', async function (assert) {
     assert.expect(7);
 
-    await this.start();
+    patchWithCleanup(browser, {
+        innerHeight: 640,
+        innerWidth: 360,
+    });
+    const { messaging, openDiscuss } = await this.start({ legacyEnv: { device: { isMobile: true } } });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_Discuss',
@@ -65,20 +39,20 @@ QUnit.test('select another mailbox', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector('.o_Discuss_thread').dataset.threadLocalId,
-        this.messaging.inbox.localId,
+        messaging.inbox.localId,
         "inbox mailbox should be opened initially"
     );
     assert.containsOnce(
         document.body,
         `.o_DiscussMobileMailboxSelection_button[
-            data-mailbox-local-id="${this.messaging.starred.localId}"
+            data-mailbox-local-id="${messaging.starred.localId}"
         ]`,
         "should have a button to open starred mailbox"
     );
 
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussMobileMailboxSelection_button[
-            data-mailbox-local-id="${this.messaging.starred.localId}"]
+            data-mailbox-local-id="${messaging.starred.localId}"]
         `).click()
     );
     assert.containsOnce(
@@ -88,7 +62,7 @@ QUnit.test('select another mailbox', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector('.o_Discuss_thread').dataset.threadLocalId,
-        this.messaging.starred.localId,
+        messaging.starred.localId,
         "starred mailbox should be opened after clicking on it"
     );
 });
@@ -96,14 +70,13 @@ QUnit.test('select another mailbox', async function (assert) {
 QUnit.test('auto-select "Inbox" when discuss had channel as active thread', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    await this.start({
-        discuss: {
-            context: {
-                active_id: 20,
-            },
-        }
+    patchWithCleanup(browser, {
+        innerHeight: 640,
+        innerWidth: 360,
     });
+    this.serverData.models['mail.channel'].records.push({ id: 20 });
+    const { messaging, openDiscuss } = await this.start({ legacyEnv: { device: { isMobile: true } } });
+    await openDiscuss({ activeId: 'mail.channel_20' });
     assert.hasClass(
         document.querySelector('.o_MobileMessagingNavbar_tab[data-tab-id="channel"]'),
         'o-active',
@@ -118,7 +91,7 @@ QUnit.test('auto-select "Inbox" when discuss had channel as active thread', asyn
     );
     assert.hasClass(
         document.querySelector(`.o_DiscussMobileMailboxSelection_button[data-mailbox-local-id="${
-            this.messaging.inbox.localId
+            messaging.inbox.localId
         }"]`),
         'o-active',
         "'Inbox' mailbox should be auto-selected after click on mailbox tab"

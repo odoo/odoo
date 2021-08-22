@@ -2,32 +2,14 @@
 
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 import {
-    afterEach,
     beforeEach,
     nextAnimationFrame,
-    start,
 } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('dialog_manager', {}, function () {
-QUnit.module('dialog_manager_tests.js', {
-    beforeEach() {
-        beforeEach(this);
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign(
-                params,
-                { data: this.data }
-            ));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
-    },
-});
+QUnit.module('dialog_manager_tests.js', { beforeEach });
 
 QUnit.test('[technical] messaging not created', async function (assert) {
     /**

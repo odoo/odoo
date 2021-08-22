@@ -476,7 +476,7 @@ function factory(dependencies) {
          * @return {integer} the posted message id
          */
         static async performRpcMessagePost({ postData, threadId, threadModel }) {
-            return this.env.services.orm.call(threadModel, 'message_post', [threadId], postData);
+            return this.env.services.orm.call(threadModel, 'message_post', [[threadId]], postData);
         }
 
         /**
@@ -608,7 +608,7 @@ function factory(dependencies) {
          * Add current user to provided thread's followers.
          */
         async follow() {
-            await this.env.services.orm.call(this.model, 'message_subscribe', [this.id], {
+            await this.env.services.orm.call(this.model, 'message_subscribe', [[this.id]], {
                 partner_ids: [this.messaging.currentPartner.id],
             });
             if (!this.exists()) {
@@ -640,7 +640,7 @@ function factory(dependencies) {
          * Leaves this thread. Only makes sense on channels of type channel.
          */
         async leave() {
-            await this.env.services.orm.call('mail.channel', 'action_unfollow', [this.id]);
+            await this.env.services.orm.call('mail.channel', 'action_unfollow', [[this.id]]);
         }
 
         /**
@@ -917,7 +917,7 @@ function factory(dependencies) {
          * @param {string} newName
          */
         async rename(newName) {
-            return this.env.services.orm.call('mail.channel', 'channel_rename', [this.id], { name: newName });
+            return this.env.services.orm.call('mail.channel', 'channel_rename', [[this.id]], { name: newName });
         }
 
         /**
@@ -928,7 +928,7 @@ function factory(dependencies) {
          * @param {string} newName
          */
         async setCustomName(newName) {
-            return this.env.services.orm.call('mail.channel', 'channel_set_custom_name', [this.id], { name: newName });
+            return this.env.services.orm.call('mail.channel', 'channel_set_custom_name', [[this.id]], { name: newName });
         }
 
         /**

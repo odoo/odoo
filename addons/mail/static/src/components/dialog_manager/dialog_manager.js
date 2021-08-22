@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { getMessagingComponent, registerMessagingComponent } from '@mail/utils/messaging_component';
-
-import { registry } from '@web/core/registry';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
@@ -42,8 +40,3 @@ Object.assign(DialogManager, {
 });
 
 registerMessagingComponent(DialogManager);
-
-registry.category('main_components').add('mail.dialog', {
-    Component: getMessagingComponent('DialogManager'),
-    props: {},
-});

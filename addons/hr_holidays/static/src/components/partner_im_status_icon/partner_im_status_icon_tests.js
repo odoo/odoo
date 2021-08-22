@@ -2,10 +2,8 @@ odoo.define('hr_holidays/static/src/components/partner_im_status_icon/partner_im
 'use strict';
 
 const {
-    afterEach,
     beforeEach,
     createRootMessagingComponent,
-    start,
 } = require('@mail/utils/test_utils');
 
 QUnit.module('hr_holidays', {}, function () {
@@ -13,33 +11,22 @@ QUnit.module('components', {}, function () {
 QUnit.module('partner_im_status_icon', {}, function () {
 QUnit.module('partner_im_status_icon_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createPartnerImStatusIcon = async partner => {
             await createRootMessagingComponent(this, "PartnerImStatusIcon", {
                 props: { partnerLocalId: partner.localId },
-                target: this.widget.el
+                target: this.webClient.el
             });
         };
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('on leave & online', async function (assert) {
     assert.expect(2);
 
-    await this.start();
-    const partner = this.messaging.models['mail.partner'].create({
+    const { messaging } = await this.start();
+    const partner = messaging.models['mail.partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'leave_online',
@@ -60,8 +47,8 @@ QUnit.test('on leave & online', async function (assert) {
 QUnit.test('on leave & away', async function (assert) {
     assert.expect(2);
 
-    await this.start();
-    const partner = this.messaging.models['mail.partner'].create({
+    const { messaging } = await this.start();
+    const partner = messaging.models['mail.partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'leave_away',
@@ -82,8 +69,8 @@ QUnit.test('on leave & away', async function (assert) {
 QUnit.test('on leave & offline', async function (assert) {
     assert.expect(2);
 
-    await this.start();
-    const partner = this.messaging.models['mail.partner'].create({
+    const { messaging } = await this.start();
+    const partner = messaging.models['mail.partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'leave_offline',

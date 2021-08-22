@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { getMessagingComponent, registerMessagingComponent } from '@mail/utils/messaging_component';
-
-import { registry } from '@web/core/registry';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
@@ -196,8 +194,3 @@ Object.assign(MessagingMenu, {
 });
 
 registerMessagingComponent(MessagingMenu);
-
-registry.category('systray').add('mail.messaging_menu', {
-    Component: getMessagingComponent('MessagingMenu'),
-    props: {},
-}, { sequence: 5 });

@@ -3,6 +3,7 @@
 import BusService from 'bus.BusService';
 
 import { messagingService, messagingValues } from '@mail/services/messaging_service/messaging_service';
+import { newMessageService } from "@mail/services/new_message_service/new_message_service";
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 import { nextTick } from '@mail/utils/utils';
 import { MockModels } from '@mail/../tests/helpers/mock_models';
@@ -10,8 +11,10 @@ import { MockModels } from '@mail/../tests/helpers/mock_models';
 import AbstractStorageService from 'web.AbstractStorageService';
 import { browser } from "@web/core/browser/browser";
 import { registry } from '@web/core/registry';
+import { commandService } from "@web/webclient/commands/command_service";
 import RamStorage from 'web.RamStorage';
 import { makeTestPromise } from 'web.test_utils';
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 import LegacyRegistry from "web.Registry";
@@ -165,95 +168,57 @@ function getAfterEvent(messagingBus) {
 // Public: test lifecycle
 //------------------------------------------------------------------------------
 
-function beforeEach(self) {
-    const data = MockModels.generateData();
-
-    data.partnerRootId = 2;
-    data['res.partner'].records.push({
-        active: false,
-        display_name: "OdooBot",
-        id: data.partnerRootId,
-    });
-
-    data.currentPartnerId = 3;
-    data['res.partner'].records.push({
-        display_name: "Your Company, Mitchell Admin",
-        id: data.currentPartnerId,
-        name: "Mitchell Admin",
-    });
-    data.currentUserId = 2;
-    data['res.users'].records.push({
-        display_name: "Your Company, Mitchell Admin",
-        id: data.currentUserId,
-        name: "Mitchell Admin",
-        partner_id: data.currentPartnerId,
-    });
-
-    data.publicPartnerId = 4;
-    data['res.partner'].records.push({
-        active: false,
-        display_name: "Public user",
-        id: data.publicPartnerId,
-    });
-    data.publicUserId = 3;
-    data['res.users'].records.push({
-        active: false,
-        display_name: "Public user",
-        id: data.publicUserId,
-        name: "Public user",
-        partner_id: data.publicPartnerId,
-    });
-
-    const originals = {
-        '_.debounce': _.debounce,
-        '_.throttle': _.throttle,
-    };
-
-    (function patch() {
-        // patch _.debounce and _.throttle to be fast and synchronous
-        _.debounce = _.identity;
-        _.throttle = _.identity;
-    })();
-
-    function unpatch() {
-        _.debounce = originals['_.debounce'];
-        _.throttle = originals['_.throttle'];
-    }
-
-    Object.assign(self, {
-        components: [],
-        data,
-        unpatch,
-        widget: undefined
-    });
-
-    Object.defineProperty(self, 'messaging', {
+function beforeEach() {
+    // Warnings to ease migration of code / future rebase.
+    Object.defineProperty(this, 'advanceTime', {
         get() {
-            if (!this.env || !this.env.services.messaging) {
-                return undefined;
-            }
-            return this.env.services.messaging.messaging;
+            throw Error("don't use this.advanceTime, use advanceTime from start() instead");
         },
     });
+    Object.defineProperty(this, 'afterEvent', {
+        get() {
+            throw Error("don't use this.afterEvent, use afterEvent from start() instead");
+        },
+    });
+    Object.defineProperty(this, 'data', {
+        get() {
+            throw Error('use this.serverData instead of this.data (it has extra keys, you might want to update this.serverData.models in particular?)');
+        },
+    });
+    Object.defineProperty(this, 'env', {
+        get() {
+            throw Error("don't use this.env, use env from start() instead (or directly messaging from start() maybe?)");
+        },
+    });
+    Object.defineProperty(this, 'messaging', {
+        get() {
+            throw Error("don't use this.messaging, use messaging from start() instead");
+        },
+    });
+    Object.defineProperty(this, 'widget', {
+        get() {
+            throw Error("don't use this.widget, use webClient from start() instead");
+        },
+    });
+
+    const serverData = MockModels.generateServerData();
+    Object.assign(this, { serverData });
+
+    this.start = async (params = {}) => {
+        if (params.serverData) {
+            throw Error("don't give serverData to start, update this.serverData instead");
+        }
+        const result = await start({
+            ...params,
+            serverData: this.serverData,
+        });
+        this.webClient = result.webClient;
+        return result;
+    };
 }
 
-function afterEach(self) {
-    // The components must be destroyed before the widget, because the
-    // widget might destroy the models before destroying the components,
-    // and the components might still rely on messaging (or other) record(s).
-    while (self.components.length > 0) {
-        const component = self.components.pop();
-        component.destroy();
-    }
-    if (self.widget) {
-        self.widget.destroy();
-        self.widget = undefined;
-    }
-    if (self.messaging) {
-        self.messaging.delete();
-    }
-    self.env = undefined;
-    self.unpatch();
+function afterEach() {
+    throw Error("afterEach should no longer be called");
 }
 
 /**
@@ -271,12 +236,13 @@ function afterEach(self) {
  * @returns {owl.Component} the new component instance
  */
 async function createRootMessagingComponent(self, componentName, { props = {}, target }) {
+    // todo replace by actually using main component stuff from webclient
     const Component = getMessagingComponent(componentName);
-    Component.env = self.env;
+    Component.env = self.webClient.env;
     const component = new Component(null, props);
     delete Component.env;
-    self.components.push(component);
     await afterNextRender(() => component.mount(target));
+    registerCleanup(() => component.destroy());
     return component;
 }
 
@@ -330,46 +296,69 @@ function getTimeControl() {
     };
 }
 
+function getOpenDiscuss({ afterEvent, env }) {
+    return async function openDiscuss({ activeId = 'mail.box_inbox', waitUntilMessagesLoaded = true, waitUntilScrollToEnd = false } = {}) {
+        function openDiscussAction() {
+            return env.services.action.doAction({
+                id: 200001,
+                params: { 'default_active_id': activeId },
+                tag: "mail.widgets.discuss",
+                type: "ir.actions.client",
+                xml_id: "mail.action_discuss",
+            });
+        }
+        return afterNextRender(() => {
+            const [model, id] = typeof activeId === 'number' ? ['mail.channel', activeId] : activeId.split('_');
+            if (waitUntilScrollToEnd) {
+                return afterEvent({
+                    eventName: 'o-component-message-list-scrolled',
+                    func: () => openDiscussAction(),
+                    message: `should wait until ${model} ${id} scrolled to its last message initially`,
+                    predicate: ({ scrollTop, thread }) => {
+                        const messageList = document.querySelector('.o_ThreadView_messageList');
+                        return (
+                            thread &&
+                            thread.model === model &&
+                            thread.id.toString() === id &&
+                            scrollTop === messageList.scrollHeight - messageList.clientHeight
+                        );
+                    },
+                });
+            }
+            if (waitUntilMessagesLoaded) {
+                return afterEvent({
+                    eventName: 'o-thread-view-hint-processed',
+                    func: () => openDiscussAction(),
+                    message: `should wait until ${model} ${id} displayed its messages`,
+                    predicate: ({ hint, threadViewer }) => {
+                        return (
+                            hint.type === 'messages-loaded' &&
+                            threadViewer.thread.model === model &&
+                            threadViewer.thread.id.toString() === id
+                        );
+                    },
+                });
+            }
+            return openDiscussAction();
+        });
+    };
+}
+
 /**
  * Main function used to make a mocked environment with mocked messaging env.
  *
  * @param {Object} [param0={}]
- * @param {string} [param0.arch] makes only sense when `param0.hasView` is set:
- *   the arch to use in createView.
- * @param {Object} [param0.archs]
- * @param {boolean} [param0.autoOpenDiscuss=false] makes only sense when
- *   `param0.hasDiscuss` is set: determine whether mounted discuss should be
- *   open initially.
- * @param {boolean} [param0.debug=false]
- * @param {Object} [param0.data] makes only sense when `param0.hasView` is set:
- *   the data to use in createView.
- * @param {Object} [param0.discuss={}] makes only sense when `param0.hasDiscuss`
- *   is set: provide data that is passed to discuss widget (= client action) as
- *   2nd positional argument.
- * @param {Object} [param0.env={}]
- * @param {function} [param0.mockFetch]
  * @param {function} [param0.mockRPC]
  * @param {boolean} [param0.hasDiscuss=false] if set, mount discuss app.
  * @param {boolean} [param0.hasTimeControl=false] if set, all flow of time
  *   with `env.browser.setTimeout` are fully controlled by test itself.
  *     @see addTimeControlToEnv that adds `advanceTime` function in
  *     `env.testUtils`.
- * @param {boolean} [param0.hasView=false] if set, use createView to create a
- *   view instead of a generic widget.
  * @param {integer} [param0.loadingBaseDelayDuration=0]
  * @param {Deferred|Promise} [param0.messagingBeforeCreationDeferred=Promise.resolve()]
  *   Deferred that let tests block messaging creation and simulate resolution.
  *   Useful for testing working components when messaging is not yet created.
- * @param {string} [param0.model] makes only sense when `param0.hasView` is set:
- *   the model to use in createView.
- * @param {integer} [param0.res_id] makes only sense when `param0.hasView` is set:
- *   the res_id to use in createView.
  * @param {Object} [param0.services]
- * @param {Object} [param0.session]
- * @param {Object} [param0.View] makes only sense when `param0.hasView` is set:
- *   the View class to use in createView.
- * @param {Object} [param0.viewOptions] makes only sense when `param0.hasView`
- *   is set: the view options to use in createView.
  * @param {Object} [param0.waitUntilEvent]
  * @param {String} [param0.waitUntilEvent.eventName]
  * @param {String} [param0.waitUntilEvent.message]
@@ -387,20 +376,48 @@ function getTimeControl() {
  *   as param of `messagingBeforeCreationDeferred`. To make sure messaging is
  *   not initialized, test should mock RPC `mail/init_messaging` and block its
  *   resolution.
- * @param {...Object} [param0.kwargs]
  * @throws {Error} in case some provided parameters are wrong, such as
  *   `waitUntilMessagingCondition`.
  * @returns {Object}
  */
 async function start(param0 = {}) {
+    // Warnings to ease migration of code / future rebase.
+    if (param0.actions) {
+        throw Error("don't give actions to start(), give serverData.actions");
+    }
+    if (param0.archs) {
+        throw Error("don't give archs to start(), give serverData.views");
+    }
+    if (param0.data) {
+        throw Error("don't give data to start(), give serverData");
+    }
+    if (param0.debug) {
+        throw Error("don't give debug to start(), define test with QUnit.debug");
+    }
+    if (param0.discuss) {
+        throw Error("don't give discuss to start(), use openDiscuss() params");
+    }
+    if (param0.env) {
+        throw Error("don't give env to start(), give legacyEnv");
+    }
+    if (param0.kwargs) {
+        throw Error("don't give kwargs to start()");
+    }
+    if (param0.hasDiscuss) {
+        throw Error("don't give hasDiscuss to start(), call startWithDiscuss() instead");
+    }
+    if (param0.session) {
+        throw Error("don't give session to start()");
+    }
     const {
         browser: browserValues = {},
-        env: providedEnv,
-        hasDiscuss = false,
+        legacyEnv,
+        legacyServices,
         hasTimeControl = false,
         loadingBaseDelayDuration = 0,
         messagingBeforeCreationDeferred = Promise.resolve(),
         mockRPC,
+        serverData = {},
         services,
         waitUntilEvent,
         waitUntilMessagingCondition = 'initialized',
@@ -408,18 +425,20 @@ async function start(param0 = {}) {
     if (!['none', 'created', 'initialized'].includes(waitUntilMessagingCondition)) {
         throw Error(`Unknown parameter value ${waitUntilMessagingCondition} for 'waitUntilMessaging'.`);
     }
-    delete param0.browser;
-    delete param0.env;
-    delete param0.mockRPC;
-    delete param0.hasDiscuss;
-    delete param0.hasTimeControl;
-    delete param0.hasView;
-    delete param0.services;
-    if (hasDiscuss) {
-        // add the action and open it correctly, I guess from the web client actions
-    }
+    const originals = {
+        '_.debounce': _.debounce,
+        '_.throttle': _.throttle,
+    };
+    (function patch() {
+        // patch _.debounce and _.throttle to be fast and synchronous
+        _.debounce = _.identity;
+        _.throttle = _.identity;
+    })();
+    registerCleanup(function unpatch() {
+        _.debounce = originals['_.debounce'];
+        _.throttle = originals['_.throttle'];
+    });
     const messagingBus = new EventBus();
-    let env = Object.assign(providedEnv || {});
     patchWithCleanup(browser, {
         Notification: {
             permission: 'denied',
@@ -446,67 +465,23 @@ async function start(param0 = {}) {
     for (const service in services) {
         registry.category('services').add(service, services[service]);
     }
+    registry.category('services').add("command", commandService);
     registry.category('services').add('messaging', messagingService);
+    registry.category('services').add("new_message", newMessageService);
     registry.category('systray').add('mail.messaging_menu', {
         Component: getMessagingComponent('MessagingMenu'),
         props: {},
     }, { sequence: 5 });
-    const kwargs = Object.assign({}, param0, {
-        archs: Object.assign({}, {
-            'mail.activity,false,form': '<form/>',
-            'mail.compose.message,false,form': '<form/>',
-            'mail.message,false,search': '<search/>',
-            'mail.wizard.invite,false,form': '<form/>',
-            'res.partner,false,form': '<form/>',
-            'res.partner,false,kanban': '<kanban><templates/></kanban>',
-            'res.partner,false,list': '<list/>',
-            'res.partner,false,search': '<search/>',
-        }, param0.archs),
-        debug: param0.debug || false,
-    }, { env });
-    let serverData;
-    if (!kwargs.serverData) {
-        serverData = getActionManagerServerData();
-    } else {
-        serverData = kwargs.serverData;
-        delete kwargs.serverData;
-    }
-
-    if (kwargs.actions) {
-        const actions = {};
-        kwargs.actions.forEach((act) => {
-            actions[act.xml_id || act.id] = act;
-        });
-        Object.assign(serverData.actions, actions);
-        delete kwargs.actions;
-    }
-
-    Object.assign(serverData.views, kwargs.archs);
-    delete kwargs.archs;
-
-    if (kwargs.data && kwargs.data.currentPartnerId) {
-        serverData.currentPartnerId = kwargs.data.currentPartnerId;
-        delete kwargs.data.currentPartnerId;
-    }
-    if (kwargs.data && kwargs.data.currentUserId) {
-        serverData.currentUserId = kwargs.data.currentUserId;
-        delete kwargs.data.currentUserId;
-    }
-    if (kwargs.data && kwargs.data.partnerRootId) {
-        serverData.partnerRootId = kwargs.data.partnerRootId;
-        delete kwargs.data.partnerRootId;
-    }
-    if (kwargs.data && kwargs.data.publicPartnerId) {
-        serverData.publicPartnerId = kwargs.data.publicPartnerId;
-        delete kwargs.data.publicPartnerId;
-    }
-    if (kwargs.data && kwargs.data.publicUserId) {
-        serverData.publicUserId = kwargs.data.publicUserId;
-        delete kwargs.data.publicUserId;
-    }
-    Object.assign(serverData.models, kwargs.data);
-    delete kwargs.data;
-
+    registry.category('main_components').add('mail.chat_window_manager', {
+        Component: getMessagingComponent('ChatWindowManager'),
+        props: {},
+    });
+    registry.category('main_components').add('mail.dialog', {
+        Component: getMessagingComponent('DialogManager'),
+        props: {},
+    });
+    registry.category("command_categories").add("default", { label: ("default") });
+    registry.category("actions").add("mail.widgets.discuss", getMessagingComponent('Discuss'));
     const legacyServiceRegistry = new LegacyRegistry();
     legacyServiceRegistry.add('bus_service', BusService.extend({
         _beep() {},
@@ -520,20 +495,57 @@ async function start(param0 = {}) {
     legacyServiceRegistry.add('local_storage', AbstractStorageService.extend({
         storage: new RamStorage(),
     }));
+    for (const legacyService in legacyServices) {
+        legacyServiceRegistry.add(legacyService, legacyServices[legacyService]);
+    }
     const legacyParams = {
-        ...kwargs,
-        env,
+        // ...kwargs, // todo what is it supposed to be?
+        env: legacyEnv,
         serviceRegistry: legacyServiceRegistry,
         withLegacyMockServer: true,
     };
+    const actionManagerServerData = getActionManagerServerData();
     const afterEvent = getAfterEvent(messagingBus);
     async function getWebClient() {
-        return afterNextRender(() => createWebClient({ serverData, mockRPC, legacyParams }));
+        return afterNextRender(async () => {
+            const finalServerData = {
+                ...actionManagerServerData,
+                ...serverData,
+                actions: {
+                    ...actionManagerServerData.actions,
+                    ...serverData.actions,
+                },
+                menus: {
+                    ...actionManagerServerData.menus,
+                    ...serverData.menus,
+                },
+                models: {
+                    ...actionManagerServerData.models,
+                    ...serverData.models,
+                },
+                views: {
+                    ...actionManagerServerData.views,
+                    ...serverData.views,
+                },
+            };
+            const webClient = await createWebClient({
+                legacyParams,
+                mockRPC,
+                serverData: finalServerData,
+            });
+            registerCleanup(() => webClient.destroy());
+            return webClient;
+        });
     }
-    const webClientComponent = waitUntilEvent
+    const webClient = waitUntilEvent
         ? await afterEvent({ func: () => getWebClient(), ...waitUntilEvent, })
         : await getWebClient();
-    const { modelManager } = webClientComponent.env.services.messaging;
+    const { env } = webClient;
+    const { modelManager } = env.services.messaging;
+    registerCleanup(async () => {
+        const messaging = await env.services.messaging.get();
+        messaging.delete();
+    });
     if (waitUntilMessagingCondition === 'created') {
         await modelManager.messagingCreatedPromise;
     }
@@ -544,8 +556,35 @@ async function start(param0 = {}) {
     return {
         advanceTime: hasTimeControl ? getTimeControl() : undefined,
         afterEvent,
-        env: webClientComponent.env,
-        widget: webClientComponent,
+        env,
+        get messaging() {
+            return modelManager.messaging;
+        },
+        openDiscuss: getOpenDiscuss({ afterEvent, env }),
+        async openResPartnerFormView({ partnerId } = {}, options = {}) {
+            return afterNextRender(() =>
+                env.services.action.doAction(
+                    {
+                        'name': 'Partner Form',
+                        'res_model': 'res.partner',
+                        'type': 'ir.actions.act_window',
+                        'view_mode': 'form',
+                        'views': [[false, 'form']],
+                    },
+                    {
+                        ...options,
+                        props: {
+                            resId: partnerId,
+                            ...(options.props || {}),
+                        },
+                    },
+                )
+            );
+        },
+        webClient,
+        get widget() {
+            throw Error("don't use widget from start() result, use webClient instead");
+        },
     };
 }
 

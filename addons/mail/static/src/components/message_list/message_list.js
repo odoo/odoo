@@ -499,7 +499,7 @@ export class MessageList extends Component {
             threadView,
             threadViewer,
         } = this._lastRenderedValues();
-        if (!this._getScrollableElement()) {
+        if (!this._getScrollableElement() || !this.messaging) {
             // could be unmounted in the meantime (due to throttled behavior)
             return;
         }

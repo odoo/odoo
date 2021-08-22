@@ -2,7 +2,6 @@
 
 import ActivityMenu from '@mail/js/systray/systray_activity_menu';
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     start,
@@ -13,7 +12,7 @@ import testUtils from 'web.test_utils';
 QUnit.module('mail', {}, function () {
 QUnit.module('ActivityMenu', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         Object.assign(this.data, {
             'mail.activity.menu': {
@@ -82,9 +81,6 @@ QUnit.module('ActivityMenu', {
         this.session = {
             uid: 10,
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

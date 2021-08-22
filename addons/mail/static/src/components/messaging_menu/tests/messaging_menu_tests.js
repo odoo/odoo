@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     nextAnimationFrame,
-    start,
 } from '@mail/utils/test_utils';
 
 import { browser } from "@web/core/browser/browser";
@@ -15,23 +13,7 @@ import { patchWithCleanup } from "@web/../tests/helpers/utils";
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('messaging_menu', {}, function () {
-QUnit.module('messaging_menu_tests.js', {
-    beforeEach() {
-        beforeEach(this);
-
-        this.start = async (params = {}) => {
-            let { discussWidget, env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.discussWidget = discussWidget;
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
-    },
-});
+QUnit.module('messaging_menu_tests.js', { beforeEach });
 
 QUnit.test('[technical] messaging not created then becomes created', async function (assert) {
     /**
@@ -286,18 +268,18 @@ QUnit.test('basic rendering', async function (assert) {
 QUnit.test('counter is taking into account failure notification', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         id: 31,
         seen_message_id: 11,
     });
     // message that is expected to have a failure
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         id: 11, // random unique id, will be used to link failure to message
         model: 'mail.channel', // expected value to link message to channel
         res_id: 31, // id of a random channel
     });
     // failure that is expected to be used in the test
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 11, // id of the related message
         notification_status: 'exception', // necessary value to have a failure
     });
@@ -453,10 +435,7 @@ QUnit.skip('no new message when discuss is open', async function (assert) {
     // skip: discuss currently not done
     assert.expect(3);
 
-    await this.start({
-        autoOpenDiscuss: true,
-        hasDiscuss: true,
-    });
+    await this.start();
 
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_toggler`).click()
@@ -487,17 +466,17 @@ QUnit.skip('no new message when discuss is open', async function (assert) {
 QUnit.test('channel preview: basic rendering', async function (assert) {
     assert.expect(9);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         id: 7, // random unique id, to link message author
         name: "Demo", // random name, will be asserted in the test
     });
     // channel that is expected to be found in the test
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         id: 20, // random unique id, will be used to link message to channel
         name: "General", // random name, will be asserted in the test
     });
     // message that is expected to be displayed in the test
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         author_id: 7, // not current partner, will be asserted in the test
         body: "<p>test</p>", // random body, will be asserted in the test
         model: 'mail.channel', // necessary to link message to channel
@@ -586,11 +565,11 @@ QUnit.test('filtered previews', async function (assert) {
     assert.expect(12);
 
     // chat and channel expected to be found in the menu
-    this.data['mail.channel'].records.push(
+    this.serverData.models['mail.channel'].records.push(
         { channel_type: "chat", id: 10 },
         { id: 20 },
     );
-    this.data['mail.message'].records.push(
+    this.serverData.models['mail.message'].records.push(
         {
             model: 'mail.channel', // to link message to channel
             res_id: 10, // id of related channel
@@ -600,7 +579,7 @@ QUnit.test('filtered previews', async function (assert) {
             res_id: 20, // id of related channel
         },
     );
-    await this.start();
+    const { messaging } = await this.start();
 
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_toggler`).click()
@@ -614,7 +593,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                messaging.models['mail.thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -627,7 +606,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                messaging.models['mail.thread'].findFromIdentifyingData({
                     id: 20,
                     model: 'mail.channel',
                 }).localId
@@ -649,7 +628,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                messaging.models['mail.thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -662,7 +641,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                messaging.models['mail.thread'].findFromIdentifyingData({
                     id: 20,
                     model: 'mail.channel',
                 }).localId
@@ -687,7 +666,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                messaging.models['mail.thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -700,7 +679,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                messaging.models['mail.thread'].findFromIdentifyingData({
                     id: 20,
                     model: 'mail.channel',
                 }).localId
@@ -722,7 +701,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                messaging.models['mail.thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -735,7 +714,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                messaging.models['mail.thread'].findFromIdentifyingData({
                     id: 20,
                     model: 'mail.channel',
                 }).localId
@@ -750,7 +729,7 @@ QUnit.test('open chat window from preview', async function (assert) {
     assert.expect(1);
 
     // channel expected to be found in the menu, only its existence matters, data are irrelevant
-    this.data['mail.channel'].records.push({});
+    this.serverData.models['mail.channel'].records.push({});
     await this.start();
 
     await afterNextRender(() =>
@@ -769,8 +748,8 @@ QUnit.test('open chat window from preview', async function (assert) {
 QUnit.test('no code injection in message body preview', async function (assert) {
     assert.expect(5);
 
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.channel'].records.push({ id: 11 });
+    this.serverData.models['mail.message'].records.push({
         body: "<p><em>&shoulnotberaised</em><script>throw new Error('CodeInjectionError');</script></p>",
         model: "mail.channel",
         res_id: 11,
@@ -811,8 +790,8 @@ QUnit.test('no code injection in message body preview', async function (assert) 
 QUnit.test('no code injection in message body preview from sanitized message', async function (assert) {
     assert.expect(5);
 
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.channel'].records.push({ id: 11 });
+    this.serverData.models['mail.message'].records.push({
         body: "<p>&lt;em&gt;&shoulnotberaised&lt;/em&gt;&lt;script&gt;throw new Error('CodeInjectionError');&lt;/script&gt;</p>",
         model: "mail.channel",
         res_id: 11,
@@ -853,8 +832,8 @@ QUnit.test('no code injection in message body preview from sanitized message', a
 QUnit.test('<br/> tags in message body preview are transformed in spaces', async function (assert) {
     assert.expect(4);
 
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.channel'].records.push({ id: 11 });
+    this.serverData.models['mail.message'].records.push({
         body: "<p>a<br/>b<br>c<br   />d<br     ></p>",
         model: "mail.channel",
         res_id: 11,
@@ -986,7 +965,7 @@ QUnit.test('rendering without OdooBot has a request (accepted)', async function 
 QUnit.test('respond to notification prompt (denied)', async function (assert) {
     assert.expect(4);
 
-    await this.start({
+    const { messaging } = await this.start({
         browser: {
             Notification: {
                 permission: 'default',
@@ -1013,7 +992,7 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
     await afterNextRender(() =>
         document.querySelector('.o_MessagingMenu_toggler').click()
     );
-    this.messaging.browser.Notification.permission = 'denied';
+    messaging.browser.Notification.permission = 'denied';
     await afterNextRender(() =>
         document.querySelector('.o_NotificationRequest').click()
     );

@@ -189,7 +189,7 @@ function factory(dependencies) {
          * partner Inbox.
          */
         async markAsRead() {
-            await this.env.services.orm.call('mail.message', 'set_message_done', [this.id]);
+            await this.env.services.orm.call('mail.message', 'set_message_done', [[this.id]]);
         }
 
         /**
@@ -225,7 +225,7 @@ function factory(dependencies) {
          * Toggle the starred status of the provided message.
          */
         async toggleStar() {
-            await this.env.services.orm.call('mail.message', 'toggle_message_starred', [this.id]);
+            await this.env.services.orm.call('mail.message', 'toggle_message_starred', [[this.id]]);
         }
 
         //----------------------------------------------------------------------

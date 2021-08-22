@@ -195,7 +195,7 @@ function factory(dependencies) {
          */
         _handleGlobalWindowFocus() {
             this.update({ outOfFocusUnreadMessageCounter: 0 });
-            this.env.bus.trigger('set_title_part', {
+            owl.Component.env.bus.trigger('set_title_part', {
                 part: '_chat',
             });
         }

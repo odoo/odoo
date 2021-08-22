@@ -1,10 +1,8 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     beforeEach,
     createRootMessagingComponent,
-    start,
 } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -12,38 +10,27 @@ QUnit.module('components', {}, function () {
 QUnit.module('composer_suggestion', {}, function () {
 QUnit.module('composer_suggestion_partner_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createComposerSuggestion = async props => {
             await createRootMessagingComponent(this, "ComposerSuggestion", {
                 props,
-                target: this.widget.el,
+                target: this.webClient.el,
             });
         };
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('partner mention suggestion displayed', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    this.serverData.models['mail.channel'].records.push({ id: 20 });
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    const partner = this.messaging.models['mail.partner'].create({
+    const partner = messaging.models['mail.partner'].create({
         id: 7,
         im_status: 'online',
         name: "Demo User",
@@ -65,13 +52,13 @@ QUnit.test('partner mention suggestion displayed', async function (assert) {
 QUnit.test('partner mention suggestion correct data', async function (assert) {
     assert.expect(6);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    this.serverData.models['mail.channel'].records.push({ id: 20 });
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    const partner = this.messaging.models['mail.partner'].create({
+    const partner = messaging.models['mail.partner'].create({
         email: "demo_user@odoo.com",
         id: 7,
         im_status: 'online',
@@ -119,13 +106,13 @@ QUnit.test('partner mention suggestion correct data', async function (assert) {
 QUnit.test('partner mention suggestion active', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    this.serverData.models['mail.channel'].records.push({ id: 20 });
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    const partner = this.messaging.models['mail.partner'].create({
+    const partner = messaging.models['mail.partner'].create({
         id: 7,
         im_status: 'online',
         name: "Demo User",

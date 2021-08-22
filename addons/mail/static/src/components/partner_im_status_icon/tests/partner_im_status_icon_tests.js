@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
-    start,
 } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -13,33 +11,22 @@ QUnit.module('components', {}, function () {
 QUnit.module('partner_im_status_icon', {}, function () {
 QUnit.module('partner_im_status_icon_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createPartnerImStatusIcon = async partner => {
             await createRootMessagingComponent(this, "PartnerImStatusIcon", {
                 props: { partnerLocalId: partner.localId },
-                target: this.widget.el
+                target: this.webClient.el
             });
         };
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('initially online', async function (assert) {
     assert.expect(3);
 
-    await this.start();
-    const partner = this.messaging.models['mail.partner'].create({
+    const { messaging } = await this.start();
+    const partner = messaging.models['mail.partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'online',
@@ -65,8 +52,8 @@ QUnit.test('initially online', async function (assert) {
 QUnit.test('initially offline', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const partner = this.messaging.models['mail.partner'].create({
+    const { messaging } = await this.start();
+    const partner = messaging.models['mail.partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'offline',
@@ -82,8 +69,8 @@ QUnit.test('initially offline', async function (assert) {
 QUnit.test('initially away', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const partner = this.messaging.models['mail.partner'].create({
+    const { messaging } = await this.start();
+    const partner = messaging.models['mail.partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'away',
@@ -99,8 +86,8 @@ QUnit.test('initially away', async function (assert) {
 QUnit.test('change icon on change partner im_status', async function (assert) {
     assert.expect(4);
 
-    await this.start();
-    const partner = this.messaging.models['mail.partner'].create({
+    const { messaging } = await this.start();
+    const partner = messaging.models['mail.partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'online',

@@ -2,8 +2,6 @@
 
 import { ModelManager } from '@mail/model/model_manager';
 
-import { registry } from '@web/core/registry';
-
 export const messagingValues = {};
 
 export const messagingService = {
@@ -53,5 +51,3 @@ export const messagingService = {
         this.modelManager.start(messagingValues);
     },
 };
-
-registry.category('services').add('messaging', messagingService);

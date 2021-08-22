@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
-    start,
 } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -13,34 +11,23 @@ QUnit.module('components', {}, function () {
 QUnit.module('follow_button', {}, function () {
 QUnit.module('follow_button_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createFollowButtonComponent = async (thread, otherProps = {}) => {
             const props = Object.assign({ threadLocalId: thread.localId }, otherProps);
             await createRootMessagingComponent(this, "FollowButton", {
                 props,
-                target: this.widget.el,
+                target: this.webClient.el,
             });
         };
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(3);
 
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -64,8 +51,8 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(3);
 
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -89,17 +76,17 @@ QUnit.test('base rendering editable', async function (assert) {
 QUnit.test('hover following button', async function (assert) {
     assert.expect(8);
 
-    this.data['res.partner'].records.push({ id: 100, message_follower_ids: [1] });
-    this.data['mail.followers'].records.push({
+    this.serverData.models['res.partner'].records.push({ id: 100, message_follower_ids: [1] });
+    this.serverData.models['mail.followers'].records.push({
         id: 1,
         is_active: true,
         is_editable: true,
-        partner_id: this.data.currentPartnerId,
+        partner_id: this.serverData.currentPartnerId,
         res_id: 100,
         res_model: 'res.partner',
     });
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -157,16 +144,16 @@ QUnit.test('hover following button', async function (assert) {
 QUnit.test('click on "follow" button', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({ id: 100, message_follower_ids: [1] });
-    this.data['mail.followers'].records.push({
+    this.serverData.models['res.partner'].records.push({ id: 100, message_follower_ids: [1] });
+    this.serverData.models['mail.followers'].records.push({
         id: 1,
         is_active: true,
         is_editable: true,
-        partner_id: this.data.currentPartnerId,
+        partner_id: this.serverData.currentPartnerId,
         res_id: 100,
         res_model: 'res.partner',
     });
-    await this.start({
+    const { messaging } = await this.start({
         async mockRPC(route, args) {
             if (route.includes('message_subscribe')) {
                 assert.step('rpc:message_subscribe');
@@ -175,7 +162,7 @@ QUnit.test('click on "follow" button', async function (assert) {
             }
         },
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -213,23 +200,23 @@ QUnit.test('click on "follow" button', async function (assert) {
 QUnit.test('click on "unfollow" button', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({ id: 100, message_follower_ids: [1] });
-    this.data['mail.followers'].records.push({
+    this.serverData.models['res.partner'].records.push({ id: 100, message_follower_ids: [1] });
+    this.serverData.models['mail.followers'].records.push({
         id: 1,
         is_active: true,
         is_editable: true,
-        partner_id: this.data.currentPartnerId,
+        partner_id: this.serverData.currentPartnerId,
         res_id: 100,
         res_model: 'res.partner',
     });
-    await this.start({
+    const { messaging } = await this.start({
         async mockRPC(route, args) {
             if (route.includes('message_unsubscribe')) {
                 assert.step('rpc:message_unsubscribe');
             }
         },
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });

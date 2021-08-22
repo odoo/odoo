@@ -1,9 +1,9 @@
-odoo.define('snailmail/static/tests/helpers/mock_server.js', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const MockServer = require('web.MockServer');
+import { patch } from "@web/core/utils/patch";
+import { MockServer } from "@web/../tests/helpers/mock_server";
 
-MockServer.include({
+patch(MockServer.prototype, "snailmail", {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -11,7 +11,10 @@ MockServer.include({
     /**
      * @override
      */
-    async _performRpc(route, args) {
+    async _performRPC(route, args) {
+        if (args.model === 'iap.account' && args.method === 'get_credits_url') {
+            return 'fixme should return the correct value';
+        }
         if (args.model === 'mail.message' && args.method === 'cancel_letter') {
             const ids = args.args[0];
             return this._mockMailMessageCancelLetter(ids);
@@ -45,6 +48,4 @@ MockServer.include({
     _mockMailMessageSendLetter(ids) {
         // TODO implement this mock and improve related tests (task-2300496)
     },
-});
-
 });

@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
-
 export const newMessageService = {
     dependencies: ["command", "messaging"],
     start(env, { command }) {
@@ -21,5 +19,3 @@ export const newMessageService = {
         });
     },
 };
-
-registry.category("services").add("new_message", newMessageService);

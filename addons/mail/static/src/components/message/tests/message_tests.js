@@ -8,12 +8,10 @@ import {
 } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
     nextAnimationFrame,
-    start,
 } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
@@ -23,34 +21,23 @@ QUnit.module('components', {}, function () {
 QUnit.module('message', {}, function () {
 QUnit.module('message_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createMessageComponent = async (message, otherProps) => {
             const props = Object.assign({ messageLocalId: message.localId }, otherProps);
             await createRootMessagingComponent(this, "Message", {
                 props,
-                target: this.widget.el,
+                target: this.webClient.el,
             });
         };
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('basic rendering', async function (assert) {
     assert.expect(12);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         author: insert({ id: 7, display_name: "Demo User" }),
         body: "<p>Test</p>",
         date: moment(),
@@ -65,7 +52,7 @@ QUnit.test('basic rendering', async function (assert) {
     const messageEl = document.querySelector('.o_Message');
     assert.strictEqual(
         messageEl.dataset.messageLocalId,
-        this.messaging.models['mail.message'].findFromIdentifyingData({ id: 100 }).localId,
+        messaging.models['mail.message'].findFromIdentifyingData({ id: 100 }).localId,
         "message component should be linked to message store model"
     );
     assert.strictEqual(
@@ -123,17 +110,17 @@ QUnit.test('basic rendering', async function (assert) {
 QUnit.test('Notification Sent', async function (assert) {
     assert.expect(9);
 
-    this.data['mail.channel'].records.push({ id: 11 });
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    this.serverData.models['mail.channel'].records.push({ id: 11 });
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = messaging.models['mail.message'].create({
         id: 10,
         message_type: 'email',
         notifications: insert({
@@ -219,17 +206,17 @@ QUnit.test('Notification Error', async function (assert) {
         openResendActionDef.resolve();
     });
 
-    this.data['mail.channel'].records.push({ id: 11 });
-    await this.start({ env: { bus } });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    this.serverData.models['mail.channel'].records.push({ id: 11 });
+    const { messaging } = await this.start({ legacyEnv: { bus } });
+    const thread = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = messaging.models['mail.message'].create({
         id: 10,
         message_type: 'email',
         notifications: insert({
@@ -274,29 +261,29 @@ QUnit.test('Notification Error', async function (assert) {
 QUnit.test("'channel_fetch' notification received is correctly handled", async function (assert) {
     assert.expect(3);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "Recipient",
         id: 11,
     });
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         channel_type: 'chat',
         id: 11,
-        members: [this.data.currentPartnerId, 11],
+        members: [this.serverData.currentPartnerId, 11],
     });
-    await this.start();
-    const currentPartner = this.messaging.models['mail.partner'].insert({
-        id: this.messaging.currentPartner.id,
+    const { messaging } = await this.start();
+    const currentPartner = messaging.models['mail.partner'].insert({
+        id: messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = messaging.models['mail.message'].create({
         author: link(currentPartner),
         body: "<p>Test</p>",
         id: 100,
@@ -340,29 +327,29 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
 QUnit.test("'channel_seen' notification received is correctly handled", async function (assert) {
     assert.expect(3);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "Recipient",
         id: 11,
     });
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         channel_type: 'chat',
         id: 11,
-        members: [this.data.currentPartnerId, 11],
+        members: [this.serverData.currentPartnerId, 11],
     });
-    await this.start();
-    const currentPartner = this.messaging.models['mail.partner'].insert({
-        id: this.messaging.currentPartner.id,
+    const { messaging } = await this.start();
+    const currentPartner = messaging.models['mail.partner'].insert({
+        id: messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = messaging.models['mail.message'].create({
         author: link(currentPartner),
         body: "<p>Test</p>",
         id: 100,
@@ -405,29 +392,29 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
 QUnit.test("'channel_fetch' notification then 'channel_seen' received  are correctly handled", async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "Recipient",
         id: 11,
     });
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         channel_type: 'chat',
         id: 11,
-        members: [this.data.currentPartnerId, 11],
+        members: [this.serverData.currentPartnerId, 11],
     });
-    await this.start();
-    const currentPartner = this.messaging.models['mail.partner'].insert({
-        id: this.messaging.currentPartner.id,
+    const { messaging } = await this.start();
+    const currentPartner = messaging.models['mail.partner'].insert({
+        id: messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = messaging.models['mail.message'].create({
         author: link(currentPartner),
         body: "<p>Test</p>",
         id: 100,
@@ -487,19 +474,19 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
 QUnit.test('do not show messaging seen indicator if not authored by me', async function (assert) {
     assert.expect(2);
 
-    await this.start();
-    const author = this.messaging.models['mail.partner'].create({
+    const { messaging } = await this.start();
+    const author = messaging.models['mail.partner'].create({
         id: 100,
         display_name: "Demo User"
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = messaging.models['mail.thread'].create({
         channel_type: 'chat',
         id: 11,
         partnerSeenInfos: create([
             {
                 channelId: 11,
                 lastFetchedMessage: insert({ id: 100 }),
-                partnerId: this.messaging.currentPartner.id,
+                partnerId: messaging.currentPartner.id,
             },
             {
                 channelId: 11,
@@ -509,11 +496,11 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
         ]),
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
-    const message = this.messaging.models['mail.message'].insert({
+    const message = messaging.models['mail.message'].insert({
         author: link(author),
         body: "<p>Test</p>",
         id: 100,
@@ -536,12 +523,12 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
 QUnit.test('do not show messaging seen indicator if before last seen by all message', async function (assert) {
     assert.expect(3);
 
-    await this.start();
-    const currentPartner = this.messaging.models['mail.partner'].insert({
-        id: this.messaging.currentPartner.id,
+    const { messaging } = await this.start();
+    const currentPartner = messaging.models['mail.partner'].insert({
+        id: messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = messaging.models['mail.thread'].create({
         channel_type: 'chat',
         id: 11,
         messageSeenIndicators: insert({
@@ -550,27 +537,27 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
         }),
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
-    const lastSeenMessage = this.messaging.models['mail.message'].create({
+    const lastSeenMessage = messaging.models['mail.message'].create({
         author: link(currentPartner),
         body: "<p>You already saw me</p>",
         id: 100,
         originThread: link(thread),
     });
-    const message = this.messaging.models['mail.message'].insert({
+    const message = messaging.models['mail.message'].insert({
         author: link(currentPartner),
         body: "<p>Test</p>",
         id: 99,
         originThread: link(thread),
     });
-    this.messaging.models['mail.thread_partner_seen_info'].insert([
+    messaging.models['mail.thread_partner_seen_info'].insert([
         {
             channelId: 11,
             lastSeenMessage: link(lastSeenMessage),
-            partnerId: this.messaging.currentPartner.id,
+            partnerId: messaging.currentPartner.id,
         },
         {
             channelId: 11,
@@ -602,19 +589,19 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
 QUnit.test('only show messaging seen indicator if authored by me, after last seen by all message', async function (assert) {
     assert.expect(3);
 
-    await this.start();
-    const currentPartner = this.messaging.models['mail.partner'].insert({
-        id: this.messaging.currentPartner.id,
+    const { messaging } = await this.start();
+    const currentPartner = messaging.models['mail.partner'].insert({
+        id: messaging.currentPartner.id,
         display_name: "Demo User"
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = messaging.models['mail.thread'].create({
         channel_type: 'chat',
         id: 11,
         partnerSeenInfos: create([
             {
                 channelId: 11,
                 lastSeenMessage: insert({ id: 100 }),
-                partnerId: this.messaging.currentPartner.id,
+                partnerId: messaging.currentPartner.id,
             },
             {
                 channelId: 11,
@@ -629,11 +616,11 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
         }),
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
-    const message = this.messaging.models['mail.message'].insert({
+    const message = messaging.models['mail.message'].insert({
         author: link(currentPartner),
         body: "<p>Test</p>",
         id: 100,
@@ -664,14 +651,14 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
 QUnit.test('allow attachment delete on authored message', async function (assert) {
     assert.expect(5);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         attachments: insertAndReplace({
             filename: "BLAH.jpg",
             id: 10,
             name: "BLAH",
         }),
-        author: link(this.messaging.currentPartner),
+        author: link(messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -713,8 +700,8 @@ QUnit.test('allow attachment delete on authored message', async function (assert
 QUnit.test('prevent attachment delete on non-authored message', async function (assert) {
     assert.expect(2);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         attachments: insertAndReplace({
             filename: "BLAH.jpg",
             id: 10,
@@ -741,8 +728,8 @@ QUnit.test('prevent attachment delete on non-authored message', async function (
 QUnit.test('subtype description should be displayed if it is different than body', async function (assert) {
     assert.expect(2);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         body: "<p>Hello</p>",
         id: 100,
         subtype_description: 'Bonjour',
@@ -763,8 +750,8 @@ QUnit.test('subtype description should be displayed if it is different than body
 QUnit.test('subtype description should not be displayed if it is similar to body', async function (assert) {
     assert.expect(2);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         body: "<p>Hello</p>",
         id: 100,
         subtype_description: 'hello',
@@ -785,10 +772,6 @@ QUnit.test('subtype description should not be displayed if it is similar to body
 QUnit.test('data-oe-id & data-oe-model link redirection on click', async function (assert) {
     assert.expect(7);
 
-    this.data['some.model'] = {
-        fields: {},
-        records: [],
-    };
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.strictEqual(
@@ -798,22 +781,19 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
         );
         assert.strictEqual(
             payload.action.res_model,
-            'some.model',
-            "action should open view on 'some.model' model"
+            'res.fake',
+            "action should open view on 'res.fake' model"
         );
         assert.strictEqual(
             payload.action.res_id,
             250,
             "action should open view on 250"
         );
-        assert.step('do-action:openFormView_some.model_250');
+        assert.step('do-action:openFormView_res.fake_250');
     });
-    await this.start({ env: { bus }, archs: {
-        'some.model,false,form': '<form/>',
-        'some.model,false,search': '<search/>',
-    } });
-    const message = this.messaging.models['mail.message'].create({
-        body: `<p><a href="#" data-oe-id="250" data-oe-model="some.model">some.model_250</a></p>`,
+    const { messaging } = await this.start({ legacyEnv: { bus } });
+    const message = messaging.models['mail.message'].create({
+        body: `<p><a href="#" data-oe-id="250" data-oe-model="res.fake">res.fake_250</a></p>`,
         id: 100,
     });
     await this.createMessageComponent(message);
@@ -830,7 +810,7 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
 
     document.querySelector(`.o_Message_content a`).click();
     assert.verifySteps(
-        ['do-action:openFormView_some.model_250'],
+        ['do-action:openFormView_res.fake_250'],
         "should have open form view on related record after click on link"
     );
 });
@@ -838,10 +818,10 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
 QUnit.test('chat with author should be opened after clicking on his avatar', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 10 });
-    this.data['res.users'].records.push({ partner_id: 10 });
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    this.serverData.models['res.partner'].records.push({ id: 10 });
+    this.serverData.models['res.users'].records.push({ partner_id: 10 });
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         author: insert({ id: 10 }),
         id: 10,
     });
@@ -875,10 +855,10 @@ QUnit.test('chat with author should be opened after clicking on his avatar', asy
 QUnit.test('chat with author should be opened after clicking on his im status icon', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 10 });
-    this.data['res.users'].records.push({ partner_id: 10 });
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    this.serverData.models['res.partner'].records.push({ id: 10 });
+    this.serverData.models['res.users'].records.push({ partner_id: 10 });
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         author: insert({ id: 10, im_status: 'online' }),
         id: 10,
     });
@@ -912,21 +892,21 @@ QUnit.test('chat with author should be opened after clicking on his im status ic
 QUnit.test('open chat with author on avatar click should be disabled when currently chatting with the author', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         channel_type: 'chat',
-        members: [this.data.currentPartnerId, 10],
+        members: [this.serverData.currentPartnerId, 10],
         public: 'private',
     });
-    this.data['res.partner'].records.push({ id: 10 });
-    this.data['res.users'].records.push({ partner_id: 10 });
-    await this.start();
-    const correspondent = this.messaging.models['mail.partner'].insert({ id: 10 });
-    const message = this.messaging.models['mail.message'].create({
+    this.serverData.models['res.partner'].records.push({ id: 10 });
+    this.serverData.models['res.users'].records.push({ partner_id: 10 });
+    const { messaging } = await this.start();
+    const correspondent = messaging.models['mail.partner'].insert({ id: 10 });
+    const message = messaging.models['mail.message'].create({
         author: link(correspondent),
         id: 10,
     });
     const thread = await correspondent.getChat();
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
@@ -956,8 +936,8 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
 QUnit.test('basic rendering of tracking value (float type)', async function (assert) {
     assert.expect(8);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Total",
@@ -1013,8 +993,8 @@ QUnit.test('basic rendering of tracking value (float type)', async function (ass
 QUnit.test('rendering of tracked field of type integer: from non-0 to 0', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Total",
@@ -1035,8 +1015,8 @@ QUnit.test('rendering of tracked field of type integer: from non-0 to 0', async 
 QUnit.test('rendering of tracked field of type integer: from 0 to non-0', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Total",
@@ -1057,8 +1037,8 @@ QUnit.test('rendering of tracked field of type integer: from 0 to non-0', async 
 QUnit.test('rendering of tracked field of type float: from non-0 to 0', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Total",
@@ -1079,8 +1059,8 @@ QUnit.test('rendering of tracked field of type float: from non-0 to 0', async fu
 QUnit.test('rendering of tracked field of type float: from 0 to non-0', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Total",
@@ -1101,8 +1081,8 @@ QUnit.test('rendering of tracked field of type float: from 0 to non-0', async fu
 QUnit.test('rendering of tracked field of type monetary: from non-0 to 0', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Total",
@@ -1123,8 +1103,8 @@ QUnit.test('rendering of tracked field of type monetary: from non-0 to 0', async
 QUnit.test('rendering of tracked field of type monetary: from 0 to non-0', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Total",
@@ -1145,8 +1125,8 @@ QUnit.test('rendering of tracked field of type monetary: from 0 to non-0', async
 QUnit.test('rendering of tracked field of type boolean: from true to false', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Is Ready",
@@ -1167,8 +1147,8 @@ QUnit.test('rendering of tracked field of type boolean: from true to false', asy
 QUnit.test('rendering of tracked field of type boolean: from false to true', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Is Ready",
@@ -1189,8 +1169,8 @@ QUnit.test('rendering of tracked field of type boolean: from false to true', asy
 QUnit.test('rendering of tracked field of type char: from a string to empty string', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Name",
@@ -1211,8 +1191,8 @@ QUnit.test('rendering of tracked field of type char: from a string to empty stri
 QUnit.test('rendering of tracked field of type char: from empty string to a string', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Name",
@@ -1233,8 +1213,8 @@ QUnit.test('rendering of tracked field of type char: from empty string to a stri
 QUnit.test('rendering of tracked field of type date: from no date to a set date', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Deadline",
@@ -1255,8 +1235,8 @@ QUnit.test('rendering of tracked field of type date: from no date to a set date'
 QUnit.test('rendering of tracked field of type date: from a set date to no date', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Deadline",
@@ -1278,8 +1258,8 @@ QUnit.skip('rendering of tracked field of type datetime: from no date and time t
     // skip: timezone issue
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Deadline",
@@ -1301,8 +1281,8 @@ QUnit.skip('rendering of tracked field of type datetime: from a set date and tim
     // skip: timezone issue
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Deadline",
@@ -1323,8 +1303,8 @@ QUnit.skip('rendering of tracked field of type datetime: from a set date and tim
 QUnit.test('rendering of tracked field of type text: from some text to empty', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Name",
@@ -1345,8 +1325,8 @@ QUnit.test('rendering of tracked field of type text: from some text to empty', a
 QUnit.test('rendering of tracked field of type text: from empty to some text', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Name",
@@ -1367,8 +1347,8 @@ QUnit.test('rendering of tracked field of type text: from empty to some text', a
 QUnit.test('rendering of tracked field of type selection: from a selection to no selection', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "State",
@@ -1389,8 +1369,8 @@ QUnit.test('rendering of tracked field of type selection: from a selection to no
 QUnit.test('rendering of tracked field of type selection: from no selection to a selection', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "State",
@@ -1411,8 +1391,8 @@ QUnit.test('rendering of tracked field of type selection: from no selection to a
 QUnit.test('rendering of tracked field of type many2one: from having a related record to no related record', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Author",
@@ -1433,8 +1413,8 @@ QUnit.test('rendering of tracked field of type many2one: from having a related r
 QUnit.test('rendering of tracked field of type many2one: from no related record to having a related record', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Author",
@@ -1456,14 +1436,14 @@ QUnit.skip('basic rendering of tracking value (monetary type)', async function (
     // skip: currency issue
     assert.expect(8);
 
-    await this.start({
-        env: {
+    const { messaging } = await this.start({
+        legacyEnv: {
             session: {
                 currencies: { 1: { symbol: '$', position: 'before' } },
             },
         },
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Revenue",
@@ -1521,8 +1501,8 @@ QUnit.skip('basic rendering of tracking value (monetary type)', async function (
 QUnit.test('message should not be considered as "clicked" after clicking on its author name', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         author: [['insert', { id: 7, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
@@ -1540,8 +1520,8 @@ QUnit.test('message should not be considered as "clicked" after clicking on its 
 QUnit.test('message should not be considered as "clicked" after clicking on its author avatar', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const message = this.messaging.models['mail.message'].create({
+    const { messaging } = await this.start();
+    const message = messaging.models['mail.message'].create({
         author: [['insert', { id: 7, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
@@ -1559,15 +1539,15 @@ QUnit.test('message should not be considered as "clicked" after clicking on its 
 QUnit.test('message should not be considered as "clicked" after clicking on notification failure icon', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const { messaging } = await this.start();
+    const threadViewer = messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: [['create', {
             id: 11,
             model: 'mail.channel',
         }]],
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = messaging.models['mail.message'].create({
         id: 10,
         message_type: 'email',
         notifications: [['insert', {
