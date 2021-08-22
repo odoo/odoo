@@ -6,11 +6,9 @@ import {
     unregisterMessagingComponent,
 } from '@mail/utils/messaging_component';
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
-    start,
 } from '@mail/utils/test_utils';
 
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
@@ -24,33 +22,22 @@ QUnit.module('components', {}, function () {
 QUnit.module('activity', {}, function () {
 QUnit.module('activity_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createActivityComponent = async function (activity) {
             await createRootMessagingComponent(this, "Activity", {
                 props: { activityLocalId: activity.localId },
-                target: this.widget.el,
+                target: this.webClient.el,
             });
         };
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('activity simplest layout', async function (assert) {
     assert.expect(12);
 
-    await this.start();
-    const activity = this.messaging.models['mail.activity'].create({
+    const { messaging } = await this.start();
+    const activity = messaging.models['mail.activity'].create({
         id: 12,
         thread: insert({ id: 42, model: 'res.partner' }),
     });
@@ -120,8 +107,8 @@ QUnit.test('activity simplest layout', async function (assert) {
 QUnit.test('activity with note layout', async function (assert) {
     assert.expect(3);
 
-    await this.start();
-    const activity = this.messaging.models['mail.activity'].create({
+    const { messaging } = await this.start();
+    const activity = messaging.models['mail.activity'].create({
         id: 12,
         note: 'There is no good or bad note',
         thread: insert({ id: 42, model: 'res.partner' }),
@@ -147,11 +134,11 @@ QUnit.test('activity with note layout', async function (assert) {
 QUnit.test('activity info layout when planned after tomorrow', async function (assert) {
     assert.expect(4);
 
-    await this.start();
+    const { messaging } = await this.start();
     const today = new Date();
     const fiveDaysFromNow = new Date();
     fiveDaysFromNow.setDate(today.getDate() + 5);
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         dateDeadline: date_to_str(fiveDaysFromNow),
         id: 12,
         state: 'planned',
@@ -182,11 +169,11 @@ QUnit.test('activity info layout when planned after tomorrow', async function (a
 QUnit.test('activity info layout when planned tomorrow', async function (assert) {
     assert.expect(4);
 
-    await this.start();
+    const { messaging } = await this.start();
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         dateDeadline: date_to_str(tomorrow),
         id: 12,
         state: 'planned',
@@ -217,9 +204,9 @@ QUnit.test('activity info layout when planned tomorrow', async function (assert)
 QUnit.test('activity info layout when planned today', async function (assert) {
     assert.expect(4);
 
-    await this.start();
+    const { messaging } = await this.start();
     const today = new Date();
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         dateDeadline: date_to_str(today),
         id: 12,
         state: 'today',
@@ -250,11 +237,11 @@ QUnit.test('activity info layout when planned today', async function (assert) {
 QUnit.test('activity info layout when planned yesterday', async function (assert) {
     assert.expect(4);
 
-    await this.start();
+    const { messaging } = await this.start();
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         dateDeadline: date_to_str(yesterday),
         id: 12,
         state: 'overdue',
@@ -285,11 +272,11 @@ QUnit.test('activity info layout when planned yesterday', async function (assert
 QUnit.test('activity info layout when planned before yesterday', async function (assert) {
     assert.expect(4);
 
-    await this.start();
+    const { messaging } = await this.start();
     const today = new Date();
     const fiveDaysBeforeNow = new Date();
     fiveDaysBeforeNow.setDate(today.getDate() - 5);
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         dateDeadline: date_to_str(fiveDaysBeforeNow),
         id: 12,
         state: 'overdue',
@@ -320,8 +307,8 @@ QUnit.test('activity info layout when planned before yesterday', async function 
 QUnit.test('activity with a summary layout', async function (assert) {
     assert.expect(4);
 
-    await this.start();
-    const activity = this.messaging.models['mail.activity'].create({
+    const { messaging } = await this.start();
+    const activity = messaging.models['mail.activity'].create({
         id: 12,
         summary: 'test summary',
         thread: insert({ id: 42, model: 'res.partner' }),
@@ -352,8 +339,8 @@ QUnit.test('activity with a summary layout', async function (assert) {
 QUnit.test('activity without summary layout', async function (assert) {
     assert.expect(5);
 
-    await this.start();
-    const activity = this.messaging.models['mail.activity'].create({
+    const { messaging } = await this.start();
+    const activity = messaging.models['mail.activity'].create({
         id: 12,
         thread: insert({ id: 42, model: 'res.partner' }),
         type: insert({ id: 1, displayName: "Fake type" }),
@@ -389,11 +376,11 @@ QUnit.test('activity without summary layout', async function (assert) {
 QUnit.test('activity details toggle', async function (assert) {
     assert.expect(5);
 
-    await this.start();
+    const { messaging } = await this.start();
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         creator: insert({ id: 1, display_name: "Admin" }),
         dateCreate: date_to_str(today),
         dateDeadline: date_to_str(tomorrow),
@@ -441,11 +428,11 @@ QUnit.test('activity details toggle', async function (assert) {
 QUnit.test('activity details layout', async function (assert) {
     assert.expect(11);
 
-    await this.start();
+    const { messaging } = await this.start();
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         assignee: insert({ id: 10, display_name: "Pauvre pomme" }),
         creator: insert({ id: 1, display_name: "Admin" }),
         dateCreate: date_to_str(today),
@@ -520,8 +507,8 @@ QUnit.test('activity details layout', async function (assert) {
 QUnit.test('activity with mail template layout', async function (assert) {
     assert.expect(8);
 
-    await this.start();
-    const activity = this.messaging.models['mail.activity'].create({
+    const { messaging } = await this.start();
+    const activity = messaging.models['mail.activity'].create({
         id: 12,
         mailTemplates: insert({ id: 1, name: "Dummy mail template" }),
         thread: insert({ id: 42, model: 'res.partner' }),
@@ -606,8 +593,8 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
         );
     });
 
-    await this.start({ env: { bus } });
-    const activity = this.messaging.models['mail.activity'].create({
+    const { messaging } = await this.start({ legacyEnv: { bus } });
+    const activity = messaging.models['mail.activity'].create({
         id: 12,
         mailTemplates: insert({
             id: 1,
@@ -637,7 +624,7 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
 QUnit.test('activity with mail template: send mail', async function (assert) {
     assert.expect(6);
 
-    await this.start({
+    const { messaging } = await this.start({
         async mockRPC(route, args) {
             if (args.method === 'activity_send_mail') {
                 assert.step('activity_send_mail');
@@ -647,7 +634,7 @@ QUnit.test('activity with mail template: send mail', async function (assert) {
             }
         },
     });
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         id: 12,
         mailTemplates: insert({
             id: 1,
@@ -677,11 +664,11 @@ QUnit.test('activity with mail template: send mail', async function (assert) {
 QUnit.test('activity upload document is available', async function (assert) {
     assert.expect(3);
 
-    await this.start();
+    const { messaging } = await this.start();
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         canWrite: true,
         category: 'upload_file',
         id: 12,
@@ -708,11 +695,11 @@ QUnit.test('activity upload document is available', async function (assert) {
 QUnit.test('activity click on mark as done', async function (assert) {
     assert.expect(4);
 
-    await this.start();
+    const { messaging } = await this.start();
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
@@ -753,11 +740,11 @@ QUnit.test('activity click on mark as done', async function (assert) {
 QUnit.test('activity mark as done popover should focus feedback input on open [REQUIRE FOCUS]', async function (assert) {
     assert.expect(3);
 
-    await this.start();
+    const { messaging } = await this.start();
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
@@ -819,8 +806,8 @@ QUnit.test('activity click on edit', async function (assert) {
         );
     });
 
-    await this.start({ env: { bus } });
-    const activity = this.messaging.models['mail.activity'].create({
+    const { messaging } = await this.start({ legacyEnv: { bus } });
+    const activity = messaging.models['mail.activity'].create({
         canWrite: true,
         id: 12,
         mailTemplates: insert({ id: 1, name: "Dummy mail template" }),
@@ -848,7 +835,7 @@ QUnit.test('activity click on edit', async function (assert) {
 QUnit.test('activity edition', async function (assert) {
     assert.expect(14);
 
-    this.data['mail.activity'].records.push({
+    this.serverData.models['mail.activity'].records.push({
         can_write: true,
         icon: 'fa-times',
         id: 12,
@@ -883,14 +870,14 @@ QUnit.test('activity edition', async function (assert) {
             12,
             'Action should have activity id as res_id'
         );
-        this.data['mail.activity'].records[0].icon = 'fa-check';
+        this.serverData.models['mail.activity'].records[0].icon = 'fa-check';
         payload.options.on_close();
     });
 
-    await this.start({ env: { bus } });
-    const activity = this.messaging.models['mail.activity'].insert(
-        this.messaging.models['mail.activity'].convertData(
-            this.data['mail.activity'].records[0]
+    const { messaging } = await this.start({ legacyEnv: { bus } });
+    const activity = messaging.models['mail.activity'].insert(
+        messaging.models['mail.activity'].convertData(
+            this.serverData.models['mail.activity'].records[0]
         )
     );
     await this.createActivityComponent(activity);
@@ -943,7 +930,7 @@ QUnit.test('activity edition', async function (assert) {
 QUnit.test('activity click on cancel', async function (assert) {
     assert.expect(6);
 
-    await this.start({
+    const { env, messaging } = await this.start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/unlink') {
                 assert.step('unlink');
@@ -952,7 +939,7 @@ QUnit.test('activity click on cancel', async function (assert) {
             }
         },
     });
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         canWrite: true,
         id: 12,
         mailTemplates: insert({
@@ -969,10 +956,10 @@ QUnit.test('activity click on cancel', async function (assert) {
          * @returns {mail.activity}
          */
         get activity() {
-            return this.messaging.models['mail.activity'].get(this.props.activityLocalId);
+            return messaging.models['mail.activity'].get(this.props.activityLocalId);
         }
     }
-    ParentComponent.env = this.env;
+    ParentComponent.env = env;
     Object.assign(ParentComponent, {
         props: { activityLocalId: String },
         template: xml`
@@ -988,7 +975,7 @@ QUnit.test('activity click on cancel', async function (assert) {
     registerCleanup(() => unregisterMessagingComponent(ParentComponent));
     await createRootMessagingComponent(this, "ParentComponent", {
         props: { activityLocalId: activity.localId },
-        target: this.widget.el,
+        target: this.webClient.el,
     });
 
     assert.strictEqual(
@@ -1021,8 +1008,8 @@ QUnit.test('activity mark done popover close on ESCAPE', async function (assert)
     // component to have a parent in order to allow testing interactions the popover.
     assert.expect(2);
 
-    await this.start();
-    const activity = this.messaging.models['mail.activity'].create({
+    const { messaging } = await this.start();
+    const activity = messaging.models['mail.activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
@@ -1055,8 +1042,8 @@ QUnit.test('activity mark done popover click on discard', async function (assert
     // component to have a parent in order to allow testing interactions the popover.
     assert.expect(3);
 
-    await this.start();
-    const activity = this.messaging.models['mail.activity'].create({
+    const { messaging } = await this.start();
+    const activity = messaging.models['mail.activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
@@ -1089,7 +1076,7 @@ QUnit.test('activity mark done popover click on discard', async function (assert
 QUnit.test('data-oe-id & data-oe-model link redirection on click', async function (assert) {
     assert.expect(7);
 
-    this.data['some.model'] = {
+    this.serverData.models['res.fake'] = {
         fields: {},
         records: [],
     };
@@ -1102,25 +1089,22 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
         );
         assert.strictEqual(
             payload.action.res_model,
-            'some.model',
-            "action should open view on 'some.model' model"
+            'res.fake',
+            "action should open view on 'res.fake' model"
         );
         assert.strictEqual(
             payload.action.res_id,
             250,
             "action should open view on 250"
         );
-        assert.step('do-action:openFormView_some.model_250');
+        assert.step('do-action:openFormView_res.fake_250');
     });
-    await this.start({ env: { bus }, archs: {
-        'some.model,false,form': '<form/>',
-        'some.model,false,search': '<search/>',
-    } });
-    const activity = this.messaging.models['mail.activity'].create({
+    const { messaging } = await this.start({ legacyEnv: { bus } });
+    const activity = messaging.models['mail.activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
-        note: `<p><a href="#" data-oe-id="250" data-oe-model="some.model">some.model_250</a></p>`,
+        note: `<p><a href="#" data-oe-id="250" data-oe-model="res.fake">res.fake_250</a></p>`,
         thread: insert({ id: 42, model: 'res.partner' }),
     });
     await this.createActivityComponent(activity);
@@ -1137,7 +1121,7 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
 
     document.querySelector(`.o_Activity_note a`).click();
     assert.verifySteps(
-        ['do-action:openFormView_some.model_250'],
+        ['do-action:openFormView_res.fake_250'],
         "should have open form view on related record after click on link"
     );
 });

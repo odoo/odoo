@@ -687,7 +687,7 @@ function factory(dependencies) {
             const titlePattern = messaging.outOfFocusUnreadMessageCounter === 1
                 ? this.env._t("%d Message")
                 : this.env._t("%d Messages");
-            this.env.bus.trigger('set_title_part', {
+            owl.Component.env.bus.trigger('set_title_part', {
                 part: '_chat',
                 title: _.str.sprintf(titlePattern, messaging.outOfFocusUnreadMessageCounter),
             });

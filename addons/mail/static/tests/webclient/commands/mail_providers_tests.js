@@ -1,55 +1,45 @@
 /** @odoo-module **/
 
-import { afterEach, afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
+import { afterNextRender, beforeEach } from '@mail/utils/test_utils';
+
 import { click, nextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { browser } from '@web/core/browser/browser';
-import { registry } from "@web/core/registry";
-import { commandService } from "@web/webclient/commands/command_service";
-
-const serviceRegistry = registry.category("services");
 
 QUnit.module('mail', {}, function () {
     QUnit.module('Command Palette', {
         beforeEach() {
-            serviceRegistry.add("command", commandService);
-            beforeEach(this);
+            beforeEach.call(this);
             patchWithCleanup(browser, {
                 clearTimeout() {},
                 setTimeout(later, wait) {
                     later();
                 },
             });
-            registry.category("command_categories").add("default", { label: ("default") });
-        },
-        afterEach() {
-            afterEach(this);
         },
     });
 
     QUnit.test('open the chatWindow of a user from the command palette', async function (assert) {
         assert.expect(3);
 
-        this.data['res.partner'].records.push(
+        this.serverData.models['res.partner'].records.push(
             { id: 11, name: "Partner 1", email: "p1@odoo.com" },
             { id: 12, name: "Partner 2", email: "p2@odoo.com" },
             { id: 13, name: "Partner 3", email: "p3@odoo.com" },
         );
-        this.data['res.users'].records.push(
+        this.serverData.models['res.users'].records.push(
             { id: 11, name: "User 1", partner_id: 11 },
             { id: 7, name: "User 2", partner_id: 12 },
             { id: 23, name: "User 3", partner_id: 13 },
         );
 
-        const { widget: webClient } = await start({
-            data: this.data,
-        });
+        const { webClient } = await this.start();
         triggerHotkey("control+k");
         await nextTick();
 
         // Switch to partners
         const search = webClient.el.querySelector(".o_command_palette_search input");
         search.value = "@";
-        search.dispatchEvent(new InputEvent("input"));
+        search.dispatchEvent(new window.InputEvent("input"));
         await nextTick();
         assert.deepEqual(
             [...webClient.el.querySelectorAll(".o_command_palette .o_command")].map((el) => el.textContent),
@@ -70,26 +60,24 @@ QUnit.module('mail', {}, function () {
     QUnit.test('open the chatWindow of a channel from the command palette', async function (assert) {
         assert.expect(3);
 
-        this.data['mail.channel'].records.push({
+        this.serverData.models['mail.channel'].records.push({
             id: 100,
             name: "general",
-            members: [this.data.currentPartnerId],
+            members: [this.serverData.currentPartnerId],
         });
-        this.data['mail.channel'].records.push({
+        this.serverData.models['mail.channel'].records.push({
             id: 101,
             name: "project",
-            members: [this.data.currentPartnerId],
+            members: [this.serverData.currentPartnerId],
         });
-        const { widget: webClient } = await start({
-            data: this.data,
-        });
+        const { webClient } = await this.start();
         triggerHotkey("control+k");
         await nextTick();
 
         // Switch to channels
         const search = webClient.el.querySelector(".o_command_palette_search input");
         search.value = "#";
-        search.dispatchEvent(new InputEvent("input"));
+        search.dispatchEvent(new window.InputEvent("input"));
         await nextTick();
         assert.deepEqual(
             [...webClient.el.querySelectorAll(".o_command_palette .o_command")].map((el) => el.textContent),

@@ -2,9 +2,8 @@
 
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { link, unlink } from '@mail/model/model_field_command';
-import { getMessagingComponent, registerMessagingComponent } from '@mail/utils/messaging_component';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-import { registry } from '@web/core/registry';
 import { useService } from "@web/core/utils/hooks";
 
 const { Component } = owl;
@@ -260,5 +259,3 @@ Object.assign(Discuss, {
 });
 
 registerMessagingComponent(Discuss);
-
-registry.category("actions").add("mail.widgets.discuss", getMessagingComponent('Discuss'));

@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
-    start,
 } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -13,44 +11,32 @@ QUnit.module('components', {}, function () {
 QUnit.module('thread_icon', {}, function () {
 QUnit.module('thread_icon_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createThreadIcon = async thread => {
             await createRootMessagingComponent(this, "ThreadIcon", {
                 props: { threadLocalId: thread.localId },
-                target: this.widget.el
+                target: this.webClient.el
             });
         };
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('chat: correspondent is typing', async function (assert) {
     assert.expect(5);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         id: 17,
         im_status: 'online',
         name: 'Demo',
     });
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         channel_type: 'chat',
         id: 20,
-        members: [this.data.currentPartnerId, 17],
+        members: [this.serverData.currentPartnerId, 17],
     });
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });

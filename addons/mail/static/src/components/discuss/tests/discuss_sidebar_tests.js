@@ -2,40 +2,20 @@
 
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     nextAnimationFrame,
-    start,
 } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss', {}, function () {
-QUnit.module('discuss_sidebar_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+QUnit.module('discuss_sidebar_tests.js', { beforeEach });
 
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                autoOpenDiscuss: true,
-                data: this.data,
-                hasDiscuss: true,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
-    },
-});
-
-QUnit.skip('sidebar find shows channels matching search term', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('sidebar find shows channels matching search term', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         channel_type: 'channel',
         id: 20,
         members: [],
@@ -43,13 +23,14 @@ QUnit.skip('sidebar find shows channels matching search term', async function (a
         public: 'public',
     });
     const searchReadDef = makeDeferred();
-    await this.start({
+    const { openDiscuss } = await this.start({
         async mockRPC(route, args) {
             if (args.method === 'search_read') {
                 searchReadDef.resolve();
             }
         },
     });
+    await openDiscuss();
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebar_groupHeaderItemAdd`).click()
     );
@@ -82,25 +63,25 @@ QUnit.skip('sidebar find shows channels matching search term', async function (a
     );
 });
 
-QUnit.skip('sidebar find shows channels matching search term even when user is member', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('sidebar find shows channels matching search term even when user is member', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         channel_type: 'channel',
         id: 20,
-        members: [this.data.currentPartnerId],
+        members: [this.serverData.currentPartnerId],
         name: 'test',
         public: 'public',
     });
     const searchReadDef = makeDeferred();
-    await this.start({
+    const { openDiscuss } = await this.start({
         async mockRPC(route, args) {
             if (args.method === 'search_read') {
                 searchReadDef.resolve();
             }
         },
     });
+    await openDiscuss();
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebar_groupHeaderItemAdd`).click()
     );
@@ -133,17 +114,17 @@ QUnit.skip('sidebar find shows channels matching search term even when user is m
     );
 });
 
-QUnit.skip('sidebar channels should be ordered case insensitive alphabetically', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('sidebar channels should be ordered case insensitive alphabetically', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push(
+    this.serverData.models['mail.channel'].records.push(
         { id: 19, name: "Xyz" },
         { id: 20, name: "abc" },
         { id: 21, name: "Abc" },
         { id: 22, name: "Xyz" }
     );
-    await this.start();
+    const { openDiscuss } = await this.start();
+    await openDiscuss();
     const results = document.querySelectorAll('.o_DiscussSidebar_groupChannel .o_DiscussSidebarItem_name');
     assert.deepEqual(
         [results[0].textContent, results[1].textContent, results[2].textContent, results[3].textContent],

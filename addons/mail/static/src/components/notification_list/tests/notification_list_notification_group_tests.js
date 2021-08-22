@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
-    start,
 } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
@@ -15,7 +13,7 @@ QUnit.module('components', {}, function () {
 QUnit.module('notification_list', {}, function () {
 QUnit.module('notification_list_notification_group_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         /**
          * @param {Object} param0
@@ -24,20 +22,9 @@ QUnit.module('notification_list_notification_group_tests.js', {
         this.createNotificationListComponent = async ({ filter = 'all' } = {}) => {
             await createRootMessagingComponent(this, "NotificationList", {
                 props: { filter },
-                target: this.widget.el,
+                target: this.webClient.el,
             });
         };
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
@@ -45,7 +32,7 @@ QUnit.test('notification group basic layout', async function (assert) {
     assert.expect(10);
 
     // message that is expected to have a failure
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         id: 11, // random unique id, will be used to link failure to message
         message_type: 'email', // message must be email (goal of the test)
         model: 'mail.channel', // expected value to link message to channel
@@ -53,7 +40,7 @@ QUnit.test('notification group basic layout', async function (assert) {
         res_model_name: "Channel", // random res model name, will be asserted in the test
     });
     // failure that is expected to be used in the test
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 11, // id of the related message
         notification_status: 'exception', // necessary value to have a failure
         notification_type: 'email', // expected failure type for email message
@@ -116,7 +103,7 @@ QUnit.test('mark as read', async function (assert) {
     assert.expect(6);
 
     // message that is expected to have a failure
-    this.data['mail.message'].records.push({
+    this.serverData.models['mail.message'].records.push({
         id: 11, // random unique id, will be used to link failure to message
         message_type: 'email', // message must be email (goal of the test)
         model: 'mail.channel', // expected value to link message to channel
@@ -124,7 +111,7 @@ QUnit.test('mark as read', async function (assert) {
         res_model_name: "Channel", // random res model name, will be asserted in the test
     });
     // failure that is expected to be used in the test
-    this.data['mail.notification'].records.push({
+    this.serverData.models['mail.notification'].records.push({
         mail_message_id: 11, // id of the related message
         notification_status: 'exception', // necessary value to have a failure
         notification_type: 'email', // expected failure type for email message
@@ -148,7 +135,7 @@ QUnit.test('mark as read', async function (assert) {
             "action should have the group notification length as unread_counter"
         );
     });
-    await this.start({ env: { bus } });
+    await this.start({ legacyEnv: { bus } });
     await this.createNotificationListComponent();
     assert.containsOnce(
         document.body,
@@ -168,7 +155,7 @@ QUnit.test('grouped notifications by document', async function (assert) {
     // notification should group all those failures.
     assert.expect(5);
 
-    this.data['mail.message'].records.push(
+    this.serverData.models['mail.message'].records.push(
         // first message that is expected to have a failure
         {
             id: 11, // random unique id, will be used to link failure to message
@@ -186,7 +173,7 @@ QUnit.test('grouped notifications by document', async function (assert) {
             res_model_name: "Partner", // same related model name for consistency
         }
     );
-    this.data['mail.notification'].records.push(
+    this.serverData.models['mail.notification'].records.push(
         // first failure that is expected to be used in the test
         {
             mail_message_id: 11, // id of the related first message
@@ -240,7 +227,7 @@ QUnit.test('grouped notifications by document model', async function (assert) {
     // document model.
     assert.expect(12);
 
-    this.data['mail.message'].records.push(
+    this.serverData.models['mail.message'].records.push(
         // first message that is expected to have a failure
         {
             id: 11, // random unique id, will be used to link failure to message
@@ -258,7 +245,7 @@ QUnit.test('grouped notifications by document model', async function (assert) {
             res_model_name: "Partner", // same related model name for consistency
         }
     );
-    this.data['mail.notification'].records.push(
+    this.serverData.models['mail.notification'].records.push(
         // first failure that is expected to be used in the test
         {
             mail_message_id: 11, // id of the related first message
@@ -312,7 +299,7 @@ QUnit.test('grouped notifications by document model', async function (assert) {
         );
     });
 
-    await this.start({ env: { bus } });
+    await this.start({ legacyEnv: { bus } });
     await this.createNotificationListComponent();
 
     assert.containsOnce(
@@ -343,8 +330,8 @@ QUnit.test('different mail.channel are not grouped', async function (assert) {
     // they are linked to different channels, even though the model is the same.
     assert.expect(6);
 
-    this.data['mail.channel'].records.push({ id: 31 }, { id: 32 });
-    this.data['mail.message'].records.push(
+    this.serverData.models['mail.channel'].records.push({ id: 31 }, { id: 32 });
+    this.serverData.models['mail.message'].records.push(
         // first message that is expected to have a failure
         {
             id: 11, // random unique id, will be used to link failure to message
@@ -362,7 +349,7 @@ QUnit.test('different mail.channel are not grouped', async function (assert) {
             res_model_name: "Channel", // same related model name for consistency
         }
     );
-    this.data['mail.notification'].records.push(
+    this.serverData.models['mail.notification'].records.push(
         // first failure that is expected to be used in the test
         {
             mail_message_id: 11, // id of the related first message
@@ -417,7 +404,7 @@ QUnit.test('different mail.channel are not grouped', async function (assert) {
 QUnit.test('multiple grouped notifications by document model, sorted by the most recent message of each group', async function (assert) {
     assert.expect(9);
 
-    this.data['mail.message'].records.push(
+    this.serverData.models['mail.message'].records.push(
         // first message that is expected to have a failure
         {
             id: 11, // random unique id, will be used to link failure to message
@@ -435,7 +422,7 @@ QUnit.test('multiple grouped notifications by document model, sorted by the most
             res_model_name: "Company", // random related model name
         }
     );
-    this.data['mail.notification'].records.push(
+    this.serverData.models['mail.notification'].records.push(
         // first failure that is expected to be used in the test
         {
             mail_message_id: 11, // id of the related first message
@@ -503,7 +490,7 @@ QUnit.test('multiple grouped notifications by document model, sorted by the most
 QUnit.test('non-failure notifications are ignored', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.message'].records.push(
+    this.serverData.models['mail.message'].records.push(
         // message that is expected to have a notification
         {
             id: 11, // random unique id, will be used to link failure to message
@@ -512,7 +499,7 @@ QUnit.test('non-failure notifications are ignored', async function (assert) {
             res_id: 31, // random unique id, useful to link failure to message
         }
     );
-    this.data['mail.notification'].records.push(
+    this.serverData.models['mail.notification'].records.push(
         // notification that is expected to be used in the test
         {
             mail_message_id: 11, // id of the related first message

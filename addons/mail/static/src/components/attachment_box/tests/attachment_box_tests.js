@@ -2,13 +2,11 @@
 
 import { insert } from '@mail/model/model_field_command';
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
     dragenterFiles,
     dropFiles,
-    start,
 } from '@mail/utils/test_utils';
 
 import { file } from 'web.test_utils';
@@ -20,34 +18,23 @@ QUnit.module('components', {}, function () {
 QUnit.module('attachment_box', {}, function () {
 QUnit.module('attachment_box_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createAttachmentBoxComponent = async (thread, otherProps) => {
             const props = Object.assign({ threadLocalId: thread.localId }, otherProps);
             await createRootMessagingComponent(this, "AttachmentBox", {
                 props,
-                target: this.widget.el,
+                target: this.webClient.el,
             });
         };
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('base empty rendering', async function (assert) {
     assert.expect(4);
 
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -77,7 +64,7 @@ QUnit.test('base empty rendering', async function (assert) {
 QUnit.test('base non-empty rendering', async function (assert) {
     assert.expect(6);
 
-    this.data['ir.attachment'].records.push(
+    this.serverData.models['ir.attachment'].records.push(
         {
             mimetype: 'text/plain',
             name: 'Blah.txt',
@@ -91,14 +78,14 @@ QUnit.test('base non-empty rendering', async function (assert) {
             res_model: 'res.partner',
         }
     );
-    await this.start({
+    const { messaging } = await this.start({
         async mockRPC(route, args) {
             if (route.includes('ir.attachment/search_read')) {
                 assert.step('ir.attachment/search_read');
             }
         },
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -133,8 +120,8 @@ QUnit.test('base non-empty rendering', async function (assert) {
 QUnit.test('attachment box: drop attachments', async function (assert) {
     assert.expect(5);
 
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -207,8 +194,8 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
 QUnit.test('view attachments', async function (assert) {
     assert.expect(7);
 
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].create({
         attachments: [
             insert({
                 id: 143,
@@ -224,7 +211,7 @@ QUnit.test('view attachments', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    const firstAttachment = this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 143 });
+    const firstAttachment = messaging.models['mail.attachment'].findFromIdentifyingData({ id: 143 });
     await this.createAttachmentBoxComponent(thread);
 
     await afterNextRender(() =>
@@ -281,8 +268,8 @@ QUnit.test('view attachments', async function (assert) {
 QUnit.test('remove attachment should ask for confirmation', async function (assert) {
     assert.expect(5);
 
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].create({
         attachments: insert({
             id: 143,
             mimetype: 'text/plain',

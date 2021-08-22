@@ -1,35 +1,18 @@
 /** @odoo-module **/
 
 import { create, clear } from '@mail/model/model_field_command';
-import {
-    afterEach,
-    beforeEach,
-    start,
-} from '@mail/utils/test_utils';
+import { beforeEach } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('model', {}, function () {
 QUnit.module('model_field_command', {}, function () {
-QUnit.module('clear_tests.js', {
-    beforeEach() {
-        beforeEach(this);
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
-    },
-});
+QUnit.module('clear_tests.js', { beforeEach });
+
 QUnit.test('clear: should set attribute field undefined if there is no default value', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const task = this.messaging.models['test.task'].create({
+    const { messaging } = await this.start();
+    const task = messaging.models['test.task'].create({
         id: 1,
         title: 'test title 1',
     });
@@ -44,8 +27,8 @@ QUnit.test('clear: should set attribute field undefined if there is no default v
 QUnit.test('clear: should set attribute field the default value', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const task = this.messaging.models['test.task'].create({
+    const { messaging } = await this.start();
+    const task = messaging.models['test.task'].create({
         id: 1,
         difficulty: 5,
     });
@@ -59,13 +42,14 @@ QUnit.test('clear: should set attribute field the default value', async function
 
 QUnit.test('clear: should set x2one field undefined if no default value is given', async function (assert) {
     assert.expect(2);
-    await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({
+    const { messaging } = await this.start();
+
+    const contact = messaging.models['test.contact'].create({
         id: 10,
         address: create({ id: 20 }),
     });
-    const address = this.messaging.models['test.address'].findFromIdentifyingData({ id: 20 });
+    const address = messaging.models['test.address'].findFromIdentifyingData({ id: 20 });
     contact.update({ address: clear() });
     assert.strictEqual(
         contact.address,
@@ -81,9 +65,10 @@ QUnit.test('clear: should set x2one field undefined if no default value is given
 
 QUnit.test('clear: should set x2one field the default value', async function (assert) {
     assert.expect(1);
-    await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({
+    const { messaging } = await this.start();
+
+    const contact = messaging.models['test.contact'].create({
         favorite: create({ description: 'pingpong' }),
     });
     contact.update({ favorite: clear() });
@@ -96,13 +81,14 @@ QUnit.test('clear: should set x2one field the default value', async function (as
 
 QUnit.test('clear: should set x2many field empty array if no default value is given', async function (assert) {
     assert.expect(2);
-    await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({
+    const { messaging } = await this.start();
+
+    const contact = messaging.models['test.contact'].create({
         id: 10,
         tasks: create({ id: 20 }),
     });
-    const task = this.messaging.models['test.task'].findFromIdentifyingData({ id:20 });
+    const task = messaging.models['test.task'].findFromIdentifyingData({ id: 20 });
     contact.update({ tasks: clear() });
     assert.ok(
         contact.tasks instanceof Array &&
@@ -118,14 +104,15 @@ QUnit.test('clear: should set x2many field empty array if no default value is gi
 
 QUnit.test('clear: should set x2many field the default value', async function (assert) {
     assert.expect(1);
-    await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({
+    const { messaging } = await this.start();
+
+    const contact = messaging.models['test.contact'].create({
         id: 10,
         hobbies: [
             create({ description: 'basketball' }),
             create({ description: 'running' }),
-            create({ description: 'photographing'})
+            create({ description: 'photographing' })
         ],
     });
     contact.update({ hobbies: clear() });

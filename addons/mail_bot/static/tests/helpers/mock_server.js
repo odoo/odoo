@@ -10,7 +10,7 @@ MockServer.include({
     /**
      * @override
      */
-    async _performRpc(route, args) {
+    async _performRPC(route, args) {
         if (args.model === 'mail.channel' && args.method === 'init_odoobot') {
             return this._mockMailChannelInitOdooBot();
         }

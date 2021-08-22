@@ -159,11 +159,11 @@ patch(MockServer.prototype, "mail", {
             return this._mockMailChannelExecuteCommandWho(args);
         }
         if (args.model === 'mail.channel' && args.method === 'message_post') {
-            const id = args.args[0];
+            const ids = args.args[0];
             const kwargs = args.kwargs;
             const context = kwargs.context;
             delete kwargs.context;
-            return this._mockMailChannelMessagePost(id, kwargs, context);
+            return this._mockMailChannelMessagePost(ids, kwargs, context);
         }
         if (args.model === 'mail.channel' && args.method === 'notify_typing') {
             const ids = args.args[0];
@@ -277,7 +277,7 @@ patch(MockServer.prototype, "mail", {
         const body = message_content;
         // ideally should be posted with mail_create_nosubscribe=True
         return this._mockMailChannelMessagePost(
-            mailChannel.id,
+            [mailChannel.id],
             {
                 author_id,
                 email_from,
@@ -909,14 +909,14 @@ patch(MockServer.prototype, "mail", {
      * Simulates `message_post` on `mail.channel`.
      *
      * @private
-     * @param {integer} id
+     * @param {integer[]} id
      * @param {Object} kwargs
      * @param {Object} [context]
      * @returns {integer|false}
      */
-    _mockMailChannelMessagePost(id, kwargs, context) {
+    _mockMailChannelMessagePost(ids, kwargs, context) {
         const message_type = kwargs.message_type || 'notification';
-        const channel = this.getRecords('mail.channel', [['id', '=', id]])[0];
+        const channel = this.getRecords('mail.channel', [['id', 'in', ids]])[0];
         if (channel.channel_type !== 'channel' && !channel.is_pinned) {
             // channel.partner not handled here for simplicity
             this.mockWrite('mail.channel', [
@@ -926,7 +926,7 @@ patch(MockServer.prototype, "mail", {
         }
         const messageId = this._mockMailThreadMessagePost(
             'mail.channel',
-            [id],
+            ids,
             Object.assign(kwargs, {
                 message_type,
             }),
@@ -1764,7 +1764,7 @@ patch(MockServer.prototype, "mail", {
             partner_root: this._mockResPartnerMailPartnerFormat([this.data.partnerRootId]).get(this.data.partnerRootId),
             public_partners: [...this._mockResPartnerMailPartnerFormat([this.data.publicPartnerId]).values()],
             shortcodes: this.getRecords('mail.shortcode', []),
-            starred_counter: this.getRecords('mail.message', [['starred_partner_ids', 'in', user.partner_id]]).length,
+            starred_counter: this.getRecords('mail.message', [['starred_partner_ids', 'in', [user.partner_id]]]).length,
         };
     },
 });

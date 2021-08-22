@@ -1,38 +1,21 @@
 /** @odoo-module **/
 
 import { create, insert } from '@mail/model/model_field_command';
-import {
-    afterEach,
-    beforeEach,
-    start,
-} from '@mail/utils/test_utils';
+import { beforeEach } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('model', {}, function () {
 QUnit.module('model_field_command', {}, function () {
-QUnit.module('insert_tests.js', {
-    beforeEach() {
-        beforeEach(this);
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
-    },
-});
+QUnit.module('insert_tests.js', { beforeEach });
 
 QUnit.test('insert: should create and link a new record for an empty x2one field', async function (assert) {
     assert.expect(2);
-    await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({ id: 10 });
+    const { messaging } = await this.start();
+
+    const contact = messaging.models['test.contact'].create({ id: 10 });
     contact.update({ address: insert({ id: 10 }) });
-    const address = this.messaging.models['test.address'].findFromIdentifyingData({ id: 10 });
+    const address = messaging.models['test.address'].findFromIdentifyingData({ id: 10 });
     assert.strictEqual(
         contact.address,
         address,
@@ -47,15 +30,16 @@ QUnit.test('insert: should create and link a new record for an empty x2one field
 
 QUnit.test('insert: should create and replace a new record for a non-empty x2one field', async function (assert) {
     assert.expect(3);
-    await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({
+    const { messaging } = await this.start();
+
+    const contact = messaging.models['test.contact'].create({
         id: 10,
         address: create({ id: 10 }),
     });
-    const address10 = this.messaging.models['test.address'].findFromIdentifyingData({ id: 10 });
+    const address10 = messaging.models['test.address'].findFromIdentifyingData({ id: 10 });
     contact.update({ address: insert({ id: 20 }) });
-    const address20 = this.messaging.models['test.address'].findFromIdentifyingData({ id: 20 });
+    const address20 = messaging.models['test.address'].findFromIdentifyingData({ id: 20 });
     assert.strictEqual(
         contact.address,
         address20,
@@ -75,16 +59,17 @@ QUnit.test('insert: should create and replace a new record for a non-empty x2one
 
 QUnit.test('insert: should update the existing record for an x2one field', async function (assert) {
     assert.expect(2);
-    await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({
+    const { messaging } = await this.start();
+
+    const contact = messaging.models['test.contact'].create({
         id: 10,
         address: create({
             id: 10,
             addressInfo: 'address 10',
         }),
     });
-    const address10 = this.messaging.models['test.address'].findFromIdentifyingData({ id: 10 });
+    const address10 = messaging.models['test.address'].findFromIdentifyingData({ id: 10 });
     contact.update({
         address: insert({
             id: 10,
@@ -105,11 +90,12 @@ QUnit.test('insert: should update the existing record for an x2one field', async
 
 QUnit.test('insert: should create and link a new record for an x2many field', async function (assert) {
     assert.expect(3);
-    await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({ id: 10 });
+    const { messaging } = await this.start();
+
+    const contact = messaging.models['test.contact'].create({ id: 10 });
     contact.update({ tasks: insert({ id: 10 }) });
-    const task = this.messaging.models['test.task'].findFromIdentifyingData({ id: 10 });
+    const task = messaging.models['test.task'].findFromIdentifyingData({ id: 10 });
     assert.strictEqual(
         contact.tasks.length,
         1,
@@ -129,15 +115,16 @@ QUnit.test('insert: should create and link a new record for an x2many field', as
 
 QUnit.test('insert: should create and add a new record for an x2many field', async function (assert) {
     assert.expect(4);
-    await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({
+    const { messaging } = await this.start();
+
+    const contact = messaging.models['test.contact'].create({
         id: 10,
         tasks: create({ id: 10 }),
     });
-    const task10 = this.messaging.models['test.task'].findFromIdentifyingData({ id: 10 });
+    const task10 = messaging.models['test.task'].findFromIdentifyingData({ id: 10 });
     contact.update({ tasks: insert({ id: 20 }) });
-    const task20 = this.messaging.models['test.task'].findFromIdentifyingData({ id: 20 });
+    const task20 = messaging.models['test.task'].findFromIdentifyingData({ id: 20 });
     assert.strictEqual(
         contact.tasks.length,
         2,
@@ -162,16 +149,17 @@ QUnit.test('insert: should create and add a new record for an x2many field', asy
 
 QUnit.test('insert: should update existing records for an x2many field', async function (assert) {
     assert.expect(3);
-    await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({
+    const { messaging } = await this.start();
+
+    const contact = messaging.models['test.contact'].create({
         id: 10,
         tasks: create({
             id: 10,
             title: 'task 10',
         }),
     });
-    const task = this.messaging.models['test.task'].findFromIdentifyingData({ id: 10 });
+    const task = messaging.models['test.task'].findFromIdentifyingData({ id: 10 });
     contact.update({
         tasks: insert({
             id: 10,

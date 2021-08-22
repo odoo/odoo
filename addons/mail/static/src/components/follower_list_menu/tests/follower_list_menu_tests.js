@@ -2,11 +2,9 @@
 
 import { insert, link } from '@mail/model/model_field_command';
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
-    start,
 } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
@@ -16,34 +14,23 @@ QUnit.module('components', {}, function () {
 QUnit.module('follower_list_menu', {}, function () {
 QUnit.module('follower_list_menu_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createFollowerListMenuComponent = async (thread, otherProps = {}) => {
             const props = Object.assign({ threadLocalId: thread.localId }, otherProps);
             await createRootMessagingComponent(this, "FollowerListMenu", {
                 props,
-                target: this.widget.el,
+                target: this.webClient.el,
             });
         };
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -79,8 +66,8 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(5);
 
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -142,14 +129,14 @@ QUnit.test('click on "add followers" button', async function (assert) {
             "ir.actions.act_window",
             "The 'add followers' action should be of type 'ir.actions.act_window'"
         );
-        const partner = this.data['res.partner'].records.find(
+        const partner = this.serverData.models['res.partner'].records.find(
             partner => partner.id === payload.action.context.default_res_id
         );
         partner.message_follower_ids.push(1);
         payload.options.on_close();
     });
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.followers'].records.push({
+    this.serverData.models['res.partner'].records.push({ id: 100 });
+    this.serverData.models['mail.followers'].records.push({
         partner_id: 42,
         email: "bla@bla.bla",
         id: 1,
@@ -159,10 +146,10 @@ QUnit.test('click on "add followers" button', async function (assert) {
         res_id: 100,
         res_model: 'res.partner',
     });
-    await this.start({
-        env: { bus },
+    const { messaging } = await this.start({
+        legacyEnv: { bus },
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -233,8 +220,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
 QUnit.test('click on remove follower', async function (assert) {
     assert.expect(7);
 
-    const self = this;
-    await this.start({
+    const { messaging } = await this.start({
         async mockRPC(route, args) {
             if (route.includes('message_unsubscribe')) {
                 assert.step('message_unsubscribe');
@@ -245,24 +231,24 @@ QUnit.test('click on remove follower', async function (assert) {
                 );
                 assert.deepEqual(
                     args.kwargs.partner_ids,
-                    [self.messaging.currentPartner.id],
+                    [messaging.currentPartner.id],
                     "message_unsubscribe should be called with right partner ids"
                 );
             }
         },
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    await this.messaging.models['mail.follower'].create({
+    await messaging.models['mail.follower'].create({
         followedThread: link(thread),
         id: 2,
         isActive: true,
         isEditable: true,
         partner: insert({
             email: "bla@bla.bla",
-            id: this.messaging.currentPartner.id,
+            id: messaging.currentPartner.id,
             name: "François Perusse",
         }),
     });

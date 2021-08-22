@@ -1,12 +1,10 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
     nextAnimationFrame,
-    start,
 } from '@mail/utils/test_utils';
 
 import { makeTestPromise } from 'web.test_utils';
@@ -16,36 +14,24 @@ QUnit.module('components', {}, function () {
 QUnit.module('chatter_topbar', {}, function () {
 QUnit.module('chatter_topbar_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createChatterTopbarComponent = async (chatter, otherProps) => {
             const props = Object.assign({ chatterLocalId: chatter.localId }, otherProps);
             await createRootMessagingComponent(this, "ChatterTopbar", {
                 props,
-                target: this.widget.el,
+                target: this.webClient.el,
             });
         };
-
-        this.start = async (params = {}) => {
-            const { advanceTime, env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-            return { advanceTime };
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('base rendering', async function (assert) {
     assert.expect(8);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    this.serverData.models['res.partner'].records.push({ id: 100 });
+    const { messaging } = await this.start();
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -96,8 +82,8 @@ QUnit.test('base rendering', async function (assert) {
 QUnit.test('base disabled rendering', async function (assert) {
     assert.expect(8);
 
-    await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const { messaging } = await this.start();
+    const chatter = messaging.models['mail.chatter'].create({
         threadModel: 'res.partner',
     });
     await this.createChatterTopbarComponent(chatter);
@@ -142,8 +128,8 @@ QUnit.test('base disabled rendering', async function (assert) {
 QUnit.test('attachment loading is delayed', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    const { advanceTime } = await this.start({
+    this.serverData.models['res.partner'].records.push({ id: 100 });
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
         loadingBaseDelayDuration: 100,
         async mockRPC(route) {
@@ -152,7 +138,7 @@ QUnit.test('attachment loading is delayed', async function (assert) {
             }
         }
     });
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -185,15 +171,15 @@ QUnit.test('attachment loading is delayed', async function (assert) {
 QUnit.test('attachment counter while loading attachments', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    await this.start({
+    this.serverData.models['res.partner'].records.push({ id: 100 });
+    const { messaging } = await this.start({
         async mockRPC(route) {
             if (route.includes('ir.attachment/search_read')) {
                 await makeTestPromise(); // simulate long loading
             }
         }
     });
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -224,16 +210,16 @@ QUnit.test('attachment counter while loading attachments', async function (asser
 QUnit.test('attachment counter transition when attachments become loaded)', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({ id: 100 });
+    this.serverData.models['res.partner'].records.push({ id: 100 });
     const attachmentPromise = makeTestPromise();
-    await this.start({
+    const { messaging } = await this.start({
         async mockRPC(route) {
             if (route.includes('ir.attachment/search_read')) {
                 await attachmentPromise;
             }
         },
     });
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -281,9 +267,9 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
 QUnit.test('attachment counter without attachments', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    this.serverData.models['res.partner'].records.push({ id: 100 });
+    const { messaging } = await this.start();
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -314,8 +300,8 @@ QUnit.test('attachment counter without attachments', async function (assert) {
 QUnit.test('attachment counter with attachments', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['ir.attachment'].records.push(
+    this.serverData.models['res.partner'].records.push({ id: 100 });
+    this.serverData.models['ir.attachment'].records.push(
         {
             mimetype: 'text/plain',
             name: 'Blah.txt',
@@ -329,8 +315,8 @@ QUnit.test('attachment counter with attachments', async function (assert) {
             res_model: 'res.partner',
         }
     );
-    await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const { messaging } = await this.start();
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -361,9 +347,9 @@ QUnit.test('attachment counter with attachments', async function (assert) {
 QUnit.test('composer state conserved when clicking on another topbar button', async function (assert) {
     assert.expect(8);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    this.serverData.models['res.partner'].records.push({ id: 100 });
+    const { messaging } = await this.start();
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -421,12 +407,12 @@ QUnit.test('composer state conserved when clicking on another topbar button', as
 QUnit.test('rendering with multiple partner followers', async function (assert) {
     assert.expect(7);
 
-    await this.start();
-    this.data['res.partner'].records.push({
+    const { messaging } = await this.start();
+    this.serverData.models['res.partner'].records.push({
         id: 100,
         message_follower_ids: [1, 2],
     });
-    this.data['mail.followers'].records.push(
+    this.serverData.models['mail.followers'].records.push(
         {
             // simulate real return from RPC
             id: 1,
@@ -443,7 +429,7 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
             res_model: 'res.partner',
         },
     );
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const chatter = messaging.models['mail.chatter'].create({
         followerIds: [1, 2],
         threadId: 100,
         threadModel: 'res.partner',
@@ -496,9 +482,9 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
 QUnit.test('log note/send message switching', async function (assert) {
     assert.expect(8);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    this.serverData.models['res.partner'].records.push({ id: 100 });
+    const { messaging } = await this.start();
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -556,9 +542,9 @@ QUnit.test('log note/send message switching', async function (assert) {
 QUnit.test('log note toggling', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    this.serverData.models['res.partner'].records.push({ id: 100 });
+    const { messaging } = await this.start();
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -596,9 +582,9 @@ QUnit.test('log note toggling', async function (assert) {
 QUnit.test('send message toggling', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    this.serverData.models['res.partner'].records.push({ id: 100 });
+    const { messaging } = await this.start();
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });

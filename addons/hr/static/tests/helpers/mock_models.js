@@ -13,9 +13,9 @@ patch(MockModels, 'hr/static/tests/helpers/mock_models.js', {
     /**
      * @override
      */
-    generateData() {
+    generateServerData() {
         const data = this._super(...arguments);
-        Object.assign(data, {
+        Object.assign(data.models, {
             'hr.employee.public': {
                 fields: {
                     display_name: { string: "Name", type: "char" },

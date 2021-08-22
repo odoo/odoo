@@ -2,11 +2,9 @@
 
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     nextAnimationFrame,
-    start,
 } from '@mail/utils/test_utils';
 
 import config from 'web.config';
@@ -18,41 +16,9 @@ const { triggerEvent } = dom;
 QUnit.module('mail', {}, function () {
 QUnit.module('widgets', {}, function () {
 QUnit.module('form_renderer', {}, function () {
-QUnit.module('form_renderer_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+QUnit.module('form_renderer_tests.js', { beforeEach });
 
-        // FIXME archs could be removed once task-2248306 is done
-        // The mockServer will try to get the list view
-        // of every relational fields present in the main view.
-        // In the case of mail fields, we don't really need them,
-        // but they still need to be defined.
-        this.createView = async (viewParams, ...args) => {
-            await afterNextRender(async () => {
-                const viewArgs = Object.assign(
-                    {
-                        archs: {
-                            'mail.activity,false,list': '<tree/>',
-                            'mail.followers,false,list': '<tree/>',
-                            'mail.message,false,list': '<tree/>',
-                        },
-                    },
-                    viewParams,
-                );
-                const { afterEvent, env, widget } = await start(viewArgs, ...args);
-                this.afterEvent = afterEvent;
-                this.env = env;
-                this.widget = widget;
-            });
-        };
-    },
-    afterEach() {
-        afterEach(this);
-    },
-});
-
-QUnit.skip('[technical] spinner when messaging is not created', async function (assert) {
-    // skip: need to use start / create web client to generate the view in new env
+QUnit.test('[technical] spinner when messaging is not created', async function (assert) {
     /**
      * Creation of messaging in env is async due to generation of models being
      * async. Generation of models is async because it requires parsing of all
@@ -63,28 +29,15 @@ QUnit.skip('[technical] spinner when messaging is not created', async function (
      */
     assert.expect(3);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "second partner",
         id: 12,
     });
-    await this.createView({
-        data: this.data,
-        hasView: true,
+    const { openResPartnerFormView } = await this.start({
         messagingBeforeCreationDeferred: makeDeferred(), // block messaging creation
         waitUntilMessagingCondition: 'none',
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter"></div>
-            </form>
-        `,
-        res_id: 12,
     });
+    await openResPartnerFormView({ partnerId: 12 });
     assert.containsOnce(
         document.body,
         '.o_ChatterContainer',
@@ -102,8 +55,7 @@ QUnit.skip('[technical] spinner when messaging is not created', async function (
     );
 });
 
-QUnit.skip('[technical] keep spinner on transition from messaging non-created to messaging created (and non-initialized)', async function (assert) {
-    // skip: need to use start / create web client to generate the view in new env
+QUnit.test('[technical] keep spinner on transition from messaging non-created to messaging created (and non-initialized)', async function (assert) {
     /**
      * Creation of messaging in env is async due to generation of models being
      * async. Generation of models is async because it requires parsing of all
@@ -115,35 +67,21 @@ QUnit.skip('[technical] keep spinner on transition from messaging non-created to
     assert.expect(4);
 
     const messagingBeforeCreationDeferred = makeDeferred();
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "second partner",
         id: 12,
     });
-    await this.createView({
-        data: this.data,
-        hasView: true,
+    const { openResPartnerFormView } = await this.start({
         messagingBeforeCreationDeferred,
         async mockRPC(route, args) {
-            const _super = this._super.bind(this, ...arguments); // limitation of class.js
             if (route === '/mail/init_messaging') {
                 await new Promise(() => {}); // simulate messaging never initialized
             }
-            return _super();
         },
         waitUntilMessagingCondition: 'none',
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter"></div>
-            </form>
-        `,
         res_id: 12,
     });
+    await openResPartnerFormView({ partnerId: 12 });
     assert.strictEqual(
         document.querySelector('.o_ChatterContainer').textContent,
         "Please wait...",
@@ -170,38 +108,23 @@ QUnit.skip('[technical] keep spinner on transition from messaging non-created to
     );
 });
 
-QUnit.skip('spinner when messaging is created but not initialized', async function (assert) {
-    // skip: need to use start / create web client to generate the view in new env
+QUnit.test('spinner when messaging is created but not initialized', async function (assert) {
     assert.expect(3);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "second partner",
         id: 12,
     });
-    await this.createView({
-        data: this.data,
-        hasView: true,
+    const { openResPartnerFormView } = await this.start({
         async mockRPC(route, args) {
-            const _super = this._super.bind(this, ...arguments); // limitation of class.js
             if (route === '/mail/init_messaging') {
                 await new Promise(() => {}); // simulate messaging never initialized
             }
-            return _super();
         },
         waitUntilMessagingCondition: 'created',
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter"></div>
-            </form>
-        `,
         res_id: 12,
     });
+    await openResPartnerFormView({ partnerId: 12 });
     assert.containsOnce(
         document.body,
         '.o_ChatterContainer',
@@ -219,39 +142,24 @@ QUnit.skip('spinner when messaging is created but not initialized', async functi
     );
 });
 
-QUnit.skip('transition non-initialized messaging to initialized messaging: display spinner then chatter', async function (assert) {
-    // skip: need to use start / create web client to generate the view in new env
+QUnit.test('transition non-initialized messaging to initialized messaging: display spinner then chatter', async function (assert) {
     assert.expect(3);
 
     const messagingBeforeInitializationDeferred = makeDeferred();
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "second partner",
         id: 12,
     });
-    await this.createView({
-        data: this.data,
-        hasView: true,
+    const { openResPartnerFormView } = await this.start({
         async mockRPC(route, args) {
-            const _super = this._super.bind(this, ...arguments); // limitation of class.js
             if (route === '/mail/init_messaging') {
                 await messagingBeforeInitializationDeferred;
             }
-            return _super();
         },
         waitUntilMessagingCondition: 'created',
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter"></div>
-            </form>
-        `,
         res_id: 12,
     });
+    await openResPartnerFormView({ partnerId: 12 });
     assert.strictEqual(
         document.querySelector('.o_ChatterContainer').textContent,
         "Please wait...",
@@ -272,27 +180,12 @@ QUnit.skip('transition non-initialized messaging to initialized messaging: displ
     );
 });
 
-QUnit.skip('basic chatter rendering', async function (assert) {
-    // skip: need to use start / create web client to generate the view in new env
+QUnit.test('basic chatter rendering', async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({ display_name: "second partner", id: 12, });
-    await this.createView({
-        data: this.data,
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter"></div>
-            </form>
-        `,
-        res_id: 12,
-    });
+    this.serverData.models['res.partner'].records.push({ display_name: "second partner", id: 12, });
+    const { openResPartnerFormView } = await this.start();
+    await openResPartnerFormView({ partnerId: 12 });
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter`).length,
         1,
@@ -300,30 +193,20 @@ QUnit.skip('basic chatter rendering', async function (assert) {
     );
 });
 
-QUnit.skip('basic chatter rendering without followers', async function (assert) {
-    // skip: need to use start / create web client to generate the view in new env
+QUnit.test('basic chatter rendering without followers', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records.push({ display_name: "second partner", id: 12 });
-    await this.createView({
-        data: this.data,
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        `,
-        res_id: 12,
-    });
+    this.serverData.models['res.partner'].records.push({ display_name: "second partner", id: 12 });
+    this.serverData.views['res.partner,false,form'] = `
+        <form>
+            <div class="oe_chatter">
+                <field name="activity_ids"/>
+                <field name="message_ids"/>
+            </div>
+        </form>
+    `;
+    const { openResPartnerFormView } = await this.start();
+    await openResPartnerFormView({ partnerId: 12 });
     assert.containsOnce(
         document.body,
         '.o_Chatter',
@@ -356,30 +239,20 @@ QUnit.skip('basic chatter rendering without followers', async function (assert) 
     );
 });
 
-QUnit.skip('basic chatter rendering without activities', async function (assert) {
-    // skip: need to use start / create web client to generate the view in new env
+QUnit.test('basic chatter rendering without activities', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records.push({ display_name: "second partner", id: 12 });
-    await this.createView({
-        data: this.data,
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        `,
-        res_id: 12,
-    });
+    this.serverData.models['res.partner'].records.push({ display_name: "second partner", id: 12 });
+    this.serverData.views['res.partner,false,form'] = `
+        <form>
+            <div class="oe_chatter">
+                <field name="message_follower_ids"/>
+                <field name="message_ids"/>
+            </div>
+        </form>
+    `;
+    const { openResPartnerFormView } = await this.start();
+    await openResPartnerFormView({ partnerId: 12 });
     assert.containsOnce(
         document.body,
         '.o_Chatter',
@@ -412,30 +285,20 @@ QUnit.skip('basic chatter rendering without activities', async function (assert)
     );
 });
 
-QUnit.skip('basic chatter rendering without messages', async function (assert) {
-    // skip: need to use start / create web client to generate the view in new env
+QUnit.test('basic chatter rendering without messages', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records.push({ display_name: "second partner", id: 12 });
-    await this.createView({
-        data: this.data,
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
+    this.serverData.models['res.partner'].records.push({ display_name: "second partner", id: 12 });
+    this.serverData.views['res.partner,false,form'] = `
+        <form>
+            <div class="oe_chatter">
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
-                </div>
-            </form>
-        `,
-        res_id: 12,
-    });
+            </div>
+        </form>
+    `;
+    const { openResPartnerFormView } = await this.start();
+    await openResPartnerFormView({ partnerId: 12 });
     assert.containsOnce(
         document.body,
         '.o_Chatter',
@@ -469,48 +332,27 @@ QUnit.skip('basic chatter rendering without messages', async function (assert) {
 });
 
 QUnit.skip('chatter updating', async function (assert) {
-    // skip: need to use start / create web client to generate the view in new env
+    // skip: how to open the form with 2 records in the pager?
     assert.expect(1);
 
-    this.data['mail.message'].records.push({ body: "not empty", model: 'res.partner', res_id: 12 });
-    this.data['res.partner'].records.push(
+    this.serverData.models['res.partner'].records.push(
         { display_name: "first partner", id: 11 },
         { display_name: "second partner", id: 12 }
     );
-    await this.createView({
-        data: this.data,
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        res_id: 11,
-        viewOptions: {
-            ids: [11, 12],
-            index: 0,
+    const { afterEvent, openResPartnerFormView } = await this.start();
+    await afterNextRender(() => afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => openResPartnerFormView({ partnerId: 11 }, { ids: [11, 12] }),
+        message: "should wait until partner 11 thread loaded messages initially",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'res.partner' &&
+                threadViewer.thread.id === 11
+            );
         },
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        `,
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until partner 11 thread loaded messages initially",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'res.partner' &&
-                    threadViewer.thread.id === 11
-                );
-            },
-        }
-    });
-    await afterNextRender(() => this.afterEvent({
+    }));
+    await afterNextRender(() => afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: () => document.querySelector('.o_pager_next').click(),
         message: "should wait until partner 12 thread loaded messages after clicking on next",
@@ -529,30 +371,11 @@ QUnit.skip('chatter updating', async function (assert) {
     );
 });
 
-QUnit.skip('chatter should become enabled when creation done', async function (assert) {
-    // skip: need to use start / create web client to generate the view in new env
+QUnit.test('chatter should become enabled when creation done', async function (assert) {
     assert.expect(10);
 
-    await this.createView({
-        data: this.data,
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        `,
-        viewOptions: {
-            mode: 'edit',
-        },
-    });
+    const { openResPartnerFormView } = await this.start();
+    await openResPartnerFormView();
     assert.containsOnce(
         document.body,
         '.o_Chatter',
@@ -605,12 +428,11 @@ QUnit.skip('chatter should become enabled when creation done', async function (a
     );
 });
 
-QUnit.skip('read more/less links are not duplicated when switching from read to edit mode', async function (assert) {
-    // skip: need to use start / create web client to generate the view in new env
+QUnit.test('read more/less links are not duplicated when switching from read to edit mode', async function (assert) {
     assert.expect(5);
 
-    this.data['mail.message'].records.push({
-        author_id: 100,
+    this.serverData.models['mail.message'].records.push({
+        author_id: 2,
         // "data-o-mail-quote" added by server is intended to be compacted in read more/less blocks
         body: `
             <div>
@@ -628,32 +450,16 @@ QUnit.skip('read more/less links are not duplicated when switching from read to 
         model: 'res.partner',
         res_id: 2,
     });
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "Someone",
-        id: 100,
+        id: 2,
     });
-    await this.createView({
-        data: this.data,
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        res_id: 2,
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        `,
-        waitUntilEvent: {
-            eventName: 'o-component-message-read-more-less-inserted',
-            message: "should wait until read more/less is inserted initially",
-            predicate: ({ message }) => message.id === 1000,
-        },
+    const { afterEvent, openResPartnerFormView } = await this.start();
+    await afterEvent({
+        eventName: 'o-component-message-read-more-less-inserted',
+        func: () => openResPartnerFormView({ partnerId: 2 }),
+        message: "should wait until read more/less is inserted initially",
+        predicate: ({ message }) => message.id === 1000,
     });
     assert.containsOnce(
         document.body,
@@ -670,7 +476,7 @@ QUnit.skip('read more/less links are not duplicated when switching from read to 
         '.o_Message_readMoreLess',
         "there should be only one read more"
     );
-    await afterNextRender(() => this.afterEvent({
+    await afterNextRender(() => afterEvent({
         eventName: 'o-component-message-read-more-less-inserted',
         func: () => document.querySelector('.o_form_button_edit').click(),
         message: "should wait until read more/less is inserted after clicking on edit",
@@ -682,7 +488,7 @@ QUnit.skip('read more/less links are not duplicated when switching from read to 
         "there should still be only one read more after switching to edit mode"
     );
 
-    await afterNextRender(() => this.afterEvent({
+    await afterNextRender(() => afterEvent({
         eventName: 'o-component-message-read-more-less-inserted',
         func: () => document.querySelector('.o_form_button_cancel').click(),
         message: "should wait until read more/less is inserted after canceling edit",
@@ -695,12 +501,11 @@ QUnit.skip('read more/less links are not duplicated when switching from read to 
     );
 });
 
-QUnit.skip('read more links becomes read less after being clicked', async function (assert) {
-    // skip: need to use start / create web client to generate the view in new env
+QUnit.test('read more links becomes read less after being clicked', async function (assert) {
     assert.expect(6);
 
-    this.data['mail.message'].records = [{
-        author_id: 100,
+    this.serverData.models['mail.message'].records = [{
+        author_id: 2,
         // "data-o-mail-quote" added by server is intended to be compacted in read more/less blocks
         body: `
             <div>
@@ -718,32 +523,16 @@ QUnit.skip('read more links becomes read less after being clicked', async functi
         model: 'res.partner',
         res_id: 2,
     }];
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "Someone",
-        id: 100,
+        id: 2,
     });
-    await this.createView({
-        data: this.data,
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        res_id: 2,
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        `,
-        waitUntilEvent: {
-            eventName: 'o-component-message-read-more-less-inserted',
-            message: "should wait until read more/less is inserted initially",
-            predicate: ({ message }) => message.id === 1000,
-        },
+    const { afterEvent, openResPartnerFormView } = await this.start();
+    await afterEvent({
+        eventName: 'o-component-message-read-more-less-inserted',
+        func: () => openResPartnerFormView({ partnerId: 2 }),
+        message: "should wait until read more/less is inserted initially",
+        predicate: ({ message }) => message.id === 1000,
     });
     assert.containsOnce(
         document.body,
@@ -766,7 +555,7 @@ QUnit.skip('read more links becomes read less after being clicked', async functi
         "read more/less link should contain 'read more' as text"
     );
 
-    await afterNextRender(() => this.afterEvent({
+    await afterNextRender(() => afterEvent({
         eventName: 'o-component-message-read-more-less-inserted',
         func: () => document.querySelector('.o_form_button_edit').click(),
         message: "should wait until read more/less is inserted after clicking on edit",
@@ -787,10 +576,10 @@ QUnit.skip('read more links becomes read less after being clicked', async functi
 });
 
 QUnit.skip('Form view not scrolled when switching record', async function (assert) {
-    // skip: need to use start / create web client to generate the view in new env
+    // skip: need to have 2 records in pager, also need to adapt arch
     assert.expect(6);
 
-    this.data['res.partner'].records.push(
+    this.serverData.models['res.partner'].records.push(
         {
             id: 11,
             display_name: "Partner 1",
@@ -804,18 +593,12 @@ QUnit.skip('Form view not scrolled when switching record', async function (asser
 
     const messages = [...Array(60).keys()].map(id => {
         return {
-            model: 'res.partner',
             res_id: id % 2 ? 11 : 12,
         };
     });
-    this.data['mail.message'].records = messages;
+    this.serverData.models['mail.message'].records = messages;
 
-    await this.createView({
-        data: this.data,
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
+    const { openResPartnerFormView } = await this.start({
         arch: `
             <form string="Partners">
                 <sheet>
@@ -834,10 +617,11 @@ QUnit.skip('Form view not scrolled when switching record', async function (asser
         config: {
             device: { size_class: config.device.SIZES.LG },
         },
-        env: {
+        legacyEnv: {
             device: { size_class: config.device.SIZES.LG },
         },
     });
+    await openResPartnerFormView({ partnerId: 12 });
 
     const controllerContentEl = document.querySelector('.o_content');
 
@@ -884,52 +668,30 @@ QUnit.skip('Form view not scrolled when switching record', async function (asser
 });
 
 QUnit.skip('Attachments that have been unlinked from server should be visually unlinked from record', async function (assert) {
-    // skip: need to use start / create web client to generate the view in new env
+    // skip: need to have 2 records in pager
     // Attachments that have been fetched from a record at certain time and then
     // removed from the server should be reflected on the UI when the current
     // partner accesses this record again.
     assert.expect(2);
 
-    this.data['res.partner'].records.push(
+    this.serverData.models['res.partner'].records.push(
         { display_name: "Partner1", id: 11 },
         { display_name: "Partner2", id: 12 }
     );
-    this.data['ir.attachment'].records.push(
+    this.serverData.models['ir.attachment'].records.push(
         {
            id: 11,
            mimetype: 'text.txt',
            res_id: 11,
-           res_model: 'res.partner',
         },
         {
            id: 12,
            mimetype: 'text.txt',
            res_id: 11,
-           res_model: 'res.partner',
         }
     );
-    await this.createView({
-        data: this.data,
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        res_id: 11,
-        viewOptions: {
-            ids: [11, 12],
-            index: 0,
-        },
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        `,
-    });
+    const { openResPartnerFormView } = await this.start();
+    await openResPartnerFormView({ partnerId: 11 });
     assert.strictEqual(
         document.querySelector('.o_ChatterTopbar_buttonCount').textContent,
         '2',
@@ -942,7 +704,7 @@ QUnit.skip('Attachments that have been unlinked from server should be visually u
         document.querySelector('.o_pager_next').click()
     );
     // Simulate unlinking attachment 12 from Partner 1.
-    this.data['ir.attachment'].records.find(a => a.id === 11).res_id = 0;
+    this.serverData.models['ir.attachment'].records.find(a => a.id === 11).res_id = 0;
     await afterNextRender(() =>
         document.querySelector('.o_pager_previous').click()
     );
@@ -953,25 +715,12 @@ QUnit.skip('Attachments that have been unlinked from server should be visually u
     );
 });
 
-QUnit.skip('chatter just contains "creating a new record" message during the creation of a new record after having displayed a chatter for an existing record', async function (assert) {
-    // skip: need to use start / create web client to generate the view in new env
+QUnit.test('chatter just contains "creating a new record" message during the creation of a new record after having displayed a chatter for an existing record', async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({ id: 12 });
-    await this.createView({
-        data: this.data,
-        hasView: true,
-        View: FormView,
-        model: 'res.partner',
-        res_id: 12,
-        arch: `
-            <form>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        `,
-    });
+    this.serverData.models['res.partner'].records.push({ id: 12 });
+    const { openResPartnerFormView } = await this.start();
+    await openResPartnerFormView({ partnerId: 12 });
 
     await afterNextRender(() => {
         document.querySelector('.o_form_button_create').click();

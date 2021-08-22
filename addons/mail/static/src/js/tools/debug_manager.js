@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
-
 export function manageMessages({ action, component, env }) {
     const selectedIds = component.widget.getSelectedIds();
     if (!selectedIds.length) {
@@ -33,5 +31,3 @@ export function manageMessages({ action, component, env }) {
         sequence: 325,
     };
 }
-
-registry.category("debug").category("form").add("mail.manageMessages", manageMessages);

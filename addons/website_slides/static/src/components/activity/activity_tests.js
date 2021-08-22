@@ -3,10 +3,8 @@ odoo.define('website_slides/static/src/tests/activity_tests.js', function (requi
 
 const { insert } = require('@mail/model/model_field_command');
 const {
-    afterEach,
     beforeEach,
     createRootMessagingComponent,
-    start,
 } = require('@mail/utils/test_utils');
 
 QUnit.module('website_slides', {}, function () {
@@ -14,42 +12,31 @@ QUnit.module('components', {}, function () {
 QUnit.module('activity', {}, function () {
 QUnit.module('activity_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createActivityComponent = async activity => {
             await createRootMessagingComponent(this, "Activity", {
                 props: { activityLocalId: activity.localId },
-                target: this.widget.el,
+                target: this.webClient.el,
             });
         };
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('grant course access', async function (assert) {
     assert.expect(6);
 
-    await this.start({
+    const { messaging } = await this.start({
         async mockRPC(route, args) {
             if (args.method === 'action_grant_access') {
                 assert.strictEqual(args.args[0], 100);
                 assert.strictEqual(args.kwargs.partner_id, 5);
                 assert.step('access_grant');
+                return 'this should be part of the mock server';
             }
-            return this._super(...arguments);
         },
     });
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         id: 100,
         canWrite: true,
         thread: insert({
@@ -77,17 +64,17 @@ QUnit.test('grant course access', async function (assert) {
 QUnit.test('refuse course access', async function (assert) {
     assert.expect(6);
 
-    await this.start({
+    const { messaging } = await this.start({
         async mockRPC(route, args) {
             if (args.method === 'action_refuse_access') {
                 assert.strictEqual(args.args[0], 100);
                 assert.strictEqual(args.kwargs.partner_id, 5);
                 assert.step('access_refuse');
+                return 'this should be part of the mock server';
             }
-            return this._super(...arguments);
         },
     });
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         id: 100,
         canWrite: true,
         thread: insert({

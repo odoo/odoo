@@ -2,11 +2,9 @@
 
 import { insert, link } from '@mail/model/model_field_command';
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
-    start,
 } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -14,7 +12,7 @@ QUnit.module('components', {}, function () {
 QUnit.module('follower_subtype', {}, function () {
 QUnit.module('follower_subtype_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createFollowerSubtypeComponent = async ({ follower, followerSubtype }) => {
             const props = {
@@ -23,33 +21,22 @@ QUnit.module('follower_subtype_tests.js', {
             };
             await createRootMessagingComponent(this, "FollowerSubtype", {
                 props,
-                target: this.widget.el,
+                target: this.webClient.el,
             });
         };
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('simplest layout of a followed subtype', async function (assert) {
     assert.expect(5);
 
-    await this.start();
+    const { messaging } = await this.start();
 
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = this.messaging.models['mail.follower'].create({
+    const follower = messaging.models['mail.follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -59,7 +46,7 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
         isActive: true,
         isEditable: true,
     });
-    const followerSubtype = this.messaging.models['mail.follower_subtype'].create({
+    const followerSubtype = messaging.models['mail.follower_subtype'].create({
         id: 1,
         isDefault: true,
         isInternal: false,
@@ -103,13 +90,13 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
 QUnit.test('simplest layout of a not followed subtype', async function (assert) {
     assert.expect(5);
 
-    await this.start();
+    const { messaging } = await this.start();
 
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = this.messaging.models['mail.follower'].create({
+    const follower = messaging.models['mail.follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -119,7 +106,7 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
         isActive: true,
         isEditable: true,
     });
-    const followerSubtype = this.messaging.models['mail.follower_subtype'].create({
+    const followerSubtype = messaging.models['mail.follower_subtype'].create({
         id: 1,
         isDefault: true,
         isInternal: false,
@@ -160,13 +147,13 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
 QUnit.test('toggle follower subtype checkbox', async function (assert) {
     assert.expect(5);
 
-    await this.start();
+    const { messaging } = await this.start();
 
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = this.messaging.models['mail.follower'].create({
+    const follower = messaging.models['mail.follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -176,7 +163,7 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
         isActive: true,
         isEditable: true,
     });
-    const followerSubtype = this.messaging.models['mail.follower_subtype'].create({
+    const followerSubtype = messaging.models['mail.follower_subtype'].create({
         id: 1,
         isDefault: true,
         isInternal: false,

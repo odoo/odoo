@@ -1,8 +1,10 @@
 /** @odoo-module **/
 
-import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach } from '@mail/utils/test_utils';
 import throttle from '@mail/utils/throttle/throttle';
 import { nextTick } from '@mail/utils/utils';
+
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 
 const { ThrottleReinvokedError, ThrottleCanceledError } = throttle;
 
@@ -11,38 +13,28 @@ QUnit.module('utils', {}, function () {
 QUnit.module('throttle', {}, function () {
 QUnit.module('throttle_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
         this.throttles = [];
-
-        this.start = async (params = {}) => {
-            const { advanceTime, env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-            return { advanceTime };
-        };
-    },
-    afterEach() {
         // Important: tests should cleanly intercept cancelation errors that
         // may result from this teardown.
-        for (const t of this.throttles) {
-            t.clear();
-        }
-        afterEach(this);
+        registerCleanup(() => {
+            for (const t of this.throttles) {
+                t.clear();
+            }
+        });
     },
 });
 
 QUnit.test('single call', async function (assert) {
     assert.expect(6);
 
-    const { advanceTime } = await this.start({
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
     });
 
     let hasInvokedFunc = false;
     const throttledFunc = throttle(
-        this.messaging.browser,
+        messaging.browser,
         () => {
             hasInvokedFunc = true;
             return 'func_result';
@@ -84,13 +76,13 @@ QUnit.test('single call', async function (assert) {
 QUnit.test('2nd (throttled) call', async function (assert) {
     assert.expect(8);
 
-    const { advanceTime } = await this.start({
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
     });
 
     let funcCalledAmount = 0;
     const throttledFunc = throttle(
-        this.messaging.browser,
+        messaging.browser,
         () => {
             funcCalledAmount++;
             return `func_result_${funcCalledAmount}`;
@@ -143,13 +135,13 @@ QUnit.test('2nd (throttled) call', async function (assert) {
 QUnit.test('throttled call reinvocation', async function (assert) {
     assert.expect(11);
 
-    const { advanceTime } = await this.start({
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
     });
 
     let funcCalledAmount = 0;
     const throttledFunc = throttle(
-        this.messaging.browser,
+        messaging.browser,
         () => {
             funcCalledAmount++;
             return `func_result_${funcCalledAmount}`;
@@ -221,12 +213,12 @@ QUnit.test('throttled call reinvocation', async function (assert) {
 QUnit.test('flush throttled call', async function (assert) {
     assert.expect(9);
 
-    const { advanceTime } = await this.start({
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
     });
 
     const throttledFunc = throttle(
-        this.messaging.browser,
+        messaging.browser,
         () => {},
         1000,
     );
@@ -277,12 +269,12 @@ QUnit.test('flush throttled call', async function (assert) {
 QUnit.test('cancel throttled call', async function (assert) {
     assert.expect(10);
 
-    const { advanceTime } = await this.start({
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
     });
 
     const throttledFunc = throttle(
-        this.messaging.browser,
+        messaging.browser,
         () => {},
         1000,
         { silentCancelationErrors: false }
@@ -343,12 +335,12 @@ QUnit.test('cancel throttled call', async function (assert) {
 QUnit.test('clear throttled call', async function (assert) {
     assert.expect(9);
 
-    const { advanceTime } = await this.start({
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
     });
 
     const throttledFunc = throttle(
-        this.messaging.browser,
+        messaging.browser,
         () => {},
         1000,
         { silentCancelationErrors: false }

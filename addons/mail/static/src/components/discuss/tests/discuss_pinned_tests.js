@@ -1,51 +1,29 @@
 /** @odoo-module **/
 
-import {
-    afterEach,
-    afterNextRender,
-    beforeEach,
-    start,
-} from '@mail/utils/test_utils';
+import { afterNextRender, beforeEach } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss', {}, function () {
-QUnit.module('discuss_pinned_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+QUnit.module('discuss_pinned_tests.js', { beforeEach });
 
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                autoOpenDiscuss: true,
-                data: this.data,
-                hasDiscuss: true,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
-    },
-});
-
-QUnit.skip('sidebar: pinned channel 1: init with one pinned channel', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async function (assert) {
     assert.expect(2);
 
     // channel that is expected to be found in the sidebar
     // with a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20 });
-    await this.start();
+    this.serverData.models['mail.channel'].records.push({ id: 20 });
+    const { messaging, openDiscuss } = await this.start();
+    await openDiscuss();
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-local-id="${this.messaging.inbox.localId}"]`,
+        `.o_Discuss_thread[data-thread-local-id="${messaging.inbox.localId}"]`,
         "The Inbox is opened in discuss"
     );
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            messaging.models['mail.thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -54,16 +32,16 @@ QUnit.skip('sidebar: pinned channel 1: init with one pinned channel', async func
     );
 });
 
-QUnit.skip('sidebar: pinned channel 2: open pinned channel', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (assert) {
     assert.expect(1);
 
     // channel that is expected to be found in the sidebar
     // with a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20 });
-    await this.start();
+    this.serverData.models['mail.channel'].records.push({ id: 20 });
+    const { messaging, openDiscuss } = await this.start();
+    await openDiscuss();
 
-    const threadGeneral = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const threadGeneral = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -79,18 +57,17 @@ QUnit.skip('sidebar: pinned channel 2: open pinned channel', async function (ass
     );
 });
 
-QUnit.skip('sidebar: pinned channel 3: open pinned channel and unpin it', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async function (assert) {
     assert.expect(7);
 
     // channel that is expected to be found in the sidebar
     // with a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         id: 20,
         is_minimized: true,
         state: 'open',
     });
-    await this.start({
+    const { messaging, openDiscuss } = await this.start({
         async mockRPC(route, args) {
             if (args.method === 'action_unfollow') {
                 assert.step('action_unfollow');
@@ -103,8 +80,8 @@ QUnit.skip('sidebar: pinned channel 3: open pinned channel and unpin it', async 
             }
         },
     });
-
-    const threadGeneral = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    await openDiscuss();
+    const threadGeneral = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -129,29 +106,29 @@ QUnit.skip('sidebar: pinned channel 3: open pinned channel and unpin it', async 
         `.o_DiscussSidebarItem[data-thread-local-id="${threadGeneral.localId}"]`,
         "The channel must have been removed from discuss sidebar"
     );
-    assert.containsOnce(
-        document.body,
-        '.o_Discuss_noThread',
-        "should have no thread opened in discuss"
+    assert.strictEqual(
+        document.querySelector('.o_ThreadViewTopbar_threadName').textContent,
+        "Inbox",
+        "should have inbox opened in discuss"
     );
 });
 
-QUnit.skip('sidebar: unpin channel from bus', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     assert.expect(5);
 
     // channel that is expected to be found in the sidebar
     // with a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20 });
-    await this.start();
-    const threadGeneral = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    this.serverData.models['mail.channel'].records.push({ id: 20 });
+    const { messaging, openDiscuss } = await this.start();
+    await openDiscuss();
+    const threadGeneral = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
 
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-local-id="${this.messaging.inbox.localId}"]`,
+        `.o_Discuss_thread[data-thread-local-id="${messaging.inbox.localId}"]`,
         "The Inbox is opened in discuss"
     );
     assert.containsOnce(
@@ -175,7 +152,7 @@ QUnit.skip('sidebar: unpin channel from bus', async function (assert) {
     // (e.g. from user interaction from another device or browser tab)
     await afterNextRender(() => {
         const notif = [
-            ["dbName", 'res.partner', this.messaging.currentPartner.id],
+            ["dbName", 'res.partner', messaging.currentPartner.id],
             {
                 channel_type: 'channel',
                 id: 20,
@@ -185,12 +162,12 @@ QUnit.skip('sidebar: unpin channel from bus', async function (assert) {
                 state: 'open',
             }
         ];
-        this.env.services.bus_service.trigger('notification', [notif]);
+        owl.Component.env.services.bus_service.trigger('notification', [notif]);
     });
-    assert.containsOnce(
-        document.body,
-        '.o_Discuss_noThread',
-        "should have no thread opened in discuss"
+    assert.strictEqual(
+        document.querySelector('.o_ThreadViewTopbar_threadName').textContent,
+        "Inbox",
+        "should have inbox opened in discuss"
     );
     assert.containsNone(
         document.body,
@@ -199,8 +176,7 @@ QUnit.skip('sidebar: unpin channel from bus', async function (assert) {
     );
 });
 
-QUnit.skip('[technical] sidebar: channel group_based_subscription: mandatorily pinned', async function (assert) {
-    // skip: discuss not yet done
+QUnit.test('[technical] sidebar: channel group_based_subscription: mandatorily pinned', async function (assert) {
     assert.expect(2);
 
     // FIXME: The following is admittedly odd.
@@ -209,13 +185,14 @@ QUnit.skip('[technical] sidebar: channel group_based_subscription: mandatorily p
     // task-2284357
 
     // channel that is expected to be found in the sidebar
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         group_based_subscription: true, // expected value for this test
         id: 20, // random unique id, will be referenced in the test
         is_pinned: false, // expected value for this test
     });
-    await this.start();
-    const threadGeneral = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const { messaging, openDiscuss } = await this.start();
+    await openDiscuss();
+    const threadGeneral = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });

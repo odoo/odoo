@@ -1,12 +1,10 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
     nextAnimationFrame,
-    start,
 } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -14,39 +12,27 @@ QUnit.module('components', {}, function () {
 QUnit.module('thread_textual_typing_status', {}, function () {
 QUnit.module('thread_textual_typing_status_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createThreadTextualTypingStatusComponent = async thread => {
             await createRootMessagingComponent(this, "ThreadTextualTypingStatus", {
                 props: { threadLocalId: thread.localId },
-                target: this.widget.el,
+                target: this.webClient.el,
             });
         };
-
-        this.start = async (params = {}) => {
-            const { advanceTime, env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-            return { advanceTime };
-        };
-    },
-    async afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('receive other member typing status "is typing"', async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
-    this.data['mail.channel'].records.push({
+    this.serverData.models['res.partner'].records.push({ id: 17, name: 'Demo' });
+    this.serverData.models['mail.channel'].records.push({
         id: 20,
-        members: [this.data.currentPartnerId, 17],
+        members: [this.serverData.currentPartnerId, 17],
     });
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -79,13 +65,13 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
 QUnit.test('receive other member typing status "is typing" then "no longer is typing"', async function (assert) {
     assert.expect(3);
 
-    this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
-    this.data['mail.channel'].records.push({
+    this.serverData.models['res.partner'].records.push({ id: 17, name: 'Demo' });
+    this.serverData.models['mail.channel'].records.push({
         id: 20,
-        members: [this.data.currentPartnerId, 17],
+        members: [this.serverData.currentPartnerId, 17],
     });
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -135,15 +121,15 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
 QUnit.test('assume other member typing status becomes "no longer is typing" after 60 seconds without any updated typing status', async function (assert) {
     assert.expect(3);
 
-    this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
-    this.data['mail.channel'].records.push({
+    this.serverData.models['res.partner'].records.push({ id: 17, name: 'Demo' });
+    this.serverData.models['mail.channel'].records.push({
         id: 20,
-        members: [this.data.currentPartnerId, 17],
+        members: [this.serverData.currentPartnerId, 17],
     });
-    const { advanceTime } = await this.start({
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -183,15 +169,15 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
 QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer of assuming no longer typing', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
-    this.data['mail.channel'].records.push({
+    this.serverData.models['res.partner'].records.push({ id: 17, name: 'Demo' });
+    this.serverData.models['mail.channel'].records.push({
         id: 20,
-        members: [this.data.currentPartnerId, 17],
+        members: [this.serverData.currentPartnerId, 17],
     });
-    const { advanceTime } = await this.start({
+    const { advanceTime, messaging } = await this.start({
         hasTimeControl: true,
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -249,17 +235,17 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
 QUnit.test('receive several other members typing status "is typing"', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records.push(
+    this.serverData.models['res.partner'].records.push(
         { id: 10, name: 'Other10' },
         { id: 11, name: 'Other11' },
         { id: 12, name: 'Other12' }
     );
-    this.data['mail.channel'].records.push({
+    this.serverData.models['mail.channel'].records.push({
         id: 20,
-        members: [this.data.currentPartnerId, 10, 11, 12],
+        members: [this.serverData.currentPartnerId, 10, 11, 12],
     });
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });

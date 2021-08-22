@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
-    start,
 } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -13,44 +11,33 @@ QUnit.module('components', {}, function () {
 QUnit.module('chatter', {}, function () {
 QUnit.module('chatter_suggested_recipients_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createChatterComponent = async ({ chatter }, otherProps) => {
             const props = Object.assign({ chatterLocalId: chatter.localId }, otherProps);
             await createRootMessagingComponent(this, "Chatter", {
                 props,
-                target: this.widget.el,
+                target: this.webClient.el,
             });
         };
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test("suggest recipient on 'Send message' composer", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "John Jane",
         email: "john@jane.be",
         id: 100,
     });
-    this.data['res.fake'].records.push({
+    this.serverData.models['res.fake'].records.push({
         id: 10,
         email_cc: "john@test.be",
         partner_ids: [100],
     });
-    await this.start ();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const { messaging } = await this.start ();
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -68,18 +55,18 @@ QUnit.test("suggest recipient on 'Send message' composer", async function (asser
 QUnit.test("with 3 or less suggested recipients: no 'show more' button", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "John Jane",
         email: "john@jane.be",
         id: 100,
     });
-    this.data['res.fake'].records.push({
+    this.serverData.models['res.fake'].records.push({
         id: 10,
         email_cc: "john@test.be",
         partner_ids: [100],
     });
-    await this.start ();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const { messaging } = await this.start ();
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -97,17 +84,17 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async f
 QUnit.test("display reason for suggested recipient on mouse over", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "John Jane",
         email: "john@jane.be",
         id: 100,
     });
-    this.data['res.fake'].records.push({
+    this.serverData.models['res.fake'].records.push({
         id: 10,
         partner_ids: [100],
     });
-    await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const { messaging } = await this.start();
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -126,12 +113,12 @@ QUnit.test("display reason for suggested recipient on mouse over", async functio
 QUnit.test("suggested recipient without partner are unchecked by default", async function (assert) {
     assert.expect(1);
 
-    this.data['res.fake'].records.push({
+    this.serverData.models['res.fake'].records.push({
         id: 10,
         email_cc: "john@test.be",
     });
-    await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const { messaging } = await this.start();
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -149,17 +136,17 @@ QUnit.test("suggested recipient without partner are unchecked by default", async
 QUnit.test("suggested recipient with partner are checked by default", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "John Jane",
         email: "john@jane.be",
         id: 100,
     });
-    this.data['res.fake'].records.push({
+    this.serverData.models['res.fake'].records.push({
         id: 10,
         partner_ids: [100],
     });
-    await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const { messaging } = await this.start();
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -177,32 +164,32 @@ QUnit.test("suggested recipient with partner are checked by default", async func
 QUnit.test("more than 3 suggested recipients: display only 3 and 'show more' button", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "John Jane",
         email: "john@jane.be",
         id: 100,
     });
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "Jack Jone",
         email: "jack@jone.be",
         id: 1000,
     });
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "jolly Roger",
         email: "Roger@skullflag.com",
         id: 1001,
     });
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "jack sparrow",
         email: "jsparrow@blackpearl.bb",
         id: 1002,
     });
-    this.data['res.fake'].records.push({
+    this.serverData.models['res.fake'].records.push({
         id: 10,
         partner_ids: [100, 1000, 1001, 1002],
     });
-    await this.start ();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const { messaging } = await this.start ();
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -221,32 +208,32 @@ QUnit.test("more than 3 suggested recipients: display only 3 and 'show more' but
 QUnit.test("more than 3 suggested recipients: show all of them on click 'show more' button", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "John Jane",
         email: "john@jane.be",
         id: 100,
     });
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "Jack Jone",
         email: "jack@jone.be",
         id: 1000,
     });
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "jolly Roger",
         email: "Roger@skullflag.com",
         id: 1001,
     });
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "jack sparrow",
         email: "jsparrow@blackpearl.bb",
         id: 1002,
     });
-    this.data['res.fake'].records.push({
+    this.serverData.models['res.fake'].records.push({
         id: 10,
         partner_ids: [100, 1000, 1001, 1002],
     });
-    await this.start ();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const { messaging } = await this.start ();
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -269,32 +256,32 @@ QUnit.test("more than 3 suggested recipients: show all of them on click 'show mo
 QUnit.test("more than 3 suggested recipients -> click 'show more' -> 'show less' button", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "John Jane",
         email: "john@jane.be",
         id: 100,
     });
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "Jack Jone",
         email: "jack@jone.be",
         id: 1000,
     });
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "jolly Roger",
         email: "Roger@skullflag.com",
         id: 1001,
     });
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "jack sparrow",
         email: "jsparrow@blackpearl.bb",
         id: 1002,
     });
-    this.data['res.fake'].records.push({
+    this.serverData.models['res.fake'].records.push({
         id: 10,
         partner_ids: [100, 1000, 1001, 1002],
     });
-    await this.start ();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const { messaging } = await this.start ();
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -316,32 +303,32 @@ QUnit.test("more than 3 suggested recipients -> click 'show more' -> 'show less'
 QUnit.test("suggested recipients list display 3 suggested recipient and 'show more' button when 'show less' button is clicked", async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "John Jane",
         email: "john@jane.be",
         id: 100,
     });
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "Jack Jone",
         email: "jack@jone.be",
         id: 1000,
     });
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "jolly Roger",
         email: "Roger@skullflag.com",
         id: 1001,
     });
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "jack sparrow",
         email: "jsparrow@blackpearl.bb",
         id: 1002,
     });
-    this.data['res.fake'].records.push({
+    this.serverData.models['res.fake'].records.push({
         id: 10,
         partner_ids: [100, 1000, 1001, 1002],
     });
-    await this.start ();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const { messaging } = await this.start ();
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -372,16 +359,16 @@ QUnit.test("suggested recipients list display 3 suggested recipient and 'show mo
 QUnit.test("suggested recipients should not be notified when posting an internal note", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
+    this.serverData.models['res.partner'].records.push({
         display_name: "John Jane",
         email: "john@jane.be",
         id: 100,
     });
-    this.data['res.fake'].records.push({
+    this.serverData.models['res.fake'].records.push({
         id: 10,
         partner_ids: [100],
     });
-    await this.start({
+    const { messaging } = await this.start({
         async mockRPC(route, args) {
             if (args.model === 'res.fake' && args.method === 'message_post') {
                 assert.strictEqual(
@@ -392,7 +379,7 @@ QUnit.test("suggested recipients should not be notified when posting an internal
             }
         },
     });
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const chatter = messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });

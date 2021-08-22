@@ -3,11 +3,9 @@
 import { insert, link } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
-    start,
 } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
@@ -17,38 +15,27 @@ QUnit.module('components', {}, function () {
 QUnit.module('follower', {}, function () {
 QUnit.module('follower_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createFollowerComponent = async (follower) => {
             await createRootMessagingComponent(this, "Follower", {
                 props: { followerLocalId: follower.localId },
-                target: this.widget.el,
+                target: this.webClient.el,
             });
         };
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
-    await this.start();
+    const { messaging } = await this.start();
 
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.messaging.models['mail.follower'].create({
+    const follower = await messaging.models['mail.follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -89,12 +76,12 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(6);
 
-    await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const { messaging } = await this.start();
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.messaging.models['mail.follower'].create({
+    const follower = await messaging.models['mail.follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -161,22 +148,22 @@ QUnit.test('click on partner follower details', async function (assert) {
         );
         openFormDef.resolve();
     });
-    this.data['res.partner'].records.push({ id: 100 });
-    await this.start({
-        env: { bus },
+    this.serverData.models['res.partner'].records.push({ id: 100 });
+    const { messaging } = await this.start({
+        legacyEnv: { bus },
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.messaging.models['mail.follower'].create({
+    const follower = await messaging.models['mail.follower'].create({
         followedThread: link(thread),
         id: 2,
         isActive: true,
         isEditable: true,
         partner: insert({
             email: "bla@bla.bla",
-            id: this.messaging.currentPartner.id,
+            id: messaging.currentPartner.id,
             name: "François Perusse",
         }),
     });
@@ -203,23 +190,23 @@ QUnit.test('click on partner follower details', async function (assert) {
 QUnit.test('click on edit follower', async function (assert) {
     assert.expect(5);
 
-    this.data['res.partner'].records.push({ id: 100, message_follower_ids: [2] });
-    this.data['mail.followers'].records.push({
+    this.serverData.models['res.partner'].records.push({ id: 100, message_follower_ids: [2] });
+    this.serverData.models['mail.followers'].records.push({
         id: 2,
         is_active: true,
         is_editable: true,
-        partner_id: this.data.currentPartnerId,
+        partner_id: this.serverData.currentPartnerId,
         res_id: 100,
         res_model: 'res.partner',
     });
-    await this.start({
+    const { messaging } = await this.start({
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');
             }
         },
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -251,8 +238,8 @@ QUnit.test('click on edit follower', async function (assert) {
 QUnit.test('edit follower and close subtype dialog', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    await this.start({
+    this.serverData.models['res.partner'].records.push({ id: 100 });
+    const { messaging } = await this.start({
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');
@@ -267,18 +254,18 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
             }
         },
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.messaging.models['mail.follower'].create({
+    const follower = await messaging.models['mail.follower'].create({
         followedThread: link(thread),
         id: 2,
         isActive: true,
         isEditable: true,
         partner: insert({
             email: "bla@bla.bla",
-            id: this.messaging.currentPartner.id,
+            id: messaging.currentPartner.id,
             name: "François Perusse",
         }),
     });

@@ -2,11 +2,9 @@
 
 import { insert } from '@mail/model/model_field_command';
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
-    start,
 } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
@@ -16,33 +14,22 @@ QUnit.module('components', {}, function () {
 QUnit.module('activity_mark_done_popover', {}, function () {
 QUnit.module('activity_mark_done_popover_tests.js', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
         this.createActivityMarkDonePopoverComponent = async activity => {
             await createRootMessagingComponent(this, "ActivityMarkDonePopover", {
                 props: { activityLocalId: activity.localId },
-                target: this.widget.el,
+                target: this.webClient.el,
             });
         };
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
 QUnit.test('activity mark done popover simplest layout', async function (assert) {
     assert.expect(6);
 
-    await this.start();
-    const activity = this.messaging.models['mail.activity'].create({
+    const { messaging } = await this.start();
+    const activity = messaging.models['mail.activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
@@ -85,8 +72,8 @@ QUnit.test('activity mark done popover simplest layout', async function (assert)
 QUnit.test('activity with force next mark done popover simplest layout', async function (assert) {
     assert.expect(6);
 
-    await this.start();
-    const activity = this.messaging.models['mail.activity'].create({
+    const { messaging } = await this.start();
+    const activity = messaging.models['mail.activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         chaining_type: 'trigger',
@@ -130,7 +117,7 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
 QUnit.test('activity mark done popover mark done without feedback', async function (assert) {
     assert.expect(5);
 
-    await this.start({
+   const { messaging } = await this.start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
                 assert.step('action_feedback');
@@ -145,7 +132,7 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
             }
         },
     });
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
@@ -163,7 +150,7 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
 QUnit.test('activity mark done popover mark done with feedback', async function (assert) {
     assert.expect(5);
 
-    await this.start({
+    const { messaging } = await this.start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
                 assert.step('action_feedback');
@@ -178,7 +165,7 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
             }
         },
     });
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
@@ -204,7 +191,7 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
         assert.step('activity_action');
         throw new Error("The do-action event should not be triggered when the route doesn't return an action");
     });
-    await this.start({
+    const { messaging } = await this.start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
                 assert.step('action_feedback_schedule_next');
@@ -217,9 +204,9 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
                 throw new Error("'unlink' RPC on activity must not be called (already unlinked from mark as done)");
             }
         },
-        env: { bus },
+        legacyEnv: { bus },
     });
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
@@ -239,34 +226,28 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
     );
 });
 
-QUnit.skip('[technical] activity mark done & schedule next with new action', async function (assert) {
-    // skip: need to properly set up the action that is returned since it is executed correctly now apparently
+QUnit.test('[technical] activity mark done & schedule next with new action', async function (assert) {
     assert.expect(3);
 
+    const { 200022: action } = this.serverData.actions;
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.step('activity_action');
         assert.deepEqual(
             payload.action,
-            {
-                type: 'ir.actions.act_window',
-                views: [],
-            },
+            action,
             "The content of the action should be correct"
         );
     });
-    await this.start({
+    const { messaging } = await this.start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
-                return {
-                    type: 'ir.actions.act_window',
-                    views: [],
-                };
+                return action;
             }
         },
-        env: { bus },
+        legacyEnv: { bus },
     });
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = messaging.models['mail.activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         id: 12,

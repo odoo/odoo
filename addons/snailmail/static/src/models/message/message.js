@@ -16,7 +16,7 @@ registerInstancePatchModel('mail.message', 'snailmail/static/src/models/message.
      */
     async cancelLetter() {
         // the result will come from longpolling: message_notification_update
-        await this.env.services.orm.call('mail.message', 'cancel_letter', [this.id]);
+        await this.env.services.orm.call('mail.message', 'cancel_letter', [[this.id]]);
     },
     /**
      * Opens the action about 'snailmail.letter' format error.
@@ -50,7 +50,7 @@ registerInstancePatchModel('mail.message', 'snailmail/static/src/models/message.
      */
     async resendLetter() {
         // the result will come from longpolling: message_notification_update
-        await this.env.services.orm.call('mail.message', 'send_letter', [this.id]);
+        await this.env.services.orm.call('mail.message', 'send_letter', [[this.id]]);
     },
 });
 

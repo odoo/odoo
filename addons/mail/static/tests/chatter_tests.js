@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach, start } from '@mail/utils/test_utils';
 
 import FormView from 'web.FormView';
 import ListView from 'web.ListView';
@@ -9,16 +9,16 @@ import testUtils from 'web.test_utils';
 QUnit.module('mail', {}, function () {
 QUnit.module('Chatter', {
     beforeEach: function () {
-        beforeEach(this);
+        beforeEach.call(this);
 
-        this.data['res.partner'].records.push({ id: 11, im_status: 'online' });
-        this.data['mail.activity.type'].records.push(
+        this.serverData.models['res.partner'].records.push({ id: 11, im_status: 'online' });
+        this.serverData.models['mail.activity.type'].records.push(
             { id: 1, name: "Type 1" },
             { id: 2, name: "Type 2" },
             { id: 3, name: "Type 3", category: 'upload_file' },
             { id: 4, name: "Exception", decoration_type: "warning", icon: "fa-warning" }
         );
-        this.data['ir.attachment'].records.push(
+        this.serverData.models['ir.attachment'].records.push(
             {
                 id: 1,
                 mimetype: 'image/png',
@@ -44,7 +44,7 @@ QUnit.module('Chatter', {
                 type: 'binary',
             },
         );
-        Object.assign(this.data['res.users'].fields, {
+        Object.assign(this.serverData.models['res.users'].fields, {
             activity_exception_decoration: {
                 string: 'Decoration',
                 type: 'selection',
@@ -97,9 +97,6 @@ QUnit.module('Chatter', {
             },
         });
     },
-    afterEach() {
-        afterEach(this);
-    },
 });
 
 QUnit.skip('list activity widget with no activity', async function (assert) {
@@ -133,7 +130,7 @@ QUnit.skip('list activity widget with activities', async function (assert) {
     // skip: need to adapt to use the start from test utils to actually start a view
     assert.expect(7);
 
-    const currentUser = this.data['res.users'].records.find(user =>
+    const currentUser = this.serverData.models['res.users'].records.find(user =>
         user.id === this.data.currentUserId
     );
     Object.assign(currentUser, {
@@ -144,7 +141,7 @@ QUnit.skip('list activity widget with activities', async function (assert) {
         activity_type_icon: 'fa-phone',
     });
 
-    this.data['res.users'].records.push({
+    this.serverData.models['res.users'].records.push({
         id: 44,
         activity_ids: [2],
         activity_state: 'planned',
@@ -183,7 +180,7 @@ QUnit.skip('list activity widget with exception', async function (assert) {
     // skip: need to adapt to use the start from test utils to actually start a view
     assert.expect(5);
 
-    const currentUser = this.data['res.users'].records.find(user =>
+    const currentUser = this.serverData.models['res.users'].records.find(user =>
         user.id === this.data.currentUserId
     );
     Object.assign(currentUser, {
@@ -221,7 +218,7 @@ QUnit.skip('list activity widget: open dropdown', async function (assert) {
     // skip: need to adapt to use the start from test utils to actually start a view
     assert.expect(10);
 
-    const currentUser = this.data['res.users'].records.find(user =>
+    const currentUser = this.serverData.models['res.users'].records.find(user =>
         user.id === this.data.currentUserId
     );
     Object.assign(currentUser, {
@@ -230,7 +227,7 @@ QUnit.skip('list activity widget: open dropdown', async function (assert) {
         activity_summary: 'Call with Al',
         activity_type_id: 3,
     });
-    this.data['mail.activity'].records.push(
+    this.serverData.models['mail.activity'].records.push(
         {
             id: 1,
             display_name: "Call with Al",
@@ -266,7 +263,7 @@ QUnit.skip('list activity widget: open dropdown', async function (assert) {
         mockRPC: function (route, args) {
             assert.step(args.method || route);
             if (args.method === 'action_feedback') {
-                const currentUser = this.data['res.users'].records.find(user =>
+                const currentUser = this.serverData.models['res.users'].records.find(user =>
                     user.id === this.currentUserId
                 );
                 Object.assign(currentUser, {
@@ -317,11 +314,11 @@ QUnit.skip('list activity exception widget with activity', async function (asser
     // skip: need to adapt to use the start from test utils to actually start a view
     assert.expect(3);
 
-    const currentUser = this.data['res.users'].records.find(user =>
+    const currentUser = this.serverData.models['res.users'].records.find(user =>
         user.id === this.data.currentUserId
     );
     currentUser.activity_ids = [1];
-    this.data['res.users'].records.push({
+    this.serverData.models['res.users'].records.push({
         id: 13,
         message_attachment_count: 3,
         display_name: "second partner",
@@ -332,7 +329,7 @@ QUnit.skip('list activity exception widget with activity', async function (asser
         activity_exception_decoration: 'warning',
         activity_exception_icon: 'fa-warning',
     });
-    this.data['mail.activity'].records.push(
+    this.serverData.models['mail.activity'].records.push(
         {
             id: 1,
             display_name: "An activity",
@@ -377,12 +374,12 @@ QUnit.skip('list activity exception widget with activity', async function (asser
 
 QUnit.module('FieldMany2ManyTagsEmail', {
     beforeEach() {
-        beforeEach(this);
+        beforeEach.call(this);
 
-        Object.assign(this.data['res.users'].fields, {
+        Object.assign(this.serverData.models['res.users'].fields, {
             timmy: { string: "pokemon", type: "many2many", relation: 'partner_type' },
         });
-        this.data['res.users'].records.push({
+        this.serverData.models['res.users'].records.push({
             id: 11,
             display_name: "first record",
             timmy: [],
@@ -396,13 +393,10 @@ QUnit.module('FieldMany2ManyTagsEmail', {
                 records: [],
             },
         });
-        this.data['partner_type'].records.push(
+        this.serverData.models['partner_type'].records.push(
             { id: 12, display_name: "gold", email: 'coucou@petite.perruche' },
             { id: 14, display_name: "silver", email: '' }
         );
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
@@ -411,7 +405,7 @@ QUnit.skip('fieldmany2many tags email', function (assert) {
     assert.expect(13);
     var done = assert.async();
 
-    const user11 = this.data['res.users'].records.find(user => user.id === 11);
+    const user11 = this.serverData.models['res.users'].records.find(user => user.id === 11);
     user11.timmy = [12, 14];
 
     // the modals need to be closed before the form view rendering
@@ -473,7 +467,7 @@ QUnit.skip('fieldmany2many tags email (edition)', async function (assert) {
     // skip: need to adapt to use the start from test utils to actually start a view
     assert.expect(15);
 
-    const user11 = this.data['res.users'].records.find(user => user.id === 11);
+    const user11 = this.serverData.models['res.users'].records.find(user => user.id === 11);
     user11.timmy = [12];
 
     var { widget: form } = await start({
@@ -535,11 +529,11 @@ QUnit.skip('many2many_tags_email widget can load more than 40 records', async fu
     // skip: need to adapt to use the start from test utils to actually start a view
     assert.expect(3);
 
-    const user11 = this.data['res.users'].records.find(user => user.id === 11);
-    this.data['res.users'].fields.partner_ids = { string: "Partner", type: "many2many", relation: 'res.users' };
+    const user11 = this.serverData.models['res.users'].records.find(user => user.id === 11);
+    this.serverData.models['res.users'].fields.partner_ids = { string: "Partner", type: "many2many", relation: 'res.users' };
     user11.partner_ids = [];
     for (let i = 100; i < 200; i++) {
-        this.data['res.users'].records.push({ id: i, display_name: `partner${i}` });
+        this.serverData.models['res.users'].records.push({ id: i, display_name: `partner${i}` });
         user11.partner_ids.push(i);
     }
 

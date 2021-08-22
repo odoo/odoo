@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach, start } from '@mail/utils/test_utils';
 
 import FormView from 'web.FormView';
 import KanbanView from 'web.KanbanView';
@@ -12,7 +12,7 @@ import { dom, mock, nextTick } from 'web.test_utils';
 QUnit.module('mail', {}, function () {
     QUnit.module('M2XAvatarUser', {
         beforeEach() {
-            beforeEach(this);
+            beforeEach.call(this);
 
             // reset the cache before each test
             Many2OneAvatarUser.prototype.partnerIds = {};
@@ -32,19 +32,16 @@ QUnit.module('mail', {}, function () {
                 },
             });
 
-            this.data['res.partner'].records.push(
+            this.serverData.models['res.partner'].records.push(
                 { id: 11, display_name: "Partner 1" },
                 { id: 12, display_name: "Partner 2" },
                 { id: 13, display_name: "Partner 3" }
             );
-            this.data['res.users'].records.push(
+            this.serverData.models['res.users'].records.push(
                 { id: 11, name: "Mario", partner_id: 11 },
                 { id: 7, name: "Luigi", partner_id: 12 },
                 { id: 23, name: "Yoshi", partner_id: 13 }
             );
-        },
-        afterEach() {
-            afterEach(this);
         },
     });
 
@@ -236,7 +233,7 @@ QUnit.module('mail', {}, function () {
         // skip: need to adapt to use the start from test utils to actually start a view
         assert.expect(11);
 
-        this.data['res.users'].records.push({ id: 15, name: "Tapu", partner_id: 11 },);
+        this.serverData.models['res.users'].records.push({ id: 15, name: "Tapu", partner_id: 11 },);
         this.data.foo.records[2].user_ids = [11, 23, 7, 15];
 
         const { widget: kanban } = await start({

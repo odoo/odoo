@@ -1,34 +1,19 @@
 /** @odoo-module **/
 
 import { insert } from '@mail/model/model_field_command';
-import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('models', {}, function () {
 QUnit.module('thread', {}, function () {
-QUnit.module('thread_tests.js', {
-    beforeEach() {
-        beforeEach(this);
-
-        this.start = async (params = {}) => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-    },
-    afterEach() {
-        afterEach(this);
-    },
-});
+QUnit.module('thread_tests.js', { beforeEach });
 
 QUnit.test('inbox & starred mailboxes', async function (assert) {
     assert.expect(10);
 
-    await this.start();
-    const mailboxInbox = this.messaging.inbox;
-    const mailboxStarred = this.messaging.starred;
+    const { messaging } = await this.start();
+    const mailboxInbox = messaging.inbox;
+    const mailboxStarred = messaging.starred;
     assert.ok(mailboxInbox, "should have mailbox inbox");
     assert.ok(mailboxStarred, "should have mailbox starred");
     assert.strictEqual(mailboxInbox.model, 'mail.box');
@@ -44,15 +29,15 @@ QUnit.test('inbox & starred mailboxes', async function (assert) {
 QUnit.test('create (channel)', async function (assert) {
     assert.expect(23);
 
-    await this.start();
-    assert.notOk(this.messaging.models['mail.partner'].findFromIdentifyingData({ id: 9 }));
-    assert.notOk(this.messaging.models['mail.partner'].findFromIdentifyingData({ id: 10 }));
-    assert.notOk(this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const { messaging } = await this.start();
+    assert.notOk(messaging.models['mail.partner'].findFromIdentifyingData({ id: 9 }));
+    assert.notOk(messaging.models['mail.partner'].findFromIdentifyingData({ id: 10 }));
+    assert.notOk(messaging.models['mail.thread'].findFromIdentifyingData({
         id: 100,
         model: 'mail.channel',
     }));
 
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = messaging.models['mail.thread'].create({
         channel_type: 'channel',
         id: 100,
         members: insert([{
@@ -71,15 +56,15 @@ QUnit.test('create (channel)', async function (assert) {
         serverMessageUnreadCounter: 5,
     });
     assert.ok(thread);
-    assert.ok(this.messaging.models['mail.partner'].findFromIdentifyingData({ id: 9 }));
-    assert.ok(this.messaging.models['mail.partner'].findFromIdentifyingData({ id: 10 }));
-    assert.ok(this.messaging.models['mail.thread'].findFromIdentifyingData({
+    assert.ok(messaging.models['mail.partner'].findFromIdentifyingData({ id: 9 }));
+    assert.ok(messaging.models['mail.partner'].findFromIdentifyingData({ id: 10 }));
+    assert.ok(messaging.models['mail.thread'].findFromIdentifyingData({
         id: 100,
         model: 'mail.channel',
     }));
-    const partner9 = this.messaging.models['mail.partner'].findFromIdentifyingData({ id: 9 });
-    const partner10 = this.messaging.models['mail.partner'].findFromIdentifyingData({ id: 10 });
-    assert.strictEqual(thread, this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const partner9 = messaging.models['mail.partner'].findFromIdentifyingData({ id: 9 });
+    const partner10 = messaging.models['mail.partner'].findFromIdentifyingData({ id: 10 });
+    assert.strictEqual(thread, messaging.models['mail.thread'].findFromIdentifyingData({
         id: 100,
         model: 'mail.channel',
     }));
@@ -103,14 +88,14 @@ QUnit.test('create (channel)', async function (assert) {
 QUnit.test('create (chat)', async function (assert) {
     assert.expect(15);
 
-    await this.start();
-    assert.notOk(this.messaging.models['mail.partner'].findFromIdentifyingData({ id: 5 }));
-    assert.notOk(this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const { messaging } = await this.start();
+    assert.notOk(messaging.models['mail.partner'].findFromIdentifyingData({ id: 5 }));
+    assert.notOk(messaging.models['mail.thread'].findFromIdentifyingData({
         id: 200,
         model: 'mail.channel',
     }));
 
-    const channel = this.messaging.models['mail.thread'].create({
+    const channel = messaging.models['mail.thread'].create({
         channel_type: 'chat',
         id: 200,
         members: insert({
@@ -122,13 +107,13 @@ QUnit.test('create (chat)', async function (assert) {
         model: 'mail.channel',
     });
     assert.ok(channel);
-    assert.ok(this.messaging.models['mail.thread'].findFromIdentifyingData({
+    assert.ok(messaging.models['mail.thread'].findFromIdentifyingData({
         id: 200,
         model: 'mail.channel',
     }));
-    assert.ok(this.messaging.models['mail.partner'].findFromIdentifyingData({ id: 5 }));
-    const partner = this.messaging.models['mail.partner'].findFromIdentifyingData({ id: 5 });
-    assert.strictEqual(channel, this.messaging.models['mail.thread'].findFromIdentifyingData({
+    assert.ok(messaging.models['mail.partner'].findFromIdentifyingData({ id: 5 }));
+    const partner = messaging.models['mail.partner'].findFromIdentifyingData({ id: 5 });
+    assert.strictEqual(channel, messaging.models['mail.thread'].findFromIdentifyingData({
         id: 200,
         model: 'mail.channel',
     }));

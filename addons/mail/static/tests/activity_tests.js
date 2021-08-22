@@ -199,11 +199,11 @@ QUnit.skip('activity view: no content rendering', async function (assert) {
     assert.expect(2);
 
     // reset incompatible setup
-    this.data['mail.activity'].records = [];
+    this.serverData.models['mail.activity'].records = [];
     this.data.task.records.forEach(function (task) {
         task.activity_ids = false;
     });
-    this.data['mail.activity.type'].records = [];
+    this.serverData.models['mail.activity.type'].records = [];
 
     var activity = await createView({
         View: ActivityView,

@@ -13,9 +13,9 @@ patch(MockModels, 'website_livechat/static/tests/helpers/mock_models.js', {
     /**
      * @override
      */
-    generateData() {
+    generateServerData() {
         const data = this._super(...arguments);
-        Object.assign(data, {
+        Object.assign(data.models, {
             'website.visitor': {
                 fields: {
                     country_id: { string: "Country", type: 'many2one', relation: 'res.country' },
@@ -24,16 +24,16 @@ patch(MockModels, 'website_livechat/static/tests/helpers/mock_models.js', {
                     // To ease testing this allows tests to set it directly instead
                     // of implementing the computation made on server.
                     // This should normally not be a field.
-                    history: { string: "History", type: 'string'},
+                    history: { string: "History", type: 'string' },
                     is_connected: { string: "Is connected", type: 'boolean' },
-                    lang_name: { string: "Language name", type: 'string'},
-                    partner_id: {string: "partner", type: "many2one", relation: 'res.partner'},
+                    lang_name: { string: "Language name", type: 'string' },
+                    partner_id: { string: "partner", type: "many2one", relation: 'res.partner' },
                     website_name: { string: "Website name", type: 'string' },
                 },
                 records: [],
             },
         });
-        Object.assign(data['mail.channel'].fields, {
+        Object.assign(data.models['mail.channel'].fields, {
             livechat_visitor_id: { string: "Visitor", type: 'many2one', relation: 'website.visitor' },
         });
         return data;
