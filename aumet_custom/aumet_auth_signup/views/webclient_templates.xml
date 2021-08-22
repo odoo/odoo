@@ -150,6 +150,15 @@
 
         </template>
 
+        <template id="aumet.web.login" inherit_id="web.login">
+            <xpath expr="//div[hasclass('field-db')]" position="attributes">
+
+                <attribute name="t-att-style">'display: none;'</attribute>
+
+            </xpath>
+
+        </template>
+
         <template id="signup" inherit_id="auth_signup.signup" name="Sign up login">
 
             <xpath expr="//form" position="attributes">
