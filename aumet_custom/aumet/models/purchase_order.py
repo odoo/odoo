@@ -21,7 +21,7 @@ class PurchaseOrder(models.Model):
                 i.bonus,
                 i.payment_method.marketplace_payment_method_id
             )
-            print(ErrorHelper.get_status_code(item_add_line_result.status_code))
+
             if ErrorHelper.get_status_code(item_add_line_result.json()["message"]) == 409:
                 raise ValidationError(f'Invalid Payment method for order line {i.product_id.name}')
 

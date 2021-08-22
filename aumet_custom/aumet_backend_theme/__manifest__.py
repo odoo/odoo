@@ -3,13 +3,13 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 {
-    "name": "Openworx Material Backend Theme V14",
-    "summary": "Openworx Material Backend Theme V14",
+    "name": "Aumet backend theme",
+    "summary": "Aumet backend theme",
     "version": "14.0.0.2",
     "category": "Theme/Backend",
-    "website": "https://www.openworx.nl",
+
 	"description": """
-		Openworx Material Backend theme for Odoo 14.0 community edition.
+		Override odoo theme to aumet colors and fonts
     """,
 	'images':[
         'images/screen.png'
@@ -26,8 +26,9 @@
         'views/assets.xml',
 		'views/res_company_view.xml',
 		'views/users.xml',
-        	'views/sidebar.xml',
+        'views/sidebar.xml',
     ],
-    #'live_test_url': 'https://youtu.be/JX-ntw2ORl8'
+
+    'css': ["static/src/css/aumet.css"],
 
 }

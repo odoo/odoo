@@ -19,7 +19,7 @@
 
     'data': [
         'data/aumet.scientific_name.csv',
-        'views/assets.xml',
+        # 'views/assets.xml',
         'views/views.xml'
 
     ],
@@ -29,8 +29,6 @@
     'qweb': [
         'views/templates.xml'
     ],
-
-    'css': ["static/src/css/aumet.css"],
 
     'installable': True,
     'application': True,
