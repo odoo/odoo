@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	 <record id="product_scientific_name_view_tree" model="ir.ui.view">
+            <field name="name">product.scientific.name.tree</field>
+            <field name="model">product.scientific.name</field>
+            <field name="arch" type="xml">
+                <tree string="Scientific Name" editable="bottom">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+    
+    	<record id="product_scientific_name_form_view" model="ir.ui.view">
+            <field name="name">product.scientific.name.form</field>
+            <field name="model">product.scientific.name</field>
+            <field name="arch" type="xml">
+                <form string="Scientific name">
+                    <sheet>
+	                    <group>
+	                        <group>
+				                <field name="name"/>
+	                        </group>
+	                    </group>
+                   	</sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_product_scientific_name_tree" model="ir.actions.act_window">
+            <field name="name">Scientific Name</field>
+            <field name="res_model">product.scientific.name</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="product_scientific_name_view_tree"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new Scientific name
+              </p>
+            </field>
+        </record>
+        
+        <menuitem id="menu_scientific_name" name="Scientific Name" parent="stock.menu_stock_inventory_control" sequence="301" action="action_product_scientific_name_tree"/>
+        
+    </data>
+</odoo>

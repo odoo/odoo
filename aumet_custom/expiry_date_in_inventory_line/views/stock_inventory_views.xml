@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="stock_inventory_line_tree_inherit_expiration_date" model="ir.ui.view">
+        <field name="name">stock.inventory.line.tree.inherit.expiration.date"</field>
+        <field name="model">stock.inventory.line</field>
+        <field name="inherit_id" ref="stock.stock_inventory_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='prod_lot_id']" position="after">
+                <field name="expiration_date" readonly="1" force_save="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
