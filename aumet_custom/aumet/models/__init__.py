@@ -6,3 +6,4 @@ from . import purchase_order_ine
 from . import purchase_order
 from . import company_marketplace
 from . import payment_methods
+from . import marketplace_product

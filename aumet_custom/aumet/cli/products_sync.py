@@ -100,6 +100,13 @@ class product_sync(Command):
         cur.execute(insert_payment_query)
         products = DatabaseOps.retrieve_products()
 
+
+        insert_into_marketplace = """INSERT INTO public.aumet_marketplace_product
+                (name_en, unit_price, marketplace_seller_id, is_archived, is_locked,
+                 marketplace_id, create_uid, create_date, write_uid, write_date)
+                VALUES('', 0, 0, false, false, 0, 0, '', 0, '');
+                """
+
         insert_statement = f"""INSERT INTO public.product_template
             (message_main_attachment_id, name, "sequence",
              description, description_purchase, description_sale,
