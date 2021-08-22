@@ -71,10 +71,12 @@
 
 
 
-            <xpath expr="//a[@href='/web/database/selector']" position="replace">
-                <a role="button" href="/web/database/selector" class="btn btn-secondary">
-                    <i class="fa fa-database" role="img" aria-label="Database" title="Database"/>
-                </a>
+            <xpath expr="//a[@href='/web/database/selector']" position="attributes">
+                <attribute name="t-att-style">'display: none;'</attribute>
+
+<!--                <a role="button" href="/web/database/selector" class="btn btn-secondary">-->
+<!--                    <i class="fa fa-database" role="img" aria-label="Database" title="Database"/>-->
+<!--                </a>-->
             </xpath>
             <xpath expr="//button[@type='submit']" position="attributes">
                 <attribute name="class">btn login-btn</attribute>
@@ -150,14 +152,14 @@
 
         </template>
 
-        <template id="web.login_inherit" inherit_id="web.login">
-            <xpath expr="//div[hasclass('field-db')]" position="attributes">
+<!--        <template id="web.login_inherit" inherit_id="web.login">-->
+<!--            <xpath expr="//div[hasclass('field-db')]" position="attributes">-->
 
-                <attribute name="t-att-style">'display: none;'</attribute>
+<!--                <attribute name="t-att-style">'display: none;'</attribute>-->
 
-            </xpath>
+<!--            </xpath>-->
 
-        </template>
+<!--        </template>-->
 
         <template id="signup" inherit_id="auth_signup.signup" name="Sign up login">
 
