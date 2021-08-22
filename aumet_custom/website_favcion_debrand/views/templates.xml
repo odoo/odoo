@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Debrand Assets -->
+    <template id="title_extend_2" name="Extend Title" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_favcion_debrand/static/src/js/title.js"/>
+        </xpath>
+    </template>
+
+
+    <template id="MYSITE_layout" inherit_id="web.layout" name="MYSITE layout" priority="17">
+        <xpath expr="//head/title" position="replace">
+            <title t-esc="'Aumet Pharmacy'"/>
+        </xpath>
+        <xpath expr="//head/link" position="replace">
+            <link rel="shortcut icon" href="/website_favcion_debrand/static/src/img/favicon.ico"/>
+        </xpath>
+
+    </template>
+ </odoo>
