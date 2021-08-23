@@ -181,7 +181,7 @@ QUnit.module('Barcode GS1 Parser', {
 }, function () {
     QUnit.test('Test gs1 date barcode', async function (assert) {
         assert.expect(9);
-        const barcodeNomenclature = new BarcodeParser({'nomenclature_id': false});
+        const barcodeNomenclature = new BarcodeParser({'nomenclature_id': 2});
         await barcodeNomenclature.loaded;
 
         // 20/10/2015 -> 151020
@@ -208,7 +208,7 @@ QUnit.module('Barcode GS1 Parser', {
 
     QUnit.test('Test gs1 decompose extanded', async function (assert) {
         assert.expect(19);
-        const barcodeNomenclature = new BarcodeParser({'nomenclature_id': false});
+        const barcodeNomenclature = new BarcodeParser({'nomenclature_id': 2});
         await barcodeNomenclature.loaded;
 
         barcodeNomenclature.nomenclature = this.data['barcode.nomenclature'].records[0];
