@@ -602,6 +602,10 @@ class AccountPayment(models.Model):
         if not self.move_id:
             self.name = False
 
+    @api.onchange('journal_id')
+    def _onchange_journal(self):
+        self.move_id._onchange_journal()
+
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------
