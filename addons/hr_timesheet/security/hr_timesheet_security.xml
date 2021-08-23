@@ -39,7 +39,7 @@
                     ('project_id.message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
                     ('task_id.message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
                 ('project_id.privacy_visibility', '=', 'portal'),
-                ('project_id.project_sharing_access_ids.user_id', 'in', [user.id]),
+                ('project_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
             ]</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>

@@ -113,7 +113,6 @@ class ProjectCustomerPortal(CustomerPortal):
             cache_hashes=cache_hashes,
             action_name='project.project_sharing_project_task_action',
             project_id=project.id,
-            can_edit=project._check_project_sharing_access('edit'),
             user_companies={
                 'current_company': project_company.id,
                 'allowed_companies': {
