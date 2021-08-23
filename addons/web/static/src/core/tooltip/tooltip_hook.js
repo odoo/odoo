@@ -4,6 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { useListener } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Tooltip } from "./tooltip";
+import { registry } from "@web/core/registry";
 
 /**
  * The useTooltip hook allows to display custom tooltips on every elements with
@@ -45,12 +46,23 @@ export function useTooltip() {
     function onMouseEnter(ev) {
         const dataset = ev.target.dataset;
         const tooltip = dataset.tooltip;
-        if (tooltip) {
+
+        let Component, props;
+        if ("tooltipComponent" in dataset) {
+            ({ Component, props } = JSON.parse(dataset["tooltipComponent"]));
+            Component = registry.category("tooltips").get(Component, null);
+        }
+        if (tooltip || Component) {
             cleanup();
             target = ev.target;
             openTooltipTimeout = browser.setTimeout(() => {
                 const position = dataset.tooltipPosition;
-                closeTooltip = popover.add(target, Tooltip, { tooltip }, { position });
+                closeTooltip = popover.add(
+                    target,
+                    Tooltip,
+                    { tooltip, Component, props },
+                    { position }
+                );
             }, OPEN_DELAY);
         }
     }
