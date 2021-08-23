@@ -46,6 +46,7 @@
                     </group>
                     <group>
                         <group string="Availability">
+<<<<<<< HEAD
                             <label for="tz" groups="base.group_no_one"/>
                             <div class="o_col">
                                 <div class="o_row">
@@ -53,6 +54,15 @@
                                 </div>
                                 <widget name="week_days"/>
                             </div>
+=======
+                            <field name="recurrency_monday"/>
+                            <field name="recurrency_tuesday"/>
+                            <field name="recurrency_wednesday"/>
+                            <field name="recurrency_thursday"/>
+                            <field name="recurrency_friday"/>
+                            <field name="recurrency_saturday"/>
+                            <field name="recurrency_sunday"/>
+>>>>>>> 0636615577f... temp
                             <field name="recurrency_end_date" groups="base.group_no_one"/>
                         </group>
                         <group string="Orders">
@@ -61,6 +71,7 @@
                             <field name="send_by" widget="radio"/>
                             <label for="automatic_email_time" attrs="{'invisible': [('send_by', '!=', 'mail')]}"/>
                             <div class="o_row" attrs="{'invisible': [('send_by', '!=', 'mail')]}"><field name="automatic_email_time" widget="float_time"/> <field name="moment"/></div>
+                            <field name="tz" groups="base.group_no_one"/>
                         </group>
                     </group>
                 </sheet>
