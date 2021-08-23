@@ -45,7 +45,7 @@
                                     </th>
                                     <th colspan="1" class="text-right text-muted">
                                         <t t-if="is_uom_day">
-                                            Total: <span class="text-muted" t-esc="timesheets[0]._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                                            Total: <span class="text-muted" t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
                                         </t>
                                         <t t-else="">
                                             Total: <span class="text-muted" t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
@@ -59,7 +59,7 @@
                                     </th>
                                     <th colspan="1" class="text-right text-muted">
                                         <t t-if="is_uom_day">
-                                            Total: <span t-esc="timesheets[0]._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                                            Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
                                         </t>
                                         <t t-else="">
                                             Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
@@ -73,7 +73,7 @@
                                     </th>
                                     <th colspan="1" class="text-right text-muted">
                                         <t t-if="is_uom_day">
-                                            Total: <span t-esc="timesheets[0]._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                                            Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
                                         </t>
                                         <t t-else="">
                                             Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
@@ -87,7 +87,7 @@
                                     </th>
                                     <th colspan="1" class="text-right text-muted">
                                         <t t-if="is_uom_day">
-                                            Total: <span t-esc="timesheets[0]._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                                            Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
                                         </t>
                                         <t t-else="">
                                             Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
@@ -98,7 +98,7 @@
                             <tr t-else="">
                                 <div style="text-align: right;" class="mr-2 mb-1 text-muted">
                                     <t t-if="is_uom_day">
-                                        Total: <span t-esc="timesheets[0]._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                                        Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
                                     </t>
                                     <t t-else="">
                                         Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>

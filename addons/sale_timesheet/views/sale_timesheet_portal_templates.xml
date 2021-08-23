@@ -35,7 +35,7 @@
                 </th>
                 <th colspan="1" class="text-right text-muted font-weight-normal">
                     <t t-if="is_uom_day">
-                        Total: <span t-esc="timesheets[0]._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                        Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
                     </t>
                     <t t-else="">
                         Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
@@ -52,7 +52,7 @@
                 </th>
                 <th colspan="1" class="text-right text-muted">
                     <t t-if="is_uom_day">
-                        Total: <span t-esc="timesheets[0]._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                        Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
                     </t>
                     <t t-else="">
                         Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
@@ -60,7 +60,7 @@
                 </th>
             </t>
             <t t-elif="groupby == 'invoice'">
-                <t t-set="invoice" t-value="timesheets[0].timesheet_invoice_id"/>
+                <t t-set="invoice" t-value="timesheets.timesheet_invoice_id"/>
                 <th colspan="6">
                     <t t-if="invoice">
                         <em class="font-weight-normal text-muted">Timesheets for Invoice:</em>
@@ -69,7 +69,7 @@
                 </th>
                 <th colspan="1" class="text-right text-muted">
                     <t t-if="is_uom_day">
-                        Total: <span t-esc="timesheets[0]._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                        Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
                     </t>
                     <t t-else="">
                         Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
