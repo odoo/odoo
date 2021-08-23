@@ -170,7 +170,7 @@
                 </div>
             </xpath>
             <xpath expr="//page[@name='other_info']" position="after">
-                <page string="Electronic Invoicing" attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
+                <page string="Electronic Invoicing" attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('country_code', '!=', 'IT')]}">
                     <group>
                         <group>
                             <field name="l10n_it_stamp_duty"/>
