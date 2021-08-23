@@ -490,16 +490,7 @@ class PosSession(models.Model):
                 order_taxes = defaultdict(tax_amounts)
                 for order_line in order.lines:
                     line = self._prepare_line(order_line)
-                    # Combine sales/refund lines
-                    sale_key = (
-                        # account
-                        line['income_account_id'],
-                        # sign
-                        -1 if line['amount'] < 0 else 1,
-                        # for taxes
-                        tuple((tax['id'], tax['account_id'], tax['tax_repartition_line_id']) for tax in line['taxes']),
-                        line['base_tags'],
-                    )
+                    sale_key = self._get_sale_key(order_line, line)
                     sales[sale_key] = self._update_amounts(sales[sale_key], {'amount': line['amount']}, line['date_order'])
                     # Combine tax lines
                     for tax in line['taxes']:
@@ -760,6 +751,19 @@ class PosSession(models.Model):
             | stock_account_move_lines.filtered(lambda aml: aml.account_id == account_id)
             ).filtered(lambda aml: not aml.reconciled).reconcile()
         return data
+    
+    def _get_sale_key(self, order_line, line):
+        # Combine sales/refund lines
+        sale_key = (
+            # account
+            line['income_account_id'],
+            # sign
+            -1 if line['amount'] < 0 else 1,
+            # for taxes
+            tuple((tax['id'], tax['account_id'], tax['tax_repartition_line_id']) for tax in line['taxes']),
+            line['base_tags'],
+        )
+        return sale_key
 
     def _prepare_line(self, order_line):
         """ Derive from order_line the order date, income account, amount and taxes information.
