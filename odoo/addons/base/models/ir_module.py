@@ -597,18 +597,17 @@ class Module(models.Model):
         function(self)
 
         self._cr.commit()
-        api.Environment.reset()
-        modules.registry.Registry.new(self._cr.dbname, update_module=True)
+        registry = modules.registry.Registry.new(self._cr.dbname, update_module=True)
+        self._cr.reset()
+        assert self.env.registry is registry
 
-        self._cr.commit()
-        env = api.Environment(self._cr, self._uid, self._context)
         # pylint: disable=next-method-called
-        config = env['ir.module.module'].next() or {}
+        config = self.env['ir.module.module'].next() or {}
         if config.get('type') not in ('ir.actions.act_window_close',):
             return config
 
         # reload the client; open the first available root menu
-        menu = env['ir.ui.menu'].search([('parent_id', '=', False)])[:1]
+        menu = self.env['ir.ui.menu'].search([('parent_id', '=', False)])[:1]
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
