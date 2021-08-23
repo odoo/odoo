@@ -27,6 +27,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 client: this._barcodeClientAction,
                 discount: this._barcodeDiscountAction,
                 error: this._barcodeErrorAction,
+                package: this._barcodeProductAction,
             })
             onChangeOrder(null, (newOrder) => newOrder && this.render());
             NumberBuffer.use({

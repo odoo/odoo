@@ -172,9 +172,8 @@ var PosDB = core.Class.extend({
         str  = product.id + ':' + str.replace(/:/g,'') + '\n';
         return str;
     },
-    add_products: function(products){
+    add_products: function(products, product_packagings){
         var stored_categories = this.product_by_category_id;
-
         if(!products instanceof Array){
             products = [products];
         }
@@ -214,6 +213,14 @@ var PosDB = core.Class.extend({
             if(product.barcode){
                 this.product_by_barcode[product.barcode] = product;
             }
+            self = this;
+            _.each(product.packaging_ids, function(product_packagings_id) {
+                _.each(product_packagings, function(packagings_id) {
+                    if (product_packagings_id == packagings_id.id) {
+                        self.product_by_barcode[packagings_id.barcode] = product;
+                    }
+                });
+            });
         }
     },
     _partner_search_string: function(partner){

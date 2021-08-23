@@ -426,10 +426,21 @@ exports.PosModel = Backbone.Model.extend({
             self.db.add_categories(categories);
         },
     },{
+        model: 'product.packaging',
+        fields: ['name', 'barcode', 'product_id'],
+        domain: function(self){return [['barcode', '!=', '']]; },
+        loaded: function(self, product_packagings) {
+            self.product_packagings = {};
+            _.map(product_packagings, function (product_packaging) {
+                self.product_packagings[product_packaging.id] = product_packaging;
+            });
+        }
+    },{
         model:  'product.product',
         fields: ['display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id',
                  'barcode', 'default_code', 'to_weight', 'uom_id', 'description_sale', 'description',
-                 'product_tmpl_id','tracking', 'write_date', 'available_in_pos', 'attribute_line_ids'],
+                 'product_tmpl_id','tracking', 'write_date', 'available_in_pos', 'attribute_line_ids',
+                 'packaging_ids'],
         order:  _.map(['sequence','default_code','name'], function (name) { return {name: name}; }),
         domain: function(self){
             var domain = ['&', '&', ['sale_ok','=',true],['available_in_pos','=',true],'|',['company_id','=',self.config.company_id[0]],['company_id','=',false]];
@@ -454,7 +465,7 @@ exports.PosModel = Backbone.Model.extend({
                 product.categ = _.findWhere(self.product_categories, {'id': product.categ_id[0]});
                 product.pos = self;
                 return new exports.Product({}, product);
-            }));
+            }), self.product_packagings);
         },
     },{
         model: 'product.attribute',
