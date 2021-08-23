@@ -6,12 +6,7 @@
         <field name="inherit_id" ref="fleet.fleet_vehicle_log_contract_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='purchaser_id']" position="after">
-                <field name="fleet_is_internal" invisible="1"/>
-                <field name="purchaser_employee_id" string="Driver"
-                    attrs="{'invisible': [('fleet_is_internal', '=', False)]}"/>
-            </xpath>
-            <xpath expr="//field[@name='purchaser_id']" position="attributes">
-                <attribute name="attrs">{'invisible': [('fleet_is_internal', '=', True)]}</attribute>
+                <field name="purchaser_employee_id" string="Driver" invisible="1"/>
             </xpath>
         </field>
     </record>
@@ -22,9 +17,7 @@
         <field name="inherit_id" ref="fleet.fleet_vehicle_log_contract_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='purchaser_id']" position="after">
-                <field name="fleet_is_internal" invisible="1"/>
-                <field name="purchaser_employee_id"
-                    attrs="{'invisible': [('fleet_is_internal', '=', False)]}"/>
+                <field name="purchaser_employee_id" optional="hide" widget="many2one_avatar_employee"/>
             </xpath>
         </field>
     </record>
@@ -47,12 +40,7 @@
         <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='purchaser_id']" position="after">
-                <field name="fleet_is_internal" invisible="1"/>
-                <field name="purchaser_employee_id" string="Driver"
-                    attrs="{'invisible': [('fleet_is_internal', '=', False)]}"/>
-            </xpath>
-            <xpath expr="//field[@name='purchaser_id']" position="attributes">
-                <attribute name="attrs">{'invisible': [('fleet_is_internal', '=', True)]}</attribute>
+                <field name="purchaser_employee_id" string="Driver (Employee)" invisible="1"/>
             </xpath>
         </field>
     </record>
@@ -63,9 +51,7 @@
         <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='purchaser_id']" position="after">
-                <field name="fleet_is_internal" invisible="1"/>
-                <field name="purchaser_employee_id" readonly="1" widget="many2one_avatar"
-                    attrs="{'invisible': [('fleet_is_internal', '=', False)]}"/>
+                <field name="purchaser_employee_id" readonly="1" widget="many2one_avatar" optional="hide"/>
             </xpath>
         </field>
     </record>
@@ -75,15 +61,8 @@
         <field name="model">fleet.vehicle.log.services</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//kanban/field[@name='amount']" position="after">
-                <field name="fleet_is_internal" invisible="1"/>
-            </xpath>
             <xpath expr="//div/field[@name='purchaser_id']" position="after">
-                <field name="purchaser_employee_id"
-                    attrs="{'invisible': [('fleet_is_internal', '=', False)]}"/>
-            </xpath>
-            <xpath expr="//div/field[@name='purchaser_id']" position="attributes">
-                <attribute name="attrs">{'invisible': [('fleet_is_internal', '=', True)]}</attribute>
+                <field name="purchaser_employee_id"/>
             </xpath>
         </field>
     </record>

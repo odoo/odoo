@@ -10,13 +10,12 @@ class FleetVehicleLogServices(models.Model):
         'hr.employee', string="Driver (Employee)",
         compute='_compute_purchaser_employee_id', readonly=False, store=True,
     )
-    fleet_is_internal = fields.Boolean(related='vehicle_id.fleet_is_internal')
 
     @api.depends('vehicle_id', 'purchaser_employee_id')
     def _compute_purchaser_id(self):
-        internal = self.filtered(lambda r: r.fleet_is_internal)
-        super(FleetVehicleLogServices, (self - internal))._compute_purchaser_id()
-        for service in internal:
+        internals = self.filtered(lambda r: r.purchaser_employee_id)
+        super(FleetVehicleLogServices, (self - internals))._compute_purchaser_id()
+        for service in internals:
             service.purchaser_id = service.purchaser_employee_id.address_home_id
 
     @api.depends('vehicle_id')

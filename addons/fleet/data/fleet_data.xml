@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="fleet_category_tag_internal" model="fleet.category.tag">
-            <field name="name">Internal</field>
-            <field name="color" eval="1"/>
-        </record>
-
-        <record id="fleet_category_tag_external" model="fleet.category.tag">
-          <field name="name">External</field>
-          <field name="color" eval="2"/>
-        </record>
-
-        <record id="fleet_category_internal" model="fleet.category">
-            <field name="name">My Fleet</field>
-            <field name="description">My Fleet</field>
-            <field name="tag_ids" eval="[(4, ref('fleet.fleet_category_tag_internal'))]"/>
-            <field name="manager_id" ref="base.user_admin"/>
-            <field name="favorite_user_ids" eval="[(4, ref('base.user_admin'))]"/>
-        </record>
-
         <record forcecreate="True" id="ir_cron_contract_costs_generator" model="ir.cron">
             <field name="name">Fleet: Generate contracts costs based on costs frequency</field>
             <field name="model_id" ref="model_fleet_vehicle_log_contract"/>

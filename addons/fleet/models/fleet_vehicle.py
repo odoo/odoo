@@ -29,19 +29,14 @@ class FleetVehicle(models.Model):
     name = fields.Char(compute="_compute_vehicle_name", store=True)
     description = fields.Html("Vehicle Description", help="Add a note about this vehicle")
     active = fields.Boolean('Active', default=True, tracking=True)
-    fleet_id = fields.Many2one('fleet.category', string='Fleet')
     manager_id = fields.Many2one(
-        'res.users', 'Manager',
+        'res.users', 'Fleet Manager',
         compute='_compute_manager_id', store=True, readonly=False,
         domain=lambda self: [('groups_id', 'in', self.env.ref('fleet.fleet_group_manager').id)],
     )
-    #Company should always be the same as fleet_id, but since we do have a case where fleet_id is null
-    # and we want the vehicle to be company bound we need to store it aswell, fleet_id.company_id is not editable
     company_id = fields.Many2one(
         'res.company', 'Company',
-        compute='_compute_company_id',
         default=lambda self: self.env.company,
-        store=True,
     )
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     country_id = fields.Many2one('res.country', related='company_id.country_id')
@@ -50,8 +45,8 @@ class FleetVehicle(models.Model):
         help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
     trailer_hook = fields.Boolean(default=False, string='Trailer Hitch', compute='_compute_model_fields', store=True, readonly=False)
-    driver_id = fields.Many2one('res.partner', 'Driver', tracking=True, help='Driver of the vehicle', copy=False)
-    future_driver_id = fields.Many2one('res.partner', 'Future Driver', tracking=True, help='Next Driver of the vehicle', copy=False, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    driver_id = fields.Many2one('res.partner', 'Driver', tracking=True, help='Driver address of the vehicle', copy=False)
+    future_driver_id = fields.Many2one('res.partner', 'Future Driver', tracking=True, help='Next Driver Address of the vehicle', copy=False, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     model_id = fields.Many2one('fleet.vehicle.model', 'Model',
         tracking=True, required=True, help='Model of the vehicle')
 
@@ -114,18 +109,6 @@ class FleetVehicle(models.Model):
     frame_type = fields.Selection([('diamant', 'Diamant'), ('trapez', 'Trapez'), ('wave', 'Wave')], help="Frame type of the bike")
     electric_assistance = fields.Boolean(compute='_compute_model_fields', store=True, readonly=False)
     frame_size = fields.Float()
-
-    @api.depends('fleet_id')
-    def _compute_manager_id(self):
-        for record in self:
-            record.manager_id = record.fleet_id.manager_id
-
-    @api.depends('fleet_id')
-    def _compute_company_id(self):
-        for record in self:
-            # Retain company when fleet is unset
-            if record.fleet_id:
-                record.company_id = record.fleet_id.company_id
 
     @api.depends('model_id')
     def _compute_model_fields(self):

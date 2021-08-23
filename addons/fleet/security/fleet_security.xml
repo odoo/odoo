@@ -80,11 +80,6 @@
             <field name="model_id" ref="model_fleet_vehicle"/>
             <field name="groups" eval="[(4, ref('fleet_group_manager'))]"/>
         </record>
-        <record id="ir_rule_fleet_category" model="ir.rule">
-            <field name="name">Fleet: Multi Company</field>
-            <field name="model_id" ref="model_fleet_category"/>
-            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
-        </record>
         <record id="ir_rule_fleet_vehicle" model="ir.rule">
             <field name="name">Fleet vehicle: Multi Company</field>
             <field name="model_id" ref="model_fleet_vehicle"/>
