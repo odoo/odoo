@@ -146,7 +146,17 @@ var LinkDialog = Dialog.extend({
         if (this.data.iniClassName) {
             this.$('input[name="link_style_color"], select[name="link_style_size"] > option, select[name="link_style_shape"] > option').each(function () {
                 var $option = $(this);
-                if ($option.val() && self.data.iniClassName.match(new RegExp('(^|btn-| |btn-outline-)' + $option.val()))) {
+                var value = $option.val();
+                if (!value) {
+                    return;
+                }
+                var subValues = value.split(',');
+                var active = true;
+                for (var i = 0; i < subValues.length; i++) {
+                    var classPrefix = new RegExp('(^|btn-| |btn-outline-)' + subValues[i]);
+                    active = active && classPrefix.test(self.data.iniClassName);
+                }
+                if (active) {
                     if ($option.is("input")) {
                         $option.prop("checked", true);
                     } else {
