@@ -18,8 +18,8 @@
     </template>
 
     <template id="portal_my_task_planned_hours_template">
-        <t t-if="is_uom_day and timesheets[0]._convert_hours_to_days(task.planned_hours) > 0">
-            <strong>Planned Days:</strong> <span t-esc="timesheets[0]._convert_hours_to_days(task.planned_hours)" t-options='{"widget": "timesheet_uom"}'/>
+        <t t-if="is_uom_day and timesheets._convert_hours_to_days(task.planned_hours) > 0">
+            <strong>Planned Days:</strong> <span t-esc="timesheets._convert_hours_to_days(task.planned_hours)" t-options='{"widget": "timesheet_uom"}'/>
         </t>
         <t t-if="not is_uom_day and task.planned_hours > 0" t-call="project.portal_my_task_planned_hours_template"></t>
     </template>
