@@ -43,7 +43,7 @@
                 </xpath>
                 <xpath expr="//page[@id='other_tab']" position="after">
                     <page id="edi_documents" string="EDI Documents" groups="base.group_no_one" attrs="{'invisible': [('edi_document_ids', '=', [])]}">
-                        <field name="edi_document_ids">
+                        <field name="edi_document_ids" style="pointer-events:none;">
                             <tree create="false" delete="false" edit="false" decoration-danger="error">
                                 <field name="name"/>
                                 <field name="edi_format_name"/>
