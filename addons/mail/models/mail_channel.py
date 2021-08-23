@@ -8,6 +8,7 @@ from uuid import uuid4
 from odoo import _, api, fields, models, modules, tools, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
+from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 
@@ -553,7 +554,7 @@ class Channel(models.Model):
                     info['seen_message_id'] = partner_channel.seen_message_id.id
                     info['custom_channel_name'] = partner_channel.custom_channel_name
                     info['is_pinned'] = partner_channel.is_pinned
-                    info['last_meaningful_action_time'] = partner_channel.last_meaningful_action_time
+                    info['last_meaningful_action_time'] = partner_channel.last_meaningful_action_time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             # add members infos
             if channel.channel_type != 'channel':
                 # avoid sending potentially a lot of members for big channels

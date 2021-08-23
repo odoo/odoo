@@ -3,8 +3,12 @@
 
 from odoo import fields, models
 
+
 class MailUserSettings(models.Model):
 
     _inherit = 'mail.user.settings'
 
     is_discuss_sidebar_category_livechat_open = fields.Boolean("Is category livechat open", default=True)
+
+    def _mail_user_settings_format_fields(self):
+        return super()._mail_user_settings_format_fields() + ['is_discuss_sidebar_category_livechat_open']

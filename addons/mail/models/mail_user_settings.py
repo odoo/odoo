@@ -23,9 +23,17 @@ class MailUserSettings(models.Model):
             settings = self.create({'user_id': user.id})
         return settings
 
+    def _mail_user_settings_format_fields(self):
+        return [
+            'id',
+            'is_discuss_sidebar_category_channel_open',
+            'is_discuss_sidebar_category_chat_open',
+            'user_id',
+        ]
+
     def mail_user_settings_format(self):
-        self.ensure_one
-        return self.read()[0]
+        self.ensure_one()
+        return self._read_format(fnames=self._mail_user_settings_format_fields())[0]
 
     def set_mail_user_settings(self, new_settings):
         self.ensure_one()

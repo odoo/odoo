@@ -11,6 +11,7 @@ from odoo.exceptions import AccessError
 from odoo.tests import tagged, Form
 from odoo.tests.common import users
 from odoo.tools import mute_logger
+from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 @tagged('mail_channel')
@@ -325,7 +326,7 @@ class TestChannelInternals(MailCommon):
             # `last_meaningful_action_time` should be updated again when `channel_get` is called
             # because `channel_pin` is called.
             channel_info = self.env['mail.channel'].channel_get(partners_to=self.partner_admin.ids)
-        self.assertEqual(channel_info['last_meaningful_action_time'], retrive_time)
+        self.assertEqual(channel_info['last_meaningful_action_time'], retrive_time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
 
     @users('employee')
     def test_channel_info_seen(self):
