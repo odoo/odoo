@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.view_tax_form"/>
             <field name="arch" type="xml">
                 <field name="name" position="after">
-                    <field name="l10n_cl_sii_code" options="{'format': false}"/>
+                    <field name="l10n_cl_sii_code" options="{'format': false}" attrs="{'invisible': [('country_code', '!=', 'CL')]}"/>
                 </field>
             </field>
         </record>
