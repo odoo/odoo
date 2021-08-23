@@ -8,6 +8,6 @@ class FleetVehicleOdometer(models.Model):
     _inherit = 'fleet.vehicle.odometer'
 
     driver_employee_id = fields.Many2one(
-        related='vehicle_id.driver_employee_id', string='Current Driver (Employee)',
+        related='vehicle_id.driver_employee_id', string='Driver (Employee)',
         readonly=True,
     )
