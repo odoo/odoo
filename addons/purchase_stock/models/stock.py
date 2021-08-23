@@ -171,7 +171,9 @@ class Orderpoint(models.Model):
             ('state','in',('draft','sent','to approve')),
             '|',
                 ('orderpoint_id','in',self.ids),
-                ('move_dest_ids.product_id', 'in', self.mapped('product_id.id'))
+                '&',
+                  ('move_dest_ids.product_id', 'in', self.mapped('product_id.id')),
+                  ('move_dest_ids.location_id', 'in', self.mapped('location_id.id')),
         ])
         for poline in purchase_lines_in_progress:
             orderpoints = self.filtered(lambda x: x.product_id == poline.product_id)

@@ -63,6 +63,74 @@ class TestReorderingRule(TransactionCase):
         # On the po generated, the source document should be the name of the reordering rule
         self.assertEqual(order_point.name, purchase_order.origin, 'Source document on purchase order should be the name of the reordering rule.')
 
+    def test_reordering_rule_multi_wh(self):
+        """
+            - MultiWarehouse, WH2 resupply from WH
+            - Receive products in 2 steps
+            - The product has a reordering rule in each WH
+            - Both orderpoint trigger a separate PO line
+
+        """
+        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        warehouse_2 = self.env['stock.warehouse'].create({
+            'partner_id': self.env.ref('base.main_partner').id,
+            'code': 'Test',
+        })
+
+        warehouse_1.write({'reception_steps': 'two_steps'})
+        warehouse_2.write({'resupply_wh_ids': warehouse_1.ids})
+
+        # Create a supplier
+        partner = self.env['res.partner'].create({
+            'name': 'Smith'
+        })
+
+        # create product and set the vendor
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'Product A'
+        product_form.type = 'product'
+        with product_form.seller_ids.new() as seller:
+            seller.name = partner
+        product_form.route_ids.add(self.env.ref('purchase_stock.route_warehouse0_buy'))
+        product_01 = product_form.save()
+
+        # create reordering rule
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.warehouse_id = warehouse_1
+        orderpoint_form.location_id = warehouse_1.lot_stock_id
+        orderpoint_form.product_id = product_01
+        orderpoint_form.product_min_qty = 0
+        orderpoint_form.product_max_qty = 30
+        order_point = orderpoint_form.save()
+
+        # create reordering rule
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.warehouse_id = warehouse_2
+        orderpoint_form.location_id = warehouse_2.lot_stock_id
+        orderpoint_form.product_id = product_01
+        orderpoint_form.product_min_qty = 0
+        orderpoint_form.product_max_qty = 20
+        order_point = orderpoint_form.save()
+
+        # Create Delivery Order of 1 product
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.partner_id = partner
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product_01
+            move.product_uom_qty = 1
+        customer_picking = picking_form.save()
+
+        # picking confirm
+        customer_picking.action_confirm()
+
+        # Run scheduler
+        self.env['procurement.group'].run_scheduler()
+
+        # Check purchase order created or not
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
+        self.assertEqual(len(purchase_order), 2, 'No purchase order created.')
+
     def test_procure_not_default_partner(self):
         """Define a product with 2 vendors. First run a "standard" procurement,
         default vendor should be used. Then, call a procurement with
