@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 
-import collections
 import babel.dates
+import pytz
 import re
 import werkzeug
-from werkzeug.datastructures import OrderedMultiDict
-from werkzeug.exceptions import NotFound
 
 from ast import literal_eval
 from collections import defaultdict
 from datetime import datetime, timedelta
+from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
+from werkzeug.datastructures import OrderedMultiDict
+from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.main import QueryURL
-from odoo.addons.event.controllers.main import EventController
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools.misc import get_lang, format_date
@@ -26,6 +26,10 @@ class WebsiteEventController(http.Controller):
     def sitemap_event(env, rule, qs):
         if not qs or qs.lower() in '/events':
             yield {'loc': '/events'}
+
+    # ------------------------------------------------------------
+    # EVENT LIST
+    # ------------------------------------------------------------
 
     @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>'], type='http', auth="public", website=True, sitemap=sitemap_event)
     def events(self, page=1, **searches):
@@ -152,7 +156,7 @@ class WebsiteEventController(http.Controller):
             'current_type': current_type,
             'event_ids': events,  # event_ids used in website_event_track so we keep name as it is
             'dates': dates,
-            'categories': request.env['event.tag.category'].search([]),
+            'categories': request.env['event.tag.category'].search([('is_published', '=', True)]),
             'countries': countries,
             'pager': pager,
             'searches': searches,
@@ -166,6 +170,10 @@ class WebsiteEventController(http.Controller):
             values['canonical_params'] = OrderedMultiDict([('date', 'old')])
 
         return request.render("website_event.index", values)
+
+    # ------------------------------------------------------------
+    # EVENT PAGE
+    # ------------------------------------------------------------
 
     @http.route(['''/event/<model("event.event"):event>/page/<path:page>'''], type='http', auth="public", website=True, sitemap=False)
     def event_page(self, event, page, **post):
@@ -213,51 +221,6 @@ class WebsiteEventController(http.Controller):
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url'),
         }
-
-    @http.route('/event/add_event', type='json', auth="user", methods=['POST'], website=True)
-    def add_event(self, event_name="New Event", **kwargs):
-        event = self._add_event(event_name, request.context)
-        return "/event/%s/register?enable_editor=1" % slug(event)
-
-    def _add_event(self, event_name=None, context=None, **kwargs):
-        if not event_name:
-            event_name = _("New Event")
-        date_begin = datetime.today() + timedelta(days=(14))
-        vals = {
-            'name': event_name,
-            'date_begin': fields.Date.to_string(date_begin),
-            'date_end': fields.Date.to_string((date_begin + timedelta(days=(1)))),
-            'seats_available': 1000,
-            'website_id': request.website.id,
-        }
-        return request.env['event.event'].with_context(context or {}).create(vals)
-
-    def get_formated_date(self, event):
-        start_date = fields.Datetime.from_string(event.date_begin).date()
-        end_date = fields.Datetime.from_string(event.date_end).date()
-        month = babel.dates.get_month_names('abbreviated', locale=get_lang(event.env).code)[start_date.month]
-        return ('%s %s%s') % (month, start_date.strftime("%e"), (end_date != start_date and ("-" + end_date.strftime("%e")) or ""))
-
-    @http.route('/event/get_country_event_list', type='json', auth='public', website=True)
-    def get_country_events(self, **post):
-        Event = request.env['event.event']
-        country_code = request.session['geoip'].get('country_code')
-        result = {'events': [], 'country': False}
-        events = None
-        domain = request.website.website_domain()
-        if country_code:
-            country = request.env['res.country'].search([('code', '=', country_code)], limit=1)
-            events = Event.search(domain + ['|', ('address_id', '=', None), ('country_id.code', '=', country_code), ('date_begin', '>=', '%s 00:00:00' % fields.Date.today())], order="date_begin")
-        if not events:
-            events = Event.search(domain + [('date_begin', '>=', '%s 00:00:00' % fields.Date.today())], order="date_begin")
-        for event in events:
-            if country_code and event.country_id.code == country_code:
-                result['country'] = country
-            result['events'].append({
-                "date": self.get_formated_date(event),
-                "event": event,
-                "url": event.website_url})
-        return request.env['ir.ui.view']._render_template("website_event.country_events_list", result)
 
     def _process_tickets_form(self, event, form_details):
         """ Process posted data about ticket order. Generic ticket are supported
@@ -413,6 +376,75 @@ class WebsiteEventController(http.Controller):
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url')
         }
+
+    # ------------------------------------------------------------
+    # EDITOR (NEW EVENT)
+    # ------------------------------------------------------------
+
+    @http.route('/event/add_event', type='json', auth="user", methods=['POST'], website=True)
+    def add_event(self, name, event_start, event_end, address_values, **kwargs):
+        values = self._prepare_event_values(name, event_start, event_end, address_values)
+        event = request.env['event.event'].create(values)
+        return "/event/%s/register?enable_editor=1" % slug(event)
+
+    def _prepare_event_values(self, name, event_start, event_end, address_values=None):
+        """
+        Return the values to create a new event.
+        event_start,event_date are datetimes in the user tz.
+        address_values is used to either choose an existing location or create one as we allow it in the frontend.
+        """
+        date_begin = parse(event_start).astimezone(pytz.utc).replace(tzinfo=None)
+        date_end = parse(event_end).astimezone(pytz.utc).replace(tzinfo=None)
+        address_id = request.env['res.partner']
+        if address_values:
+            (address_pid, address_vals) = int(address_values[0]), address_values[1]
+            address_id = address_pid
+            if address_pid == 0:
+                address_id = request.env['res.partner'].create(address_vals).id
+        return {
+            'name': name,
+            'date_begin': date_begin,
+            'date_end': date_end,
+            'address_id': address_id,
+            'seats_available': 1000,
+            'website_id': request.website.id,
+            'event_ticket_ids': request.env['event.event.ticket'],
+        }
+
+    # ------------------------------------------------------------
+    # TOOLS (JSON)
+    # ------------------------------------------------------------
+
+    @http.route('/event/get_country_event_list', type='json', auth='public', website=True)
+    def get_country_events(self, **post):
+        Event = request.env['event.event']
+        country_code = request.session['geoip'].get('country_code')
+        result = {'events': [], 'country': False}
+        events = None
+        domain = request.website.website_domain()
+        if country_code:
+            country = request.env['res.country'].search([('code', '=', country_code)], limit=1)
+            events = Event.search(domain + ['|', ('address_id', '=', None), ('country_id.code', '=', country_code), ('date_begin', '>=', '%s 00:00:00' % fields.Date.today())], order="date_begin")
+        if not events:
+            events = Event.search(domain + [('date_begin', '>=', '%s 00:00:00' % fields.Date.today())], order="date_begin")
+        for event in events:
+            if country_code and event.country_id.code == country_code:
+                result['country'] = country
+            result['events'].append({
+                "date": self.get_formated_date(event),
+                "event": event,
+                "url": event.website_url})
+        return request.env['ir.ui.view']._render_template("website_event.country_events_list", result)
+
+    # ------------------------------------------------------------
+    # TOOLS (HELPERS)
+    # ------------------------------------------------------------
+
+    def get_formated_date(self, event):
+        start_date = fields.Datetime.from_string(event.date_begin).date()
+        end_date = fields.Datetime.from_string(event.date_end).date()
+        month = babel.dates.get_month_names('abbreviated', locale=get_lang(event.env).code)[start_date.month]
+        return ('%s %s%s') % (month, start_date.strftime("%e"), (end_date != start_date and ("-" + end_date.strftime("%e")) or ""))
 
     def _extract_searched_event_tags(self, searches):
         tags = request.env['event.tag']
