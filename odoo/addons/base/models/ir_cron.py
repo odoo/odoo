@@ -254,7 +254,7 @@ class ir_cron(models.Model):
         # 3: now
         # 4: future_nextcall, the cron nextcall as seen from now
 
-        with api.Environment.manage(), db.cursor() as job_cr:
+        with cls.pool.cursor() as job_cr:
             lastcall = fields.Datetime.to_datetime(job['lastcall'])
             interval = _intervalTypes[job['interval_type']](job['interval_number'])
             env = api.Environment(job_cr, job['user_id'], {'lastcall': lastcall})

@@ -591,7 +591,7 @@ class Users(models.Model):
             # This is unlikely in a business code to change the company of a user and then do business stuff
             # but in case it happens this is handled.
             # e.g. `account_test_savepoint.py` `setup_company_data`, triggered by `test_account_invoice_report.py`
-            for env in list(self.env.envs):
+            for env in list(self.env.transaction.envs):
                 if env.user in self:
                     lazy_property.reset_all(env)
 

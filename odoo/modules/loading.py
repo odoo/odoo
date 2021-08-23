@@ -369,7 +369,10 @@ def load_marked_modules(cr, graph, states, force, progressdict, report,
             break
     return processed_modules
 
-def load_modules(db, force_demo=False, status=None, update_module=False):
+def load_modules(registry, force_demo=False, status=None, update_module=False):
+    """ Load the modules for a registry object that has just been created.  This
+        function is part of Registry.new() and should not be used anywhere else.
+    """
     initialize_sys_path()
 
     force = []
@@ -378,7 +381,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
     models_to_check = set()
 
-    with db.cursor() as cr:
+    with registry.cursor() as cr:
         # prevent endless wait for locks on schema changes (during online
         # installs) if a concurrent transaction has accessed the table;
         # connection settings are automatically reset when the connection is
@@ -394,10 +397,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             tools.config["init"]["all"] = 1
             if not tools.config['without_demo']:
                 tools.config["demo"]['all'] = 1
-
-        # This is a brand new registry, just created in
-        # odoo.modules.registry.Registry.new().
-        registry = odoo.registry(cr.dbname)
 
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
@@ -537,10 +536,10 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 # modules to remove next time
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
-                api.Environment.reset()
                 registry = odoo.modules.registry.Registry.new(
                     cr.dbname, force_demo, status, update_module
                 )
+                cr.reset()
                 registry.check_tables_exist(cr)
                 cr.commit()
                 return registry

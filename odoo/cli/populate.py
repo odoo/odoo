@@ -26,12 +26,11 @@ class Populate(Command):
         opt = odoo.tools.config.parse_config(cmdargs)
         populate_models = opt.populate_models and set(opt.populate_models.split(','))
         population_size = opt.population_size
-        with odoo.api.Environment.manage():
-            dbname = odoo.tools.config['db_name']
-            registry = odoo.registry(dbname)
-            with registry.cursor() as cr:
-                env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
-                self.populate(env, population_size, populate_models)
+        dbname = odoo.tools.config['db_name']
+        registry = odoo.registry(dbname)
+        with registry.cursor() as cr:
+            env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+            self.populate(env, population_size, populate_models)
 
 
     @classmethod

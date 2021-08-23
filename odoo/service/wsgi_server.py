@@ -95,10 +95,9 @@ def application_unproxied(environ, start_response):
     if hasattr(threading.current_thread(), 'url'):
         del threading.current_thread().url
 
-    with odoo.api.Environment.manage():
-        result = odoo.http.root(environ, start_response)
-        if result is not None:
-            return result
+    result = odoo.http.root(environ, start_response)
+    if result is not None:
+        return result
 
     # We never returned from the loop.
     return werkzeug.exceptions.NotFound("No handler found.\n")(environ, start_response)

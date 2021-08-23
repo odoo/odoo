@@ -24,8 +24,6 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ
 from psycopg2.pool import PoolError
 from werkzeug import urls
 
-from odoo.api import Environment
-
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 _logger = logging.getLogger(__name__)
@@ -99,29 +97,29 @@ class BaseCursor:
         self.postcommit = tools.Callbacks()
         self.prerollback = tools.Callbacks()
         self.postrollback = tools.Callbacks()
+        # By default a cursor has no transaction object.  A transaction object
+        # for managing environments is instantiated by registry.cursor().  It
+        # is not done here in order to avoid cyclic module dependencies.
+        self.transaction = None
 
     def flush(self):
-        """ Flush an environment corresponding to self, and run precommit hooks. """
-        env_to_flush = None
-        for env in list(Environment.envs):
-            # don't flush() on another cursor or with a RequestUID
-            if env.cr is self and (isinstance(env.uid, int) or env.uid is None):
-                env_to_flush = env
-                if env.uid is not None:
-                    break               # prefer an environment with a real uid
-
-        if env_to_flush is not None:
-            env_to_flush['base'].flush()
-
+        """ Flush the current transaction, and run precommit hooks. """
+        if self.transaction is not None:
+            self.transaction.flush()
         self.precommit.run()
 
     def clear(self):
-        """ Clear an environment corresponding to self, and clear precommit hooks. """
-        for env in list(Environment.envs):
-            if env.cr is self:
-                env.clear()
-                break
+        """ Clear the current transaction, and clear precommit hooks. """
+        if self.transaction is not None:
+            self.transaction.clear()
         self.precommit.clear()
+
+    def reset(self):
+        """ Reset the current transaction (this invalidates more that clear()).
+            This method should be called only right after commit() or rollback().
+        """
+        if self.transaction is not None:
+            self.transaction.reset()
 
     @contextmanager
     @check
@@ -523,6 +521,7 @@ class TestCursor(BaseCursor):
     _savepoint_seq = itertools.count()
 
     def __init__(self, cursor, lock):
+        super().__init__()
         self._closed = False
         self._cursor = cursor
         # we use a lock to serialize concurrent requests

@@ -34,7 +34,7 @@ def after_commit(func):
         @self.env.cr.postcommit.add
         def called_after():
             db_registry = registry(dbname)
-            with api.Environment.manage(), db_registry.cursor() as cr:
+            with db_registry.cursor() as cr:
                 env = api.Environment(cr, uid, context)
                 try:
                     func(self.with_env(env), *args, **kwargs)
