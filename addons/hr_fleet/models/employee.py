@@ -46,7 +46,6 @@ class Employee(models.Model):
         no_address = self.filtered(lambda r: not r.address_home_id)
         car_ids = self.env['fleet.vehicle'].sudo().search([
             ('driver_employee_id', 'in', no_address.ids),
-            ('fleet_id.internal', '=', True),
         ])
         # Prevent from removing employee address when linked to a car
         if car_ids:
@@ -60,7 +59,6 @@ class Employee(models.Model):
             car_ids = self.env['fleet.vehicle'].sudo().search([
                 ('driver_employee_id', 'in', self.ids),
                 ('driver_id', 'in', self.mapped('address_home_id').ids),
-                ('fleet_id.internal', '=', True),
             ])
             if car_ids:
                 car_ids.write({'driver_id': vals['address_home_id']})
