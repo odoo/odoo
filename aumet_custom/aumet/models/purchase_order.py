@@ -20,7 +20,9 @@ class PurchaseOrder(models.Model):
                     i.payment_method.marketplace_payment_method_id
                 )
 
-                if ErrorHelper.get_status_code(item_add_line_result.json()["message"]) == 409:
-                    raise ValidationError(f'Invalid Payment method for order line {i.product_id.name}')
+                print("item_add_line_result")
+                print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+                # if ErrorHelper.get_status_code(item_add_line_result.json()["message"]) == 409:
+                #     raise ValidationError(f'Invalid Payment method for order line {i.product_id.name}')
 
         return super(PurchaseOrder, self).write(vals)
