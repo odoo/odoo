@@ -109,7 +109,7 @@ const Link = Widget.extend({
                 const subValues = value.split(',');
                 let subActive = true;
                 for (let subValue of subValues) {
-                    const classPrefix = new RegExp('(^|btn-| |btn-outline-)' + subValue);
+                    const classPrefix = new RegExp('(^|btn-| |btn-outline-|btn-fill-)' + subValue);
                     subActive = subActive && classPrefix.test(this.data.iniClassName);
                 }
                 active = subActive;
