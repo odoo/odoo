@@ -3,6 +3,7 @@
 
 from odoo import Command
 from odoo.exceptions import AccessError
+from odoo.tests import tagged
 from odoo.tests.common import Form
 
 from .test_project_base import TestProjectCommon
@@ -18,6 +19,13 @@ class TestProjectSharingCommon(TestProjectCommon):
             (0, 0, {'name': 'To Do', 'sequence': 1}),
             (0, 0, {'name': 'Done', 'sequence': 10}),
         ]
+
+        cls.partner_portal = cls.env['res.partner'].create({
+            'name': 'Chell Gladys',
+            'email': 'chell@gladys.portal',
+            'company_id': False,
+            'user_ids': [Command.link(cls.user_portal.id)]})
+
         cls.project_cows = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
             'name': 'Cows',
             'privacy_visibility': 'portal',
@@ -49,16 +57,7 @@ class TestProjectSharingCommon(TestProjectCommon):
             view="project.project_sharing_project_task_view_form"
         )
 
-    def get_project_sharing_access_for_user(self, with_user, project):
-        project_with_user = project.with_user(with_user or self.env.user)
-        return {
-            'read': project_with_user._check_project_sharing_access(),
-            'comment': project_with_user._check_project_sharing_access('comment'),
-            'edit': project_with_user._check_project_sharing_access('edit')
-        }
-
-
-
+@tagged('project_sharing')
 class TestProjectSharing(TestProjectSharingCommon):
 
     def test_project_share_wizard(self):
@@ -73,95 +72,30 @@ class TestProjectSharing(TestProjectSharingCommon):
         project_share_wizard = self.env['project.share.wizard'].create({
             'res_model': 'project.project',
             'res_id': self.project_portal.id,
+            'access_mode': 'edit',
         })
-        self.assertFalse(project_share_wizard.line_ids, 'No access rights should be given to a portal user in this project.')
+        self.assertFalse(project_share_wizard.partner_ids, 'No collaborator should be in the wizard.')
         self.assertFalse(self.project_portal.with_user(self.user_portal)._check_project_sharing_access(), 'The portal user should not have accessed in project sharing views.')
-        project_share_wizard.write({'line_ids': [
-            Command.create({
-                'user_id': self.user_portal.id,
-                'access_mode': 'read',
-            }),
-        ]})
-        project_share_wizard.action_confirm_access()
-        self.assertEqual(len(self.project_portal.project_sharing_access_ids), 1, 'The access right added in project share wizard should be added in the project when the user confirm the access in the wizard.')
+        project_share_wizard.write({'partner_ids': [Command.link(self.user_portal.partner_id.id)]})
+        project_share_wizard.action_send_mail()
+        self.assertEqual(len(self.project_portal.collaborator_ids), 1, 'The access right added in project share wizard should be added in the project when the user confirm the access in the wizard.')
         self.assertDictEqual({
-            'user_id': self.project_portal.project_sharing_access_ids.user_id,
-            'access_mode': self.project_portal.project_sharing_access_ids.access_mode,
-            'project_id': self.project_portal.project_sharing_access_ids.project_id,
+            'partner_id': self.project_portal.collaborator_ids.partner_id,
+            'project_id': self.project_portal.collaborator_ids.project_id,
         }, {
-            'user_id': self.user_portal,
-            'access_mode': 'read',
+            'partner_id': self.user_portal.partner_id,
             'project_id': self.project_portal,
         }, 'The access rights added should be the read access for the portal project for Chell Gladys.')
-        self.assertTrue(self.project_portal._check_project_sharing_access(), 'The portal user should have read access to the portal project with project sharing feature.')
-        self.assertTrue(self.user_portal.partner_id in self.project_portal.message_partner_ids)
+        self.assertTrue(self.project_portal.with_user(self.user_portal)._check_project_sharing_access(), 'The portal user should have read access to the portal project with project sharing feature.')
 
     def test_project_sharing_access(self):
-        """ Check the _check_project_sharing_access returns the expected value for all access mode defined in project sharing.
-        """
-        self.assertDictEqual(
-            self.get_project_sharing_access_for_user(self.user_public, self.project_portal),
-            {
-                'read': False,
-                'comment': False,
-                'edit': False,
-            },
-            'The public user should not have any access to project sharing feature of the portal project.'
-        )
-        self.assertDictEqual(
-            self.get_project_sharing_access_for_user(self.user_projectuser, self.project_portal),
-            {
-                'read': True,
-                'comment': True,
-                'edit': True,
-            },
-            'The internal user should have all accesses to project sharing feature of the portal project.'
-        )
-        self.assertDictEqual(
-            self.get_project_sharing_access_for_user(self.user_portal, self.project_portal),
-            {
-                'read': False,
-                'comment': False,
-                'edit': False,
-            },
-            'The portal user should not have any access to project sharing feature of the portal project.'
-        )
-        self.project_portal.write({
-            'project_sharing_access_ids': [Command.create({
-                'user_id': self.user_portal.id,
-                'access_mode': 'read',
-            })],
-        })
-        project_sharing_access = self.project_portal.project_sharing_access_ids
-        self.assertDictEqual(
-            self.get_project_sharing_access_for_user(self.user_portal, self.project_portal),
-            {
-                'read': True,
-                'comment': False,
-                'edit': False,
-            },
-            'The portal user should have only the read access to project sharing feature of the portal project.'
-        )
-        project_sharing_access.write({'access_mode': 'comment'})
-        self.assertDictEqual(
-            self.get_project_sharing_access_for_user(self.user_portal, self.project_portal),
-            {
-                'read': True,
-                'comment': True,
-                'edit': False,
-            },
-            'The portal user should can read and comment the tasks of the portal project in project sharing views.'
-        )
-        project_sharing_access.write({'access_mode': 'edit'})
-        self.assertDictEqual(
-            self.get_project_sharing_access_for_user(self.user_portal, self.project_portal),
-            {
-                'read': True,
-                'comment': True,
-                'edit': True,
-            },
-            'The portal user should can read, comment and edit the tasks of the portal project in project sharing views.'
-        )
+        """ Check if the different user types can access to project sharing feature as expected. """
+        with self.assertRaises(AccessError, msg='The public user should not have any access to project sharing feature of the portal project.'):
+            self.project_portal.with_user(self.user_public)._check_project_sharing_access()
+        self.assertTrue(self.project_portal.with_user(self.user_projectuser)._check_project_sharing_access(), 'The internal user should have all accesses to project sharing feature of the portal project.')
+        self.assertFalse(self.project_portal.with_user(self.user_portal)._check_project_sharing_access(), 'The portal user should not have any access to project sharing feature of the portal project.')
+        self.project_portal.write({'collaborator_ids': [Command.create({'partner_id': self.user_portal.partner_id.id})]})
+        self.assertTrue(self.project_portal.with_user(self.user_portal)._check_project_sharing_access(), 'The portal user can access to project sharing feature of the portal project.')
 
     def test_create_task_in_project_sharing(self):
         """ Test when portal user creates a task in project sharing views.
@@ -174,29 +108,16 @@ class TestProjectSharing(TestProjectSharingCommon):
             3.1) Try to change the project of the new task with this user.
         """
         # 1) Give the 'read' access mode to a portal user in a project and try to create task with this user.
+        with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
+            with self.get_project_sharing_form_view(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_portal.id}), self.user_portal) as form:
+                form.name = 'Test'
+                task = form.save()
+
         self.project_portal.write({
-            'project_sharing_access_ids': [
-                Command.create({
-                    'user_id': self.user_portal.id,
-                    'access_mode': 'read',
-                }),
+            'collaborator_ids': [
+                Command.create({'partner_id': self.user_portal.partner_id.id}),
             ],
         })
-        with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
-            with self.get_project_sharing_form_view(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_portal.id}), self.user_portal) as form:
-                form.name = 'Test'
-                task = form.save()
-
-        # 2) Give the 'comment' access mode to a portal user in a project and try to create task with this user.
-        project_sharing_access = self.project_portal.project_sharing_access_ids
-        project_sharing_access.write({'access_mode': 'comment'})
-        with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
-            with self.get_project_sharing_form_view(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_portal.id}), self.user_portal) as form:
-                form.name = 'Test'
-                task = form.save()
-
-        # 3) Give the 'edit' access mode to a portal user in a project and try to create task with this user.
-        project_sharing_access.write({'access_mode': 'edit'})
         with self.get_project_sharing_form_view(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_portal.id}), self.user_portal) as form:
             form.name = 'Test'
             task = form.save()
@@ -219,32 +140,21 @@ class TestProjectSharing(TestProjectSharingCommon):
             3.1) Try to change the project of the new task with this user.
         """
         # 1) Give the 'read' access mode to a portal user in a project and try to create task with this user.
+        with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
+            with self.get_project_sharing_form_view(self.task_cow.with_context({'tracking_disable': True, 'default_project_id': self.project_cows.id}), self.user_portal) as form:
+                form.name = 'Test'
+                task = form.save()
+
         project_share_wizard = self.env['project.share.wizard'].create({
+            'access_mode': 'edit',
             'res_model': 'project.project',
             'res_id': self.project_cows.id,
-            'line_ids': [
-                Command.create({
-                    'user_id': self.user_portal.id,
-                    'access_mode': 'read',
-                }),
+            'partner_ids': [
+                Command.link(self.user_portal.partner_id.id),
             ],
         })
-        project_share_wizard.action_confirm_access()
-        with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
-            with self.get_project_sharing_form_view(self.task_cow.with_context({'tracking_disable': True, 'default_project_id': self.project_cows.id}), self.user_portal) as form:
-                form.name = 'Test'
-                task = form.save()
+        project_share_wizard.action_send_mail()
 
-        # 2) Give the 'comment' access mode to a portal user in a project and try to create task with this user.
-        project_sharing_access = self.project_cows.project_sharing_access_ids
-        project_sharing_access.write({'access_mode': 'comment'})
-        with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
-            with self.get_project_sharing_form_view(self.task_cow.with_context({'tracking_disable': True, 'default_project_id': self.project_cows.id}), self.user_portal) as form:
-                form.name = 'Test'
-                task = form.save()
-
-        # 3) Give the 'edit' access mode to a portal user in a project and try to create task with this user.
-        project_sharing_access.write({'access_mode': 'edit'})
         with self.get_project_sharing_form_view(self.task_cow.with_context({'tracking_disable': True, 'default_project_id': self.project_cows.id, 'uid': self.user_portal.id}), self.user_portal) as form:
             form.name = 'Test'
             task = form.save()

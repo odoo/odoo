@@ -33,6 +33,7 @@
         'views/project_update_templates.xml',
         'views/project_project_stage_views.xml',
         'wizard/project_share_wizard_views.xml',
+        'views/project_collaborator_views.xml',
         'views/project_views.xml',
         'views/res_partner_views.xml',
         'views/res_config_settings_views.xml',

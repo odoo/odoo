@@ -145,14 +145,13 @@
             '|',
                 ('project_id.message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
                 ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
-            ('project_id.project_sharing_access_ids.user_id', 'in', [user.id]),
-            ('project_id.project_sharing_access_ids.access_mode', '=', 'edit'),
+            ('project_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
         ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         <field name="perm_read" eval="False"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="False"/>
-        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
 
     <record model="ir.rule" id="update_comp_rule">
@@ -181,13 +180,6 @@
         <field name="model_id" ref="project.model_project_update"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
-    </record>
-
-    <record id="project_sharing_access_portal" model="ir.rule">
-        <field name="name">Project Sharing Access: Portal user can read its own access</field>
-        <field name="model_id" ref="project.model_project_sharing_access" />
-        <field name="domain_force">[('user_id', '=', user.id)]</field>
-        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
 
 </data>

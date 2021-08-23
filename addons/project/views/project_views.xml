@@ -264,8 +264,10 @@
             <field name="arch" type="xml">
                 <form string="Project" delete="0">
                     <header>
-                        <button name="%(project.project_share_action)d" string="Share" type="action" class="oe_highlight" groups="project.group_project_manager"
-                        attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}"/>
+                        <button name="%(project.project_share_wizard_action)d" string="Share Readonly" type="action" class="oe_highlight" groups="project.group_project_manager"
+                        attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}" context="{'default_access_mode': 'read'}"/>
+                        <button name="%(project.project_share_wizard_action)d" string="Share Editable" type="action" class="oe_highlight" groups="project.group_project_manager"
+                        attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}" context="{'default_access_mode': 'edit'}"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" groups="project.group_project_stages"/>
                     </header>
                 <sheet string="Project">
@@ -310,6 +312,16 @@
                             <div class="pl-4">
                                 <field name="last_update_color" invisible="1"/>
                                 <field name="last_update_status" widget="status_with_color" options="{'color_field': 'last_update_color', 'no_quick_edit': 1}"/>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" name="%(project.project_collaborator_action)d" type="action" icon="fa-users" groups="project.group_project_manager">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="collaborator_count" nolabel="1"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    Collaborators
+                                </span>
                             </div>
                         </button>
                     </div>
@@ -640,7 +652,7 @@
                                                 <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
                                             </div>
                                             <div role="menuitem" class="col-4">
-                                                <a t-if="record.privacy_visibility.raw_value == 'portal'" class="dropdown-item" role="menuitem" name="%(project.project_share_action)d" type="action">Share</a>
+                                                <a t-if="record.privacy_visibility.raw_value == 'portal'" class="dropdown-item" role="menuitem" name="%(project.project_share_wizard_action)d" type="action">Share</a>
                                                 <a class="dropdown-item" role="menuitem" type="edit">Edit</a>
                                             </div>
                                         </div>

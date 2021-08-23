@@ -7,13 +7,12 @@ from collections import defaultdict
 from datetime import timedelta, datetime
 from random import randint
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError, AccessError
-from odoo.osv import expression
+from odoo.osv.expression import OR
 
 from .project_task_recurrence import DAYS, WEEKS
 from .project_update import STATUS_COLOR
-from .project_sharing_access import PROJECT_SHARING_ACCESS_MODE
 
 
 PROJECT_TASK_READABLE_FIELDS = {
@@ -38,7 +37,6 @@ PROJECT_TASK_READABLE_FIELDS = {
     'displayed_image_id',
     'display_name',
     'priority',
-    'project_sharing_access_mode',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
@@ -283,7 +281,8 @@ class Project(models.Model):
     tag_ids = fields.Many2many('project.tags', relation='project_project_project_tags_rel', string='Tags')
 
     # Project Sharing fields
-    project_sharing_access_ids = fields.One2many('project.sharing.access', 'project_id', 'Project Sharing Access', copy=False)
+    collaborator_ids = fields.One2many('project.collaborator', 'project_id', string='Collaborators', copy=False)
+    collaborator_count = fields.Integer('# Collaborators', compute='_compute_collaborator_count')
 
     # rating fields
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
@@ -396,6 +395,18 @@ class Project(models.Model):
                 project.alias_value = ''
             else:
                 project.alias_value = "%s@%s" % (project.alias_name, project.alias_domain)
+
+    @api.depends('collaborator_ids', 'privacy_visibility')
+    def _compute_collaborator_count(self):
+        project_sharings = self.filtered(lambda project: project.privacy_visibility == 'portal')
+        collaborator_read_group = self.env['project.collaborator'].read_group(
+            [('project_id', 'in', project_sharings.ids)],
+            ['project_id'],
+            ['project_id'],
+        )
+        collaborator_count_by_project = {res['project_id'][0]: res['project_id_count'] for res in collaborator_read_group}
+        for project in self:
+            project.collaborator_count = collaborator_count_by_project.get(project.id, 0)
 
     @api.model
     def _map_tasks_default_valeus(self, task, project):
@@ -700,25 +711,6 @@ class Project(models.Model):
             })
             project.write({'analytic_account_id': analytic_account.id})
 
-    def _check_project_sharing_access(self, access_mode='read'):
-        self.ensure_one()
-        if access_mode not in map(lambda access: access[0], PROJECT_SHARING_ACCESS_MODE):
-            raise ValidationError('The %s does not exists in project sharing accesses.' % access_mode)
-        if self.privacy_visibility != 'portal' or self.env.user._is_public():
-            return False
-        if self.env.user.has_group('base.group_portal'):
-            # check in project sharing access model of the project
-            project_sharing_access = self.project_sharing_access_ids.filtered(lambda access: access.user_id == self.env.user)
-            if not project_sharing_access:
-                return False
-            if access_mode == 'edit':
-                return project_sharing_access.access_mode == 'edit'
-            elif access_mode == 'comment':
-                return project_sharing_access.access_mode in ('comment', 'edit')
-            else:
-                return True
-        return self.env.user.has_group('base.group_user')
-
     # ---------------------------------------------------
     # Rating business
     # ---------------------------------------------------
@@ -749,6 +741,35 @@ class Project(models.Model):
             portal_users = project.message_partner_ids.user_ids.filtered('share')
             project.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
             project.mapped('tasks')._change_project_privacy_visibility()
+
+    # ---------------------------------------------------
+    # Project sharing
+    # ---------------------------------------------------
+    def _check_project_sharing_access(self):
+        self.ensure_one()
+        if self.privacy_visibility != 'portal':
+            return False
+        if self.env.user.has_group('base.group_portal'):
+            return self.env.user.partner_id in self.collaborator_ids.partner_id
+        return self.env.user.has_group('base.group_user')
+
+    def _add_collaborators(self, partners):
+        self.ensure_one()
+        user_group_id = self.env['ir.model.data']._xmlid_to_res_id('base.group_user')
+        all_collaborators = self.collaborator_ids.partner_id
+        new_collaborators = partners.filtered(
+            lambda partner:
+                partner not in all_collaborators
+                and (not partner.user_ids or user_group_id not in partner.user_ids[0].groups_id.ids)
+        )
+        if not new_collaborators:
+            # Then we have nothing to do
+            return
+        self.write({'collaborator_ids': [
+            Command.create({
+                'partner_id': collaborator.id,
+            }) for collaborator in new_collaborators],
+        })
 
 class Task(models.Model):
     _name = "project.task"
@@ -879,9 +900,6 @@ class Task(models.Model):
     # Task Dependencies fields
     allow_task_dependencies = fields.Boolean(related='project_id.allow_task_dependencies')
     depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id", column2="depends_on_id", string="Blocked By", domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
-
-    # Project Sharing fields
-    project_sharing_access_mode = fields.Selection(PROJECT_SHARING_ACCESS_MODE, compute='_compute_project_sharing_access_mode')
 
     # recurrence fields
     allow_recurring_tasks = fields.Boolean(related='project_id.allow_recurring_tasks')
@@ -1189,26 +1207,6 @@ class Task(models.Model):
             else:
                 task.stage_id = False
 
-    @api.depends_context('uid')
-    @api.depends('project_id.project_sharing_access_ids', 'project_id.privacy_visibility')
-    def _compute_project_sharing_access_mode(self):
-        if self.env.user._is_public():
-            self.project_sharing_access_mode = False
-            return
-        portal_user = self.user_has_groups('base.group_portal')
-        project_sharings = self.project_id.filtered(lambda project: project.privacy_visibility == 'portal')
-        if portal_user:
-            project_sharing_access_read = self.env['project.sharing.access'].search_read(
-                [('user_id', '=', self.env.user.id), ('project_id', 'in', project_sharings.ids)],
-                ['project_id', 'access_mode']
-            )
-            project_sharing_access_dict = {res['project_id'][0]: res['access_mode'] for res in project_sharing_access_read}
-        for task in self:
-            if not portal_user:
-                task.project_sharing_access_mode = task.project_id in project_sharings and 'edit'
-                continue
-            task.project_sharing_access_mode = project_sharing_access_dict.get(task.project_id.id, False)
-
     @api.constrains('recurring_task')
     def _check_recurring_task(self):
         if self.filtered(lambda task: task.parent_id and task.recurring_task):
@@ -1497,7 +1495,7 @@ class Task(models.Model):
             recurrence_domain = []
             if recurrence_update == 'subsequent':
                 for task in self:
-                    recurrence_domain = expression.OR([recurrence_domain, ['&', ('recurrence_id', '=', task.recurrence_id.id), ('create_date', '>=', task.create_date)]])
+                    recurrence_domain = OR([recurrence_domain, ['&', ('recurrence_id', '=', task.recurrence_id.id), ('create_date', '>=', task.create_date)]])
             else:
                 recurrence_domain = [('recurrence_id', 'in', self.recurrence_id.ids)]
             tasks |= self.env['project.task'].search(recurrence_domain)
