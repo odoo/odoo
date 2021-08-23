@@ -395,7 +395,7 @@ class AccountPartialReconcile(models.Model):
                     'line_ids': [],
                     'tax_cash_basis_rec_id': partial.id,
                     'tax_cash_basis_move_id': move.id,
-                    'fiscal_position_id': move.fiscal_position_id,
+                    'fiscal_position_id': move.fiscal_position_id.id,
                 }
 
                 # Tracking of lines grouped all together.
