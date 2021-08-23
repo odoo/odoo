@@ -65,7 +65,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         get currentOrder() {
             return this.env.pos.get_order();
         }
-        async _getAddProductOptions(product) {
+        async _getAddProductOptions(product, base_code) {
             let price_extra = 0.0;
             let draftPackLotLines, weight, description, packLotLinesToEdit;
 
@@ -138,6 +138,10 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 } else {
                     await this._onScaleNotAvailable();
                 }
+            }
+
+            if (base_code && this.env.pos.db.product_packaging_by_barcode[base_code.code]) {
+                weight = this.env.pos.db.product_packaging_by_barcode[base_code.code].qty;
             }
 
             return { draftPackLotLines, quantity: weight, description, price_extra };
@@ -238,7 +242,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     return this._barcodeErrorAction(code);
                 }
             }
-            const options = await this._getAddProductOptions(product);
+            const options = await this._getAddProductOptions(product, code);
             // Do not proceed on adding the product when no options is returned.
             // This is consistent with _clickProduct.
             if (!options) return;
