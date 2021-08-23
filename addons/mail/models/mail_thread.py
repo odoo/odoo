@@ -2298,7 +2298,7 @@ class MailThread(models.AbstractModel):
                 @self.env.cr.postcommit.add
                 def send_notifications():
                     db_registry = registry(dbname)
-                    with api.Environment.manage(), db_registry.cursor() as cr:
+                    with db_registry.cursor() as cr:
                         env = api.Environment(cr, SUPERUSER_ID, _context)
                         env['mail.mail'].browse(email_ids).send()
             else:

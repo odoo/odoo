@@ -15,7 +15,7 @@ from werkzeug import urls
 from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
 
-from odoo import api, fields, models, tools, http, release
+from odoo import api, fields, models, tools, http, release, registry
 from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import get_unaccent_sql_wrapper, similarity_score, text_from_html
@@ -397,10 +397,7 @@ class Website(models.Model):
 
             if modules:
                 modules.button_immediate_install()
-                # Force to refresh env after install of modules
-                self._cr.commit()
-                api.Environment.reset()
-                self.env = api.Environment(modules._cr, modules._uid, modules._context)
+                assert self.env.registry is registry()
 
             self.env['website'].browse(website.id).configurator_set_menu_links(menu_company, module_data)
 
@@ -465,9 +462,7 @@ class Website(models.Model):
         url = theme.button_choose_theme()
 
         # Force to refresh env after install of module
-        self._cr.commit()
-        api.Environment.reset()
-        self.env = api.Environment(theme._cr, theme._uid, theme._context)
+        assert self.env.registry is registry()
 
         website.configurator_done = True
 

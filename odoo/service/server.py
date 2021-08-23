@@ -1254,8 +1254,7 @@ def preload_registries(dbnames):
                     _logger.warning('test file %s is not a python file', test_file)
                 else:
                     _logger.info('loading test file %s', test_file)
-                    with odoo.api.Environment.manage():
-                        load_test_file_py(registry, test_file)
+                    load_test_file_py(registry, test_file)
 
             # run post-install tests
             if config['test_enable']:
@@ -1265,9 +1264,8 @@ def preload_registries(dbnames):
                                 sorted(registry._init_modules))
                 _logger.info("Starting post tests")
                 tests_before = registry._assertion_report.testsRun
-                with odoo.api.Environment.manage():
-                    result = loader.run_suite(loader.make_suite(module_names, 'post_install'))
-                    registry._assertion_report.update(result)
+                result = loader.run_suite(loader.make_suite(module_names, 'post_install'))
+                registry._assertion_report.update(result)
                 _logger.info("%d post-tests in %.2fs, %s queries",
                              registry._assertion_report.testsRun - tests_before,
                              time.time() - t0,

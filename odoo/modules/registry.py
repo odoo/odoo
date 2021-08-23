@@ -71,33 +71,32 @@ class Registry(Mapping):
         """ Create and return a new registry for the given database name. """
         t0 = time.time()
         with cls._lock:
-            with odoo.api.Environment.manage():
-                registry = object.__new__(cls)
-                registry.init(db_name)
+            registry = object.__new__(cls)
+            registry.init(db_name)
 
-                # Initializing a registry will call general code which will in
-                # turn call Registry() to obtain the registry being initialized.
-                # Make it available in the registries dictionary then remove it
-                # if an exception is raised.
-                cls.delete(db_name)
-                cls.registries[db_name] = registry
+            # Initializing a registry will call general code which will in
+            # turn call Registry() to obtain the registry being initialized.
+            # Make it available in the registries dictionary then remove it
+            # if an exception is raised.
+            cls.delete(db_name)
+            cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
+            try:
+                registry.setup_signaling()
+                # This should be a method on Registry
                 try:
-                    registry.setup_signaling()
-                    # This should be a method on Registry
-                    try:
-                        odoo.modules.load_modules(registry._db, force_demo, status, update_module)
-                    except Exception:
-                        odoo.modules.reset_modules_state(db_name)
-                        raise
+                    odoo.modules.load_modules(registry, force_demo, status, update_module)
                 except Exception:
-                    _logger.error('Failed to load registry')
-                    del cls.registries[db_name]
+                    odoo.modules.reset_modules_state(db_name)
                     raise
+            except Exception:
+                _logger.error('Failed to load registry')
+                del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
+                raise
 
-                # load_modules() above can replace the registry by calling
-                # indirectly new() again (when modules have to be uninstalled).
-                # Yeah, crazy.
-                registry = cls.registries[db_name]
+            # load_modules() above can replace the registry by calling
+            # indirectly new() again (when modules have to be uninstalled).
+            # Yeah, crazy.
+            registry = cls.registries[db_name]  # pylint: disable=unsubscriptable-object
 
             registry._init = False
             registry.ready = True
@@ -695,11 +694,15 @@ class Registry(Mapping):
         """ Return a new cursor for the database. The cursor itself may be used
             as a context manager to commit/rollback and close automatically.
         """
-        if self.test_cr is not None:
-            # When in test mode, we use a proxy object that uses 'self.test_cr'
-            # underneath.
-            return TestCursor(self.test_cr, self.test_lock)
-        return self._db.cursor()
+        if self.test_cr is None:
+            cr = self._db.cursor()
+        else:
+            # in test mode we use a proxy object that uses 'self.test_cr' underneath
+            cr = TestCursor(self.test_cr, self.test_lock)
+
+        # bind the cursor to a Transaction object, which manages environments
+        cr.transaction = odoo.api.Transaction(self)
+        return cr
 
 
 class DummyRLock(object):

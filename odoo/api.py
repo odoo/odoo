@@ -15,6 +15,7 @@ __all__ = [
 ]
 
 import logging
+import warnings
 from collections import defaultdict
 from collections.abc import Mapping
 from contextlib import contextmanager
@@ -23,7 +24,6 @@ from pprint import pformat
 from weakref import WeakSet
 
 from decorator import decorate
-from werkzeug.local import Local, release_local
 
 from .exceptions import CacheMiss
 from .tools import frozendict, classproperty, lazy_property, StackMap
@@ -475,31 +475,25 @@ class Environment(Mapping):
         names to new api models. It also holds a cache for records, and a data
         structure to manage recomputations.
     """
-    _local = Local()
-
     @classproperty
     def envs(cls):
-        return getattr(cls._local, 'environments', ())
+        raise NotImplementedError(
+            "Since Odoo 15.0, Environment.envs no longer works; "
+            "use cr.transaction or env.transaction instead."
+        )
 
     @classmethod
     @contextmanager
     def manage(cls):
-        """ Context manager for a set of environments. """
-        if hasattr(cls._local, 'environments'):
-            yield
-        else:
-            try:
-                cls._local.environments = Environments()
-                yield
-            finally:
-                release_local(cls._local)
+        warnings.warn(
+            "Since Odoo 15.0, Environment.manage() is useless.",
+            DeprecationWarning, stacklevel=2,
+        )
+        yield
 
-    @classmethod
-    def reset(cls):
-        """ Clear the set of environments.
-            This may be useful when recreating a registry inside a transaction.
-        """
-        cls._local.environments = Environments()
+    def reset(self):
+        """ Reset the transaction, see :meth:`Transaction.reset`. """
+        self.transaction.reset()
 
     def __new__(cls, cr, uid, context, su=False):
         if uid == SUPERUSER_ID:
@@ -508,8 +502,8 @@ class Environment(Mapping):
         args = (cr, uid, context, su)
 
         # if env already exists, return it
-        env, envs = None, cls.envs
-        for env in envs:
+        transaction = cr.transaction
+        for env in transaction.envs:
             if env.args == args:
                 return env
 
@@ -517,12 +511,13 @@ class Environment(Mapping):
         self = object.__new__(cls)
         args = (cr, uid, frozendict(context), su)
         self.cr, self.uid, self.context, self.su = self.args = args
-        self.registry = Registry(cr.dbname)
-        self.cache = envs.cache
+
+        self.transaction = self.all = transaction
+        self.registry = transaction.registry
+        self.cache = transaction.cache
         self._cache_key = {}                    # memo {field: cache_key}
-        self._protected = envs.protected        # proxy to shared data structure
-        self.all = envs
-        envs.add(self)
+        self._protected = transaction.protected
+        transaction.envs.add(self)
         return self
 
     #
@@ -690,35 +685,17 @@ class Environment(Mapping):
             This may be useful when recovering from a failed ORM operation.
         """
         lazy_property.reset_all(self)
-        self.cache.invalidate()
-        self.all.tocompute.clear()
-        self.all.towrite.clear()
+        self.transaction.clear()
 
-    @contextmanager
     def clear_upon_failure(self):
-        """ Context manager that clears the environments (caches and fields to
-            recompute) upon exception.
+        """ Context manager that rolls back the environments (caches and pending
+            computations and updates) upon exception.
         """
-        tocompute = {
-            field: set(ids)
-            for field, ids in self.all.tocompute.items()
-        }
-        towrite = {
-            model: {
-                record_id: dict(values)
-                for record_id, values in id_values.items()
-            }
-            for model, id_values in self.all.towrite.items()
-        }
-        try:
-            yield
-        except Exception:
-            self.clear()
-            self.all.tocompute.update(tocompute)
-            for model, id_values in towrite.items():
-                for record_id, values in id_values.items():
-                    self.all.towrite[model][record_id].update(values)
-            raise
+        warnings.warn(
+            "Since Odoo 15.0, use cr.savepoint() instead of env.clear_upon_failure().",
+            DeprecationWarning, stacklevel=2,
+        )
+        return self.cr.savepoint()
 
     def is_protected(self, field, record):
         """ Return whether `record` is protected against invalidation or
@@ -822,23 +799,48 @@ class Environment(Mapping):
             return result
 
 
-class Environments(object):
-    """ A common object for all environments in a request. """
-    def __init__(self):
-        self.envs = WeakSet()                   # weak set of environments
-        self.cache = Cache()                    # cache for all records
-        self.protected = StackMap()             # fields to protect {field: ids, ...}
-        self.tocompute = defaultdict(set)       # recomputations {field: ids}
-        # updates {model: {id: {field: value}}}
+class Transaction:
+    """ A object holding ORM data structures for a transaction. """
+    def __init__(self, registry):
+        self.registry = registry
+        # weak set of environments
+        self.envs = WeakSet()
+        # cache for all records
+        self.cache = Cache()
+        # fields to protect {field: ids}
+        self.protected = StackMap()
+        # pending computations {field: ids}
+        self.tocompute = defaultdict(set)
+        # pending updates {model: {id: {field: value}}}
         self.towrite = defaultdict(lambda: defaultdict(dict))
 
-    def add(self, env):
-        """ Add the environment ``env``. """
-        self.envs.add(env)
+    def flush(self):
+        """ Flush pending computations and updates in the transaction. """
+        env_to_flush = None
+        for env in self.envs:
+            if isinstance(env.uid, int) or env.uid is None:
+                env_to_flush = env
+                if env.uid is not None:
+                    break
+        if env_to_flush is not None:
+            env_to_flush['base'].flush()
 
-    def __iter__(self):
-        """ Iterate over environments. """
-        return iter(self.envs)
+    def clear(self):
+        """ Clear the caches and pending computations and updates in the translations. """
+        self.cache.invalidate()
+        self.tocompute.clear()
+        self.towrite.clear()
+
+    def reset(self):
+        """ Reset the transaction.  This clears the transaction, and reassigns
+            the registry on all its environments.  This operation is strongly
+            recommended after reloading the registry.
+        """
+        self.registry = Registry(self.registry.db_name)
+        for env in self.envs:
+            env.registry = self.registry
+            lazy_property.reset_all(env)
+        self.clear()
 
 
 # sentinel value for optional parameters
