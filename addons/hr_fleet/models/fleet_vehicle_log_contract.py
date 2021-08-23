@@ -8,6 +8,5 @@ class FleetVehicleLogContract(models.Model):
 
     purchaser_employee_id = fields.Many2one(
         related='vehicle_id.driver_employee_id',
-        string='Current Driver (Employee)',
+        string='Driver (Employee)',
     )
-    fleet_is_internal = fields.Boolean(related='vehicle_id.fleet_is_internal')

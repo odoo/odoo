@@ -35,8 +35,6 @@ Main Features
         'views/fleet_vehicle_views.xml',
         'views/fleet_vehicle_cost_views.xml',
         'views/fleet_board_view.xml',
-        'views/fleet_category_views.xml',
-        'views/fleet_category_tag_views.xml',
         'views/mail_activity_views.xml',
         'views/res_config_settings_views.xml',
         'data/fleet_cars_data.xml',
