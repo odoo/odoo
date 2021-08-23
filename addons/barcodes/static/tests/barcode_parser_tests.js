@@ -37,7 +37,7 @@ QUnit.module('Barcode Parser', {
 }, function () {
     QUnit.test('Test check digit', async function (assert) {
         assert.expect(6);
-        const barcodeNomenclature = new BarcodeParser({'nomenclature_id': false});
+        const barcodeNomenclature = new BarcodeParser({'nomenclature_id': 1});
         await barcodeNomenclature.loaded;
 
         let ean8 = "87111125";
