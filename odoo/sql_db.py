@@ -501,6 +501,7 @@ class TestCursor(BaseCursor):
         # savepoint at its last commit
         self._savepoint = "test_cursor_%s" % next(self._savepoint_seq)
         self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
+        self.transaction = Transaction()
 
     def close(self):
         if not self._closed:
