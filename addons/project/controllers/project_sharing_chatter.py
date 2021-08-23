@@ -23,7 +23,7 @@ class ProjectSharingChatter(PortalChatter):
             If it is the case, then we give the access token of the task.
         """
         project_sudo = ProjectCustomerPortal._document_check_access(self, 'project.project', project_id, token)
-        can_access = project_sudo and res_model == 'project.task' and project_sudo.with_user(request.env.user)._check_project_sharing_access('comment')
+        can_access = project_sudo and res_model == 'project.task' and project_sudo.with_user(request.env.user)._check_project_sharing_access()
         if token:
             can_access &= consteq(project_sudo.access_token, token)
         else:

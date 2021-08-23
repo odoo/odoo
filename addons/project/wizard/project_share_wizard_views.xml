@@ -1,46 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="project_share_wizard" model="ir.ui.view">
-        <field name="name">project.share.wizard</field>
+    <record id="project_share_wizard_view_form" model="ir.ui.view">
+        <field name="name">project.share.wizard.view.form</field>
         <field name="model">project.share.wizard</field>
         <field name="arch" type="xml">
-            <form string="Share Document">
+            <form string="Share Project">
+                <field name="res_model" invisible="1"/>
+                <field name="res_id" invisible="1"/>
+                <field name="display_access_mode" invisible="1" />
                 <p class="alert alert-warning" attrs="{'invisible': [('access_warning', '=', '')]}" role="alert"><field name="access_warning"/></p>
-                <group name="share_link">
-                    <field name="res_model" invisible="1"/>
-                    <field name="res_id" invisible="1"/>
+                <group attrs="{'invisible': [('display_access_mode', '=', False)]}">
+                    <field class="flex-row" name="access_mode" widget="radio"/>
+                </group>
+                <group name="share_link" attrs="{'invisible': [('access_mode', '=', 'edit')]}">
                     <field name="share_link" widget="CopyClipboardChar" options="{'string': 'Copy Link'}"/>
                 </group>
                 <group>
-                    <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to share the document..."/>
+                    <div class="o_td_label">
+                        <label for="partner_ids" string="Invite People" attrs="{'invisible': [('access_mode', '=', 'read')]}"/>
+                        <label for="partner_ids" attrs="{'invisible': [('access_mode', '=', 'edit')]}"/>
+                    </div>
+                    <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to share the project..." nolabel="1"/>
                 </group>
                 <group>
                     <field name="note" placeholder="Add a note"/>
                 </group>
-                <group>
-                    <field name="line_ids" nolabel="1">
-                        <tree create="1" edit="1" delete="1" editable="bottom">
-                            <field name="user_id" />
-                            <field name="access_mode" />
-                        </tree>
-                    </field>
-                </group>
                 <footer>
-                    <field name="has_access_changed" invisible="1" />
-                    <button string="Confirm Access" name="action_confirm_access" attrs="{'invisible': ['|', ('access_warning', '!=', ''), ('has_access_changed', '=', False)]}" type="object" class="btn-primary" data-hotkey="v"/>
-                    <button string="Send" name="action_send_mail" attrs="{'invisible': ['|', ('access_warning', '!=', ''), ('has_access_changed', '=', True)]}" type="object" class="btn-primary" data-hotkey="q"/>
-                    <button string="Send &amp; Confirm" name="action_send_mail_and_confirm_access" attrs="{'invisible': ['|', ('access_warning', '!=', ''), ('has_access_changed', '=', False)]}" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Send" name="action_send_mail" attrs="{'invisible': [('access_warning', '!=', '')]}" type="object" class="btn-primary" data-hotkey="q"/>
                     <button string="Cancel" class="btn-default" special="cancel" data-hotkey="z" />
                 </footer>
             </form>
         </field>
     </record>
 
-    <record id="project_share_action" model="ir.actions.act_window">
+    <record id="project_share_wizard_action" model="ir.actions.act_window">
         <field name="name">Share Project</field>
         <field name="res_model">project.share.wizard</field>
-        <field name="binding_model_id" ref="model_project_share_wizard"/>
+        <field name="binding_model_id" ref="model_project_project"/>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
