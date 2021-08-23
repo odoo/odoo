@@ -536,6 +536,15 @@ class MrpProduction(models.Model):
             production._onchange_move_raw()
         return production
 
+    def copy(self, default=None):
+        """
+        When there is a kit in the child bom of that production, we should not copy the workorder
+        """
+        res = super().copy(default)
+        if any(bom.type == 'phantom' for bom in self.bom_id.bom_line_ids.child_bom_id):
+            res.move_raw_ids.workorder_id = False
+        return res
+
     def unlink(self):
         if any(production.state == 'done' for production in self):
             raise UserError(_('Cannot delete a manufacturing order in done state.'))
