@@ -2,7 +2,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.tests.common import Form
-from odoo import fields
+from odoo import fields, Command
 
 
 @tagged('post_install', '-at_install')
@@ -2455,3 +2455,69 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ._create_payments()
 
         bill.button_draft()
+
+    def test_caba_foreign_vat(self):
+        test_country = self.env['res.country'].create({
+            'name': "Bretonnia",
+            'code': 'wh',
+        })
+
+        foreign_vat_fpos = self.env['account.fiscal.position'].create({
+            'name': "Fiscal Position to the Holy Grail",
+            'country_id': test_country.id,
+            'foreign_vat': 'WH1234',
+        })
+
+        foreign_caba_tax = self.env['account.tax'].create({
+            'name': 'tax_1',
+            'amount': 33.3333,
+            'company_id': self.company_data['company'].id,
+            'cash_basis_transition_account_id': self.cash_basis_transfer_account.id,
+            'tax_exigibility': 'on_payment',
+            'country_id': test_country.id,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ],
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2021-07-01',
+            'fiscal_position_id': foreign_vat_fpos.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': "test",
+                    'price_unit': 100,
+                    'tax_ids': [Command.set(foreign_caba_tax.ids)],
+                }),
+            ]
+        })
+        invoice.action_post()
+
+        self.env['account.payment.register'].with_context(active_ids=invoice.ids, active_model='account.move').create({
+            'payment_date': invoice.date,
+        })._create_payments()
+
+        caba_move = self.env['account.move'].search([('tax_cash_basis_move_id', '=', invoice.id)])
+
+        self.assertEqual(caba_move.fiscal_position_id, foreign_vat_fpos, "The foreign VAT fiscal position should be kept in the the cash basis move.")
