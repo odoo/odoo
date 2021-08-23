@@ -299,7 +299,8 @@ class Task(models.Model):
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         """ Set the correct label for `unit_amount`, depending on company UoM """
         result = super(Task, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        result['arch'] = self.env['account.analytic.line']._apply_timesheet_label(result['arch'])
+        # Use of sudo as the portal user doesn't have access to uom
+        result['arch'] = self.env['account.analytic.line'].sudo()._apply_timesheet_label(result['arch'])
 
         if view_type in ['tree', 'pivot', 'graph'] and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
             result['arch'] = self.env['account.analytic.line']._apply_time_label(result['arch'], related_model=self._name)
