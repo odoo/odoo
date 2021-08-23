@@ -26,6 +26,7 @@ var PosDB = core.Class.extend({
         this.product_by_id = {};
         this.product_by_barcode = {};
         this.product_by_category_id = {};
+        this.product_packaging_by_barcode = {};
 
         this.partner_sorted = [];
         this.partner_by_id = {};
@@ -216,6 +217,14 @@ var PosDB = core.Class.extend({
             }
         }
     },
+    add_packagings: function(product_packagings){
+        var self = this;
+        _.map(product_packagings, function (product_packaging) {
+            if (_.find(self.product_by_id, {'id': product_packaging.product_id[0]})) {
+                self.product_packaging_by_barcode[product_packaging.barcode] = product_packaging;
+            }
+        });
+    },
     _partner_search_string: function(partner){
         var str =  partner.name || '';
         if(partner.barcode){
@@ -354,9 +363,10 @@ var PosDB = core.Class.extend({
     get_product_by_barcode: function(barcode){
         if(this.product_by_barcode[barcode]){
             return this.product_by_barcode[barcode];
-        } else {
-            return undefined;
+        } else if (this.product_packaging_by_barcode[barcode]) {
+            return this.product_by_id[this.product_packaging_by_barcode[barcode].product_id[0]];
         }
+        return undefined;
     },
     get_product_by_category: function(category_id){
         var product_ids  = this.product_by_category_id[category_id];

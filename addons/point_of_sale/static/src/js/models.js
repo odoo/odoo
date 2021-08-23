@@ -505,6 +505,13 @@ exports.PosModel = Backbone.Model.extend({
             }));
         },
     },{
+        model: 'product.packaging',
+        fields: ['name', 'barcode', 'product_id', 'qty'],
+        domain: function(self){return [['barcode', '!=', '']]; },
+        loaded: function(self, product_packagings) {
+            self.db.add_packagings(product_packagings);
+        }
+    },{
         model: 'product.attribute',
         fields: ['name', 'display_type'],
         condition: function (self) { return self.config.product_configurator; },
