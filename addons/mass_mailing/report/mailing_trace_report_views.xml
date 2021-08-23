@@ -8,6 +8,7 @@
                     <field name="name"/>
                     <field name="campaign" groups="mass_mailing.group_mass_mailing_campaign"/>
                     <field name="mailing_type" invisible="1"/>
+                    <field name="scheduled_date" string="Scheduled On"/>
                     <field name="state"/>
                     <field name="scheduled"/>
                     <field name="sent"/>
@@ -61,9 +62,9 @@
                 <search string="Mass Mailing Statistics">
                     <field name="name" string="Mailing"/>
                     <field name="campaign" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign"/>
-                    <filter name="filter_scheduled_date" date="scheduled"/>
+                    <filter name="filter_scheduled_date" date="scheduled_date"/>
                     <group expand="0" string="Extended Filters...">
-                        <field name="scheduled"/>
+                        <field name="scheduled_date"/>
                     </group>
                     <group expand="1" string="Group By...">
                         <filter string="Mass Mailing Campaign" domain="[]" name="mass_mailing_campaign"
@@ -73,8 +74,8 @@
                         <filter string="Sent By" domain="[]" name="sent_by"
                             context="{'group_by':'email_from'}"/>
                         <separator/>
-                        <filter string="Scheduled Period" name="scheduled"
-                            domain="[]" context="{'group_by':'scheduled'}"/>
+                        <filter string="Scheduled Period" name="scheduled_date"
+                            domain="[]" context="{'group_by':'scheduled_date'}"/>
                     </group>
                 </search>
             </field>
