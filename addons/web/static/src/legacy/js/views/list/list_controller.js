@@ -659,6 +659,7 @@ var ListController = BasicController.extend({
      * @private
      */
     _updateSelectionBox() {
+        this._renderHeaderButtons();
         if (this.$selectionBox) {
             this.$selectionBox.remove();
             this.$selectionBox = null;
@@ -674,7 +675,6 @@ var ListController = BasicController.extend({
             }));
             this.$selectionBox.appendTo(this.$buttons);
         }
-        this._renderHeaderButtons();
     },
 
     //--------------------------------------------------------------------------
