@@ -2184,6 +2184,11 @@ class AccountMove(models.Model):
             'This entry has been duplicated from <a href=# data-oe-model=account.move data-oe-id=%(id)d>%(title)s</a>',
             id=self.id, title=html_escape(self.display_name)
         ))
+
+        # Make sure to recompute payment terms. This could be necessary if the date is different for example.
+        # Also, this is necessary when creating a credit note because the current invoice is copied.
+        copied_am._recompute_payment_terms_lines()
+
         return copied_am
 
     @api.model_create_multi
