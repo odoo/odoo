@@ -93,7 +93,6 @@
             'mail/static/src/components/*/tests/*.js',
             'mail/static/src/model/tests/**/*.js',
             'mail/static/src/models/*/tests/*.js',
-            'mail/static/src/services/*/tests/*.js',
             'mail/static/src/utils/*/tests/*.js',
             'mail/static/src/widgets/*/tests/*.js',
         ],
