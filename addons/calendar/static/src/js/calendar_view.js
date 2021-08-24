@@ -1,11 +1,12 @@
-odoo.define('calendar.CalendarView', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var CalendarController = require('calendar.CalendarController');
-var CalendarModel = require('calendar.CalendarModel');
-const CalendarRenderer = require('calendar.CalendarRenderer').AttendeeCalendarRenderer;
-var CalendarView = require('web.CalendarView');
-var viewRegistry = require('web.view_registry');
+import CalendarController from '@calendar/js/calendar_controller';
+import CalendarModel from '@calendar/js/calendar_model';
+import AttendeeCalendarRenderer from '@calendar/js/calendar_renderer';
+import CalendarView from 'web.CalendarView';
+import viewRegistry from 'web.view_registry';
+
+const CalendarRenderer = AttendeeCalendarRenderer.AttendeeCalendarRenderer;
 
 var AttendeeCalendarView = CalendarView.extend({
     config: _.extend({}, CalendarView.prototype.config, {
@@ -17,6 +18,4 @@ var AttendeeCalendarView = CalendarView.extend({
 
 viewRegistry.add('attendee_calendar', AttendeeCalendarView);
 
-return AttendeeCalendarView
-
-});
+export default AttendeeCalendarView;

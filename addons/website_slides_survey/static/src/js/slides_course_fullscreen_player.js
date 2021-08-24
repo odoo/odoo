@@ -3,7 +3,7 @@ odoo.define('website_slides_survey.fullscreen', function (require) {
 
 var core = require('web.core');
 var QWeb = core.qweb;
-var Fullscreen = require('website_slides.fullscreen');
+var Fullscreen = require('@website_slides/js/slides_course_fullscreen_player')[Symbol.for("default")];
 
 Fullscreen.include({
     xmlDependencies: (Fullscreen.prototype.xmlDependencies || []).concat(

@@ -1,8 +1,7 @@
-odoo.define('website_slides.tour.slide.course.publisher', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var tour = require('web_tour.tour');
-var slidesTourTools = require('website_slides.tour.tools');
+import tour from 'web_tour.tour';
+import slidesTourTools from '@website_slides/tests/tours/slides_tour_tools';
 
 /**
  * Global use case:
@@ -92,5 +91,3 @@ tour.register('course_publisher', {
 //     run: 'drag_and_drop div.o_wslides_slides_list_drag a.o_wslides_js_slide_section_add',
 // }]
 ));
-
-});

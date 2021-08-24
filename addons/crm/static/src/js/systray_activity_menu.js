@@ -1,7 +1,6 @@
-odoo.define('crm.systray.ActivityMenu', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var ActivityMenu = require('@mail/js/systray/systray_activity_menu')[Symbol.for("default")];
+import ActivityMenu from '@mail/js/systray/systray_activity_menu';
 
 ActivityMenu.include({
 
@@ -53,5 +52,4 @@ ActivityMenu.include({
             this._super.apply(this, arguments);
         }
     },
-});
 });

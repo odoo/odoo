@@ -4,7 +4,7 @@ odoo.define('website_slides_survey.upload_modal', function (require) {
 var core = require('web.core');
 var _t = core._t;
 var sessionStorage = window.sessionStorage;
-var SlidesUpload = require('website_slides.upload_modal');
+var SlidesUpload = require('@website_slides/js/slides_upload')[Symbol.for("default")];
 
 /**
  * Management of the new 'certification' slide_type

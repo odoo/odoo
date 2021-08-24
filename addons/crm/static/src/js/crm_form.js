@@ -1,5 +1,4 @@
-odoo.define("crm.crm_form", function (require) {
-    "use strict";
+/** @odoo-module **/
 
     /**
      * This From Controller makes sure we display a rainbowman message
@@ -9,9 +8,9 @@ odoo.define("crm.crm_form", function (require) {
      * with a rainbowman like when the user click on the button "Mark Won".
      */
 
-    var FormController = require('web.FormController');
-    var FormView = require('web.FormView');
-    var viewRegistry = require('web.view_registry');
+    import FormController from 'web.FormController';
+    import FormView from 'web.FormView';
+    import viewRegistry from 'web.view_registry';
 
     var CrmFormController = FormController.extend({
         /**
@@ -84,8 +83,7 @@ odoo.define("crm.crm_form", function (require) {
 
     viewRegistry.add('crm_form', CrmFormView);
 
-    return {
+    export default {
         CrmFormController: CrmFormController,
         CrmFormView: CrmFormView,
     };
-});

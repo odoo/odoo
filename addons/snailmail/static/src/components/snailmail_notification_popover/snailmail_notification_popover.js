@@ -1,7 +1,6 @@
-odoo.define('snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registerMessagingComponent } = require('@mail/utils/messaging_component');
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
@@ -65,6 +64,4 @@ Object.assign(SnailmailNotificationPopover, {
 
 registerMessagingComponent(SnailmailNotificationPopover);
 
-return SnailmailNotificationPopover;
-
-});
+export default SnailmailNotificationPopover;

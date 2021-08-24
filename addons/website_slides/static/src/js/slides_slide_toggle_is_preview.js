@@ -1,7 +1,6 @@
-odoo.define('website_slides.slide.preview', function (require) {
-    'use strict';
+/** @odoo-module **/
 
-    var publicWidget = require('web.public.widget');
+    import publicWidget from 'web.public.widget';
 
     publicWidget.registry.websiteSlidesSlideToggleIsPreview = publicWidget.Widget.extend({
         selector: '.o_wslides_js_slide_toggle_is_preview',
@@ -33,8 +32,6 @@ odoo.define('website_slides.slide.preview', function (require) {
         },
     });
 
-    return {
+    export default {
         websiteSlidesSlideToggleIsPreview: publicWidget.registry.websiteSlidesSlideToggleIsPreview
     };
-
-});

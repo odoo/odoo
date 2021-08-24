@@ -1,7 +1,7 @@
 odoo.define('google_calendar.calendar_tests', function (require) {
 "use strict";
 
-var GoogleCalendarView = require('calendar.CalendarView');
+var GoogleCalendarView = require('@calendar/js/calendar_view')[Symbol.for("default")];
 var testUtils = require('web.test_utils');
 
 var createCalendarView = testUtils.createCalendarView;

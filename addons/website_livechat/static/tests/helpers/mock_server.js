@@ -1,9 +1,8 @@
-odoo.define('website_livechat/static/tests/helpers/mock_server.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-require('@im_livechat/../tests/helpers/mock_server'); // ensure mail overrides are applied first
+import '@im_livechat/../tests/helpers/mock_server'; // ensure mail overrides are applied first
 
-const MockServer = require('web.MockServer');
+import MockServer from 'web.MockServer';
 
 MockServer.include({
     /**
@@ -73,6 +72,4 @@ MockServer.include({
             this._widget.call('bus_service', 'trigger', 'notification', [notification]);
         }
     },
-});
-
 });

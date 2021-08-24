@@ -1,7 +1,7 @@
 odoo.define('website_sale_slides.course.join.widget', function (require) {
 "use strict";
 
-var CourseJoinWidget = require('website_slides.course.join.widget').courseJoinWidget;
+var CourseJoinWidget = require('@website_slides/js/slides_course_join')[Symbol.for("default")].courseJoinWidget;
 const wUtils = require('website.utils');
 
 CourseJoinWidget.include({

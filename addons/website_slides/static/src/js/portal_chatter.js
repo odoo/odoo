@@ -1,9 +1,7 @@
-odoo.define('website_slides.portal_chatter', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { _t } = require('web.core');
-const PortalChatter = require('portal.chatter').PortalChatter;
-
+import { _t } from 'web.core';
+import { PortalChatter } from 'portal.chatter';
 
 /**
  * PortalChatter
@@ -23,5 +21,4 @@ PortalChatter.include({
             $('#review-tab').text(_.str.sprintf(_t('Reviews (%d)'), data.rating_count));
         }
     },
-});
 });

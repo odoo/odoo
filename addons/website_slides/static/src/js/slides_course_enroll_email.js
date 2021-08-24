@@ -1,10 +1,8 @@
-odoo.define('website_slides.course.enroll', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var Dialog = require('web.Dialog');
-var publicWidget = require('web.public.widget');
-var _t = core._t;
+import { _t } from 'web.core';
+import Dialog from 'web.Dialog';
+import publicWidget from 'web.public.widget';
 
 var SlideEnrollDialog = Dialog.extend({
     template: 'slide.course.join.request',
@@ -75,9 +73,7 @@ publicWidget.registry.websiteSlidesEnroll = publicWidget.Widget.extend({
     }
 });
 
-return {
+export default {
     slideEnrollDialog: SlideEnrollDialog,
     websiteSlidesEnroll: publicWidget.registry.websiteSlidesEnroll
 };
-
-});

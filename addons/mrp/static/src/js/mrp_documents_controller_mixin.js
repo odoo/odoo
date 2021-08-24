@@ -1,9 +1,8 @@
-odoo.define('mrp.controllerMixin', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { _t, qweb } = require('web.core');
-const fileUploadMixin = require('web.fileUploadMixin');
-const DocumentViewer = require('mrp.MrpDocumentViewer');
+import { _t, qweb } from 'web.core';
+import fileUploadMixin from 'web.fileUploadMixin';
+import DocumentViewer from '@mrp/js/mrp_documents_document_viewer';
 
 const MrpDocumentsControllerMixin = Object.assign({}, fileUploadMixin, {
     events: {
@@ -123,6 +122,4 @@ const MrpDocumentsControllerMixin = Object.assign({}, fileUploadMixin, {
     },
 });
 
-return MrpDocumentsControllerMixin;
-
-});
+export default MrpDocumentsControllerMixin;

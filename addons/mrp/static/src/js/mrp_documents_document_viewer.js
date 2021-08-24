@@ -1,7 +1,6 @@
-odoo.define('mrp.MrpDocumentViewer', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const DocumentViewer = require('@mail/js/document_viewer')[Symbol.for("default")];
+import DocumentViewer from '@mail/js/document_viewer';
 
 /**
  * This file defines the DocumentViewer for the MRP Documents Kanban view.
@@ -13,7 +12,4 @@ const MrpDocumentsDocumentViewer = DocumentViewer.extend({
     },
 });
 
-return MrpDocumentsDocumentViewer;
-
-});
-
+export default MrpDocumentsDocumentViewer;

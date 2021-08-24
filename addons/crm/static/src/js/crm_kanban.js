@@ -1,5 +1,4 @@
-odoo.define('crm.crm_kanban', function (require) {
-    "use strict";
+/** @odoo-module **/
 
     /**
      * This Kanban Model make sure we display a rainbowman
@@ -7,9 +6,9 @@ odoo.define('crm.crm_kanban', function (require) {
      * correct column and when it's grouped by stage_id (default).
      */
 
-    var KanbanModel = require('web.KanbanModel');
-    var KanbanView = require('web.KanbanView');
-    var viewRegistry = require('web.view_registry');
+    import KanbanModel from 'web.KanbanModel';
+    import KanbanView from 'web.KanbanView';
+    import viewRegistry from 'web.view_registry';
 
     var CrmKanbanModel = KanbanModel.extend({
         /**
@@ -44,9 +43,7 @@ odoo.define('crm.crm_kanban', function (require) {
 
     viewRegistry.add('crm_kanban', CrmKanbanView);
 
-    return {
+    export default {
         CrmKanbanModel: CrmKanbanModel,
         CrmKanbanView: CrmKanbanView,
     };
-
-});

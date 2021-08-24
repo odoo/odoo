@@ -1,10 +1,8 @@
-odoo.define('website_slides.slides_share', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
-require('website_slides.slides');
-var core = require('web.core');
-var _t = core._t;
+import publicWidget from 'web.public.widget';
+import '@website_slides/js/slides';
+import { _t } from 'web.core';
 
 var ShareMail = publicWidget.Widget.extend({
     events: {
@@ -101,5 +99,4 @@ publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
             clipboard.destroy();
         })
     },
-});
 });
