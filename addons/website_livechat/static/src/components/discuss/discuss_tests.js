@@ -1,11 +1,10 @@
-odoo.define('website_livechat/static/src/components/discuss/discuss_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
+import {
     afterEach,
     beforeEach,
     start,
-} = require('@mail/utils/test_utils');
+} from '@mail/utils/test_utils';
 
 QUnit.module('website_livechat', {}, function () {
 QUnit.module('components', {}, function () {
@@ -264,6 +263,4 @@ QUnit.test('non-livechat channel should not show visitor banner', async function
 
 });
 });
-});
-
 });

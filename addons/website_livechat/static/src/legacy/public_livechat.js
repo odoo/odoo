@@ -26,7 +26,7 @@ LivechatButton.include({
     /**
      * @override
      */
-    start() {
+     start() {
         // We trigger a resize to launch the event that checks if this element hides
         // a button when the page is loaded.
         $(window).trigger('resize');

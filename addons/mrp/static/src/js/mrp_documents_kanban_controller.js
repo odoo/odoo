@@ -1,14 +1,13 @@
-odoo.define('mrp.MrpDocumentsKanbanController', function (require) {
-"use strict";
+/** @odoo-module **/
 
 /**
  * This file defines the Controller for the MRP Documents Kanban view, which is an
  * override of the KanbanController.
  */
 
-const MrpDocumentsControllerMixin = require('mrp.controllerMixin');
+import MrpDocumentsControllerMixin from '@mrp/js/mrp_documents_controller_mixin';
 
-const KanbanController = require('web.KanbanController');
+import KanbanController from 'web.KanbanController';
 
 const MrpDocumentsKanbanController = KanbanController.extend(MrpDocumentsControllerMixin, {
     events: Object.assign({}, KanbanController.prototype.events, MrpDocumentsControllerMixin.events),
@@ -32,6 +31,4 @@ const MrpDocumentsKanbanController = KanbanController.extend(MrpDocumentsControl
     },
 });
 
-return MrpDocumentsKanbanController;
-
-});
+export default MrpDocumentsKanbanController;

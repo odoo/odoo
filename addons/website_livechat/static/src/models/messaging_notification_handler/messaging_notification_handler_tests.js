@@ -1,19 +1,14 @@
-odoo.define('website_livechat/static/src/models/messaging_notification_handler/messaging_notification_handler_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     start,
-} = require('@mail/utils/test_utils');
+} from '@mail/utils/test_utils';
 
-const FormView = require('web.FormView');
-const {
-    mock: {
-        intercept,
-    },
-} = require('web.test_utils');
+import FormView from 'web.FormView';
+import { mock } from 'web.test_utils';
 
 QUnit.module('website_livechat', {}, function () {
 QUnit.module('models', {}, function () {
@@ -59,7 +54,7 @@ QUnit.test('should open chat window on send chat request to website visitor', as
         `,
         res_id: 11,
     });
-    intercept(this.widget, 'execute_action', payload => {
+    mock.intercept(this.widget, 'execute_action', payload => {
         this.env.services.rpc({
             route: '/web/dataset/call_button',
             params: {
@@ -93,6 +88,4 @@ QUnit.test('should open chat window on send chat request to website visitor', as
 
 });
 });
-});
-
 });

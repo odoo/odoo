@@ -1,7 +1,6 @@
-odoo.define('calendar.CalendarModel', function (require) {
-    "use strict";
+/** @odoo-module **/
 
-    const Model = require('web.CalendarModel');
+    import Model from 'web.CalendarModel';
 
     const CalendarModel = Model.extend({
 
@@ -78,5 +77,4 @@ odoo.define('calendar.CalendarModel', function (require) {
         },
     });
 
-    return CalendarModel;
-});
+    export default CalendarModel;

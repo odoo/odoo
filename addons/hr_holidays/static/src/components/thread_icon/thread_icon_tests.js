@@ -1,12 +1,11 @@
-odoo.define('hr_holidays/static/src/components/thread_icon/thread_icon_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
+import {
     afterEach,
     beforeEach,
     createRootMessagingComponent,
     start,
-} = require('@mail/utils/test_utils');
+} from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -134,6 +133,4 @@ QUnit.test('thread icon of a chat when correspondent is on leave & offline', asy
 
 });
 });
-});
-
 });
