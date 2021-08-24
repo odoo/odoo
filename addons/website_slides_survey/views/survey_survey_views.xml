@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="survey_survey_action_slides" model="ir.actions.act_window">
-        <field name="name">Certifications</field>
-        <field name="res_model">survey.survey</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[('certification', '=', True)]</field>
-        <field name="context">{'default_certification': True, 'default_scoring_type': 'scoring_with_answers'}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Add a new certification
-            </p>
+    <record id="survey_survey_inherit_view_search" model="ir.ui.view">
+        <field name="name">survey.survey.search.inherit.website_slides</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_search"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr='//filter[@name="certification"]' position="replace"/>
         </field>
     </record>
 
-    <record id="survey_survey_action_slides_report" model="ir.actions.act_window">
+    <record id="survey_survey_action_slides" model="ir.actions.act_window">
         <field name="name">Certifications</field>
         <field name="res_model">survey.survey</field>
-        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="view_mode">kanban,tree,pivot,graph,form</field>
         <field name="domain">[('certification', '=', True)]</field>
+        <field name="search_view_id" ref="survey_survey_inherit_view_search"/>
         <field name="context">{'default_certification': True, 'default_scoring_type': 'scoring_with_answers'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Add a new certification
+                Create a Certification
+            </p>
+            <p>
+                Assess the level of understanding of your attendees
+                <br/>and send them a document if they pass the test.
             </p>
         </field>
     </record>

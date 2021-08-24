@@ -14,13 +14,22 @@
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_slides"
                                 type="object"
+                                icon="fa-eye"
+                                class="oe_stat_button"
+                                groups="website_slides.group_website_slides_officer"
+                                disabled="1"
+                                attrs="{'invisible': [('total_views', '=', 0)]}">
+                                <field name="total_views" widget="statinfo" string="Visits"/>
+                            </button>
+                            <button name="action_view_slides"
+                                type="object"
                                 icon="fa-files-o"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer">
-                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value"><field name="total_views" nolabel="1"/> Visits</span>
-                                    <span class="o_stat_value"><field name="total_slides" nolabel="1"/> Contents</span>
-                                </div>
+                                <span>
+                                    <field name="total_slides" widget="statinfo" nolabel="1"/>
+                                    Published Contents
+                                </span>
                             </button>
                             <button name="action_redirect_to_done_members"
                                 type="object"
@@ -34,14 +43,14 @@
                             </button>
                             <button name="action_redirect_to_members"
                                 type="object"
-                                icon="fa-users"
+                                icon="fa-graduation-cap"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer">
                                 <field name="members_count" string="Attendees" widget="statinfo"/>
                             </button>
                              <button name="action_view_ratings"
                                 type="object"
-                                icon="fa-star"
+                                icon="fa-star-half-o"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer"
                                 attrs="{'invisible': [('allow_comment', '=', False)]}">
@@ -81,10 +90,8 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page name="description" string="Description">
-                                <group>
-                                    <field name="description" colspan="4" placeholder="Common tasks for a computer scientist is asking the right questions and answering questions. In this course, you'll study those topics with activities about mathematics, science and logic."/>
-                                </group>
+                            <page name="description" string="Description" >
+                                <field name="description" widget="html" nolabel="1" placeholder="Common tasks for a computer scientist is asking the right questions and answering questions. In this course, you'll study those topics with activities about mathematics, science and logic."/>
                             </page>
                             <page name="options" string="Options">
                                 <group>
@@ -100,19 +107,20 @@
                                 </group>
                                 <group>
                                     <group name="communication" string="Communication">
-                                        <field string="Allow Rating" name="allow_comment"/>
-                                        <field name="publish_template_id" domain="[('model','=','slide.slide')]"/>
+                                        <field string="Allow Reviews" name="allow_comment"/>
                                         <field name="share_template_id" domain="[('model','=','slide.slide')]" groups="base.group_no_one"/>
-                                        <field name="completed_template_id"/>
+                                        <field name="publish_template_id" placeholder="No Notification"/>
+                                        <field name="completed_template_id" placeholder="No Notification"/>
                                     </group>
                                     <group name="display" string="Display">
-                                        <field string="Display" name="channel_type" widget="radio"/>
-                                        <field name="visibility" widget="radio"/>
-                                        <field name="promote_strategy" widget="radio"
-                                        attrs="{'invisible': [('channel_type', '=', 'training')]}"/>
+                                        <field string="Type" name="channel_type" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="visibility" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="promote_strategy" widget="selection"
+                                            attrs="{'invisible': [('channel_type', '=', 'training')]}"/>
                                         <field name="promoted_slide_id"
                                                attrs="{'invisible': ['|', ('channel_type', '=', 'training'), ('promote_strategy', '!=', 'specific')],
                                                        'required': [('channel_type', '!=', 'training'), ('promote_strategy', '=', 'specific')]}"
+                                               string="Content"
                                                domain="[('channel_id', '=', active_id), ('is_category', '=', False)]"/>
                                     </group>
                                 </group>
@@ -174,7 +182,7 @@
                     <field name="total_time" widget="float_time" />
                     <field name="members_count"/>
                     <field name="total_votes"/>
-                    <field name="rating_avg_stars"/>
+                    <field name="rating_avg_stars" string="Average Rating"/>
                 </tree>
             </field>
         </record>
@@ -197,7 +205,32 @@
                 <graph string="Courses" sample="1">
                     <field name="name"/>
                     <field name="total_views" type="measure"/>
+                    <field name="karma_slide_comment" invisible="1"/>
+                    <field name="karma_review" invisible="1"/>
+                    <field name="color" invisible="1"/>
+                    <field name="karma_gen_channel_finish" invisible="1"/>
+                    <field name="karma_gen_channel_rank" invisible="1"/>
+                    <field name="karma_gen_slide_vote" invisible="1"/>
+                    <field name="sequence" invisible="1"/>
                 </graph>
+            </field>
+        </record>
+
+        <record id="slide_channel_view_pivot" model="ir.ui.view">
+            <field name="name">slide.channel.view.pivot</field>
+            <field name="model">slide.channel</field>
+            <field name="arch" type="xml">
+                <pivot string="Pivot" default_order="create_date desc" sample="1">
+                    <field type="row" name="name" />
+                    <field type="measure" name="total_views"/>
+                    <field name="karma_slide_comment" invisible="1"/>
+                    <field name="karma_review" invisible="1"/>
+                    <field name="color" invisible="1"/>
+                    <field name="karma_gen_channel_finish" invisible="1"/>
+                    <field name="karma_gen_channel_rank" invisible="1"/>
+                    <field name="karma_gen_slide_vote" invisible="1"/>
+                    <field name="sequence" invisible="1"/>
+                </pivot>
             </field>
         </record>
 
@@ -229,9 +262,6 @@
                                             <div role="menuitem">
                                                 <a type="edit">Edit</a>
                                             </div>
-                                            <div role="menuitem">
-                                                <a name="action_view_slides" type="object">Lessons</a>
-                                            </div>
                                             <div role="menuitem" name="action_channel_invite"
                                                 attrs="{'invisible': [('enroll', '!=', 'invite')]}">
                                                 <a name="action_channel_invite" type="object">Invite</a>
@@ -258,7 +288,7 @@
                                         </div>
                                         <div class="col-6 o_kanban_primary_right">
                                             <div class="d-flex" t-if="record.rating_count.raw_value">
-                                                <a name="action_view_ratings" type="object" class="mr-auto"><field name="rating_count"/> reviews</a>
+                                                <a name="action_view_ratings" type="object" class="mr-auto"><field name="rating_count"/> Reviews</a>
                                                 <span><field name="rating_avg_stars"/> / 5</span>
                                             </div>
                                             <div class="d-flex">
@@ -272,19 +302,19 @@
                                         </div>
                                     </div>
                                     <div class="row mt3">
-                                        <div class="col-4 border-right">
+                                        <div class="col-5 border-right">
                                             <a name="action_view_slides" type="object" class="d-flex flex-column align-items-center">
                                                 <span class="font-weight-bold"><field name="total_slides"/></span>
-                                                <span class="text-muted">Contents</span>
+                                                <span class="text-muted">Published Contents</span>
                                             </a>
                                         </div>
-                                        <div class="col-4 border-right">
+                                        <div class="col-3 border-right">
                                             <a name="action_redirect_to_members" type="object" class="d-flex flex-column align-items-center">
                                                 <span class="font-weight-bold"><field name="members_count"/></span>
                                                 <span class="text-muted">Attendees</span>
                                             </a>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <a name="action_redirect_to_done_members" type="object" class="d-flex flex-column align-items-center">
                                                 <span class="font-weight-bold"><field name="members_done_count"/></span>
                                                 <span name="done_members_count_label" class="text-muted">Finished</span>
@@ -300,13 +330,17 @@
         </record>
 
         <record id="slide_channel_action_overview" model="ir.actions.act_window">
-            <field name="name">eLearning Overview</field>
+            <field name="name">All Courses</field>
             <field name="res_model">slide.channel</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="slide_channel_view_kanban"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a course
+                    <strong>Create a course</strong>
+                </p>
+                <p>
+                    Your eLearning platform starts here!<br/>
+                    Upload content, set up rewards, manage attendees...
                 </p>
             </field>
         </record>
@@ -314,11 +348,15 @@
         <record id="slide_channel_action_report" model="ir.actions.act_window">
             <field name="name">Courses</field>
             <field name="res_model">slide.channel</field>
-            <field name="view_mode">tree,graph,form</field>
+            <field name="view_mode">tree,graph,pivot,form</field>
             <field name="view_id" ref="slide_channel_view_tree_report"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a course
+                    <strong>Create a course</strong>
+                </p>
+                <p>
+                    Your eLearning platform starts here!<br/>
+                    Upload content, set up rewards, manage attendees...
                 </p>
             </field>
         </record>

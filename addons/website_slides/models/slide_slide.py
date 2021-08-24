@@ -71,7 +71,7 @@ class SlideResource(models.Model):
 
     slide_id = fields.Many2one('slide.slide', required=True, ondelete='cascade')
     name = fields.Char('Name', required=True)
-    data = fields.Binary('Resource')
+    data = fields.Binary('Resource'
 
 
 class EmbeddedSlide(models.Model):
@@ -144,7 +144,7 @@ class Slide(models.Model):
     # Categories
     is_category = fields.Boolean('Is a category', default=False)
     category_id = fields.Many2one('slide.slide', string="Section", compute="_compute_category_id", store=True)
-    slide_ids = fields.One2many('slide.slide', "category_id", string="Slides")
+    slide_ids = fields.One2many('slide.slide', "category_id", string="Content")
     # subscribers
     partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',
                                    string='Subscribers', groups='website_slides.group_website_slides_officer', copy=False)
@@ -170,7 +170,7 @@ class Slide(models.Model):
         string='Type', required=True,
         default='document',
         help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
-    datas = fields.Binary('Content', attachment=True)
+    datas = fields.Binary('File', attachment=True)
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
     link_ids = fields.One2many('slide.slide.link', 'slide_id', string="External URL for this slide")
@@ -189,7 +189,7 @@ class Slide(models.Model):
     embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
     public_views = fields.Integer('# of Public Views', copy=False)
-    total_views = fields.Integer("Views", default="0", compute='_compute_total', store=True)
+    total_views = fields.Integer("# Total Views", default="0", compute='_compute_total', store=True)
     # comments
     comments_count = fields.Integer('Number of comments', compute="_compute_comments_count")
     # channel
