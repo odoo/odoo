@@ -148,7 +148,7 @@ class SaleReport(models.Model):
         if not fields:
             fields = {}
         with_ = ("WITH %s" % with_clause) if with_clause else ""
-        return '%s (SELECT %s FROM %s GROUP BY %s)' % \
+        return '%s (SELECT %s FROM %s WHERE l.display_type IS NULL GROUP BY %s)' % \
                (with_, self._select_sale(fields), self._from_sale(from_clause), self._group_by_sale(groupby))
 
     def init(self):
