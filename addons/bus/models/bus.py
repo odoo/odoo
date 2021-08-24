@@ -48,6 +48,7 @@ class ImBus(models.Model):
     def sendmany(self, notifications):
         channels = set()
         for channel, message in notifications:
+            print(channel, json_dump(channel))
             channels.add(channel)
             values = {
                 "channel": json_dump(channel),
