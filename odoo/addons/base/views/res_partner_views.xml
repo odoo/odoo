@@ -260,6 +260,7 @@
                                     <field name="mobile"/>
                                     <field name="state_id"/>
                                     <field name="image_128"/>
+                                    <field name="avatar_128"/>
                                     <field name="lang"/>
                                     <!-- fields in form x2many view to diminish requests -->
                                     <field name="comment"/>
@@ -269,17 +270,7 @@
                                             <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
                                             <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
                                                 <div class="o_kanban_image">
-                                                    <img alt="Contact image" t-if="record.image_128.raw_value" t-att-src="kanban_image('res.partner', 'image_128', record.id.raw_value)"/>
-                                                    <t t-if="!record.image_128.raw_value">
-                                                        <t t-set="delivery_icon_path" t-value="'/base/static/img/truck.png'"/>
-                                                        <t t-set="invoice_icon_path" t-value="'/base/static/img/money.png'"/>
-                                                        <img alt="Delivery" t-if="record.type.raw_value === 'delivery'" t-att-src='_s + delivery_icon_path'/>
-                                                        <img alt="Invoice" t-if="record.type.raw_value === 'invoice'" t-att-src='_s + invoice_icon_path'/>
-                                                        <t t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">
-                                                            <img alt="Logo" t-if="record.is_company.raw_value === true" t-att-src='_s + "/base/static/img/company_image.png"'/>
-                                                            <img alt="Avatar" t-if="record.is_company.raw_value === false" t-att-src='_s + "/base/static/img/avatar_grey.png"'/>
-                                                        </t>
-                                                    </t>
+                                                    <img alt="Contact image" t-att-src="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
                                                 </div>
                                                 <div class="oe_kanban_details">
                                                     <field name="name"/>
@@ -474,19 +465,16 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban">
                                 <t t-if="!record.is_company.raw_value">
-                                    <t t-if="record.type.raw_value === 'delivery'" t-set="placeholder" t-value="'/base/static/img/truck.png'"/>
-                                    <t t-elif="record.type.raw_value === 'invoice'" t-set="placeholder" t-value="'/base/static/img/money.png'"/>
-                                    <t t-else="" t-set="placeholder" t-value="'/base/static/img/avatar_grey.png'"/>
-                                    <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image:url('#{kanban_image('res.partner', 'avatar_128', record.id.raw_value,  placeholder)}')">
+                                    <t t-set="background_image" t-value="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
+                                    <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image:url('#{background_image}')">
                                         <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'avatar_128', record.parent_id.raw_value)"/>
                                     </div>
-                                    <div class="o_kanban_image d-md-none" t-attf-style="background-image:url('#{kanban_image('res.partner', 'avatar_128', record.id.raw_value,  placeholder)}')">
+                                    <div class="o_kanban_image d-md-none" t-attf-style="background-image: url(#{background_image})">
                                         <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'avatar_128', record.parent_id.raw_value)"/>
                                     </div>
                                 </t>
                                 <t t-else="">
-                                    <t t-set="placeholder" t-value="'/base/static/img/company_image.png'"/>
-                                    <div class="o_kanban_image_fill_left o_kanban_image_full" t-attf-style="background-image: url(#{kanban_image('res.partner', 'avatar_128', record.id.raw_value, placeholder)})" role="img"/>
+                                    <div class="o_kanban_image_fill_left o_kanban_image_full" t-attf-style="background-image: url(#{kanban_image('res.partner', 'avatar_128', record.id.raw_value)})" role="img"/>
                                 </t>
                                 <div class="oe_kanban_details d-flex flex-column">
                                     <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name"/></strong>

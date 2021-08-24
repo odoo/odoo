@@ -37,3 +37,8 @@ class ResPartnerMondialRelay(models.Model):
                 'parent_id': self.id,
             })
         return partner
+
+    def _avatar_get_placeholder_path(self):
+        if self.is_mondialrelay:
+            return "delivery_mondialrelay/static/src/img/truck_mr.png"
+        return super()._avatar_get_placeholder_path()
