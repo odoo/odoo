@@ -2900,8 +2900,9 @@ const SnippetOptionWidget = Widget.extend({
      * (the first time, this follows the call to the @see start method).
      *
      * @abstract
+     * @returns {Promise|undefined}
      */
-    onFocus: function () {},
+    async onFocus() {},
     /**
      * Called when the parent edition overlay is covering the associated snippet
      * for the first time, when it is a new snippet dropped from the d&d snippet
@@ -2915,8 +2916,9 @@ const SnippetOptionWidget = Widget.extend({
      * snippet (another snippet enters edition for example).
      *
      * @abstract
+     * @returns {Promise|undefined}
      */
-    onBlur: function () {},
+    async onBlur() {},
     /**
      * Called when the associated snippet is the result of the cloning of
      * another snippet (so `this.$target` is a cloned element).
