@@ -9,8 +9,10 @@ class ResConfigSettings(models.TransientModel):
 
     module_project_timesheet_synchro = fields.Boolean("Awesome Timesheet",
         compute="_compute_timesheet_modules", store=True, readonly=False)
-    module_project_timesheet_holidays = fields.Boolean("Record Time Off",
+    module_project_timesheet_holidays = fields.Boolean("Time Off",
         compute="_compute_timesheet_modules", store=True, readonly=False)
+    reminder_user_allow = fields.Boolean(string="Employee Reminder", help="If checked, send an email to all users who have not recorded their timesheet")
+    reminder_manager_allow = fields.Boolean(string="Manager Reminder", help="If checked, send an email to all manager")
     project_time_mode_id = fields.Many2one(
         'uom.uom', related='company_id.project_time_mode_id', string='Project Time Unit', readonly=False,
         help="This will set the unit of measure used in projects and tasks.\n"
@@ -20,8 +22,6 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.timesheet_encode_uom_id', readonly=False,
         help="""This will set the unit of measure used to encode timesheet. This will simply provide tools
         and widgets to help the encoding. All reporting will still be expressed in hours (default value).""")
-    timesheet_min_duration = fields.Integer('Minimal duration', default=15, config_parameter='hr_timesheet.timesheet_min_duration')
-    timesheet_rounding = fields.Integer('Rounding up', default=15, config_parameter='hr_timesheet.timesheet_rounding')
     is_encode_uom_days = fields.Boolean(compute='_compute_is_encode_uom_days')
 
     @api.depends('timesheet_encode_uom_id')

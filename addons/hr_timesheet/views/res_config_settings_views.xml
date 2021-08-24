@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="content-group">
                                     <div class="mt16">
-                                        <field name="timesheet_encode_uom_id" options="{'no_create': True, 'no_open': True}" required="1" class="col-lg-5"/>
+                                        <field name="timesheet_encode_uom_id" options="{'no_create': True, 'no_open': True}" required="1" class="col-lg-5 pl-0"/>
                                         <field name="is_encode_uom_days" invisible="1"/>
                                     </div>
                                 </div>
@@ -69,21 +69,30 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('module_project_timesheet_synchro', '=', False), ('is_encode_uom_days', '=', True)]}">
-                            <div class="o_setting_right_pane">
-                                <strong>Time Rounding</strong>
+                    </div>
+                    <h2>Timesheets Control</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="reminder_user_allow" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane" id="reminder_user_allow">
+                                <label for="reminder_user_allow"/>
+                                <span class="fa fa-lg fa-building-o " title="Values set here are company-specific." groups="base.group_multi_company"/>
                                 <div class="text-muted">
-                                    Minimal duration and rounding applied when using the timer
+                                    Send a periodical email reminder to timesheets users
                                 </div>
-                                <div class="content-group">
-                                    <div class="mt16">
-                                        <div class="o_row w-30">
-                                            <span class="o_light_label"><label for="timesheet_min_duration"/><field name="timesheet_min_duration" class="col-lg-2 text-center"/> minutes</span>
-                                        </div>
-                                        <div class="o_row">
-                                            <span class="o_light_label"><label for="timesheet_rounding"/><field name="timesheet_rounding" class="col-lg-2 text-center"/> minutes</span>
-                                        </div>
-                                    </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="reminder_manager_allow" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane" id="reminder_manager_allow">
+                                <label for="reminder_manager_allow"/>
+                                <span class="fa fa-lg fa-building-o " title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                <div class="text-muted">
+                                    Send a periodical email reminder to timesheets managers
                                 </div>
                             </div>
                         </div>
@@ -99,7 +108,7 @@
                                     <label for="module_project_timesheet_holidays"/>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted">
-                                        Create timesheets upon time off validation
+                                        Generate timesheets upon time off validation
                                     </div>
                                     <div class="content-group">
                                         <div id="module_project_timesheet_holidays"/>
