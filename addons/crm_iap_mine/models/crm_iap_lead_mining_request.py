@@ -186,7 +186,7 @@ class CRMLeadMiningRequest(models.Model):
             self.company_size_max = self.company_size_min
 
     @api.model
-    def get_empty_list_help(self, help):
+    def get_empty_list_help(self, help_string):
         help_title = _('Create a Lead Mining Request')
         sub_title = _('Generate new leads based on their country, industry, size, etc.')
         return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
