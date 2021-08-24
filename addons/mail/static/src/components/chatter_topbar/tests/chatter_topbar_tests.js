@@ -435,7 +435,7 @@ QUnit.test('search box state conserved when clicking on another topbar button', 
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -695,7 +695,7 @@ QUnit.test('search message toggling', async function (assert) {
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });

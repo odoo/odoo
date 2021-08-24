@@ -542,7 +542,7 @@ QUnit.test('search message with "Enter" keyboard shortcut', async function (asse
         });
     }
     await this.start();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.messaging.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
     });
