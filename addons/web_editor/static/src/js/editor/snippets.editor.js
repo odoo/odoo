@@ -550,24 +550,21 @@ var SnippetEditor = Widget.extend({
         this.cover();
     },
     /**
-     * Displays/Hides the editor (+ parent) options and call onFocus/onBlur if
-     * necessary.
+     * Updates the UI of the editor (+ parent) options and call onFocus/onBlur
+     * if necessary. The UI jquery elements to display are returned, it is up
+     * to the caller to actually display them or not.
      *
      * @param {boolean} show
-     * @returns {Promise}
+     * @returns {Promise<jQuery[]>}
      */
     async toggleOptions(show) {
         if (!this.$el) {
-            return;
+            return [];
         }
 
         if (this.areOptionsShown() === show) {
-            return;
+            return this._customize$Elements;
         }
-        // TODO should update the panel after the items have been updated
-        this.trigger_up('update_customize_elements', {
-            customize$Elements: show ? this._customize$Elements : [],
-        });
 
         // All onFocus before all ui updates as the onFocus of an option might
         // affect another option (like updating the $target)
@@ -595,6 +592,8 @@ var SnippetEditor = Widget.extend({
         }
         await Promise.all(editorUIsToUpdate.map(editor => editor.updateOptionsUI()));
         await Promise.all(editorUIsToUpdate.map(editor => editor.updateOptionsUIVisibility()));
+
+        return this._customize$Elements;
     },
     /**
      * @param {boolean} [show]
@@ -1129,7 +1128,6 @@ var SnippetsMenu = Widget.extend({
         'snippet_thumbnail_url_request': '_onSnippetThumbnailURLRequest',
         'reload_snippet_dropzones': '_disableUndroppableSnippets',
         'request_save': '_onSaveRequest',
-        'update_customize_elements': '_onUpdateCustomizeElements',
         'hide_overlay': '_onHideOverlay',
         'block_preview_overlays': '_onBlockPreviewOverlays',
         'unblock_preview_overlays': '_onUnblockPreviewOverlays',
@@ -1790,6 +1788,7 @@ var SnippetsMenu = Widget.extend({
                 }
                 // ... then enable the right editor or look if some have been
                 // enabled previously by a click
+                let customize$Elements;
                 if (editorToEnable) {
                     editorToEnable.toggleOverlay(true, previewMode);
                     if (!previewMode && !editorToEnable.displayOverlayOptions) {
@@ -1798,14 +1797,22 @@ var SnippetsMenu = Widget.extend({
                             parentEditor.toggleOverlay(true, previewMode);
                         }
                     }
-                    await editorToEnable.toggleOptions(true);
+                    customize$Elements = await editorToEnable.toggleOptions(true);
                 } else {
                     for (const editor of this.snippetEditors) {
                         if (editor.isSticky()) {
                             editor.toggleOverlay(true, false);
-                            await editor.toggleOptions(true);
+                            customize$Elements = await editor.toggleOptions(true);
+                            break;
                         }
                     }
+                }
+
+                if (!previewMode) {
+                    this._updateRightPanelContent({
+                        content: customize$Elements || [],
+                        tab: customize$Elements ? this.tabs.OPTIONS : this.tabs.BLOCKS,
+                    });
                 }
 
                 return editorToEnable;
@@ -3057,19 +3064,6 @@ var SnippetsMenu = Widget.extend({
     _onSnippetThumbnailURLRequest(ev) {
         const $snippet = this.$snippets.has(`[data-snippet="${ev.data.key}"]`);
         ev.data.onSuccess($snippet.length ? $snippet[0].dataset.oeThumbnail : '');
-    },
-    /**
-     * @private
-     */
-    /**
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onUpdateCustomizeElements: function (ev) {
-        this._updateRightPanelContent({
-            content: ev.data.customize$Elements,
-            tab: ev.data.customize$Elements.length ? this.tabs.OPTIONS : this.tabs.BLOCKS,
-        });
     },
     /**
      * Called when an user value widget is being opened -> close all the other
