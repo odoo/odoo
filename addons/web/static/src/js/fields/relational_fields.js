@@ -2088,6 +2088,9 @@ var FieldOne2Many = FieldX2Many.extend({
         }
     },
     /**
+     * Trigger the event to open a dialog containing the corresponding Form view for the current record.
+     * If the options 'no_open' is specified, the dialog will not be opened.
+     *
      * @private
      * @param {Object} params
      * @param {Object} [params.context] We allow additional context, this is
@@ -2099,6 +2102,11 @@ var FieldOne2Many = FieldX2Many.extend({
             this.recordParams,
             { additionalContext: params.context }
         ));
+
+        if (this.nodeOptions.no_open) {
+            return;
+        }
+
         this.trigger_up('open_one2many_record', _.extend(params, {
             domain: this.record.getDomain(this.recordParams),
             context: context,
