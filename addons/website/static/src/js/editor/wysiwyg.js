@@ -63,8 +63,19 @@ Wysiwyg.include({
 
             if ($target.is('a') && !$target.attr('data-oe-model') && !$target.find('> [data-oe-model]').length && $target.closest('#wrapwrap').length) {
                 if (!$target.data('popover-widget-initialized')) {
-                    weWidgets.LinkPopoverWidget.createFor(this, ev.target);
-                    $target.data('popover-widget-initialized', true);
+                    // TODO this code is ugly maybe the mutex should be in the
+                    // editor root widget / the popover should not depend on
+                    // editor panel (like originally intended but...) / ...
+                    (async () => {
+                        if (this.snippetsMenu) {
+                            // Await for the editor panel to be fully updated
+                            // as some buttons of the link popover we create
+                            // here relies on clicking in that editor panel...
+                            await this.snippetsMenu._mutex.exec(() => null);
+                        }
+                        weWidgets.LinkPopoverWidget.createFor(this, ev.target);
+                        $target.data('popover-widget-initialized', true);
+                    })();
                 }
             }
         });
