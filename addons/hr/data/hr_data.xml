@@ -53,8 +53,6 @@
 
         <record id="onboarding_plan" model='hr.plan'>
             <field name="name">Onboarding</field>
-            <field name="plan_type">onboarding</field>
-            <field name="trigger">manual</field>
             <field name="plan_activity_type_ids" eval="[(6, 0, [
                 ref('hr.onboarding_setup_it_materials'),
                 ref('hr.onboarding_plan_training'),
@@ -64,8 +62,6 @@
 
         <record id="offboarding_plan" model='hr.plan'>
             <field name="name">Offboarding</field>
-            <field name="plan_type">offboarding</field>
-            <field name="trigger">manual</field>
             <field name="plan_activity_type_ids" eval="[(6, 0, [
                 ref('hr.offboarding_setup_compute_out_delais'),
                 ref('hr.offboarding_take_back_hr_materials'),
