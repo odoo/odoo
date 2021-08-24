@@ -573,15 +573,15 @@ var SnippetEditor = Widget.extend({
         // affect another option (like updating the $target)
         const editorUIsToUpdate = [];
         const focusOrBlur = show
-            ? (editor, options) => {
+            ? async (editor, options) => {
                 for (const opt of options) {
-                    opt.onFocus();
+                    await opt.onFocus();
                 }
                 editorUIsToUpdate.push(editor);
             }
-            : (editor, options) => {
+            : async (editor, options) => {
                 for (const opt of options) {
-                    opt.onBlur();
+                    await opt.onBlur();
                 }
             };
         for (const $el of this._customize$Elements) {
@@ -590,8 +590,8 @@ var SnippetEditor = Widget.extend({
                 .values()
                 .sortBy('__order')
                 .value();
-            // TODO ideally: allow async parts in onFocus/onBlur
-            focusOrBlur(editor, styles);
+
+            await focusOrBlur(editor, styles);
         }
         await Promise.all(editorUIsToUpdate.map(editor => editor.updateOptionsUI()));
         await Promise.all(editorUIsToUpdate.map(editor => editor.updateOptionsUIVisibility()));
