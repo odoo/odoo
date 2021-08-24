@@ -217,6 +217,15 @@ class WebRequest(object):
             self._cr = self.registry.cursor()
         return self._cr
 
+    @cr.setter
+    def cr(self, val):
+        if self._env:
+            args = list(self._env.args)
+            args[0] = val
+            self._env.args = tuple(args)
+            self._env.cr = val
+        self._cr = val
+
     @property
     def uid(self):
         return self._uid
@@ -507,7 +516,7 @@ def route(route=None, **kw):
 
     """
     routing = kw.copy()
-    assert 'type' not in routing or routing['type'] in ("http", "json")
+    assert 'type' not in routing or routing['type'] in ("http", "json", "websocket")
     def decorator(f):
         if route:
             if isinstance(route, list):
@@ -535,7 +544,7 @@ def route(route=None, **kw):
                     _logger.info("<function %s.%s> called ignoring args %s" % (f.__module__, f.__name__, ', '.join(ignored)))
 
             response = f(*args, **kw)
-            if isinstance(response, Response) or f.routing_type == 'json':
+            if isinstance(response, Response) or f.routing_type in ('json', 'websocket'):
                 return response
 
             if isinstance(response, (bytes, str)):
@@ -959,6 +968,13 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
                         for url in routing['routes']:
                             yield (url, endpoint, routing)
 
+def ws_routing_map():
+    """
+        Create ws routing map based on the map that was already created to handle handshake.
+        This allow us to keep the same controller for handshake and ws requests.
+    """
+    return werkzeug.routing.Map([werkzeug.routing.Rule(str(r), endpoint=r.endpoint) for r in request.env['ir.http']
+                            .routing_map().iter_rules() if r.endpoint.routing['type'] == 'websocket'])
 
 #----------------------------------------------------------
 # HTTP Sessions

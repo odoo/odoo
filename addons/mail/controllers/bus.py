@@ -16,7 +16,7 @@ class MailChatController(BusController):
         return request.session.uid and request.session.uid or SUPERUSER_ID
 
     # --------------------------
-    # Extends BUS Controller Poll
+    # Extends BUS Controller Poll/Subscribe
     # --------------------------
     def _poll(self, dbname, channels, last, options):
         if request.session.uid:
@@ -30,6 +30,18 @@ class MailChatController(BusController):
                 channels.append((request.db, 'res.partner', partner_id))
                 channels.append((request.db, 'ir.needaction', partner_id))
         return super(MailChatController, self)._poll(dbname, channels, last, options)
+
+    @route('/subscribe', type="websocket")
+    def subscribe(self, channels):
+        if request.session.uid:
+            partner_id = request.env.user.partner_id.id
+            if partner_id:
+                for mail_channel in request.env['mail.channel'].search([('channel_partner_ids', 'in', [partner_id])]):
+                    channels.append((request.db, 'mail.channel', mail_channel.id))
+                # personal and needaction channel
+                channels.append((request.db, 'res.partner', partner_id))
+                channels.append((request.db, 'ir.needaction', partner_id))
+        return super().subscribe(channels)
 
     # --------------------------
     # Anonymous routes (Common Methods)

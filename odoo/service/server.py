@@ -388,9 +388,9 @@ class ThreadedServer(CommonServer):
             self.limits_reached_threads.add(threading.currentThread())
 
         for thread in threading.enumerate():
-            if not thread.daemon or getattr(thread, 'type', None) == 'cron':
+            if not thread.daemon and getattr(thread, 'type', None) != 'websocket' or getattr(thread, 'type', None) == 'cron':
                 # We apply the limits on cron threads and HTTP requests,
-                # longpolling requests excluded.
+                # longpolling/websocket requests excluded.
                 if getattr(thread, 'start_time', None):
                     thread_execution_time = time.time() - thread.start_time
                     thread_limit_time_real = config['limit_time_real']
