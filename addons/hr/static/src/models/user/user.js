@@ -1,10 +1,9 @@
-odoo.define('hr/static/src/models/user/user.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
+import {
     registerFieldPatchModel,
-} = require('@mail/model/model_core');
-const { one2one } = require('@mail/model/model_field');
+} from '@mail/model/model_core';
+import { one2one } from '@mail/model/model_field';
 
 registerFieldPatchModel('mail.user', 'hr/static/src/models/user/user.js', {
     /**
@@ -15,4 +14,3 @@ registerFieldPatchModel('mail.user', 'hr/static/src/models/user/user.js', {
     }),
 });
 
-});

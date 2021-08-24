@@ -1,11 +1,8 @@
-odoo.define('mrp.should_consume', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const BasicFields = require('web.basic_fields');
-const FieldFloat = BasicFields.FieldFloat;
-const fieldRegistry = require('web.field_registry');
-const field_utils = require('web.field_utils');
-
+import { FieldFloat } from 'web.basic_fields';
+import fieldRegistry from 'web.field_registry';
+import field_utils from 'web.field_utils';
 /**
  * This widget is used to display alongside the total quantity to consume of a production order,
  * the exact quantity that the worker should consume depending on the BoM. Ex:
@@ -74,8 +71,6 @@ const MrpShouldConsume = FieldFloat.extend({
 
 fieldRegistry.add('mrp_should_consume', MrpShouldConsume);
 
-return {
+export default {
     MrpShouldConsume: MrpShouldConsume,
 };
-
-});

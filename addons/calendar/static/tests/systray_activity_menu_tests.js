@@ -1,10 +1,9 @@
-odoo.define('calendar.systray.ActivityMenuTests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { afterEach, beforeEach, start } = require('@mail/utils/test_utils');
-var ActivityMenu = require('@mail/js/systray/systray_activity_menu')[Symbol.for("default")];
+import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
+import ActivityMenu from '@mail/js/systray/systray_activity_menu';
 
-var testUtils = require('web.test_utils');
+import testUtils from 'web.test_utils';
 
 QUnit.module('calendar', {}, function () {
 QUnit.module('ActivityMenu', {
@@ -77,6 +76,4 @@ QUnit.test('activity menu widget:today meetings', async function (assert) {
     assert.doesNotHaveClass(activityMenu.$('.o_meeting_filter').eq(1), 'o_meeting_bold', 'this meeting has been started');
     widget.destroy();
 });
-});
-
 });

@@ -1,14 +1,11 @@
-odoo.define('mrp.MrpFieldOne2ManyWithCopy', function (require) {
+/** @odoo-module **/
 
-"use strict";
-
-var FieldOne2Many = require('web.relational_fields').FieldOne2Many;
-var ListRenderer = require('web.ListRenderer');
-var fieldRegistry = require('web.field_registry');
-const {_t} = require('web.core');
+import { FieldOne2Many } from 'web.relational_fields';
+import ListRenderer from 'web.ListRenderer';
+import fieldRegistry from 'web.field_registry';
+import {_t} from 'web.core';
 
 //----------------------------------------------------
-var dialogs = require('web.view_dialogs');
 
 var MrpFieldOne2ManyWithCopyListRenderer = ListRenderer.extend({
 
@@ -80,6 +77,4 @@ var MrpFieldOne2ManyWithCopy = FieldOne2Many.extend({
 
 fieldRegistry.add('mrp_one2many_with_copy', MrpFieldOne2ManyWithCopy);
 
-return MrpFieldOne2ManyWithCopy;
-
-});
+export default MrpFieldOne2ManyWithCopy;

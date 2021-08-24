@@ -1,17 +1,16 @@
-odoo.define('sms/static/src/components/message/message_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { create, insert, link } = require('@mail/model/model_field_command');
-const { makeDeferred } = require('@mail/utils/deferred/deferred');
-const {
+import { create, insert, link } from '@mail/model/model_field_command';
+import { makeDeferred } from '@mail/utils/deferred/deferred';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
     start,
-} = require('@mail/utils/test_utils');
+} from '@mail/utils/test_utils';
 
-const Bus = require('web.Bus');
+import Bus from 'web.Bus';
 
 QUnit.module('sms', {}, function () {
 QUnit.module('components', {}, function () {
@@ -190,6 +189,4 @@ QUnit.test('Notification Error', async function (assert) {
 
 });
 });
-});
-
 });

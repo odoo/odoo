@@ -1,9 +1,8 @@
-odoo.define('calendar.CalendarRenderer', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const CalendarRenderer = require('web.CalendarRenderer');
-const CalendarPopover = require('web.CalendarPopover');
-const session = require('web.session');
+import CalendarRenderer from 'web.CalendarRenderer';
+import CalendarPopover from 'web.CalendarPopover';
+import session from 'web.session';
 
 const AttendeeCalendarPopover = CalendarPopover.extend({
     template: 'Calendar.attendee.status.popover',
@@ -132,9 +131,7 @@ const AttendeeCalendarRenderer = CalendarRenderer.extend({
     },
 });
 
-return {
+export default {
     AttendeeCalendarRenderer: AttendeeCalendarRenderer,
     AttendeeCalendarPopover: AttendeeCalendarPopover,
 };
-
-});

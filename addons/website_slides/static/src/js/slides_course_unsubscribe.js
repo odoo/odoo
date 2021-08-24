@@ -1,10 +1,9 @@
-odoo.define('website_slides.unsubscribe_modal', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var Dialog = require('web.Dialog');
-var publicWidget = require('web.public.widget');
-var utils = require('web.utils');
+import core from 'web.core';
+import Dialog from 'web.Dialog';
+import publicWidget from 'web.public.widget';
+import utils from 'web.utils';
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -160,9 +159,7 @@ publicWidget.registry.websiteSlidesUnsubscribe = publicWidget.Widget.extend({
     },
 });
 
-return {
+export default {
     SlideUnsubscribeDialog: SlideUnsubscribeDialog,
     websiteSlidesUnsubscribe: publicWidget.registry.websiteSlidesUnsubscribe
 };
-
-});

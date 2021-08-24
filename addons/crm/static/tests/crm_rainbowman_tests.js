@@ -1,8 +1,8 @@
 odoo.define('crm.form_rainbowman_tests', function (require) {
     "use strict";
 
-    var CrmFormView = require('crm.crm_form').CrmFormView;
-    var CrmKanbanView = require('crm.crm_kanban').CrmKanbanView;
+    var CrmFormView = require('@crm/js/crm_form')[Symbol.for("default")].CrmFormView;
+    var CrmKanbanView = require('@crm/js/crm_kanban')[Symbol.for("default")].CrmKanbanView;
     var testUtils = require('web.test_utils');
     var createView = testUtils.createView;
 

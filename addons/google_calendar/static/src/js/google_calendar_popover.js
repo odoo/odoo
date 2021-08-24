@@ -1,7 +1,7 @@
 odoo.define('google_calendar.GoogleCalendarPopover', function(require) {
     "use strict";
 
-    const CalendarPopover = require('calendar.CalendarRenderer').AttendeeCalendarPopover;
+    const CalendarPopover = require('@calendar/js/calendar_renderer')[Symbol.for("default")].AttendeeCalendarPopover;
 
     const GoogleCalendarPopover = CalendarPopover.include({
         events: _.extend({}, CalendarPopover.prototype.events, {

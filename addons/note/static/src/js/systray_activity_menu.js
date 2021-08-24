@@ -1,12 +1,9 @@
-odoo.define('note.systray.ActivityMenu', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var ActivityMenu = require('@mail/js/systray/systray_activity_menu')[Symbol.for("default")];
+import ActivityMenu from '@mail/js/systray/systray_activity_menu';
 
-var core = require('web.core');
-var datepicker = require('web.datepicker');
-
-var _t = core._t;
+import { _t } from 'web.core';
+import datepicker from 'web.datepicker';
 
 ActivityMenu.include({
     events: _.extend({}, ActivityMenu.prototype.events, {
@@ -133,5 +130,4 @@ ActivityMenu.include({
             this._saveNote();
         }
     },
-});
 });

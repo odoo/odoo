@@ -1,10 +1,8 @@
-odoo.define('website_slides.category.add', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
-var Dialog = require('web.Dialog');
-var core = require('web.core');
-var _t = core._t;
+import publicWidget from 'web.public.widget';
+import Dialog from 'web.Dialog';
+import { _t } from 'web.core';
 
 var CategoryAddDialog = Dialog.extend({
     template: 'slides.category.add',
@@ -76,9 +74,7 @@ publicWidget.registry.websiteSlidesCategoryAdd = publicWidget.Widget.extend({
     },
 });
 
-return {
+export default {
     categoryAddDialog: CategoryAddDialog,
     websiteSlidesCategoryAdd: publicWidget.registry.websiteSlidesCategoryAdd
 };
-
-});

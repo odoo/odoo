@@ -1,11 +1,8 @@
-odoo.define('calendar.CalendarController', function (require) {
-    "use strict";
+/** @odoo-module **/
 
-    const Controller = require('web.CalendarController');
-    const Dialog = require('web.Dialog');
-    const { qweb, _t } = require('web.core');
-    const core = require('web.core');
-    const QWeb = core.qweb;
+    import Controller from 'web.CalendarController';
+    import Dialog from 'web.Dialog';
+    import { qweb as QWeb, _t } from 'web.core';
 
     const CalendarController = Controller.extend({
 
@@ -27,7 +24,7 @@ odoo.define('calendar.CalendarController', function (require) {
                 new Dialog(this, {
                     title: _t('Edit Recurrent event'),
                     size: 'small',
-                    $content: $(qweb.render('calendar.RecurrentEventUpdate')),
+                    $content: $(QWeb.render('calendar.RecurrentEventUpdate')),
                     buttons: [{
                         text: _t('Confirm'),
                         classes: 'btn-primary',
@@ -89,6 +86,4 @@ odoo.define('calendar.CalendarController', function (require) {
 
     });
 
-    return CalendarController;
-
-});
+    export default CalendarController;

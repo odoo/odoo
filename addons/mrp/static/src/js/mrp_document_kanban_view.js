@@ -1,10 +1,9 @@
-odoo.define('mrp.MrpDocumentsKanbanView', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const KanbanView = require('web.KanbanView');
-const MrpDocumentsKanbanController = require('mrp.MrpDocumentsKanbanController');
-const MrpDocumentsKanbanRenderer = require('mrp.MrpDocumentsKanbanRenderer');
-const viewRegistry = require('web.view_registry');
+import KanbanView from 'web.KanbanView';
+import MrpDocumentsKanbanController from '@mrp/js/mrp_documents_kanban_controller';
+import MrpDocumentsKanbanRenderer from '@mrp/js/mrp_documents_kanban_renderer';
+import viewRegistry from 'web.view_registry';
 
 const MrpDocumentsKanbanView = KanbanView.extend({
     config: Object.assign({}, KanbanView.prototype.config, {
@@ -15,6 +14,4 @@ const MrpDocumentsKanbanView = KanbanView.extend({
 
 viewRegistry.add('mrp_documents_kanban', MrpDocumentsKanbanView);
 
-return MrpDocumentsKanbanView;
-
-});
+export default MrpDocumentsKanbanView;

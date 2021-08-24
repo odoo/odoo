@@ -1,9 +1,8 @@
-odoo.define('base_calendar.base_calendar', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var BasicModel = require('web.BasicModel');
-var fieldRegistry = require('web.field_registry');
-var relationalFields = require('web.relational_fields');
+import BasicModel from 'web.BasicModel';
+import fieldRegistry from 'web.field_registry';
+import relationalFields from 'web.relational_fields';
 
 const FieldMany2ManyTagsAvatar = relationalFields.FieldMany2ManyTagsAvatar;
 
@@ -52,5 +51,3 @@ const Many2ManyAttendee = FieldMany2ManyTagsAvatar.extend({
 });
 
 fieldRegistry.add('many2manyattendee', Many2ManyAttendee);
-
-});

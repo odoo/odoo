@@ -1,8 +1,7 @@
-odoo.define('website_slides.quiz.question.form', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
-var core = require('web.core');
+import publicWidget from 'web.public.widget';
+import core from 'web.core';
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -224,5 +223,4 @@ var QuestionFormWidget = publicWidget.Widget.extend({
 
 });
 
-return QuestionFormWidget;
-});
+export default QuestionFormWidget;

@@ -1,8 +1,7 @@
-odoo.define('mrp.tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var FormView = require('web.FormView');
-var testUtils = require("web.test_utils");
+import FormView from 'web.FormView';
+import testUtils from "web.test_utils";
 
 var createView = testUtils.createView;
 
@@ -129,5 +128,4 @@ QUnit.module('mrp', {
 
         form.destroy();
     });
-});
 });

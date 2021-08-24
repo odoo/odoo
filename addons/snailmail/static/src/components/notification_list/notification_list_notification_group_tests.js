@@ -1,14 +1,13 @@
-odoo.define('snailmail/static/src/components/notification_list/notification_list_notification_group_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
+import {
     afterEach,
     beforeEach,
     createRootMessagingComponent,
     start,
-} = require('@mail/utils/test_utils');
+} from '@mail/utils/test_utils';
 
-const Bus = require('web.Bus');
+import Bus from 'web.Bus';
 
 QUnit.module('snailmail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -295,6 +294,4 @@ QUnit.test('grouped notifications by document model', async function (assert) {
 
 });
 });
-});
-
 });

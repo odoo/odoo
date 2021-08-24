@@ -1,9 +1,8 @@
-odoo.define('website_livechat/static/src/models/partner/partner.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registerNewModel } = require('@mail/model/model_core');
-const { attr, many2one, one2many } = require('@mail/model/model_field');
-const { insert, link, unlink } = require('@mail/model/model_field_command');
+import { registerNewModel } from '@mail/model/model_core';
+import { attr, many2one, one2many } from '@mail/model/model_field';
+import { insert, link, unlink } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -147,5 +146,3 @@ function factory(dependencies) {
 }
 
 registerNewModel('website_livechat.visitor', factory);
-
-});

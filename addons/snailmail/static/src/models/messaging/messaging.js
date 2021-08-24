@@ -1,11 +1,10 @@
-odoo.define('snailmail/static/src/models/messaging/messaging.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
+import {
     registerInstancePatchModel,
     registerFieldPatchModel,
-} = require('@mail/model/model_core');
-const { attr } = require('@mail/model/model_field');
+} from '@mail/model/model_core';
+import { attr } from '@mail/model/model_field';
 
 registerInstancePatchModel('mail.messaging', 'snailmail/static/src/models/messaging/messaging.js', {
     async fetchSnailmailCreditsUrl() {
@@ -33,6 +32,4 @@ registerInstancePatchModel('mail.messaging', 'snailmail/static/src/models/messag
 registerFieldPatchModel('mail.messaging', 'snailmail/static/src/models/messaging/messaging.js', {
     snailmail_credits_url: attr(),
     snailmail_credits_url_trial: attr(),
-});
-
 });

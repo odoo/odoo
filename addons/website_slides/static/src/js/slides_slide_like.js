@@ -1,11 +1,8 @@
-odoo.define('website_slides.slides.slide.like', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
-require('website_slides.slides');
-
-var _t = core._t;
+import { _t } from 'web.core';
+import publicWidget from 'web.public.widget';
+import '@website_slides/js/slides';
 
 var SlideLikeWidget = publicWidget.Widget.extend({
     events: {
@@ -106,9 +103,7 @@ publicWidget.registry.websiteSlidesSlideLike = publicWidget.Widget.extend({
     },
 });
 
-return {
+export default {
     slideLikeWidget: SlideLikeWidget,
     websiteSlidesSlideLike: publicWidget.registry.websiteSlidesSlideLike
 };
-
-});

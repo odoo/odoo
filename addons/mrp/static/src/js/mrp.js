@@ -1,14 +1,11 @@
-odoo.define('mrp.mrp_state', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var AbstractField = require('web.AbstractField');
-var core = require('web.core');
-var fields = require('web.basic_fields');
-var fieldUtils = require('web.field_utils');
-var field_registry = require('web.field_registry');
-var time = require('web.time');
-
-var _t = core._t;
+import AbstractField from 'web.AbstractField';
+import { _t } from 'web.core';
+import fields from 'web.basic_fields';
+import fieldUtils from 'web.field_utils';
+import field_registry from 'web.field_registry';
+import time from 'web.time';
 
 /**
  * This widget is used to display the availability on a workorder.
@@ -264,5 +261,4 @@ field_registry
 
 fieldUtils.format.mrp_time_counter = fieldUtils.format.float_time;
 
-return FieldEmbedURLViewer;
-});
+export default FieldEmbedURLViewer;
