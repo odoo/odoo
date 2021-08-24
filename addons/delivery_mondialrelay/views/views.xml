@@ -24,18 +24,5 @@
         </field>
     </record>
 
-    <record id="view_partner_form_mondialrelay" model="ir.ui.view">
-        <field name="name">view_partner_form_mondialrelay</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//page[@name='contact_addresses']//kanban/field[@name='display_name']" position="after">
-                <field name="is_mondialrelay"/>
-            </xpath>
-            <xpath expr="//t[@t-set='delivery_icon_path']" position="after">
-                <t t-set="delivery_icon_path" t-if="record.is_mondialrelay.raw_value" t-value="'/delivery_mondialrelay/static/src/img/truck_mr.png'"/>
-            </xpath>
-        </field>
-    </record>
   </data>
 </odoo>
