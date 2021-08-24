@@ -238,23 +238,23 @@ class Partner(models.Model):
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name'),
     ]
 
-    @api.depends('name', 'user_ids.share', 'image_1920', 'is_company')
+    @api.depends('name', 'user_ids.share', 'image_1920', 'is_company', 'type')
     def _compute_avatar_1920(self):
         super()._compute_avatar_1920()
 
-    @api.depends('name', 'user_ids.share', 'image_1024', 'is_company')
+    @api.depends('name', 'user_ids.share', 'image_1024', 'is_company', 'type')
     def _compute_avatar_1024(self):
         super()._compute_avatar_1024()
 
-    @api.depends('name', 'user_ids.share', 'image_512', 'is_company')
+    @api.depends('name', 'user_ids.share', 'image_512', 'is_company', 'type')
     def _compute_avatar_512(self):
         super()._compute_avatar_512()
 
-    @api.depends('name', 'user_ids.share', 'image_256', 'is_company')
+    @api.depends('name', 'user_ids.share', 'image_256', 'is_company', 'type')
     def _compute_avatar_256(self):
         super()._compute_avatar_256()
 
-    @api.depends('name', 'user_ids.share', 'image_128', 'is_company')
+    @api.depends('name', 'user_ids.share', 'image_128', 'is_company', 'type')
     def _compute_avatar_128(self):
         super()._compute_avatar_128()
 
@@ -264,11 +264,14 @@ class Partner(models.Model):
         for partner in self - partners_with_internal_user:
             partner[avatar_field] = partner[image_field] or partner._avatar_get_placeholder()
 
-    def _avatar_get_placeholder(self):
-        path = "base/static/img/avatar_grey.png"
+    def _avatar_get_placeholder_path(self):
         if self.is_company:
-            path = "base/static/img/company_image.png"
-        return base64.b64encode(tools.file_open(path, 'rb').read())
+            return "base/static/img/company_image.png"
+        if self.type == 'delivery':
+            return "base/static/img/truck.png"
+        if self.type == 'invoice':
+            return "base/static/img/money.png"
+        return super()._avatar_get_placeholder_path()
 
     @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name')
     def _compute_display_name(self):

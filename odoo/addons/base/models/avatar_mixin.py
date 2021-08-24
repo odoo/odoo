@@ -72,5 +72,8 @@ class AvatarMixin(models.AbstractModel):
             "</svg>"
         ).encode())
 
+    def _avatar_get_placeholder_path(self):
+        return "base/static/img/avatar_grey.png"
+
     def _avatar_get_placeholder(self):
-        return b64encode(file_open("base/static/img/avatar_grey.png", 'rb').read())
+        return b64encode(file_open(self._avatar_get_placeholder_path(), 'rb').read())
