@@ -60,7 +60,7 @@
     <t t-name="website.slide.upload.modal.common">
         <div class="form-group">
             <label for="name" class="col-form-label">Title</label>
-            <input id="name" name="name" placeholder="Title" class="form-control" required="required"/>
+            <input id="name" name="name" placeholder="Title" class="form-control" required="required" autocomplete="off"/>
         </div>
         <div t-if="!widget.defaultCategoryID" class="form-group">
             <label for="category_id" class="col-form-label">Section</label>
@@ -73,7 +73,7 @@
         <div class="form-group">
             <label for="duration" class="col-form-label">Duration</label>
             <div class="input-group">
-                <input type="number" id="duration" min="0" name="duration" placeholder="Estimated slide completion time" class="form-control"/>
+                <input type="number" id="duration" min="0" name="duration" placeholder="Estimated slide completion time" class="form-control" autocomplete="off"/>
                     <div class="input-group-prepend">
                     <span class="input-group-text">Minutes</span>
                 </div>

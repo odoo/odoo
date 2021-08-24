@@ -36,7 +36,7 @@ $o-wslides-fs-side-width: 300px;
     margin-top: 10px;
     line-height: 1.8em;
     padding-left: 8px;
-    padding-right: 5px;  
+    padding-right: 5px;
     background: #17A2B8;
     color: white;
     box-shadow: 0px 0px 3px  gray;
@@ -50,7 +50,7 @@ $o-wslides-fs-side-width: 300px;
         position: absolute;
         height: 0px;
         width: 0px;
-        right: 0; 
+        right: 0;
         margin-right: -15px;
         border-left: 15px solid #17A2B8;
         border-bottom: 12px solid transparent;
@@ -176,7 +176,7 @@ $o-wslides-fs-side-width: 300px;
     }
 
     .o_wslides_entry_muted {
-        opacity: 0.5;
+        opacity: 0.1;
     }
 
     // Solve an overfow issue caused in some
@@ -319,7 +319,15 @@ $o-wslides-fs-side-width: 300px;
         border-width: 0 1px;
     }
 
-    .breadcrumb-item.active a, .breadcrumb-item a:hover {
+    .breadcrumb-item, .breadcrumb-item.active{
+        --max-lines: 2;
+        position: relative;
+        max-height: calc(1.4rem * var(--max-lines));
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .breadcrumb-item.active a, .breadcrumb-item a:hover{
         color: white;
     }
 

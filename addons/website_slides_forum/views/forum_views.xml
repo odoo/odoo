@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="website_forum.view_forum_forum_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='group_order']" position="after">
-                <group string="eLearning" name="group_slides">
+                <group string="eLearning" name="group_slides" attrs="{'invisible': [('slide_channel_id', '=', False)]}">
                     <field name="slide_channel_id" readonly="True"/>
                 </group>
             </xpath>
@@ -23,22 +23,29 @@
     </record>
 
     <record id="forum_forum_action_channel" model="ir.actions.act_window">
-        <field name="name">eLearning Forums</field>
+        <field name="name">Forums</field>
         <field name="res_model">forum.forum</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('slide_channel_ids', '!=', 'False')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Forum
+            </p>
+            <p>Forums allow your attendees to ask questions to your community.</p>
+        </field>
     </record>
 
     <record id="forum_post_action_channel" model="ir.actions.act_window">
-        <field name="name">eLearning Forum Posts</field>
+        <field name="name">Forum Posts</field>
         <field name="res_model">forum.post</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,graph,pivot,form</field>
         <field name="domain">[('forum_id.slide_channel_ids', '!=', 'False')]</field>
         <field name="context">{'search_default_questions': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a new forum post
+                No Forum Post yet!
             </p>
+            <p>Come back later to monitor and moderate what is posted on your Forums.</p>
         </field>
     </record>
 
@@ -53,16 +60,4 @@
         </field>
     </record>
 
-    <record id="forum_post_action_report" model="ir.actions.act_window">
-        <field name="name">eLearning Forum Posts</field>
-        <field name="res_model">forum.post</field>
-        <field name="view_mode">graph</field>
-        <field name="view_id" ref="forum_post_view_graph_slides"/>
-        <field name="domain">[('forum_id.slide_channel_ids', '!=', 'False')]</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No data yet!
-            </p>
-        </field>
-    </record>
 </odoo>
