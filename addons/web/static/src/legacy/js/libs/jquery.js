@@ -128,6 +128,10 @@ $.fn.extend({
     closestScrollable() {
         let $el = this;
         while ($el[0] !== document.scrollingElement) {
+            // Avoid infinite loop.
+            if (!$el.length) {
+                return $();
+            }
             if ($el.isScrollable()) {
                 return $el;
             }
