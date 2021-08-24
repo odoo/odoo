@@ -174,12 +174,11 @@ const LinkPopoverWidget = Widget.extend({
     /**
      * Removes the link/anchor.
      *
-     * TODO Call business methods once new editor is released instead of click
-     *
      * @private
      * @param {Event} ev
      */
     _onRemoveLinkClick(ev) {
+        // TODO surely there is better to do than finding the editor instance in the DOM?
         $('#wrapwrap').data('wysiwyg').odooEditor.execCommand('unlink');
         ev.stopImmediatePropagation();
     },
