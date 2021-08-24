@@ -209,8 +209,8 @@ class Partner(models.Model):
                     P.id as id,
                     P.name as name,
                     P.email as email,
-                    CASE WHEN B.last_poll IS NULL THEN 'offline'
-                         WHEN age(now() AT TIME ZONE 'UTC', B.last_poll) > interval %s THEN 'offline'
+                    CASE WHEN B.last_update IS NULL THEN 'offline'
+                         WHEN age(now() AT TIME ZONE 'UTC', B.last_update) > interval %s THEN 'offline'
                          WHEN age(now() AT TIME ZONE 'UTC', B.last_presence) > interval %s THEN 'away'
                          ELSE 'online'
                     END as im_status

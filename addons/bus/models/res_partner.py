@@ -14,8 +14,8 @@ class ResPartner(models.Model):
         self.env.cr.execute("""
             SELECT
                 U.partner_id as id,
-                CASE WHEN max(B.last_poll) IS NULL THEN 'offline'
-                    WHEN age(now() AT TIME ZONE 'UTC', max(B.last_poll)) > interval %s THEN 'offline'
+                CASE WHEN max(B.last_update) IS NULL THEN 'offline'
+                    WHEN age(now() AT TIME ZONE 'UTC', max(B.last_update)) > interval %s THEN 'offline'
                     WHEN age(now() AT TIME ZONE 'UTC', max(B.last_presence)) > interval %s THEN 'away'
                     ELSE 'online'
                 END as status

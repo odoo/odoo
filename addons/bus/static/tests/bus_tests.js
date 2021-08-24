@@ -119,7 +119,6 @@ QUnit.module('Bus', {
             legacyParams: { serviceRegistry: legacyRegistry },
         });
         busService = owl.Component.env.services.bus_service;
-        busService.startPolling();
         // Give longpolling bus a tick to try to restart polling
         await nextTick();
 

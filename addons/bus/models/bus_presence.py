@@ -28,16 +28,16 @@ class BusPresence(models.Model):
     _sql_constraints = [('bus_user_presence_unique', 'unique(user_id)', 'A user can only have one IM status.')]
 
     user_id = fields.Many2one('res.users', 'Users', required=True, index=True, ondelete='cascade')
-    last_poll = fields.Datetime('Last Poll', default=lambda self: fields.Datetime.now())
+    last_update = fields.Datetime('Last Update', default=lambda self: fields.Datetime.now())
     last_presence = fields.Datetime('Last Presence', default=lambda self: fields.Datetime.now())
     status = fields.Selection([('online', 'Online'), ('away', 'Away'), ('offline', 'Offline')], 'IM Status', default='offline')
 
     @api.model
     def update(self, inactivity_period):
-        """ Updates the last_poll and last_presence of the current user
+        """ Updates the last_update and last_presence of the current user
             :param inactivity_period: duration in milliseconds
         """
-        # This method is called in method _poll() and cursor is closed right
+        # This method is called in method update_presence()/_poll() and cursor is closed right
         # after; see bus/controllers/main.py.
         try:
             # Hide transaction serialization errors, which can be ignored, the presence update is not essential
@@ -58,7 +58,7 @@ class BusPresence(models.Model):
         # compute last_presence timestamp
         last_presence = datetime.datetime.now() - datetime.timedelta(milliseconds=inactivity_period)
         values = {
-            'last_poll': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            'last_update': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
         }
         # update the presence or a create a new one
         if not presence:  # create a new presence for the user

@@ -31,7 +31,6 @@ function factory(dependencies) {
          */
         start() {
             this.env.services.bus_service.onNotification(null, notifs => this._handleNotifications(notifs));
-            this.env.services.bus_service.startPolling();
         }
 
         //----------------------------------------------------------------------

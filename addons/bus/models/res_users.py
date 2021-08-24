@@ -16,7 +16,7 @@ class ResUsers(models.Model):
         self.env.cr.execute("""
             SELECT
                 user_id as id,
-                CASE WHEN age(now() AT TIME ZONE 'UTC', last_poll) > interval %s THEN 'offline'
+                CASE WHEN age(now() AT TIME ZONE 'UTC', last_update) > interval %s THEN 'offline'
                      WHEN age(now() AT TIME ZONE 'UTC', last_presence) > interval %s THEN 'away'
                      ELSE 'online'
                 END as status

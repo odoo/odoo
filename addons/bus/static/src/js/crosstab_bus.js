@@ -1,7 +1,7 @@
 odoo.define('bus.CrossTab', function (require) {
 "use strict";
 
-var Longpolling = require('bus.Longpolling');
+var Websocket = require('bus.Websocket');
 
 var session = require('web.session');
 
@@ -26,7 +26,7 @@ var session = require('web.session');
  * - become_master : when this tab became the master
  * - no_longer_master : when this tab is not longer the master (the user swith tab)
  */
-var CrossTabBus = Longpolling.extend({
+var CrossTabBus = Websocket.extend({
     // constants
     TAB_HEARTBEAT_PERIOD: 10000, // 10 seconds
     MASTER_TAB_HEARTBEAT_PERIOD: 1500, // 1.5 seconds

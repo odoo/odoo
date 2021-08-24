@@ -21,7 +21,6 @@ export const calendarNotificationService = {
                     }
                 }
             });
-            legacyEnv.services.bus_service.startPolling();
         });
 
         /**
