@@ -166,25 +166,21 @@ class Channel(models.Model):
         string='Tags', help='Used to categorize and filter displayed channels/courses')
     # slides: promote, statistics
     slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides and categories")
-    slide_content_ids = fields.One2many('slide.slide', string='Slides', compute="_compute_category_and_slide_ids")
+    slide_content_ids = fields.One2many('slide.slide', string='Content', compute="_compute_category_and_slide_ids")
     slide_category_ids = fields.One2many('slide.slide', string='Categories', compute="_compute_category_and_slide_ids")
     slide_last_update = fields.Date('Last Update', compute='_compute_slide_last_update', store=True)
     slide_partner_ids = fields.One2many(
         'slide.slide.partner', 'channel_id', string="Slide User Data",
         copy=False, groups='website_slides.group_website_slides_officer')
     promote_strategy = fields.Selection([
-        ('latest', 'Latest Published'),
+        ('latest', 'Latest Created'),
         ('most_voted', 'Most Voted'),
         ('most_viewed', 'Most Viewed'),
-        ('specific', 'Specific'),
+        ('specific', 'Select Manually'),
         ('none', 'None')],
-        string="Promoted Content", default='latest', required=False,
-        help='Depending the promote strategy, a slide will appear on the top of the course\'s page :\n'
-             ' * Latest Published : the slide created last.\n'
-             ' * Most Voted : the slide which has to most votes.\n'
-             ' * Most Viewed ; the slide which has been viewed the most.\n'
-             ' * Specific : You choose the slide to appear.\n'
-             ' * None : No slides will be shown.\n')
+        string="Featured Content", default='specific', required=False,
+        help='Defines the content that will be promoted on the course home page',
+    )
     promoted_slide_id = fields.Many2one('slide.slide', string='Promoted Slide')
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     nbr_presentation = fields.Integer('Presentations', compute='_compute_slides_statistics', store=True)
@@ -193,7 +189,7 @@ class Channel(models.Model):
     nbr_infographic = fields.Integer('Infographics', compute='_compute_slides_statistics', store=True)
     nbr_webpage = fields.Integer("Webpages", compute='_compute_slides_statistics', store=True)
     nbr_quiz = fields.Integer("Number of Quizs", compute='_compute_slides_statistics', store=True)
-    total_slides = fields.Integer('Content', compute='_compute_slides_statistics', store=True)
+    total_slides = fields.Integer('Number of Contents', compute='_compute_slides_statistics', store=True)
     total_views = fields.Integer('Visits', compute='_compute_slides_statistics', store=True)
     total_votes = fields.Integer('Votes', compute='_compute_slides_statistics', store=True)
     total_time = fields.Float('Duration', compute='_compute_slides_statistics', digits=(10, 2), store=True)
@@ -201,32 +197,32 @@ class Channel(models.Model):
     # configuration
     allow_comment = fields.Boolean(
         "Allow rating on Course", default=True,
-        help="If checked it allows members to either:\n"
-             " * like content and post comments on documentation course;\n"
-             " * post comment and review on training course;")
+        help="Allow Attendees to like and comment your content and to submit reviews on your course.")
     publish_template_id = fields.Many2one(
-        'mail.template', string='New Content Email',
-        help="Email attendees once a new content is published",
-        default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('website_slides.slide_template_published'))
+        'mail.template', string='New Content Notification',
+        help="Defines the email your Attendees will receive each time you upload new content.",
+        default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('website_slides.slide_template_published'),
+        domain=[('model', '=', 'slide.slide')])
     share_template_id = fields.Many2one(
         'mail.template', string='Share Template',
         help="Email template used when sharing a slide",
         default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('website_slides.slide_template_shared'))
     completed_template_id = fields.Many2one(
-        'mail.template', string='Completion Email', help="Email attendees once they've finished the course",
-        default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('website_slides.mail_template_channel_completed'))
+        'mail.template', string='Completion Notification', help="Defines the email your Attendees will receive once they reach the end of your course.",
+        default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('website_slides.mail_template_channel_completed'),
+        domain=[('model', '=', 'slide.channel.partner')])
     enroll = fields.Selection([
         ('public', 'Public'), ('invite', 'On Invitation')],
         default='public', string='Enroll Policy', required=True,
-        help='Condition to enroll: everyone, on invite, on payment (sale bridge).')
+        help='Defines how people can enroll to your Course.')
     enroll_msg = fields.Html(
         'Enroll Message', help="Message explaining the enroll process",
         default=_get_default_enroll_msg, translate=tools.html_translate, sanitize_attributes=False)
     enroll_group_ids = fields.Many2many('res.groups', string='Auto Enroll Groups', help="Members of those groups are automatically added as members of the channel.")
     visibility = fields.Selection([
-        ('public', 'Public'), ('members', 'Members Only')],
+        ('public', 'Open To All'), ('members', 'Members Only')],
         default='public', string='Visibility', required=True,
-        help='Applied directly as ACLs. Allow to hide channels and their content for non members.')
+        help='Defines who can access your courses and their content.')
     partner_ids = fields.Many2many(
         'res.partner', 'slide_channel_partner', 'channel_id', 'partner_id',
         string='Members', help="All members of the channel.", context={'active_test': False}, copy=False, depends=['channel_partner_ids'])
@@ -531,10 +527,20 @@ class Channel(models.Model):
         """ Redirects to attendees of the course. If completed is True, a filter
         will be added in action that will display only attendees who have completed
         the course. """
-        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_partner_action")
         action_ctx = {'active_test': False}
+        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_partner_action")
         if completed:
             action_ctx['search_default_filter_completed'] = 1
+        action['domain'] = [('channel_id', 'in', self.ids)]
+        action['sample'] = 1
+        if completed:
+            help_message = {'header_message':_("No Attendee has completed this course yet!"), 'body_message': ""}
+        else:
+            help_message = {
+                'header_message': _("No Attendees Yet!"),
+                'body_message': _("From here you'll be able to monitor attendees and to track their progress.")
+            }
+        action['help'] = """<p class="o_view_nocontent_smiling_face">%(header_message)s</p><p>%(body_message)s</p>""" % help_message
         if len(self) == 1:
             action['display_name'] = _('Attendees of %s', self.name)
             action_ctx['search_default_channel_id'] = self.id

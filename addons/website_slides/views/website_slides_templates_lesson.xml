@@ -383,6 +383,22 @@
             </div>
         </div>
     </div>
+    <div t-if="slide.channel_id.allow_comment and slide.channel_id.channel_type == 'documentation'"
+        class="col-12 col-md d-flex align-items-start justify-content-md-start mb-2 mb-md-0">
+        <span class="text-muted font-weight-bold mr-3">Rating</span>
+        <div class="text-muted border-left pl-3">
+            <div class="o_wslides_js_slide_like mr-2">
+                <span t-attf-class="o_wslides_js_slide_like_up #{'disabled' if not slide.channel_id.can_vote else ''}" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
+                    <i class="fa fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"></i>
+                    <span t-esc="slide.likes"/>
+                </span>
+                <span t-attf-class="o_wslides_js_slide_like_down ml-3 #{'disabled' if not slide.channel_id.can_vote else ''}" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
+                    <i class="fa fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"></i>
+                    <span t-esc="slide.dislikes"/>
+                </span>
+            </div>
+        </div>
+    </div>
     <div class="o_wslides_js_quiz_container" t-att-data-slide-id="slide.id">
         <div class="row" t-if="slide.slide_type != 'certification'">
             <t t-if="slide.question_ids">
@@ -402,35 +418,21 @@
                 </t>
             </div>
         </div>
-        <div class="col-12 col-md d-flex align-items-start mb-4 mb-md-0 o_wslides_js_course_join" t-if="len(slide.slide_resource_ids)">
-            <span t-if="slide.channel_id.is_member or slide.channel_id.can_publish or slide.is_preview or slide.channel_id.enroll in ['private', 'payment']" class="text-muted font-weight-bold mr-3">
-                Additional Resources
-            </span>
-            <div t-if="slide.channel_id.is_member or slide.channel_id.can_publish" class="text-muted mr-auto border-left pl-3">
-                <t t-foreach="slide.slide_resource_ids" t-as="resource">
-                    <a t-attf-href="/web/content/slide.slide.resource/#{resource.id}/data?download=true" t-esc="resource.name"/><br />
-                </t>
-            </div>
-            <div t-elif="slide.channel_id.enroll == 'public'" class="text-muted mr-auto border-left pl-3">
-                <t t-call="website_slides.join_course_link"/>
-            </div>
-        </div>
-        <div t-if="slide.channel_id.allow_comment and slide.channel_id.channel_type == 'documentation'"
-             class="col-12 col-md d-flex align-items-start justify-content-md-end mb-2 mb-md-0">
-            <span class="text-muted font-weight-bold mr-3">Rating</span>
-            <div class="text-muted border-left pl-3">
-                <div class="o_wslides_js_slide_like mr-2">
-                    <span t-att-class="('o_wslides_js_slide_like_up %s') % ('disabled' if not slide.channel_id.can_vote else '')" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
-                        <i class="fa fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"></i>
-                        <span t-esc="slide.likes"/>
-                    </span>
-                    <span t-att-class="('o_wslides_js_slide_like_down ml-3 %s') % ('disabled' if not slide.channel_id.can_vote else '')" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
-                        <i class="fa fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"></i>
-                        <span t-esc="slide.dislikes"/>
-                    </span>
+        <group>
+            <div class="col-12 col-md d-flex align-items-start mb-4 mb-md-0 o_wslides_js_course_join" t-if="len(slide.slide_resource_ids)">
+                <span t-if="slide.channel_id.is_member or slide.channel_id.can_publish or slide.is_preview or slide.channel_id.enroll in ['private', 'payment']" class="text-muted font-weight-bold mr-3">
+                    Additional Resources
+                </span>
+                <div t-if="slide.channel_id.is_member or slide.channel_id.can_publish" class="text-muted mr-auto border-left pl-3">
+                    <t t-foreach="slide.slide_resource_ids" t-as="resource">
+                        <a t-attf-href="/web/content/slide.slide.resource/#{resource.id}/data?download=true" t-esc="resource.name"/><br />
+                    </t>
+                </div>
+                <div t-elif="slide.channel_id.enroll == 'public'" class="text-muted mr-auto border-left pl-3">
+                    <t t-call="website_slides.join_course_link"/>
                 </div>
             </div>
-        </div>
+        </group>
     </div>
 </template>
 
