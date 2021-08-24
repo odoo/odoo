@@ -31,6 +31,13 @@ function factory(dependencies) {
         _created() {
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
             this.onClickActivityBoxTitle = this.onClickActivityBoxTitle.bind(this);
+            this.onClickButtonAttachments = this.onClickButtonAttachments.bind(this);
+            this.onClickChatterTopbarClose = this.onClickChatterTopbarClose.bind(this);
+            this.onClickLogNote = this.onClickLogNote.bind(this);
+            this.onClickScheduleActivity = this.onClickScheduleActivity.bind(this);
+            this.onClickSendMessage = this.onClickSendMessage.bind(this);
+            this.onComposerMessagePosted = this.onComposerMessagePosted.bind(this);
+            this.onScrollScrollPanel = this.onScrollScrollPanel.bind(this);
         }
 
         /**
@@ -51,9 +58,114 @@ function factory(dependencies) {
 
         /**
          * Handles click on activity box title.
+         *
+         * @param {MouseEvent} ev
          */
-        onClickActivityBoxTitle() {
+        onClickActivityBoxTitle(ev) {
             this.update({ isActivityBoxVisible: !this.isActivityBoxVisible });
+        }
+
+        /**
+         * Handles click on the attachments button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickButtonAttachments(ev) {
+            this.update({ isAttachmentBoxVisible: !this.isAttachmentBoxVisible });
+        }
+
+        /**
+         * Handles click on top bar close button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickChatterTopbarClose(ev) {
+            this.componentChatterTopbar.trigger('o-close-chatter');
+        }
+
+        /**
+         * Handles click on "log note" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickLogNote() {
+            if (!this.composer) {
+                return;
+            }
+            if (this.isComposerVisible && this.composer.isLog) {
+                this.update({ isComposerVisible: false });
+            } else {
+                this.showLogNote();
+            }
+        }
+
+        /**
+         * Handles click on "schedule activity" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickScheduleActivity(ev) {
+            const action = {
+                type: 'ir.actions.act_window',
+                name: this.env._t("Schedule Activity"),
+                res_model: 'mail.activity',
+                view_mode: 'form',
+                views: [[false, 'form']],
+                target: 'new',
+                context: {
+                    default_res_id: this.thread.id,
+                    default_res_model: this.thread.model,
+                },
+                res_id: false,
+            };
+            return this.env.bus.trigger('do-action', {
+                action,
+                options: {
+                    on_close: () => {
+                        if (!this.componentChatterTopbar) {
+                            return;
+                        }
+                        this.componentChatterTopbar.trigger('reload', { keepChanges: true });
+                    },
+                },
+            });
+        }
+
+        /**
+         * Handles click on "send message" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickSendMessage(ev) {
+            if (!this.composer) {
+                return;
+            }
+            if (this.isComposerVisible && !this.composer.isLog) {
+                this.update({ isComposerVisible: false });
+            } else {
+                this.showSendMessage();
+            }
+        }
+
+        /**
+         * Handles message posted on composer.
+         *
+         * @param {Event} ev
+         */
+        onComposerMessagePosted(ev) {
+            this.update({ isComposerVisible: false });
+        }
+
+        /**
+         * Handles scroll on this scroll panel.
+         *
+         * @param {Event} ev
+         */
+        onScrollScrollPanel(ev) {
+            if (!this.threadRef.comp) {
+                return;
+            }
+            this.threadRef.comp.onScroll(ev);
         }
 
         async refresh() {
@@ -207,6 +319,10 @@ function factory(dependencies) {
         composer: many2one('mail.composer', {
             related: 'thread.composer',
         }),
+        /**
+         * States the OWL component of this chatter top bar.
+         */
+        componentChatterTopbar: attr(),
         context: attr({
             default: {},
         }),
@@ -293,6 +409,10 @@ function factory(dependencies) {
          * Determines the model of the thread that will be displayed by `this`.
          */
         threadModel: attr(),
+        /**
+         * States the OWL ref of the "thread" (ThreadView) of this chatter.
+         */
+        threadRef: attr(),
         /**
          * States the `mail.thread_view` displaying `this.thread`.
          */

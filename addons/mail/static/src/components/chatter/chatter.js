@@ -2,6 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -14,6 +15,7 @@ export class Chatter extends Component {
     constructor(...args) {
         super(...args);
         useUpdate({ func: () => this._update() });
+        useRefToModel({ fieldName: 'threadRef', modelName: 'mail.chatter', propNameAsRecordLocalId: 'chatterLocalId', refName: 'thread' });
         /**
          * Reference of the composer. Useful to focus it.
          */
@@ -82,28 +84,6 @@ export class Chatter extends Component {
                 composer.focus();
             }
         }
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onComposerMessagePosted() {
-        this.chatter.update({ isComposerVisible: false });
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onScrollPanelScroll(ev) {
-        if (!this._threadRef.comp) {
-            return;
-        }
-        this._threadRef.comp.onScroll(ev);
     }
 
 }
