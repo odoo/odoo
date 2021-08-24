@@ -116,6 +116,9 @@ $o-we-switch-inactive-color: #F7F7F7 !default;
     max-width: $popover-max-width * 1.2;
     // Prevent UI glitch after fetching page preview (size might change)
     width: $popover-max-width * 1.2;
+    // Prevent the edited link from being deselected when clicking between
+    // buttons in the popover
+    user-select: none;
 
     .o_we_url_link {
         word-break: break-all;
