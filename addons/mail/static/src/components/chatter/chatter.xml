@@ -19,12 +19,12 @@
                             isCompact="false"
                             isExpandable="true"
                             textInputSendShortcuts="['ctrl-enter', 'meta-enter']"
-                            t-on-o-message-posted="_onComposerMessagePosted"
+                            t-on-o-message-posted="chatter.onComposerMessagePosted"
                             t-ref="composer"
                         />
                     </t>
                 </div>
-                <div class="o_Chatter_scrollPanel" t-on-scroll="_onScrollPanelScroll" t-ref="scrollPanel">
+                <div class="o_Chatter_scrollPanel" t-on-scroll="chatter.onScrollScrollPanel" t-ref="scrollPanel">
                     <t t-if="chatter.isAttachmentBoxVisible">
                         <AttachmentBox
                             class="o_Chatter_attachmentBox"
