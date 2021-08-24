@@ -238,23 +238,23 @@ class Partner(models.Model):
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name'),
     ]
 
-    @api.depends('name', 'user_ids.share', 'image_1920', 'is_company')
+    @api.depends('name', 'user_ids.share', 'image_1920', 'is_company', 'type')
     def _compute_avatar_1920(self):
         super()._compute_avatar_1920()
 
-    @api.depends('name', 'user_ids.share', 'image_1024', 'is_company')
+    @api.depends('name', 'user_ids.share', 'image_1024', 'is_company', 'type')
     def _compute_avatar_1024(self):
         super()._compute_avatar_1024()
 
-    @api.depends('name', 'user_ids.share', 'image_512', 'is_company')
+    @api.depends('name', 'user_ids.share', 'image_512', 'is_company', 'type')
     def _compute_avatar_512(self):
         super()._compute_avatar_512()
 
-    @api.depends('name', 'user_ids.share', 'image_256', 'is_company')
+    @api.depends('name', 'user_ids.share', 'image_256', 'is_company', 'type')
     def _compute_avatar_256(self):
         super()._compute_avatar_256()
 
-    @api.depends('name', 'user_ids.share', 'image_128', 'is_company')
+    @api.depends('name', 'user_ids.share', 'image_128', 'is_company', 'type')
     def _compute_avatar_128(self):
         super()._compute_avatar_128()
 
@@ -268,6 +268,10 @@ class Partner(models.Model):
         path = "base/static/img/avatar_grey.png"
         if self.is_company:
             path = "base/static/img/company_image.png"
+        elif self.type == 'delivery':
+            path = "base/static/img/truck.png"
+        elif self.type == 'invoice':
+            path = "base/static/img/money.png"
         return base64.b64encode(tools.file_open(path, 'rb').read())
 
     @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name')
