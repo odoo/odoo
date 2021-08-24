@@ -20,7 +20,6 @@
             <field name="arch" type="xml">
                 <tree string="Planning">
                     <field name="name"/>
-                    <field name="plan_type"/>
                 </tree>
             </field>
         </record>
@@ -38,23 +37,12 @@
                                 <field name="name" placeholder="e.g. Onboarding"/>
                             </h1>
                         </div>
-                        <field name="active" invisible="1"/>
-                        <group>
-                            <group>
-                                <field name="plan_type" widget="radio"/>
-                                <field name="trigger" invisible="1"/>
-                                <field name="trigger_onboarding" string="Activation Trigger" attrs="{'invisible': [('plan_type', '!=', 'onboarding')]}"/>
-                                <field name="trigger_offboarding" string="Activation Trigger" attrs="{'invisible': [('plan_type', '!=', 'offboarding')]}"/>
-                                <field name="trigger_other" string="Activation Trigger" attrs="{'invisible': [('plan_type', '!=', 'other')], 'readonly': True}"/>
-                            </group>
-                        </group>
                         <group string="Activities">
+                            <field name="active" invisible="1"/>
                             <field name="plan_activity_type_ids" nolabel="1">
                                 <tree editable="bottom">
                                     <field name="activity_type_id"/>
                                     <field name="summary"/>
-                                    <field name="deadline_type"/>
-                                    <field name="deadline_days" attrs="{'readonly': [('deadline_type', '!=', 'trigger_offset')]}"/>
                                     <field name="responsible"/>
                                     <field name="responsible_id" attrs="{'readonly': [('responsible', '!=', 'other')]}"/>
                                 </tree>
@@ -72,8 +60,6 @@
                 <tree string="Activities">
                     <field name="activity_type_id"/>
                     <field name="summary"/>
-                    <field name="deadline_type"/>
-                    <field name="deadline_days" attrs="{'invisible': [('deadline_type', '!=', 'trigger_offset')]}"/>
                     <field name="responsible"/>
                 </tree>
             </field>
@@ -88,8 +74,6 @@
                         <group>
                             <field name="activity_type_id"/>
                             <field name="summary"/>
-                            <field name="deadline_type"/>
-                            <field name="deadline_days" attrs="{'invisible': [('deadline_type', '!=', 'trigger_offset')]}"/>
                             <field name="responsible"/>
                             <field name="responsible_id" attrs="{'invisible': [('responsible', '!=', 'other')]}"/>
                             <field name="note"/>
