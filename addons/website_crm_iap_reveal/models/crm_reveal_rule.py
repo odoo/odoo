@@ -66,6 +66,15 @@ class CRMRevealRule(models.Model):
         ('limit_extra_contacts', 'check(extra_contacts >= 1 and extra_contacts <= 5)', 'Maximum 5 contacts are allowed!'),
     ]
 
+    def _compute_lead_count(self):
+        leads = self.env['crm.lead'].read_group([
+            ('reveal_rule_id', 'in', self.ids)
+        ], fields=['reveal_rule_id', 'type'], groupby=['reveal_rule_id', 'type'], lazy=False)
+        mapping = {(lead['reveal_rule_id'][0], lead['type']): lead['__count'] for lead in leads}
+        for rule in self:
+            rule.lead_count = mapping.get((rule.id, 'lead'), 0)
+            rule.opportunity_count = mapping.get((rule.id, 'opportunity'), 0)
+
     @api.constrains('regex_url')
     def _check_regex_url(self):
         try:
@@ -100,15 +109,6 @@ class CRMRevealRule(models.Model):
     def unlink(self):
         self.clear_caches() # Clear the cache in order to recompute _get_active_rules
         return super(CRMRevealRule, self).unlink()
-
-    def _compute_lead_count(self):
-        leads = self.env['crm.lead'].read_group([
-            ('reveal_rule_id', 'in', self.ids)
-        ], fields=['reveal_rule_id', 'type'], groupby=['reveal_rule_id', 'type'], lazy=False)
-        mapping = {(lead['reveal_rule_id'][0], lead['type']): lead['__count'] for lead in leads}
-        for rule in self:
-            rule.lead_count = mapping.get((rule.id, 'lead'), 0)
-            rule.opportunity_count = mapping.get((rule.id, 'opportunity'), 0)
 
     def action_get_lead_tree_view(self):
         action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_all_leads")
