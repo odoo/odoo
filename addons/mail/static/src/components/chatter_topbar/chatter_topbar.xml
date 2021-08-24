@@ -15,7 +15,7 @@
                             t-att-disabled="chatter.isDisabled"
                             title="Send a message"
                             data-hotkey="m"
-                            t-on-click="_onClickSendMessage"
+                            t-on-click="chatter.onClickSendMessage"
                         >
                             Send message
                         </button>
@@ -26,7 +26,7 @@
                                 'o-bordered': chatter.hasExternalBorder,
                             }"
                             t-att-disabled="chatter.isDisabled"
-                            t-on-click="_onClickLogNote"
+                            t-on-click="chatter.onClickLogNote"
                             title="Log a note"
                             data-hotkey="shift+m"
                         >
@@ -34,14 +34,14 @@
                         </button>
                     </t>
                     <t t-if="chatter.hasActivities">
-                        <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity" type="button" t-att-disabled="chatter.isDisabled" t-on-click="_onClickScheduleActivity" title="Schedule an activity" data-hotkey="shift+a">
+                        <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity" type="button" t-att-disabled="chatter.isDisabled" t-on-click="chatter.onClickScheduleActivity" title="Schedule an activity" data-hotkey="shift+a">
                             <i class="fa fa-clock-o"/>
                             Schedule activity
                         </button>
                     </t>
                     <div class="o-autogrow"/>
                         <div class="o_ChatterTopbar_rightSection">
-                            <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonAttachments" type="button" t-att-disabled="chatter.isDisabled" t-on-click="_onClickAttachments">
+                            <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonAttachments" type="button" t-att-disabled="chatter.isDisabled" t-on-click="chatter.onClickButtonAttachments">
                                 <i class="fa fa-paperclip"/>
                                 <t t-if="chatter.isDisabled or !chatter.isShowingAttachmentsLoading">
                                     <span class="o_ChatterTopbar_buttonCount o_ChatterTopbar_buttonAttachmentsCount" t-esc="chatter.thread ? chatter.thread.allAttachments.length : 0"/>
@@ -67,7 +67,7 @@
                         </div>
                 </div>
                 <t t-if="chatter.hasTopbarCloseButton">
-                    <div class="o_ChatterTopbar_buttonClose" title="Close" t-on-click="_onClickClose">
+                    <div class="o_ChatterTopbar_buttonClose" title="Close" t-on-click="chatter.onClickChatterTopbarClose">
                         <i class="fa fa-times"/>
                     </div>
                 </t>
