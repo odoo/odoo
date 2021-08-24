@@ -50,11 +50,11 @@ class ProductProduct(models.Model):
         dummy, bom_lines = bom.explode(self, 1)
         bom_lines = {line: data for line, data in bom_lines}
         value = 0
-        for move in stock_moves:
+        for move in stock_moves.filtered(lambda x: x.state != 'cancel'):
             bom_line = move.bom_line_id
             if bom_line:
                 bom_line_data = bom_lines[bom_line]
-                line_qty = bom_line_data['qty']
+                line_qty = bom_line.product_uom_id._compute_quantity(bom_line_data['qty'], bom_line.product_id.uom_id)
             else:
                 # bom was altered (i.e. bom line removed) after being used
                 line_qty = move.product_qty
