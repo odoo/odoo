@@ -1,12 +1,9 @@
-odoo.define('website_slides.ratingField', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var basicFields = require('web.basic_fields');
-var fieldRegistry = require('web.field_registry');
+import basicFields from 'web.basic_fields';
+import fieldRegistry from 'web.field_registry';
 
-var core = require('web.core');
-
-var QWeb = core.qweb;
+import { qweb as QWeb} from 'web.core';
 
 var FieldFloatRating = basicFields.FieldFloat.extend({
     xmlDependencies: !basicFields.FieldFloat.prototype.xmlDependencies ?
@@ -35,8 +32,6 @@ var FieldFloatRating = basicFields.FieldFloat.extend({
 
 fieldRegistry.add('field_float_rating', FieldFloatRating);
 
-return {
+export default {
     FieldFloatRating: FieldFloatRating,
 };
-
-});

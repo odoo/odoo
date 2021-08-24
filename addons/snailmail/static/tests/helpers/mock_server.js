@@ -1,7 +1,6 @@
-odoo.define('snailmail/static/tests/helpers/mock_server.js', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const MockServer = require('web.MockServer');
+import MockServer from 'web.MockServer';
 
 MockServer.include({
     //--------------------------------------------------------------------------
@@ -45,6 +44,4 @@ MockServer.include({
     _mockMailMessageSendLetter(ids) {
         // TODO implement this mock and improve related tests (task-2300496)
     },
-});
-
 });

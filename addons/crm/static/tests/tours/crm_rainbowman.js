@@ -1,7 +1,6 @@
-odoo.define('crm.tour_crm_rainbowman', function (require) {
-    "use strict";
+/** @odoo-module **/
 
-    var tour = require('web_tour.tour');
+    import tour from 'web_tour.tour';
 
     tour.register('crm_rainbowman', {
         test: true,
@@ -74,4 +73,3 @@ odoo.define('crm.tour_crm_rainbowman', function (require) {
             content: "last rainbowman appears",
         }
     ]);
-});

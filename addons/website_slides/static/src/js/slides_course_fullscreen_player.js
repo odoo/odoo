@@ -1,22 +1,15 @@
+/** @odoo-module **/
+
 /* global YT */
-var onYouTubeIframeAPIReady = undefined;
 
-odoo.define('website_slides.fullscreen', function (require) {
-    'use strict';
+    import publicWidget from 'web.public.widget';
+    import  { qweb as QWeb, _t } from 'web.core';
+    import config from 'web.config';
 
-    var publicWidget = require('web.public.widget');
-    var core = require('web.core');
-    var config = require('web.config');
-    var QWeb = core.qweb;
-    var _t = core._t;
-
-    var session = require('web.session');
-
-    var Quiz = require('website_slides.quiz').Quiz;
-
-    var Dialog = require('web.Dialog');
-
-    require('website_slides.course.join.widget');
+    import session from 'web.session';
+    import { Quiz } from '@website_slides/js/slides_course_quiz';
+    import Dialog from 'web.Dialog';
+    import '@website_slides/js/slides_course_join';
 
     /**
      * Helper: Get the slide dict matching the given criteria
@@ -60,7 +53,7 @@ odoo.define('website_slides.fullscreen', function (require) {
 
                     // function called when the Youtube asset is loaded
                     // see https://developers.google.com/youtube/iframe_api_reference#Requirements
-                    onYouTubeIframeAPIReady = function () {
+                    window.onYouTubeIframeAPIReady = function () {
                         resolve();
                     };
                 } else {
@@ -759,5 +752,4 @@ odoo.define('website_slides.fullscreen', function (require) {
         },
     });
 
-    return Fullscreen;
-});
+    export default Fullscreen;

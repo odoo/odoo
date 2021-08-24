@@ -5,7 +5,7 @@ var tour = require('web_tour.tour');
 const {Markup} = require('web.utils');
 var core = require('web.core');
 
-require('crm.tour');
+require('@crm/js/tours/crm');
 var _t = core._t;
 
 var DragOppToWonStepIndex = _.findIndex(tour.tours.crm_tour.steps, function (step) {

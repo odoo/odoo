@@ -1,9 +1,8 @@
-odoo.define('mrp.mrp_bom_report', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var framework = require('web.framework');
-var stock_report_generic = require('stock.stock_report_generic');
+import core from 'web.core';
+import framework from 'web.framework';
+import stock_report_generic from 'stock.stock_report_generic';
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -225,6 +224,4 @@ var MrpBomReport = stock_report_generic.extend({
 });
 
 core.action_registry.add('mrp_bom_report', MrpBomReport);
-return MrpBomReport;
-
-});
+export default MrpBomReport;

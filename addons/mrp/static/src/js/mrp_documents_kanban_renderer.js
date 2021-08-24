@@ -1,13 +1,12 @@
-odoo.define('mrp.MrpDocumentsKanbanRenderer', function (require) {
-"use strict";
+/** @odoo-module **/
 
 /**
  * This file defines the Renderer for the MRP Documents Kanban view, which is an
  * override of the KanbanRenderer.
  */
 
-const KanbanRenderer = require('web.KanbanRenderer');
-const MrpDocumentsKanbanRecord = require('mrp.MrpDocumentsKanbanRecord');
+import KanbanRenderer from 'web.KanbanRenderer';
+import MrpDocumentsKanbanRecord from '@mrp/js/mrp_documents_kanban_record';
 
 const MrpDocumentsKanbanRenderer = KanbanRenderer.extend({
     config: Object.assign({}, KanbanRenderer.prototype.config, {
@@ -22,6 +21,4 @@ const MrpDocumentsKanbanRenderer = KanbanRenderer.extend({
     },
 });
 
-return MrpDocumentsKanbanRenderer;
-
-});
+export default MrpDocumentsKanbanRenderer;

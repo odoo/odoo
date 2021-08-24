@@ -1,11 +1,10 @@
-odoo.define('survey.slide_category_one2many', function (require){
-"use strict";
+/** @odoo-module **/
 
-var Context = require('web.Context');
-var FieldOne2Many = require('web.relational_fields').FieldOne2Many;
-var FieldRegistry = require('web.field_registry');
-var ListRenderer = require('web.ListRenderer');
-var config = require('web.config');
+import Context from 'web.Context';
+import { FieldOne2Many } from 'web.relational_fields';
+import FieldRegistry from 'web.field_registry';
+import ListRenderer from 'web.ListRenderer';
+import config from 'web.config';
 
 var SectionListRenderer = ListRenderer.extend({
     init: function (parent, state, params) {
@@ -179,4 +178,3 @@ var SectionFieldOne2Many = FieldOne2Many.extend({
 });
 
 FieldRegistry.add('slide_category_one2many', SectionFieldOne2Many);
-});

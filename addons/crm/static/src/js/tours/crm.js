@@ -1,11 +1,8 @@
-odoo.define('crm.tour', function(require) {
-"use strict";
+/** @odoo-module **/
 
-var core = require('web.core');
-const {Markup} = require('web.utils');
-var tour = require('web_tour.tour');
-
-var _t = core._t;
+import { _t } from 'web.core';
+import { Markup } from 'web.utils';
+import tour from 'web_tour.tour';
 
 tour.register('crm_tour', {
     url: "/web",
@@ -91,5 +88,3 @@ tour.register('crm_tour', {
         actions.auto(".breadcrumb-item:not(.active):last");
     }
 }]);
-
-});

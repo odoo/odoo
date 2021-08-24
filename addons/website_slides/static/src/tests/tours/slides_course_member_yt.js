@@ -1,8 +1,7 @@
-odoo.define('website_slides.tour.slide.course.member.youtube', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var tour = require('web_tour.tour');
-var FullScreen = require('website_slides.fullscreen');
+import tour from 'web_tour.tour';
+import FullScreen from '@website_slides/js/slides_course_fullscreen_player';
 
 /**
  * Alter this method for test purposes.
@@ -63,5 +62,3 @@ tour.register('course_member_youtube', {
     trigger: 'a:contains("Back to course")'
 }
 ]);
-
-});
