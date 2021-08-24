@@ -429,11 +429,24 @@ var SnippetEditor = Widget.extend({
      */
     removeSnippet: async function (shouldRecordUndo = true) {
         this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
-        this.toggleOverlay(false);
-        await this.toggleOptions(false);
-        // If it is an invisible element, we must close it before deleting it (e.g. modal)
+
+        // First enable a surrounding snippet (or just disable the current
+        // snippet if there is nothing around).
+        const parent = this.$target[0].parentElement;
+        const nextSibling = this.$target[0].nextElementSibling;
+        const previousSibling = this.$target[0].previousElementSibling;
+        await new Promise(resolve => {
+            this.trigger_up('activate_snippet', {
+                $snippet: $(previousSibling || nextSibling || parent),
+                onSuccess: () => resolve(),
+            });
+        });
+
+        // If it is an invisible element, we must close it before deleting it
+        // (e.g. modal).
         await this.toggleTargetVisibility(!this.$target.hasClass('o_snippet_invisible'));
 
+        // Call the onRemove of all internal options
         await new Promise(resolve => {
             this.trigger_up('call_for_each_child_snippet', {
                 $snippet: this.$target,
@@ -446,13 +459,7 @@ var SnippetEditor = Widget.extend({
             });
         });
 
-        const parent = this.$target[0].parentElement;
-        const nextSibling = this.$target[0].nextElementSibling;
-        const previousSibling = this.$target[0].previousElementSibling;
-        this.trigger_up('activate_snippet', {
-            $snippet: $(previousSibling || nextSibling || parent)
-        });
-
+        // Actually remove the snippet and its option UI.
         var $parent = this.$target.parent();
         this.$target.find('*').addBack().tooltip('dispose');
         this.$target.remove();
@@ -465,6 +472,8 @@ var SnippetEditor = Widget.extend({
             }
         }
 
+        // Potentially remove ancestors (like when removing the last column of a
+        // snippet).
         if ($parent.closest(':data("snippet-editor")').length) {
             const isEmptyAndRemovable = ($el, editor) => {
                 editor = editor || $el.data('snippet-editor');
@@ -493,17 +502,19 @@ var SnippetEditor = Widget.extend({
             }
         }
 
-        // clean editor if they are image or table in deleted content
+        // Clean editor if they are image or table in deleted content
         this.$body.find('.note-control-selection').hide();
         this.$body.find('.o_table_handler').remove();
 
         this.trigger_up('snippet_removed');
         this.destroy();
         $parent.trigger('content_changed');
+
         // TODO Page content changed, some elements may need to be adapted
         // according to it. While waiting for a better way to handle that this
         // window trigger will handle most cases.
         $(window).trigger('resize');
+
         if (shouldRecordUndo) {
             this.options.wysiwyg.odooEditor.historyStep();
         }
@@ -2608,7 +2619,10 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _onActivateSnippet: function (ev) {
-        this._activateSnippet(ev.data.$snippet, ev.data.previewMode, ev.data.ifInactiveOptions);
+        const prom = this._activateSnippet(ev.data.$snippet, ev.data.previewMode, ev.data.ifInactiveOptions);
+        if (ev.data.onSuccess) {
+            prom.then(() => ev.data.onSuccess());
+        }
     },
     /**
      * Called when a child editor asks to operate some operation on all child
