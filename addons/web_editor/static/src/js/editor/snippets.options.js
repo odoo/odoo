@@ -903,11 +903,18 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
 
         this.menuTogglerEl = document.createElement('we-toggler');
         this.icon = this.el.dataset.icon || false;
+        this.image = this.el.dataset.image || false;
         if (this.icon) {
             this.el.classList.add('o_we_icon_select');
             const iconEl = document.createElement('i');
             iconEl.classList.add('fa', 'fa-fw', this.icon);
             this.menuTogglerEl.appendChild(iconEl);
+        } else if (this.image) {
+            this.el.classList.add('o_we_icon_select');
+            const imgEl = document.createElement('img');
+            imgEl.src = this.image;
+            imgEl.classList.add('fa-fw');
+            this.menuTogglerEl.appendChild(imgEl);
         }
         this.containerEl.insertBefore(this.menuTogglerEl, this.menuEl);
 
@@ -948,7 +955,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
     async setValue() {
         await this._super(...arguments);
 
-        if (this.icon) {
+        if (this.icon || this.image) {
             return;
         }
 
