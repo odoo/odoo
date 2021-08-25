@@ -37,7 +37,7 @@ odoo.define('account.tax_group', function (require) {
                 let creditAmount = 0;
                 let amount_currency = 0;
                 if (line_id.data.currency_id) { // If multi currency enable
-                    if (self.record.data.move_type === "in_invoice") {
+                    if (self.record.data.type === "in_invoice") {
                         amount_currency = line_id.data.amount_currency - deltaAmount;
                     } else {
                         amount_currency = line_id.data.amount_currency + deltaAmount;
@@ -45,7 +45,7 @@ odoo.define('account.tax_group', function (require) {
                 } else {
                     let balance = line_id.data.price_subtotal;
                     balance -= deltaAmount;
-                    if (self.record.data.move_type === "in_invoice") { // For vendor bill
+                    if (self.record.data.type === "in_invoice") { // For vendor bill
                         if (balance > 0) {
                             debitAmount = balance;
                         } else if (balance < 0) {
