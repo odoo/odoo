@@ -6784,6 +6784,60 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('buttons which has disabled attribute are not enabled after button box action is resolved', async function (assert) {
+        assert.expect(4);
+
+        const def = testUtils.makeTestPromise();
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                `<form string="Partners">
+                    <sheet>
+                        <div name="button_box" class="oe_button_box">
+                            <button class="oe_stat_button o_foo_button">
+                                <field name="foo"/>
+                            </button>
+                            <button class="oe_stat_button" disabled="1">
+                                <field name="bar"/>
+                            </button>
+                        </div>
+                        <group>
+                            <field name="foo"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            res_id: 1,
+            intercepts: {
+                execute_action: function (event) {
+                    return def.then(function () {
+                        event.data.on_success();
+                    });
+                }
+            },
+        });
+
+        assert.strictEqual(form.$('.oe_button_box button:disabled').length, 1,
+            "stat button should be disabled");
+        assert.strictEqual(form.$('.oe_button_box button.o_disabled').length, 1,
+            "stat button should have o_disabled class");
+
+        await testUtils.dom.click('.oe_button_box button.o_foo_button', form);
+
+        // The unresolved promise lets us check the state of the buttons
+        assert.strictEqual(form.$('.oe_button_box button:disabled').length, 2,
+            "stat button should be disabled");
+
+        def.resolve();
+        await testUtils.nextTick();
+        assert.strictEqual(form.$('.oe_button_box button:disabled').length, 1,
+            "stat button should still be disabled");
+
+        form.destroy();
+    });
+
     QUnit.test('buttons with "confirm" attribute save before calling the method', async function (assert) {
         assert.expect(9);
 

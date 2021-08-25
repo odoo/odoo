@@ -188,6 +188,9 @@ var FormRenderer = BasicRenderer.extend({
      */
     enableButtons: function () {
         this.$('.o_statusbar_buttons button, .oe_button_box button')
+            .filter((index, btn) => {
+                return !btn.classList.contains('o_disabled');
+            })
             .removeAttr('disabled');
     },
     /**
@@ -710,6 +713,9 @@ var FormRenderer = BasicRenderer.extend({
         var $button = viewUtils.renderButtonFromNode(node, {
             extraClass: 'oe_stat_button',
         });
+        if (node.attrs.disabled) {
+            $button.addClass('o_disabled');
+        }
         $button.append(_.map(node.children, this._renderNode.bind(this)));
         if (node.attrs.help) {
             this._addButtonTooltip(node, $button);
