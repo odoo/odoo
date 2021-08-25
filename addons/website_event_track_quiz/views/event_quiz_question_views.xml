@@ -46,7 +46,7 @@
                 <sheet>
                     <h1>
                         <field name="name" default_focus="1"
-                            placeholder="e.g. According to Douglas, what should you pay most attention to?"/>
+                            placeholder="e.g. What is Joe's favorite motto?"/>
                     </h1>
                     <group>
                         <field name="quiz_id"/>
@@ -57,6 +57,7 @@
                             <tree editable="bottom" create="true" delete="true">
                                 <field name="sequence" widget="handle"/>
                                 <field name="text_value"/>
+                                <field name="is_correct"/>
                                 <field name="awarded_points"/>
                                 <field name="comment"/>
                             </tree>
