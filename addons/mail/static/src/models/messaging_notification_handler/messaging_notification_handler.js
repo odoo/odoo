@@ -4,6 +4,8 @@ import { registerNewModel } from '@mail/model/model_core';
 import { decrement, increment, insert, link } from '@mail/model/model_field_command';
 import { htmlToTextContentInline } from '@mail/js/utils';
 
+import { str_to_datetime } from 'web.time';
+
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
 function factory(dependencies) {
@@ -81,8 +83,12 @@ function factory(dependencies) {
                             return this._handleNotificationChannelDescriptionChanged(message.payload);
                         case 'mail.channel_joined':
                             return this._handleNotificationChannelJoined(message.payload);
+                        case 'mail.channel_last_interest_dt_changed':
+                            return this._handleNotificationChannelLastInterestDateTimeChanged(message.payload);
                         case 'mail.channel_rename':
                             return this._handleNotificationChannelRenamed(message.payload);
+                        case 'res.users_settings_changed':
+                            return this._handleNotificationResUsersSettings(message.payload);
                     }
                 }
                 const [, model, id] = channel;
@@ -224,6 +230,24 @@ function factory(dependencies) {
                 model: 'mail.channel',
             });
             channel.update({ name });
+        }
+
+        /**
+         * @private
+         * @param {object} payload
+         * @param {integer} payload.id
+         * @param {string} payload.last_interest_dt
+         */
+        _handleNotificationChannelLastInterestDateTimeChanged({ id, last_interest_dt }) {
+            const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({
+                id: id,
+                model: 'mail.channel',
+            });
+            if (channel) {
+                channel.update({
+                    lastInterestDateTime: str_to_datetime(last_interest_dt),
+                });
+            }
         }
 
         /**
@@ -383,6 +407,25 @@ function factory(dependencies) {
                     return;
                 }
                 channel.unregisterOtherMemberTypingMember(partner);
+            }
+        }
+
+        /**
+         * @private
+         * @param {object} settings
+         * @param {boolean} [settings.is_discuss_sidebar_category_channel_open]
+         * @param {boolean} [settings.is_discuss_sidebar_category_chat_open]
+         */
+        _handleNotificationResUsersSettings(settings) {
+            if ('is_discuss_sidebar_category_channel_open' in settings) {
+                this.messaging.discuss.categoryChannel.update({
+                    isServerOpen: settings.is_discuss_sidebar_category_channel_open,
+                });
+            }
+            if ('is_discuss_sidebar_category_chat_open' in settings) {
+                this.messaging.discuss.categoryChat.update({
+                    isServerOpen: settings.is_discuss_sidebar_category_chat_open,
+                });
             }
         }
 

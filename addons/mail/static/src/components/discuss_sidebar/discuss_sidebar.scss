@@ -12,40 +12,10 @@
     }
 }
 
-.o_DiscussSidebar_group {
+.o_DiscussSidebar_category {
     display: flex;
     flex-flow: column;
     flex: 0 0 auto;
-}
-
-.o_DiscussSidebar_groupHeader {
-    display: flex;
-    align-items: center;
-    margin: 5px 0;
-}
-
-.o_DiscussSidebar_groupHeaderItem {
-    margin-left: 3px;
-    margin-right: 3px;
-
-    &:first-child {
-        margin-left: $o-mail-discuss-sidebar-active-indicator-margin-right;
-    }
-
-    &:last-child {
-        margin-right: $o-mail-discuss-sidebar-scrollbar-width;
-    }
-}
-
-.o_DiscussSidebar_itemNew {
-    display: flex;
-    justify-content: center;
-}
-
-.o_DiscussSidebar_itemNewInput {
-    flex: 1 1 auto;
-    margin-left: $o-mail-discuss-sidebar-active-indicator-margin-right + 3px;
-    margin-right: $o-mail-discuss-sidebar-scrollbar-width;
 }
 
 .o_DiscussSidebar_quickSearch {
@@ -62,49 +32,11 @@
 // Style
 // ------------------------------------------------------------------
 
-.o_DiscussSidebar {
-    background-color: gray('900');
-    color: gray('300');
-}
-
-.o_DiscussSidebar_groupHeader {
-    font-size: $font-size-sm;
-    text-transform: uppercase;
-    font-weight: bolder;
-}
-
-.o_DiscussSidebar_groupHeaderItemAdd {
-    cursor: pointer;
-
-    &:not(:hover) {
-        color: gray('600');
-    }
-}
-
-.o_DiscussSidebar_groupTitle {
-
-    &:not(.o-clickable) {
-        color: gray('600');
-    }
-
-    &.o-clickable {
-        cursor: pointer;
-
-        &:not(:hover) {
-            color: gray('600');
-        }
-    }
-}
-
-.o_DiscussSidebar_itemNewInput {
-    outline: none;
-}
-
 .o_DiscussSidebar_quickSearch {
     border: none;
     outline: none;
 }
 
 .o_DiscussSidebar_separator {
-    background-color: gray('600');
+    background-color: $border-color;
 }

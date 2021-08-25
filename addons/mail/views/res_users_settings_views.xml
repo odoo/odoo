@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="res_users_settings_view_tree" model="ir.ui.view">
+        <field name="name">res.users.settings.tree</field>
+        <field name="model">res.users.settings</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="User Settings">
+                <field name="id"/>
+                <field name="user_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="res_users_settings_action" model="ir.actions.act_window">
+        <field name="name">User Settings</field>
+        <field name="res_model">res.users.settings</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
