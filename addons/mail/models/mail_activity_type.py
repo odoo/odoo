@@ -21,7 +21,6 @@ class MailActivityType(models.Model):
                 ['&', ('is_mail_thread', '=', True), ('transient', '=', False)])
         ]
 
-
     name = fields.Char('Name', required=True, translate=True)
     summary = fields.Char('Default Summary', translate=True)
     sequence = fields.Integer('Sequence', default=10)

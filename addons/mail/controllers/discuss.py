@@ -118,6 +118,6 @@ class DiscussController(http.Controller):
         try:
             records.check_access_rule('read')
             records.check_access_rights('read')
-        except:
+        except Exception:
             return {}
         return records._message_get_suggested_recipients()

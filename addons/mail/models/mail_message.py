@@ -133,7 +133,7 @@ class Message(models.Model):
         'res.partner', 'mail_notification', string='Partners with Need Action',
         context={'active_test': False}, depends=['notification_ids'])
     needaction = fields.Boolean(
-        'Need Action', compute='_get_needaction', search='_search_needaction',
+        'Need Action', compute='_compute_needaction', search='_search_needaction',
         help='Need Action')
     has_error = fields.Boolean(
         'Has error', compute='_compute_has_error', search='_search_has_error',
@@ -146,7 +146,7 @@ class Message(models.Model):
     starred_partner_ids = fields.Many2many(
         'res.partner', 'mail_message_res_partner_starred_rel', string='Favorited By')
     starred = fields.Boolean(
-        'Starred', compute='_get_starred', search='_search_starred', compute_sudo=False,
+        'Starred', compute='_compute_starred', search='_search_starred', compute_sudo=False,
         help='Current user has a starred notification linked to this message')
     # tracking
     tracking_value_ids = fields.One2many(
@@ -183,7 +183,7 @@ class Message(models.Model):
                 plaintext_ct = '' if not message.body else tools.html2plaintext(message.body)
                 message.description = plaintext_ct[:30] + '%s' % (' [...]' if len(plaintext_ct) >= 30 else '')
 
-    def _get_needaction(self):
+    def _compute_needaction(self):
         """ Need action on a mail.message = notified on my channel """
         my_messages = self.env['mail.notification'].sudo().search([
             ('mail_message_id', 'in', self.ids),
@@ -212,7 +212,7 @@ class Message(models.Model):
 
     @api.depends('starred_partner_ids')
     @api.depends_context('uid')
-    def _get_starred(self):
+    def _compute_starred(self):
         """ Compute if the message is starred by the current user. """
         # TDE FIXME: use SQL
         starred = self.sudo().filtered(lambda msg: self.env.user.partner_id in msg.starred_partner_ids)

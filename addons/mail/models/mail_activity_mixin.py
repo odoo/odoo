@@ -187,7 +187,7 @@ class MailActivityMixin(models.AbstractModel):
         self._cr.execute(
             query,
             {
-                'today_utc': pytz.UTC.localize(datetime.utcnow()),
+                'today_utc': pytz.utc.localize(datetime.utcnow()),
                 'res_model_table': self._name,
                 'search_states_int': list(search_states_int)
             },
