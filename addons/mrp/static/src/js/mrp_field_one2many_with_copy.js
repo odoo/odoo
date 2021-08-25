@@ -4,7 +4,9 @@ odoo.define('mrp.MrpFieldOne2ManyWithCopy', function (require) {
 
 var FieldOne2Many = require('web.relational_fields').FieldOne2Many;
 var ListRenderer = require('web.ListRenderer');
+const ListView = require('web.ListView');
 var fieldRegistry = require('web.field_registry');
+const viewRegistry = require('web.view_registry');
 const {_t} = require('web.core');
 
 //----------------------------------------------------
@@ -79,6 +81,15 @@ var MrpFieldOne2ManyWithCopy = FieldOne2Many.extend({
 });
 
 fieldRegistry.add('mrp_one2many_with_copy', MrpFieldOne2ManyWithCopy);
+
+const MrpRoutingWorkcenterListView = ListView.extend({
+    init(viewInfo, params) {
+        this._super(...arguments);
+        this.rendererParams.no_open = true;
+    }
+});
+
+viewRegistry.add('mrp_routing_workcenter_no_open_tree_view', MrpRoutingWorkcenterListView);
 
 return MrpFieldOne2ManyWithCopy;
 
