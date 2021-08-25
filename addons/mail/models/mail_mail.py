@@ -28,6 +28,14 @@ class MailMail(models.Model):
     _order = 'id desc'
     _rec_name = 'subject'
 
+    @api.model
+    def default_get(self, fields):
+        # protection for `default_type` values leaking from menu action context (e.g. for invoices)
+        # To remove when automatic context propagation is removed in web client
+        if self._context.get('default_type') not in type(self).message_type.base_field.selection:
+            self = self.with_context(dict(self._context, default_type=None))
+        return super(MailMail, self).default_get(fields)
+
     # content
     mail_message_id = fields.Many2one('mail.message', 'Message', required=True, ondelete='cascade', index=True, auto_join=True)
     body_html = fields.Text('Rich-text Contents', help="Rich-text/HTML message")
@@ -103,14 +111,6 @@ class MailMail(models.Model):
         if mail_msg_cascade_ids:
             self.env['mail.message'].browse(mail_msg_cascade_ids).unlink()
         return res
-
-    @api.model
-    def default_get(self, fields):
-        # protection for `default_type` values leaking from menu action context (e.g. for invoices)
-        # To remove when automatic context propagation is removed in web client
-        if self._context.get('default_type') not in type(self).message_type.base_field.selection:
-            self = self.with_context(dict(self._context, default_type=None))
-        return super(MailMail, self).default_get(fields)
 
     def action_retry(self):
         self.filtered(lambda mail: mail.state == 'exception').mark_outgoing()
