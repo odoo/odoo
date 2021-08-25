@@ -25,9 +25,24 @@ class DatabaseOps:
         return [dict(zip(columns, i)) for i in cursor.fetchall()]
 
     @classmethod
-    def retrieve_products(cls):
+    def retrieve_vendors(cls):
         cursor = cls.mydb.cursor()
 
+        cursor.execute("""select e.id ,e.name_en as name, country.name_en as country ,
+                            currency.shortName as currency from entity e
+                            inner join  country  on e.countryId = country.id
+                    inner join  currency   on e.currencyId = currency.id""")
+
+        columns = ["marketplace_id", "name", "country", "currency"]
+
+        vendors = []
+        for i in cursor.fetchall():
+            vendors.append(dict(zip(columns, i)))
+        return vendors
+
+    @classmethod
+    def retrieve_products(cls):
+        cursor = cls.mydb.cursor()
         cursor.execute(
             """
             select
@@ -76,25 +91,57 @@ class DatabaseOps:
         return products
 
 
-
 class product_sync(Command):
-    def run(self, args):
-        conn = psycopg2.connect(
-            host=config.get("db_host"),
-            database="postgres",
-            user=config.get("db_user"),
-            password=config.get("db_password"))
+    conn = psycopg2.connect(
+        host=config.get("db_host"),
+        database="postgres",
+        user=config.get("db_user"),
+        password=config.get("db_password"))
 
-        cur = conn.cursor()
+    def handle_vendors(self):
+        vendors = DatabaseOps.retrieve_vendors()
 
+        countries = set()
+        [countries.add(vendor["country"]) for vendor in vendors]
+
+        cur = self.conn.cursor()
+
+        country_mapping = {}
+
+        for i in countries:
+            query = f"select id from public.res_country where name ilike '{i}'"
+            cur.execute(query)
+            country_mapping[i] = cur.fetchone()
+
+        insert_vendor = """INSERT INTO public.res_partner
+                                    ("name", create_date,  active, country_id, company_name, display_name, create_uid,
+                                     write_uid, write_date, marketplace_id)
+                                    VALUES( %s, %s, true, %s, %s, %s, 1, 1, %s, %s);
+                                """
+
+        for i in vendors:
+            cur.execute(insert_vendor, (i["name"], datetime.now(), country_mapping[i["country"]],
+                                        i["name"], i["name"], datetime.now(), i["marketplace_id"]))
+            self.conn.commit()
+
+    def handle_payment_methods(self):
         payment_methods = DatabaseOps.retrieve_payment_methods()
         insert_payment_query = """INSERT INTO public.aumet_payment_method (marketplace_payment_method_id, 
-                        name, create_uid, create_date, write_uid, write_date) VALUES """
+                                name, create_uid, create_date, write_uid, write_date) VALUES """
+
+        cur = self.conn.cursor()
         for i in range(len(payment_methods)):
             val = f"""({payment_methods[i]["id"]}, '{payment_methods[i]["name_en"]}', 1, '{datetime.now()}', 1, '{datetime.now()}')"""
-            insert_payment_query += (val + ",") if i != len(payment_methods) - 1 else val
+            print(i, len(payment_methods))
+            insert_payment_query += (val + ",") if i != len(payment_methods)-1 else val
+
         cur.execute(insert_payment_query)
+        self.conn.commit()
+
+    def handle_products(self):
+
         products = DatabaseOps.retrieve_products()
+        cur = self.conn.cursor()
 
         insert_into_marketplace_products = """INSERT INTO public.aumet_marketplace_product
                 (name, unit_price, marketplace_seller_id, is_archived, is_locked,
@@ -103,9 +150,13 @@ class product_sync(Command):
                 """
         for i in products:
             cur.execute(insert_into_marketplace_products, (i["name_en"], i["unitPrice"],
-                                                           i['marketplace_seller_reference'],
-                                                           bool(i["isArchived"]), bool(i["is_locked"]),
-                                                           i["marketplace_sell_id"],
-                                                           1, datetime.now(), 1, datetime.now()))
-            conn.commit()
+                                                                i['marketplace_seller_reference'],
+                                                                bool(i["isArchived"]), bool(i["is_locked"]),
+                                                                i["marketplace_sell_id"],
+                                                                1, datetime.now(), 1, datetime.now()))
+            self.conn.commit()
 
+    def run(self, args):
+        self.handle_vendors()
+        self.handle_payment_methods()
+        self.handle_products()

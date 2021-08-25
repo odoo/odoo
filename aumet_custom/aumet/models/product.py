@@ -10,6 +10,23 @@ class ProductTemplate(models.Model):
     marketplace_product = fields.Many2one('aumet.marketplace_product', string='Marketplace Product', required=False)
     is_marketplace_item = fields.Boolean(string="Is from marketplace")
 
+    price_unit = fields.Float(
+        'Unit Price', compute='_compute_standard_price', store=False)
+
+    def _compute_standard_price(self):
+        try:
+            self.price_unit = 200
+            self.standard_price = self.marketplace_product.unit_price
+        except Exception as exc1:
+            print(exc1)
+
+        self.list_price = 200
+        self.standard_price = 200
+
     @api.depends('marketplace_reference')
     def compute_referenced(self):
         self.marketplace_referenced = True if self.marketplace_product else False
+
+    def onchange(self, values, field_name, field_onchange):
+        data = super(ProductTemplate, self).onchange(values, field_name, field_onchange)
+        return data
