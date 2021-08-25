@@ -11,17 +11,15 @@
                     <attribute name="invisible">0</attribute>
                 </xpath>
                 <page name="inventory" position="after">
-                    <page string="Accounting" name="invoicing" groups="account.group_account_user">
+                    <page string="Accounting" name="invoicing"><!--groups removidos para poder selecionar classificação fiscal-->
                         <group name="properties">
-                            <group string="Receivables">
+                            <group string="Receivables" name="receivables" groups="account.group_account_user">
                                 <field name="property_account_income_id"
-                                    domain="[('internal_type','=','other'),('deprecated','=',False)]"
-                                    groups="account.group_account_user"/>
+                                    domain="[('internal_type','=','other'),('deprecated','=',False)]"/>
                             </group>
-                            <group string="Payables" name="payables">
+                            <group string="Payables" name="payables" groups="account.group_account_user">
                                 <field name="property_account_expense_id"
-                                    domain="[('internal_type','=','other'),('deprecated','=',False)]"
-                                    groups="account.group_account_user"/>
+                                    domain="[('internal_type','=','other'),('deprecated','=',False)]"/>
                             </group>
                         </group>
                         <group name="accounting"/>
