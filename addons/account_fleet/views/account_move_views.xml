@@ -15,4 +15,19 @@
             </xpath>
         </field>
     </record>
+
+    <record id="account_move_view_tree" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit.fleet</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="attributes">
+                <attribute name="string">Creation Date</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="invoice_date" optional="show"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>

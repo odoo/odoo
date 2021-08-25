@@ -24,7 +24,7 @@ class FleetVehicle(models.Model):
         self.ensure_one()
 
         form_view_ref = self.env.ref('account.view_move_form', False)
-        tree_view_ref = self.env.ref('account.view_move_tree', False)
+        tree_view_ref = self.env.ref('account_fleet.account_move_view_tree', False)
 
         result = self.env['ir.actions.act_window']._for_xml_id('account.action_move_in_invoice_type')
         result.update({
