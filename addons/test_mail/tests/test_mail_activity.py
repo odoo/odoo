@@ -471,7 +471,8 @@ class TestActivityMixin(TestActivityCommon):
 
         origin_1, origin_2 = self.env['mail.test.activity'].search([], limit=2)
 
-        with patch('odoo.addons.mail.models.mail_activity.datetime', MockedDatetime):
+        with patch('odoo.addons.mail.models.mail_activity.datetime', MockedDatetime), \
+            patch('odoo.addons.mail.models.mail_activity_mixin.datetime', MockedDatetime):
             origin_1_activity_1 = self.env['mail.activity'].create({
                 'summary': 'Test',
                 'activity_type_id': 1,
