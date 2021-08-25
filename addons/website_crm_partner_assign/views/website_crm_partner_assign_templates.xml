@@ -654,7 +654,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="row">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-5">
                                                         <label>Priority:</label>
                                                         <div class="input-group">
                                                             <label class="radio-inline">
@@ -678,11 +678,11 @@
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-7">
                                                         <label>Expected Closing:</label>
                                                         <div class="input-group date" id="exp_closing_div" data-target-input="nearest">
                                                             <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="opportunity.date_deadline"/></t>
-                                                            <input type="date" min="1900-01-01" name="date_deadline" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
+                                                            <input type="text" name="date_deadline" data-target="#exp_closing_div" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" t-att-name="prefix"/>
                                                             <div class="input-group-append" data-target="#exp_closing_div" data-toggle="datetimepicker">
                                                                 <span class="input-group-text">
                                                                     <span class="fa fa-calendar" role="img" aria-label="Calendar"></span>
@@ -708,7 +708,7 @@
                                                 <label class="col-form-label" for="activity_date_deadline">Next Activity Date</label>
                                                 <div class="input-group date" id="next_activity_div" data-target-input="nearest">
                                                     <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="user_activity.date_deadline"/></t>
-                                                    <input type="date" min="1900-01-01" name="activity_date_deadline" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
+                                                    <input type="text" name="activity_date_deadline" data-target="#next_activity_div" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" t-att-name="prefix"/>
                                                     <div class="input-group-append" data-target="#next_activity_div" data-toggle="datetimepicker">
                                                         <span class="input-group-text">
                                                             <span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span>
