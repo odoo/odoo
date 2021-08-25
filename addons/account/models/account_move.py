@@ -4692,6 +4692,7 @@ class AccountMoveLine(models.Model):
     # TRACKING METHODS
     # -------------------------------------------------------------------------
 
+<<<<<<< HEAD
     def _mail_track(self, tracked_fields, initial):
         changes, tracking_value_ids = super()._mail_track(tracked_fields, initial)
         if len(changes) > len(tracking_value_ids):
@@ -4708,6 +4709,39 @@ class AccountMoveLine(models.Model):
                     }
                     tracking_value_ids.insert(i, Command.create(vals))
         return changes, tracking_value_ids
+=======
+    def _get_formated_values(self, tracked_field):
+        if tracked_field.get('field_type') in ('date', 'datetime'):
+            return {
+                'old_value': format_date(self.env, fields.Datetime.from_string(tracked_field.get('old_value_datetime'))),
+                'new_value': format_date(self.env, fields.Datetime.from_string(tracked_field.get('new_value_datetime'))),
+            }
+        elif tracked_field.get('field_type') in ('one2many', 'many2many', 'many2one'):
+            return {
+                'old_value': tracked_field.get('old_value_char', ''),
+                'new_value': tracked_field.get('new_value_char', '')
+            }
+        else:
+            return {
+                'old_value': [val for key, val in tracked_field.items() if 'old_value' in key][0], # Get the first element because we create a list like ['Elem']
+                'new_value': [val for key, val in tracked_field.items() if 'new_value' in key][0], # Get the first element because we create a list like ['Elem']
+            }
+
+    def _get_tracking_field_string(self, fields):
+        ARROW_RIGHT = '<div class="o_Message_trackingValueSeparator o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img"/>'
+        msg = '<ul>'
+        for field in fields:
+            redirect_link = '<a href=# data-oe-model=account.move.line data-oe-id=%d>#%d</a>' % (field['line_id'], field['line_id']) # Account move line link
+            if field.get('error', False):
+                msg += '<li>%s: %s</li>' % (
+                    field['field_error'],
+                    _('A modification has been operated on the line %s.', redirect_link)
+                )
+            else:
+                msg += '<li>%s: %s %s %s (%s)</li>' % (field['field_name'], field['old_value'], ARROW_RIGHT, field['new_value'], redirect_link)
+        msg += '</ul>'
+        return msg
+>>>>>>> 951ecf951e6... temp
 
     # -------------------------------------------------------------------------
     # RECONCILIATION
