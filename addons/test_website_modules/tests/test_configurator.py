@@ -34,7 +34,7 @@ class TestConfigurator(odoo.tests.HttpCase):
                     'pages': {
                         'pricing': ['website.s_comparisons'],
                         'homepage': ['website.s_cover', 'website.s_text_image', 'website.s_numbers']},
-                    'images': []}
+                    'images': {}}
 
             iap_jsonrpc_mocked()
 
