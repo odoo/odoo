@@ -14,7 +14,7 @@ from werkzeug import urls
 from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
 
-from odoo import api, fields, models, tools, http
+from odoo import api, fields, models, tools, http, release
 from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
@@ -283,6 +283,7 @@ class Website(models.Model):
     # Configurator
     # ----------------------------------------------------------
     def _website_api_rpc(self, route, params):
+        params['version'] = release.version
         IrConfigParameter = self.env['ir.config_parameter'].sudo()
         website_api_endpoint = IrConfigParameter.get_param('website.website_api_endpoint', DEFAULT_ENDPOINT)
         endpoint = website_api_endpoint + route
@@ -440,17 +441,17 @@ class Website(models.Model):
             page_view_id.save(value=''.join(rendered_snippets), xpath="(//div[hasclass('oe_structure')])[last()]")
 
         def set_images(images):
-            for image in images:
+            for name, url in images.items():
                 try:
-                    response = requests.get(image['url'], timeout=3)
+                    response = requests.get(url, timeout=3)
                     response.raise_for_status()
                 except Exception as e:
-                    logger.warning("Failed to download image: %s.\n%s", image['url'], e)
+                    logger.warning("Failed to download image: %s.\n%s", url, e)
                 else:
                     self.env['ir.attachment'].create({
-                        'name': image['name'],
+                        'name': name,
                         'website_id': website.id,
-                        'key': image['name'],
+                        'key': name,
                         'type': 'binary',
                         'raw': response.content,
                         'public': True,
@@ -567,7 +568,7 @@ class Website(models.Model):
         for page_code, snippet_list in pages.items():
             configure_page(page_code, snippet_list, pages_views, cta_data)
 
-        images = custom_resources.get('images', [])
+        images = custom_resources.get('images', {})
         set_images(images)
         return url
 
