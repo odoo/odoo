@@ -54,7 +54,7 @@ class ResPartner(models.Model):
         return super().create(values)
 
     def write(self, values):
-        if 'vat' in values or 'l10n_latam_identification_type_id' in values:      
+        if any(field in values for field in ['vat', 'l10n_latam_identification_type_id', 'country_id']): 
             for record in self:
                 vat_values = {
                     'vat': values.get('vat', record.vat),
