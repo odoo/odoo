@@ -38,6 +38,9 @@ class CartAPI:
             'Cookie': 'PHPSESSID=adl0oj5l20ufa78t4ij2s7nl91',
             "x-access-token": token
         }, data=payload)
+        print("response.json")
+        print(response)
+        print(response.json)
         return response
 
     @classmethod
