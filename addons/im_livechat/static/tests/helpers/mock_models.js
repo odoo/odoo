@@ -29,6 +29,9 @@ patch(MockModels, 'im_livechat/static/tests/helpers/mock_models.js', {
             livechat_channel_id: { string: "Channel", type: 'many2one', relation: 'im_livechat.channel' },
             livechat_operator_id: { string: "Operator", type: 'many2one', relation: 'res.partner' },
         });
+        Object.assign(data['res.users.settings'].fields, {
+            is_discuss_sidebar_category_livechat_open: { string: "Is Discuss Sidebar Category Livechat Open?", type: 'boolean', default: true },
+        });
         Object.assign(data['res.users'].fields, {
             livechat_username: { string: 'Livechat Username', type: 'string' },
         });

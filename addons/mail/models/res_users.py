@@ -25,6 +25,7 @@ class Users(models.Model):
         help="Policy on how to handle Chatter notifications:\n"
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
+    res_users_settings_ids = fields.One2many('res.users.settings', 'user_id')
 
     # ------------------------------------------------------------
     # CRUD
@@ -95,6 +96,7 @@ class Users(models.Model):
             'channels': self.partner_id._get_channels_as_member().channel_info(),
             'current_partner': self.partner_id.mail_partner_format().get(self.partner_id),
             'current_user_id': self.id,
+            'current_user_settings': self.env['res.users.settings']._find_or_create_for_user(self)._res_users_settings_format(),
             'mail_failures': self.partner_id._message_fetch_failed(),
             'menu_id': self.env['ir.model.data']._xmlid_to_res_id('mail.menu_root_discuss'),
             'needaction_inbox_counter': self.partner_id._get_needaction_count(),

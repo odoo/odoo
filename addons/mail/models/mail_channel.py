@@ -8,6 +8,7 @@ from uuid import uuid4
 from odoo import _, api, fields, models, modules, tools, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
+from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 
@@ -421,6 +422,20 @@ class Channel(models.Model):
         message_format_values = message.message_format()[0]
         bus_notifications = self._channel_message_notifications(message, message_format_values)
         self.env['bus.bus'].sudo().sendmany(bus_notifications)
+        # Last interest is updated for a chat when posting a message.
+        # So a notification is needed to update UI.
+        if self.is_chat:
+            notifications = []
+            for channel_partners in self.channel_last_seen_partner_ids:
+                notif = {
+                    'type': 'mail.channel_last_interest_dt_changed',
+                    'payload': {
+                        'id': self.id,
+                        'last_interest_dt': channel_partners.last_interest_dt,
+                    }
+                }
+                notifications.append([(self._cr.dbname, 'res.partner', channel_partners.partner_id.id), notif])
+            self.env['bus.bus'].sendmany(notifications)
         return rdata
 
     def _message_receive_bounce(self, email, partner):
@@ -432,7 +447,10 @@ class Channel(models.Model):
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
-        self.filtered(lambda channel: channel.is_chat).mapped('channel_last_seen_partner_ids').sudo().write({'is_pinned': True})
+        self.filtered(lambda channel: channel.is_chat).mapped('channel_last_seen_partner_ids').sudo().write({
+            'is_pinned': True,
+            'last_interest_dt': fields.Datetime.now(),
+        })
 
         # mail_post_autofollow=False is necessary to prevent adding followers
         # when using mentions in channels. Followers should not be added to
@@ -549,6 +567,7 @@ class Channel(models.Model):
                     info['seen_message_id'] = partner_channel.seen_message_id.id
                     info['custom_channel_name'] = partner_channel.custom_channel_name
                     info['is_pinned'] = partner_channel.is_pinned
+                    info['last_interest_dt'] = partner_channel.last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             # add members infos
             if channel.channel_type != 'channel':
                 # avoid sending potentially a lot of members for big channels
@@ -616,7 +635,10 @@ class Channel(models.Model):
             channel = self.browse(result[0].get('channel_id'))
             # pin up the channel for the current partner
             if pin:
-                self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)]).write({'is_pinned': True})
+                self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)]).write({
+                    'is_pinned': True,
+                    'last_interest_dt': fields.Datetime.now(),
+                })
             channel._broadcast(self.env.user.partner_id.ids)
         else:
             # create a new one

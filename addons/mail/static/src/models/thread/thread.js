@@ -9,6 +9,8 @@ import Timer from '@mail/utils/timer/timer';
 import { cleanSearchTerm } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
 
+import { str_to_datetime } from 'web.time';
+
 function factory(dependencies) {
 
     class Thread extends dependencies['mail.model'] {
@@ -102,6 +104,14 @@ function factory(dependencies) {
         /**
          * @override
          */
+        _created() {
+            this.onClick = this.onClick.bind(this);
+            return super._created();
+        }
+
+        /**
+         * @override
+         */
         _willDelete() {
             this._currentPartnerInactiveTypingTimer.clear();
             this._currentPartnerLongTypingTimer.clear();
@@ -184,6 +194,9 @@ function factory(dependencies) {
             }
             if ('is_pinned' in data) {
                 data2.isServerPinned = data.is_pinned;
+            }
+            if ('last_interest_dt' in data && data.last_interest_dt) {
+                data2.lastInterestDateTime = str_to_datetime(data.last_interest_dt);
             }
             if ('last_message' in data && data.last_message) {
                 const messageData = this.messaging.models['mail.message'].convertData({
@@ -1641,6 +1654,13 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
+         * Event handler for clicking thread in discuss app.
+         */
+        async onClick() {
+            await this.open();
+        }
+
+        /**
          * @private
          */
         async _onCurrentPartnerInactiveTypingTimeout() {
@@ -1840,6 +1860,12 @@ function factory(dependencies) {
         isTemporary: attr({
             default: false,
         }),
+        /**
+         * States the date and time of the last interesting event that happened
+         * in this channel for this partner. This includes: creating, joining,
+         * pinning, and new message posted. It is contained as a Date object.
+         */
+        lastInterestDateTime: attr(),
         lastCurrentPartnerMessageSeenByEveryone: many2one('mail.message', {
             compute: '_computeLastCurrentPartnerMessageSeenByEveryone',
         }),

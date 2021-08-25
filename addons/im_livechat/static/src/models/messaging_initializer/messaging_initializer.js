@@ -1,11 +1,31 @@
 /** @odoo-module **/
 
 import { registerInstancePatchModel } from '@mail/model/model_core';
-import { insert } from '@mail/model/model_field_command';
+import { create, insert } from '@mail/model/model_field_command';
 
 registerInstancePatchModel('mail.messaging_initializer', 'im_livechat/static/src/models/messaging_initializer/messaging_initializer.js', {
     /**
      * @override
+     * @param {Object} resUsersSettings
+     * @param {boolean} resUsersSettings.is_discuss_sidebar_category_livechat_open
+     */
+    _initResUsersSettings({ is_discuss_sidebar_category_livechat_open }) {
+        this.messaging.discuss.update({
+            categoryLivechat: create({
+                counterComputeMethod: 'unread',
+                isServerOpen: is_discuss_sidebar_category_livechat_open,
+                name: this.env._t("Livechat"),
+                serverStateKey: 'is_discuss_sidebar_category_livechat_open',
+                sortComputeMethod: 'last_action',
+                supportedChannelTypes: ['livechat'],
+            }),
+        });
+        this._super(...arguments);
+    },
+
+    /**
+     * @override
+     * @param {Object[]} [param0.channel_livechat=[]]
      */
     _initCommands() {
         this._super();
