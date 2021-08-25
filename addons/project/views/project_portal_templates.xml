@@ -6,14 +6,17 @@
                 <a t-if="project" t-attf-href="/my/projects?{{ keep_query() }}">Projects</a>
                 <t t-else="">Projects</t>
             </li>
-            <li t-if="project" class="breadcrumb-item active text-truncate col-8 col-lg-10">
+            <li t-if="page_name == 'project_task' and project" class="breadcrumb-item active">
+                <a t-if="project" t-attf-href="/my/project/{{ project.id }}?{{ keep_query() }}"><t t-esc="project.name"/></a>
+            </li>
+            <li t-elif="project" t-attf-class="breadcrumb-item #{'active ' if not project else ''} text-truncate col-8 col-lg-10">
                 <t t-esc="project.name"/>
             </li>
-            <li t-if="page_name == 'task' or task" t-attf-class="breadcrumb-item #{'active ' if not task else ''}">
+            <li t-if="page_name == 'task' or (task and not project)" t-attf-class="breadcrumb-item #{'active ' if not task else ''}">
                 <a t-if="task" t-attf-href="/my/tasks?{{ keep_query() }}">Tasks</a>
                 <t t-else="">Tasks</t>
             </li>
-            <li t-if="task" class="breadcrumb-item active col-8 col-lg-10 text-truncate">
+            <li t-if="task" class="breadcrumb-item active text-truncate">
                 <span t-field="task.name"/>
             </li>
         </xpath>
@@ -68,52 +71,65 @@
         <t t-call="portal.portal_layout">
             <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
                 <t t-call="portal.portal_back_in_edit_mode">
-                    <t t-set="backend_url" t-value="'/web#model=project.project&amp;id=%s&amp;view_type=form' % (project.id)"/>
+                    <t t-set="backend_url" t-value="'/web#model=project.project&amp;id=%s&amp;view_type=kanban' % (project.id)"/>
                 </t>
             </t>
 
-            <t t-call="portal.portal_record_layout">
-                <t t-set="card_header">
-                    <h5 class="mb-0">
-                        <span t-field="project.name" class="text-truncate"/>
-                        <span class="float-right">
-                            <a role="button" t-attf-href="/my/tasks?filterby=#{project.id}" class="btn btn-sm btn-secondary">
-                                <span class="fa fa-tasks" role="img" aria-label="Tasks" title="Tasks"/>
-                                <span t-esc="project.task_count_with_subtasks" />
-                                <span t-field="project.label_tasks" />
-                            </a>
-                        </span>
-                    </h5>
-                </t>
-                <t t-set="card_body">
-                    <div class="row">
-                        <div t-if="project.user_id" class="col-12 col-md-6">
-                            <h6><strong> Project Manager </strong></h6>
-                            <div class="row">
-                                <div class="col flex-grow-0 pr-3">
-                                    <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(project.user_id.avatar_1024)" alt="Contact"/>
-                                </div>
-                                <div class="col pl-sm-0">
-                                    <div t-field="project.user_id" t-options='{"widget": "contact", "fields": ["name"]}'/>
-                                    <a t-attf-href="mailto:{{project.user_id.email}}" t-if="project.user_id.email"><div t-field="project.user_id" t-options='{"widget": "contact", "fields": ["email"]}'/></a>
-                                    <a t-attf-href="tel:{{project.user_id.phone}}" t-if="project.user_id.phone"><div t-field="project.user_id" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div t-if="project.partner_id" class="col-12 col-md-6 mb-2 mb-md-0">
-                            <h6><strong> Customer </strong></h6>
-                            <div class="row">
-                                <div class="col flex-grow-0 pr-3">
-                                    <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(project.partner_id.avatar_1024)" alt="Contact"/>
-                                </div>
-                                <div class="col pl-sm-0">
-                                    <div t-field="project.partner_id" t-options='{"widget": "contact", "fields": ["name"]}'/>
-                                    <a t-attf-href="mailto:{{project.partner_email}}" t-if="project.partner_email"><div t-field="project.partner_id" t-options='{"widget": "contact", "fields": ["email"]}'/></a>
-                                    <a t-attf-href="tel:{{project.partner_phone}}" t-if="project.partner_phone"><div t-field="project.partner_id" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Tasks</t>
+            </t>
+            <t t-if="not grouped_tasks">
+                <div class="alert alert-warning mt8" role="alert">
+                    There are no tasks.
+                </div>
+            </t>
+
+            <t t-call="project.portal_tasks_list"/>
+        </t>
+    </template>
+
+    <template id="portal_tasks_list" name="Tasks List">
+        <t t-if="grouped_tasks">
+            <t t-call="portal.portal_table">
+                <t t-foreach="grouped_tasks" t-as="tasks">
+                    <thead>
+                        <tr t-attf-class="{{'thead-light' if not groupby == 'none' else ''}}">
+                            <th class="text-left">Ref</th>
+                            <th t-if="groupby == 'none'">Name</th>
+                            <th t-if="groupby == 'project'">
+                                <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for project:</em>
+                                <span t-field="tasks[0].sudo().project_id.name"/></th>
+                            <th t-if="groupby == 'stage'">
+                                <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> in stage:</em>
+                                <span class="text-truncate" t-field="tasks[0].sudo().stage_id.name"/></th>
+                            <th t-if="groupby == 'user'">
+                                <em class="font-weight-normal text-muted" t-if="tasks[0].sudo().user_id"><span t-field="tasks[0].sudo().project_id.label_tasks"/> assigned to:</em>
+                                <span class="text-truncate" t-field="tasks[0].sudo().user_id.name"/></th>
+                            <th t-if="groupby == 'customer'">
+                                <em class="font-weight-normal text-muted" t-if="tasks[0].sudo().partner_id"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for customer:</em>
+                                <span class="text-truncate" t-field="tasks[0].sudo().partner_id.name"/></th>
+                            <th t-if="groupby != 'project'" class="text-center" name="portal_my_tasks_project_th">Project</th>
+                            <th t-if="groupby != 'stage'" class="text-center">Stage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="tasks" t-as="task">
+                            <tr>
+                                <td class="text-left">
+                                    #<span t-esc="task.id"/>
+                                </td>
+                                <td>
+                                    <a t-attf-href="/my/#{task_url}/#{task.id}?{{ keep_query() }}"><span t-field="task.name"/></a>
+                                </td>
+                                <td t-if="groupby != 'project'" class="text-center">
+                                    <span class="badge badge-pill badge-info" title="Current project of the task" t-esc="task.project_id.name" />
+                                </td>
+                                <td t-if="groupby != 'stage'" class="text-center">
+                                    <span class="badge badge-pill badge-info" title="Current stage of the task" t-esc="task.stage_id.name" />
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
                 </t>
             </t>
         </t>
@@ -131,50 +147,7 @@
                     There are no tasks.
                 </div>
             </t>
-            <t t-if="grouped_tasks">
-                <t t-call="portal.portal_table">
-                    <t t-foreach="grouped_tasks" t-as="tasks">
-                        <thead>
-                            <tr t-attf-class="{{'thead-light' if not groupby == 'none' else ''}}">
-                                <th class="text-left">Ref</th>
-                                <th t-if="groupby == 'none'">Name</th>
-                                <th t-if="groupby == 'project'">
-                                    <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for project:</em>
-                                    <span t-field="tasks[0].sudo().project_id.name"/></th>
-                                <th t-if="groupby == 'stage'">
-                                    <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> in stage:</em>
-                                    <span class="text-truncate" t-field="tasks[0].sudo().stage_id.name"/></th>
-                                <th t-if="groupby == 'user'">
-                                    <em class="font-weight-normal text-muted" t-if="tasks[0].sudo().user_id"><span t-field="tasks[0].sudo().project_id.label_tasks"/> assigned to:</em>
-                                    <span class="text-truncate" t-field="tasks[0].sudo().user_id.name"/></th>
-                                <th t-if="groupby == 'customer'">
-                                    <em class="font-weight-normal text-muted" t-if="tasks[0].sudo().partner_id"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for customer:</em>
-                                    <span class="text-truncate" t-field="tasks[0].sudo().partner_id.name"/></th>
-                                <th t-if="groupby != 'project'" class="text-center" name="portal_my_tasks_project_th">Project</th>
-                                <th t-if="groupby != 'stage'" class="text-center">Stage</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-foreach="tasks" t-as="task">
-                                <tr>
-                                    <td class="text-left">
-                                        #<span t-esc="task.id"/>
-                                    </td>
-                                    <td>
-                                        <a t-attf-href="/my/task/#{task.id}?{{ keep_query() }}"><span t-field="task.name"/></a>
-                                    </td>
-                                    <td t-if="groupby != 'project'" class="text-center">
-                                        <span class="badge badge-pill badge-info" title="Current project of the task" t-esc="task.project_id.name" />
-                                    </td>
-                                    <td t-if="groupby != 'stage'" class="text-center">
-                                        <span class="badge badge-pill badge-info" title="Current stage of the task" t-esc="task.stage_id.name" />
-                                    </td>
-                                </tr>
-                            </t>
-                        </tbody>
-                    </t>
-                </t>
-            </t>
+            <t t-call="project.portal_tasks_list"/>
         </t>
     </template>
 

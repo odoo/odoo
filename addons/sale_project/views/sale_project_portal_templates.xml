@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="portal_my_tasks_inherit" inherit_id="project.portal_my_tasks">
+    <template id="portal_tasks_list_inherit" inherit_id="project.portal_tasks_list">
         <xpath expr="//t[@t-call='portal.portal_table']//thead/tr/th[@name='portal_my_tasks_project_th']" position="before">
             <th t-if="groupby == 'sale_order'">
                 <em class="font-weight-normal text-muted" t-if="tasks[0].sudo().sale_order_id"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for sale order:</em>
