@@ -175,3 +175,97 @@ class TestSurveyInternals(common.SurveyCase):
         result = self.env['survey.survey'].prepare_result(question)
         for key in exresult:
             self.assertEqual(result[key], exresult[key])
+
+    def test_get_input_summary_no_answer(self):
+        question = self._add_question(self.page_0, 'Q1', 'numerical_box')
+        result = self.env['survey.survey'].get_input_summary(question)
+        self.assertDictEqual(result, {"answered": 0, "skipped": 0})
+
+    def test_get_input_summary_simple_choice(self):
+        question = self._add_question(
+            self.page_0, 'Q0', 'simple_choice',
+            labels=[{'value': 'Choice0'}, {'value': 'Choice1'}]
+        )
+
+        # 2 answered + 1 skipped
+        answers = [self._add_answer(self.survey, False) for i in range(3)]
+
+        self._add_answer_line(question, answers[0], random.choice(question.labels_ids.ids))
+        self._add_answer_line(question, answers[1], random.choice(question.labels_ids.ids))
+        self._add_answer_line(question, answers[2], None, answer_type=False, skipped=True)
+
+        # no result if not validated
+        result = self.env['survey.survey'].get_input_summary(question)
+        self.assertDictEqual(result, {"answered": 0, "skipped": 0})
+
+        # expected results if validated
+        for answer in answers:
+            answer.state = "done"
+
+        result = self.env['survey.survey'].get_input_summary(question)
+        self.assertDictEqual(result, {"answered": 2, "skipped": 1})
+
+    def test_get_input_summary_multiple_choice(self):
+        question = self._add_question(
+            self.page_0, 'Q0', 'multiple_choice',
+            labels=[{'value': 'Choice0'}, {'value': 'Choice1'}]
+        )
+
+        # 1 answer with one choice + 1 answer with 2 choices + 1 skipped
+        answers = [self._add_answer(self.survey, False) for i in range(3)]
+
+        self._add_answer_line(question, answers[0], random.choice(question.labels_ids.ids))
+        self._add_answer_line(question, answers[1], question.labels_ids[0].id)
+        self._add_answer_line(question, answers[1], question.labels_ids[1].id)
+        self._add_answer_line(question, answers[2], None, answer_type=False, skipped=True)
+
+        # no result if not validated
+        result = self.env['survey.survey'].get_input_summary(question)
+        self.assertDictEqual(result, {"answered": 0, "skipped": 0})
+
+        # expected results if validated
+        for answer in answers:
+            answer.state = "done"
+
+        result = self.env['survey.survey'].get_input_summary(question)
+        self.assertDictEqual(result, {"answered": 2, "skipped": 1})
+
+    def test_get_input_summary_with_filters(self):
+        question = self._add_question(
+            self.page_0, 'Q0', 'multiple_choice',
+            labels=[{'value': 'Choice0'}, {'value': 'Choice1'}]
+        )
+
+        # 1 answer with one choice + 1 answer with 2 choices + 1 skipped
+        answers = [self._add_answer(self.survey, False) for i in range(3)]
+
+        one_choice_line = self._add_answer_line(question, answers[0], random.choice(question.labels_ids.ids))
+        mul_choice_line_1 = self._add_answer_line(question, answers[1], question.labels_ids[0].id)
+        mul_choice_line_2 = self._add_answer_line(question, answers[1], question.labels_ids[1].id)
+        skipped_line = self._add_answer_line(question, answers[2], None, answer_type=False, skipped=True)
+
+        # without validated answers
+        result = self.env['survey.survey'].get_input_summary(
+            question,
+            (one_choice_line | skipped_line | mul_choice_line_1).ids
+        )
+        self.assertDictEqual(result, {"answered": 0, "skipped": 0})
+
+        for answer in answers:
+            answer.state = "done"
+
+        # filter = 1 answer with one choice
+        result = self.env['survey.survey'].get_input_summary(question, one_choice_line.ids)
+        self.assertDictEqual(result, {"answered": 1, "skipped": 0})
+
+        # filter = 1 answer with one choice + 1 skipped
+        result = self.env['survey.survey'].get_input_summary(question, (one_choice_line | skipped_line).ids)
+        self.assertDictEqual(result, {"answered": 1, "skipped": 1})
+
+        # filter = 1 line from multiple choice answer
+        result = self.env['survey.survey'].get_input_summary(question, mul_choice_line_1.ids)
+        self.assertDictEqual(result, {"answered": 1, "skipped": 0})
+
+        # filter = 2 lines from multiple choice answer -> should only count ONE answered question
+        result = self.env['survey.survey'].get_input_summary(question, (mul_choice_line_1 | mul_choice_line_2).ids)
+        self.assertDictEqual(result, {"answered": 1, "skipped": 0})

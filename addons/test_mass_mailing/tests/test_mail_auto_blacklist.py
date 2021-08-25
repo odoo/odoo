@@ -5,11 +5,34 @@ import datetime
 
 from odoo import tools
 from odoo.tests import common
+from odoo.addons.mass_mailing.models.mail_thread import BLACKLIST_MAX_BOUNCED_LIMIT
 
 
 class TestAutoBlacklist(common.TransactionCase):
 
     def test_mail_bounced_auto_blacklist(self):
+        bounced_partner = self.env['res.partner'].sudo()
+        self._test_mail_bounced_auto_blacklist(bounced_partner)
+
+    def test_mail_bounced_auto_blacklist_partner(self):
+        bounced_partner = self.env['res.partner'].sudo().create({
+            'name': 'test1',
+            'message_bounce': BLACKLIST_MAX_BOUNCED_LIMIT,
+        })
+        self._test_mail_bounced_auto_blacklist(bounced_partner)
+
+    def test_mail_bounced_auto_blacklist_partner_duplicates(self):
+        bounced_partner = self.env['res.partner'].sudo().create({
+            'name': 'test1',
+            'message_bounce': BLACKLIST_MAX_BOUNCED_LIMIT,
+        }) | self.env['res.partner'].sudo().create({
+            'name': 'test2',
+            'message_bounce': BLACKLIST_MAX_BOUNCED_LIMIT,
+        })
+
+        self._test_mail_bounced_auto_blacklist(bounced_partner)
+
+    def _test_mail_bounced_auto_blacklist(self, bounced_partner):
         mass_mailing_contacts = self.env['mailing.contact']
         mass_mailing = self.env['mailing.mailing']
         mail_blacklist = self.env['mail.blacklist']
@@ -20,7 +43,7 @@ class TestAutoBlacklist(common.TransactionCase):
 
         base_parsed_values = {
             'email_from': 'toto@yaourth.com', 'to': 'tata@yaourth.com', 'message_id': '<123.321@yaourth.com>',
-            'bounced_partner': self.env['res.partner'].sudo(), 'bounced_message': self.env['mail.message'].sudo()
+            'bounced_partner': bounced_partner, 'bounced_message': self.env['mail.message'].sudo()
         }
 
         # create bounced history of 4 statistics

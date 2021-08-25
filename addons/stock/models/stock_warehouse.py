@@ -721,8 +721,8 @@ class Warehouse(models.Model):
 
     def _update_reception_delivery_resupply(self, reception_new, delivery_new):
         """ Check if we need to change something to resupply warehouses and associated MTO rules """
-        input_loc, output_loc = self._get_input_output_locations(reception_new, delivery_new)
         for warehouse in self:
+            input_loc, output_loc = warehouse._get_input_output_locations(reception_new, delivery_new)
             if reception_new and warehouse.reception_steps != reception_new and (warehouse.reception_steps == 'one_step' or reception_new == 'one_step'):
                 warehouse._check_reception_resupply(input_loc)
             if delivery_new and warehouse.delivery_steps != delivery_new and (warehouse.delivery_steps == 'ship_only' or delivery_new == 'ship_only'):
@@ -821,9 +821,9 @@ class Warehouse(models.Model):
             'in_type_id': {'default_location_dest_id': input_loc.id},
             'out_type_id': {'default_location_src_id': output_loc.id},
             'pick_type_id': {
-                'active': self.delivery_steps != 'ship_only',
+                'active': self.delivery_steps != 'ship_only' and self.active,
                 'default_location_dest_id': output_loc.id if self.delivery_steps == 'pick_ship' else self.wh_pack_stock_loc_id.id},
-            'pack_type_id': {'active': self.delivery_steps == 'pick_pack_ship'},
+            'pack_type_id': {'active': self.delivery_steps == 'pick_pack_ship' and self.active},
             'int_type_id': {},
         }
 
@@ -977,7 +977,7 @@ class Orderpoint(models.Model):
 
     name = fields.Char(
         'Name', copy=False, required=True, readonly=True,
-        default=lambda self: self.env['ir.sequence'].next_by_code('stock.orderpoint'))
+        default=lambda self: _('New'))
     active = fields.Boolean(
         'Active', default=True,
         help="If the active field is set to False, it will allow you to hide the orderpoint without removing it.")
@@ -1024,6 +1024,12 @@ class Orderpoint(models.Model):
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
     ]
+
+    @api.model
+    def create(self, vals):
+        if not vals.get('name', False) or vals['name'] == _('New'):
+            vals['name'] = self.env['ir.sequence'].next_by_code('stock.orderpoint')
+        return super(Orderpoint, self).create(vals)
 
     @api.depends('warehouse_id')
     def _compute_allowed_location_ids(self):

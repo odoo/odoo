@@ -134,6 +134,7 @@ class TestAccountEntry(TestExpenseCommon):
                     self.assertEquals(len(line.analytic_line_ids), 1, "The debit move line should have 1 analytic lines")
                     self.assertEquals(line.product_id, self.product_expense, "Product of debit move line should be the one from the expense")
                 else:
+                    self.assertEqual(line.tax_base_amount, 318.18)
                     self.assertAlmostEquals(line.debit, 31.82)
                     self.assertAlmostEquals(line.amount_currency, 63.64)
                     self.assertEquals(len(line.analytic_line_ids), 0, "The tax move line should not have analytic lines")
@@ -447,3 +448,33 @@ class TestExpenseLinesRights(TestExpenseCommon):
             expense_line.with_user(self.user_manager).write({'account_id': self.account_expense.id})
         with self.assertRaises(UserError):
             expense_line.with_user(self.user_manager).write({'analytic_account_id': self.analytic_account.id})
+
+    def test_expenses_with_tax_and_lockdate(self):
+        ''' Test creating a journal entry for multiple expenses using taxes. A lock date is set in order to trigger
+        the recomputation of the taxes base amount.
+        '''
+        self.env.company.tax_lock_date = '2020-02-01'
+
+        expense = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.employee.id,
+            'accounting_date': '2020-01-01'
+        })
+
+        for i in range(2):
+            expense_line = self.env['hr.expense'].create({
+                'name': 'Car Travel Expenses',
+                'employee_id': self.employee.id,
+                'product_id': self.product_expense.id,
+                'unit_amount': 350.00,
+                'tax_ids': [(6, 0, [self.tax.id])],
+                'sheet_id': expense.id,
+                'analytic_account_id': self.analytic_account.id,
+            })
+            expense_line._onchange_product_id()
+
+        expense.action_submit_sheet()
+        expense.approve_expense_sheets()
+
+        # Assert not "Cannot create unbalanced journal entry" error.
+        expense.action_sheet_move_create()

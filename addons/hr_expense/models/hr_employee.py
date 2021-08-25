@@ -40,7 +40,7 @@ class EmployeePublic(models.Model):
 class User(models.Model):
     _inherit = ['res.users']
 
-    expense_manager_id = fields.Many2one(related='employee_id.expense_manager_id')
+    expense_manager_id = fields.Many2one(related='employee_id.expense_manager_id', readonly=False)
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights.

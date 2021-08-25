@@ -43,6 +43,50 @@ Content-Transfer-Encoding: quoted-printable
 ------=_Part_4200734_24778174.1344608186754--
 """
 
+MAIL_TEMPLATE_EXTRA_HTML = """Return-Path: <whatever-2a840@postmaster.twitter.com>
+To: {to}
+cc: {cc}
+Received: by mail1.openerp.com (Postfix, from userid 10002)
+    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+    boundary="----=_Part_4200734_24778174.1344608186754"
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+Message-ID: {msg_id}
+{extra}
+------=_Part_4200734_24778174.1344608186754
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Please call me as soon as possible this afternoon!
+
+--
+Sylvie
+------=_Part_4200734_24778174.1344608186754
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+ <head>=20
+  <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8" />
+ </head>=20
+ <body style=3D"margin: 0; padding: 0; background: #ffffff;-webkit-text-size-adjust: 100%;">=20
+
+  <p>Please call me as soon as possible this afternoon!</p>
+  {extra_html}
+
+  <p>--<br/>
+     Sylvie
+  <p>
+ </body>
+</html>
+------=_Part_4200734_24778174.1344608186754--
+"""
+
+
 MAIL_TEMPLATE_PLAINTEXT = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
 Received: by mail1.openerp.com (Postfix, from userid 10002)
@@ -433,6 +477,63 @@ Web: <a class="moz-txt-link-freetext" href="http://www.odoo.com">http://www.odoo
 
 --------------A6B5FD5F68F4D73ECD739009--"""
 
+MAIL_EML_ATTACHMENT_BOUNCE_HEADERS="""\
+Date: Tue, 24 Dec 2019 11:32:07 +0100 (CET)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary=16063919151.b32bE0eD.7
+Content-Transfer-Encoding: 7bit
+Subject: Undelivered Mail Returned to Sender
+From: {email_from}
+To: {to}
+Message-Id: <20191224103207.415713014C@example.com>
+Return-Path: <MAILER-DAEMON>
+Delivered-To: odoo+82240-account.invoice-19177@mycompany.example.com
+Received: by example.com (Postfix) id 415713014C; Tue, 24 Dec
+ 2019 11:32:07 +0100 (CET)
+Auto-Submitted: auto-replied
+
+
+--16063919151.b32bE0eD.7
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary=16063919150.2cD3F37.7
+Content-Transfer-Encoding: 7bit
+Content-ID: <16063919152.fD96.7@8f286b7b7880>
+
+
+--16063919150.2cD3F37.7
+Content-Type: text/plain; charset=US-ASCII
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+
+This is the mail system at host example.com.
+
+I'm sorry to have to inform you that your message could not
+be delivered to one or more recipients. It's attached below.
+
+For further assistance, please send mail to postmaster.
+
+If you do so, please include this problem report. You can
+delete your own text from the attached returned message.
+
+
+--16063919151.b32bE0eD.7
+Content-Type: text/rfc822-headers
+Content-Transfer-Encoding: 7bit
+
+Return-Path: <bounce+82240-account.invoice-19177@mycompany.example.com>
+Received: by example.com (Postfix) id 415713014C; Tue, 24 Dec
+Content-Type: multipart/mixed; boundary="===============3600759226158551994=="
+MIME-Version: 1.0
+Message-Id: {msg_id}
+references: <1571814481.189281940460205.799582441238467-openerp-19177-account.invoice@mycompany.example.com>
+Subject: Test
+From: "Test" <noreply+srglvrz-gmail.com@mycompany.example.com>
+Reply-To: "MY COMPANY" <info@mycompany.example.com>
+To: "Test" <test@anothercompany.example.com>
+Date: Tue, 24 Dec 2019 10:32:05 -0000
+X-Odoo-Objects: account.invoice-19177
+
+--16063919151.b32bE0eD.7--"""
 
 MAIL_ATTACHMENT_BAD_ENCODING = """To: xxx@example.com
 From: "xxxx xxxx" <xxxx@example.com>

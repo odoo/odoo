@@ -10,11 +10,12 @@
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
 # JonathanStein <jstein@image.dk>, 2020
-# Walther Barnett <wba@miracle.dk>, 2020
+# walther_b <wba@miracle.dk>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Martin Trigaux, 2020
 # Preben Lisby <preben.lisby@gmail.com>, 2020
-# Mads Søndergaard, 2020
+# Mads Søndergaard, 2021
+# Mads Søndergaard <mads@vkdata.dk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -197,6 +198,16 @@ msgstr ""
 "automatisk vedhæftes denne salgsmulighed.</p><p class=\"mb0\">Tast "
 "<i>'@'</i> for at sende besked direkte til en person - virker som cc/ på "
 "e-mails.</p>"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
+"<p>Eftersom du ikke tilhører noget Salgshold, åbner Odoo den første per "
+"standard.</p>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1924,6 +1935,12 @@ msgstr ""
 "kanalerne af salgs pipelinen."
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr "Antal Muligheder"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr "Indtægter på salgsmuligheder"
@@ -2016,6 +2033,7 @@ msgstr "Andet"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "Forfaldne salgsmuligheder"
 
@@ -2484,6 +2502,12 @@ msgid "Team Pipelines"
 msgstr "Team pipeline"
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr "Teknisk felt brugt til stat-knap"
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
@@ -2598,6 +2622,16 @@ msgstr "Dette mål eksisterer ikke."
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Title"
 msgstr "Titel"
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"To prevent data loss, Leads and Opportunities can only be merged by groups "
+"of 5."
+msgstr ""
+"For at forhindre tab af data, kan Kundeemner og Muligheder kun sammenlægges "
+"i grupper på 5."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter

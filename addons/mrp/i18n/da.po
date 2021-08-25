@@ -13,9 +13,10 @@
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
 # Martin Trigaux, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
-# Walther Barnett <wba@miracle.dk>, 2020
+# walther_b <wba@miracle.dk>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -367,6 +368,14 @@ msgid "A Manufacturing Order is already done or cancelled."
 msgstr "En produktionsordre er allerede udført eller annulleret."
 
 #. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr ""
+"Et produkt med en sæt-type stykliste kan ikke have en genbestillings-regel."
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "A workcenter cannot be an alternative of itself"
@@ -524,7 +533,7 @@ msgid ""
 "An unbuild order is used to break down a finished product into its "
 "components."
 msgstr ""
-"En Ubygningsordre bruges til at nedbryde det færdige produkt til dets "
+"Tilbagefør Produktion bruges til at nedbryde det færdige produkt til dets "
 "komponenter."
 
 #. module: mrp
@@ -1143,7 +1152,7 @@ msgstr "Opret et ny arbejdsordre præstation"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "Create an unbuild order"
-msgstr "Opret en demonteringsordre"
+msgstr "Opret en Tilbageført Produktion"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -2056,7 +2065,8 @@ msgid ""
 "Location where you want to send the components resulting from the unbuild "
 "order."
 msgstr ""
-"Sted hvor du vil sende komponenterne resulterende fra afmonteringsordren."
+"Sted hvor du vil sende komponenterne resulterende fra Tilbagefør "
+"Produktionen."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4303,26 +4313,26 @@ msgstr "Fjern blokering"
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
-msgstr "Ikke færdige ordre"
+msgstr "Tilbagefør Produktion"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Order"
-msgstr "Ikke færdige ordrer"
+msgstr "Tilbagefør Produktion"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
-msgstr "Produktmængden ved ikke færdige ordrer skal være større end 0."
+msgstr "Produktmængden ved Tilbageførte Produktioner skal være større end 0."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_unbuild
 #: model:ir.ui.menu,name:mrp.menu_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Orders"
-msgstr "Ikke færdige ordrer"
+msgstr "Tilbagefør Produktioner"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
@@ -4901,6 +4911,16 @@ msgstr ""
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr ""
+"Du kan ikke oprette et sæt-type stykliste for produkter som har mindst én "
+"genbestillings-regel."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
 msgstr ""
@@ -4943,7 +4963,8 @@ msgstr "Du kan ikke oprette en ny stykliste herfra."
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr "Du kan ikke slette en afmonterings ordre hvis status er 'Færdig'."
+msgstr ""
+"Du kan ikke slette en Tilbagefør Produktions ordre hvis status er 'Færdig'."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4988,7 +5009,7 @@ msgstr "Du kan ikke producere det samme serienummer to gange."
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr "Du kan ikke afmontere en omstødt produktionsordre."
+msgstr "Du kan ikke omstøde en Tilbageført Produktion"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:0
@@ -5011,6 +5032,16 @@ msgstr ""
 #, python-format
 msgid "You have to produce at least one %s."
 msgstr "Du har produceret mindst en %s."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
+msgstr ""
+"Du skal angive et antal forbrugt der er forskellig fra nul, for mindst én af"
+" dine komponenter"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0

@@ -680,7 +680,26 @@ define([
      * @return {String} [return.url=""]
      */
     this.getLinkInfo = function ($editable) {
+      // ODOO MODIFICATION START
+      var selection;
+      var currentSelection = null;
+      if (document.getSelection) {
+        selection = document.getSelection();
+        if (selection.getRangeAt && selection.rangeCount) {
+          currentSelection = selection.getRangeAt(0);
+        }
+      }
+      // ODOO MODIFICATION END
+
       this.focus($editable);
+
+      // ODOO MODIFICATION START
+      if (currentSelection && document.getSelection) {
+        selection = document.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(currentSelection);
+      }
+      // ODOO MODIFICATION END
 
       var rng = range.create().expand(dom.isAnchor);
 

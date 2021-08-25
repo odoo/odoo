@@ -73,13 +73,13 @@ class AcquirerPaypal(models.Model):
         if not self.fees_active:
             return 0.0
         country = self.env['res.country'].browse(country_id)
-        if country and self.company_id.country_id.id == country.id:
+        if country and self.company_id.sudo().country_id.id == country.id:
             percentage = self.fees_dom_var
             fixed = self.fees_dom_fixed
         else:
             percentage = self.fees_int_var
             fixed = self.fees_int_fixed
-        fees = (percentage / 100.0 * amount) + fixed / (1 - percentage / 100.0)
+        fees = (percentage / 100.0 * amount + fixed) / (1 - percentage / 100.0)
         return fees
 
     def paypal_form_generate_values(self, values):

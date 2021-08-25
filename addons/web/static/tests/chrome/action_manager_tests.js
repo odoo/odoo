@@ -2,6 +2,7 @@ odoo.define('web.action_manager_tests', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');
+var ajax = require('web.ajax');
 var ReportClientAction = require('report.client_action');
 var Notification = require('web.Notification');
 var NotificationService = require('web.NotificationService');
@@ -15,6 +16,7 @@ var RamStorage = require('web.RamStorage');
 var ReportService = require('web.ReportService');
 var SessionStorageService = require('web.SessionStorageService');
 var testUtils = require('web.test_utils');
+var WarningDialog = require('web.CrashManager').WarningDialog;
 var Widget = require('web.Widget');
 var createActionManager = testUtils.createActionManager;
 
@@ -110,6 +112,12 @@ QUnit.module('ActionManager', {
             report_type: 'qweb-pdf',
             type: 'ir.actions.report',
             close_on_report_download: true,
+        }, {
+            id: 12,
+            name: "Some HTML Report",
+            report_name: 'some_report',
+            report_type: 'qweb-html',
+            type: 'ir.actions.report',
         }];
 
         this.archs = {
@@ -573,6 +581,59 @@ QUnit.module('ActionManager', {
 
         await actionManager.doAction(5); // target 'new'
         assert.containsN(document.body, '.modal .o_form_view', 2);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('executing a window action with onchange warning does not hide it', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.foo.onChange = true;
+
+        this.archs['partner,false,form'] = `
+            <form>
+              <field name="foo"/>
+            </form>`;
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return Promise.resolve({
+                        value: {},
+                        warning: {
+                            title: "Warning",
+                            message: "Everything is alright",
+                            type: 'dialog',
+                        },
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                warning: function (event) {
+                    new WarningDialog(actionManager, {
+                        title: event.data.title,
+                    }, event.data).open();
+                },
+            },
+        });
+
+        await actionManager.doAction(3);
+
+        await testUtils.dom.click(actionManager.$('.o_list_button_add'));
+        assert.containsOnce(
+            $,
+            '.modal.o_technical_modal.show',
+            "Warning modal should be opened");
+
+        await testUtils.dom.click($('.modal.o_technical_modal.show button.close'));
+        assert.containsNone(
+            $,
+            '.modal.o_technical_modal.show',
+            "Warning modal should be closed");
 
         actionManager.destroy();
     });
@@ -1273,6 +1334,26 @@ QUnit.module('ActionManager', {
             '/web/dataset/search_read', // loaded action
             'setItem', // loaded action
         ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('state with integer active_ids should not crash', async function (assert) {
+        assert.expect(0);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            mockRPC: function (route, args) {
+                if (route === '/web/action/run') {
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        await actionManager.loadState({
+            action: 2,
+            active_ids: 3,
+        });
 
         actionManager.destroy();
     });
@@ -2214,7 +2295,7 @@ QUnit.module('ActionManager', {
                 if (route === '/report/check_wkhtmltopdf') {
                     return Promise.resolve('broken');
                 }
-                if (route === '/report/html/some_report') {
+                if (route.includes('/report/html/some_report')) {
                     return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
@@ -2235,7 +2316,64 @@ QUnit.module('ActionManager', {
             '/web/action/load',
             '/report/check_wkhtmltopdf',
             'warning',
-            '/report/html/some_report', // report client action's iframe
+            '/report/html/some_report?context=%7B%7D', // report client action's iframe
+        ]);
+
+        actionManager.destroy();
+        testUtils.mock.unpatch(ReportClientAction);
+    });
+
+    QUnit.test('send context in case of html report', async function (assert) {
+        assert.expect(4);
+
+        // patch the report client action to override its iframe's url so that
+        // it doesn't trigger an RPC when it is appended to the DOM (for this
+        // usecase, using removeSRCAttribute doesn't work as the RPC is
+        // triggered as soon as the iframe is in the DOM, even if its src
+        // attribute is removed right after)
+        testUtils.mock.patch(ReportClientAction, {
+            start: function () {
+                var self = this;
+                return this._super.apply(this, arguments).then(function () {
+                    self._rpc({route: self.iframe.getAttribute('src')});
+                    self.iframe.setAttribute('src', 'about:blank');
+                });
+            }
+        });
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: {
+                report: ReportService,
+                notification: NotificationService.extend({
+                    notify: function (params) {
+                        assert.step(params.type || 'notification');
+                    }
+                })
+            },
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                if (route.includes('/report/html/some_report')) {
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                user_context: {
+                    some_key: 2,
+                }
+            },
+        });
+        await actionManager.doAction(12);
+
+        assert.containsOnce(actionManager, '.o_report_iframe',
+            "should have opened the report client action");
+
+        assert.verifySteps([
+            '/web/action/load',
+            '/report/html/some_report?context=%7B%22some_key%22%3A2%7D', // report client action's iframe
         ]);
 
         actionManager.destroy();
@@ -3439,7 +3577,7 @@ QUnit.module('ActionManager', {
         this.archs['partner,1,list'] = '<tree default_order="foo desc"><field name="foo"/></tree>';
 
         this.actions.push({
-            id: 12,
+            id: 100,
             name: 'Partners',
             res_model: 'partner',
             type: 'ir.actions.act_window',
@@ -3466,7 +3604,7 @@ QUnit.module('ActionManager', {
             },
         });
 
-        await actionManager.doAction(12);
+        await actionManager.doAction(100);
         assert.strictEqual(actionManager.$('.o_list_view tr.o_data_row .o_data_cell').text(), 'zoupyopplopgnapblip',
             'record should be in descending order as default_order applies');
 
@@ -3768,6 +3906,57 @@ QUnit.module('ActionManager', {
             "the button should be in the footer");
         assert.strictEqual($('.o_technical_modal .modal-footer button').length, 1,
             "the modal footer should only contain one button");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('can execute act_window actions in target="new"', async function (assert) {
+        assert.expect(5);
+
+        this.actions.push({
+            id: 999,
+            name: 'A window action',
+            res_model: 'partner',
+            target: 'new',
+            type: 'ir.actions.act_window',
+            views: [[999, 'form']],
+        });
+        this.archs['partner,999,form'] = `
+            <form>
+                <button name="method" string="Call method" type="object" confirm="Are you sure?"/>
+            </form>`;
+        this.archs['partner,1000,form'] = `<form>Another action</form>`;
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'method') {
+                    return Promise.resolve({
+                        id: 1000,
+                        name: 'Another window action',
+                        res_model: 'partner',
+                        target: 'new',
+                        type: 'ir.actions.act_window',
+                        views: [[1000, 'form']],
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        await actionManager.doAction(999);
+
+        assert.containsOnce(document.body, '.modal button[name=method]');
+
+        await testUtils.dom.click($('.modal button[name=method]'));
+
+        assert.containsN(document.body, '.modal', 2);
+        assert.strictEqual($('.modal:last .modal-body').text(), 'Are you sure?');
+
+        await testUtils.dom.click($('.modal:last .modal-footer .btn-primary'));
+        assert.containsOnce(document.body, '.modal');
+        assert.strictEqual($('.modal:last .modal-body').text().trim(), 'Another action');
 
         actionManager.destroy();
     });

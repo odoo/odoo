@@ -64,5 +64,6 @@ class Orderpoint(models.Model):
         for op in self:
             for pr in self.env['purchase.requisition'].search([('state','=','draft'),('origin','=',op.name)]):
                 for prline in pr.line_ids.filtered(lambda l: l.product_id.id == op.product_id.id):
-                    res[op.id] += prline.product_uom_id._compute_quantity(prline.product_qty, op.product_uom, round=False)
+                    if prline.product_uom_id.category_id == op.product_uom.category_id:
+                        res[op.id] += prline.product_uom_id._compute_quantity(prline.product_qty, op.product_uom, round=False)
         return res

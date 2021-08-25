@@ -27,4 +27,5 @@ Accounting chart and localization for Ecuador.
         'data/account_chart_template_data.xml',
         'data/res.country.state.csv',
     ],
+    'license': 'LGPL-3',
 }

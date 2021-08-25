@@ -106,3 +106,36 @@ class TestIrAttachment(TransactionCase):
         a4 = Attachment.create(vals)
         a4.write({'datas': self.blob2_b64})
         a4.unlink()
+
+    def test_07_write_mimetype(self):
+        """
+        Tests the consistency of documents' mimetypes
+        """
+        Attachment = self.Attachment.with_user(self.env.ref('base.user_demo').id)
+        a2 = Attachment.create({'name': 'a2', 'datas': self.blob1_b64, 'mimetype': 'image/png'})
+        self.assertEqual(a2.mimetype, 'image/png', "the new mimetype should be the one given on write")
+        a3 = Attachment.create({'name': 'a3', 'datas': self.blob1_b64, 'mimetype': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})
+        self.assertEqual(a3.mimetype, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', "should preserve office mime type")
+
+    def test_08_neuter_xml_mimetype(self):
+        """
+        Tests that potentially harmful mimetypes (XML mimetypes that can lead to XSS attacks) are converted to text
+        """
+        Attachment = self.Attachment.with_user(self.env.ref('base.user_demo').id)
+        document = Attachment.create({'name': 'document', 'datas': self.blob1_b64})
+        document.write({'datas': self.blob1_b64, 'mimetype': 'text/xml'})
+        self.assertEqual(document.mimetype, 'text/plain', "XML mimetype should be forced to text")
+        document.write({'datas': self.blob1_b64, 'mimetype': 'image/svg+xml'})
+        self.assertEqual(document.mimetype, 'text/plain', "SVG mimetype should be forced to text")
+        document.write({'datas': self.blob1_b64, 'mimetype': 'text/html'})
+        self.assertEqual(document.mimetype, 'text/plain', "HTML mimetype should be forced to text")
+        document.write({'datas': self.blob1_b64, 'mimetype': 'application/xhtml+xml'})
+        self.assertEqual(document.mimetype, 'text/plain', "XHTML mimetype should be forced to text")
+
+    def test_09_dont_neuter_xml_mimetype_for_admin(self):
+        """
+        Admin user does not have a mime type filter
+        """
+        document = self.Attachment.create({'name': 'document', 'datas': self.blob1_b64})
+        document.write({'datas': self.blob1_b64, 'mimetype': 'text/xml'})
+        self.assertEqual(document.mimetype, 'text/xml', "XML mimetype should not be forced to text, for admin user")

@@ -21,6 +21,14 @@ class SaleOrder(models.Model):
                     .with_context(default_sale_order_id=so.id) \
                     .for_xml_id('event_sale', 'action_sale_order_event_registration')
         return res
+    
+    def action_cancel(self):
+        self.mapped('order_line')._cancel_associated_registrations()
+        return super(SaleOrder, self).action_cancel()
+
+    def unlink(self):
+        self.mapped('order_line')._unlink_associated_registrations()
+        return super(SaleOrder, self).unlink()
 
 
 class SaleOrderLine(models.Model):
@@ -80,6 +88,16 @@ class SaleOrderLine(models.Model):
         # we call this to force update the default name
         self.product_id_change()
 
+    def unlink(self):
+        self._unlink_associated_registrations()
+        super(SaleOrderLine, self).unlink()
+
+    def _cancel_associated_registrations(self):
+        self.env['event.registration'].search([('sale_order_line_id', 'in', self.ids)]).button_reg_cancel()
+
+    def _unlink_associated_registrations(self):
+        self.env['event.registration'].search([('sale_order_line_id', 'in', self.ids)]).unlink()
+
     def get_sale_order_line_multiline_description_sale(self, product):
         """ We override this method because we decided that:
                 The default description of a sales order line containing a ticket must be different than the default description when no ticket is present.
@@ -97,11 +115,6 @@ class SaleOrderLine(models.Model):
 
     def _get_display_price(self, product):
         if self.event_ticket_id and self.event_id:
-            company = self.event_id.company_id or self.env.company
-            currency = company.currency_id
-            return currency._convert(
-                self.event_ticket_id.price, self.order_id.currency_id,
-                self.order_id.company_id or self.env.company.id,
-                self.order_id.date_order or fields.Date.today())
+            return self.event_ticket_id.with_context(pricelist=self.order_id.pricelist_id.id, uom=self.product_uom.id).price_reduce
         else:
             return super()._get_display_price(product)

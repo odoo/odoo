@@ -16,19 +16,20 @@
 # Odgarig Byambatsogt <odgarig@gmail.com>, 2020
 # Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2020
 # Munkhbaatar Gombosuren <muuguu17@gmail.com>, 2020
-# Martin Trigaux, 2020
 # Cheemee Bumtsend <cheemeesun@gmail.com>, 2020
 # Батболд <batbold.ts@gmail.com>, 2020
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2020
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2021
+# Nomin Erdenchimeg <nomin.bmde@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020\n"
+"Last-Translator: Nomin Erdenchimeg <nomin.bmde@gmail.com>, 2021\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2704,6 +2705,7 @@ msgstr "Гүйлгээ цуцлах"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__cancelled
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
 msgstr "Цуцлагдсан"
 
@@ -5901,11 +5903,6 @@ msgid "Internal Group"
 msgstr "Дотоод бүлэг"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_move__narration
-msgid "Internal Note"
-msgstr "Дотоод тэмдэглэл"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__note
 msgid "Internal Notes"
 msgstr "Дотоод тэмдэглэл"
@@ -6284,6 +6281,14 @@ msgstr ""
 "Журналын бичилт үүсгэсэн төлбөрийг устгах боломжгүй. Ингэвэл дугаарлалтын "
 "цоорхой үүсдэг учир. Тиймээс та эсрэг журналын бичилтийг шинээр үүсгэж "
 "төлбөр төлөлтийг залруулж болно."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"It seems that the taxes have been modified since the creation of the journal"
+" entry. You should create the credit note manually instead."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7854,6 +7859,12 @@ msgid "Original Bills"
 msgstr "Эх өглөгийн нэхэмжлэх"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "Төлбөрийн эх сурвалж"
@@ -8424,6 +8435,18 @@ msgid ""
 msgstr ""
 "Энэ үйлдлийг хийхээс өмнө дансны мод суулгах эсвэл ерөнхий зориулалттай ямар"
 " нэг журнал үүссгэнэ үү."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -9159,6 +9182,11 @@ msgid "Revenue/Expense Account"
 msgstr "Орлого/Зардлын данс"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
+msgid "Reversal Move"
+msgstr "Эсрэг гүйлгээ"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
 msgstr "Эсрэг бичилтийн огноо"
@@ -9642,6 +9670,12 @@ msgid "Send Money"
 msgstr "Мөнгө илгээх"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "Send Payment"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice
 msgid "Send a sample invoice"
 msgstr "Жишээ нэхэмжлэл илгээх"
@@ -9660,6 +9694,11 @@ msgstr "Нэхэмжлэх илгээж, төлбөрийг мөшгөнө"
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
 msgstr "Баримтыг имэйлээр илгээх"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
+msgid "Send receipts by email"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
@@ -10746,6 +10785,11 @@ msgid "Terms & Conditions"
 msgstr "Худалдааны нөхцөл & шалгуур"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__narration
+msgid "Terms and Conditions"
+msgstr "Худалдааны нөхцөл, журам"
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
@@ -11057,6 +11101,14 @@ msgstr ""
 "мэйлээр илгээх боломжгүй байна."
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid ""
+"The following payment(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -11075,8 +11127,11 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "Журналын банкны дансны эзэмшигч нь (%s) компани байх ёстой."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -12573,6 +12628,12 @@ msgid "You can only send invoices."
 msgstr "Та зөвхөн нэхэмжлэх илгээх боломжтой"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "You can only send payments."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12696,6 +12757,12 @@ msgstr "Та батлагдсан төлбөрийг устгах боломжг
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
 msgstr "Та нэг удаа батлагдаад цуцлагдсан ажил гүйлгээг устгах боломжгүй."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot delete an item linked to a posted entry."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -12912,7 +12979,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You don't have the access rights to post an invoice."
-msgstr ""
+msgstr "Танд нэхэмжлэх баталгаажуулах эрх байхгүй байна."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12948,8 +13015,14 @@ msgstr "Эхлээд та нээлтийн ажил гүйлгээ бүртгэ�
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr "Уг гүйлгээ %s (id %s)аль хэдийн баталгаажсан байна."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "You need to add a line before posting."
-msgstr ""
+msgstr "Гүйлгээг батлахаас өмнө мөр нэмэх хэрэгтэй"
 
 #. module: account
 #. openerp-web
@@ -12992,12 +13065,6 @@ msgstr ""
 "Та санхүүгийн тохиргоонд \"Ханшийн зөрүүний алдагдлын данс\" тодорхойлох "
 "хэрэгтэй. Ингэснээр ханшүү зөрүүний алдагдлыг автоматаар хөтлөх боломжтой "
 "болно."
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -13075,8 +13142,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this customer. You can allocate them to mark this invoice as paid."
 msgstr ""
-"энэ захиалагчийн хувьд эдгээр нэхэмжлэлийг төлөгдсөн гэж тэмдэглэх "
-"боломжтой. "
+"Та уг нэхэмжлэлийг төлбөрийн бүртгэлтэй холбож төлөгдсөн болгох боломжтой."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13119,6 +13185,11 @@ msgid "of the following month"
 msgstr "Дараагийн сарын"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "дээр"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding debits"
 msgstr "өглөгийн дебетүүд"
@@ -13126,7 +13197,7 @@ msgstr "өглөгийн дебетүүд"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding payments"
-msgstr "Авлагын кредитүүд"
+msgstr "энэ захиалагчийн хувьд Авлагын төлөлт бүртгэгдсэн байна."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__paid
@@ -13181,6 +13252,15 @@ msgstr "Толгой компани"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "to check"
+msgstr "Шалгах"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
 msgstr ""
 
 #. module: account

@@ -40,15 +40,16 @@
 # Maxence del Marmol <mdm@odoo.com>, 2019
 # Bertrand LATOUR <divoir@gmail.com>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
-# Rémi CAZENAVE <remi@le-filament.com>, 2019
+# Rémi CAZENAVE, 2019
 # omaodoo <oma@odoo.com>, 2019
 # Laura Piraux <lap@odoo.com>, 2020
 # Alexandra Jubert <aju@odoo.com>, 2020
 # Goffin Simon <simon.goffin@outlook.com>, 2020
 # Martin Trigaux, 2020
-# Cécile Collart <cco@odoo.com>, 2020
 # Julien Goergen <jgo@odoo.com>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
+# Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
+# Cécile Collart <cco@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -56,7 +57,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Pauline Thiry <pth@odoo.com>, 2020\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -939,7 +940,7 @@ msgstr "Articles disponibles"
 #: code:addons/stock/models/product.py:581
 #, python-format
 msgid "Available quantity should be set to zero before changing type"
-msgstr ""
+msgstr "La quantité disponible doit être mise à zéro avant de changer de type"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -4385,7 +4386,7 @@ msgstr "Ajoutez quelques objets à déplacer."
 #: code:addons/stock/models/stock_quant.py:92
 #, python-format
 msgid "Please check the following serial number (name, id): "
-msgstr ""
+msgstr "Veuillez vérifier le numéro de série suivant (nom, identifiant) : "
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -6485,7 +6486,7 @@ msgstr ""
 "qui a été effectivement déplacée. Pour les autres mouvements, c'est la "
 "quantité de produits qu'il est prévu de déplacer. Abaisser cette quantité ne"
 " génère pas de reliquat. La modification de cette quantité sur les "
-"mouvements assignés affecte la réservation de marchandise, et doit être "
+"mouvements assignés affecte la réservation de marchandises, et doit être "
 "faite avec soin."
 
 #. module: stock
@@ -6564,6 +6565,20 @@ msgid ""
 msgstr ""
 "Cette opération semble être chaînée avec une autre. Plus tard, si vous recevez les produits\n"
 "que vous venez de retourner, assurez-vous <b>d'inverser</b> l'opération de retour dans le but d'éviter que les règles logistiques s'appliquent à nouveau (ce qui créerait des opérations dupliquées)"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr ""
+"Cet article a été utilisé dans au moins un mouvement de stock. Il n'est pas "
+"conseillé de changer le Type d'Article car cela peut entraîner des "
+"incohérences. Une meilleure solution pourrait consister à archiver l'article"
+" et à en créer un nouveau à la place."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -6957,6 +6972,7 @@ msgstr "Mettre à jour la quantité d'articles"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -7224,6 +7240,9 @@ msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
 "the default route when products pass through this warehouse."
 msgstr ""
+"Lorsqu'un entrepôt est sélectionné pour cet itinéraire, celui-ci doit être "
+"considéré comme l'itinéraire par défaut lorsque les articles passent par cet"
+" entrepôt."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -7236,11 +7255,15 @@ msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
 "Product form."
 msgstr ""
+"Lorsqu'il est coché, l'itinéraire sera sélectionnable dans l'onglet "
+"Inventaire du formulaire Article."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
 msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
+"Une fois vérifié, l'itinéraire sera sélectionnable dans la Catégorie de "
+"Article."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id

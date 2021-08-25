@@ -519,6 +519,22 @@ class _lt:
     def __lt__(self, other):
         raise NotImplementedError()
 
+    def __add__(self, other):
+        # Call _._get_translation() like _() does, so that we have the same number
+        # of stack frames calling _get_translation()
+        if isinstance(other, str):
+            return _._get_translation(self._source) + other
+        elif isinstance(other, _lt):
+            return _._get_translation(self._source) + _._get_translation(other._source)
+        return NotImplemented
+
+    def __radd__(self, other):
+        # Call _._get_translation() like _() does, so that we have the same number
+        # of stack frames calling _get_translation()
+        if isinstance(other, str):
+            return other + _._get_translation(self._source)
+        return NotImplemented
+
 _ = GettextAlias()
 
 
@@ -565,7 +581,8 @@ class CSVFileReader:
                 # res_id is an external id and must follow <module>.<name>
                 entry["module"], entry["imd_name"] = entry["res_id"].split(".")
                 entry["res_id"] = None
-            entry["imd_model"] = entry["name"].split(":")[0]
+            if entry["type"] == "model" or entry["type"] == "model_terms":
+                entry["imd_model"] = entry["name"].partition(',')[0]
 
             if entry["type"] == "code":
                 if entry["src"] == self.prev_code_src:

@@ -27,4 +27,5 @@ Two algorithms are suggested:
         'data/mail_template_data.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

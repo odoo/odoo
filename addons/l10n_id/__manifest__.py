@@ -21,4 +21,5 @@ This is the latest Indonesian Odoo localisation necessary to run Odoo accounting
         'data/account_chart_template_configuration_data.xml',
         'views/account_reconcile_model_views.xml',
     ],
+    'license': 'LGPL-3',
 }

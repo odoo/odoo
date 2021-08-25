@@ -3,12 +3,12 @@
 # 	* sale
 # 
 # Translators:
-# Martin Trigaux, 2019
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2019
-# Cozmin Candea <office@terrabit.ro>, 2020
-# Foldi Robert <foldirobert@nexterp.ro>, 2020
-# Dorin Hongu <dhongu@gmail.com>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
+# Cozmin Candea <office@terrabit.ro>, 2020
+# Dorin Hongu <dhongu@gmail.com>, 2020
+# Martin Trigaux, 2021
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +47,7 @@ msgid ""
 "'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 "${object.company_id.name} ${(object.get_portal_last_transaction().state == "
-"'pending') and 'Comandă în așteptare' sau 'Comandă'} (Ref ${object.name or "
+"'pending') and 'Comandă în așteptare' or 'Comandă'} (Ref ${object.name or "
 "'n/a' })"
 
 #. module: sale
@@ -95,7 +95,7 @@ msgstr ""
 #: model:product.product,description_sale:sale.product_product_4f
 #: model:product.template,description_sale:sale.product_product_4e_product_template
 msgid "160x80cm, with large legs."
-msgstr ""
+msgstr "160x80cm, cu picioare mari."
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -455,6 +455,31 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        Bună ziua,\n"
+"        <br/><br/>\n"
+"        \n"
+"        % if ctx.get('proforma'):\n"
+"            Pro forma pentru ${doc_name} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (cu referința: ${object.origin} )\n"
+"            % endif\n"
+"            în valoare de n <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> este disponibilă.\n"
+"        % else:\n"
+"            ${doc_name} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (cu referința ${object.origin} )\n"
+"            % endif\n"
+"            în valoare de <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> este gata de revizuit.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Nu ezitați să ne contactați dacă aveți întrebări..\n"
+"        <br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -474,7 +499,7 @@ msgstr "<i class=\"fa fa-comment\"/>Trimiteți un mesaj"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Send message"
-msgstr "<i class=\"fa fa-comment\"/>Trimiteți un mesaj"
+msgstr "<i class=\"fa fa-comment\"/>Trimiteți mesaj"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -486,7 +511,7 @@ msgstr "<i class=\"fa fa-download\"/>Descărcare"
 msgid "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"Done\"/>Done"
 msgstr ""
 "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
-"title=\"Done\"/>Finzalizat"
+"title=\"Done\"/>Finalizat"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -569,7 +594,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Confirmation Email</span>"
-msgstr "<span class=\"o_form_label\">Email Confirmare</span>"
+msgstr "<span class=\"o_form_label\">Email de confirmare</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -633,7 +658,7 @@ msgstr "<span>Pentru o valoare de:</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span>Pro-Forma Invoice # </span>"
-msgstr "<span>Factură Proformă # </span>"
+msgstr "<span>Factură proformă # </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -1432,7 +1457,7 @@ msgstr "Clienți"
 #: model:product.product,name:sale.product_product_4f
 #: model:product.template,name:sale.product_product_4e_product_template
 msgid "Customizable Desk (CONFIG)"
-msgstr ""
+msgstr "Birou personalizabil (CONFIG)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -1477,7 +1502,7 @@ msgstr "Data:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr "Reduceți plățile în jos"
+msgstr "Deducere avans"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1809,6 +1834,7 @@ msgstr "Urmăritori (Parteneri)"
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
 msgstr ""
+"Valori interzise pe linia de comandă de vânzare care nu este responsabilă"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__auth_signup_uninvited__b2c
@@ -1975,7 +2001,7 @@ msgstr "Importare Modele pentru Produse"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Incl. tax)"
-msgstr ""
+msgstr "Incl. impozit)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_account_id
@@ -2608,7 +2634,7 @@ msgstr "Numai valorile întregi sunt valide."
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
-msgstr "Doar proiectele de ordine pot fi marcate ca trimise direct."
+msgstr "Doar comenzile ciornă pot fi marcate ca trimise direct."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
@@ -3286,12 +3312,12 @@ msgstr "Comenzi de Vanzari"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
 msgid "Sale Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Vânzare Plata achiziționează asistent de bord"
 
 #. module: sale
 #: model:utm.source,name:sale.utm_source_sale_order_0
 msgid "Sale Promotion 1"
-msgstr ""
+msgstr "Promovare vânzare 1"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3444,7 +3470,7 @@ msgstr "Avertismente la vânzare"
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
 msgid "Sales by Channel (All in One)"
-msgstr ""
+msgstr "Vânzări pe canale (All in One)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -3669,12 +3695,12 @@ msgstr "Afișați marjele la comenzi"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Sign &amp; Pay"
-msgstr ""
+msgstr "Semnează și plătește"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Sign &amp; Pay Quotation"
-msgstr ""
+msgstr "Semnează și plătește oferta"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
@@ -3786,7 +3812,7 @@ msgstr "Dungat"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "Cheie publicabilă Stripe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_secret_key
@@ -3955,7 +3981,7 @@ msgid ""
 "total is %r but acquirer replied with %r."
 msgstr ""
 "Comanda nu a fost confirmată în ciuda răspunsului achizitorului (%s): "
-"totalul comenzii este% r, dar achizitorul a răspuns cu% r."
+"totalul comenzii este %r, dar achizitorul a răspuns cu %r."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -4563,7 +4589,7 @@ msgstr "zile"
 #: code:addons/sale/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "matching the communication of the bank statement line"
-msgstr ""
+msgstr "potrivite cu eticheta din linia de extras de banca"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -4581,4 +4607,4 @@ msgstr "tip: [(nume, cantitate, bază, cantitate formată, bază formată)]"
 #: code:addons/sale/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "uninvoiced sales orders"
-msgstr ""
+msgstr "comenzi de vânzare nefacturate"

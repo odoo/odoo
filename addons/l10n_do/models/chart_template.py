@@ -29,26 +29,20 @@ class AccountChartTemplate(models.Model):
                 journal['name'] = _('Compras Fiscales')
         res += [{
             'type': 'purchase',
-            'name': _('Compras Informales'),
-            'code': 'CINF',
-            'company_id': company.id,
-            'show_on_dashboard': True
-        }, {
-            'type': 'purchase',
-            'name': _('Gastos Menores'),
-            'code': 'GASM',
-            'company_id': company.id,
-            'show_on_dashboard': True
-        }, {
-            'type': 'purchase',
-            'name': _('Compras al Exterior'),
-            'code': 'CEXT',
-            'company_id': company.id,
-            'show_on_dashboard': True
-        }, {
-            'type': 'purchase',
             'name': _('Gastos No Deducibles'),
             'code': 'GASTO',
+            'company_id': company.id,
+            'show_on_dashboard': True
+        }, {
+            'type': 'purchase',
+            'name': _('Migración CxP'),
+            'code': 'CXP',
+            'company_id': company.id,
+            'show_on_dashboard': True
+        }, {
+            'type': 'sale',
+            'name': _('Migración CxC'),
+            'code': 'CXC',
             'company_id': company.id,
             'show_on_dashboard': True
         }]

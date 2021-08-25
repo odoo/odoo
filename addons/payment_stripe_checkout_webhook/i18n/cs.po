@@ -1,0 +1,64 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_stripe_checkout_webhook
+# 
+# Translators:
+# Michal Veselý <michal@veselyberanek.net>, 2021
+# trendspotter, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-05-06 13:53+0000\n"
+"PO-Revision-Date: 2021-08-03 09:10+0000\n"
+"Last-Translator: trendspotter, 2021\n"
+"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: payment_stripe_checkout_webhook
+#: model:ir.model.fields,help:payment_stripe_checkout_webhook.field_payment_acquirer__stripe_webhook_secret
+msgid ""
+"If you enable webhooks, this secret is used to verify the electronic "
+"signature of events sent by Stripe to Odoo. Failing to set this field in "
+"Odoo will disable the webhook system for this acquirer entirely."
+msgstr ""
+"Pokud povolíte webhooky, toto tajemství se použije k ověření elektronického "
+"podpisu událostí odeslaných Stripe do Odoo. Pokud toto pole v Odoo "
+"nenastavíte, systém webhooku pro tohoto nabyvatele se úplně deaktivuje."
+
+#. module: payment_stripe_checkout_webhook
+#: model:ir.model,name:payment_stripe_checkout_webhook.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Platební brána"
+
+#. module: payment_stripe_checkout_webhook
+#: model:ir.model,name:payment_stripe_checkout_webhook.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Platební transakce"
+
+#. module: payment_stripe_checkout_webhook
+#: model:ir.model.fields,field_description:payment_stripe_checkout_webhook.field_payment_transaction__stripe_payment_intent
+msgid "Stripe Payment Intent ID"
+msgstr "Stripe Payment Intent ID"
+
+#. module: payment_stripe_checkout_webhook
+#: model:ir.model.fields,field_description:payment_stripe_checkout_webhook.field_payment_acquirer__stripe_webhook_secret
+msgid "Stripe Webhook Secret"
+msgstr "Stripe Webhook Secret"
+
+#. module: payment_stripe_checkout_webhook
+#: code:addons/payment_stripe_checkout_webhook/models/payment.py:54
+#, python-format
+msgid "Stripe Webhook data does not conform to the expected API."
+msgstr ""
+
+#. module: payment_stripe_checkout_webhook
+#: code:addons/payment_stripe_checkout_webhook/models/payment.py:148
+#, python-format
+msgid "Stripe gave us the following info about the problem: '%s'"
+msgstr ""

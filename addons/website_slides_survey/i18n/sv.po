@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2019\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,6 +57,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '&gt;', 0)]}\">Finished</span>\n"
 "                <span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '=', 0)]}\">Certified</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '&gt;', 0)]}\">Fullföljda</span>\n"
+"                <span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '=', 0)]}\">Examinerade</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.all_user_card
@@ -71,17 +73,18 @@ msgstr ""
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_kanban
 msgid "<span class=\"text-muted\">Certified</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Examinerade</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_kanban
 msgid "<span class=\"text-muted\">Finished</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Fullföljd</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
 msgid "<span>Start Now</span><i class=\"fa fa-chevron-right ml-2 align-middle\"/>"
 msgstr ""
+"<span>Börja nu </span><i class=\"fa fa-chevron-right ml-2 align-middle\"/>"
 
 #. module: website_slides_survey
 #: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_survey_id
@@ -128,7 +131,7 @@ msgstr ""
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
 msgid "Begin your <b>certification</b> today!"
-msgstr ""
+msgstr "Påbörja din <b>examen </b> idag!"
 
 #. module: website_slides_survey
 #. openerp-web
@@ -139,7 +142,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:website_slides_survey.selection__slide_slide__slide_type__certification
 #, python-format
 msgid "Certification"
-msgstr ""
+msgstr "Certifiering"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__survey_quizz_passed
@@ -171,7 +174,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
 msgid "Certifications"
-msgstr ""
+msgstr "Certifieringar"
 
 #. module: website_slides_survey
 #: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_2_choice_1
@@ -183,7 +186,7 @@ msgstr ""
 #: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
 #, python-format
 msgid "Content Preview"
-msgstr ""
+msgstr "Förhandsgranskning av innehåll"
 
 #. module: website_slides_survey
 #. openerp-web
@@ -229,7 +232,7 @@ msgstr ""
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_templates_inherit_website_slides
 msgid "Go back to course"
-msgstr ""
+msgstr "Återgå till kursen"
 
 #. module: website_slides_survey
 #: model:survey.question,comments_message:website_slides_survey.furniture_certification_page_1
@@ -276,7 +279,7 @@ msgstr ""
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_id
 msgid "Related course slide"
-msgstr ""
+msgstr "Relaterat kursmaterial"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate

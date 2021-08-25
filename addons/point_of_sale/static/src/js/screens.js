@@ -1614,14 +1614,16 @@ var ClientListScreenWidget = ScreenWidget.extend({
             });
 
             contents.find('.image-uploader').on('change',function(event){
-                self.load_image_file(event.target.files[0],function(res){
-                    if (res) {
-                        contents.find('.client-picture img, .client-picture .fa').remove();
-                        contents.find('.client-picture').append("<img src='"+res+"'>");
-                        contents.find('.detail.picture').remove();
-                        self.uploaded_picture = res;
-                    }
-                });
+                if (event.target.files.length) {
+                    self.load_image_file(event.target.files[0],function(res){
+                        if (res) {
+                            contents.find('.client-picture img, .client-picture .fa').remove();
+                            contents.find('.client-picture').append("<img src='"+res+"'>");
+                            contents.find('.detail.picture').remove();
+                            self.uploaded_picture = res;
+                        }
+                    });
+                }
             });
         } else if (visibility === 'hide') {
             contents.empty();
@@ -2036,7 +2038,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
             line.set_payment_status('waitingCancel');
             self.render_paymentlines();
 
-            payment_terminal.send_payment_cancel(self.pos.get_order(), cid).finally(function () {
+            payment_terminal.send_payment_cancel(self.pos.get_order(), cid).then(function () {
                 line.set_payment_status('retry');
                 self.render_paymentlines();
             });
@@ -2305,14 +2307,14 @@ var PaymentScreenWidget = ScreenWidget.extend({
         var client = order.get_client();
         if (order.is_to_email() && (!client || client && !utils.is_email(client.email))) {
             var title = !client
-                ? 'Please select the customer'
-                : 'Please provide valid email';
+                ? _t('Please select the customer')
+                : _t('Please provide valid email');
             var body = !client
-                ? 'You need to select the customer before you can send the receipt via email.'
-                : 'This customer does not have a valid email address, define one or do not send an email.';
+                ? _t('You need to select the customer before you can send the receipt via email.')
+                : _t('This customer does not have a valid email address, define one or do not send an email.');
             this.gui.show_popup('confirm', {
-                'title': _t(title),
-                'body': _t(body),
+                'title': title,
+                'body': body,
                 confirm: function () {
                     this.gui.show_screen('clientlist');
                 },
@@ -2347,7 +2349,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         var self = this;
         var order = this.pos.get_order();
 
-        if (order.is_paid_with_cash() && this.pos.config.iface_cashdrawer) { 
+        if ((order.is_paid_with_cash() || order.get_change()) && this.pos.config.iface_cashdrawer) { 
 
                 this.pos.proxy.printer.open_cashbox();
         }

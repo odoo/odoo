@@ -4,7 +4,11 @@
         <t t-jquery='.pos-receipt-amount:first' t-operation='after'>
           <t t-if="receipt.total_rounded != receipt.total_with_tax">
               <div class="pos-receipt-amount">
-                  ROUNDED
+                  Rounding
+                  <span t-esc='widget.format_currency(receipt.rounding_applied)' class="pos-receipt-right-align"/>
+              </div>
+              <div class="pos-receipt-amount">
+                  To Pay
                   <span t-esc='widget.format_currency(receipt.total_rounded)' class="pos-receipt-right-align"/>
               </div>
           </t>
@@ -13,7 +17,7 @@
     <t t-extend="PaymentScreen-Paymentlines">
         <t t-jquery='.paymentlines-empty > .total' t-operation='replace'>
             <div class='total'>
-                <t t-esc="widget.format_currency(order.get_total_with_tax() + order.get_rounding_applied())"/>
+                <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
             </div>
         </t>
     </t>

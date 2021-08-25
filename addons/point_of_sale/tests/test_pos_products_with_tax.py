@@ -106,6 +106,67 @@ class TestPoSProductsWithTax(TestPoSCommon):
 
         self.assertTrue(receivable_line_cash.full_reconcile_id, 'Cash receivable line should be fully-reconciled.')
 
+    def test_orders_global_rounding(self):
+        """ Test for orders with global rounding enabled
+
+        Orders
+        ======
+        +---------+----------+-----------+----------+-----+---------+-----------------------+--------+
+        | order   | payments | invoiced? | product  | qty | untaxed | tax                   |  total |
+        +---------+----------+-----------+----------+-----+---------+-----------------------+--------+
+        | order 1 | cash     | no        | product1 |   2 |    5.21 | 1.09                  |   6.30 |
+        |         |          |           | product2 |   1 |    2.98 | 0.62                  |   3.60 |
+        |         |          |           | product2 |   1 |    0.04 | 0.01                  |   0.05 |
+        +---------+----------+-----------+----------+-----+---------+-----------------------+--------+
+
+        """
+
+
+        # create a VAT tax of 21%, included in the public price
+        Tax = self.env['account.tax']
+        account_tax_21_incl = Tax.create({
+            'name': 'VAT 21% incl',
+            'amount_type': 'percent',
+            'amount': 21.0,
+            'price_include': True,
+        })
+        account_tax_21_incl.company_id.tax_calculation_rounding_method = 'round_globally'
+
+        product1 = self.create_product(
+            'Product 1',
+            self.categ_basic,
+            3.15,
+            tax_ids=account_tax_21_incl.ids,
+        )
+        product2 = self.create_product(
+            'Product 2',
+            self.categ_basic,
+            3.60,
+            tax_ids=account_tax_21_incl.ids,
+        )
+        product3 = self.create_product(
+            'Product 3',
+            self.categ_basic,
+            0.05,
+            tax_ids=account_tax_21_incl.ids,
+        )
+        self.open_new_session()
+        # create orders
+        orders = []
+        orders.append(self.create_ui_order_data([
+            (product1, 2),
+            (product2, 1),
+            (product3, 1)
+        ]))
+
+        # sync orders
+        order = self.env['pos.order'].create_from_ui(orders)
+
+        # check values before closing the session
+        self.assertEqual(1, self.pos_session.order_count)
+        orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
+        self.assertAlmostEqual(orders_total, 9.95, msg='Total order amount should be 9.96 (Hint: check for rounding issues).')
+
     def test_orders_with_invoiced(self):
         """ Test for orders: one with invoice
 

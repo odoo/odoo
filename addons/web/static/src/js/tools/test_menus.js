@@ -8,7 +8,7 @@
     var viewUpdateCount = 0;
     var testedApps;
     var testedMenus;
-    var blackListedMenus = ['base.menu_theme_store', 'base.menu_third_party'];
+    var blackListedMenus = ['base.menu_theme_store', 'base.menu_third_party', 'account.menu_action_account_bank_journal_form'];
 
     function createWebClientHooks() {
         var AbstractController = odoo.__DEBUG__.services['web.AbstractController'];

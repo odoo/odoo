@@ -3099,6 +3099,49 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('Daterange field manually input wrong value should show toaster', async function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.date_end = { string: 'Date End', type: 'date' };
+        this.data.partner.records[0].date_end = '2017-02-08';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+            <form>
+                <field name="date" widget="daterange" options="{'related_end_date': 'date_end'}"/>
+                <field name="date_end" widget="daterange" options="{'related_start_date': 'date'}"/>
+            </form>`,
+            interceptsPropagate: {
+                call_service: function (ev) {
+                    if (ev.data.service === 'notification') {
+                        assert.strictEqual(ev.data.method, 'notify');
+                        assert.strictEqual(ev.data.args[0].title, 'The following fields are invalid:');
+                        assert.strictEqual(ev.data.args[0].message, '<ul><li>A date</li></ul>');
+                    }
+                }
+            },
+        });
+
+        await testUtils.fields.editInput(form.$('.o_field_date_range:first'), 'blabla');
+        // click outside daterange field
+        await testUtils.dom.click(form.$el);
+        assert.hasClass(form.$('input[name=date]'), 'o_field_invalid',
+            "date field should be displayed as invalid");
+        // update input date with right value
+        await testUtils.fields.editInput(form.$('.o_field_date_range:first'), '02/08/2017');
+        assert.doesNotHaveClass(form.$('input[name=date]'), 'o_field_invalid',
+            "date field should not be displayed as invalid now");
+
+        // again enter wrong value and try to save should raise invalid fields value
+        await testUtils.fields.editInput(form.$('.o_field_date_range:first'), 'blabla');
+        await testUtils.form.clickSave(form);
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDate');
 
     QUnit.test('date field: toggle datepicker [REQUIRE FOCUS]', async function (assert) {
@@ -4077,6 +4120,35 @@ QUnit.module('basic_fields', {
         $.each($('.day:not(:last-child()):not(:nth-child(2))'), function (index, value) {
             assert.doesNotHaveClass(value, 'disabled', 'other days must stay clickable');
         });
+        form.destroy();
+    });
+
+    QUnit.test('daterangepicker should disappear on scrolling outside of it', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.datetime_end = {string: 'Datetime End', type: 'datetime'};
+        this.data.partner.records[0].datetime_end = '2017-03-13 00:00:00';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'related_end_date': 'datetime_end'}"/>
+                    <field name="datetime_end" widget="daterange" options="{'related_start_date': 'datetime'}"/>
+                </form>`,
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.click(form.$('.o_field_date_range:first'));
+
+        assert.isVisible($('.daterangepicker:first'), "date range picker should be opened");
+
+        form.el.dispatchEvent(new Event('scroll'));
+        assert.isNotVisible($('.daterangepicker:first'), "date range picker should be closed");
+
         form.destroy();
     });
 

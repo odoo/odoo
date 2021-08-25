@@ -18,4 +18,5 @@ Openerp Web Diagram view.
         'static/src/xml/*.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

@@ -114,6 +114,14 @@ class View(models.Model):
 
         return True
 
+    def _load_records_write_on_cow(self, cow_view, inherit_id, values):
+        inherit_id = self.search([
+            ('key', '=', self.browse(inherit_id).key),
+            ('website_id', 'in', (False, cow_view.website_id.id)),
+        ], order='website_id', limit=1).id
+        values['inherit_id'] = inherit_id
+        cow_view.with_context(no_cow=True).write(values)
+
     def _create_all_specific_views(self, processed_modules):
         """ When creating a generic child view, we should
             also create that view under specific view trees (COW'd).

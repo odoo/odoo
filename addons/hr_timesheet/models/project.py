@@ -57,6 +57,13 @@ class Project(models.Model):
         result = super(Project, self).write(values)
         return result
 
+    def unlink(self):
+        for project in self.with_context(active_test=False):
+            timesheets = self.env['account.analytic.line'].search([('project_id', '=', project.id)])
+            if timesheets:
+                raise UserError(_('You cannot delete a project containing timesheets. You can either archive it or first delete all of its timesheets.'))
+        return super(Project, self).unlink()
+
     # ---------------------------------------------------
     #  Business Methods
     # ---------------------------------------------------

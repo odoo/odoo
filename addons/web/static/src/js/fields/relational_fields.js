@@ -388,6 +388,7 @@ var FieldMany2One = AbstractField.extend({
             res_model: this.field.relation,
             domain: this.record.getDomain({fieldName: this.name}),
             context: _.extend({}, this.record.getContext(this.recordParams), context || {}),
+            _createContext: this._createContext.bind(this),
             dynamicFilters: dynamicFilters || [],
             title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
             initial_ids: ids,
@@ -1110,7 +1111,7 @@ var FieldX2Many = AbstractField.extend({
             // case, we can re-render the whole subview.
             if (command && command.operation === 'UPDATE' && command.data) {
                 var state = record.data[this.name];
-                var fieldNames = state.getFieldNames();
+                var fieldNames = state.getFieldNames({ viewType: 'list' });
                 this._reset(record, ev);
                 return this.renderer.confirmUpdate(state, command.id, fieldNames, ev.initialEvent);
             }
@@ -2551,6 +2552,9 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
     }),
     specialData: "_fetchSpecialRelation",
     supportedFieldTypes: ['many2many'],
+    // set an arbitrary high limit to ensure that all data returned by the server
+    // are processed by the BasicModel (otherwise it would be 40)
+    limit: 100000,
     init: function () {
         this._super.apply(this, arguments);
         this.m2mValues = this.record.specialData[this.name];
@@ -2603,9 +2607,20 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
      * @private
      */
     _onChange: function () {
+        // Get the list of selected ids
         var ids = _.map(this.$('input:checked'), function (input) {
             return $(input).data("record-id");
         });
+        // The number of displayed checkboxes is limited to 100 (name_search
+        // limit, server-side), to prevent extreme cases where thousands of
+        // records are fetched/displayed. If not all values are displayed, it may
+        // happen that some values that are in the relation aren't available in the
+        // widget. In this case, when the user (un)selects a value, we don't
+        // want to remove those non displayed values from the relation. For that
+        // reason, we manually add those values to the list of ids.
+        const displayedIds = this.m2mValues.map(v => v[0]);
+        const idsInRelation = this.value.res_ids;
+        ids = ids.concat(idsInRelation.filter(a => !displayedIds.includes(a)));
         this._setValue({
             operation: 'REPLACE_WITH',
             ids: ids,

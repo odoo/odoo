@@ -16,4 +16,5 @@ This module allows a customer to give rating.
      ],
     'installable': True,
     'auto_install': False,
+    'license': 'LGPL-3',
 }

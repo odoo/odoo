@@ -328,7 +328,7 @@ class Project(models.Model):
         """ Subscribe to all existing active tasks when subscribing to a project """
         res = super(Project, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
         project_subtypes = self.env['mail.message.subtype'].browse(subtype_ids) if subtype_ids else None
-        task_subtypes = project_subtypes.mapped('parent_id').ids if project_subtypes else None
+        task_subtypes = (project_subtypes.mapped('parent_id') | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids if project_subtypes else None
         if not subtype_ids or task_subtypes:
             self.mapped('tasks').message_subscribe(
                 partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=task_subtypes)
@@ -357,7 +357,7 @@ class Project(models.Model):
 
     def open_tasks(self):
         ctx = dict(self._context)
-        ctx.update({'search_default_project_id': self.id})
+        ctx.update({'search_default_project_id': self.id, 'default_project_id': self.id})
         action = self.env['ir.actions.act_window'].for_xml_id('project', 'act_project_project_2_project_task_all')
         return dict(action, context=ctx)
 
@@ -801,13 +801,13 @@ class Task(models.Model):
             return self.env.ref('project.mt_task_stage')
         return super(Task, self)._track_subtype(init_values)
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Handle project users and managers recipients that can assign
         tasks and create new one directly from notification emails. Also give
         access button to portal users and portal customers. If they are notified
         they should probably have access to the document. """
-        groups = super(Task, self)._notify_get_groups()
-
+        groups = super(Task, self)._notify_get_groups(msg_vals=msg_vals)
+        local_msg_vals = dict(msg_vals or {})
         self.ensure_one()
 
         project_user_group_id = self.env.ref('project.group_project_user').id
@@ -818,7 +818,7 @@ class Task(models.Model):
         )
 
         if not self.user_id and not self.stage_id.fold:
-            take_action = self._notify_get_action_link('assign')
+            take_action = self._notify_get_action_link('assign', **local_msg_vals)
             project_actions = [{'url': take_action, 'title': _('I take it')}]
             new_group[2]['actions'] = project_actions
 

@@ -875,6 +875,7 @@ var ListRenderer = BasicRenderer.extend({
             'data-toggle': "dropdown",
             'data-display': "static",
             'aria-expanded': false,
+            'aria-label': _t('Optional columns'),
         });
         $a.appendTo($optionalColumnsDropdown);
 
@@ -893,6 +894,7 @@ var ListRenderer = BasicRenderer.extend({
                 (config.isDebug() ? (' (' + col.attrs.name + ')') : '');
             var $checkbox = dom.renderCheckbox({
                 text: txt,
+                role: "menuitemcheckbox",
                 prop: {
                     name: col.attrs.name,
                     checked: _.contains(self.optionalColumnsEnabled, col.attrs.name),
@@ -986,7 +988,7 @@ var ListRenderer = BasicRenderer.extend({
             if (self.optionalColumns.length) {
                 self.$el.addClass('o_list_optional_columns');
                 self.$('table').append($('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>'));
-                self.$('table').append(self._renderOptionalColumnsDropdown());
+                self.$el.append(self._renderOptionalColumnsDropdown());
             }
 
             if (self.selection.length) {
@@ -1038,7 +1040,8 @@ var ListRenderer = BasicRenderer.extend({
         this.selection = [];
         var self = this;
         var $inputs = this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
-        var allChecked = $inputs.length > 0;
+        var $closedHeaders = this.$('tbody .o_group_header.o_group_has_content:not(.o_group_open)');
+        var allChecked = $inputs.length > 0 && $closedHeaders.length === 0;
         $inputs.each(function (index, input) {
             if (input.checked) {
                 self.selection.push($(input).closest('tr').data('id'));
@@ -1135,6 +1138,13 @@ var ListRenderer = BasicRenderer.extend({
         // default, which is why we need to toggle the dropdown manually.
         ev.stopPropagation();
         this.$('.o_optional_columns .dropdown-toggle').dropdown('toggle');
+        // Explicitly set left of the optional column dropdown as it is pushed inside
+        // this.$el, so we need to position it at the end of top left corner in case of
+        // rtl language direction.
+        if (_t.database.parameters.direction === 'rtl') {
+            var left = this.$('.o_optional_columns .o_optional_columns_dropdown').width();
+            this.$('.o_optional_columns').css("left", left);
+        }
     },
     /**
      * Manages the keyboard events on the list. If the list is not editable, when the user navigates to

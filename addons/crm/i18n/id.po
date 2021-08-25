@@ -16,8 +16,9 @@
 # Ryanto The <ry.the77@gmail.com>, 2019
 # PAS IRVANUS <ipankbiz@gmail.com>, 2019
 # Gradien Foundation <gradien.co@gmail.com>, 2020
-# whenweresober <gulmugurzu@yevme.com>, 2020
+# whenwesober, 2020
 # Bonny Useful <bonny.useful@gmail.com>, 2020
+# Muftiara Syuhada <muftiara.syuhada@falinwa.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Bonny Useful <bonny.useful@gmail.com>, 2020\n"
+"Last-Translator: Muftiara Syuhada <muftiara.syuhada@falinwa.com>, 2021\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -173,6 +174,14 @@ msgstr ""
 "<p><b>Kirim pesan</b> kepada prospek Anda dan dapatkan jawaban otomatis "
 "terlampir pada peluang ini.</p><p class=\"mb0\">Ketik <i>'@'</i> untuk "
 "menyebut orang, seperti memasukkan cc pada email.</p>"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -690,7 +699,7 @@ msgstr "Buat pelanggan baru"
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 #, python-format
 msgid "Create a new lead"
-msgstr ""
+msgstr "Buat lead baru"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -1194,7 +1203,7 @@ msgstr "Pesan Masuk"
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__email_state__incorrect
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__phone_state__incorrect
 msgid "Incorrect"
-msgstr ""
+msgstr "Salah"
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor4
@@ -1871,6 +1880,12 @@ msgstr ""
 "penjualan."
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr ""
@@ -1963,6 +1978,7 @@ msgstr "Lainnya"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "Peluang yang Terlambat"
 
@@ -2224,7 +2240,7 @@ msgstr "Pilih Prospek/Peluang"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mass_mail
 msgid "Send email"
-msgstr ""
+msgstr "Kirim email"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__sequence
@@ -2428,6 +2444,12 @@ msgid "Team Pipelines"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
@@ -2535,6 +2557,14 @@ msgid "Title"
 msgstr "Gelar"
 
 #. module: crm
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"To prevent data loss, Leads and Opportunities can only be merged by groups "
+"of 5."
+msgstr ""
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Today Activities"
@@ -2558,7 +2588,7 @@ msgstr "Pelatihan"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Try Now"
-msgstr ""
+msgstr "Coba Sekarang"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
@@ -2778,7 +2808,7 @@ msgstr "Ya! Transaksi 7 hari terakhir dari tim."
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "You don't have the access needed to run this cron."
-msgstr ""
+msgstr "Anda tidak memiliki akses yang dibutuhkan untuk menjalankan cron ini"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -2838,7 +2868,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "or send an email to %s"
-msgstr ""
+msgstr "atau kirim email ke %s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count

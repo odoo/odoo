@@ -13,6 +13,7 @@ from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools import groupby
+from odoo.tools.misc import clean_context
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
@@ -78,7 +79,7 @@ class Message(models.Model):
         'res.partner', 'Author', index=True,
         ondelete='set null', default=_get_default_author,
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
-    author_avatar = fields.Binary("Author's avatar", related='author_id.image_128', readonly=False)
+    author_avatar = fields.Binary("Author's avatar", related='author_id.image_128', depends=['author_id'], readonly=False)
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
     partner_ids = fields.Many2many('res.partner', string='Recipients', context={'active_test': False})
@@ -109,7 +110,7 @@ class Message(models.Model):
     tracking_value_ids = fields.One2many(
         'mail.tracking.value', 'mail_message_id',
         string='Tracking values',
-        groups="base.group_no_one",
+        groups="base.group_system",
         help='Tracked values are stored in a separate model. This field allow to reconstruct '
              'the tracking and to generate statistics on the model.')
     # mail gateway
@@ -194,7 +195,7 @@ class Message(models.Model):
                     ('res_id', 'in', self.env.user.moderation_channel_ids.ids)]
 
         # no support for other operators
-        return ValueError(_('Unsupported search filter on moderation status'))
+        raise UserError(_('Unsupported search filter on moderation status'))
 
     #------------------------------------------------------
     # Notification API
@@ -1031,7 +1032,7 @@ class Message(models.Model):
                 values['attachment_ids'] = []
             # extract base64 images
             if 'body' in values:
-                Attachments = self.env['ir.attachment']
+                Attachments = self.env['ir.attachment'].with_context(clean_context(self._context))
                 data_to_url = {}
                 def base64_to_boundary(match):
                     key = match.group(2)
@@ -1119,6 +1120,22 @@ class Message(models.Model):
             if elem.is_thread_message():
                 elem._invalidate_documents()
         return super(Message, self).unlink()
+
+    @api.model
+    def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if not self.env.is_admin():
+            raise AccessError(_("Only administrators are allowed to use grouped read on message model"))
+
+        return super(Message, self)._read_group_raw(
+            domain=domain, fields=fields, groupby=groupby, offset=offset,
+            limit=limit, orderby=orderby, lazy=lazy,
+        )
+
+    def export_data(self, fields_to_export):
+        if not self.env.is_admin():
+            raise AccessError(_("Only administrators are allowed to export mail message"))
+
+        return super(Message, self).export_data(fields_to_export)
 
     # --------------------------------------------------
     # Moderation

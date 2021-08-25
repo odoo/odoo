@@ -26,7 +26,7 @@ class PadCommon(models.AbstractModel):
 
     @api.model
     def pad_generate_url(self):
-        company = self.env.user.sudo().company_id
+        company = self.env.company.sudo()
 
         pad = {
             "server": company.pad_server,
@@ -50,7 +50,7 @@ class PadCommon(models.AbstractModel):
         url = '%s/p/%s' % (pad["server"], path)
 
         # if create with content
-        if self.env.context.get('field_name') and self.env.context.get('model') and self.env.context.get('object_id'):
+        if self.env.context.get('field_name') and self.env.context.get('model'):
             myPad = EtherpadLiteClient(pad["key"], pad["server"] + '/api')
             try:
                 myPad.createPad(path)
@@ -62,10 +62,12 @@ class PadCommon(models.AbstractModel):
             field = model._fields[self.env.context['field_name']]
             real_field = field.pad_content_field
 
+            res_id = self.env.context.get("object_id")
+            record = model.browse(res_id)
             # get content of the real field
-            for record in model.browse([self.env.context["object_id"]]):
-                if record[real_field]:
-                    myPad.setHtmlFallbackText(path, record[real_field])
+            real_field_value = record[real_field] or self.env.context.get('record', {}).get(real_field, '')
+            if real_field_value:
+                myPad.setHtmlFallbackText(path, real_field_value)
 
         return {
             "server": pad["server"],
@@ -75,7 +77,7 @@ class PadCommon(models.AbstractModel):
 
     @api.model
     def pad_get_content(self, url):
-        company = self.env.user.sudo().company_id
+        company = self.env.company.sudo()
         myPad = EtherpadLiteClient(company.pad_key, (company.pad_server or '') + '/api')
         content = ''
         if url:

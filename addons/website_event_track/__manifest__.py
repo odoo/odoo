@@ -20,4 +20,5 @@
     'demo': [
         'data/event_demo.xml',
     ],
+    'license': 'LGPL-3',
 }

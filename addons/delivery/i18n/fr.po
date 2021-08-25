@@ -16,7 +16,7 @@
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2019
 # omaodoo <oma@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
-# Priscilla Sanchez <prs@odoo.com>, 2020
+# Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
 # Frédéric GILSON <frederic.gilson@logicasoft.eu>, 2020
 # 
@@ -1094,6 +1094,16 @@ msgid ""
 msgstr ""
 "Vous expédiez différents types d'emballages dans le même colisage.\n"
 "Types d'emballages: %s"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid ""
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

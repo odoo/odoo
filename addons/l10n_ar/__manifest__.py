@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Argentinian Accounting',
-    'version': "3.0",
+    'version': "3.4",
     'description': """
 Functional
 ----------
@@ -121,4 +121,5 @@ Master Data:
     'installable': True,
     'auto_install': False,
     'application': False,
+    'license': 'LGPL-3',
 }

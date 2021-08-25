@@ -108,6 +108,9 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
                 if (field.invisible) return;
                 var FieldClass = fieldRegistry.getAny([field.widget, field.type]);
                 var fieldWidget = new FieldClass(self, field.name, record, self.displayFields[field.name]);
+                if (fieldWidget.attrs && !_.isObject(fieldWidget.attrs.modifiers)) {
+                    fieldWidget.attrs.modifiers = fieldWidget.attrs.modifiers ? JSON.parse(fieldWidget.attrs.modifiers) : {};
+                }
                 self._registerWidget(recordID, field.name, fieldWidget);
 
                 var $field = $('<li>', {class: 'list-group-item flex-shrink-0 d-flex flex-wrap'});
@@ -116,9 +119,8 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
                 var $fieldContainer = $('<div>', {class: 'flex-grow-1'});
                 $fieldContainer.appendTo($field);
 
-                defs.push(fieldWidget.appendTo($fieldContainer).then(function () {
-                    self.$fieldsList.push($field);
-                }));
+                self.$fieldsList.push($field);
+                defs.push(fieldWidget.appendTo($fieldContainer));
             });
             return Promise.all(defs);
         });

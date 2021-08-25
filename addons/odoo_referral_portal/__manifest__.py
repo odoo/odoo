@@ -9,5 +9,6 @@
     'data': [
         'views/referral_template.xml',
     ],
-    'auto_install': False, # As deprecated
+    'auto_install': False, # As deprecated,
+    'license': 'LGPL-3',
 }

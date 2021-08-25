@@ -8,5 +8,6 @@
         'views/assets.xml',
         'views/res_users.xml',
         'views/res_config_settings_views.xml',
-    ]
+    ],
+    'license': 'LGPL-3',
 }

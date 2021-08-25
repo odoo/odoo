@@ -365,6 +365,9 @@ class ProductProduct(models.Model):
         self.clear_caches()
         return res
 
+    def _filter_to_unlink(self, check_access=True):
+        return self
+
     def _unlink_or_archive(self, check_access=True):
         """Unlink or archive products.
         Try in batch as much as possible because it is much faster.
@@ -382,6 +385,10 @@ class ProductProduct(models.Model):
             self.check_access_rights('write')
             self.check_access_rule('write')
             self = self.sudo()
+            to_unlink = self._filter_to_unlink()
+            to_archive = self - to_unlink
+            to_archive.write({'active': False})
+            self = to_unlink
 
         try:
             with self.env.cr.savepoint(), tools.mute_logger('odoo.sql_db'):
@@ -415,6 +422,12 @@ class ProductProduct(models.Model):
         if self._context.get('search_default_categ_id'):
             args.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
         return super(ProductProduct, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+
+    @api.depends_context('display_default_code')
+    def _compute_display_name(self):
+        # `display_name` is calling `name_get()`` which is overidden on product
+        # to depend on `display_default_code`
+        return super()._compute_display_name()
 
     def name_get(self):
         # TDE: this could be cleaned a bit I think
@@ -683,11 +696,17 @@ class ProductProduct(models.Model):
         return self.product_tmpl_id._is_combination_possible(self.product_template_attribute_value_ids, parent_combination=parent_combination, ignore_no_variant=True)
 
     def toggle_active(self):
-        """ Archiving related product.template if there is only one active product.product """
-        with_one_active = self.filtered(lambda product: len(product.product_tmpl_id.with_context(active_test=False).product_variant_ids) == 1)
-        for product in with_one_active:
-            product.product_tmpl_id.toggle_active()
-        return super(ProductProduct, self - with_one_active).toggle_active()
+        """ Archiving related product.template if there is not any more active product.product
+        (and vice versa, unarchiving the related product template if there is now an active product.product) """
+        result = super().toggle_active()
+        # We deactivate product templates which are active with no active variants.
+        tmpl_to_deactivate = self.filtered(lambda product: (product.product_tmpl_id.active
+                                                            and not product.product_tmpl_id.product_variant_ids)).mapped('product_tmpl_id')
+        # We activate product templates which are inactive with active variants.
+        tmpl_to_activate = self.filtered(lambda product: (not product.product_tmpl_id.active
+                                                          and product.product_tmpl_id.product_variant_ids)).mapped('product_tmpl_id')
+        (tmpl_to_deactivate + tmpl_to_activate).toggle_active()
+        return result
 
 
 class ProductPackaging(models.Model):

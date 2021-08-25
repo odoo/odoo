@@ -20,6 +20,9 @@ class CrmTeam(models.Model):
 
     def _compute_pos_order_amount_total(self):
         for team in self:
-            team.pos_order_amount_total = sum(self.env['report.pos.order'].search(
-                [('session_id', 'in', team.pos_config_ids.mapped('session_ids').filtered(lambda s: s.state == 'opened').ids)]
-            ).mapped('price_total'))
+            res = self.env['report.pos.order'].read_group(
+                [("config_id.crm_team_id", "=", team.id), ("session_id.state", "=", "opened")],
+                ["price_total"],
+                [],
+            )
+            team.pos_order_amount_total = sum(r["price_total"] for r in res if r["price_total"])

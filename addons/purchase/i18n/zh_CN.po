@@ -10,7 +10,6 @@
 # bower Guo <124358678@qq.com>, 2019
 # roye w <159820@qq.com>, 2019
 # e2f <projects@e2f.com>, 2019
-# Martin Trigaux, 2019
 # 苏州远鼎 <tiexinliu@126.com>, 2019
 # 老窦 北京 <2662059195@qq.com>, 2019
 # 湘子 南 <1360857908@qq.com>, 2019
@@ -29,6 +28,9 @@
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # 林 志豪 <linzhihao0826@gmail.com>, 2020
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# Dong <dong@freshoo.cn>, 2021
+# Titan Li <lghbeta@gmail.com>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
@@ -36,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,7 +74,7 @@ msgstr "${object.company_id.name} 订单 (编号 ${object.name or 'n/a' })"
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.report_purchase_quotation
 msgid "'Request for Quotation - %s' % (object.name)"
-msgstr "请求引用- %s' % (对象.名称)"
+msgstr " '询价单- %s' % (object.name)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -210,8 +212,8 @@ msgid ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">Request for Quotation </span>\n"
 "                        <span class=\"o_form_label\" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\">Purchase Order </span>"
 msgstr ""
-"询价单\n"
-"采购订单"
+"<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">询价单 </span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\">采购订单 </span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -2265,4 +2267,4 @@ msgstr ""
 msgid ""
 "You cannot change the type of a purchase order line. Instead you should "
 "delete the current line and create a new line of the proper type."
-msgstr ""
+msgstr "不能变更订单明细行的类型。你可以删除当前明细后再新建一行。"

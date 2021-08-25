@@ -68,6 +68,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             'number': state.valuenow,
             'timePerTransaction': Math.round(dt/1000/state.valuemax),
             'context': state.context,
+            'bank_statement_id': state.bank_statement_id,
         }));
         $done.find('*').addClass('o_reward_subcontent');
         $done.find('.button_close_statement').click(this._onCloseBankStatement.bind(this));
@@ -541,6 +542,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             relation: 'account.analytic.account',
             type: 'many2one',
             name: 'analytic_account_id',
+            domain: ["|", ['company_id', '=', state.st_line.company_id], ['company_id', '=', false]]
         }, {
             relation: 'account.analytic.tag',
             type: 'many2many',

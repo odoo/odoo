@@ -6,7 +6,7 @@
 # ТАрас <tratatuta@i.ua>, 2019
 # Martin Trigaux, 2019
 # Bohdan Lisnenko, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -288,10 +288,10 @@ msgstr "<p>Створіть канал тут.</p>"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/tours/mail.js:26
+#: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p>Create a public or private channel.</p>"
-msgstr ""
+msgstr "<p>Створити публічний або приватний канал.</p>"
 
 #. module: mail
 #. openerp-web
@@ -1572,6 +1572,12 @@ msgid "Customer is required for inbox / email notification"
 msgstr "Для отримання вхідних/електронних повідомлень потрібен клієнт"
 
 #. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr "Не можливо оновити повідомлення або отримувача сповіщення."
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
 #: model:ir.model.fields,field_description:mail.field_mail_message__date
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -2444,10 +2450,18 @@ msgid "Following"
 msgstr "Підписка"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "Following invites are invalid as user groups do not match: %s"
+msgstr ""
+"Наступні запрошення недійсні, оскільки групи копистувачів не узгоджуються: "
+"%s"
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
 #: model:ir.model.fields,help:mail.field_mail_activity_type__icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Іконка зі шрифтом Font awesome, напр. fa-tasks"
+msgstr "Іконка з чудовим шрифтом, напр. fa-tasks"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__email_from
@@ -4243,6 +4257,20 @@ msgid "Online"
 msgstr "Онлайн"
 
 #. module: mail
+#: code:addons/mail/models/mail_message.py:0
+#, python-format
+msgid "Only administrators are allowed to export mail message"
+msgstr "Лише адміністратори можуть експортувати повідомлення пошти"
+
+#. module: mail
+#: code:addons/mail/models/mail_message.py:0
+#, python-format
+msgid "Only administrators are allowed to use grouped read on message model"
+msgstr ""
+"Лише адміністратори можуть використовувати групове читання на моделі "
+"повідомлення"
+
+#. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -5639,6 +5667,12 @@ msgstr ""
 "користувача."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "The partner can not join this channel"
+msgstr "Партнер не може приєднатися до цього каналу"
+
+#. module: mail
 #: code:addons/mail/models/mail_message.py:0
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
@@ -6376,6 +6410,24 @@ msgstr ""
 "відображатиметься у цій поштовій скриньці."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not remove this partner from this channel"
+msgstr "Ви не можете вилучити партнера з цього каналу"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on the record of other users"
+msgstr "Ви не можете писати на записах інших користувачів"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr "Ви не можете писати на цьому полі"
+
+#. module: mail
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid ""
@@ -6396,6 +6448,16 @@ msgstr ""
 "компаній."
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"You cannot use anything else than unaccented latin characters in the alias "
+"address."
+msgstr ""
+"Ви не можете використовувати нічого окрім приголосних латинських символів у "
+"адресі псевдоніму."
+
+#. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -6404,16 +6466,6 @@ msgid ""
 msgstr ""
 "У вас немає прав змінювати поля, пов'язані з модерацією на одному з каналів,"
 " який ви змінюєте."
-
-#. module: mail
-#: code:addons/mail/models/mail_alias.py:89
-#, python-format
-msgid ""
-"You cannot use anything else than unaccented latin characters in the alias "
-"address."
-msgstr ""
-"Ви не можете використовувати нічого окрім приголосних латинських символів у "
-"адресі псевдоніму."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -6430,8 +6482,8 @@ msgstr "Ви були призначені на"
 #. openerp-web
 #: code:addons/mail/static/src/js/services/mail_notification_manager.js:0
 #, python-format
-msgid "You have been invited to: "
-msgstr "Вас запрошено до:"
+msgid "You have been invited to: %s"
+msgstr "Вас запросили до: %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation

@@ -422,9 +422,16 @@ class Survey(models.Model):
 
     def action_send_survey(self):
         """ Open a window to compose an email, pre-filled with the survey message """
-        # Ensure that this survey has at least one page with at least one question.
-        if (not self.page_ids and self.questions_layout == 'page_per_section') or not self.question_ids:
+        # Ensure that this survey has at least one question.
+        if not self.question_ids:
             raise UserError(_('You cannot send an invitation for a survey that has no questions.'))
+
+        # Ensure that this survey has at least one section with question(s), if question layout is 'One page per section'.
+        if self.questions_layout == 'page_per_section':
+            if not self.page_ids:
+                raise UserError(_('You cannot send an invitation for a "One page per section" survey if the survey has no sections.'))
+            if not self.page_ids.mapped('question_ids'):
+                raise UserError(_('You cannot send an invitation for a "One page per section" survey if the survey only contains empty sections.'))
 
         if self.state == 'closed':
             raise UserError(_("You cannot send invitations for closed surveys."))
@@ -626,14 +633,19 @@ class Survey(models.Model):
     @api.model
     def get_input_summary(self, question, current_filters=None):
         """ Returns overall summary of question e.g. answered, skipped, total_inputs on basis of filter """
-        current_filters = current_filters if current_filters else []
-        result = {}
-        search_line_ids = current_filters if current_filters else question.user_input_line_ids.ids
+        domain = [
+            ('user_input_id.test_entry', '=', False),
+            ('user_input_id.state', '!=', 'new'),
+            ('question_id', '=', question.id)
+        ]
+        if current_filters:
+            domain = expression.AND([[('id', 'in', current_filters)], domain])
 
-        result['answered'] = len([line for line in question.user_input_line_ids if line.user_input_id.state != 'new' and not line.user_input_id.test_entry and not line.skipped])
-        result['skipped'] = len([line for line in question.user_input_line_ids if line.user_input_id.state != 'new' and not line.user_input_id.test_entry and line.skipped])
-
-        return result
+        line_ids = self.env["survey.user_input_line"].search(domain)
+        return {
+            'answered': len(line_ids.filtered(lambda line: not line.skipped).mapped('user_input_id')),
+            'skipped': len(line_ids.filtered(lambda line: line.skipped).mapped('user_input_id'))
+        }
 
     def _get_answers_correctness(self, user_answers):
         if not user_answers.mapped('survey_id') == self:

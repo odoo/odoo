@@ -108,7 +108,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         }
         var _super = this._super.bind(this);
         return this.wysiwyg.saveCroppedImages(this.$content).then(function () {
-            return self.wysiwyg.save().then(function (result) {
+            return self.wysiwyg.save(self.nodeOptions).then(function (result) {
                 self._isDirty = result.isDirty;
                 _super();
             });
@@ -173,6 +173,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     _createWysiwygIntance: function () {
         var self = this;
         this.wysiwyg = new Wysiwyg(this, this._getWysiwygOptions());
+        this.wysiwyg.__extraAssetsForIframe = this.__extraAssetsForIframe || [];
 
         // by default this is synchronous because the assets are already loaded in willStart
         // but it can be async in the case of options such as iframe, snippets...
@@ -224,7 +225,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                         toolbar.splice(-1, 0, ['view', ['codeview']]);
                     }
                 }
-                if ("mailing.mailing" === self.model) {
+                if (self.model === "mail.compose.message" || self.model === "mailing.mailing") {
                     options.noVideos = true;
                 }
                 options.prettifyHtml = false;
@@ -457,7 +458,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @param {OdooEvent} ev
      */
     _onKeydown: function (ev) {
-        if (ev.which === $.ui.keyCode.ENTER && $(ev.target).is('textarea')) {
+        if (ev.which === $.ui.keyCode.ENTER) {
             ev.stopPropagation();
             return;
         }

@@ -16,7 +16,7 @@ class AccountCashRounding(models.Model):
     _description = 'Account Cash Rounding'
 
     name = fields.Char(string='Name', translate=True, required=True)
-    rounding = fields.Float(string='Rounding Precision', required=True,
+    rounding = fields.Float(string='Rounding Precision', required=True, default=0.01,
         help='Represent the non-zero value smallest coinage (for example, 0.05).')
     strategy = fields.Selection([('biggest_tax', 'Modify tax amount'), ('add_invoice_line', 'Add a rounding line')],
         string='Rounding Strategy', default='add_invoice_line', required=True,
@@ -30,8 +30,8 @@ class AccountCashRounding(models.Model):
     @api.constrains('rounding')
     def validate_rounding(self):
         for record in self:
-            if record.rounding < 0:
-                raise ValidationError(_("Please set a positive rounding value."))
+            if record.rounding <= 0:
+                raise ValidationError(_("Please set a strictly positive rounding value."))
 
     def round(self, amount):
         """Compute the rounding on the amount passed as parameter.

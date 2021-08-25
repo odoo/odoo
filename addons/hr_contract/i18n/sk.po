@@ -53,6 +53,11 @@ msgid ""
 "                                            Calendar Mismatch : The employee's calendar does not match this contract's calendar. This could lead to unexpected behaviors.\n"
 "                                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('calendar_mismatch', '=', False), ('state', '!=', 'open')]}\" class=\"fa fa-exclamation-triangle text-danger o_calendar_warning pl-3\">\n"
+"                                        </span>\n"
+"                                        <span class=\"o_calendar_warning_tooltip text-danger\">\n"
+"                                            Nezhoda kalendára: Kalendár zamestnanca sa nezhoduje s kalendárom tejto zmluvy. To by mohlo viesť k neočakávanému správaniu.\n"
+"                                        </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
@@ -63,6 +68,11 @@ msgid ""
 "                                Calendar Mismatch : The employee's calendar does not match its current contract calendar. This could lead to unexpected behaviors.\n"
 "                            </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('calendar_mismatch', '=', False)]}\" class=\"fa fa-exclamation-triangle text-danger o_calendar_warning pl-3\">\n"
+"                            </span>\n"
+"                            <span class=\"o_calendar_warning_tooltip text-danger\">\n"
+"                                Nezhoda kalendára: Kalendár zamestnanca sa nezhoduje s jeho aktuálnym kalendárom zmlúv. To by mohlo viesť k neočakávanému správaniu.\n"
+"                            </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form

@@ -19,6 +19,6 @@ class SaleCouponProgram(models.Model):
         return programs
 
     def _check_promo_code(self, order, coupon_code):
-        if self.reward_type == 'free_shipping' and not order.order_line.filtered(lambda line: line.is_delivery):
+        if self.reward_type == 'free_shipping' and not any(line.is_delivery for line in order.order_line):
             return {'error': _('The shipping costs are not in the order lines.')}
         return super(SaleCouponProgram, self)._check_promo_code(order, coupon_code)

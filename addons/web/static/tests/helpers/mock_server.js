@@ -748,10 +748,12 @@ var MockServer = Class.extend({
      * @param {string} args[0]
      * @param {Array} args[1], search domain
      * @param {Object} _kwargs
+     * @param {number} [_kwargs.limit=100] server-side default limit
      * @returns {Array[]} a list of [id, display_name]
      */
     _mockNameSearch: function (model, args, _kwargs) {
         var str = args && typeof args[0] === 'string' ? args[0] : _kwargs.name;
+        const limit = _kwargs.limit || 100;
         var domain = (args && args[1]) || _kwargs.args || [];
         var records = this._getRecords(model, domain);
         if (str.length) {
@@ -762,10 +764,7 @@ var MockServer = Class.extend({
         var result = _.map(records, function (record) {
             return [record.id, record.display_name];
         });
-        if (_kwargs.limit) {
-            return result.slice(0, _kwargs.limit);
-        }
-        return result;
+        return result.slice(0, limit);
     },
     /**
      * Simulate an 'onchange' rpc

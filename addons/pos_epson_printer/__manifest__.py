@@ -19,4 +19,5 @@ Use Epson ePOS Printers without the IoT Box in the Point of Sale
     ],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

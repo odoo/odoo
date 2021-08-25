@@ -27,4 +27,5 @@ Financial requirement contributor: Baskhuu Lodoikhuu. BumanIT LLC
         'data/account.chart.template.csv',
         'data/account_chart_template_configuration_data.xml',
     ],
+    'license': 'LGPL-3',
 }

@@ -223,7 +223,7 @@ class PosOrder(models.Model):
         readonly=True)
     config_id = fields.Many2one('pos.config', related='session_id.config_id', string="Point of Sale", readonly=False)
     currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency")
-    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, readonly=True, help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
+    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=0, readonly=True, help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
 
     invoice_group = fields.Boolean(related="config_id.module_account", readonly=False)
     state = fields.Selection(
@@ -379,6 +379,17 @@ class PosOrder(models.Model):
         }
         return vals
 
+    def _create_invoice(self, move_vals):
+        self.ensure_one()
+        new_move = self.env['account.move'].sudo()\
+                        .with_context(default_type=move_vals['type'], force_company=self.company_id.id)\
+                        .create(move_vals)
+        message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (self.id, self.name)
+        new_move.message_post(body=message)
+
+        return new_move
+
+
     def action_pos_order_invoice(self):
         moves = self.env['account.move']
 
@@ -392,11 +403,8 @@ class PosOrder(models.Model):
                 raise UserError(_('Please provide a partner for the sale.'))
 
             move_vals = order._prepare_invoice_vals()
-            new_move = moves.sudo()\
-                            .with_context(default_type=move_vals['type'], force_company=order.company_id.id)\
-                            .create(move_vals)
-            message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
-            new_move.message_post(body=message)
+            new_move = order._create_invoice(move_vals)
+
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
             new_move.sudo().with_context(force_company=order.company_id.id).post()
             moves += new_move
@@ -569,7 +577,8 @@ class PosOrder(models.Model):
                             if stock_production_lot.product_id.tracking == 'lot':
                                 qty = abs(pos_pack_lot.pos_order_line_id.qty)
                             qty_done += qty
-                            pack_lots.append({'lot_id': stock_production_lot.id, 'qty': qty})
+                            quant = stock_production_lot.quant_ids.filtered(lambda q: q.quantity > 0.0 and q.location_id.parent_path.startswith(move.location_id.parent_path))[-1:]
+                            pack_lots.append({'lot_id': stock_production_lot.id, 'quant_location_id': quant.location_id.id, 'qty': qty})
                         else:
                             has_wrong_lots = True
                 elif move.product_id.tracking == 'none' or not lots_necessary:
@@ -577,14 +586,14 @@ class PosOrder(models.Model):
                 else:
                     has_wrong_lots = True
                 for pack_lot in pack_lots:
-                    lot_id, qty = pack_lot['lot_id'], pack_lot['qty']
+                    lot_id, quant_location_id, qty = pack_lot['lot_id'], pack_lot['quant_location_id'], pack_lot['qty']
                     self.env['stock.move.line'].create({
                         'picking_id': move.picking_id.id,
                         'move_id': move.id,
                         'product_id': move.product_id.id,
                         'product_uom_id': move.product_uom.id,
                         'qty_done': qty,
-                        'location_id': move.location_id.id,
+                        'location_id': quant_location_id or move.location_id.id,
                         'location_dest_id': move.location_dest_id.id,
                         'lot_id': lot_id,
                     })

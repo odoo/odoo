@@ -85,7 +85,7 @@ class ResPartnerBank(models.Model):
     def _compute_l10n_ch_show_subscription(self):
         for bank in self:
             if bank.partner_id:
-                bank.l10n_ch_show_subscription = bool(bank.partner_id.ref_company_ids)
+                bank.l10n_ch_show_subscription = bank.partner_id.ref_company_ids.country_id.code =='CH'
             elif bank.company_id:
                 bank.l10n_ch_show_subscription = bank.company_id.country_id.code == 'CH'
             else:
@@ -212,7 +212,7 @@ class ResPartnerBank(models.Model):
             '{:.2f}'.format(amount),                              # Amount
             currency_name,                                        # Currency
             'K',                                                  # Ultimate Debtor Address Type
-            debtor_partner.name[:70],                             # Ultimate Debtor Name
+            debtor_partner.commercial_partner_id.name[:70],       # Ultimate Debtor Name
             debtor_addr_1,                                        # Ultimate Debtor Address Line 1
             debtor_addr_2,                                        # Ultimate Debtor Address Line 2
             '',                                                   # Ultimate Debtor Postal Code (not to be provided for address type K)
@@ -271,7 +271,8 @@ class ResPartnerBank(models.Model):
         different.
         """
         self.ensure_one()
-        return self.acc_type == 'iban' \
+        return self.sanitized_acc_number.startswith('CH')\
+               and self.acc_type == 'iban'\
                and self._check_qr_iban_range(self.sanitized_acc_number)
 
     @api.model

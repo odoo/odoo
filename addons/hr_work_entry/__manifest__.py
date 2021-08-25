@@ -20,4 +20,5 @@
     'qweb': [
         "static/src/xml/work_entry_templates.xml",
     ],
+    'license': 'LGPL-3',
 }

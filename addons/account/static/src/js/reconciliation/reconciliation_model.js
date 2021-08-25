@@ -19,7 +19,7 @@ var _t = core._t;
  *  {
  *      valuenow: integer
  *      valuenow: valuemax
- *      [bank_statement_line_id]: {
+ *      [bank_statement_id]: {
  *          id: integer
  *          display_name: string
  *      }
@@ -235,8 +235,9 @@ var StatementModel = BasicModel.extend({
         var line = this.getLine(handle);
         line.st_line.partner_id = partner && partner.id;
         line.st_line.partner_name = partner && partner.display_name || '';
-        line.mv_lines_match_rp = [];
-        line.mv_lines_match_other = [];
+        self.modes.filter(x => x.startsWith('match')).forEach(function (mode) {
+            line["mv_lines_"+mode] = [];
+        });
         return Promise.resolve(partner && this._changePartner(handle, partner.id))
                 .then(function() {
                     if(line.st_line.partner_id){
@@ -261,12 +262,9 @@ var StatementModel = BasicModel.extend({
     closeStatement: function () {
         var self = this;
         return this._rpc({
-                model: 'account.bank.statement.line',
+                model: 'account.bank.statement',
                 method: 'button_confirm_bank',
-                args: [self.bank_statement_line_id.id],
-            })
-            .then(function () {
-                return self.bank_statement_line_id.id;
+                args: [self.bank_statement_id.id],
             });
     },
     /**
@@ -413,7 +411,7 @@ var StatementModel = BasicModel.extend({
             })
             .then(function (statement) {
                 self.statement = statement;
-                self.bank_statement_line_id = self.statement_line_ids.length === 1 ? {id: self.statement_line_ids[0], display_name: statement.statement_name} : false;
+                self.bank_statement_id = statement.statement_id ? {id: statement.statement_id, display_name: statement.statement_name} : false;
                 self.valuenow = self.valuenow || statement.value_min;
                 self.valuemax = self.valuemax || statement.value_max;
                 self.context.journal_id = statement.journal_id;
@@ -495,6 +493,9 @@ var StatementModel = BasicModel.extend({
                var analyticTagIds = [];
                 for (var i=0; i<reconcileModels.length; i++) {
                     var modelTags = reconcileModels[i].analytic_tag_ids || [];
+                    if (reconcileModels[i].has_second_line) {
+                        modelTags = _.union(modelTags, reconcileModels[i].second_analytic_tag_ids || [])
+                    }
                     for (var j=0; j<modelTags.length; j++) {
                         if (analyticTagIds.indexOf(modelTags[j]) === -1) {
                             analyticTagIds.push(modelTags[j]);
@@ -511,6 +512,17 @@ var StatementModel = BasicModel.extend({
                             analyticTagData.push([tagId, self.analyticTags[tagId].display_name])
                         }
                         recModel.analytic_tag_ids = analyticTagData;
+                        if (recModel.has_second_line) {
+                            var secondAnalyticTagData = [];
+                            var modelTags = recModel.second_analytic_tag_ids || [];
+                            for (var j=0; j<modelTags.length; j++) {
+                                var tagId = modelTags[j];
+                                secondAnalyticTagData.push([tagId, self.analyticTags[tagId].display_name])
+                            }
+                            if (secondAnalyticTagData.length > 0){
+                                recModel.second_analytic_tag_ids = secondAnalyticTagData;
+                            }
+                        }
                     }
                     self.reconcileModels = reconcileModels;
                 });
@@ -681,6 +693,16 @@ var StatementModel = BasicModel.extend({
         var self = this;
         var line = this.getLine(handle);
         var prop = _.last(_.filter(line.reconciliation_proposition, '__focus'));
+        if (prop.reconcileModelId){
+            // check for a first line of the same reconciliation model
+            prop = _.find(line.reconciliation_proposition, function(proposition){
+                return proposition.__focus == true &&
+                    proposition.to_check == false &&
+                    proposition.reconcileModelId == prop.reconcileModelId &&
+                    proposition.label == prop.label &&
+                    proposition.id.includes('createLine');
+                }) || prop;
+        }
         if ('to_check' in values && values.to_check === false) {
             // check if we have another line with to_check and if yes don't change value of this proposition
             prop.to_check = line.reconciliation_proposition.some(function(rec_prop, index) {

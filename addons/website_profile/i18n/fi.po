@@ -10,6 +10,7 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
+# Miika Nissi <miika.nissi@tawasta.fi>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020\n"
+"Last-Translator: Miika Nissi <miika.nissi@tawasta.fi>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr ""
 #. module: website_profile
 #: model:mail.template,subject:website_profile.validation_email
 msgid "${object.company_id.name} Profile validation"
-msgstr ""
+msgstr "${object.company_id.name} Profiilin vahvistaminen"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -38,7 +39,7 @@ msgstr "&amp;times;"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
 msgid "(not verified)"
-msgstr ""
+msgstr "(ei vahvistettu)"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -46,11 +47,13 @@ msgid ""
 ". Collect points on the forum or on the eLearning platform. Those points "
 "will make you reach new ranks."
 msgstr ""
+". Kerää pisteitä foorumilla tai eLearning-alustalla. Nällä pisteillä "
+"saavutat uusia tasoja."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid ". Try another search."
-msgstr ""
+msgstr ". Kokeile toista hakua. "
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -71,16 +74,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<i class=\"fa fa-pencil fa-1g float-sm-none float-md-left\" title=\"Edit\"/>"
 msgstr ""
+"<i class=\"fa fa-pencil fa-1g float-sm-none float-md-left\" "
+"title=\"Muokkaa\"/>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
 msgid "<i class=\"fa fa-pencil mr-1\"/>EDIT"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil mr-1\"/>MUOKKAA"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
 msgid "<i class=\"fa fa-pencil mr-2\"/>EDIT PROFILE"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil mr-2\"/>MUOKKAA PROFIILIA"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
@@ -90,17 +95,17 @@ msgstr "<i class=\"text-muted\"> palkitut käyttäjät</i>"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "<small class=\"font-weight-bold mr-2\">Current rank:</small>"
-msgstr ""
+msgstr "<small class=\"font-weight-bold mr-2\">Tämänhetkinen sija:</small>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "<small class=\"font-weight-bold\">Badges</small>"
-msgstr ""
+msgstr "<small class=\"font-weight-bold\">Merkit</small>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "<small class=\"font-weight-bold\">Joined</small>"
-msgstr ""
+msgstr "<small class=\"font-weight-bold\">Liittynyt</small>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
@@ -112,27 +117,27 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<span class=\"font-weight-bold\">Biography</span>"
-msgstr ""
+msgstr "<span class=\"font-weight-bold\">Kuvaus</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<span class=\"font-weight-bold\">City</span>"
-msgstr ""
+msgstr "<span class=\"font-weight-bold\">Kaupunki</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<span class=\"font-weight-bold\">Country</span>"
-msgstr ""
+msgstr "<span class=\"font-weight-bold\">Maa</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<span class=\"font-weight-bold\">Email</span>"
-msgstr ""
+msgstr "<span class=\"font-weight-bold\">Sähköposti</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<span class=\"font-weight-bold\">Public profile</span>"
-msgstr ""
+msgstr "<span class=\"font-weight-bold\">Julkinen profiili</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
@@ -142,27 +147,28 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<span class=\"font-weight-bold\">Website</span>"
-msgstr ""
+msgstr "<span class=\"font-weight-bold\">Verkkosivu</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 msgid "<span class=\"text-muted small font-weight-bold\">Badges</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small font-weight-bold\">Merkit</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 msgid "<span class=\"text-muted small font-weight-bold\">XP</span>"
 msgstr ""
+"<span class=\"text-muted small font-weight-bold\">XP (kokemuspisteet)</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "<span class=\"text-muted\">Badges</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Merkit</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "<span class=\"text-muted\">XP</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">XP (kokemuspisteet)</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -170,6 +176,8 @@ msgid ""
 "<span id=\"email_validated_message\">Congratulations! Your email has just "
 "been validated.</span>"
 msgstr ""
+"<span id=\"email_validated_message\">Onnittelut! Sähköpostisi on juuri "
+"vahvistettu.</span>"
 
 #. module: website_profile
 #: model:mail.template,body_html:website_profile.validation_email

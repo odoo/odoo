@@ -24,4 +24,5 @@ trigger an automatic reminder email.
     'demo': [
         'data/base_automation_demo.xml',
     ],
+    'license': 'LGPL-3',
 }

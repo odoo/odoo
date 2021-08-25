@@ -56,6 +56,7 @@ var ListController = BasicController.extend({
         this.selectedRecords = params.selectedRecords || [];
         this.multipleRecordsSavingPromise = null;
         this.fieldChangedPrevented = false;
+        this.lastFieldChangedEvent = null;
     },
 
     //--------------------------------------------------------------------------
@@ -349,7 +350,7 @@ var ListController = BasicController.extend({
      */
     _getExportDialogWidget() {
         let state = this.model.get(this.handle);
-        let defaultExportFields = this.renderer.columns.filter(field => field.tag === 'field').map(field => field.attrs.name);
+        let defaultExportFields = this.renderer.columns.filter(field => field.tag === 'field' && state.fields[field.attrs.name].exportable !== false).map(field => field.attrs.name);
         let groupedBy = this.renderer.state.groupedBy;
         return new DataExport(this, state, defaultExportFields, groupedBy,
             this.getActiveDomain(), this.getSelectedIds());
@@ -445,6 +446,10 @@ var ListController = BasicController.extend({
     _saveRecord: function (recordId) {
         var record = this.model.get(recordId, { raw: true });
         if (record.isDirty() && this.renderer.isInMultipleRecordEdition(recordId)) {
+            if (!this.multipleRecordsSavingPromise && this.lastFieldChangedEvent) {
+                this._onFieldChanged(this.lastFieldChangedEvent);
+                this.lastFieldChangedEvent = null;
+            }
             // do not save the record (see _saveMultipleRecords)
             const prom = this.multipleRecordsSavingPromise || Promise.reject();
             this.multipleRecordsSavingPromise = null;
@@ -608,7 +613,9 @@ var ListController = BasicController.extend({
      */
     _onDiscard: function (ev) {
         ev.stopPropagation(); // So that it is not considered as a row leaving
-        this._discardChanges();
+        this._discardChanges().then(() => {
+            this.lastFieldChangedEvent = null;
+        });
     },
     /**
      * Used to detect if the discard button is about to be clicked.
@@ -698,6 +705,7 @@ var ListController = BasicController.extend({
     _onFieldChanged: function (ev) {
         ev.stopPropagation();
         const recordId = ev.data.dataPointID;
+        this.lastFieldChangedEvent = ev;
 
         if (this.fieldChangedPrevented) {
             this.fieldChangedPrevented = ev;
@@ -711,6 +719,9 @@ var ListController = BasicController.extend({
             ev.data.onFailure = saveMulti; // will show the appropriate dialog
             // disable onchanges as we'll save directly
             ev.data.notifyChange = false;
+            // In multi edit mode, we will be asked if we want to write on the selected
+            // records, so the force_save for readonly is not necessary.
+            ev.data.force_save = false;
         }
         this._super.apply(this, arguments);
     },

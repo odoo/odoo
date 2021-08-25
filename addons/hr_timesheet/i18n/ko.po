@@ -7,7 +7,7 @@
 # Link Up링크업 <linkup.way@gmail.com>, 2019
 # Seongseok Shin <shinss61@hotmail.com>, 2019
 # Linkup <link-up@naver.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2020
+# JH CHOI <hwangtog@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-18 09:46+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -676,6 +676,14 @@ msgstr ""
 "매일 프로젝트별 작업시간을 입력하거나 추적할 수 있습니다.\n"
 "                    프로젝트에서 모든 시간 사용은 비용으로 변경되며 \n"
 "                    필요시 청구서 재발행이 가능합니다."
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/models/project.py:0
+#, python-format
+msgid ""
+"You cannot delete a project containing timesheets. You can either archive it"
+" or first delete all of its timesheets."
+msgstr "작업 기록표가 포함된 프로젝트는 삭제할 수 없습니다. 이를 보관하거나 먼저 모든 작업 기록표를 삭제할 수 있습니다."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet

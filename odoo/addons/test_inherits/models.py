@@ -13,6 +13,7 @@ class Unit(models.Model):
     surname = fields.Char(compute='_compute_surname')
     line_ids = fields.One2many('test.unit.line', 'unit_id')
     readonly_name = fields.Char('Readonly Name', readonly=True)
+    size = fields.Integer()
 
     @api.depends('name')
     def _compute_surname(self):
@@ -38,6 +39,7 @@ class Box(models.Model):
     unit_id = fields.Many2one('test.unit', 'Unit', required=True,
                               ondelete='cascade')
     field_in_box = fields.Char('Field1')
+    size = fields.Integer()
 
 
 # We add a third level of _inherits

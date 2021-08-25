@@ -41,7 +41,7 @@ class L10nLatamDocumentType(models.Model):
         values.update({'padding': 8, 'implementation': 'no_gap', 'prefix': "%05i-" % (journal.l10n_ar_afip_pos_number),
                        'l10n_latam_journal_id': journal.id})
         if journal.l10n_ar_share_sequences:
-            values.update({'name': '%s - Letter %s Documents' % (journal.name, self.l10n_ar_letter),
+            values.update({'name': _('%s - Letter %s Documents') % (journal.name, self.l10n_ar_letter),
                            'l10n_ar_letter': self.l10n_ar_letter})
         else:
             values.update({'name': '%s - %s' % (journal.name, self.name), 'l10n_latam_document_type_id': self.id})

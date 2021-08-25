@@ -6,7 +6,8 @@
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2019
 # Martin Trigaux, 2019
 # Michal Veselý <michal@veselyberanek.net>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2020\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,12 +26,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
 msgid "# Invalid recipients"
-msgstr ""
+msgstr "Počet neplatných příjemců"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_count
 msgid "# Valid recipients"
-msgstr ""
+msgstr "Počet platných příjemců"
 
 #. module: sms
 #: code:addons/sms/models/sms_template.py:0
@@ -135,7 +136,7 @@ msgstr "Čeká se na odeslání"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_blacklist
 msgid "Blacklisted"
-msgstr ""
+msgstr "Na černé listině"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__body
@@ -336,7 +337,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_mail_notification__failure_type
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__failure_type
 msgid "Failure type"
-msgstr ""
+msgstr "Typ poruchy"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_object_field
@@ -389,7 +390,7 @@ msgstr "Má chybu"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__help_message
 msgid "Help message"
-msgstr ""
+msgstr "Nápověda"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_api__id
@@ -457,7 +458,7 @@ msgstr "Ve frontě"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_credit
 msgid "Insufficient Credit"
-msgstr ""
+msgstr "Nedostatečný kredit"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
@@ -550,7 +551,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_missing
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_number_missing
 msgid "Missing Number"
-msgstr ""
+msgstr "Chybějící číslo"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
@@ -582,7 +583,7 @@ msgstr "Upozornění"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
 msgid "Notification Type"
-msgstr ""
+msgstr "Typ oznámení"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
@@ -621,7 +622,7 @@ msgstr "Výraz placeholderu"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
 msgid "Post on a document"
-msgstr ""
+msgstr "Zveřejněte na dokumentu"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -752,7 +753,7 @@ msgstr "Chyba doručení SMS"
 #: code:addons/sms/static/src/js/systray_messaging_menu.js:0
 #, python-format
 msgid "SMS Failures"
-msgstr ""
+msgstr "Selhání SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
@@ -817,7 +818,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sanitized_numbers
 msgid "Sanitized Number"
-msgstr ""
+msgstr "Sanitizované číslo"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
@@ -867,7 +868,7 @@ msgstr "Odeslat SMS textovou zprávu"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
 msgid "Send SMS Wizard"
-msgstr ""
+msgstr "Odeslat průvodce SMS"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__mass
@@ -965,7 +966,7 @@ msgstr "Náhled šablony"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__lang
 msgid "Template Preview Language"
-msgstr ""
+msgstr "Jazyk náhledu šablony"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_action
@@ -996,6 +997,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Typ akce serveru. K dispozici jsou následující hodnoty:\n"
+"- 'Execute Python Code': blok kódu Pythonu, který bude spuštěn\n"
+"- 'Create': vytvoření nového záznamu s novými hodnotami\n"
+"- 'Update a Record': aktualizuje hodnoty záznamu\n"
+"- 'Execute several actions': definujte akci, která spustí několik dalších akcí serveru\n"
+"- 'Send Email': automaticky odešle e-mail (u Diskuse)\n"
+"- 'Add Followers': přidá sledující k záznamu (u Diskuse)\n"
+"- 'Create Next Activity': vytvoří novou aktivitu (u Diskuse)"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
@@ -1068,7 +1077,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_format
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_number_format
 msgid "Wrong Number Format"
-msgstr ""
+msgstr "Chybný formát čísla"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_resend.py:0

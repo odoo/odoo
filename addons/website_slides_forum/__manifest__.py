@@ -24,4 +24,5 @@
         'data/slide_channel_demo.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

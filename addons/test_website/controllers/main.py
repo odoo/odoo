@@ -44,6 +44,10 @@ class WebsiteTest(Home):
     def test_company_context(self):
         return request.make_response(json.dumps(request.context.get('allowed_company_ids')))
 
+    @http.route('/test_lang_url/<model("res.country"):country>', type='http', auth='public', website=True, sitemap=False)
+    def test_lang_url(self, **kwargs):
+        return request.render('test_website.test_view')
+
     # Test Session
 
     @http.route('/test_get_dbname', type='json', auth='public', website=True, sitemap=False)

@@ -20,4 +20,5 @@ This module applies to companies based in Algeria.
         'data/account_fiscal_position_template_data.xml',
         'data/account_chart_template_configuration_data.xml',
     ],
+    'license': 'LGPL-3',
 }

@@ -28,8 +28,9 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         if ($carriers.length > 0) {
             if ($carriers.filter(':checked').length === 0) {
                 $payButton.prop('disabled', true);
-                $payButton.data('disabled_reasons', $payButton.data('disabled_reasons') || {});
-                $payButton.data('disabled_reasons').carrier_selection = true;
+                var disabledReasons = $payButton.data('disabled_reasons') || {};
+                disabledReasons.carrier_selection = true;
+                $payButton.data('disabled_reasons', disabledReasons);
             }
             $carriers.filter(':checked').click();
         }
@@ -69,14 +70,16 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         var $amountDelivery = $('#order_delivery .monetary_field');
         var $amountUntaxed = $('#order_total_untaxed .monetary_field');
         var $amountTax = $('#order_total_taxes .monetary_field');
-        var $amountTotal = $('#order_total .monetary_field');
+        var $amountTotal = $('#order_total .monetary_field, #amount_total_summary.monetary_field');
 
         if (result.status === true) {
             $amountDelivery.html(result.new_amount_delivery);
             $amountUntaxed.html(result.new_amount_untaxed);
             $amountTax.html(result.new_amount_tax);
             $amountTotal.html(result.new_amount_total);
-            $payButton.data('disabled_reasons').carrier_selection = false;
+            var disabledReasons = $payButton.data('disabled_reasons') || {};
+            disabledReasons.carrier_selection = false;
+            $payButton.data('disabled_reasons', disabledReasons);
             $payButton.prop('disabled', _.contains($payButton.data('disabled_reasons'), true));
         } else {
             $amountDelivery.html(result.new_amount_delivery);
@@ -120,8 +123,9 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         $radio.prop("checked", true);
         var $payButton = $('#o_payment_form_pay');
         $payButton.prop('disabled', true);
-        $payButton.data('disabled_reasons', $payButton.data('disabled_reasons') || {});
-        $payButton.data('disabled_reasons').carrier_selection = true;
+        var disabledReasons = $payButton.data('disabled_reasons') || {};
+        disabledReasons.carrier_selection = true;
+        $payButton.data('disabled_reasons', disabledReasons);
         dp.add(this._rpc({
             route: '/shop/update_carrier',
             params: {

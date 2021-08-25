@@ -729,7 +729,7 @@ class HolidaysRequest(models.Model):
                         pass
 
     def write(self, values):
-        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
 
         if not is_officer:
             if any(hol.date_from.date() < fields.Date.today() for hol in self):
@@ -867,8 +867,8 @@ class HolidaysRequest(models.Model):
             'holiday_status_id': self.holiday_status_id.id,
             'date_from': self.date_from,
             'date_to': self.date_to,
-            'request_date_from': self.date_from,
-            'request_date_to': self.date_to,
+            'request_date_from': self.request_date_from,
+            'request_date_to': self.request_date_to,
             'notes': self.notes,
             'number_of_days': work_days_data[employee.id]['days'],
             'parent_id': self.id,
@@ -915,7 +915,7 @@ class HolidaysRequest(models.Model):
         # Post a second message, more verbose than the tracking message
         for holiday in self.filtered(lambda holiday: holiday.employee_id.user_id):
             holiday.message_post(
-                body=_('Your %s planned on %s has been accepted' % (holiday.holiday_status_id.display_name, holiday.date_from)),
+                body=_('Your %s planned on %s has been accepted') % (holiday.holiday_status_id.display_name, holiday.date_from),
                 partner_ids=holiday.employee_id.user_id.partner_id.ids)
 
         self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()
@@ -1140,18 +1140,19 @@ class HolidaysRequest(models.Model):
             return leave_notif_subtype or self.env.ref('hr_holidays.mt_leave')
         return super(HolidaysRequest, self)._track_subtype(init_values)
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Handle HR users and officers recipients that can validate or refuse holidays
         directly from email. """
-        groups = super(HolidaysRequest, self)._notify_get_groups()
+        groups = super(HolidaysRequest, self)._notify_get_groups(msg_vals=msg_vals)
+        local_msg_vals = dict(msg_vals or {})
 
         self.ensure_one()
         hr_actions = []
         if self.state == 'confirm':
-            app_action = self._notify_get_action_link('controller', controller='/leave/validate')
+            app_action = self._notify_get_action_link('controller', controller='/leave/validate', **local_msg_vals)
             hr_actions += [{'url': app_action, 'title': _('Approve')}]
         if self.state in ['confirm', 'validate', 'validate1']:
-            ref_action = self._notify_get_action_link('controller', controller='/leave/refuse')
+            ref_action = self._notify_get_action_link('controller', controller='/leave/refuse', **local_msg_vals)
             hr_actions += [{'url': ref_action, 'title': _('Refuse')}]
 
         holiday_user_group_id = self.env.ref('hr_holidays.group_hr_holidays_user').id

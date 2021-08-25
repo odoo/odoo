@@ -317,7 +317,7 @@
                                     </group>
                                     <group string="Control-Access" groups="account.group_account_manager">
                                         <div class="text-muted" colspan="2">Keep empty for no control</div>
-                                        <field name="type_control_ids" widget="many2many_tags"/>
+                                        <field name="type_control_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                         <field name="account_control_ids" widget="many2many_tags"/>
                                         <field name="restrict_mode_hash_table" groups="account.group_account_user"/>
                                     </group>
@@ -501,9 +501,9 @@ action = model.setting_init_bank_account_action()
                             <field name="active" invisible="1"/>
                             <field name="name"/>
                             <field name="applicability"/>
-                            <field name="tax_negate" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
-                            <field name="country_id" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
-                            <field name="tax_report_line_ids" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
+                            <field name="tax_negate" readonly="1" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
+                            <field name="country_id" attrs="{'invisible': [('applicability', '!=', 'taxes')], 'readonly': [('tax_report_line_ids', '!=', [])]}"/>
+                            <field name="tax_report_line_ids" readonly="1" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
                         </group>
                     </sheet>
                 </form>
@@ -823,7 +823,7 @@ action = model.setting_init_bank_account_action()
             <field name="model">account.bank.statement.line</field>
             <field name="priority">8</field>
             <field name="arch" type="xml">
-                <tree string="Statement lines" create="false">
+                <tree string="Statement lines" create="false" default_order="date desc, statement_id desc, sequence desc, id desc">
                     <field name="sequence" readonly="1" invisible="1"/>
                     <field name="statement_id" />
                     <field name="journal_id" invisible="1" />

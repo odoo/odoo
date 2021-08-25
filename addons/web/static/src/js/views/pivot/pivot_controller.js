@@ -150,7 +150,7 @@ var PivotController = AbstractController.extend({
      * @param {number} top top coordinate where we have to render the menu
      * @param {number} left left coordinate for the menu
      */
-    _renderGroupBySelection: function (top, left) {
+    _renderGroupBySelection: function (top, shift) {
         var state = this.model.get({raw: true});
         var groupedFields = state.rowGroupBys
             .concat(state.colGroupBys)
@@ -173,8 +173,28 @@ var PivotController = AbstractController.extend({
         }));
 
         var cssProps = {top: top};
+        // In rtl mode, position().left is distance of the right side to the left part of screen
+        // The other values have the same meaning.
+        /*
+          +=====Screen====================================================+
+          ║                                                               ║
+          ║                                                               ║
+          ║<---position().left--rtl----------------------------------->|  ║
+          ║                                                            |  ║
+          ║                          +=====Container===================+  ║
+          ║                          ║                                 ║  ║
+          ║<---position().left------>║<----shift---->|<---shift---rtl->║  ║
+          ║                          ║               |                 ║  ║
+          ║                          +===============|=================+  ║
+          ║                                          |                    ║
+          +==========================================|====================+
+          |                                          |
+          |<-------clientX-------------------------->|
+        */
+        // shift = clientX - position().left
+        shift = Math.abs(shift);
         var isRTL = _t.database.parameters.direction === 'rtl';
-        cssProps[isRTL ? 'right' : 'left'] = isRTL ? this.$el.width() - left : left;
+        cssProps[isRTL ? 'right' : 'left'] = shift;
         this.$groupBySelection.find('.dropdown-menu').first().css(cssProps).addClass('show');
     },
     /**
@@ -295,8 +315,9 @@ var PivotController = AbstractController.extend({
         } else {
             var position = $target.position();
             var top = position.top + $target.height();
-            var left = ev.clientX;
-            this._renderGroupBySelection(top, left);
+            var $container = $target.closest('.o_pivot').find('.o_field_selection');
+            var shift = ev.clientX - $container.position().left;
+            this._renderGroupBySelection(top, shift);
         }
     },
     /**

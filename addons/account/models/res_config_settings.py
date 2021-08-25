@@ -66,7 +66,7 @@ class ResConfigSettings(models.TransientModel):
     module_currency_rate_live = fields.Boolean(string="Automatic Currency Rates")
     module_account_intrastat = fields.Boolean(string='Intrastat')
     module_product_margin = fields.Boolean(string="Allow Product Margin")
-    module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
+    module_l10n_eu_service = fields.Boolean(string="EU Intra-community Distance Selling")
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
     module_account_invoice_extract = fields.Boolean(string="Bill Digitalization")
     module_snailmail_account = fields.Boolean(string="Snailmail")

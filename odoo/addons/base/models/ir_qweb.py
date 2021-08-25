@@ -426,10 +426,10 @@ class IrQWeb(models.AbstractModel, QWeb):
     def _get_attr_bool(self, attr, default=False):
         if attr:
             if attr is True:
-                return ast.Name(id='True', ctx=ast.Load())
+                return ast.Constant(True)
             attr = attr.lower()
             if attr in ('false', '0'):
-                return ast.Name(id='False', ctx=ast.Load())
+                return ast.Constant(False)
             elif attr in ('true', '1'):
-                return ast.Name(id='True', ctx=ast.Load())
-        return ast.Name(id=str(attr if attr is False else default), ctx=ast.Load())
+                return ast.Constant(True)
+        return ast.Constant(attr if attr is False else bool(default))

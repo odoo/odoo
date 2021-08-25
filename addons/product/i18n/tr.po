@@ -3,7 +3,7 @@
 # 	* product
 # 
 # Translators:
-# Alper Çiftçi <inactive+alprciftci@transifex.com>, 2019
+# 8bbc36517816c0507c9ca350a0e523fd_9e68207 <90a3963e59612d1681dec64fbc906ae0_331927>, 2019
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
 # Levent Karakaş <levent@mektup.at>, 2019
@@ -19,13 +19,13 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2019
 # Martin Trigaux, 2019
 # Ugur Yilmaz <ugurlu2001@hotmail.com>, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
 # Ediz Duman <neps1192@gmail.com>, 2019
 # Yedigen, 2019
 # abc Def <hdogan1974@gmail.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
+# Murat Kaplan <muratk@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2372,6 +2372,15 @@ msgstr ""
 "kullanılacaktır."
 
 #. module: product
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid ""
+"This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
+"This may cause inconsistencies in computations.\n"
+"Please set a precision between %s and 1."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
@@ -2685,6 +2694,13 @@ msgid "Volume unit of measure label"
 msgstr "Hacim ölçü birimi etiketi"
 
 #. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid "Warning!"
+msgstr "Uyarı!"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Warnings"
 msgstr "Uyarılar"
@@ -2716,6 +2732,16 @@ msgstr "Ağırlık ölçü birimi etiketi"
 #: model:product.template.attribute.value,name:product.product_4_attribute_2_value_1
 msgid "White"
 msgstr "Beyaz"
+
+#. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOMs:\n"
+"%s\n"
+"This may cause inconsistencies in computations.\n"
+"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+msgstr ""
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2

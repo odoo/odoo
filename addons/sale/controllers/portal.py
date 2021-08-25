@@ -23,11 +23,11 @@ class CustomerPortal(CustomerPortal):
         quotation_count = SaleOrder.search_count([
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
             ('state', 'in', ['sent', 'cancel'])
-        ])
+        ]) if SaleOrder.check_access_rights('read', raise_exception=False) else 0
         order_count = SaleOrder.search_count([
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
             ('state', 'in', ['sale', 'done'])
-        ])
+        ]) if SaleOrder.check_access_rights('read', raise_exception=False) else 0
 
         values.update({
             'quotation_count': quotation_count,
@@ -294,7 +294,7 @@ class CustomerPortal(CustomerPortal):
         # Create transaction
         vals = {
             'acquirer_id': acquirer_id,
-            'type': order._get_payment_type(),
+            'type': order._get_payment_type(save_token),
             'return_url': order.get_portal_url(),
         }
 
@@ -304,7 +304,7 @@ class CustomerPortal(CustomerPortal):
             order,
             submit_txt=_('Pay & Confirm'),
             render_values={
-                'type': order._get_payment_type(),
+                'type': order._get_payment_type(save_token),
                 'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
             }
         )

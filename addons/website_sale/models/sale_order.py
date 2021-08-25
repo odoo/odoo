@@ -149,12 +149,12 @@ class SaleOrder(models.Model):
 
         try:
             if add_qty:
-                add_qty = float(add_qty)
+                add_qty = int(add_qty)
         except ValueError:
             add_qty = 1
         try:
             if set_qty:
-                set_qty = float(set_qty)
+                set_qty = int(set_qty)
         except ValueError:
             set_qty = 0
         quantity = 0
@@ -255,14 +255,14 @@ class SaleOrder(models.Model):
                     'pricelist': order.pricelist_id.id,
                     'force_company': order.company_id.id,
                 })
-                product_with_context = self.env['product.product'].with_context(product_context)
-                product = product_with_context.browse(product_id)
-                values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
-                    order_line._get_display_price(product),
-                    order_line.product_id.taxes_id,
-                    order_line.tax_id,
-                    self.company_id
-                )
+            product_with_context = self.env['product.product'].with_context(product_context)
+            product = product_with_context.browse(product_id)
+            values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
+                order_line._get_display_price(product),
+                order_line.product_id.taxes_id,
+                order_line.tax_id,
+                self.company_id
+            )
 
             order_line.write(values)
 
@@ -350,6 +350,13 @@ class SaleOrder(models.Model):
                 template.send_mail(order.id)
                 sent_orders |= order
         sent_orders.write({'cart_recovery_email_sent': True})
+
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        for order in self:
+            if not order.transaction_ids and not order.amount_total and self._context.get('send_email'):
+                order._send_order_confirmation_mail()
+        return res
 
 
 class SaleOrderLine(models.Model):

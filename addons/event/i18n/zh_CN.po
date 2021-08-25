@@ -24,6 +24,8 @@
 # liAnGjiA <liangjia@qq.com>, 2020
 # as co02 <asco02@163.com>, 2020
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# Melvin Liu <betien@msn.cn>, 2020
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -31,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
+"Last-Translator: Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +56,7 @@ msgstr "%s (副本)"
 #: model:ir.actions.report,print_report_name:event.report_event_registration_badge
 msgid ""
 "'Registration Event - %s' % (object.name or 'Attendee').replace('/','')"
-msgstr ""
+msgstr "'注册活动 - %s' % (object.name or '参加者').replace('/','')"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -76,21 +78,21 @@ msgstr ""
 msgid ""
 "<b>Business Room</b> - To discuss implementation methodologies, best sales "
 "practices, etc."
-msgstr ""
+msgstr "商务间-讨论实施方法，最佳销售做法等。"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
 "new developers."
-msgstr ""
+msgstr "<b>技术间 - 一间面向高级Odoo开发人员，一间面向新开发人员。"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "<b>The Design Fair is preceded by 2 days of Training Sessions for "
 "experts!</b><br> We propose 3 different training sessions, 2 days each."
-msgstr ""
+msgstr "<b>在设计博览会之前，会进行为期2天的专家培训课程！</b><br> 我们建议进行3次不同的培训课程，每期2天。"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -98,7 +100,7 @@ msgid ""
 "<b>The plenary sessions in the morning will be shorter</b> and we will give "
 "more time for thematical meetings, conferences, workshops and tutorial "
 "sessions in the afternoon."
-msgstr ""
+msgstr "<b>上午的全体会议将缩短</b>，我们将在下午为主题会议，会议，讲习班和辅导会议提供更多时间。"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -109,11 +111,13 @@ msgid ""
 "contribute, there is a free ticket, therefore, catering and access to "
 "evening events aren't included."
 msgstr ""
+"<b>整个活动向所有公众开放！</b><br> 3天的费用为49.50欧元（咖啡休息，餐饮，饮料以及令人惊讶的音乐会和啤酒派对）。<br> "
+"对于那些不想捐款的人，有一张免费票，因此不包括餐饮和参加晚间活动。"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "<b>Workshop Room</b> - Mainly for developers."
-msgstr ""
+msgstr "<b>研讨会间</b> - 主要供开发人员使用。"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -146,13 +150,15 @@ msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
+"title=\"Confirm Registration\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "<i class=\"fa fa-info-circle mr-2\"></i>This event and all the conferences "
 "are in <b>English</b>!"
-msgstr ""
+msgstr "<i class=\"fa fa-info-circle mr-2\"></i>该活动和所有会议均使用<b>英语</b>！"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -166,7 +172,7 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"箭头图标\" title=\"箭头\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -198,6 +204,8 @@ msgid ""
 "<span class=\"badge badge-secondary o_wevent_badge float-"
 "right\">SPEAKER</span>"
 msgstr ""
+"<span class=\"badge badge-secondary o_wevent_badge float-"
+"right\">SPEAKER</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -219,8 +227,8 @@ msgstr "警告：这活动的登记人数没有达到最低的人数要求，你
 #: model:mail.template,body_html:event.event_subscription
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"% set date_begin = format_datetime(object.event_id.date_begin, tz='UTC', dt_format='%Y%m%dT%H%M%SZ')\n"
-"% set date_end = format_datetime(object.event_id.date_end, tz='UTC', dt_format='%Y%m%dT%H%M%SZ')\n"
+"% set date_begin = format_datetime(object.event_id.date_begin, tz='UTC', dt_format=\"yyyyMMdd'T'HHmmss'Z'\")\n"
+"% set date_end = format_datetime(object.event_id.date_end, tz='UTC', dt_format=\"yyyyMMdd'T'HHmmss'Z'\")\n"
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
@@ -361,7 +369,7 @@ msgid ""
 "                                <strong>Add this event to your calendar</strong>\n"
 "                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text=${object.event_id.name}&amp;dates=${date_begin}/${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
 "                                <a href=\"/event/${slug(object.event_id)}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> iCal/Outlook</a>\n"
-"                                <a href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title=${object.event_id.name}&amp;in_loc=${location}&amp;st=${format_datetime(object.event_id.date_begin, tz='UTC', dt_format='%Y%m%dT%H%M%S')}&amp;et=${format_datetime(object.event_id.date_end, tz='UTC', dt_format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title=${object.event_id.name}&amp;in_loc=${location}&amp;st=${format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss')}&amp;et=${format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
 "                                    <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo</a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -409,8 +417,8 @@ msgstr ""
 #: model:mail.template,body_html:event.event_reminder
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"% set date_begin = format_datetime(object.event_id.date_begin, tz='UTC', dt_format='%Y%m%dT%H%M%SZ')\n"
-"% set date_end = format_datetime(object.event_id.date_end, tz='UTC', dt_format='%Y%m%dT%H%M%SZ')\n"
+"% set date_begin = format_datetime(object.event_id.date_begin, tz='UTC', dt_format=\"yyyyMMdd'T'HHmmss'Z'\")\n"
+"% set date_end = format_datetime(object.event_id.date_end, tz='UTC', dt_format=\"yyyyMMdd'T'HHmmss'Z'\")\n"
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
@@ -551,7 +559,7 @@ msgid ""
 "                                <strong>Add this event to your calendar</strong>\n"
 "                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text=${object.event_id.name}&amp;dates=${date_begin}/${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
 "                                <a href=\"/event/${slug(object.event_id)}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> iCal/Outlook</a>\n"
-"                                <a href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title=${object.event_id.name}&amp;in_loc=${location}&amp;st=${format_datetime(object.event_id.date_begin, tz='UTC', dt_format='%Y%m%dT%H%M%S')}&amp;et=${format_datetime(object.event_id.date_end, tz='UTC', dt_format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title=${object.event_id.name}&amp;in_loc=${location}&amp;st=${format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss')}&amp;et=${format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
 "                                    <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo</a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -661,7 +669,7 @@ msgstr "事件之后"
 #. module: event
 #: model:event.event,name:event.event_6
 msgid "An unpublished event"
-msgstr ""
+msgstr "未发布活动"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -684,6 +692,8 @@ msgid ""
 "founded TinyERP. This was the first phase of OpenERP which would later "
 "became Odoo, the most installed open-source business software worldwide."
 msgstr ""
+"John DOE才13岁，已经开始为客户开发他的第一个业务应用程序。 精通土木工程后，他创立了TinyERP。 "
+"这是OpenERP的第一阶段，后来成为Odoo，这是全球安装最多的开源商业软件。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_attachment_count
@@ -793,12 +803,12 @@ msgstr "在事件之前"
 msgid ""
 "Bring your outdoor field hockey season to the next level by taking the field"
 " at this 9th annual Field Hockey tournament."
-msgstr ""
+msgstr "通过参加第9届年度曲棍球锦标赛，使您的户外曲棍球赛季更上一层楼。"
 
 #. module: event
 #: model:event.event,name:event.event_4
 msgid "Business workshops"
-msgstr ""
+msgstr "商业研讨会"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
@@ -833,7 +843,7 @@ msgstr "类别"
 msgid ""
 "Chamber Works reserves the right to cancel, re-name or re-locate the event "
 "or change the dates on which it is held."
-msgstr ""
+msgstr "Chamber Works保留取消、重命名、重新定位活动或更改举办日期的权利。"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -993,7 +1003,7 @@ msgstr "洛杉矶设计博览会"
 #. module: event
 #: model:event.event,subtitle:event.event_4
 msgid "Discover how to grow a sustainable business with our experts."
-msgstr ""
+msgstr "与我们的专家一起探索如何建立可持续发展的业务。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__display_name
@@ -1052,7 +1062,7 @@ msgstr "定位最后日期"
 #. module: event
 #: model:event.event,subtitle:event.event_2
 msgid "Enhance your architectural business and improve professional skills."
-msgstr ""
+msgstr "增强您的建筑业务并提高专业技能。"
 
 #. module: event
 #: model:ir.model,name:event.model_event_event
@@ -1242,7 +1252,7 @@ msgid ""
 "us! It's the ideal event to get together and present new features, roadmap "
 "of future versions, achievements of the software, workshops, training "
 "sessions, etc...."
-msgstr ""
+msgstr "每年我们都邀请社区，合作伙伴和最终用户来与我们见面！ 这是聚会和展示新功能，未来版本路线图，软件的成就，研讨会，培训课程等的完美活动。"
 
 #. module: event
 #: model:event.type,name:event.event_type_1
@@ -1262,7 +1272,7 @@ msgstr "预计的与会者"
 #. module: event
 #: model:event.event,subtitle:event.event_3
 msgid "Experience live music, local food and beverages."
-msgstr ""
+msgstr "体验现场音乐，当地美食和饮料。"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1322,12 +1332,12 @@ msgstr "未来活动"
 #. module: event
 #: model:event.event,subtitle:event.event_0
 msgid "Get Inspired • Stay Connected • Have Fun"
-msgstr ""
+msgstr "受到启发•保持联系•玩得开心"
 
 #. module: event
 #: model:event.event,name:event.event_1
 msgid "Great Reno Ballon Race"
-msgstr ""
+msgstr "大里诺热气球竞赛"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1343,7 +1353,7 @@ msgstr "已出席本次会议的参加者应能："
 #. module: event
 #: model:event.event,name:event.event_5
 msgid "Hockey Tournament"
-msgstr ""
+msgstr "曲棍球比赛"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
@@ -1436,7 +1446,7 @@ msgstr "关注者"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
 msgid "Is One Day"
-msgstr ""
+msgstr "为一天"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__default_registration_max
@@ -1451,12 +1461,12 @@ msgstr "当你选择这个活动，将选择默认最小值"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "John DOE"
-msgstr ""
+msgstr "John DOE"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Join us for this 3-day Event"
-msgstr ""
+msgstr "加入我们参加为期三天的活动"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__color
@@ -1515,7 +1525,7 @@ msgstr "有限名额"
 #. module: event
 #: model:event.event,name:event.event_3
 msgid "Live Music Festival"
-msgstr ""
+msgstr "现场音乐节"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
@@ -1768,6 +1778,8 @@ msgid ""
 "OpenElec Applications reserves the right to cancel, re-name or re-locate the"
 " event or change the dates on which it is held."
 msgstr ""
+"OpenElec Applications保留取消、重命名、重新定位活动或更改举行日期的权利。\n"
+" "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
@@ -2000,7 +2012,7 @@ msgstr "源单据"
 #. module: event
 #: model:event.type,name:event.event_type_5
 msgid "Sport"
-msgstr ""
+msgstr "体育"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin
@@ -2040,7 +2052,7 @@ msgstr ""
 msgid ""
 "The Great Reno Balloon Race is the world's largest free hot-air ballooning "
 "event."
-msgstr ""
+msgstr "大里诺热气球竞赛是世界上最大的免费热气球竞赛。"
 
 #. module: event
 #: code:addons/event/models/event.py:0
@@ -2062,7 +2074,7 @@ msgid ""
 "This event is also an opportunity to showcase our partners' case studies, "
 "methodology or developments. Be there and see directly from the source the "
 "features of the version 12!"
-msgstr ""
+msgstr "该活动也是展示合作伙伴的案例研究，方法论或发展的机会。 在那里，直接从源代码中查看版本12的功能！"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__template_id
@@ -2230,7 +2242,7 @@ msgstr "周"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "What's new?"
-msgstr ""
+msgstr "有什么新消息？"
 
 #. module: event
 #: code:addons/event/models/event.py:0

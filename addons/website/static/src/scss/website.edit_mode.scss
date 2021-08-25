@@ -20,9 +20,24 @@ $-editor-messages-margin-x: 2%;
 
 .o_editable {
     &:not(:empty), &[data-oe-type] {
-        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):hover,
+        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):not([data-oe-type="image"]):hover,
         &.o_editable_date_field_linked {
             box-shadow: $o-brand-odoo 0 0 5px 2px inset;
+        }
+        &[data-oe-type="image"]:hover {
+            position: relative;
+
+            &:after {
+                content: "";
+                pointer-events: none;
+                position: absolute;
+                z-index: 1;
+                top: 0px;
+                left: 0px;
+                right: 0px;
+                bottom: 0px;
+                box-shadow: $o-brand-odoo 0 0 5px 2px inset;
+            }
         }
     }
     &:focus, &[data-oe-type] {

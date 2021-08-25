@@ -18,6 +18,20 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     --o-we-snippets-color: #{$o-we-color};
 }
 
+.o_we_command_protector {
+    font-weight: 400 !important;
+
+    b, strong {
+        font-weight: 700 !important;
+    }
+    * {
+        font-weight: inherit !important;
+    }
+    .btn {
+        text-align: unset !important;
+    }
+}
+
 // EDITOR TOP BAR AND POPOVER
 .note-popover .popover {
     max-width: 350px;
@@ -258,6 +272,10 @@ body .modal {
                     &:hover {
                         color: $o-we-color-danger;
                     }
+                }
+
+                .o_file_name {
+                    @include o-text-overflow;
                 }
 
                 &:hover {

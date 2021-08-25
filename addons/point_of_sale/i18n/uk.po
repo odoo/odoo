@@ -5,14 +5,14 @@
 # Translators:
 # ТАрас <tratatuta@i.ua>, 2019
 # Bohdan Lisnenko, 2019
-# Martin Trigaux, 2019
+# Martin Trigaux, 2020
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-10-27 11:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -250,18 +250,6 @@ msgstr "= Очікується готівкою"
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? Натискання на \"Підтвердити\" підтвердить платіж."
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid ""
-"A Chart of Accounts is not yet installed in your current company. Please "
-"install a Chart of Accounts through the Invoicing/Accounting settings before"
-" launching a PoS session."
-msgstr ""
-"План рахунків досі не встановлено в поточній компанії. Встановіть план "
-"рахунків через налаштування Виставлення рахунків/Бухобліку перед запуском "
-"сесії точки продажу."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3107,6 +3095,13 @@ msgstr "Будь ласка, визначте партнера для прода
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid "Please provide valid email"
+msgstr "Введіть дійсну email-адресу"
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Please select a payment method."
@@ -3118,6 +3113,13 @@ msgstr "Будь ласка, оберіть спосіб оплати."
 #, python-format
 msgid "Please select the Customer"
 msgstr "Будь ласка, оберіть клієнта"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid "Please select the customer"
+msgstr "Оберіть клієнта"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pos_categ_id
@@ -3253,6 +3255,7 @@ msgstr "Звіт замовлень точки продажу"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment_method
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_import_journal_creation__pos_payment_method_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__pos_payment_method_ids
 msgid "Point of Sale Payment Methods"
 msgstr "Способи оплати точки продажу"
@@ -4274,6 +4277,7 @@ msgstr "Відображення податку"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
@@ -4463,6 +4467,14 @@ msgid ""
 msgstr ""
 "Платіжний метод - це готівковий тип. Виписку по касі буде створено "
 "автоматично."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_payment.py:0
+#, python-format
+msgid ""
+"The payment method selected is not allowed in the config of the POS session."
+msgstr ""
+"Обраний метод платежу не дозволений у налаштуваннях сесії Точки продажу."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__config_id
@@ -4676,6 +4688,17 @@ msgstr ""
 "контакту призначено унікальний штрих-код."
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid ""
+"This customer does not have a valid email address, define one or do not send"
+" an email."
+msgstr ""
+"У цього клієнта немає дійсної адреси електронної пошти, визначіть її або не "
+"надсилайте email."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
 msgid ""
 "This field depicts the maximum difference allowed between the ending balance"
@@ -4777,6 +4800,13 @@ msgid ""
 msgstr ""
 "Ця послідовність автоматично створюється Odoo, але ви можете змінити її, "
 "щоби налаштувати довідкові номери ваших замовлень."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "This session is already closed."
+msgstr "Цю сесію вже закрито."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4927,6 +4957,11 @@ msgstr "Разом:"
 #, python-format
 msgid "Transaction cancelled"
 msgstr "Транзакцію скасовано"
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Переміщення"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
@@ -5100,13 +5135,6 @@ msgstr "Мітки користувача"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__uuid
 msgid "Uuid"
 msgstr "Uuid"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:0
-#, python-format
-msgid "VAT:"
-msgstr "ПДВ:"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5337,6 +5365,16 @@ msgstr ""
 #, python-format
 msgid "You need to select the customer before you can invoice an order."
 msgstr "Ви повинні обрати клієнта перед тим, як виставляти йому рахунок."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid ""
+"You need to select the customer before you can send the receipt via email."
+msgstr ""
+"Вам необхідно обрати клієнта до того, як ви можете надіслати чек через "
+"email."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0

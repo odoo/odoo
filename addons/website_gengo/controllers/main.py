@@ -19,7 +19,7 @@ class WebsiteGengo(http.Controller):
 
     @http.route('/website/check_gengo_set', type='json', auth='user', website=True)
     def check_gengo_set(self):
-        company = request.env.user.sudo().company_id
+        company = request.env.company.sudo()
         company_flag = 0
         if not company.gengo_public_key or not company.gengo_private_key:
             company_flag = company.id

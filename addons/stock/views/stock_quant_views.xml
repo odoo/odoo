@@ -172,6 +172,11 @@
         <field name="domain">[('product_id.product_tmpl_id', '=', active_id)]</field>
         <field name="res_model">stock.quant</field>
     </record>
+    <record model="ir.actions.act_window" id="dashboard_open_quants"> <!-- Used in dashboard -->
+        <field name="name">Update Quantity</field>
+        <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1, 'search_default_locationgroup':1}</field>
+        <field name="res_model">stock.quant</field>
+    </record>
     <record model="ir.actions.act_window" id="location_open_quants"> <!-- Used in location -->
         <field name="context">{'search_default_productgroup': 1}</field>
         <field name="domain">[('location_id', 'child_of', active_ids)]</field>

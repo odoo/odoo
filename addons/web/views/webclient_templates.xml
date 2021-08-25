@@ -421,7 +421,7 @@
                 <title t-esc="title or 'Odoo'"/>
                 <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/src/img/favicon.ico'"/>
 
-                <script type="text/javascript">
+                <script id="web.layout.odooscript" type="text/javascript">
                     var odoo = {
                         csrf_token: "<t t-esc="request.csrf_token(None)"/>",
                         debug: "<t t-esc="debug"/>",
@@ -441,7 +441,7 @@
             <t t-call-assets="web.assets_common" t-js="false"/>
             <t t-call-assets="web.assets_frontend" t-js="false"/>
         </xpath>
-        <xpath expr="//head/script" position="after">
+        <xpath expr="//head/script[@id='web.layout.odooscript'] | //head/script[last()]" position="after">
             <script type="text/javascript">
                 odoo.session_info = <t t-raw="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
             </script>

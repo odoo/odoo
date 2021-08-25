@@ -56,6 +56,24 @@ class BaseFunctionalTest(common.SavepointCase):
         cls.email_template = cls.env['mail.template'].create(create_values)
         return cls.email_template
 
+    def _generate_notify_recipients(self, partners):
+        """ Tool method to generate recipients data according to structure used
+        in notification methods. Purpose is to allow testing of internals of
+        some notification methods, notably testing links or group-based notification
+        details.
+
+        See notably ``MailThread._notify_compute_recipients()``.
+        """
+        return [
+            {'id': partner.id,
+             'active': True,
+             'share': partner.partner_share,
+             'groups': partner.user_ids.groups_id.ids,
+             'notif': partner.user_ids.notification_type or 'email',
+             'type': 'user' if partner.user_ids and not partner.partner_share else partner.user_ids and 'portal' or 'customer',
+            } for partner in partners
+        ]
+
     @classmethod
     def _init_mail_gateway(cls):
         cls.alias_domain = 'test.com'
@@ -328,16 +346,16 @@ class MockEmails(common.SingleTransactionCase):
 
     def format(self, template, to='groups@example.com, other@gmail.com', subject='Frogs',
                extra='', email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>',
-               cc='', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>'):
-        return template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
+               cc='', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>', **kwargs):
+        return template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id, **kwargs)
 
     def format_and_process(self, template, email_from, to, subject='Frogs', extra='',  cc='', msg_id=False,
-                           model=None, target_model='mail.test.gateway', target_field='name'):
+                           model=None, target_model='mail.test.gateway', target_field='name', **kwargs):
         self.assertFalse(self.env[target_model].search([(target_field, '=', subject)]))
         if not msg_id:
             msg_id = "<%.7f-test@iron.sky>" % (time.time())
 
-        mail = self.format(template, to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
+        mail = self.format(template, to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id, **kwargs)
         self.env['mail.thread'].with_context(mail_channel_noautofollow=True).message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
 

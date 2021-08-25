@@ -19,6 +19,11 @@ from odoo.addons.base.models.ir_qweb_fields import nl2br
 
 class WebsiteForm(http.Controller):
 
+    @http.route('/website_form/', type='http', auth="public", methods=['POST'], multilang=False)
+    def website_form_empty(self, **kwargs):
+        # This is a workaround to don't add language prefix to <form action="/website_form/" ...>
+        return ""
+
     # Check and insert values from the form on the model <model>
     @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True, csrf=False)
     def website_form(self, model_name, **kwargs):
@@ -261,6 +266,7 @@ class WebsiteForm(http.Controller):
                     'no_auto_thread': False,
                     'res_id': id_record,
                     'attachment_ids': [(6, 0, orphan_attachment_ids)],
+                    'subtype_id': request.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'),
                 }
                 mail_id = request.env['mail.message'].with_user(SUPERUSER_ID).create(values)
         else:

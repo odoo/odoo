@@ -968,7 +968,8 @@ registry.gallerySlider = publicWidget.Widget.extend({
         }
 
         function update() {
-            index = $lis.index($lis.filter('.active')) || 0;
+            const active = $lis.filter('.active');
+            index = active.length ? $lis.index(active) : 0;
             page = Math.floor(index / realNbPerPage);
             hide();
         }

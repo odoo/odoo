@@ -6,15 +6,15 @@
 # Vida Potočnik <vida.potocnik@mentis.si>, 2020
 # Dejan Sraka <dejan.sraka@picolabs.si>, 2020
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2020
-# Leo S. <inactive+sp9leonardo@transifex.com>, 2020
+# 30f0e0f3823f68feca8520042fbda052_98cf833 <72cf8012f0cd98a260fb74dcfcf48299_343025>, 2020
 # laznikd <laznik@mentis.si>, 2020
 # jl2035 <jaka.luthar@gmail.com>, 2020
 # Simon Gorše <simon@gorse.org>, 2020
 # Boris Kodelja <boris@hbs.si>, 2020
-# Jasmina Macur <jasmina@hbs.si>, 2020
 # Martin Trigaux, 2020
 # matjaz k <matjaz@mentis.si>, 2020
-# Tadej Lupšina <tadej@hbs.si>, 2020
+# Jasmina Macur <jasmina@hbs.si>, 2021
+# Tadej Lupšina <tadej@hbs.si>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2020\n"
+"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -679,7 +679,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__0
 msgid "Cubic Meters"
-msgstr ""
+msgstr "Kubični metri"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__currency_id
@@ -727,7 +727,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__uom_id
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "Privzeta merska enota, ki se uporablja za vse operacije z zalogami."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__uom_po_id
@@ -1400,7 +1400,7 @@ msgstr "Število aktivnosti"
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Število napak"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
@@ -1742,7 +1742,7 @@ msgstr "Skupina izdelkov"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_configurator
 msgid "Product Configurator"
-msgstr ""
+msgstr "Konfigurator izdelkov"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_label
@@ -1996,7 +1996,7 @@ msgstr "Prodaja"
 #: model:ir.model.fields,field_description:product.field_product_template__description_sale
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Sales Description"
-msgstr ""
+msgstr "Prodajni opis"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_matrix
@@ -2286,7 +2286,7 @@ msgstr "Vsota vseh dodatkov k ceni za vse atribute"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is added to sales orders and invoices."
-msgstr ""
+msgstr "Ta opomba je dodana prodajnim nalogov in računov."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2301,6 +2301,15 @@ msgid ""
 "current partner"
 msgstr ""
 "Ta cenik bo uporabljen namesto privzetega, za prodajo trenutnemu partnerju"
+
+#. module: product
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid ""
+"This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
+"This may cause inconsistencies in computations.\n"
+"Please set a precision between %s and 1."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -2337,7 +2346,7 @@ msgstr "Današnje aktivnosti"
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Vrsta dejavnosti izjeme na zapisu. "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__product_uom_id
@@ -2612,6 +2621,13 @@ msgid "Volume unit of measure label"
 msgstr ""
 
 #. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid "Warning!"
+msgstr "Opozorilo!"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Warnings"
 msgstr "Opozorila"
@@ -2643,6 +2659,16 @@ msgstr ""
 #: model:product.template.attribute.value,name:product.product_4_attribute_2_value_1
 msgid "White"
 msgstr "Bela"
+
+#. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOMs:\n"
+"%s\n"
+"This may cause inconsistencies in computations.\n"
+"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+msgstr ""
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -2745,6 +2771,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"Definirate morate vsak izdelek, katerega prodajate ali kupujete,\n"
+"                ne glede na to, ali gre za izdelek z zalogo, potrošni material ali storitev. "
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action

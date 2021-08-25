@@ -74,6 +74,10 @@ class FleetVehicleCost(models.Model):
                 del data['odometer']
         return super(FleetVehicleCost, self).create(vals_list)
 
+    def unlink(self):
+        if self.contract_id:
+            raise UserError(_('You cannot delete an activation cost linked to a contract. You should delete the contract instead.'))
+        return super(FleetVehicleCost, self).unlink()
 
 class FleetVehicleLogContract(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -177,11 +181,24 @@ class FleetVehicleLogContract(models.Model):
     def _onchange_vehicle(self):
         if self.vehicle_id:
             self.odometer_unit = self.vehicle_id.odometer_unit
+    
+    @api.model
+    def create(self, vals):
+        res = super(FleetVehicleLogContract, self).create(vals)
+        res.cost_id.write({'contract_id': res.id})
+        return res
 
     def write(self, vals):
         res = super(FleetVehicleLogContract, self).write(vals)
         if vals.get('expiration_date') or vals.get('user_id'):
             self.activity_reschedule(['fleet.mail_act_fleet_contract_to_renew'], date_deadline=vals.get('expiration_date'), new_user_id=vals.get('user_id'))
+        return res
+
+    def unlink(self):
+        cost_to_unlink = self.cost_id
+        res = super(FleetVehicleLogContract, self).unlink()
+        if cost_to_unlink:
+            cost_to_unlink.unlink()
         return res
 
     def contract_close(self):
@@ -252,7 +269,7 @@ class FleetVehicleLogContract(models.Model):
             while (startdate <= today) & (startdate <= contract.expiration_date):
                 data = {
                     'amount': contract.cost_generated,
-                    'date': fields.Date.context_today(self),
+                    'date': startdate,
                     'vehicle_id': contract.vehicle_id.id,
                     'cost_subtype_id': contract.cost_subtype_id.id,
                     'contract_id': contract.id,

@@ -55,7 +55,7 @@ class AccountMove(models.Model):
         # Invoice lines.
         for i, line in enumerate(self.invoice_line_ids.filtered(lambda l: not l.display_type)):
             price_unit_with_discount = line.price_unit * (1 - (line.discount / 100.0))
-            taxes_res = line.tax_ids.compute_all(
+            taxes_res = line.tax_ids.with_context(force_sign=line.move_id._get_tax_force_sign()).compute_all(
                 price_unit_with_discount,
                 currency=line.currency_id,
                 quantity=line.quantity,
@@ -95,6 +95,18 @@ class AccountMove(models.Model):
         :param tree: The tree of the Factur-x xml file.
         :return: A dictionary containing account.invoice values to create/update it.
         '''
+        def find_partner(partner_type):
+            elements = tree.xpath('//ram:%s/ram:SpecifiedTaxRegistration/ram:ID' % partner_type, namespaces=tree.nsmap)
+            partner = elements and self.env['res.partner'].search([('vat', '=', elements[0].text)], limit=1)
+            if not partner:
+                elements = tree.xpath('//ram:%s/ram:Name' % partner_type, namespaces=tree.nsmap)
+                partner_name = elements and elements[0].text
+                partner = elements and self.env['res.partner'].search([('name', 'ilike', partner_name)], limit=1)
+            if not partner:
+                elements = tree.xpath('//ram:%s//ram:URIID[@schemeID=\'SMTP\']' % partner_type, namespaces=tree.nsmap)
+                partner = elements and self.env['res.partner'].search([('email', '=', elements[0].text)], limit=1)
+            return partner or self.env["res.partner"]
+
         amount_total_import = None
 
         default_type = False
@@ -142,17 +154,11 @@ class AccountMove(models.Model):
         with Form(self.with_context(default_type=default_type)) as invoice_form:
             # Partner (first step to avoid warning 'Warning! You must first select a partner.').
             partner_type = invoice_form.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
-            elements = tree.xpath('//ram:'+partner_type+'/ram:SpecifiedTaxRegistration/ram:ID', namespaces=tree.nsmap)
-            partner = elements and self.env['res.partner'].search([('vat', '=', elements[0].text)], limit=1)
-            if not partner:
-                elements = tree.xpath('//ram:'+partner_type+'/ram:Name', namespaces=tree.nsmap)
-                partner_name = elements and elements[0].text
-                partner = elements and self.env['res.partner'].search([('name', 'ilike', partner_name)], limit=1)
-            if not partner:
-                elements = tree.xpath('//ram:'+partner_type+'//ram:URIID[@schemeID=\'SMTP\']', namespaces=tree.nsmap)
-                partner = elements and self.env['res.partner'].search([('email', '=', elements[0].text)], limit=1)
-            if partner:
-                invoice_form.partner_id = partner
+            invoice_form.partner_id = find_partner(partner_type)
+
+            # Delivery Partner
+            if 'partner_shipping_id' in self._fields:
+                invoice_form.partner_shipping_id = find_partner('ShipToTradeParty')
 
             # Reference.
             elements = tree.xpath('//rsm:ExchangedDocument/ram:ID', namespaces=tree.nsmap)
@@ -274,19 +280,18 @@ class AccountMove(models.Model):
 
         return invoice_form.save()
 
-    @api.returns('mail.message', lambda value: value.id)
-    def message_post(self, **kwargs):
+    def _message_post_process_attachments(self, attachments, attachment_ids, message_values):
         # OVERRIDE
         # /!\ 'default_res_id' in self._context is used to don't process attachment when using a form view.
-        res = super(AccountMove, self).message_post(**kwargs)
-
+        return_values = super()._message_post_process_attachments(attachments, attachment_ids, message_values)
         if not self.env.context.get('no_new_invoice') and len(self) == 1 and self.state == 'draft' and (
             self.env.context.get('default_type', self.type) in self.env['account.move'].get_invoice_types(include_receipts=True)
             or self.env['account.journal'].browse(self.env.context.get('default_journal_id')).type in ('sale', 'purchase')
         ):
-            for attachment in self.env['ir.attachment'].browse(kwargs.get('attachment_ids', [])):
+            attachments = self.env['ir.attachment'].browse([c[1] for c in return_values['attachment_ids']])
+            for attachment in attachments:
                 self._create_invoice_from_attachment(attachment)
-        return res
+        return return_values
 
     def _create_invoice_from_attachment(self, attachment):
         if 'pdf' in attachment.mimetype:
@@ -311,13 +316,11 @@ class AccountMove(models.Model):
                     # '[::2]' because it's a list [fn_1, content_1, fn_2, content_2, ..., fn_n, content_2]
                     for filename_obj, content_obj in list(zip(embedded_files, embedded_files[1:]))[::2]:
                         content = content_obj.getObject()['/EF']['/F'].getData()
-
-                        if filename_obj == 'factur-x.xml':
-                            try:
-                                tree = etree.fromstring(content)
-                            except Exception:
-                                continue
-
+                        try:
+                            tree = etree.fromstring(content)
+                        except Exception:
+                            continue
+                        if tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
                             self._import_facturx_invoice(tree)
                             self._remove_ocr_option()
                             buffer.close()

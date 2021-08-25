@@ -192,11 +192,19 @@ class SaleOrderOption(models.Model):
             return [('line_id', '=', False)]
         return [('line_id', '!=', False)]
 
-    @api.onchange('product_id', 'uom_id')
+    @api.onchange('product_id', 'uom_id', 'quantity')
     def _onchange_product_id(self):
         if not self.product_id:
             return
-        product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
+        product = self.product_id.with_context(
+            lang=self.order_id.partner_id.lang,
+            partner=self.order_id.partner_id,
+            quantity=self.quantity,
+            date=self.order_id.date_order,
+            pricelist=self.order_id.pricelist_id.id,
+            uom=self.uom_id.id,
+            fiscal_position=self.env.context.get('fiscal_position')
+        )
         self.name = product.get_product_multiline_description_sale()
         self.uom_id = self.uom_id or product.uom_id
         domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
@@ -205,7 +213,8 @@ class SaleOrderOption(models.Model):
         new_sol = self.env['sale.order.line'].new(values)
         new_sol._onchange_discount()
         self.discount = new_sol.discount
-        self.price_unit = new_sol._get_display_price(product)
+        if self.order_id.pricelist_id and self.order_id.partner_id:
+            self.price_unit = new_sol._get_display_price(product)
         return {'domain': domain}
 
     def button_add_to_order(self):

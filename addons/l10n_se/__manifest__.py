@@ -18,4 +18,5 @@
         "data/account_fiscal_position_tax_template.xml",
         "data/account_chart_template_configuration.xml",
     ],
+    'license': 'LGPL-3',
  }

@@ -87,4 +87,5 @@ The kernel of Odoo, needed for all installation.
     'installable': True,
     'auto_install': True,
     'post_init_hook': 'post_init',
+    'license': 'LGPL-3',
 }

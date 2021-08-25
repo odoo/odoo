@@ -105,6 +105,7 @@ var SlideUnsubscribeDialog = Dialog.extend({
 
     _onClickSubscriptionSubmit: function () {
         if (this.isFollower === this.getSubscriptionState()) {
+            this.destroy();
             return;
         }
         this._rpc({

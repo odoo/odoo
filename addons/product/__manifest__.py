@@ -48,4 +48,5 @@ Print product labels with barcode.
     ],
     'installable': True,
     'auto_install': False,
+    'license': 'LGPL-3',
 }

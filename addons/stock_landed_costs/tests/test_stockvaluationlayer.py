@@ -8,6 +8,7 @@ from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockVa
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 
 
+@tagged('post_install', '-at_install')
 class TestStockValuationLC(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
@@ -76,6 +77,7 @@ class TestStockValuationLC(TestStockValuationCommon):
         return lc
 
 
+@tagged('post_install', '-at_install')
 class TestStockValuationLCFIFO(TestStockValuationLC):
     def setUp(self):
         super(TestStockValuationLCFIFO, self).setUp()
@@ -191,6 +193,7 @@ class TestStockValuationLCFIFO(TestStockValuationLC):
         self.assertEqual(move2.stock_valuation_layer_ids.value, -115)
 
 
+@tagged('post_install', '-at_install')
 class TestStockValuationLCAVCO(TestStockValuationLC):
     def setUp(self):
         super(TestStockValuationLCAVCO, self).setUp()
@@ -233,6 +236,7 @@ class TestStockValuationLCAVCO(TestStockValuationLC):
         self.assertEqual(self.product1.quantity_svl, 19)
 
 
+@tagged('post_install', '-at_install')
 class TestStockValuationLCFIFOVB(TestStockValuationLC):
     @classmethod
     def setUpClass(cls):
@@ -459,9 +463,9 @@ class TestStockValuationLCFIFOVB(TestStockValuationLC):
         self.assertEqual(lc.cost_lines.price_unit, 50)
         self.assertEqual(lc.cost_lines.product_id, self.productlc1)
 
-        expense_aml = self._get_expense_move_lines()[-1]
-        self.assertEqual(expense_aml.debit, 0)
-        self.assertEqual(expense_aml.credit, 50)
+        input_aml = self._get_stock_input_move_lines()[-1]
+        self.assertEqual(input_aml.debit, 0)
+        self.assertEqual(input_aml.credit, 50)
         valuation_aml = self._get_stock_valuation_move_lines()[-1]
         self.assertEqual(valuation_aml.debit, 50)
         self.assertEqual(valuation_aml.credit, 0)

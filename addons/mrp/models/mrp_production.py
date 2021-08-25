@@ -347,6 +347,7 @@ class MrpProduction(models.Model):
                 if (
                     production.bom_id.consumption == 'flexible'
                     and float_compare(production.qty_produced, production.product_qty, precision_rounding=production.product_uom_id.rounding) == -1
+                    and production.state != 'done'
                 ):
                     production.state = 'progress'
                 else:
@@ -451,7 +452,7 @@ class MrpProduction(models.Model):
             'date': self.date_planned_start,
             'date_expected': self.date_planned_start,
         })
-        if not self.routing_id:
+        if self.date_planned_start and not self.routing_id:
             self.date_planned_finished = self.date_planned_start + datetime.timedelta(hours=1)
 
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
@@ -576,7 +577,7 @@ class MrpProduction(models.Model):
             'propagate_cancel': self.propagate_cancel,
             'propagate_date': self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
-            'move_dest_ids': [(4, x.id) for x in self.move_dest_ids],
+            'move_dest_ids': [(4, x.id) for x in self.move_dest_ids if not byproduct_id],
         }
 
     def _generate_finished_moves(self):
@@ -658,6 +659,7 @@ class MrpProduction(models.Model):
                 return self.env['stock.move'], old_qty, quantity
         else:
             move_values = self._get_move_raw_values(bom_line, line_data)
+            move_values['state'] = 'confirmed'
             move = self.env['stock.move'].create(move_values)
             return move, 0, quantity
 
@@ -941,6 +943,9 @@ class MrpProduction(models.Model):
                         + "You must complete the work orders before posting the inventory."
                     )
                 )
+
+            if not any(order.move_raw_ids.mapped('quantity_done')):
+                raise UserError(_("You must indicate a non-zero amount consumed for at least one of your components"))
 
             moves_not_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done')
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))

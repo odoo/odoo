@@ -16,6 +16,18 @@ class AccountFiscalPosition(models.Model):
         """ Take into account the partner afip responsibility in order to auto-detect the fiscal position """
         company = self.env['res.company'].browse(self._context.get('force_company', self.env.company.id))
         if company.country_id == self.env.ref('base.ar'):
+            PartnerObj = self.env['res.partner']
+            partner = PartnerObj.browse(partner_id)
+
+            # if no delivery use invoicing
+            if delivery_id:
+                delivery = PartnerObj.browse(delivery_id)
+            else:
+                delivery = partner
+
+            # partner manually set fiscal position always win
+            if delivery.property_account_position_id or partner.property_account_position_id:
+                return delivery.property_account_position_id.id or partner.property_account_position_id.id
             domain = [
                 ('auto_apply', '=', True),
                 ('l10n_ar_afip_responsibility_type_ids', '=', self.env['res.partner'].browse(

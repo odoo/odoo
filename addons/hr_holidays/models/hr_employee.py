@@ -80,12 +80,12 @@ class HrEmployeeBase(models.AbstractModel):
                 ('holiday_status_id.active', '=', True),
                 ('state', '=', 'validate'),
             ])
-            employee.allocation_count = sum(allocations.mapped('number_of_days'))
+            employee.allocation_count = float_round(sum(allocations.mapped('number_of_days')), precision_digits=2)
             employee.allocation_display = "%g" % employee.allocation_count
 
     def _compute_total_allocation_used(self):
         for employee in self:
-            employee.allocation_used_count = employee.allocation_count - employee.remaining_leaves
+            employee.allocation_used_count = float_round(employee.allocation_count - employee.remaining_leaves, precision_digits=2)
             employee.allocation_used_display = "%g" % employee.allocation_used_count
 
     def _compute_presence_state(self):
@@ -184,3 +184,13 @@ class HrEmployeeBase(models.AbstractModel):
             allocations = self.env['hr.leave.allocation'].sudo().search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
             allocations.write(hr_vals)
         return res
+
+class HrEmployeePrivate(models.Model):
+    _inherit = 'hr.employee'
+
+class HrEmployeePublic(models.Model):
+    _inherit = 'hr.employee.public'
+
+    def _compute_leave_status(self):
+        super()._compute_leave_status()
+        self.current_leave_id = False

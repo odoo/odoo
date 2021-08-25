@@ -107,7 +107,11 @@ class AccountInvoiceReport(models.Model):
                 line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                                                                             AS quantity,
                 -line.balance                                               AS price_subtotal,
-                -line.balance / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)
+                -COALESCE(line.balance
+                   / NULLIF(line.quantity, 0.0)
+                   / NULLIF(COALESCE(uom_line.factor, 1), 0.0)
+                   / NULLIF(COALESCE(uom_template.factor, 1), 0.0),
+                   0.0)
                                                                             AS price_average,
                 COALESCE(partner.country_id, commercial_partner.country_id) AS country_id,
                 1                                                           AS nbr_lines

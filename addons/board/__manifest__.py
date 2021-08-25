@@ -20,4 +20,5 @@ Allows users to create custom dashboard.
     ],
     'qweb': ['static/src/xml/board.xml'],
     'application': True,
+    'license': 'LGPL-3',
 }

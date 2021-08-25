@@ -11,15 +11,15 @@
 # Mark Lee <odoos@soti.33mail.com>, 2019
 # Martin Trigaux, 2019
 # Linkup <link-up@naver.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2020
+# JH CHOI <hwangtog@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-10-27 11:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -252,17 +252,6 @@ msgstr "= 예상 현금"
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? \"확인\"을 클릭하면 결제가 승인됩니다."
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid ""
-"A Chart of Accounts is not yet installed in your current company. Please "
-"install a Chart of Accounts through the Invoicing/Accounting settings before"
-" launching a PoS session."
-msgstr ""
-"현재 회사에 계정과목 일람표가 아직 설치되어 있지 않습니다. POS 세션을 시작하기 전에 송장/회계 설정을 통해 계정과목 일람표를 "
-"설치하십시오."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3054,6 +3043,13 @@ msgstr "이 판매의 파트너를 입력하십시오."
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid "Please provide valid email"
+msgstr "올바른 전자 메일을 제공하십시오."
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Please select a payment method."
@@ -3064,6 +3060,13 @@ msgstr "결제 방법을 선택하십시오."
 #: code:addons/point_of_sale/static/src/js/screens.js:0
 #, python-format
 msgid "Please select the Customer"
+msgstr "고객을 선택하십시오"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid "Please select the customer"
 msgstr "고객을 선택하십시오"
 
 #. module: point_of_sale
@@ -3200,6 +3203,7 @@ msgstr "점포판매시스템 주문 보고서"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment_method
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_import_journal_creation__pos_payment_method_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__pos_payment_method_ids
 msgid "Point of Sale Payment Methods"
 msgstr "POS 결제 수단"
@@ -4218,6 +4222,7 @@ msgstr "세금 표시"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
@@ -4391,6 +4396,13 @@ msgid ""
 "The payment method is of type cash. A cash statement will be automatically "
 "generated."
 msgstr "지불 방법은 현금 유형입니다. 현금 명세서가 자동으로 생성됩니다."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_payment.py:0
+#, python-format
+msgid ""
+"The payment method selected is not allowed in the config of the POS session."
+msgstr "매장 세션 구성에서는 선택한 결제 방법이 허용되지 않습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__config_id
@@ -4582,6 +4594,15 @@ msgid ""
 msgstr "이 바코드는 이미 다른 연락처에 할당되어 있습니다. 이 연락처에 고유한 바코드를 할당하십시오."
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid ""
+"This customer does not have a valid email address, define one or do not send"
+" an email."
+msgstr "이 고객은 올바른 전자 메일 주소가 없거나, 전자 메일을 정의하거나 보내지 않습니다."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
 msgid ""
 "This field depicts the maximum difference allowed between the ending balance"
@@ -4669,6 +4690,13 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders."
 msgstr "이 순서는 Odoo에 의해 자동으로 생성되나, 주문의 참조 번호를 사용자 정의로 변경할 수 있습니다."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "This session is already closed."
+msgstr "이 세션은 이미 닫혀 있습니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4816,6 +4844,11 @@ msgstr "합계 :"
 #, python-format
 msgid "Transaction cancelled"
 msgstr "거래 취소됨"
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_stock_picking
+msgid "Transfer"
+msgstr "전송"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
@@ -4984,13 +5017,6 @@ msgstr "사용자 꼬리표"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__uuid
 msgid "Uuid"
 msgstr "Uuid"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:0
-#, python-format
-msgid "VAT:"
-msgstr "VAT :"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5206,6 +5232,14 @@ msgstr "POS 인터페이스를 통해 판매하는 모든 제품에 대한 제�
 #, python-format
 msgid "You need to select the customer before you can invoice an order."
 msgstr "주문을 청구하기 전에 고객을 선택해야 합니다."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid ""
+"You need to select the customer before you can send the receipt via email."
+msgstr "이메일로 영수증을 보내려면 먼저 고객을 선택해야 합니다."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0

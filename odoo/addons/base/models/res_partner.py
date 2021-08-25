@@ -165,7 +165,7 @@ class Partner(models.Model):
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     user_id = fields.Many2one('res.users', string='Salesperson',
       help='The internal user in charge of this contact.')
-    vat = fields.Char(string='Tax ID', help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
+    vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
     same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
     website = fields.Char('Website Link')
@@ -229,11 +229,6 @@ class Partner(models.Model):
     _sql_constraints = [
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name'),
     ]
-
-    def init(self):
-        self._cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'res_partner_vat_index'""")
-        if not self._cr.fetchone():
-            self._cr.execute("""CREATE INDEX res_partner_vat_index ON res_partner (regexp_replace(upper(vat), '[^A-Z0-9]+', '', 'g'))""")
 
     @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name')
     def _compute_display_name(self):
@@ -504,7 +499,7 @@ class Partner(models.Model):
             self.invalidate_cache(['user_ids'], self._ids)
             for partner in self:
                 if partner.active and partner.user_ids:
-                    raise ValidationError(_('You cannot archive a contact linked to an internal user.'))
+                    raise ValidationError(_('You cannot archive a contact linked to a portal or internal user.'))
         # res.partner must only allow to set the company_id of a partner if it
         # is the same as the company of all users that inherit from this partner
         # (this is to allow the code from res_users to write to the partner!) or
@@ -514,16 +509,17 @@ class Partner(models.Model):
             vals['website'] = self._clean_website(vals['website'])
         if vals.get('parent_id'):
             vals['company_name'] = False
-        if vals.get('company_id'):
-            company = self.env['res.company'].browse(vals['company_id'])
+        if 'company_id' in vals:
+            company_id = vals['company_id']
             for partner in self:
-                if partner.user_ids:
+                if company_id and partner.user_ids:
+                    company = self.env['res.company'].browse(company_id)
                     companies = set(user.company_id for user in partner.user_ids)
                     if len(companies) > 1 or company not in companies:
                         raise UserError(
                             ("The selected company is not compatible with the companies of the related user(s)"))
                 if partner.child_ids:
-                    partner.child_ids.write({'company_id': company.id})
+                    partner.child_ids.write({'company_id': company_id})
         result = True
         # To write in SUPERUSER on field is_company and avoid access rights problems.
         if 'is_company' in vals and self.user_has_groups('base.group_partner_manager') and not self.env.su:

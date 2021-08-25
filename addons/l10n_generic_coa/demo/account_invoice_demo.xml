@@ -42,7 +42,7 @@
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="invoice_user_id" ref="base.user_demo"/>
             <field name="invoice_payment_term_id" ref="account.account_payment_term_immediate"/>
-            <field name="invoice_date" eval="(datetime.today() + timedelta(days=-15)).strftime('%Y-%m-%d')"/>
+            <field name="invoice_date" eval="(datetime.today() + relativedelta(months=-1)).strftime('%Y-%m-%d')"/>
             <field name="invoice_line_ids" eval="[
                 (0, 0, {'product_id': ref('product.consu_delivery_02'), 'price_unit': 642.0, 'quantity': 5}),
                 (0, 0, {'product_id': ref('product.consu_delivery_03'), 'price_unit': 280.0, 'quantity': 5}),

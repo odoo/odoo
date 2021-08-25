@@ -12,4 +12,5 @@ Attachments list and document indexation
 """,
     'depends': ['web'],
     'installable': True,
+    'license': 'LGPL-3',
 }

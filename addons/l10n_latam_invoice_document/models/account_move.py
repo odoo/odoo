@@ -3,6 +3,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from functools import partial
+from odoo.tools.sql import column_exists, create_column
 from odoo.tools.misc import formatLang
 
 
@@ -10,11 +11,44 @@ class AccountMove(models.Model):
 
     _inherit = "account.move"
 
+    def _auto_init(self):
+        # Skip the computation of the field `l10n_latam_document_type_id` at the module installation
+        # Without this, at the module installation,
+        # it would call `_compute_l10n_latam_document_type` on all existing records
+        # which can take quite a while if you already have a lot of moves. It can even fail with a MemoryError.
+        # In addition, it sets `_compute_l10n_latam_document_type = False` on all records
+        # because this field depends on the many2many `l10n_latam_available_document_type_ids`,
+        # which relies on having records for the model `l10n_latam.document.type`
+        # which only happens once the according localization module is loaded.
+        # The localization module is loaded afterwards, because the localization module depends on this module,
+        # (e.g. `l10n_cl` depends on `l10n_latam_invoice_document`, and therefore `l10n_cl` is loaded after)
+        # and therefore there are no records for the model `l10n_latam.document.type` at the time this fields
+        # gets computed on installation. Hence, all records' `_compute_l10n_latam_document_type` are set to `False`.
+        # In addition, multiple localization module depends on this module (e.g. `l10n_cl`, `l10n_ar`)
+        # So, imagine `l10n_cl` gets installed first, and then `l10n_ar` is installed next,
+        # if `l10n_latam_document_type_id` needed to be computed on install,
+        # the install of `l10n_cl` would call the compute method,
+        # because `l10n_latam_invoice_document` would be installed at the same time,
+        # but then `l10n_ar` would miss it, because `l10n_latam_invoice_document` would already be installed.
+        # Besides, this field is computed only for drafts invoices, as stated in the compute method:
+        # `for rec in self.filtered(lambda x: x.state == 'draft'):`
+        # So, if we want this field to be computed on install, it must be done only on draft invoices, and only once
+        # the localization modules are loaded.
+        # It should be done in a dedicated post init hook,
+        # filtering correctly the invoices for which it must be computed.
+        # Though I don't think this is needed.
+        # In practical, it's very rare to already have invoices (draft, in addition)
+        # for a Chilian or Argentian company (`res.company`) before installing `l10n_cl` or `l10n_ar`.
+        if not column_exists(self.env.cr, "account_move", "l10n_latam_document_type_id"):
+            create_column(self.env.cr, "account_move", "l10n_latam_document_type_id", "int4")
+        return super()._auto_init()
+
     l10n_latam_amount_untaxed = fields.Monetary(compute='_compute_l10n_latam_amount_and_taxes')
     l10n_latam_tax_ids = fields.One2many(compute="_compute_l10n_latam_amount_and_taxes", comodel_name='account.move.line')
     l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_l10n_latam_available_document_types')
     l10n_latam_document_type_id = fields.Many2one(
         'l10n_latam.document.type', string='Document Type', readonly=False, auto_join=True, index=True,
+        inverse='_inverse_l10n_latam_document_number',
         states={'posted': [('readonly', True)]}, compute='_compute_l10n_latam_document_type', store=True)
     l10n_latam_sequence_id = fields.Many2one('ir.sequence', compute='_compute_l10n_latam_sequence')
     l10n_latam_document_number = fields.Char(
@@ -63,6 +97,7 @@ class AccountMove(models.Model):
         recs_invoice = self.filtered(lambda x: x.is_invoice())
         for invoice in recs_invoice:
             tax_lines = invoice.line_ids.filtered('tax_line_id')
+            currencies = invoice.line_ids.filtered(lambda x: x.currency_id == invoice.currency_id).mapped('currency_id')
             included_taxes = invoice.l10n_latam_document_type_id and \
                 invoice.l10n_latam_document_type_id._filter_taxes_included(tax_lines.mapped('tax_line_id'))
             if not included_taxes:
@@ -75,7 +110,8 @@ class AccountMove(models.Model):
                     sign = -1
                 else:
                     sign = 1
-                l10n_latam_amount_untaxed = invoice.amount_untaxed + sign * sum(included_invoice_taxes.mapped('balance'))
+                amount = 'amount_currency' if len(currencies) == 1 else 'balance'
+                l10n_latam_amount_untaxed = invoice.amount_untaxed + sign * sum(included_invoice_taxes.mapped(amount))
             invoice.l10n_latam_amount_untaxed = l10n_latam_amount_untaxed
             invoice.l10n_latam_tax_ids = not_included_invoice_taxes
         remaining = self - recs_invoice
@@ -129,8 +165,7 @@ class AccountMove(models.Model):
         for rec in self.filtered('l10n_latam_document_type_id.internal_type'):
             internal_type = rec.l10n_latam_document_type_id.internal_type
             invoice_type = rec.type
-            if internal_type in ['debit_note', 'invoice'] and invoice_type in ['out_refund', 'in_refund'] and \
-               rec.l10n_latam_document_type_id.code != '99':
+            if internal_type in ['debit_note', 'invoice'] and invoice_type in ['out_refund', 'in_refund']:
                 raise ValidationError(_('You can not use a %s document type with a refund invoice') % internal_type)
             elif internal_type == 'credit_note' and invoice_type in ['out_invoice', 'in_invoice']:
                 raise ValidationError(_('You can not use a %s document type with a invoice') % (internal_type))
@@ -173,17 +208,33 @@ class AccountMove(models.Model):
         for move in move_with_doc_type:
             lang_env = move.with_context(lang=move.partner_id.lang).env
             tax_lines = move.l10n_latam_tax_ids
+            tax_balance_multiplicator = -1 if move.is_inbound(True) else 1
             res = {}
             # There are as many tax line as there are repartition lines
             done_taxes = set()
             for line in tax_lines:
                 res.setdefault(line.tax_line_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                res[line.tax_line_id.tax_group_id]['amount'] += line.price_subtotal
+                res[line.tax_line_id.tax_group_id]['amount'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
                 tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
                 if tax_key_add_base not in done_taxes:
+                    if line.currency_id and line.company_currency_id and line.currency_id != line.company_currency_id:
+                        amount = line.company_currency_id._convert(line.tax_base_amount, line.currency_id, line.company_id, line.date or fields.Date.today())
+                    else:
+                        amount = line.tax_base_amount
+                    res[line.tax_line_id.tax_group_id]['base'] += amount
                     # The base should be added ONCE
-                    res[line.tax_line_id.tax_group_id]['base'] += line.tax_base_amount
                     done_taxes.add(tax_key_add_base)
+
+            # At this point we only want to keep the taxes with a zero amount since they do not
+            # generate a tax line.
+            zero_taxes = set()
+            for line in move.line_ids:
+                for tax in line.l10n_latam_tax_ids.flatten_taxes_hierarchy():
+                    if tax.tax_group_id not in res or tax.id in zero_taxes:
+                        res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
+                        res[tax.tax_group_id]['base'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
+                        zero_taxes.add(tax.id)
+
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             move.amount_by_group = [(
                 group.name, amounts['amount'],
@@ -191,7 +242,7 @@ class AccountMove(models.Model):
                 formatLang(lang_env, amounts['amount'], currency_obj=move.currency_id),
                 formatLang(lang_env, amounts['base'], currency_obj=move.currency_id),
                 len(res),
-                group.id,
+                group.id
             ) for group, amounts in res]
         super(AccountMove, self - move_with_doc_type)._compute_invoice_taxes_by_group()
 
@@ -205,7 +256,8 @@ class AccountMove(models.Model):
         """ The constraint _check_unique_sequence_number is valid for customer bills but not valid for us on vendor
         bills because the uniqueness must be per partner and also because we want to validate on entry creation and
         not on entry validation """
-        for rec in self.filtered(lambda x: x.is_purchase_document() and x.l10n_latam_use_documents and x.l10n_latam_document_number):
+        for rec in self.filtered(lambda x: x.is_purchase_document() and x.l10n_latam_use_documents
+                                           and x.l10n_latam_document_number and x.commercial_partner_id):
             domain = [
                 ('type', '=', rec.type),
                 # by validating name we validate l10n_latam_document_number and l10n_latam_document_type_id

@@ -69,14 +69,14 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     # Overload of fields defined in account
-    analytic_account_id = fields.Many2one(compute="_compute_analytic_account", store=True, readonly=False)
-    analytic_tag_ids = fields.Many2many(compute="_compute_analytic_account", store=True, readonly=False)
+    analytic_account_id = fields.Many2one(compute="_compute_analytic_account", store=True, readonly=False, copy=True)
+    analytic_tag_ids = fields.Many2many(compute="_compute_analytic_account", store=True, readonly=False, copy=True)
 
     @api.depends('product_id', 'account_id', 'partner_id', 'date_maturity')
     def _compute_analytic_account(self):
         for record in self:
-            record.analytic_account_id = (record._origin or record).analytic_account_id
-            record.analytic_tag_ids = (record._origin or record).analytic_tag_ids
+            record.analytic_account_id = record.analytic_account_id
+            record.analytic_tag_ids = record.analytic_tag_ids
             rec = self.env['account.analytic.default'].account_get(
                 product_id=record.product_id.id,
                 partner_id=record.partner_id.commercial_partner_id.id or record.move_id.partner_id.commercial_partner_id.id,
@@ -88,9 +88,3 @@ class AccountMoveLine(models.Model):
             if rec and not record.exclude_from_invoice_tab:
                 record.analytic_account_id = rec.analytic_id
                 record.analytic_tag_ids = rec.analytic_tag_ids
-
-    def _copy_data_extend_business_fields(self, values):
-        # OVERRIDE to copy the 'analytic_account_id' if set
-        super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
-        if self.analytic_account_id:
-            values['analytic_account_id'] = self.analytic_account_id.id

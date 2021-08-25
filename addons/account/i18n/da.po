@@ -7,12 +7,11 @@
 # Jesper Carstensen <jc@danodoo.dk>, 2019
 # Rasmus Værum <rasmus@niova.dk>, 2019
 # peso <peer.sommerlund@gmail.com>, 2019
-# jonas jensen <j.jensen@tcomp.dk>, 2019
 # Nicolaj Helmer Hansen <nhh@softwarehuset.com>, 2019
+# Kenneth Hansen <kenneth@vkdata.dk>, 2019
 # Jesper Laugesen <jel@enigma.dk>, 2019
 # Joe Hansen <joedalton2@yahoo.dk>, 2019
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2019
-# Kenneth Hansen <kenneth@vkdata.dk>, 2019
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2019
 # Morten Schou <ms@msteknik.dk>, 2019
 # Jesper Carstensen <info@danodoo.dk>, 2019
@@ -23,18 +22,20 @@
 # JonathanStein <jstein@image.dk>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
 # Martin Trigaux, 2020
-# Walther Barnett <wba@miracle.dk>, 2020
+# walther_b <wba@miracle.dk>, 2020
 # Preben Lisby <preben.lisby@gmail.com>, 2020
+# jonas jensen <j.jensen@tcomp.dk>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -879,7 +880,7 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"En journalbevægelse består af flere journalposter, som hver\n"
+"En journalbevægelse består af flere journal bilag, som hver\n"
 "især er enten debet eller kredit transaktion."
 
 #. module: account
@@ -2715,6 +2716,7 @@ msgstr "Fortryd indtastning"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__cancelled
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
 msgstr "Annulleret"
 
@@ -2998,7 +3000,7 @@ msgid ""
 "journal items."
 msgstr ""
 "Afkryds dette felt, hvis denne konto tillader fakturaer og betalinger, der "
-"matcher journalposter."
+"matcher journal bilag."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence
@@ -3827,7 +3829,7 @@ msgstr "Kreditkonto"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
-msgstr "Kredit journaler, der matches med denne journal."
+msgstr "Krediter journal bilag, der matches med denne journal."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -4116,7 +4118,7 @@ msgstr "Debit konto"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_debit_ids
 msgid "Debit journal items that are matched with this journal item."
-msgstr "Debet journalposter, der matches med denne journal."
+msgstr "Debiter journal bilag, der matches med denne journal."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__12
@@ -5775,7 +5777,7 @@ msgid ""
 " related journal items."
 msgstr ""
 "For at slette en bankkonto linje, skal du først annullere den for at slette "
-"relaterede journaler."
+"relaterede journal bilag."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -5785,7 +5787,7 @@ msgid ""
 "related journal items."
 msgstr ""
 "For at slette en kontoudskrift skal du først annullere den for at slette "
-"relaterede journaler."
+"relaterede journal bilag."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -5952,11 +5954,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_type__internal_group
 msgid "Internal Group"
 msgstr "Intern gruppe"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move__narration
-msgid "Internal Note"
-msgstr "Intern note"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__note
@@ -6242,8 +6239,7 @@ msgstr "Fakturaer til godkendelse"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
 msgid "Invoices whose journal items have been reconciled with these payments."
-msgstr ""
-"Faktura hvis journal posteringer der er blevet afstemt med disse betalinger."
+msgstr "Faktura hvis journal bilag er blevet afstemt med disse betalinger."
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
@@ -6343,6 +6339,16 @@ msgstr ""
 "journalpost, da det ville skabe et hul i nummereringen. Du skal oprette "
 "journalindgangen igen og annullere den takket være en regelmæssig "
 "tilbagekomst."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"It seems that the taxes have been modified since the creation of the journal"
+" entry. You should create the credit note manually instead."
+msgstr ""
+"Det ser ud til at momsen er blevet modificeret siden oprettelsen af journal "
+"posteringen. Du bør oprette kreditnotatet manuelt i stedet."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6480,12 +6486,12 @@ msgstr "Tekst på journalpost"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 #, python-format
 msgid "Journal Items"
-msgstr "Journalposter"
+msgstr "Journal bilag"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_select_tax_audit
 msgid "Journal Items for Tax Audit"
-msgstr "Journalposter til momskontrol"
+msgstr "Journal bilag til momskontrol"
 
 #. module: account
 #. openerp-web
@@ -6493,7 +6499,7 @@ msgstr "Journalposter til momskontrol"
 #: model:ir.actions.client,name:account.action_manual_reconcile
 #, python-format
 msgid "Journal Items to Reconcile"
-msgstr "Posteringer til udligning"
+msgstr "Journal bilag til udligning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -6509,7 +6515,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journal items where matching number isn't set"
-msgstr "Journalposter, hvor matchende nummer ikke er angivet"
+msgstr "Journal bilag, hvor matchende nummer ikke er angivet"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_accrual_accounting_wizard__journal_id
@@ -7172,7 +7178,7 @@ msgstr "Matchet debit"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__reconciled_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_full_reconcile_form
 msgid "Matched Journal Items"
-msgstr "Matchede journalposter"
+msgstr "Matchede journal bilag"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_full_reconcile_form
@@ -7916,6 +7922,12 @@ msgid "Original Bills"
 msgstr "Oprindelige regninger"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
+msgstr "Oprindelig Valuta"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "Oprindelig betaling"
@@ -8488,6 +8500,18 @@ msgstr ""
 "fortsætter."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr "Vær venligt at angive en positiv afrundingsværdi."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr "Vær venlig at angive en strengt positiv afrundingsværdi."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "Anvend venligst følgende oplysninger ved bankoverførsel:"
@@ -8565,7 +8589,7 @@ msgstr "Bogførte posteringer"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "Registrerede posteringer"
+msgstr "Registrerede journal bilag"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -9226,6 +9250,11 @@ msgid "Revenue/Expense Account"
 msgstr "Indtægt/Udgift konto"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
+msgid "Reversal Move"
+msgstr "Tilbageførsel bevægelse"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
 msgstr "Tilbagebetalingsdato"
@@ -9511,7 +9540,7 @@ msgstr "Søg faktura"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Search Journal Items"
-msgstr "Søg i journal posteringer"
+msgstr "Søg i journal bilag"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -9710,6 +9739,12 @@ msgid "Send Money"
 msgstr "Send penge"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "Send Payment"
+msgstr "Send Betaling"
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice
 msgid "Send a sample invoice"
 msgstr "Send en test faktura"
@@ -9728,6 +9763,11 @@ msgstr "Send faktura og betalings opfølgninger per brev"
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
 msgstr "Send kvittering via email"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
+msgid "Send receipts by email"
+msgstr "Send kvitteringer per email"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
@@ -10053,7 +10093,7 @@ msgstr "Kontoudtog"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Statement %s confirmed, journal items were created."
-msgstr "Kontoudtog %sbekræftet, journalposter blev oprettet."
+msgstr "Kontoudtog %sbekræftet, journal bilag blev oprettet."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_line_form
@@ -10771,10 +10811,9 @@ msgid ""
 "will become exigible only when the payment is recorded."
 msgstr ""
 "Teknisk felt brugt til at markere en momslinje til at kunne håndhæves i en "
-"moms rapport eller ej (kun journalposteringer der kan håndhæves vises). Per "
-"standard kan alle nye journalposteringer håndhæves direkte, men med "
-"funktionen cash_basis på moms, som kun kan håndhæves når betalingen er "
-"optegnet."
+"moms rapport eller ej (kun journal bilag der kan håndhæves vises). Per "
+"standard kan alle nye journal bilag håndhæves direkte, men med funktionen "
+"cash_basis på moms, som kun kan håndhæves når betalingen er optegnet."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__country_id
@@ -10846,6 +10885,11 @@ msgstr "Vilkår"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_terms
 msgid "Terms & Conditions"
 msgstr "Salgs- & leveringsbetingelser"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__narration
+msgid "Terms and Conditions"
+msgstr "Salgs- og leveringsbetingelser"
 
 #. module: account
 #. openerp-web
@@ -11175,6 +11219,16 @@ msgstr ""
 "en email adresse."
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid ""
+"The following payment(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+"De(n) følgende betaling(er) vil ikke blive afsendt per email, fordi kunderne"
+" ikke har en email adresse."
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -11199,8 +11253,14 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "Indehaveren af en journals bankkonto skal være virksomheden (%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
+msgstr ""
+"Indehaveren af kontoen af \"Bank\" journal typen skal være virksomheden (%s).\n"
+"Dog er indehaveren af \"%s\" \"%s\".\n"
+"Vær venlig at vælge en anden konto, eller ændre indehaveren af \"%s\"."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -11344,7 +11404,7 @@ msgstr "Betalingen kan ikke behandles, fordi fakturaen ikke er åben!"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__invoice_payment_ref
 msgid "The payment reference to set on journal items."
-msgstr "Betalings referencens der skal angives på journalposter."
+msgstr "Betalings referencens der skal angives på journal bilag."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11554,7 +11614,7 @@ msgstr "Der er i øjeblikket ingen fakturaer eller betalinger til din konto."
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
 msgid "There are no journal items in the draft state to post."
-msgstr "Der er ingen journalposteringer i kladde tilstand som kan posteres."
+msgstr "Der er ingen journal bilag i kladde tilstand som kan posteres."
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -11719,7 +11779,7 @@ msgstr ""
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "This can only be used on journal items"
-msgstr "Dette kan kun bruges på journalposteringer"
+msgstr "Dette kan kun bruges på journal bilag"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence_id
@@ -11907,7 +11967,7 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
-"De kan bruges til hurtigt at oprette en journalartikel, når man afstemmer \n"
+"De kan bruges til hurtigt at oprette en journal bilag, når man afstemmer \n"
 "En kontoudskrift eller en konto."
 
 #. module: account
@@ -12186,7 +12246,7 @@ msgstr "Ikke bogførte posteringer"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "Ikke-posterede journalposteringer"
+msgstr "Ikke-posterede journal bilag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_unread
@@ -12315,10 +12375,10 @@ msgid ""
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
 msgstr ""
-"Brugt i rapporter til at vide, om vi bør tage højde for journalposteringer "
-"helt fra begyndelsen, i stedet for kun fra begyndelsen af finansåret. Konto "
-"typer der bør nulstilles hvert finansår (så som udgifter, indtægter..) bør "
-"ikke have denne mulighed anvendt."
+"Brugt i rapporter til at vide, om vi bør tage højde for journal bilag helt "
+"fra begyndelsen, i stedet for kun fra begyndelsen af finansåret. Konto typer"
+" der bør nulstilles hvert finansår (så som udgifter, indtægter..) bør ikke "
+"have denne mulighed anvendt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__reference
@@ -12697,7 +12757,7 @@ msgstr "Du kan kun ændre perioden for genstande der endnu ikke er afstemte."
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "You can only change the period for posted journal items."
-msgstr "Du kan kun ændre perioden for posterede journal genstande."
+msgstr "Du kan kun ændre perioden for posterede journal bilag."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12731,6 +12791,12 @@ msgstr "Du kan kun registrere betalinger for åbne faktura'er"
 #, python-format
 msgid "You can only send invoices."
 msgstr "Du kan kun sende fakturaer."
+
+#. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "You can only send payments."
+msgstr "Du kan kun sende betalinger."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12771,7 +12837,7 @@ msgid ""
 "items linked to it."
 msgstr ""
 "Du kan ikke ændre din kontos virksomhed, siden den allerede indeholder "
-"journal genstande."
+"journal bilag."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12791,7 +12857,7 @@ msgid ""
 "linked to it."
 msgstr ""
 "Du kan ikke ændre din skats virksomhed, siden den allerede indeholder "
-"journal genstande."
+"journal bilag."
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -12801,7 +12867,7 @@ msgid ""
 "some journal items linked to it."
 msgstr ""
 "Du kan ikke angive en anden virksomhed på din analyse konto, siden den "
-"allerede indeholder journal genstande."
+"allerede indeholder journal bilag."
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -12811,7 +12877,7 @@ msgid ""
 " journal items linked to it."
 msgstr ""
 "Du kan ikke angive en anden virksomhed på din analyse tags, siden den "
-"allerede indeholder journal genstande."
+"allerede indeholder journal bilag."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12837,8 +12903,8 @@ msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
 msgstr ""
-"Du kan ikke ændre virksomhedens valuta siden visse journal genstande "
-"allerede eksisterer."
+"Du kan ikke ændre virksomhedens valuta siden visse journal bilag allerede "
+"eksisterer."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12848,7 +12914,7 @@ msgid ""
 "journal items."
 msgstr ""
 "Du kan ikke ændre ejerselskabet til en konto, der allerede indeholder "
-"journalartikler."
+"journal bilag."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12872,6 +12938,12 @@ msgstr "Du kan ikke slette en betaling som allerede er posteret."
 msgid "You cannot delete an entry which has been posted once."
 msgstr ""
 "Du kan ikke slette en postering som allerede er blevet bogført én gang."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot delete an item linked to a posted entry."
+msgstr "Du kan ikke slette en artikel forbundet til en indskreven postering."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -12987,8 +13059,7 @@ msgstr ""
 msgid ""
 "You cannot perform this action on an account that contains journal items."
 msgstr ""
-"Du kan ikke udføre denne handling på en konto der indeholder journal "
-"genstande."
+"Du kan ikke udføre denne handling på en konto der indeholder journal bilag."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:0
@@ -13142,6 +13213,12 @@ msgstr "Du skal først definere en åbnende bevægelse."
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr "Posteringen %s (ID %s) er allerede posteret."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "You need to add a line before posting."
 msgstr "Du skal tilføje en linje før postering."
 
@@ -13187,12 +13264,6 @@ msgstr ""
 "Du skal konfigurere 'Tab valutakurs konto' i regnskabs indstillinger, for "
 "automatisk at administrere bogføringen af regnskabsposteringer relateret til"
 " differencen mellem valutakurser."
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr "Vær venligt at angive en positiv afrundingsværdi."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -13314,6 +13385,11 @@ msgid "of the following month"
 msgstr "i den følgende måned"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "på"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding debits"
 msgstr "udestående debitposter"
@@ -13377,6 +13453,18 @@ msgstr "overordnet firma"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "to check"
 msgstr "at tjekke"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
+msgstr ""
+"Den valgte journal har en type som ikke er kompatibel med din fakturerings "
+"type. Salgsoperationer bør gå gennem 'salg' journaler, og indkøbsoperationer"
+" til 'indkøbs' journaler."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

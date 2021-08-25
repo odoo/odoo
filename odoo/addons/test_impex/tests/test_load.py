@@ -704,6 +704,20 @@ class test_m2o(ImporterCase):
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), 1)
 
+class TestInvalidStrings(ImporterCase):
+    model_name = 'export.m2o.str'
+
+    @mute_logger('odoo.sql_db')
+    def test_fail_unpaired_surrogate(self):
+        result = self.import_(['child_id'], [['\uddff']])
+        self.assertTrue(result['messages'])
+        self.assertIn('surrogates', result['messages'][0]['message'])
+
+    @mute_logger('odoo.sql_db')
+    def test_fail_nul(self):
+        result = self.import_(['child_id'], [['\x00']])
+        self.assertTrue(result['messages'])
+        self.assertIn('NUL', result['messages'][0]['message'])
 
 class test_m2m(ImporterCase):
     model_name = 'export.many2many'

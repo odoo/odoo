@@ -20,4 +20,5 @@ Configure your own methods with a pricing grid or integrate with carriers for a 
     'qweb': [],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

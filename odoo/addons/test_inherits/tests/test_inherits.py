@@ -17,6 +17,24 @@ class test_inherits(common.TransactionCase):
         self.assertEqual(pallet.field_in_box, 'box')
         self.assertEqual(pallet.field_in_pallet, 'pallet')
 
+    def test_create_3_levels_inherits_with_defaults(self):
+        unit = self.env['test.unit'].create({
+            'name': 'U',
+            'state': 'a',
+            'size': 1,
+        })
+        ctx = {
+            'default_state': 'b',       # 'state' is inherited from 'test.unit'
+            'default_size': 2,          # 'size' is inherited from 'test.box'
+        }
+        pallet = self.env['test.pallet'].with_context(ctx).create({
+            'name': 'P',
+            'unit_id': unit.id,         # grand-parent field is set
+        })
+        # default 'state' should be ignored, but default 'size' should not
+        self.assertEqual(pallet.state, 'a')
+        self.assertEqual(pallet.size, 2)
+
     def test_read_3_levels_inherits(self):
         """ Check that we can read an inherited field on 3 levels """
         pallet = self.env.ref('test_inherits.pallet_a')
@@ -120,3 +138,13 @@ class test_inherits(common.TransactionCase):
         self.assertIn('lang', Unit.display_name.depends_context)
         self.assertIn('lang', Box.display_name.depends_context)
         self.assertIn('lang', Pallet.display_name.depends_context)
+
+    def test_multi_write_m2o_inherits(self):
+        """Verify that an inherits m2o field can be written to in batch"""
+        unit_foo = self.env['test.unit'].create({'name': 'foo'})
+        boxes = self.env['test.box'].create([{'unit_id': unit_foo.id}] * 5)
+
+        unit_bar = self.env['test.unit'].create({'name': 'bar'})
+        boxes.unit_id = unit_bar
+
+        self.assertEquals(boxes.mapped('unit_id.name'), ['bar'])

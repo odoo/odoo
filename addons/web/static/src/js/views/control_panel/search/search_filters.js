@@ -206,6 +206,9 @@ var DateTime = Field.extend({
      * @return {Moment} The value in UTC
      */
     get_value: function (index) {
+        if (!this["datewidget_" + (index || 0)].getValue()) {
+            return false;
+        }
         // retrieve the datepicker value
         var value = this["datewidget_" + (index || 0)].getValue().clone();
         // convert to utc
@@ -273,6 +276,9 @@ var DateTime = Field.extend({
      * @return {String} Represents the value in UTC
      */
     _formatMomentToServer: function (momentValue) {
+        if (!momentValue) {
+            return false;
+        }
         return momentValue.locale('en').format(this.serverFormat);
     },
 });
@@ -337,7 +343,11 @@ var Integer = Field.extend({
 });
 
 var Id = Integer.extend({
-    operators: [{value: "=", text: _lt("is")}]
+    operators: [
+        {value: "=", text: _lt("is")},
+        {value: "<=", text: _lt("less than or equal to")},
+        {value: ">", text: _lt("greater than")}
+    ]
 });
 
 var Float = Field.extend({

@@ -13,7 +13,7 @@ class PortalAccount(CustomerPortal):
         values = super(PortalAccount, self)._prepare_home_portal_values()
         invoice_count = request.env['account.move'].search_count([
             ('type', 'in', ('out_invoice', 'in_invoice', 'out_refund', 'in_refund', 'out_receipt', 'in_receipt')),
-        ])
+        ]) if request.env['account.move'].check_access_rights('read', raise_exception=False) else 0
         values['invoice_count'] = invoice_count
         return values
 

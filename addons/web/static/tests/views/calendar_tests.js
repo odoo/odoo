@@ -1,6 +1,8 @@
 odoo.define('web.calendar_tests', function (require) {
 "use strict";
 
+const AbstractField = require('web.AbstractField');
+const fieldRegistry = require('web.field_registry');
 var AbstractStorageService = require('web.AbstractStorageService');
 var CalendarView = require('web.CalendarView');
 var CalendarRenderer = require('web.CalendarRenderer');
@@ -276,7 +278,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create and change events', async function (assert) {
-        assert.expect(26);
+        assert.expect(28);
 
         var calendar = await createCalendarView({
             View: CalendarView,
@@ -403,6 +405,14 @@ QUnit.module('Views', {
         assert.ok($newevent2.length, "should display the 2 days new record");
         assert.hasAttrValue($newevent2.closest('.fc-event-container'),
             'colspan', "2","the new record should have 2 days");
+
+        await testUtils.dom.click(calendar.$('.fc-event:contains(new event in quick create 2) .fc-content'));
+        var $popover_description = calendar.$('.o_cw_popover .o_cw_body .list-group-item');
+        assert.strictEqual($popover_description.children()[1].textContent,'December 20-21, 2016',
+            "The popover description should indicate the correct range");
+        assert.strictEqual($popover_description.children()[2].textContent,'(2 days)',
+            "The popover description should indicate 2 days");
+        await testUtils.dom.click(calendar.$('.o_cw_popover .fa-close'));
 
         // delete the a record
 
@@ -535,6 +545,7 @@ QUnit.module('Views', {
         assert.containsOnce($('body'), '.modal', "there should be only one open modal");
 
         calendar.destroy();
+        testUtils.mock.unpatch(ViewDialogs.FormViewDialog);
     });
 
     QUnit.test('create event with timezone in week mode European locale', async function (assert) {
@@ -784,6 +795,40 @@ QUnit.module('Views', {
         assert.containsOnce(calendar, '.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_form_uri', "should apply m20 widget");
         assert.strictEqual(calendar.$('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last strong').text(), 'user : ', "label should be a 'user'");
         assert.strictEqual(calendar.$('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_form_uri').text(), 'partner 1', "value should be a 'partner 1'");
+
+        await testUtils.dom.click($('.o_cw_popover .o_cw_popover_close'));
+        assert.containsNone(calendar, '.o_cw_popover', "should close a popover");
+
+        calendar.destroy();
+    });
+
+    QUnit.test('render popover with modifiers', async function (assert) {
+        assert.expect(3);
+
+        this.data.event.fields.priority = {string: "Priority", type: "selection", selection: [['0', 'Normal'], ['1', 'Important']],};
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="week">'+
+                '<field name="priority" widget="priority" readonly="1"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        await testUtils.dom.click($('.fc-event:contains(event 4)'));
+
+        assert.containsOnce(calendar, '.o_cw_popover', "should open a popover clicking on event");
+        assert.containsOnce(calendar, '.o_cw_popover .o_priority span.o_priority_star', "priority field should not be editable");
 
         await testUtils.dom.click($('.o_cw_popover .o_cw_popover_close'));
         assert.containsNone(calendar, '.o_cw_popover', "should close a popover");
@@ -2982,6 +3027,54 @@ QUnit.module('Views', {
             "The last day of the week should be Friday the 13th");
 
         calendar.destroy();
+    });
+
+    QUnit.test("fields are added in the right order in popover", async function (assert) {
+        assert.expect(3);
+
+        const def = testUtils.makeTestPromise();
+        const DeferredWidget = AbstractField.extend({
+            async start() {
+                await this._super(...arguments);
+                await def;
+            }
+        });
+        fieldRegistry.add("deferred_widget", DeferredWidget);
+
+        const calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+                `<calendar
+                    date_start="start"
+                    date_stop="stop"
+                    all_day="allday"
+                    mode="month"
+                >
+                    <field name="user_id" widget="deferred_widget" />
+                    <field name="name" />
+                </calendar>`,
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        await testUtils.dom.click(calendar.$(`[data-event-id="4"]`));
+        assert.containsNone(calendar, ".o_cw_popover");
+
+        def.resolve();
+        await testUtils.nextTick();
+        assert.containsOnce(calendar, ".o_cw_popover");
+
+        assert.strictEqual(
+            calendar.$(".o_cw_popover .o_cw_popover_fields_secondary").text(),
+            "user : name : event 4"
+        );
+
+        calendar.destroy();
+        delete fieldRegistry.map.deferred_widget;
     });
 });
 

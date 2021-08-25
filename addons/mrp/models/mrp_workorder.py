@@ -433,6 +433,14 @@ class MrpWorkorder(models.Model):
         if float_compare(self.qty_producing, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
             raise UserError(_('Please set the quantity you are currently producing. It should be different from zero.'))
 
+        # Ensure serial numbers are used once
+        if self.product_id.tracking == 'serial' and self.finished_lot_id:
+            line = self.finished_workorder_line_ids.filtered(
+                lambda line: line.lot_id.id == self.finished_lot_id.id
+            )
+            if line:
+                raise UserError(_('You cannot produce the same serial number twice.'))
+
         # If last work order, then post lots used
         if not self.next_work_order_id:
             self._update_finished_move()
@@ -494,8 +502,9 @@ class MrpWorkorder(models.Model):
         self.ensure_one()
         final_lot_quantity = self._get_real_uom_qty(self.qty_production)
         rounding = self.product_uom_id.rounding
-        # Get the max quantity possible for current lot in other workorders
-        for workorder in (self.production_id.workorder_ids - self):
+        # Get the max quantity possible for current lot in other workorders, avoid
+        # considering already completed steps up to the current one
+        for workorder in (self.production_id.workorder_ids.filtered(lambda wo: not (wo.id < self.id and wo.state in ('done','cancel'))) - self):
             # We add the remaining quantity to the produced quantity for the
             # current lot. For 5 finished products: if in the first wo it
             # creates 4 lot A and 1 lot B and in the second it create 3 lot A
@@ -677,6 +686,17 @@ class MrpWorkorder(models.Model):
         for wo in self:
             production_qty = wo._get_real_uom_qty(wo.qty_production)
             wo.qty_remaining = float_round(production_qty - wo.qty_produced, precision_rounding=wo.production_id.product_uom_id.rounding)
+
+    def _update_workorder_lines(self):
+        # OVERRIDE
+        line_values = super(MrpWorkorder, self)._update_workorder_lines()
+        # wo lines without move_id should also be deleted
+        for wo_line in self._workorder_line_ids().filtered(lambda w: not w.move_id and (not w.finished_workorder_id or w.product_id != w.finished_workorder_id.product_id)):
+            if not line_values['to_delete']:
+                line_values['to_delete'] = wo_line
+            elif wo_line not in line_values['to_delete']:
+                line_values['to_delete'] |= wo_line
+        return line_values
 
 
 class MrpWorkorderLine(models.Model):

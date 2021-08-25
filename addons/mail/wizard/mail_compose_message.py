@@ -270,7 +270,7 @@ class MailComposer(models.TransientModel):
                             subtype_id=subtype_id,
                             email_layout_xmlid=notif_layout,
                             add_sign=not bool(wizard.template_id),
-                            mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else False,
+                            mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else True,
                             model_description=model_description)
                         post_params.update(mail_values)
                         if ActiveModel._name == 'mail.thread':
@@ -306,7 +306,7 @@ class MailComposer(models.TransientModel):
         blacklisted_rec_ids = set()
         if mass_mail_mode and issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
             self.env['mail.blacklist'].flush(['email'])
-            self._cr.execute("SELECT email FROM mail_blacklist")
+            self._cr.execute("SELECT email FROM mail_blacklist WHERE active=true")
             blacklist = {x[0] for x in self._cr.fetchall()}
             if blacklist:
                 targets = self.env[self.model].browse(res_ids).read(['email_normalized'])
@@ -360,7 +360,7 @@ class MailComposer(models.TransientModel):
                     new_attach_id = self.env['ir.attachment'].browse(attach_id).copy({'res_model': self._name, 'res_id': self.id})
                     attachment_ids.append(new_attach_id.id)
                 attachment_ids.reverse()
-                mail_values['attachment_ids'] = self.env['mail.thread']._message_post_process_attachments(
+                mail_values['attachment_ids'] = self.env['mail.thread'].with_context(attached_to=record)._message_post_process_attachments(
                     mail_values.pop('attachments', []),
                     attachment_ids,
                     {'model': 'mail.message', 'res_id': 0}

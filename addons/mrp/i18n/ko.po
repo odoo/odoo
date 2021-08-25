@@ -9,7 +9,7 @@
 # Martin Trigaux, 2019
 # Link Up링크업 <linkup.way@gmail.com>, 2019
 # Linkup <link-up@naver.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2020
+# JH CHOI <hwangtog@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -358,6 +358,13 @@ msgstr "키트 유형의 BoM은 제품을 부품으로 나누는 데 사용됩�
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
 msgstr "제조 주문이 이미 완료되었거나 취소되었습니다."
+
+#. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr "키트 형식의 재료 명세서가 있는 제품은 재주문 규칙을 가질 수 없습니다."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -4790,6 +4797,14 @@ msgstr "어떤 것을 소비했는지 말하지 않고는 소비할 수 없습�
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr "하나 이상의 재주문 규칙이 있는 제품에는 키트 유형의 재료 청구서를 만들 수 없습니다."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
 msgstr ""
@@ -4891,6 +4906,14 @@ msgstr "이전 작업 지시에서 %s %s의 로트 %s를 생산했습니다. 이
 #, python-format
 msgid "You have to produce at least one %s."
 msgstr "적어도 하나 이상의 %s를 생산해야 합니다."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
+msgstr "구성 요소 중 하나 이상에 대해 0이 아닌 값을 지정해야 합니다."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0

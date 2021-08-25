@@ -10,7 +10,6 @@
 # renodoo <ren@odoo.com>, 2019
 # Cristian Salamea <ovnicraft@gmail.com>, 2019
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
-# Rick Hunter <rick.hunter.ec@gmail.com>, 2019
 # 36700cd705c35e1852bdffcd0b296648, 2019
 # Massiel Acuna <mac@odoo.com>, 2019
 # Jimmy Ramos <jimmybanegas93@gmail.com>, 2019
@@ -47,7 +46,8 @@
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
 # Edilianny Sanchez - https://www.vauxoo.com/ <esanchez@vauxoo.com>, 2020
 # Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# Josep Anton Belchi Riera, 2021
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -55,7 +55,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2020\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,7 +71,7 @@ msgstr "# de líneas"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr "# de Órdenes de Venta"
+msgstr "Nº de pedidos de venta"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
@@ -723,7 +723,7 @@ msgstr "<strong class=\"mr16\">Subtotal</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong class=\"text-muted\">Salesperson</strong>"
-msgstr "<strong class=\"text-muted\">Vendedor</strong>"
+msgstr "<strong class=\"text-muted\">Comercial</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -750,7 +750,7 @@ msgstr "<strong>Fecha orden:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Quotation Date:</strong>"
-msgstr "<strong>Fecha de cotización:</strong>"
+msgstr "<strong>Fecha de presupuesto:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -880,7 +880,7 @@ msgstr "Aceptar y Pagar"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Pay Quotation"
-msgstr "Aceptar &amp; Pagar Cotización"
+msgstr "Aceptar &amp; pagar presupuesto"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -890,7 +890,7 @@ msgstr "Aceptar y firmar"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Sign Quotation"
-msgstr "Aceptar &amp; Firmar Cotización"
+msgstr "Aceptar &amp; firmar presupuesto"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -1877,7 +1877,7 @@ msgstr "Valores prohibidos en la línea de pedido de venta virtual"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__auth_signup_uninvited__b2c
 msgid "Free sign up"
-msgstr "Registro gratuito"
+msgstr "Registro libre"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -2693,7 +2693,7 @@ msgstr ""
 #, python-format
 msgid "Open Sales app to send your first quotation in a few clicks."
 msgstr ""
-"Abra la aplicación Ventas para enviar su primera cotización en unos pocos "
+"Abra la aplicación Ventas para enviar su primer presupuesto en unos pocos "
 "clics."
 
 #. module: sale
@@ -3139,7 +3139,7 @@ msgstr "Recuento de presupuestos"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quotation Date"
-msgstr "Fecha de cotización"
+msgstr "Fecha de presupuesto"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -3149,7 +3149,7 @@ msgstr "Diseño de Presupuesto"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr "Número de presupuesto"
+msgstr "Nº de presupuesto"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__sent
@@ -3178,7 +3178,7 @@ msgstr "Presupuesto enviado"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
-msgstr "Cita vista por el cliente %s"
+msgstr "Presupuesto visto por el cliente %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -3336,7 +3336,7 @@ msgstr "Pedido de venta"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
-msgstr "Recuento de órdenes de venta"
+msgstr "Nº de pedidos de venta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
@@ -3648,7 +3648,7 @@ msgstr "Enviar un presupuesto para probar el portal del cliente."
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_sample_quotation
 msgid "Send a sample quotation"
-msgstr "Enviar una cotización de muestra"
+msgstr "Enviar un presupuesto de muestra"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3823,7 +3823,7 @@ msgstr "Estado del paso de orden de confirmación de incorporación"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr "Estado del paso de cotización de muestra de incorporación"
+msgstr "Estado del paso de incorporación del presupuesto de muestra"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state

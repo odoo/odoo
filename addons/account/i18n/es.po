@@ -9,6 +9,7 @@
 # Marcos Stulzer <maon_stca@hotmail.com>, 2019
 # Harald Panten <harald.panten@qubiq.es>, 2019
 # Pilar Marín <pilar@odooperu.pe>, 2019
+# José Vicente <txusev@gmail.com>, 2019
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2019
 # cubells <info@obertix.net>, 2019
 # RGB Consulting <odoo@rgbconsulting.com>, 2019
@@ -54,7 +55,6 @@
 # Jon Perez <jop@odoo.com>, 2019
 # Juan Pablo Mora <jpm@odoo.com>, 2019
 # Allan Estuardo Ramírez Madrid <allaneramirezm@gmail.com>, 2019
-# José Vicente <txusev@gmail.com>, 2019
 # Jimmy Ramos <jimmybanegas93@gmail.com>, 2019
 # Samuel Perez <samuel@itlighten.com>, 2019
 # Luciano Nahuel Vitale <lucianonahuelvitale@gmail.com>, 2019
@@ -63,21 +63,25 @@
 # Platon BJS <raul.caballero.girol@gmail.com>, 2019
 # gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # Juventino Villegas <2tino480@gmail.com>, 2020
-# Martin Trigaux, 2020
 # Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
 # Carlos Dauden <carlos.dauden@tecnativa.com>, 2020
 # Haider Ilich López Areiza <hlopez@itsoluciones.com.co>, 2020
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Caroline Renson <car@odoo.com>, 2020
+# Martin Trigaux, 2020
+# Dany Lopez <almustafa.net@gmail.com>, 2020
+# Carles Antoli <carlesantoli@hotmail.com>, 2021
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
+# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
+# Juan Rivero <jr@adhoc.com.ar>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Caroline Renson <car@odoo.com>, 2020\n"
+"Last-Translator: Juan Rivero <jr@adhoc.com.ar>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -425,7 +429,7 @@ msgid ""
 msgstr ""
 "<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
 " aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
-"-md-inline\"> Pendiente de pago</span>"
+"-md-inline\"> Pendiente de Pago</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -454,7 +458,9 @@ msgstr ""
 msgid ""
 "<span class=\"badge badge-warning text-uppercase "
 "o_sample_data_label\">Sample data</span>"
-msgstr "datos de muestra"
+msgstr ""
+"<span class=\"badge badge-warning text-uppercase o_sample_data_label\">Datos"
+" de muestra</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -764,7 +770,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<strong class=\"text-muted\">Salesperson</strong>"
-msgstr "<strong class=\"text-muted\">Vendedor</strong>"
+msgstr "<strong class=\"text-muted\">Comercial</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_with_payments
@@ -1677,12 +1683,12 @@ msgstr "Tipo de ajuste"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
 msgid "Advance Tax payment account"
-msgstr "Cuenta de pago de impuestos por avanzado"
+msgstr "Cuenta Impuesto de pago avanzado"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_advance_tax_payment_account_id
 msgid "Advance tax payment account"
-msgstr "Cuenta de pago de impuestos por avanzado"
+msgstr "Cuenta Impuesto de pago avanzado"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -2768,6 +2774,7 @@ msgstr "Cancelar Asiento"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__cancelled
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
 msgstr "Cancelado"
 
@@ -3697,8 +3704,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your vendors."
 msgstr ""
-"Cree facturas, registre pagos y realice un seguimiento de las conversaciones"
-" con sus proveedores."
+"Cree facturas, registre pagos y mantenga un seguimiento de las "
+"conversaciones con sus vendedores."
 
 #. module: account
 #. openerp-web
@@ -4561,7 +4568,7 @@ msgstr "Borrador"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Bill"
-msgstr "Factura borrador"
+msgstr "Borrador de Factura"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -5443,7 +5450,7 @@ msgstr "Agrupar por"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__group_payment
 msgid "Group Payment"
-msgstr "Pago de Grupo"
+msgstr "Pago agrupado"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__group
@@ -6025,11 +6032,6 @@ msgid "Internal Group"
 msgstr "Grupo interno"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_move__narration
-msgid "Internal Note"
-msgstr "Nota interna"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__note
 msgid "Internal Notes"
 msgstr "Notas internas"
@@ -6415,6 +6417,16 @@ msgstr ""
 "No está permitido borrar un apunte de pago si se ha creado una entrada en el"
 " diario puesto que crearía un salto en la numeración. Debería crear la "
 "entrada en el diario de nuevo y cancelando gracias a una entrada inversa."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"It seems that the taxes have been modified since the creation of the journal"
+" entry. You should create the credit note manually instead."
+msgstr ""
+"Parece que los impuestos se han modificado desde la creación del asiento "
+"contable. En su lugar, debe crear la factura rectificativa manualmente."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7997,6 +8009,12 @@ msgid "Original Bills"
 msgstr "Facturas originales"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
+msgstr "Moneda original"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "Emisor del pago"
@@ -8309,7 +8327,7 @@ msgstr "Recibo de Pago"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Payment Receipt:"
-msgstr "Payment Receipt:"
+msgstr "Recibo de Pago:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_payment_ref
@@ -8393,7 +8411,7 @@ msgstr "Plazo de pago: 30% adelanto a final del mes siguiente"
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
-msgstr "Plazo de pago: 30% hoy, balancear en 60 días"
+msgstr "Plazo de pago: 30% hoy, el resto en 60 días"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_45days
@@ -8573,6 +8591,18 @@ msgid ""
 msgstr ""
 "Por favor, instale un plan de cuentas o cree un libro de operaciones diarias"
 " antes de continuar."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr "Establezca un valor de redondeo positivo."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr "Por favor establezca un valor positivo para redondear un valor."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -8916,7 +8946,7 @@ msgstr "Motivo..."
 #: model:ir.ui.menu,name:account.menu_action_move_in_receipt_type
 #: model:ir.ui.menu,name:account.menu_action_move_out_receipt_type
 msgid "Receipts"
-msgstr "Recepciones"
+msgstr "Recibos"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_receivable
@@ -9144,7 +9174,7 @@ msgstr "Modelo de documento relacionado"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Repartition for Credit Notes"
-msgstr "Repartición de notas de crédito"
+msgstr "Repartición de facturas rectificativas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
@@ -9319,6 +9349,11 @@ msgid "Revenue/Expense Account"
 msgstr "Cuenta de Ingresos/Gastos"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
+msgid "Reversal Move"
+msgstr "Movimiento de reversión"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
 msgstr "Fecha de reversión"
@@ -9467,7 +9502,7 @@ msgstr "Ventas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Sales Person"
-msgstr "Vendedor"
+msgstr "Comercial"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__type__out_receipt
@@ -9805,6 +9840,12 @@ msgid "Send Money"
 msgstr "Enviar dinero"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "Send Payment"
+msgstr "Enviar Pago"
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice
 msgid "Send a sample invoice"
 msgstr "Enviar una factura ejemplo"
@@ -9823,6 +9864,11 @@ msgstr "Enviar facturas y seguimientos de pagos por correo"
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
 msgstr "Enviar recibo por correo electrónico"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
+msgid "Send receipts by email"
+msgstr "Enviar ingresos por correo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
@@ -10959,6 +11005,11 @@ msgid "Terms & Conditions"
 msgstr "Términos y condiciones"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__narration
+msgid "Terms and Conditions"
+msgstr "Términos y condiciones"
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
@@ -11298,6 +11349,16 @@ msgstr ""
 "no tienen correo electrónico. "
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid ""
+"The following payment(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+"Los siguientes pagos no serán enviados por correo,\n"
+"porque el cliente no tiene registrado un correo."
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -11322,10 +11383,14 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
 msgstr ""
-"El poseedor de una cuenta bancaria en un diario tiene que ser la compañía "
-"(%s)."
+"El poseedor de una cuenta bancaria en un diario tiene que ser la compañía (%s).\n"
+"Sin embargo, el poseedor of \"%s\" es \"%s\".\n"
+"Seleccione por favor otra cuenta bancaria o cambie al poseedor de \"%s\"."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -11477,8 +11542,9 @@ msgid ""
 "The payments which have not been matched with a bank statement will not be "
 "shown in bank reconciliation data if they were made before this date"
 msgstr ""
-"Los pagos que no coinciden con un extracto bancario no se mostrarán en los "
-"datos de conciliación bancaria si se realizaron antes de esta fecha"
+"Los pagos que no han sido casados con un extracto bancario no serán "
+"mostrados en los datos de conciliación bancaria si se realizaron antes de "
+"esta fecha"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -12772,7 +12838,7 @@ msgstr "Fecha de descuadre"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr "¡Valor incorrecto de crédito o débito en asiento contable!"
+msgstr "Valor incorrecto en el debe o en el haber del apunte contable."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12871,6 +12937,12 @@ msgstr "Sólo puede registrar pagos en facturas abiertas"
 #, python-format
 msgid "You can only send invoices."
 msgstr "Solo puede enviar facturas."
+
+#. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "You can only send payments."
+msgstr "Solo puedes enviar pagos."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13013,6 +13085,12 @@ msgstr "No puede eliminar un pago que ya fue publicado. "
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
 msgstr "No puede eliminar una entrada que se haya publicado una vez."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot delete an item linked to a posted entry."
+msgstr "No puede eliminar un elemento vinculado a una entrada publicada."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -13284,6 +13362,12 @@ msgstr "Debe primero definir un movimiento de apertura. "
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr "La entrada %s (id %s) ya está publicada."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "You need to add a line before posting."
 msgstr "Necesita añadir líneas antes de validar."
 
@@ -13329,12 +13413,6 @@ msgstr ""
 "Debería configurar la 'Cuenta de pérdidas por tasa de cambio' en las "
 "opciones de contabilidad para gestionar automáticamente los asientos "
 "relacionados con diferencias entre tipos de cambio."
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr "Establezca un valor de redondeo positivo."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -13454,6 +13532,11 @@ msgid "of the following month"
 msgstr "Del mes siguiente"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "de"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding debits"
 msgstr "débitos pendientes"
@@ -13517,6 +13600,18 @@ msgstr "la compañia matriz"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "to check"
 msgstr "por revisar"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
+msgstr ""
+"El diario elegido tiene un tipo que no es compatible con el tipo de factura."
+" Las operaciones de ventas deben ir a diarios de 'venta', y las operaciones "
+"de compra a los de 'compra'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

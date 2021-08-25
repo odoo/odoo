@@ -63,7 +63,7 @@ class WebsiteLivechat(LivechatController):
         """ Override to use visitor name instead of 'Visitor' whenever a visitor start a livechat session. """
         visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
         if visitor_sudo:
-            anonymous_name = visitor_sudo.display_name
+            anonymous_name = visitor_sudo.with_context(lang=visitor_sudo.lang_id.code).display_name
         return super(WebsiteLivechat, self).get_session(channel_id, anonymous_name, previous_operator_id=previous_operator_id, **kwargs)
 
     @http.route('/im_livechat/visitor_leave_session', type='json', auth="public")

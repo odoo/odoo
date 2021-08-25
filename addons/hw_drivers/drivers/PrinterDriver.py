@@ -26,31 +26,20 @@ except:
 
 _logger = logging.getLogger(__name__)
 
-def print_star_error(deviceId):
-    """We communicate with receipt printers using the ESCPOS protocol.
-    By default, Star printers use the Star mode. This can be changed by
-    modifying the position of the DIP-Switches at the bottom of the printer.
-    """
-    error_page = (
-        "\x1B\x1D\x61\x01"                                      # Centering start
-        "\x1B\x69\x01\x01Bad configuration\x1B\x69\x00\x00"     # Title, double size
-        "\n\n--------------------\n\n"
-        "\x1B\x1D\x61\x00"                                      # Centering Stop
-        "Your printer is in Star line mode, but should\n"
-        "use ESC/POS mode. You will not be able to print\n"
-        "receipts without changing your configuration.\n\n"
-        "For more details and instructions on how to\n"
-        "configure your printer, please refer to:\n\n"
-        "\x1B\x1D\x61\x01"                                      # Centering start
-        "\x1B\x2D\x01"                                          # Underline start
-        "http://www.odoo.com"  # TODO: Replace URL
-        "\x0A\x0A"
-        "\x1B\x2D\x00"                                          # Underline stop
-        "\x1B\x1D\x61\x00"                                      # Centering stop
-        "\x1B\x64\x02"                                          # Full Cut
-    )
-    process = subprocess.Popen(["lp", "-d", deviceId], stdin=subprocess.PIPE)
-    process.communicate(error_page.encode("utf-8"))
+RECEIPT_PRINTER_COMMANDS = {
+    'star': {
+        'center': b'\x1b\x1d\x61\x01', # ESC GS a n
+        'cut': b'\x1b\x64\x02',  # ESC d n
+        'title': b'\x1b\x69\x01\x01%s\x1b\x69\x00\x00',  # ESC i n1 n2
+        'drawers': [b'\x07', b'\x1a']  # BEL & SUB
+    },
+    'escpos': {
+        'center': b'\x1b\x61\x01',  # ESC a n
+        'cut': b'\x1d\x56\x41\n',  # GS V m
+        'title': b'\x1b\x21\x30%s\x1b\x21\x00',  # ESC ! n
+        'drawers': [b'\x1b\x3d\x01', b'\x1b\x70\x00\x19\x19', b'\x1b\x70\x01\x19\x19']  # ESC = n then ESC p m t1 t2
+    }
+}
 
 def cups_notification_handler(message, uri, device_id, state, reason, accepting_jobs):
     if device_id in iot_devices:
@@ -91,7 +80,9 @@ class PrinterDriver(Driver):
             'reason': None,
         }
         self.send_status()
-        if 'direct' in self._device_connection and 'CMD:ESC/POS;' in self.dev['device-id']:
+
+        self.receipt_protocol = 'star' if 'STR_T' in self.dev['device-id'] else 'escpos'
+        if 'direct' in self._device_connection and any(cmd in self.dev['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
             self.print_status()
 
     @classmethod
@@ -118,11 +109,7 @@ class PrinterDriver(Driver):
                     conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
                 else:
                     device['device-make-and-model'] = printers[device['identifier']]['printer-info']
-            if 'STR_T' in device['device-id']:
-                # Star printers have either STR_T or ESP in their name depending on the protocol used.
-                print_star_error(device['identifier'])
-            else:
-                return True
+            return True
         return False
 
     @classmethod
@@ -195,52 +182,41 @@ class PrinterDriver(Driver):
         im = ImageOps.invert(im)
         im = im.convert("1")
 
-        '''ESC a n
-            - ESC a: Select justification, in hex: "1B 61"
-            - n: Justification:
-                - 0: left
-                - 1: center
-                - 2: right
-        '''
-        center = b'\x1b\x61\x01'
+        print_command = getattr(self, 'format_%s' % self.receipt_protocol)(im)
+        self.print_raw(print_command)
 
-        '''GS v0 m x y
-            - GS v0: Print raster bit image, in hex: "1D 76 30"
-            - m: Density mode:
-                - 0: 180dpi x 180dpi
-                - 1: 180dpi x 90dpi
-                - 2: 90dpi x 180 dpi
-                - 3: 90dpi x 90 dpi
-            - x: Length in X direction, in bytes, represented as 2 bytes in little endian
-                --> Must be <= 255
-            - y: Length in Y direction, in dots, represented as 2 bytes in little endian
-        '''
-        width_pixels, height_pixels = im.size
-        width_bytes = int((width_pixels + 7) / 8)
-        print_command = b"\x1d\x76\x30" + b'\x00' + (width_bytes).to_bytes(2, 'little') + height_pixels.to_bytes(2, 'little')
+    def format_star(self, im):
+        width = int((im.width + 7) / 8)
 
-        # There is a height limit when printing images, so we split the image
-        # into slices and print each slice with a separate command.
-        blobs = []
-        slice_offset = 0
-        while slice_offset < height_pixels:
-            slice_height_pixels = min(255, height_pixels - slice_offset)
-            im_slice = im.crop((0, slice_offset, width_pixels, slice_offset + slice_height_pixels))
-            print_command = b"\x1d\x76\x30" + b'\x00' + (width_bytes).to_bytes(2, 'little') + slice_height_pixels.to_bytes(2, 'little')
-            blobs += [print_command + im_slice.tobytes()]
-            slice_offset += slice_height_pixels
+        raster_init = b'\x1b\x2a\x72\x41'
+        raster_page_length = b'\x1b\x2a\x72\x50\x30\x00'
+        raster_send = b'\x62'
+        raster_close = b'\x1b\x2a\x72\x42'
 
-        '''GS V m
-            - GS V: Cut, in hex: "1D 56"
-            - m: Cut mode:
-                - 0: Full cut
-                - 1: Partial cut
-                - 65 (0x41): Feed paper then full cut
-                - 66 (0x42): Feed paper then partial cut
-        '''
-        cut = b'\x1d\x56' + b'\x41'
+        raster_data = b''
+        dots = im.tobytes()
+        while len(dots):
+            raster_data += raster_send + width.to_bytes(2, 'little') + dots[:width]
+            dots = dots[width:]
 
-        self.print_raw(center + b"".join(blobs) + cut + b'\n')
+        return raster_init + raster_page_length + raster_data + raster_close
+
+    def format_escpos(self, im):
+        width = int((im.width + 7) / 8)
+
+        raster_send = b'\x1d\x76\x30\x00'
+        max_slice_height = 255
+
+        raster_data = b''
+        dots = im.tobytes()
+        while len(dots):
+            im_slice = dots[:width*max_slice_height]
+            slice_height = int(len(im_slice) / width)
+            raster_data += raster_send + width.to_bytes(2, 'little') + slice_height.to_bytes(2, 'little') + im_slice
+            dots = dots[width*max_slice_height:]
+
+        _logger.error('done')
+        return raster_data + RECEIPT_PRINTER_COMMANDS['escpos']['cut']
 
     def print_status(self):
         """Prints the status ticket of the IoTBox on the current printer."""
@@ -278,19 +254,15 @@ class PrinterDriver(Driver):
         if code:
             pairing_code = '\nPairing Code:\n%s\n' % code
 
-        center = b'\x1b\x61\x01'
-        title = b'\n\x1b\x21\x30\x1b\x4d\x01IoTBox Status\x1b\x4d\x00\x1b\x21\x00\n'
-        cut = b'\x1d\x56\x41'
-
-        self.print_raw(center + title + wlan.encode() + mac.encode() + ip.encode() + homepage.encode() + pairing_code.encode() + cut + b'\n')
+        commands = RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
+        title = commands['title'] % b'IoTBox Status'
+        self.print_raw(commands['center'] + title + b'\n' + wlan.encode() + mac.encode() + ip.encode() + homepage.encode() + pairing_code.encode() + commands['cut'])
 
     def open_cashbox(self):
         """Sends a signal to the current printer to open the connected cashbox."""
-        # ESC = --> Set peripheral device
-        self.print_raw(b'\x1b\x3d\x01')
-        for drawer in [b'\x1b\x70\x00', b'\x1b\x70\x01']:  # Kick pin 2 and 5
-            command = drawer + b'\x19\x19'  # Pulse ON during 50ms then OFF during 50ms
-            self.print_raw(command)
+        commands = RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
+        for drawer in commands['drawers']:
+            self.print_raw(drawer)
 
 
 class PrinterController(http.Controller):

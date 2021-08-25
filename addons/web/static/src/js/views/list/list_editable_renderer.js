@@ -266,7 +266,7 @@ ListRenderer.include({
                     currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
                     if (currentWidget) {
                         focusedElement = currentWidget.getFocusableElement().get(0);
-                        if (currentWidget.formatType !== 'boolean') {
+                        if (currentWidget.formatType !== 'boolean' && focusedElement) {
                             selectionRange = dom.getSelectionRange(focusedElement);
                         }
                     }
@@ -1709,6 +1709,7 @@ ListRenderer.include({
             const newWidth = Math.max(10, initialWidth + delta);
             const tableDelta = newWidth - initialWidth;
             th.style.width = `${newWidth}px`;
+            th.style.maxWidth = `${newWidth}px`;
             table.style.width = `${initialTableWidth + tableDelta}px`;
             if (optionalDropdown) {
                 optionalDropdown.style.left = `${initialDropdownX + tableDelta}px`;
@@ -1789,7 +1790,7 @@ ListRenderer.include({
         }
 
         // ignore clicks in autocomplete dropdowns
-        if ($(event.target).parents('.ui-autocomplete').length) {
+        if ($(event.target).closest('.ui-autocomplete').length) {
             return;
         }
 

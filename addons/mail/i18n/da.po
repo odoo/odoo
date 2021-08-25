@@ -16,10 +16,11 @@
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
 # JonathanStein <jstein@image.dk>, 2020
-# Walther Barnett <wba@miracle.dk>, 2020
+# walther_b <wba@miracle.dk>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Preben Lisby <preben.lisby@gmail.com>, 2020
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -296,7 +297,7 @@ msgstr "<p>Opret en kanal her.</p>"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/tours/mail.js:26
+#: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p>Create a public or private channel.</p>"
 msgstr "<p>Opret en offentlig eller privat kanal.</p>"
@@ -1577,6 +1578,12 @@ msgid "Customer is required for inbox / email notification"
 msgstr "Kunde kræves for indbakke / email notifikation"
 
 #. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr "Kan ikke opdatere beskeden eller modtageren af en notifikation."
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
 #: model:ir.model.fields,field_description:mail.field_mail_message__date
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -2447,6 +2454,14 @@ msgstr "Kun følgere"
 #, python-format
 msgid "Following"
 msgstr "Following"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "Following invites are invalid as user groups do not match: %s"
+msgstr ""
+"Følgende invitationer er ugyldige eftersom brugergrupper ikke stemmer "
+"overens: %s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
@@ -4252,6 +4267,18 @@ msgid "Online"
 msgstr "Online"
 
 #. module: mail
+#: code:addons/mail/models/mail_message.py:0
+#, python-format
+msgid "Only administrators are allowed to export mail message"
+msgstr "Kun administratorer må eksportere email beskeder"
+
+#. module: mail
+#: code:addons/mail/models/mail_message.py:0
+#, python-format
+msgid "Only administrators are allowed to use grouped read on message model"
+msgstr "Kun administratorer må anvende grupperet læsning på besked model"
+
+#. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -5646,6 +5673,12 @@ msgstr ""
 " der ikke findes en systembruger for den pågældende adresse."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "The partner can not join this channel"
+msgstr "Partneren kan ikke deltage i denne kanal"
+
+#. module: mail
 #: code:addons/mail/models/mail_message.py:0
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
@@ -6378,6 +6411,24 @@ msgstr ""
 "Du kan markere enhver besked som 'stjernet', og den vises i denne postkasse."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not remove this partner from this channel"
+msgstr "Du kan ikke fjerne denne partner fra denne kanal"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on the record of other users"
+msgstr "Du kan ikke skrive i andre brugers datasæt"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr "Du kan ikke skrive i dette felt"
+
+#. module: mail
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid ""
@@ -6398,6 +6449,15 @@ msgstr ""
 "af andre moduler."
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"You cannot use anything else than unaccented latin characters in the alias "
+"address."
+msgstr ""
+"Du kan ikke bruge andet en uaccenterede latinske tegn i kaldenavns adressen."
+
+#. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -6406,15 +6466,6 @@ msgid ""
 msgstr ""
 "Du har ikke rettigheder til at modificere felter relateret til moderering af"
 " en af de kanaler du modificerer."
-
-#. module: mail
-#: code:addons/mail/models/mail_alias.py:89
-#, python-format
-msgid ""
-"You cannot use anything else than unaccented latin characters in the alias "
-"address."
-msgstr ""
-"Du kan ikke bruge andet en uaccenterede latinske tegn i kaldenavns adressen."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -6431,8 +6482,8 @@ msgstr "Du er blevet tildelt"
 #. openerp-web
 #: code:addons/mail/static/src/js/services/mail_notification_manager.js:0
 #, python-format
-msgid "You have been invited to: "
-msgstr "Du er blevet inviteret til:"
+msgid "You have been invited to: %s"
+msgstr "Du er blevet inviteret til: %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation

@@ -19,7 +19,7 @@ var MrpBomReport = stock_report_generic.extend({
         var self = this;
         var args = [
             this.given_context.active_id,
-            this.given_context.searchQty || 1,
+            this.given_context.searchQty || false,
             this.given_context.searchVariant,
         ];
         return this._rpc({

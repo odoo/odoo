@@ -48,12 +48,14 @@ class PosController(http.Controller):
             return werkzeug.utils.redirect('/web#action=point_of_sale.action_client_pos_menu')
         # The POS only work in one company, so we enforce the one of the session in the context
         session_info = request.env['ir.http'].session_info()
-        session_info['user_context']['allowed_company_ids'] = pos_session.company_id.ids
+        session_info['user_context']['pos_session_company_ids'] = pos_session.company_id.ids
         context = {
             'session_info': session_info,
             'login_number': pos_session.login(),
         }
-        return request.render('point_of_sale.index', qcontext=context)
+        response = request.render('point_of_sale.index', qcontext=context)
+        response.headers['Cache-Control'] = 'no-store'
+        return response
 
     @http.route('/pos/sale_details_report', type='http', auth='user')
     def print_sale_details(self, date_start=False, date_stop=False, **kw):

@@ -55,4 +55,5 @@ The Dashboard for the Sales Manager will include
     'application': True,
     'uninstall_hook': 'uninstall_hook',
     'post_init_hook': 'post_init_hook',
+    'license': 'LGPL-3',
 }

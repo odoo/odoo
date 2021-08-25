@@ -14,9 +14,9 @@
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
 # Батболд <batbold.ts@gmail.com>, 2020
 # Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020
-# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2020
 # Minj P <pminj322@gmail.com>, 2020
 # Munkhbaatar Gombosuren <muuguu17@gmail.com>, 2020
+# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Munkhbaatar Gombosuren <muuguu17@gmail.com>, 2020\n"
+"Last-Translator: tserendavaa tsogtoo <tseegii011929@gmail.com>, 2021\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -197,6 +197,14 @@ msgstr ""
 "<p>Ирээдүйтэй харилцагчиддаа<b>Зурвас илгээж</b> хариу хүлээж авах бөгөөд "
 "хариу нь энэ боломждоо хавсрагдана.</p><p class=\"mb0\"> <i>'@'</i> гэж "
 "бичээд хүмүүсийг mention хийж болно - энэ яг л имэйлийг cc-ддэгтэй ижил.</p>"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1904,6 +1912,12 @@ msgstr ""
 "Энэхүү тайланг борлуулалтын менежер борлуулалтын сувгуудыг тогтмол шалгах зорилгоор ашигладаг."
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr "Боломжийн тоо"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr "Боломжуудийн орлого"
@@ -1996,6 +2010,7 @@ msgstr "Бусад"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "Хугацаа хэтэрсэн Боломжууд"
 
@@ -2459,6 +2474,12 @@ msgid "Team Pipelines"
 msgstr "Багийн боловсруулалтын үе шат"
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
@@ -2567,6 +2588,14 @@ msgstr "Энэ зорилт үүсгэгдээгүй."
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Title"
 msgstr "Гарчиг"
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"To prevent data loss, Leads and Opportunities can only be merged by groups "
+"of 5."
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter

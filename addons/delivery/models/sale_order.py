@@ -37,7 +37,16 @@ class SaleOrder(models.Model):
             self.recompute_delivery_price = True
 
     def _remove_delivery_line(self):
-        self.env['sale.order.line'].search([('order_id', 'in', self.ids), ('is_delivery', '=', True)]).unlink()
+        delivery_lines = self.env['sale.order.line'].search([('order_id', 'in', self.ids), ('is_delivery', '=', True)])
+        if not delivery_lines:
+            return
+        to_delete = delivery_lines.filtered(lambda x: x.qty_invoiced == 0)
+        if not to_delete:
+            raise UserError(
+                _('You can not update the shipping costs on an order where it was already invoiced!\n\nThe following delivery lines (product, invoiced quantity and price) have already been processed:\n\n')
+                + '\n'.join(['- %s: %s x %s' % (line.product_id.with_context(display_default_code=False).display_name, line.qty_invoiced, line.price_unit) for line in delivery_lines])
+            )
+        to_delete.unlink()
 
     def set_delivery_line(self, carrier, amount):
 
@@ -56,7 +65,10 @@ class SaleOrder(models.Model):
             carrier = self.carrier_id
         else:
             name = _('Add a shipping method')
-            carrier = self.partner_id.property_delivery_carrier_id
+            carrier = (
+                self.partner_shipping_id.property_delivery_carrier_id
+                or self.partner_shipping_id.commercial_partner_id.property_delivery_carrier_id
+            )
         return {
             'name': name,
             'type': 'ir.actions.act_window',
@@ -108,6 +120,10 @@ class SaleOrder(models.Model):
             values['name'] += '\n' + 'Free Shipping'
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
+
+        to_update = self.picking_ids.filtered(lambda p: p.state not in ['cancel', 'done'] and p.carrier_tracking_ref == False)
+        if to_update:
+            to_update.write({'carrier_id': carrier.id})
         sol = SaleOrderLine.sudo().create(values)
         return sol
 
@@ -119,8 +135,7 @@ class SaleOrder(models.Model):
             post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=self.currency_id.symbol or '')
         return u' {pre}{0}{post}'.format(amount, pre=pre, post=post)
 
-    @api.depends('order_line.is_delivery', 'order_line.is_downpayment',
-                 'order_line.product_id.invoice_policy')
+    @api.depends('order_line.is_delivery', 'order_line.is_downpayment')
     def _get_invoice_status(self):
         super()._get_invoice_status()
         for order in self:

@@ -35,9 +35,9 @@
                 <span t-if="dismissibleBtn and tag.id in active_tag_ids" class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
                     <i class="fa fa-tag mr-2 text-muted"/>
                     <t t-esc="tag.name"/>
-                    <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1">&#215;</a>
+                    <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1" t-att-rel="len(active_tag_ids) and 'nofollow'">&#215;</a>
                 </span>
-                <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate #{tag.id in active_tag_ids and 'badge-primary' or 'border'}" t-esc="tag.name"/>
+                <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate #{tag.id in active_tag_ids and 'badge-primary' or 'border'}" t-attf-rel="len(active_tag_ids) and 'nofollow'" t-esc="tag.name"/>
             </t>
         </t>
     </t>

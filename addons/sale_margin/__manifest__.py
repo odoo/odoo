@@ -15,4 +15,5 @@ Price and Cost Price.
     'depends':['sale_management'],
     'demo':['data/sale_margin_demo.xml'],
     'data':['security/ir.model.access.csv','views/sale_margin_view.xml'],
+    'license': 'LGPL-3',
 }

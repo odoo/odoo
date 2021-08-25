@@ -18,9 +18,9 @@
 # JonathanStein <jstein@image.dk>, 2020
 # Jesper Carstensen <info@danodoo.dk>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
-# nle_odoo, 2020
 # Mads Søndergaard, 2020
-# Mads Søndergaard <mads@vkdata.dk>, 2020
+# nle_odoo, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -12259,6 +12259,14 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
+"Kan ikke deaktivere et sprog som på nuværende tidspunkt anvendes af "
+"kontakter."
+
+#. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
 msgid "Cannot deactivate a language that is currently used by users."
 msgstr ""
 "Kan ikke deaktivere et sprog der bliver brugt af brugere i øjeblikket."
@@ -22752,6 +22760,20 @@ msgstr ""
 "Odoo hjælper dig med nemt at spore alle aktiviteter relateret til en sælger"
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+"Odoo er ude af stand til at forene PDF filerne forbundet til følgende datasæt:\n"
+"%s\n"
+"\n"
+"Vær venlig at udeluk dem fra valget for at fortsætte. Det er muligt stadig at indhente de pågældende PDF filer, ved at vælge hver af de pågældende datasæt individuelt, hvilket undgår foreningen."
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
 msgstr "Odoo henvisningsprogram"
@@ -22820,6 +22842,12 @@ msgid ""
 msgstr ""
 "En af de dokumenter, du forsøger at få adgang er blevet slettet, skal du "
 "prøve igen efter forfriskende."
+
+#. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid "One of the documents, you try to merge is encrypted"
+msgstr "En af de dokumenter du forsøger at forene er krypteret"
 
 #. module: base
 #: code:addons/models.py:0
@@ -27437,6 +27465,12 @@ msgid "The internal user in charge of this contact."
 msgstr "Den interne bruger ansvarlig for denne kontakt."
 
 #. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr "Layoutet indeholder en ugyldig format nøgle"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "Listen over modeller der udvider den nuværende model."
@@ -28027,16 +28061,6 @@ msgid ""
 msgstr ""
 "Denne operation er tilladt for grupperne:\n"
 "%(groups_list)s"
-
-#. module: base
-#: code:addons/base/ir/ir_sequence.py:56
-#, python-format
-msgid ""
-"This transaction wasn't executed because another transaction is already "
-"using the same no-gap sequence. Please try again later."
-msgstr ""
-"Denne transaktion blev ikke gennemført, eftersom en anden transaktion "
-"allerede anvender den samme no-gap sekvens. Prøv venligst igen senere."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -29914,8 +29938,10 @@ msgstr "Du kan ikke aktiverer superbrugeren."
 #. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
-msgid "You cannot archive a contact linked to an internal user."
-msgstr "Du kan ikke arkiverer en kontakt forbundet til en intern bruger."
+msgid "You cannot archive a contact linked to a portal or internal user."
+msgstr ""
+"Du kan ikke arkivere en kontakt der er forbundet til en portal- eller intern"
+" bruger."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0

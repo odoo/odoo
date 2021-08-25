@@ -10,16 +10,18 @@
 # Michael Yeung, 2019
 # Martin Trigaux, 2019
 # 棋文 鄭 <a09930185@gmail.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # 曾逸民 <suncombo@gmail.com>, 2020
+# pofan lai <gasklath20312@gmail.com>, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Gerard Chen <gerardpublico@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: 曾逸民 <suncombo@gmail.com>, 2020\n"
+"Last-Translator: Gerard Chen <gerardpublico@gmail.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -130,17 +132,17 @@ msgstr "-> 查看已部分調節分錄"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
 msgid "15 Days"
-msgstr "15天"
+msgstr "15 天"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_2months
 msgid "2 Months"
-msgstr "2個月"
+msgstr "2 個月"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
 msgid "21 Days"
-msgstr "21天"
+msgstr "21 天"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
@@ -150,7 +152,7 @@ msgstr "30 天"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
 msgid "30% Advance End of Following Month"
-msgstr "預付30% 其他下個月月底支付"
+msgstr "預付30%，其他下個月月底支付"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -166,7 +168,7 @@ msgstr "45 天"
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid ": Refund"
-msgstr ":退款"
+msgstr "：退款"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -193,7 +195,7 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        親愛的 ${object.partner_id.name}<br/><br/>\n"
 "        感謝您的付款.\n"
-"        附件為您的付款收據 <strong>${(object.name or '').replace('/','-')}</strong> 總金額\n"
+"        附件為您的付款收據 <strong>${(object.name or '').replace('/','-')}</strong> 總金額為\n"
 "         <strong>${format_amount(object.amount, object.currency_id)}</strong> 支付對象 ${object.company_id.name}.\n"
 "        <br/><br/>\n"
 "        若有任何問題請隨時跟我們聯絡.\n"
@@ -2645,6 +2647,7 @@ msgstr "取消分錄"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__cancelled
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
 msgstr "已取消"
 
@@ -3922,7 +3925,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Data consistency check"
-msgstr ""
+msgstr "資料一致性檢查"
 
 #. module: account
 #. openerp-web
@@ -5752,11 +5755,6 @@ msgid "Internal Group"
 msgstr "內部群組"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_move__narration
-msgid "Internal Note"
-msgstr "內部備註"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__note
 msgid "Internal Notes"
 msgstr "內部備註"
@@ -6128,6 +6126,14 @@ msgid ""
 "since it would create a gap in the numbering. You should create the journal "
 "entry again and cancel it thanks to a regular revert."
 msgstr "不允許刪除已創建日記帳分錄的付款，因為它會在編號中產生差異。您應該取消它正常恢復後再次生成日記帳分錄。"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"It seems that the taxes have been modified since the creation of the journal"
+" entry. You should create the credit note manually instead."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7093,7 +7099,7 @@ msgstr "憑證已調節"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__move_type
 msgid "Move Type"
-msgstr ""
+msgstr "日記帳類型"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7668,6 +7674,12 @@ msgid "Original Bills"
 msgstr "原始帳單"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "發起人付款"
@@ -7936,7 +7948,7 @@ msgstr "付款差異處理"
 #: code:addons/account/static/src/xml/account_payment.xml:0
 #, python-format
 msgid "Payment Info"
-msgstr "付款信息"
+msgstr "付款資訊"
 
 #. module: account
 #. openerp-web
@@ -8232,6 +8244,18 @@ msgid ""
 "Please install a chart of accounts or create a miscellaneous journal before "
 "proceeding."
 msgstr "請在處理之前先安裝會計科目表或創建一個雜項日記帳."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -8957,6 +8981,11 @@ msgid "Revenue/Expense Account"
 msgstr "收入/費用科目"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
+msgid "Reversal Move"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
 msgstr "撤銷日期"
@@ -9433,6 +9462,12 @@ msgid "Send Money"
 msgstr "支付"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "Send Payment"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice
 msgid "Send a sample invoice"
 msgstr "憑單憑單樣例"
@@ -9451,6 +9486,11 @@ msgstr "寄送憑單及收付款追蹤"
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
 msgstr "通過電子信件發送收據"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
+msgid "Send receipts by email"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
@@ -10503,6 +10543,11 @@ msgid "Terms & Conditions"
 msgstr "條款及條件"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__narration
+msgid "Terms and Conditions"
+msgstr "條款和條件"
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
@@ -10794,6 +10839,14 @@ msgid ""
 msgstr "以下憑單將不會通過電子信件發送，因為客戶沒有電子信件地址。"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid ""
+"The following payment(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -10812,8 +10865,11 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "日記帳銀行帳的所有者必須為公司 (%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -11929,7 +11985,7 @@ msgstr "供應商應付憑單"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Vendor Bill Created"
-msgstr ""
+msgstr "已建立供應商應付憑單"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -12210,6 +12266,12 @@ msgid "You can only send invoices."
 msgstr "您僅能發送憑單。"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "You can only send payments."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12325,6 +12387,12 @@ msgid "You cannot delete an entry which has been posted once."
 msgstr "您不能刪除曾經有過帳的會計分錄(依內控需求)。"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot delete an item linked to a posted entry."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -12386,7 +12454,7 @@ msgstr "您不能修改已登帳的付款分錄。"
 msgid ""
 "You cannot modify a posted entry of this journal because it is in strict "
 "mode."
-msgstr ""
+msgstr "您不能修改此日誌的已過帳條目,因為它處於限制模式。"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12410,7 +12478,7 @@ msgstr ""
 msgid ""
 "You cannot overwrite the values ensuring the inalterability of the "
 "accounting."
-msgstr ""
+msgstr "不能覆寫數值以確保會計的一致性。"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12459,7 +12527,7 @@ msgstr "您不能刪除／關閉一個已經被設定在供應商／客戶上的
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft a tax cash basis journal entry."
-msgstr ""
+msgstr "您不能重置到稅現金基礎日記帳分錄草稿。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12551,6 +12619,12 @@ msgstr "您必須首先定義一個打開動作。"
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "You need to add a line before posting."
 msgstr "您需要在過帳前添加分錄明細。"
 
@@ -12587,12 +12661,6 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr "您應該在會計配置配置 '匯率損失科目' ，自動管理與匯率之間的差額的會計分錄的預訂."
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -12710,6 +12778,11 @@ msgid "of the following month"
 msgstr "下月"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "在"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding debits"
 msgstr "未完借方"
@@ -12773,6 +12846,15 @@ msgstr "上級公司"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "to check"
 msgstr "勾選"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

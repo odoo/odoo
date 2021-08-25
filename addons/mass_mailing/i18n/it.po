@@ -18,7 +18,7 @@
 # Paolo Valier, 2019
 # Martin Trigaux, 2019
 # Iacopo Simonelli <lsi@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -199,6 +199,9 @@ msgid ""
 "<span attrs=\"{'invisible': "
 "[('mailing_model_name','!=','mailing.list')]}\">Mailing Contact</span>"
 msgstr ""
+"<span attrs=\"{'invisible': "
+"[('mailing_model_name','!=','mailing.list')]}\">Contatto per invio "
+"e-mail</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
@@ -213,7 +216,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"failed_text\">emails could not be sent.</span>"
-msgstr ""
+msgstr "<span name=\"failed_text\">e-mail non possono essere inviate.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -221,11 +224,15 @@ msgid ""
 "<span name=\"ignored_text\">emails have been ignored and will not be "
 "sent.</span>"
 msgstr ""
+"<span name=\"ignored_text\">e-mail sono state ignorate e non verranno "
+"inviate.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"next_departure_text\">This mailing is scheduled for </span>"
 msgstr ""
+"<span name=\"next_departure_text\">Questo invio e-mail è programmato per "
+"</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -233,6 +240,8 @@ msgid ""
 "<span name=\"scheduled_text\">emails are in queue and will be sent "
 "soon.</span>"
 msgstr ""
+"<span name=\"scheduled_text\">e-mail sono in coda e verranno inviate a "
+"breve.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
@@ -256,6 +265,10 @@ msgid ""
 "                            <span attrs=\"{'invisible': [('bounced', '=', False)]}\"> appears to be invalid</span>\n"
 "                            </strong>"
 msgstr ""
+"<strong><span name=\"trace_type_name_mail\">L'e-mail</span>\n"
+"                            <span attrs=\"{'invisible': [('exception', '=', False)]}\"> non può essere inviata</span>\n"
+"                            <span attrs=\"{'invisible': [('bounced', '=', False)]}\"> non sembra essere valida</span>\n"
+"                            </strong>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
@@ -317,7 +330,7 @@ msgstr "Attività"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Decorazione eccezione attività"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_state
@@ -332,7 +345,7 @@ msgstr "Consentire test A/B"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Allow recipients to blacklist themselves"
-msgstr ""
+msgstr "Consente ai destinatari di aggiungersi alla lista nera"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__show_blacklist_buttons
@@ -411,7 +424,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Archived"
-msgstr "Archiviato"
+msgstr "In archivio"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing_list.py:0
@@ -420,6 +433,8 @@ msgid ""
 "At least one of the mailing list you are trying to archive is used in an "
 "ongoing mailing campaign."
 msgstr ""
+"Almeno una delle mailing list che si sta tentando di archiviare è utilizzata"
+" in una campagna di invio e-mail in corso."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -463,7 +478,7 @@ msgstr "Aggiungimi alla lista nera"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__show_blacklist_buttons
 msgid "Blacklist Option when Unsubscribing"
-msgstr ""
+msgstr "Opzione lista nera all'annullamento iscrizione"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__body_arch
@@ -526,6 +541,8 @@ msgstr "Campagne"
 msgid ""
 "Campaigns are the perfect tool to track results across multiple mailings."
 msgstr ""
+"Le campagne sono lo strumento perfetto per monitorare i risultati di invii "
+"e-mail multipli."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
@@ -618,7 +635,7 @@ msgstr "Configurazione"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Configure Email Server"
-msgstr ""
+msgstr "Configura server e-mail"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__smtp
@@ -736,7 +753,7 @@ msgid ""
 "                                The discussion will examine how to develop new norms and integrate them into EU"
 msgstr ""
 "Le minacce informatiche sono in aumento.<br/>\n"
-"                                Verrà esaminato come sviluppare nuove norme e la loro integrazione nell'Unione Europea"
+"                                Verrà esaminato il modo per sviluppare nuove norme e la loro integrazione nell'Unione Europea"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_event
@@ -816,7 +833,7 @@ msgstr "Consegnate"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered to"
-msgstr ""
+msgstr "Consegnate a"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__medium_id
@@ -912,7 +929,7 @@ msgstr "Marketing via e-mail"
 #: model:ir.cron,cron_name:mass_mailing.ir_cron_mass_mailing_queue
 #: model:ir.cron,name:mass_mailing.ir_cron_mass_mailing_queue
 msgid "Email Marketing: Process queue"
-msgstr ""
+msgstr "Marketing via e-mail: elabora coda"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_template
@@ -958,7 +975,7 @@ msgstr "Eccezione"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Exclude Blacklisted Emails"
-msgstr ""
+msgstr "Escludi e-mail in lista nera"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
@@ -1073,7 +1090,7 @@ msgstr "Icona"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare un'attività di eccezione."
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_needaction
@@ -1108,7 +1125,7 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Se l'indirizzo e-mail è nella lista nera il contatto non sarà più soggetto "
+"Se l'indirizzo e-mail è in lista nera, il contatto non sarà più soggetto "
 "all'invio massivo di e-mail, da nessuna lista."
 
 #. module: mass_mailing
@@ -1269,7 +1286,7 @@ msgstr "Campagne di invio e-mail"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact
 msgid "Mailing Contact"
-msgstr ""
+msgstr "Contatto per invio e-mail"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_list
@@ -1339,7 +1356,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_type
 msgid "Mailing Type"
-msgstr ""
+msgstr "Tipologia invio e-mail"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
@@ -1347,6 +1364,8 @@ msgid ""
 "Mailing contacts allow you to separate your marketing audience from your "
 "business contact directory."
 msgstr ""
+"I contatti per invio e-mail consentono di separare la platea del marketing "
+"dall'elenco dei contatti aziendali."
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_create_mass_mailings_from_campaign
@@ -1721,6 +1740,8 @@ msgid ""
 "Opt out flag for a specific mailing list.This field should not be used in a "
 "view without a unique and active mailing list context."
 msgstr ""
+"Spunta di disattivazione per una specifica mailing list. Usare il campo in "
+"una vista solo nel contesto di una mailing list univoca e attiva."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
@@ -1943,7 +1964,7 @@ msgstr "Data pianificata"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__schedule_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_schedule_date__schedule_date
 msgid "Scheduled for"
-msgstr ""
+msgstr "Programmato per"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing_contact.py:0
@@ -1977,7 +1998,7 @@ msgstr "Invia"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__email_from
 msgid "Send From"
-msgstr ""
+msgstr "Invia da"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
@@ -1993,6 +2014,7 @@ msgstr "Invia un messaggio campione"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send a sample email for testing purpose to the address below."
 msgstr ""
+"Invio di una e-mail campione all'indirizzo sottostante a scopo di prova."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
@@ -2166,7 +2188,7 @@ msgstr "Grazie! Il commento è stato inviato con successo!"
 #. module: mass_mailing
 #: model_terms:mailing.list,toast_content:mass_mailing.mass_mail_list_2
 msgid "Thanks for subscribing!"
-msgstr ""
+msgstr "Grazie per l'iscrizione!"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
@@ -2294,6 +2316,8 @@ msgid ""
 "Trackers are used to collect count stat about click on links and generate "
 "short URLs."
 msgstr ""
+"I monitoraggi servono a raccogliere statistiche riguardo il numero di clic "
+"sui link e a generare URL brevi."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__trace_type
@@ -2304,7 +2328,7 @@ msgstr "Tipologia"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di attività di eccezione sul record."
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_utm_campaign
@@ -2350,12 +2374,12 @@ msgstr "Data cancellazione iscrizione"
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Unsupported mass mailing model %s"
-msgstr ""
+msgstr "Modello invio massivo e-mail %s non supportato"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
 msgid "Update my subscriptions"
-msgstr ""
+msgstr "Aggiorna iscrizioni"
 
 #. module: mass_mailing
 #. openerp-web
@@ -2381,7 +2405,7 @@ msgstr "Usare questo codice promo PRIMA del 1 agosto"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Use a dedicated server for mailings"
-msgstr ""
+msgstr "Utilizzo di un server dedicato per invio delle e-mail"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__mail_server_id
@@ -2406,7 +2430,7 @@ msgstr "Utente"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Valid Email Recipients"
-msgstr ""
+msgstr "Destinatari e-mail validi"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
@@ -2450,6 +2474,8 @@ msgid ""
 "With strong technical foundations, Odoo's framework is unique.\n"
 "                                It provides top notch usability that scales across all apps."
 msgstr ""
+"Con solide basi tecniche, il framework Odoo è unico.\n"
+"                                Fornisce una eccellente usabilità che scala su tutte le applicazioni."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_image
@@ -2457,6 +2483,8 @@ msgid ""
 "With strong technical foundations, Odoo's framework is unique. It provides "
 "<strong>top notch usability that scales across all apps</strong>."
 msgstr ""
+"Con solide basi tecniche, il framework Odoo è unico. Fornisce una "
+"<strong>eccellente usabilità che scala su tutte le applicazioni</strong>."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_two_cols
@@ -2492,6 +2520,8 @@ msgid ""
 "You don't need to import your mailing lists, you can easily\n"
 "                send emails<br> to any contact saved in other Odoo apps."
 msgstr ""
+"È possibile inviare e-mail in modo facile a tutti i contatti salvati in\n"
+"                altre applicazioni<br> Odoo, senza dover importare le mailing list."
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
@@ -2499,6 +2529,8 @@ msgid ""
 "You don't need to import your mailing lists, you can easily\n"
 "            send emails<br> to any contact saved in other Odoo apps."
 msgstr ""
+"È possibile inviare e-mail in modo facile a tutti i contatti salvati in\n"
+"            altre applicazioni<br> Odoo, senza dover importare le mailing list."
 
 #. module: mass_mailing
 #. openerp-web

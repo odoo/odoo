@@ -15,7 +15,7 @@ class StockValuationLayer(models.Model):
 
     active = fields.Boolean(related='product_id.active')
     company_id = fields.Many2one('res.company', 'Company', readonly=True, required=True)
-    product_id = fields.Many2one('product.product', 'Product', readonly=True, required=True, check_company=True)
+    product_id = fields.Many2one('product.product', 'Product', readonly=True, required=True, check_company=True, auto_join=True)
     categ_id = fields.Many2one('product.category', related='product_id.categ_id')
     product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id')
     quantity = fields.Float('Quantity', digits=0, help='Quantity', readonly=True)
@@ -37,3 +37,6 @@ class StockValuationLayer(models.Model):
             self._table, ['product_id', 'remaining_qty', 'stock_move_id', 'company_id', 'create_date']
         )
 
+    def _update_stock_move(self):
+        """ To be overriden in mrp subcontracting"""
+        return True

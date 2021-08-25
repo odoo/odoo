@@ -327,7 +327,6 @@ class Repair(models.Model):
                     'partner_shipping_id': repair.address_id.id,
                     'currency_id': currency.id,
                     'narration': narration,
-                    'line_ids': [],
                     'invoice_origin': repair.name,
                     'repair_ids': [(4, repair.id)],
                     'invoice_line_ids': [],
@@ -673,7 +672,8 @@ class RepairLine(models.Model):
                     # Check automatic detection
                     fp_id = self.env['account.fiscal.position'].get_fiscal_position(partner.id, delivery_id=self.repair_id.address_id.id)
                     fp = self.env['account.fiscal.position'].browse(fp_id)
-                self.tax_id = fp.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
+                taxes = self.product_id.taxes_id.filtered(lambda x: x.company_id == self.repair_id.company_id)
+                self.tax_id = fp.map_tax(taxes, self.product_id, partner).ids
             warning = False
             if not pricelist:
                 warning = {
@@ -740,7 +740,8 @@ class RepairFee(models.Model):
                 # Check automatic detection
                 fp_id = self.env['account.fiscal.position'].get_fiscal_position(partner.id, delivery_id=self.repair_id.address_id.id)
                 fp = self.env['account.fiscal.position'].browse(fp_id)
-            self.tax_id = fp.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
+            taxes = self.product_id.taxes_id.filtered(lambda x: x.company_id == self.repair_id.company_id)
+            self.tax_id = fp.map_tax(taxes, self.product_id, partner).ids
         if self.product_id:
             if partner:
                 self.name = self.product_id.with_context(lang=partner.lang).display_name
