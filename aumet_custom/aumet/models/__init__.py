@@ -7,6 +7,6 @@ from . import purchase_order
 from . import company_marketplace
 from . import payment_methods
 from . import marketplace_product
-from . import res_partner
+# from . import res_partner
 from . import product_product
 from . import stock_order_point
