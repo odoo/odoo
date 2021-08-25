@@ -152,13 +152,3 @@ class MailController(http.Controller):
         if res_id and isinstance(res_id, str):
             res_id = int(res_id)
         return self._redirect_to_record(model, res_id, access_token, **kwargs)
-
-    @http.route('/mail/assign', type='http', auth='user', methods=['GET'])
-    def mail_action_assign(self, model, res_id, token=None):
-        comparison, record, redirect = self._check_token_and_record_or_redirect(model, int(res_id), token)
-        if comparison and record:
-            try:
-                record.write({'user_id': request.uid})
-            except Exception:
-                return self._redirect_to_messaging()
-        return redirect
