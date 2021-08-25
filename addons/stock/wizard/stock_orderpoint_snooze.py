@@ -20,7 +20,7 @@ class StockOrderpointSnooze(models.TransientModel):
 
     @api.onchange('predefined_date')
     def _onchange_predefined_date(self):
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         if self.predefined_date == 'day':
             self.snoozed_until = add(today, days=1)
         elif self.predefined_date == 'week':
