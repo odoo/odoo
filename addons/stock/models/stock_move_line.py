@@ -778,3 +778,7 @@ class StockMoveLine(models.Model):
                 aggregated_move_lines[line_key]['qty_ordered'] += empty_move.product_uom_qty
 
         return aggregated_move_lines
+
+    def _compute_sale_price(self):
+        # To Override
+        pass
