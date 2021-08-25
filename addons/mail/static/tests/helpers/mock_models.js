@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { datetime_to_str } from 'web.time';
+
 /**
  * Allows to generate mocked models that will be used by the mocked server.
  * This is defined as a class to allow patches by dependent modules and a new
@@ -76,6 +78,10 @@ export class MockModels {
                     is_minimized: { string: "isMinimized", type: "boolean", default: false },
                     // In python this belongs to mail.channel.partner. Here for simplicity.
                     is_pinned: { string: "isPinned", type: "boolean", default: true },
+                    // In python this belongs to mail.channel.partner. Here for simplicity.
+                    last_interest_dt: { string: "Last Interest", type: "datetime", default() {
+                        return datetime_to_str(new Date());
+                    } },
                     members: { string: "Members", type: 'many2many', relation: 'res.partner', default() { return [this.currentPartnerId]; } },
                     message_unread_counter: { string: "# unread messages", type: 'integer' },
                     name: { string: "Name", type: "char", required: true },
@@ -176,6 +182,14 @@ export class MockModels {
                     field_type: { string: 'Field type', type: 'char' },
                     new_value: { string: 'New value', type: 'char' },
                     old_value: { string: 'Old value', type: 'char' },
+                },
+                records: [],
+            },
+            'res.users.settings': {
+                fields: {
+                    is_discuss_sidebar_category_channel_open: { string: "Is Discuss Sidebar Category Channel Open?", type: 'boolean', default: true },
+                    is_discuss_sidebar_category_chat_open: { string: "Is Discuss Sidebar Category Chat Open?", type: 'boolean', default: true },
+                    user_id: { string: "User Id", type: 'many2one', relation: 'res.users' },
                 },
                 records: [],
             },
