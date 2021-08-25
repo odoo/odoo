@@ -2,6 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import crm_lead
-from . import res_config_settings
-from . import website
-from . import website_visitor
+from . import crm_reveal_rule
+from . import crm_reveal_view
+from . import ir_http
