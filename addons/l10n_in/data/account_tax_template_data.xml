@@ -51,35 +51,87 @@
         <field name="sequence">4</field>
         <field name="report_id" ref="tax_report"/>
     </record>
+    <record id="tax_report_line_state_cess" model="account.tax.report.line">
+        <field name="name">STATE CESS</field>
+        <field name="tag_name">STATE CESS</field>
+        <field name="parent_id" ref="tax_report_line_gst_others"/>
+        <field name="sequence">4</field>
+        <field name="report_id" ref="tax_report"/>
+    </record>
 
     <record id="tax_report_line_sgst_rc" model="account.tax.report.line">
-        <field name="name">SGST Reverse Charge</field>
-        <field name="tag_name">SGST (RC)</field>
+        <field name="name">SGST Reverse Charge Inward</field>
+        <field name="tag_name">SGST Inward (RC)</field>
         <field name="parent_id" ref="tax_report_line_gst"/>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence">3</field>
     </record>
     <record id="tax_report_line_cgst_rc" model="account.tax.report.line">
-        <field name="name">CGST Reverse Charge</field>
-        <field name="tag_name">CGST (RC)</field>
+        <field name="name">CGST Reverse Charge Inward</field>
+        <field name="tag_name">CGST Inward (RC)</field>
         <field name="parent_id" ref="tax_report_line_gst"/>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence">4</field>
     </record>
 
     <record id="tax_report_line_igst_rc" model="account.tax.report.line">
-        <field name="name">IGST Reverse Charge</field>
-        <field name="tag_name">IGST (RC)</field>
+        <field name="name">IGST Reverse Charge Inward</field>
+        <field name="tag_name">IGST Inward (RC)</field>
         <field name="parent_id" ref="tax_report_line_igst_root"/>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence">4</field>
     </record>
     <record id="tax_report_line_cess_rc" model="account.tax.report.line">
-        <field name="name">CESS Reverse Charge</field>
-        <field name="tag_name">CESS (RC)</field>
+        <field name="name">CESS Reverse Charge Inward</field>
+        <field name="tag_name">CESS Inward (RC)</field>
         <field name="parent_id" ref="tax_report_line_gst_others"/>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence">5</field>
+    </record>
+    <record id="tax_report_line_state_cess_rc" model="account.tax.report.line">
+        <field name="name">STATE CESS Reverse Charge Inward</field>
+        <field name="tag_name">STATE CESS Inward (RC)</field>
+        <field name="parent_id" ref="tax_report_line_gst_others"/>
+        <field name="sequence">5</field>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_sgst_rc_outward" model="account.tax.report.line">
+        <field name="name">SGST Reverse Charge Outward *</field>
+        <field name="tag_name">SGST Outward (RC)</field>
+        <field name="parent_id" ref="tax_report_line_gst"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">5</field>
+    </record>
+    <record id="tax_report_line_cgst_rc_outward" model="account.tax.report.line">
+        <field name="name">CGST Reverse Charge Outward *</field>
+        <field name="tag_name">CGST Outward (RC)</field>
+        <field name="parent_id" ref="tax_report_line_gst"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">6</field>
+    </record>
+
+    <record id="tax_report_line_igst_rc_outward" model="account.tax.report.line">
+        <field name="name">IGST Reverse Charge Outward *</field>
+        <field name="tag_name">IGST Outward (RC)</field>
+        <field name="parent_id" ref="tax_report_line_igst_root"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">5</field>
+    </record>
+    <record id="tax_report_line_cess_rc_outward" model="account.tax.report.line">
+        <field name="name">CESS Reverse Charge Outward *</field>
+        <field name="tag_name">CESS Outward (RC)</field>
+        <field name="parent_id" ref="tax_report_line_gst_others"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">6</field>
+    </record>
+
+    <record id="tax_report_line_state_cess_rc_outward" model="account.tax.report.line">
+        <field name="name">STATE CESS Reverse Charge Outward *</field>
+        <field name="tag_name">STATE CESS Outward (RC)</field>
+        <field name="parent_id" ref="tax_report_line_gst_others"/>
+        <field name="sequence">6</field>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="tax_report_line_exempt" model="account.tax.report.line">
@@ -96,11 +148,18 @@
         <field name="sequence">6</field>
         <field name="report_id" ref="tax_report"/>
     </record>
+    <record id="tax_report_line_non_gst" model="account.tax.report.line">
+        <field name="name">Non-GST</field>
+        <field name="tag_name">Non-GST</field>
+        <field name="parent_id" ref="tax_report_line_gst_others"/>
+        <field name="sequence">7</field>
+        <field name="report_id" ref="tax_report"/>
+    </record>
     <record id="tax_report_line_zero_rated" model="account.tax.report.line">
         <field name="name">Zero Rated</field>
         <field name="tag_name">Zero Rated</field>
         <field name="parent_id" ref="tax_report_line_gst_others"/>
-        <field name="sequence">7</field>
+        <field name="sequence">8</field>
         <field name="report_id" ref="tax_report"/>
     </record>
 
@@ -301,6 +360,41 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
 
+            }),
+        ]"/>
+    </record>
+
+    <!-- Non-GST -->
+
+    <record id="non_gst_sale" model="account.tax.template">
+        <field name="name">Non-GST</field>
+        <field name="description">Exempt</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tax_group_id" ref="non_gst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_non_gst')],
+
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_non_gst')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
             }),
         ]"/>
     </record>
@@ -1238,6 +1332,41 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
 
+            }),
+        ]"/>
+    </record>
+
+    <!-- Non-GST -->
+
+    <record id="non_gst_purchase" model="account.tax.template">
+        <field name="name">Non-GST</field>
+        <field name="description">Exempt</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tax_group_id" ref="non_gst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_non_gst')],
+
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_non_gst')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
             }),
         ]"/>
     </record>

@@ -8,8 +8,13 @@ from odoo.exceptions import ValidationError
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    # Use for filter import and export type.
-    l10n_in_gstin_partner_id = fields.Many2one('res.partner', string="GSTIN Unit", ondelete="restrict", help="GSTIN related to this journal. If empty then consider as company GSTIN.")
+    # It's complicated to create a company base on this and move record so we simply hide this insted of remove it.
+    l10n_in_gstin_partner_id = fields.Many2one(
+        "res.partner",
+        string="GSTIN Unit",
+        ondelete="restrict",
+        help="Deprecated doesn't use this instead of this create multi-company",
+    )
 
     def name_get(self):
         """

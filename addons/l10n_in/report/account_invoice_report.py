@@ -131,7 +131,7 @@ class L10nInAccountInvoiceReport(models.Model):
                 aj.company_id,
                 am.move_type AS move_type,
                 am.reversed_entry_id AS reversed_entry_id,
-                am.l10n_in_gstin AS partner_vat,
+                p.vat AS partner_vat,
                 CASE WHEN rp.vat IS NULL THEN '' ELSE rp.vat END AS ecommerce_vat,
                 (CASE WHEN at.l10n_in_reverse_charge = True
                     THEN True
