@@ -119,6 +119,16 @@
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
 
+    <record id="project_collaborator_rule_portal" model="ir.rule">
+        <field name="name">Project/Collaborator: portal users: can only see his own collobaroration in shared projects</field>
+        <field name="model_id" ref="project.model_project_collaborator"/>
+        <field name="domain_force">[
+            ('project_id.privacy_visibility', '=', 'portal'),
+            ('partner_id', '=', user.partner_id.id),
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
     <record id="project_task_rule_portal" model="ir.rule">
         <field name="name">Project/Task: portal users: (portal and following project) or (portal and following task)</field>
         <field name="model_id" ref="project.model_project_task"/>
