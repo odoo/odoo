@@ -252,7 +252,7 @@ export const mocks = {
     cookie: () => fakeCookieService,
     effect: () => effectService, // BOI The real service ? Is this what we want ?
     localization: makeFakeLocalizationService,
-    notifications: makeFakeNotificationService,
+    notification: makeFakeNotificationService,
     router: makeFakeRouterService,
     rpc: makeFakeRPCService,
     title: () => fakeTitleService,
