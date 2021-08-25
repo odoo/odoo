@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-
 from odoo import _, api, fields, models, tools
 from odoo.addons.bus.models.bus_presence import AWAY_TIMER
 from odoo.addons.bus.models.bus_presence import DISCONNECTION_TIMER
 from odoo.osv import expression
-
-_logger = logging.getLogger(__name__)
 
 
 class Partner(models.Model):
@@ -18,12 +14,12 @@ class Partner(models.Model):
     _inherit = ['res.partner', 'mail.activity.mixin', 'mail.thread.blacklist']
     _mail_flat_thread = False
 
+    # override to add tracking
     email = fields.Char(tracking=1)
     phone = fields.Char(tracking=2)
-
-    channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels', copy=False)
-    # override the field to track the visibility of user
     user_id = fields.Many2one(tracking=True)
+    # channels
+    channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels', copy=False)
 
     def _compute_im_status(self):
         super()._compute_im_status()
@@ -32,6 +28,31 @@ class Partner(models.Model):
         if odoobot in self:
             odoobot.im_status = 'bot'
 
+    # pseudo computes
+
+    def _get_needaction_count(self):
+        """ compute the number of needaction of the current partner """
+        self.ensure_one()
+        self.env['mail.notification'].flush(['is_read', 'res_partner_id'])
+        self.env.cr.execute("""
+            SELECT count(*) as needaction_count
+            FROM mail_notification R
+            WHERE R.res_partner_id = %s AND (R.is_read = false OR R.is_read IS NULL)""", (self.id,))
+        return self.env.cr.dictfetchall()[0].get('needaction_count')
+
+    def _get_starred_count(self):
+        """ compute the number of starred of the current partner """
+        self.ensure_one()
+        self.env.cr.execute("""
+            SELECT count(*) as starred_count
+            FROM mail_message_res_partner_starred_rel R
+            WHERE R.res_partner_id = %s """, (self.id,))
+        return self.env.cr.dictfetchall()[0].get('starred_count')
+
+    # ------------------------------------------------------------
+    # MESSAGING
+    # ------------------------------------------------------------
+
     def _message_get_suggested_recipients(self):
         recipients = super(Partner, self)._message_get_suggested_recipients()
         for partner in self:
@@ -39,11 +60,18 @@ class Partner(models.Model):
         return recipients
 
     def _message_get_default_recipients(self):
-        return {r.id: {
-            'partner_ids': [r.id],
-            'email_to': False,
-            'email_cc': False}
-            for r in self}
+        return {
+            r.id:
+            {'partner_ids': [r.id],
+             'email_to': False,
+             'email_cc': False
+            }
+            for r in self
+        }
+
+    # ------------------------------------------------------------
+    # ORM
+    # ------------------------------------------------------------
 
     @api.model
     @api.returns('self', lambda value: value.id)
@@ -69,6 +97,10 @@ class Partner(models.Model):
             create_values['email'] = parsed_email
         return self.create(create_values)
 
+    # ------------------------------------------------------------
+    # DISCUSS
+    # ------------------------------------------------------------
+
     def mail_partner_format(self):
         partners_format = dict()
         for partner in self:
@@ -85,25 +117,6 @@ class Partner(models.Model):
                 "is_internal_user": not partner.partner_share,
             }
         return partners_format
-
-    def _get_needaction_count(self):
-        """ compute the number of needaction of the current partner """
-        self.ensure_one()
-        self.env['mail.notification'].flush(['is_read', 'res_partner_id'])
-        self.env.cr.execute("""
-            SELECT count(*) as needaction_count
-            FROM mail_notification R
-            WHERE R.res_partner_id = %s AND (R.is_read = false OR R.is_read IS NULL)""", (self.id,))
-        return self.env.cr.dictfetchall()[0].get('needaction_count')
-
-    def _get_starred_count(self):
-        """ compute the number of starred of the current partner """
-        self.ensure_one()
-        self.env.cr.execute("""
-            SELECT count(*) as starred_count
-            FROM mail_message_res_partner_starred_rel R
-            WHERE R.res_partner_id = %s """, (self.id,))
-        return self.env.cr.dictfetchall()[0].get('starred_count')
 
     def _message_fetch_failed(self):
         """Returns all messages, sent by the current partner, that have errors, in

@@ -3,8 +3,6 @@
 
 import datetime
 
-from werkzeug import urls
-
 from odoo import api, fields, models, tools
 
 

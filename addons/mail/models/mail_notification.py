@@ -50,6 +50,10 @@ class MailNotification(models.Model):
          'Customer is required for inbox / email notification'),
     ]
 
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
+
     def init(self):
         self._cr.execute("""
             CREATE INDEX IF NOT EXISTS mail_notification_res_partner_id_is_read_notification_status_mail_message_id
@@ -73,13 +77,6 @@ class MailNotification(models.Model):
             vals['read_date'] = fields.Datetime.now()
         return super(MailNotification, self).write(vals)
 
-    def format_failure_reason(self):
-        self.ensure_one()
-        if self.failure_type != 'unknown':
-            return dict(type(self).failure_type.selection).get(self.failure_type, _('No Error'))
-        else:
-            return _("Unknown error") + ": %s" % (self.failure_reason or '')
-
     @api.model
     def _gc_notifications(self, max_age_days=180):
         domain = [
@@ -89,6 +86,21 @@ class MailNotification(models.Model):
             ('notification_status', 'in', ('sent', 'canceled'))
         ]
         return self.search(domain).unlink()
+
+    # ------------------------------------------------------------
+    # TOOLS
+    # ------------------------------------------------------------
+
+    def format_failure_reason(self):
+        self.ensure_one()
+        if self.failure_type != 'unknown':
+            return dict(type(self).failure_type.selection).get(self.failure_type, _('No Error'))
+        else:
+            return _("Unknown error") + ": %s" % (self.failure_reason or '')
+
+    # ------------------------------------------------------------
+    # DISCUSS
+    # ------------------------------------------------------------
 
     def _filtered_for_web_client(self):
         """Returns only the notifications to show on the web client."""
