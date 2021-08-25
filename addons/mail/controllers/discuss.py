@@ -94,23 +94,9 @@ class DiscussController(http.Controller):
         response.status = str(status)
         return response
 
-    @http.route('/mail/needaction', type='json', auth='user')
-    def needaction(self):
-        return request.env.user.partner_id._get_needaction_count()
-
     @http.route('/mail/init_messaging', type='json', auth='user')
     def mail_init_messaging(self):
         return request.env.user._init_messaging()
-
-    @http.route('/mail/get_partner_info', type='json', auth='user')
-    def message_partner_info_from_emails(self, model, res_ids, emails, link_mail=False):
-        records = request.env[model].browse(res_ids)
-        try:
-            records.check_access_rule('read')
-            records.check_access_rights('read')
-        except:
-            return []
-        return records._message_partner_info_from_emails(emails, link_mail=link_mail)
 
     @http.route('/mail/get_suggested_recipients', type='json', auth='user')
     def message_get_suggested_recipients(self, model, res_ids):
