@@ -654,7 +654,7 @@ class TestPickShip(TestStockCommon):
         # Should do the same behavior than unreserve
         picking_client.move_line_ids.unlink()
 
-        self.assertEqual(picking_client.move_lines.state, 'waiting', 'The move state should be waiting since nothing is reserved and another origin move still in progess.')
+        self.assertEqual(picking_client.move_lines.state, 'waiting', 'The move state should be waiting since nothing is reserved and another origin move still in progress.')
         self.assertEqual(picking_client.state, 'waiting', 'The picking state should not be ready anymore.')
 
         picking_client.action_assign()
