@@ -39,6 +39,8 @@ class PurchaseOrder(models.Model):
                     i.bonus,
                     i.payment_method.marketplace_payment_method_id
                 )
+                print("@!#!@#!@#!")
+                print(item_add_line_result.json()["message"])
                 error_code = ErrorHelper.get_status_code(item_add_line_result.json()["message"])
 
                 if error_code == 409:
@@ -66,6 +68,7 @@ class PurchaseOrder(models.Model):
                 dist_data = CartAPI.get_disr_details(self.env.user.marketplace_token, seller_id)
                 if dist_data["data"]["payment_methods"]:
                     allowed_methods = [method["name"] for method in dist_data["data"]["payment_methods"]]
+                    return allowed_methods
 
             except Exception:
                 pass
