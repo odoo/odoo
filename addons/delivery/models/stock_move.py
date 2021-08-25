@@ -41,6 +41,7 @@ class StockMoveLine(models.Model):
                 unit_price = move_line.product_id.list_price
                 qty = move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id)
             move_line.sale_price = unit_price * qty
+        super(StockMoveLine, self)._compute_sale_price()
 
     def _get_aggregated_product_quantities(self, **kwargs):
         """Returns dictionary of products and corresponding values of interest + hs_code
