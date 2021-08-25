@@ -5,14 +5,14 @@
     import  { qweb as QWeb, _t } from 'web.core';
     import session from 'web.session';
     import { Markup } from 'web.utils';
-    import courseJoinWidget from '@website_slides/js/slides_course_join';
+    import CourseJoin from '@website_slides/js/slides_course_join';
     import QuestionFormWidget from '@website_slides/js/slides_course_quiz_question_form';
     import SlideQuizFinishModal from '@website_slides/js/slides_course_quiz_finish';
 
-    import slideEnrollDialog from '@website_slides/js/slides_course_enroll_email';
+    import SlideEnroll from '@website_slides/js/slides_course_enroll_email';
 
-    const { CourseJoinWidget } = courseJoinWidget;
-    const { SlideEnrollDialog } = slideEnrollDialog;
+    const CourseJoinWidget = CourseJoin.courseJoinWidget;
+    const SlideEnrollDialog = SlideEnroll.slideEnrollDialog;
 
     /**
      * This widget is responsible of displaying quiz questions and propositions. Submitting the quiz will fetch the
