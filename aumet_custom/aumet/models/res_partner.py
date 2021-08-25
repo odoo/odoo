@@ -1,7 +1,7 @@
 from odoo import models, fields
 
 
-class PurchaseOrderLine(models.Model):
+class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     marketplace_id = fields.Integer("Reference marketplace")
