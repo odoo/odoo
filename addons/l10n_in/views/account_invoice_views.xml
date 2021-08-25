@@ -10,6 +10,7 @@
                 <field name="l10n_in_gst_treatment"
                     attrs="{'invisible': ['|', ('country_code', '!=', 'IN'), ('move_type', '=', 'entry')], 'required': [('country_code', '=', 'IN'), ('move_type', '!=', 'entry')]}"/>
                 <field name="l10n_in_state_id" attrs="{
+                    'readonly': [('state','=','posted')],
                     'invisible': ['|', ('country_code', '!=', 'IN'),
                         ('move_type', 'not in', ['out_invoice', 'out_refund','out_receipt'])],
                     'required': [('country_code', '=', 'IN'),

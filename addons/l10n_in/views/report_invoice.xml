@@ -4,7 +4,7 @@
 
         <xpath expr="//t[@t-set='address']" position="inside">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.l10n_in_state_id" class="mt16">
-                <t t-if="o.move_type in ('out_invoice', 'out_refund')">
+                <t t-if="o.is_sale_document(include_receipts=True)">
                     Place of supply: <span t-field="o.l10n_in_state_id"/>
                 </t>
             </t>
@@ -19,6 +19,7 @@
                     <strong>Tax is payable on reverse charge basis</strong>
                 </p>
             </t>
+
         </xpath>
 
         <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[1]" position="after">

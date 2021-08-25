@@ -51,6 +51,13 @@
         <field name="sequence">4</field>
         <field name="report_id" ref="tax_report"/>
     </record>
+    <record id="tax_report_line_state_cess" model="account.tax.report.line">
+        <field name="name">STATE CESS</field>
+        <field name="tag_name">STATE CESS</field>
+        <field name="parent_id" ref="tax_report_line_gst_others"/>
+        <field name="sequence">4</field>
+        <field name="report_id" ref="tax_report"/>
+    </record>
 
     <record id="tax_report_line_sgst_rc" model="account.tax.report.line">
         <field name="name">SGST Reverse Charge Inward</field>
@@ -80,6 +87,51 @@
         <field name="parent_id" ref="tax_report_line_gst_others"/>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence">5</field>
+    </record>
+    <record id="tax_report_line_state_cess_rc" model="account.tax.report.line">
+        <field name="name">STATE CESS Reverse Charge Inward</field>
+        <field name="tag_name">STATE CESS Inward (RC)</field>
+        <field name="parent_id" ref="tax_report_line_gst_others"/>
+        <field name="sequence">5</field>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_sgst_rc_outward" model="account.tax.report.line">
+        <field name="name">SGST Reverse Charge Outward *</field>
+        <field name="tag_name">SGST Outward (RC)</field>
+        <field name="parent_id" ref="tax_report_line_gst"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">5</field>
+    </record>
+    <record id="tax_report_line_cgst_rc_outward" model="account.tax.report.line">
+        <field name="name">CGST Reverse Charge Outward *</field>
+        <field name="tag_name">CGST Outward (RC)</field>
+        <field name="parent_id" ref="tax_report_line_gst"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">6</field>
+    </record>
+
+    <record id="tax_report_line_igst_rc_outward" model="account.tax.report.line">
+        <field name="name">IGST Reverse Charge Outward *</field>
+        <field name="tag_name">IGST Outward (RC)</field>
+        <field name="parent_id" ref="tax_report_line_igst_root"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">5</field>
+    </record>
+    <record id="tax_report_line_cess_rc_outward" model="account.tax.report.line">
+        <field name="name">CESS Reverse Charge Outward *</field>
+        <field name="tag_name">CESS Outward (RC)</field>
+        <field name="parent_id" ref="tax_report_line_gst_others"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">6</field>
+    </record>
+
+    <record id="tax_report_line_state_cess_rc_outward" model="account.tax.report.line">
+        <field name="name">STATE CESS Reverse Charge Outward *</field>
+        <field name="tag_name">STATE CESS Outward (RC)</field>
+        <field name="parent_id" ref="tax_report_line_gst_others"/>
+        <field name="sequence">6</field>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="tax_report_line_sgst_rc_outward" model="account.tax.report.line">
