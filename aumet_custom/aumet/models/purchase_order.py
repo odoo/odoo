@@ -1,10 +1,12 @@
+import logging
+
 from odoo import models, fields
 from odoo.exceptions import ValidationError
 from ..marketplace_apis import cart
 from ..marketplace_apis.cart import CartAPI
 from ..response_mapping.errors import ErrorHelper
 
-
+_logger = logging.getLogger(__name__)
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
@@ -25,13 +27,14 @@ class PurchaseOrder(models.Model):
         pass
 
     def write(self, vals):
+        _logger.error("#!@#!@#!@#!@#!@#!@")
         state_of_po = vals.get('state', False)
         if state_of_po != "cancel":
 
             for i in self.order_line:
                 if not self.env.user.marketplace_token:
                     raise ValidationError(f'Make sure to have your Marketplace token in your user settings')
-
+                _logger.error(i.product_id.is_marketplace_item)
                 if i.product_id.is_marketplace_item:
                     item_add_line_result = cart.CartAPI.add_item_to_cart(
                         self.env.user.marketplace_token,
