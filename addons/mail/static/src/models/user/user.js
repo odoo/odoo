@@ -224,6 +224,10 @@ function factory(dependencies) {
         partner: one2one('mail.partner', {
             inverse: 'user',
         }),
+        /**
+         * Id of this user's res.users.settings record.
+         */
+        resUsersSettingsId: attr(),
     };
 
     User.modelName = 'mail.user';
