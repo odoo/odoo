@@ -26,6 +26,10 @@ class Users(models.Model):
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
 
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
+
     @property
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS + ['notification_type']
@@ -79,6 +83,10 @@ class Users(models.Model):
         current_cp.filtered(
             lambda cp: cp.channel_id.public != 'public' and cp.channel_id.channel_type == 'channel'
         ).unlink()
+
+    # ------------------------------------------------------------
+    # DISCUSS
+    # ------------------------------------------------------------
 
     def _init_messaging(self):
         self.ensure_one()
