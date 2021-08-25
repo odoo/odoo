@@ -22,10 +22,25 @@ class ProductTemplate(models.Model):
     produce_delay = fields.Float(
         'Manufacturing Lead Time', default=0.0,
         help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added.")
+    is_kits = fields.Boolean(compute='_compute_is_kits', compute_sudo=False)
 
     def _compute_bom_count(self):
         for product in self:
             product.bom_count = self.env['mrp.bom'].search_count(['|', ('product_tmpl_id', '=', product.id), ('byproduct_ids.product_id.product_tmpl_id', '=', product.id)])
+
+    def _compute_is_kits(self):
+        domain = [('product_tmpl_id', 'in', self.ids), ('type', '=', 'phantom')]
+        bom_mapping = self.env['mrp.bom'].search_read(domain, ['product_tmpl_id'])
+        kits_ids = set(b['product_tmpl_id'][0] for b in bom_mapping)
+        for template in self:
+            template.is_kits = (template.id in kits_ids)
+
+    def _compute_show_qty_status_button(self):
+        super()._compute_show_qty_status_button()
+        for template in self:
+            if template.is_kits:
+                template.show_on_hand_qty_status_button = True
+                template.show_forecasted_qty_status_button = False
 
     def _compute_used_in_bom_count(self):
         for template in self:
@@ -70,10 +85,34 @@ class ProductProduct(models.Model):
         compute='_compute_used_in_bom_count', compute_sudo=False)
     mrp_product_qty = fields.Float('Manufactured',
         compute='_compute_mrp_product_qty', compute_sudo=False)
+    is_kits = fields.Boolean(compute="_compute_is_kits", compute_sudo=False)
 
     def _compute_bom_count(self):
         for product in self:
             product.bom_count = self.env['mrp.bom'].search_count(['|', '|', ('byproduct_ids.product_id', '=', product.id), ('product_id', '=', product.id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product.product_tmpl_id.id)])
+
+    def _compute_is_kits(self):
+        domain = ['&', ('type', '=', 'phantom'),
+                       '|', ('product_id', 'in', self.ids),
+                            '&', ('product_id', '=', False),
+                                 ('product_tmpl_id', 'in', self.product_tmpl_id.ids)]
+        bom_mapping = self.env['mrp.bom'].search_read(domain, ['product_tmpl_id', 'product_id'])
+        kits_template_ids = set([])
+        kits_product_ids = set([])
+        for bom_data in bom_mapping:
+            if bom_data['product_id']:
+                kits_product_ids.add(bom_data['product_id'][0])
+            else:
+                kits_template_ids.add(bom_data['product_tmpl_id'][0])
+        for product in self:
+            product.is_kits = (product.id in kits_product_ids or product.product_tmpl_id.id in kits_template_ids)
+
+    def _compute_show_qty_status_button(self):
+        super()._compute_show_qty_status_button()
+        for product in self:
+            if product.is_kits:
+                product.show_on_hand_qty_status_button = True
+                product.show_forecasted_qty_status_button = False
 
     def _compute_used_in_bom_count(self):
         for product in self:
