@@ -130,7 +130,6 @@
             <field name="type">qty_done</field>
             <field name="gs1_content_type">measure</field>
             <field name="gs1_decimal_usage">False</field>
-
         </record>
 
         <record id="barcode_rule_gs1_37" model="barcode.rule">
@@ -203,6 +202,17 @@
             <field name="type">qty_done</field>
             <field name="gs1_content_type">measure</field>
             <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <!-- Company internal information (91 to 99): Custom rules  -->
+        <record id="barcode_rule_gs1_91" model="barcode.rule">
+            <field name="name">Package type</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">200</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(91)([!"%-/0-9:-?A-Z_a-z]{0,90})</field>
+            <field name="type">package_type</field>
+            <field name="gs1_content_type">alpha</field>
         </record>
     </data>
 </odoo>
