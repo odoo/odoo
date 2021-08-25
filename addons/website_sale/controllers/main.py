@@ -844,16 +844,6 @@ class WebsiteSale(http.Controller):
         if redirection:
             return redirection
 
-        # if form posted
-        if 'post_values' in post:
-            values = {}
-            for field_name, field_value in post.items():
-                if field_name in request.env['sale.order']._fields and field_name.startswith('x_'):
-                    values[field_name] = field_value
-            if values:
-                order.write(values)
-            return request.redirect("/shop/payment")
-
         values = {
             'website_sale_order': order,
             'post': post,
@@ -861,7 +851,6 @@ class WebsiteSale(http.Controller):
             'partner': order.partner_id.id,
             'order': order,
         }
-
         return request.render("website_sale.extra_info", values)
 
     # ------------------------------------------------------
