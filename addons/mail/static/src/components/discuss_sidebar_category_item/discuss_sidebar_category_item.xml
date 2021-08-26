@@ -15,23 +15,9 @@
                     </t>
                 </div>
             </div>
-            <t t-if="categoryItem.isRenaming">
-                <span class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_name o-editable">
-                    <EditableText
-                        class="o_DiscussSidebarCategoryItem_nameInput"
-                        placeholder="categoryItem.channel.correspondent ? categoryItem.channel.correspondent.name : categoryItem.channel.name"
-                        value="categoryItem.channel.displayName"
-                        t-on-o-cancel="categoryItem.onCancelRenaming"
-                        t-on-o-clicked="categoryItem.onClickedEditableText"
-                        t-on-o-validate="categoryItem.onValidateEditableText"
-                    />
-                </span>
-            </t>
-            <t t-else="">
-                <span class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_name" t-att-class="{ 'o-item-unread': categoryItem.isUnread }">
-                    <t t-esc="categoryItem.channel.displayName"/>
-                </span>
-            </t>
+            <span class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_name ml-3 text-truncate" t-att-class="{ 'o-item-unread': categoryItem.isUnread }">
+                <t t-esc="categoryItem.channel.displayName"/>
+            </span>
             <div class="o-autogrow o_DiscussSidebarCategoryItem_item"/>
             <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_commands">
                 <t t-if="categoryItem.hasSettingsCommand">
@@ -39,9 +25,6 @@
                 </t>
                 <t t-if="categoryItem.hasLeaveCommand">
                     <div class="o_DiscussSidebarCategoryItem_command o_DiscussSidebarCategoryItem_commandLeave fa fa-times" t-on-click="categoryItem.onClickCommandLeave" title="Leave this channel" role="img"/>
-                </t>
-                <t t-if="categoryItem.hasRenameCommand">
-                    <div class="o_DiscussSidebarCategoryItem_command o_DiscussSidebarCategoryItem_commandRename fa fa-cog" t-on-click="categoryItem.onClickCommandRename" title="Rename conversation" role="img"/>
                 </t>
                 <t t-if="categoryItem.hasUnpinCommand">
                     <div class="o_DiscussSidebarCategoryItem_command o_DiscussSidebarCategoryItem_commandUnpin fa fa-times" t-on-click="categoryItem.onClickCommandUnpin" title="Unpin Conversation" role="img"/>
