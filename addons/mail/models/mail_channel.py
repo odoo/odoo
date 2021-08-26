@@ -238,6 +238,14 @@ class Channel(models.Model):
         notification = _('<div class="o_mail_notification">left the channel</div>')
         # post 'channel left' message as root since the partner just unsubscribed from the channel
         self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
+        self.env['bus.bus'].sendone((self._cr.dbname, 'mail.channel', self.id), {
+            'type': 'mail.channel_update',
+            'payload': {
+                'id': self.id,
+                'memberCount': len(self.channel_partner_ids),
+                'members': [('insert-and-unlink', {'id': partner.id})],
+            },
+        })
         return result
 
     def add_members(self, partner_ids):
@@ -283,6 +291,18 @@ class Channel(models.Model):
                     new_partner_name=channel_partner.partner_id.name,
                 )
             channel_partner.channel_id.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment", notify_by_email=False)
+            self.env['bus.bus'].sendone((self._cr.dbname, 'mail.channel', channel_partner.channel_id.id), {
+                'type': 'mail.channel_update',
+                'payload': {
+                    'id': channel_partner.channel_id.id,
+                    'memberCount': len(channel_partner.channel_id.channel_partner_ids),
+                    'members': [('insert', {
+                        'id': channel_partner.partner_id.id,
+                        'im_status': channel_partner.partner_id.im_status,
+                        'name': channel_partner.partner_id.name,
+                    })],
+                },
+            })
 
     def _action_remove_members(self, partners):
         """ Private implementation to remove members from channels. Done as sudo
@@ -554,7 +574,7 @@ class Channel(models.Model):
             info['last_message_id'] = channel_last_message_ids.get(channel.id, False)
             # listeners of the channel
             channel_partners = channel.channel_last_seen_partner_ids
-
+            info['memberCount'] = len(channel_partners)
             # find the channel partner state, if logged user
             if self.env.user and self.env.user.partner_id:
                 info['message_needaction_counter'] = channel.message_needaction_counter
@@ -825,10 +845,6 @@ class Channel(models.Model):
             notifications.append([channel.uuid, data]) # notify frontend users
         self.env['bus.bus'].sendmany(notifications)
 
-    # ------------------------------------------------------------
-    # IM VIEW SPECIFIC (Slack Client Action)
-    # ------------------------------------------------------------
-
     @api.model
     def channel_search_to_join(self, name=None, domain=None):
         """ Return the channel info of the channel the current partner can join
@@ -924,6 +940,15 @@ class Channel(models.Model):
             GROUP BY res_id
             """, (tuple(self.ids),))
         return self.env.cr.dictfetchall()
+
+    def load_more_members(self, known_member_ids):
+        self.ensure_one()
+        partners = self.env['res.partner'].with_context(active_test=False).search_read(
+            domain=[('id', 'not in', known_member_ids), ('channel_ids', 'in', self.id)],
+            fields=['id', 'name', 'im_status'],
+            limit=30
+        )
+        return [('insert', partners)]
 
     # ------------------------------------------------------------
     # COMMANDS

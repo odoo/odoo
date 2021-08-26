@@ -3,10 +3,21 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
 import { clear, create, link, unlink, update } from '@mail/model/model_field_command';
+import { markEventHandled } from '@mail/utils/utils';
 
 function factory(dependencies) {
 
     class ChatWindow extends dependencies['mail.model'] {
+
+        /**
+         * @override
+         */
+        _created() {
+            super._created();
+            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
+            this.onClickHideMemberList = this.onClickHideMemberList.bind(this);
+            this.onClickShowMemberList = this.onClickShowMemberList.bind(this);
+        }
 
         //----------------------------------------------------------------------
         // Public
@@ -106,6 +117,25 @@ function factory(dependencies) {
             }
             const lastVisible = this.manager.lastVisible;
             this.manager.swap(this, lastVisible);
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickHideMemberList(ev) {
+            markEventHandled(ev, 'ChatWindow.onClickHideMemberList');
+            this.update({ isMemberListOpened: false });
+            if (this.threadViewer.threadView) {
+                this.threadViewer.threadView.addComponentHint('member-list-hidden');
+            }
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickShowMemberList(ev) {
+            markEventHandled(ev, 'ChatWindow.onClickShowMemberList');
+            this.update({ isMemberListOpened: true });
         }
 
         /**
@@ -355,6 +385,13 @@ function factory(dependencies) {
          * Determines whether `this` is folded.
          */
         isFolded: attr({
+            default: false,
+        }),
+        /**
+         * Determines whether the member list of this chat window is opened.
+         * Only makes sense if this thread hasMemberListFeature is true.
+         */
+        isMemberListOpened: attr({
             default: false,
         }),
         /**
