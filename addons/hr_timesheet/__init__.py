@@ -8,6 +8,8 @@ from . import wizard
 
 from odoo import api, fields, SUPERUSER_ID, _
 
+from odoo.addons.project import _check_exists_collaborators_for_project_sharing
+
 
 def create_internal_project(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
@@ -28,3 +30,5 @@ def create_internal_project(cr, registry):
         'project_id': task.project_id.id,
         'task_id': task.id,
     } for task in project_ids.task_ids.filtered(lambda t: t.company_id in admin.employee_ids.company_id)])
+
+    _check_exists_collaborators_for_project_sharing(env)

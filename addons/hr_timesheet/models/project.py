@@ -7,6 +7,22 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 
 
+PROJECT_TASK_READABLE_FIELDS = {
+    'allow_subtasks',
+    'allow_timesheets',
+    'analytic_account_active',
+    'effective_hours',
+    'encode_uom_in_days',
+    'planned_hours',
+    'progress',
+    'overtime',
+    'remaining_hours',
+    'subtask_effective_hours',
+    'subtask_planned_hours',
+    'timesheet_ids',
+    'total_hours_spent',
+}
+
 class Project(models.Model):
     _inherit = "project.project"
 
@@ -167,7 +183,7 @@ class Task(models.Model):
     _name = "project.task"
     _inherit = "project.task"
 
-    analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active')
+    analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active', compute_sudo=True)
     allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.", readonly=True)
     remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', store=True, readonly=True, help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Time spent on this task, excluding its sub-tasks.")
@@ -177,6 +193,10 @@ class Task(models.Model):
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', recursive=True, store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', default=lambda self: self._uom_in_days())
+
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS | PROJECT_TASK_READABLE_FIELDS
 
     def _uom_in_days(self):
         return self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
@@ -279,7 +299,8 @@ class Task(models.Model):
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         """ Set the correct label for `unit_amount`, depending on company UoM """
         result = super(Task, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        result['arch'] = self.env['account.analytic.line']._apply_timesheet_label(result['arch'])
+        # Use of sudo as the portal user doesn't have access to uom
+        result['arch'] = self.env['account.analytic.line'].sudo()._apply_timesheet_label(result['arch'])
 
         if view_type in ['tree', 'pivot', 'graph'] and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
             result['arch'] = self.env['account.analytic.line']._apply_time_label(result['arch'], related_model=self._name)

@@ -340,8 +340,10 @@ class ProjectTask(models.Model):
     def _get_default_partner_id(self, project, parent):
         res = super()._get_default_partner_id(project, parent)
         if not res and project:
-            if project.pricing_type == 'employee_rate':
-                return project.sale_line_employee_ids.sale_line_id.order_partner_id[:1]
+            # project in sudo if the current user is a portal user.
+            related_project = project if not self.user_has_groups('!base.group_user,base.group_portal') else project.sudo()
+            if related_project.pricing_type == 'employee_rate':
+                return related_project.sale_line_employee_ids.sale_line_id.order_partner_id[:1]
         return res
 
     sale_order_id = fields.Many2one(domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id', 'child_of', commercial_partner_id), ('partner_id', 'parent_of', partner_id)]")
@@ -353,6 +355,14 @@ class ProjectTask(models.Model):
     timesheet_product_id = fields.Many2one(related="project_id.timesheet_product_id")
     remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so', compute_sudo=True)
     remaining_hours_available = fields.Boolean(related="sale_line_id.remaining_hours_available")
+
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS | {
+            'allow_billable',
+            'remaining_hours_available',
+            'remaining_hours_so',
+        }
 
     @api.depends('sale_line_id', 'timesheet_ids', 'timesheet_ids.unit_amount')
     def _compute_remaining_hours_so(self):

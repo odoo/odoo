@@ -25,13 +25,6 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
         groupby_mapping.update(sale_order='sale_order_id', sale_line='sale_line_id')
         return groupby_mapping
 
-    def _task_get_grouped_tasks(self, groupby, tasks):
-        if groupby:
-            grouped_tasks = [request.env['project.task'].concat(*g) for k, g in groupbyelem(tasks, itemgetter(groupby))]
-        else:
-            grouped_tasks = super()._task_get_grouped_tasks(groupby, tasks)
-        return grouped_tasks
-
     def _task_get_searchbar_inputs(self):
         values = super()._task_get_searchbar_inputs()
         values['sale_order'] = {'input': 'sale_order', 'label': _('Search in Sales Order'), 'order': 4}

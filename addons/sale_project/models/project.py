@@ -67,6 +67,10 @@ class ProjectTask(models.Model):
     invoice_count = fields.Integer("Number of invoices", related='sale_order_id.invoice_count')
     task_to_invoice = fields.Boolean("To invoice", compute='_compute_task_to_invoice', search='_search_task_to_invoice', groups='sales_team.group_sale_salesman_all_leads')
 
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS | {'sale_order_id', 'sale_line_id'}
+
     @api.depends('sale_line_id', 'project_id', 'commercial_partner_id')
     def _compute_sale_order_id(self):
         for task in self:
