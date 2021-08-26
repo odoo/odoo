@@ -38,6 +38,7 @@ function factory(dependencies) {
         _computeAvatarUrl() {
             switch (this.channelType) {
                 case 'channel':
+                case 'group':
                     return `/web/image/mail.channel/${this.channelId}/image_128`;
                 case 'chat':
                     return this.channel.correspondent.avatarUrl;
@@ -64,6 +65,7 @@ function factory(dependencies) {
                 case 'channel':
                     return this.channel.message_needaction_counter;
                 case 'chat':
+                case 'group':
                     return this.channel.localMessageUnreadCounter;
             }
         }
@@ -73,9 +75,11 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasLeaveCommand() {
-            return this.channelType === 'channel' &&
+            return (
+                ['channel', 'group'].includes(this.channelType) &&
                 !this.channel.message_needaction_counter &&
-                !this.channel.group_based_subscription;
+                !this.channel.group_based_subscription
+            );
         }
 
         /**
@@ -121,6 +125,7 @@ function factory(dependencies) {
             switch (this.channelType) {
                 case 'channel':
                 case 'chat':
+                case 'group':
                     return true;
             }
         }
@@ -144,10 +149,13 @@ function factory(dependencies) {
          */
         async onClickCommandLeave(ev) {
             ev.stopPropagation();
-            if (this.channel.creator === this.messaging.currentUser) {
+            if (this.channel.channel_type !== 'group' && this.channel.creator === this.messaging.currentUser) {
                 await this._askAdminConfirmation();
             }
-            this.channel.unsubscribe();
+            if (this.channel.channel_type === 'group') {
+                await this._askLeaveGroupConfirmation();
+            }
+            this.channel.leave();
         }
 
         /**
@@ -201,6 +209,33 @@ function factory(dependencies) {
                 );
             });
         }
+
+        /**
+         * @private
+         * @returns {Promise}
+         */
+        _askLeaveGroupConfirmation() {
+            return new Promise(resolve => {
+                Dialog.confirm(this,
+                    this.env._t("You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"),
+                    {
+                        buttons: [
+                            {
+                                text: this.env._t("Leave"),
+                                classes: 'btn-primary',
+                                close: true,
+                                click: resolve
+                            },
+                            {
+                                text: this.env._t("Discard"),
+                                close: true
+                            }
+                        ]
+                    }
+                );
+            });
+        }
+
     }
 
     DiscussSidebarCategoryItem.fields = {

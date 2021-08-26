@@ -77,8 +77,8 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
     );
 });
 
-QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async function (assert) {
-    assert.expect(7);
+QUnit.test('sidebar: pinned channel 3: open channel and leave it', async function (assert) {
+    assert.expect(6);
 
     // channel that is expected to be found in the sidebar
     // with a random unique id that will be referenced in the test
@@ -95,9 +95,6 @@ QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async 
                     "The right id is sent to the server to remove"
                 );
             }
-            if (args.method === 'channel_fold') {
-                assert.step('channel_fold');
-            }
             return this._super(...arguments);
         },
     });
@@ -111,16 +108,15 @@ QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async 
             threadGeneral.localId
         }"]`).click()
     );
-    assert.verifySteps([], "neither channel_fold nor action_unfollow are called yet");
+    assert.verifySteps([], "action_unfollow is not called yet");
     await afterNextRender(() =>
         document.querySelector('.o_DiscussSidebarCategoryItem_commandLeave').click()
     );
     assert.verifySteps(
         [
-            'channel_fold',
             'action_unfollow'
         ],
-        "both channel_fold and action_unfollow have been called when unpinning a channel"
+        "action_unfollow has been called when leaving a channel"
     );
     assert.containsNone(
         document.body,
