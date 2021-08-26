@@ -883,3 +883,53 @@ OyI+T2RvbzwvYT4uCjwvcD4KPC9kaXY+CiAgICAgICAg
 
 --92726A5F09.1555335666/mail2.test.ironsky--
 """
+
+MAIL_NO_FINAL_RECIPIENT = """\
+Return-Path: <bounce-md_9656353.6125275c.v1-f28f7746389e45f0bfbf9faefe9e0dc8@mandrillapp.com>
+Delivered-To: catchall@xxxx.xxxx
+Received: from in58.mail.ovh.net (unknown [10.101.4.58])
+	by vr46.mail.ovh.net (Postfix) with ESMTP id 4GvFsq2QLYz1t0N7r
+	for <catchall@xxxx.xxxx>; Tue, 24 Aug 2021 17:07:43 +0000 (UTC)
+Received-SPF: Softfail (mailfrom) identity=mailfrom; client-ip=46.105.72.169; helo=40.mo36.mail-out.ovh.net; envelope-from=bounce-md_9656353.6125275c.v1-f28f7746389e45f0bfbf9faefe9e0dc8@mandrillapp.com; receiver=catchall@xxxx.xxxx 
+Authentication-Results: in58.mail.ovh.net;
+	dkim=pass (1024-bit key; unprotected) header.d=mandrillapp.com header.i=bounces-noreply@mandrillapp.com header.b="TDzUcdJs";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="MyjddTY5";
+	dkim-atps=neutral
+Delivered-To: xxxx.xxxx-{email_to}
+Authentication-Results: in62.mail.ovh.net;
+	dkim=pass (1024-bit key; unprotected) header.d=mandrillapp.com header.i=bounces-noreply@mandrillapp.com header.b="TDzUcdJs";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="MyjddTY5";
+	dkim-atps=neutral
+From: MAILER-DAEMON <bounces-noreply@mandrillapp.com>
+Subject: Undelivered Mail Returned to Sender
+To: {email_to}
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=9656353.f28f7746389e45f0bfbf9faefe9e0dc8
+X-Mandrill-User: md_9656353
+Feedback-ID: 9656353:9656353.20210824:md
+Message-Id: <9656353.20210824170740.6125275cf21879.17950539@mail9.us4.mandrillapp.com>
+Date: Tue, 24 Aug 2021 17:07:40 +0000
+MIME-Version: 1.0
+Content-Type: multipart/report; boundary="_av-UfLe6y6qxNo54-urtAxbJQ"
+
+--_av-UfLe6y6qxNo54-urtAxbJQ
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+    --- The following addresses had delivery problems ---
+
+<{email_from}>   (5.7.1 <{email_from}>: Recipient address rejected: Access denied)
+
+
+--_av-UfLe6y6qxNo54-urtAxbJQ
+Content-Type: message/delivery-status
+Content-Transfer-Encoding: 7bit
+
+Original-Recipient: <{email_from}>
+Action: failed
+Diagnostic-Code: smtp; 554 5.7.1 <{email_from}>: Recipient address rejected: Access denied
+Remote-MTA: 10.245.192.40
+
+
+
+--_av-UfLe6y6qxNo54-urtAxbJQ--"""
