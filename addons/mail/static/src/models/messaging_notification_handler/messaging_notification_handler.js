@@ -87,6 +87,8 @@ function factory(dependencies) {
                             return this._handleNotificationChannelLastInterestDateTimeChanged(message.payload);
                         case 'mail.channel_rename':
                             return this._handleNotificationChannelRenamed(message.payload);
+                        case 'mail.channel_update':
+                            return this._handleNotificationChannelUpdate(message.payload);
                         case 'res.users_settings_changed':
                             return this._handleNotificationResUsersSettings(message.payload);
                     }
@@ -408,6 +410,14 @@ function factory(dependencies) {
                 }
                 channel.unregisterOtherMemberTypingMember(partner);
             }
+        }
+
+        /**
+         * @private
+         * @param {Object} channelData
+         */
+        _handleNotificationChannelUpdate(channelData) {
+            this.messaging.models['mail.thread'].insert({ model: 'mail.channel', ...channelData });
         }
 
         /**

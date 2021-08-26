@@ -45,7 +45,15 @@ registerInstancePatchModel('mail.partner', 'hr_holidays/static/src/models/partne
         const formattedDate = date.toLocaleDateString(localeCode, options);
         return _.str.sprintf(this.env._t("Out of office until %s"), formattedDate);
     },
-
+    /**
+     * @override
+     */
+    _computeIsOnline() {
+        if (['leave_online', 'leave_away'].includes(this.im_status)) {
+            return true;
+        }
+        return this._super();
+    },
 });
 
 registerFieldPatchModel('mail.partner', 'hr/static/src/models/partner/partner.js', {
