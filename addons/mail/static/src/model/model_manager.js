@@ -815,21 +815,24 @@ export class ModelManager {
         if (this._isInUpdateCycle) {
             throw Error('Already in update cycle. You are probably trying to manually create/update/delete a record from inside a compute method, which is not supported.');
         }
-        this._isInUpdateCycle = true;
-        this._notifyListenersInUpdateCycle();
-        // Verify the existence of value for required fields (of non-deleted records).
-        for (const record of this._updatedRecords) {
-            if (!record.exists()) {
-                continue;
-            }
-            for (const required of record.constructor.__requiredFieldsList) {
-                if (record[required.fieldName] === undefined) {
-                    throw Error(`Field ${required.fieldName} of ${record.localId} is required.`);
+        try {
+            this._isInUpdateCycle = true;
+            this._notifyListenersInUpdateCycle();
+            // Verify the existence of value for required fields (of non-deleted records).
+            for (const record of this._updatedRecords) {
+                if (!record.exists()) {
+                    continue;
+                }
+                for (const required of record.constructor.__requiredFieldsList) {
+                    if (record[required.fieldName] === undefined) {
+                        throw Error(`Field ${required.fieldName} of ${record.localId} is required.`);
+                    }
                 }
             }
+            this._updatedRecords.clear();
+        } finally {
+            this._isInUpdateCycle = false;
         }
-        this._updatedRecords.clear();
-        this._isInUpdateCycle = false;
         // Execution of `_created` and "on change" (after the update cycle itself).
         while (this._createdRecords.size > 0) {
             for (const record of this._createdRecords) {
