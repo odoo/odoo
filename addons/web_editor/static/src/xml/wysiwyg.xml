@@ -521,22 +521,20 @@
         <we-row>
             <we-select class="o_we_user_value_widget">
                 <we-title>⌙ Style</we-title>
-                <div t-attf-class="#{widget.colorCombinationClass ? ('p-2 ' + widget.colorCombinationClass) : ''}">
-                    <div class="dropdown">
-                        <button class="dropdown-toggle"
-                            data-toggle="dropdown" title="" tabindex="-1"
-                            data-original-title="Link Style" aria-expanded="false">
-                            <we-toggler/>
-                        </button>
-                        <we-selection-items class="dropdown-menu" name="link_style_color">
-                            <t t-foreach="widget.colorsData" t-as="colorData">
-                                <we-button class="dropdown-item" href="#" t-att-data-value="colorData.type">
-                                    <t t-esc="colorData.label"/>
-                                </we-button>
-                            </t>
-                        </we-selection-items>
-                        <span class="o_we_dropdown_caret"></span>
-                    </div>
+                <div class="dropdown">
+                    <button class="dropdown-toggle"
+                        data-toggle="dropdown" title="" tabindex="-1"
+                        data-original-title="Link Style" aria-expanded="false">
+                        <we-toggler/>
+                    </button>
+                    <we-selection-items class="dropdown-menu" name="link_style_color">
+                        <t t-foreach="widget.colorsData" t-as="colorData">
+                            <we-button class="dropdown-item" href="#" t-att-data-value="colorData.type">
+                                <t t-esc="colorData.label"/>
+                            </we-button>
+                        </t>
+                    </we-selection-items>
+                    <span class="o_we_dropdown_caret"></span>
                 </div>
             </we-select>
         </we-row>
