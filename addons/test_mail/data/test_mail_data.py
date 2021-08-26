@@ -883,3 +883,118 @@ OyI+T2RvbzwvYT4uCjwvcD4KPC9kaXY+CiAgICAgICAg
 
 --92726A5F09.1555335666/mail2.test.ironsky--
 """
+
+MAIL_NO_FINAL_RECIPIENT= """\
+Return-Path: <bounce-md_9656353.6125275c.v1-f28f7746389e45f0bfbf9faefe9e0dc8@mandrillapp.com>
+Delivered-To: catchall@xxxx.xxxx
+Received: from localhost (HELO queue) (127.0.0.1)
+	by localhost with SMTP; 24 Aug 2021 19:07:43 +0200
+Received: from unknown (HELO output30.mail.ovh.net) (10.108.97.187)
+  by mail664.ha.ovh.net with AES256-GCM-SHA384 encrypted SMTP; 24 Aug 2021 19:07:43 +0200
+Received: from vr46.mail.ovh.net (unknown [10.101.8.46])
+	by out30.mail.ovh.net (Postfix) with ESMTP id 4GvFsq47XLzHQSlFd
+	for <catchall@xxxx.xxxx>; Tue, 24 Aug 2021 17:07:43 +0000 (UTC)
+Received: from in58.mail.ovh.net (unknown [10.101.4.58])
+	by vr46.mail.ovh.net (Postfix) with ESMTP id 4GvFsq2QLYz1t0N7r
+	for <catchall@xxxx.xxxx>; Tue, 24 Aug 2021 17:07:43 +0000 (UTC)
+Received-SPF: Softfail (mailfrom) identity=mailfrom; client-ip=46.105.72.169; helo=40.mo36.mail-out.ovh.net; envelope-from=bounce-md_9656353.6125275c.v1-f28f7746389e45f0bfbf9faefe9e0dc8@mandrillapp.com; receiver=catchall@xxxx.xxxx 
+Authentication-Results: in58.mail.ovh.net;
+	dkim=pass (1024-bit key; unprotected) header.d=mandrillapp.com header.i=bounces-noreply@mandrillapp.com header.b="TDzUcdJs";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="MyjddTY5";
+	dkim-atps=neutral
+Received: from 40.mo36.mail-out.ovh.net (40.mo36.mail-out.ovh.net [46.105.72.169])
+	by in58.mail.ovh.net (Postfix) with ESMTPS id 4GvFsq1vTCz1FsnMp
+	for <catchall@xxxx.xxxx>; Tue, 24 Aug 2021 17:07:43 +0000 (UTC)
+Received: from mail114.ha.ovh.net (unknown [10.109.143.218])
+	by mo36.mail-out.ovh.net (Postfix) with SMTP id 0C35B5F009A
+	for <catchall@xxxx.xxxx>; Tue, 24 Aug 2021 19:07:43 +0200 (CEST)
+Received: from localhost (HELO queueout) (127.0.0.1)
+	by localhost with SMTP; 24 Aug 2021 19:07:42 +0200
+Delivered-To: xxxx.xxxx-{email_to}
+Received: from localhost (HELO queue) (127.0.0.1)
+	by localhost with SMTP; 24 Aug 2021 19:07:42 +0200
+Received: from unknown (HELO output51.mail.ovh.net) (10.108.117.70)
+  by mail114.ha.ovh.net with AES256-GCM-SHA384 encrypted SMTP; 24 Aug 2021 19:07:42 +0200
+Received: from vr36.mail.ovh.net (unknown [10.101.8.36])
+	by out51.mail.ovh.net (Postfix) with ESMTP id 4GvFsp4HkLzMhF1dQ
+	for <{email_to}>; Tue, 24 Aug 2021 17:07:42 +0000 (UTC)
+Received: from in62.mail.ovh.net (unknown [10.101.4.62])
+	by vr36.mail.ovh.net (Postfix) with ESMTP id 4GvFsp2PZTz1p5xXK
+	for <{email_to}>; Tue, 24 Aug 2021 17:07:42 +0000 (UTC)
+Received-SPF: Pass (mailfrom) identity=mailfrom; client-ip=205.201.136.9; helo=mail9.us4.mandrillapp.com; envelope-from=bounce-md_9656353.6125275c.v1-f28f7746389e45f0bfbf9faefe9e0dc8@mandrillapp.com; receiver={email_to} 
+Authentication-Results: in62.mail.ovh.net;
+	dkim=pass (1024-bit key; unprotected) header.d=mandrillapp.com header.i=bounces-noreply@mandrillapp.com header.b="TDzUcdJs";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="MyjddTY5";
+	dkim-atps=neutral
+Received: from mail9.us4.mandrillapp.com (mail9.us4.mandrillapp.com [205.201.136.9])
+	by in62.mail.ovh.net (Postfix) with ESMTPS id 4GvFsp0KG4z1FjyMp
+	for <{email_to}>; Tue, 24 Aug 2021 17:07:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com;
+	s=mandrill; t=1629824861; i=bounces-noreply@mandrillapp.com;
+	bh=Ph4H+vQPad5pzBE4oaKC4uQfnLekeVGy0u856V8IE3A=;
+	h=From:Subject:To:Message-Id:Date:MIME-Version:Content-Type;
+	b=TDzUcdJs7Yn24xv4G5KH5M+fzbLm6DHahsiSV7hsGme0hBmQa/9XGu5yv7kP5vvst
+	 LTHvH9uqMDaD3CqppS7f8rQyceY3Ggpm7U5roPA9M51eaXtdetg2crg7ut/6vVFVZK
+	 +65UF+5h5KmH+IxS6OrjQ1cdmVERN4MadXpgDA24=
+Received: from pmta15.mandrill.prod.suw01.rsglab.com (localhost [127.0.0.1])
+	by mail9.us4.mandrillapp.com (Mailchimp) with ESMTP id 4GvFsn0g6YzHXYSyx
+	for <{email_to}>; Tue, 24 Aug 2021 17:07:41 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1629824860; h=From : 
+ Subject : To : Message-Id : Date : MIME-Version : Content-Type : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=Ph4H+vQPad5pzBE4oaKC4uQfnLekeVGy0u856V8IE3A=; 
+ b=MyjddTY5mmJp2Q0Gf2h9NlzEcJlIvHxn0R1NuBbZmpwXru+mQwgW7ZkAc2HpMURwXqZ4z5
+ 9ZJHSOU/nE4ntXzXObXBH6NVgF+bvr2NCHekHsEGPTcPj04o3iLh8vnKVm7lpPV//hi3Z0YP
+ IK7H0hrCGgBIJjqiHmi3rfGpMl8qo=
+From: MAILER-DAEMON <bounces-noreply@mandrillapp.com>
+Subject: Undelivered Mail Returned to Sender
+To: {email_to}
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=9656353.f28f7746389e45f0bfbf9faefe9e0dc8
+X-Mandrill-User: md_9656353
+Feedback-ID: 9656353:9656353.20210824:md
+Message-Id: <9656353.20210824170740.6125275cf21879.17950539@mail9.us4.mandrillapp.com>
+Date: Tue, 24 Aug 2021 17:07:40 +0000
+MIME-Version: 1.0
+Content-Type: multipart/report; boundary="_av-UfLe6y6qxNo54-urtAxbJQ"
+X-Ovh-Tracer-Id: 2836704815859914010
+X-VR-SPAMSTATE: BOUNCE
+X-VR-SPAMSCORE: 10000
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvtddruddtjedguddtlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecupfhothhifhhitggrthhiohhnucdluddttddttddmnecujfgurhephffuvffkffggtgesphdttdertddtjeenucfhrhhomhepofetkffngfftqdfftefgoffqpfcuoegsohhunhgtvghsqdhnohhrvghplhihsehmrghnughrihhllhgrphhprdgtohhmqeenucggtffrrghtthgvrhhnpeevgffgfefhffefgeetiedtkefhveegueegudfggffhhfelvdeuteegkeeugfelhfenucfkpheptddrtddrtddrtddpvddthedrvddtuddrudefiedrleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopehinheivddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpegsohhunhgtvgdqmhgupgelieehieefheefrdeiuddvhedvjeehtgdrvhduqdhfvdekfhejjeegieefkeelvgeghehftdgsfhgsfhelfhgrvghfvgelvgdtuggtkeesmhgrnhgurhhilhhlrghpphdrtghomhdprhgtphhtthhopehsvghrvhhitggvtghlihgvnhhtsehsihhmphhlhihfvghurdgtohhm
+X-Ovh-Spam-Status: OK
+X-Ovh-Spam-Reason: vr: BOUNCE; dkim: disabled; spf: disabled
+X-Ovh-Message-Type: BOUNCE
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvtddruddtjedguddtlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhephffuvffkffggtgesphdttdertddtjeenucfhrhhomhepofetkffngfftqdfftefgoffqpfcuoegsohhunhgtvghsqdhnohhrvghplhihsehmrghnughrihhllhgrphhprdgtohhmqeenucggtffrrghtthgvrhhnpeevgffgfefhffefgeetiedtkefhveegueegudfggffhhfelvdeuteegkeeugfelhfenucfkpheptddrtddrtddrtddpvddthedrvddtuddrudefiedrleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehmrghilhduudegrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepsghouhhntggvqdhmuggpleeiheeifeehfedrieduvdehvdejhegtrdhvuddqfhdvkehfjeejgeeifeeklegvgeehfhdtsghfsghflehfrggvfhgvlegvtdgutgeksehmrghnughrihhllhgrphhprdgtohhmpdhrtghpthhtoheptggrthgthhgrlhhlsehsihhmphhlhihfvghurdgtohhmpdhmohguvgepshhmthhppdhhvghlohepihhniedvrdhmrghilhdrohhvhhdrnhgvthdprhgtphhtthhopehsvghrvhhitggvtghlihgvnhhtsehsihhmphhlhihfvghurdgtohhm
+X-OVH-Remote: 46.105.72.169 (40.mo36.mail-out.ovh.net)
+X-VR-SPAMSTATE: BOUNCE
+X-VR-SPAMSCORE: 10000
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvtddruddtjedguddtlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecupfhothhifhhitggrthhiohhnucdluddttddttddmnecujfgurhephffuvffkffggtgesphdttdertddtjeenucfhrhhomhepofetkffngfftqdfftefgoffqpfcuoegsohhunhgtvghsqdhnohhrvghplhihsehmrghnughrihhllhgrphhprdgtohhmqeenucggtffrrghtthgvrhhnpeevgffgfefhffefgeetiedtkefhveegueegudfggffhhfelvdeuteegkeeugfelhfenucfkpheptddrtddrtddrtddpvddthedrvddtuddrudefiedrleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopehinhehkedrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpegsohhunhgtvgdqmhgupgelieehieefheefrdeiuddvhedvjeehtgdrvhduqdhfvdekfhejjeegieefkeelvgeghehftdgsfhgsfhelfhgrvghfvgelvgdtuggtkeesmhgrnhgurhhilhhlrghpphdrtghomhdprhgtphhtthhopegtrghttghhrghllhesshhimhhplhihfhgvuhdrtghomhdphhgvlhhopehinheivddrmhgrihhlrdhovhhhrdhnvghtpdhrtghpthhtohepshgvrhhvihgtvggtlhhivghnthesshhimhhplhihfhgvuhdrtghomhdpmhhouggvpehsmh
+ htphdqohhuthdphhgvlhhopehmrghilhduudegrdhhrgdrohhvhhdrnhgvth
+X-Ovh-Spam-Status: OK
+X-Ovh-Spam-Reason: vr: BOUNCE; dkim: disabled; spf: disabled
+X-Ovh-Message-Type: BOUNCE
+
+--_av-UfLe6y6qxNo54-urtAxbJQ
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+    --- The following addresses had delivery problems ---
+
+<{email_from}>   (5.7.1 <{email_from}>: Recipient address rejected: Access denied)
+
+
+--_av-UfLe6y6qxNo54-urtAxbJQ
+Content-Type: message/delivery-status
+Content-Transfer-Encoding: 7bit
+
+Original-Recipient: <{email_from}>
+Action: failed
+Diagnostic-Code: smtp; 554 5.7.1 <{email_from}>: Recipient address rejected: Access denied
+Remote-MTA: 10.245.192.40
+
+
+
+--_av-UfLe6y6qxNo54-urtAxbJQ--"""
