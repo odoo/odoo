@@ -2383,6 +2383,11 @@ class AccountMove(models.Model):
                 raise UserError(_('You cannot modify a posted entry of this journal because it is in strict mode.'))
             # We remove all the analytics entries for this journal
             move.mapped('line_ids.analytic_line_ids').unlink()
+            # If the invoice_date is before tax_lock_date, and the accounting date is after tax_lock_date
+            # we should reset the date to invoice_date to insure the tax_lock_date_message is shown as it would be for a new move
+            tax_lock_date = move.company_id.tax_lock_date
+            if move._affect_tax_report() and tax_lock_date and move.date and move.invoice_date and move.invoice_date <= tax_lock_date < move.date:
+                move.write({'state': 'draft', 'date': self.invoice_date})
 
         self.mapped('line_ids').remove_move_reconcile()
         self.write({'state': 'draft'})

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import timedelta
+
 from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
@@ -485,3 +487,43 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # You can remove journal items if the related journal entry is draft.
         self.test_move.button_draft()
         self.test_move.line_ids.unlink()
+
+    def test_misc_tax_lock_date_before(self):
+        """
+        Test that the tax_lock_date_message that appears before posting an invoice whose invoice_date is set to before
+        the tax_lock_date still appears when resetting that same invoice to draft
+        Business flow :
+          Have a Tax Lock Date setup to 31 August 2021
+          Create an invoice, with invoice_date set to 30 August 2021
+          ! A banner appears (tax_lock_date_message)
+          Post the invoice
+          ! The `date` field is set to tax_lock_date + 1
+          ! The `invoice_date` field is unchanged
+          ! The banner is gone
+          Reset to draft
+          ! The `invoice_date` is still unchanged
+          !! The `date` field is set back to the `invoice_date` field, since we want them synchronized after a draft reset
+          !! The banner is back
+        """
+        # Set the tax lock date after the journal entry date.
+        self.test_move.company_id.tax_lock_date = fields.Date.from_string('2021-08-31')
+        self.test_move.invoice_date = fields.Date.from_string('2021-08-30')
+
+        self.assertTrue(self.test_move.tax_lock_date_message, msg="A banner appears telling you that posting it will move the date")
+
+        before_posting_invoice_date = self.test_move.invoice_date
+        self.test_move.action_post()
+
+        self.assertRecordValues(self.test_move, [{
+            'date': self.test_move.company_id.tax_lock_date + timedelta(days=1),
+            'invoice_date': before_posting_invoice_date,
+            'tax_lock_date_message': False
+        }])
+        self.test_move.button_draft()
+
+        self.assertRecordValues(self.test_move, [{
+            'date': self.test_move.invoice_date,
+            'invoice_date': before_posting_invoice_date,
+            'tax_lock_date_message': "The accounting date is prior to the tax lock date which is set on 08/31/2021. "
+                                     "Then, this will be moved to the next available one during the invoice validation."
+        }])
