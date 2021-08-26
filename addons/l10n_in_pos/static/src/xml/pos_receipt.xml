@@ -15,7 +15,10 @@
                 </div>
             </t>
         </xpath>
-        <xpath expr="//div[hasclass('orderlines')]" position="after">
+    </t>
+
+    <t t-name="OrderLinesReceipt" t-inherit="point_of_sale.OrderLinesReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-foreach='receipt.orderlines']" position="inside">
             <t t-if="line.l10n_in_hsn_code and env.pos.company.country and env.pos.company.country.code == 'IN'">
                 <div class="pos-receipt-left-padding">
                     <span>HSN Code: </span>
