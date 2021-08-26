@@ -39,9 +39,10 @@ class Channel(models.Model):
     name = fields.Char('Name', required=True, translate=True)
     active = fields.Boolean(default=True, help="Set active to false to hide the channel without removing it.")
     channel_type = fields.Selection([
-        ('chat', 'Chat Discussion'),
-        ('channel', 'Channel')],
-        string='Channel Type', default='channel')
+        ('chat', 'Chat'),
+        ('channel', 'Channel'),
+        ('group', 'Group')],
+        string='Channel Type', default='channel', help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration).")
     is_chat = fields.Boolean(string='Is a chat', compute='_compute_is_chat')
     description = fields.Text('Description')
     image_128 = fields.Image("Image", max_width=128, max_height=128, default=_get_default_image)
@@ -630,6 +631,8 @@ class Channel(models.Model):
         """
         if self.env.user.partner_id.id not in partners_to:
             partners_to.append(self.env.user.partner_id.id)
+        if len(partners_to) > 2:
+            raise UserError(_("A chat should not be created with more than 2 persons. Create a group instead."))
         # determine type according to the number of partner in the channel
         self.flush()
         self.env.cr.execute("""
@@ -890,6 +893,22 @@ class Channel(models.Model):
         return channel_info
 
     @api.model
+    def create_group(self, partners_to):
+        """ Create a group channel.
+            :param partners_to : list of res.partner ids to add to the conversation
+            :returns: channel_info of the created channel
+            :rtype: dict
+        """
+        channel = self.create({
+            'channel_last_seen_partner_ids': [Command.create({'partner_id': partner_id}) for partner_id in partners_to],
+            'channel_type': 'group',
+            'name': '',  # default name is computed client side from the list of members
+            'public': 'private',
+        })
+        channel._broadcast(partners_to)
+        return channel.channel_info()[0]
+
+    @api.model
     def get_mention_suggestions(self, search, limit=8):
         """ Return 'limit'-first channels' id, name and public fields such that the name matches a
             'search' string. Exclude channels of type chat (DM), and private channels the current
@@ -988,7 +1007,7 @@ class Channel(models.Model):
         return msg
 
     def execute_command_leave(self, **kwargs):
-        if self.channel_type == 'channel':
+        if self.channel_type in ('channel', 'group'):
             self.action_unfollow()
         else:
             self.channel_pin(self.uuid, False)
