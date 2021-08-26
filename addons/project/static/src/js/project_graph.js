@@ -53,9 +53,9 @@ class ProjectControlPanel extends ControlPanel {
         });
     }
 }
-ControlPanel.template = "web.ControlPanel"; /** @todo should be something good that inherits from web.ControlPanel */
+ProjectControlPanel.template = "web.ControlPanel"; /** @todo */
 
 class ProjectGraphView extends GraphView {}
-GraphView.ControlPanel = ProjectControlPanel;
+ProjectGraphView.ControlPanel = ProjectControlPanel;
 
 viewRegistry.add("project_graph", ProjectGraphView);
