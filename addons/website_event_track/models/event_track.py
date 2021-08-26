@@ -42,15 +42,24 @@ class Track(models.Model):
         group_expand='_read_group_stage_ids',
         required=True, tracking=True)
     is_accepted = fields.Boolean('Is Accepted', related='stage_id.is_accepted', readonly=True)
+    legend_blocked = fields.Char(related='stage_id.legend_blocked',
+        string='Kanban Blocked Explanation', readonly=True)
+    legend_done = fields.Char(related='stage_id.legend_done',
+        string='Kanban Valid Explanation', readonly=True)
+    legend_normal = fields.Char(related='stage_id.legend_normal',
+        string='Kanban Ongoing Explanation', readonly=True)
     kanban_state = fields.Selection([
         ('normal', 'Grey'),
         ('done', 'Green'),
         ('blocked', 'Red')], string='Kanban State',
-        copy=False, default='normal', required=True, tracking=True,
+        copy=False, default='normal', required=True,
         help="A track's kanban state indicates special situations affecting it:\n"
              " * Grey is the default situation\n"
              " * Red indicates something is preventing the progress of this track\n"
              " * Green indicates the track is ready to be pulled to the next stage")
+    kanban_state_label = fields.Char(
+        string='Kanban State Label', compute='_compute_kanban_state_label', store=True,
+        tracking=True)
     partner_id = fields.Many2one('res.partner', 'Contact', help="Contact of the track, may be different from speaker.")
     # speaker information
     partner_name = fields.Char(
@@ -158,6 +167,18 @@ class Track(models.Model):
         for track in self:
             if track.id:
                 track.website_url = '/event/%s/track/%s' % (slug(track.event_id), slug(track))
+
+    # STAGES
+
+    @api.depends('stage_id', 'kanban_state')
+    def _compute_kanban_state_label(self):
+        for track in self:
+            if track.kanban_state == 'normal':
+                track.kanban_state_label = track.stage_id.legend_normal
+            elif track.kanban_state == 'blocked':
+                track.kanban_state_label = track.stage_id.legend_blocked
+            else:
+                track.kanban_state_label = track.stage_id.legend_done
 
     # SPEAKER
 
