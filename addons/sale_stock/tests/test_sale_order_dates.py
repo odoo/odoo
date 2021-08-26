@@ -86,7 +86,12 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
             ml.qty_done = ml.product_uom_qty
         picking._action_done()
         self.assertEqual(picking.state, 'done', "Picking not processed correctly!")
+<<<<<<< HEAD
         self.assertEqual(fields.Date.today(), sale_order.effective_date.date(), "Wrong effective date on sale order!")
+=======
+        self.assertEqual(fields.Date.today(), sale_order.effective_date, "Wrong effective date on sale order!")
+        self.assertEqual(fields.Date.context_today(sale_order), sale_order.effective_date, "Wrong effective date on sale order!")
+>>>>>>> 329e177d516... temp
 
     def test_sale_order_commitment_date(self):
 
