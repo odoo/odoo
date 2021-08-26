@@ -1199,8 +1199,8 @@ class MailThread(models.AbstractModel):
         Indeed those aspects should be covered by the html_sanitize method
         located in tools. """
         body, attachments = payload_dict['body'], payload_dict['attachments']
-        if not body:
-            return payload_dict
+        if not body.strip():
+            return {'body': body, 'attachments': attachments}
         try:
             root = lxml.html.fromstring(body)
         except ValueError:
