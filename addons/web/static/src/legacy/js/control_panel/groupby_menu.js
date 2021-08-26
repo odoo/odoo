@@ -57,12 +57,14 @@ odoo.define('web.GroupByMenu', function (require) {
         //---------------------------------------------------------------------
 
         /**
+         * @see {@link odoo/fields.py} Field._description_sortable
+         * @see {@link odoo/fields.py} Many2Many.groupable
          * @private
          * @param {Object} field
          * @returns {boolean}
          */
         _validateField(field) {
-            return field.sortable &&
+            return (field.sortable || (field.type === "many2many" && field.store)) &&
                 field.name !== "id" &&
                 GROUPABLE_TYPES.includes(field.type);
         }
