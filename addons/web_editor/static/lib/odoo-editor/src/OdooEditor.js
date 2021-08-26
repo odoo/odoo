@@ -1738,6 +1738,7 @@ export class OdooEditor extends EventTarget {
                 }
                 // Check for url after user insert a space so we won't transform an incomplete url.
                 if (
+                    ev.data &&
                     ev.data.includes(' ') &&
                     selection &&
                     selection.anchorNode
