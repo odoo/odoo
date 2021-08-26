@@ -11,6 +11,7 @@ import werkzeug.utils
 import werkzeug.wrappers
 
 from itertools import islice
+from lxml import etree
 from xml.etree import ElementTree as ET
 
 import odoo
@@ -330,7 +331,14 @@ class Website(Home):
         domain = [['key', 'ilike', '.dynamic_filter_template_'], ['type', '=', 'qweb']]
         if filter_name:
             domain.append(['key', 'ilike', escape_psql('_%s_' % filter_name)])
-        templates = request.env['ir.ui.view'].sudo().search_read(domain, ['key', 'name'])
+        templates = request.env['ir.ui.view'].sudo().search_read(domain, ['key', 'name', 'arch_db'])
+
+        for t in templates:
+            children = etree.fromstring(t.pop('arch_db')).getchildren()
+            attribs = children and children[0].attrib or {}
+            t['numOfEl'] = attribs.get('data-number-of-elements')
+            t['numOfElSm'] = attribs.get('data-number-of-elements-sm')
+            t['numOfElFetch'] = attribs.get('data-number-of-elements-fetch')
         return templates
 
     # ------------------------------------------------------
