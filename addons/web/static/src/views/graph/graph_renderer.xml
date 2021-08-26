@@ -24,6 +24,7 @@
 
     <t t-name="web.GraphRenderer" owl="1">
         <div class="o_graph_renderer">
+            <label t-if="props.metaData.title" t-esc="props.metaData.title"/>
             <div class="o_graph_canvas_container" t-ref="container">
                 <canvas t-ref="canvas"/>
             </div>

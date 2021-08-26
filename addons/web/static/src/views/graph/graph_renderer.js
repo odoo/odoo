@@ -58,6 +58,12 @@ export class GraphRenderer extends Component {
         this.renderChart();
     }
 
+    willUnmount() {
+        if (this.chart) {
+            this.chart.destroy();
+        }
+    }
+
     /**
      * This function aims to remove a suitable number of lines from the
      * tooltip in order to make it reasonably visible. A message indicating
@@ -178,20 +184,14 @@ export class GraphRenderer extends Component {
      * @returns {string}
      */
     formatValue(value, allIntegers = true) {
-        try {
-            const largeNumber = Math.abs(value) >= 1000;
-            if (allIntegers && !largeNumber) {
-                return String(value);
-            }
-            if (largeNumber) {
-                return formatFloat(value, { humanReadable: true, decimals: 2, minDigits: 1 });
-            }
-            return formatFloat(value);
-        } catch (e) {
-            console.log("value:", value);
-            console.log("allIntegers:", allIntegers);
-            // throw e;
+        const largeNumber = Math.abs(value) >= 1000;
+        if (allIntegers && !largeNumber) {
+            return String(value);
         }
+        if (largeNumber) {
+            return formatFloat(value, { humanReadable: true, decimals: 2, minDigits: 1 });
+        }
+        return formatFloat(value);
     }
 
     /**

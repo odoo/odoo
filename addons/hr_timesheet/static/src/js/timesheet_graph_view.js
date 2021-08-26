@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 
 const viewRegistry = registry.category("views");
 
-export class hrTimesheetGraphView extends GraphView {};
+export class hrTimesheetGraphView extends GraphView {}
 hrTimesheetGraphView.Model = hrTimesheetGraphModel;
 
 viewRegistry.add("hr_timesheet_graphview", hrTimesheetGraphView);

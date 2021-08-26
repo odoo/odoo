@@ -51,14 +51,12 @@ export function computeReportMeasures(fields, fieldAttrs, activeMeasures, additi
         }
     }
 
-    const sortedMeasures = Object.entries(measures).sort(
-        ([m1, { string: s1 }], [m2, { string: s2 }]) => {
-            if (m1 === "__count" || m2 === "__count") {
-                return m1 === "__count" ? 1 : -1; // Count is always last
-            }
-            return s1.toLowerCase().localeCompare(s2.toLowerCase());
+    const sortedMeasures = Object.entries(measures).sort(([m1, f1], [m2, f2]) => {
+        if (m1 === "__count" || m2 === "__count") {
+            return m1 === "__count" ? 1 : -1; // Count is always last
         }
-    );
+        return f1.string.toLowerCase().localeCompare(f2.string.toLowerCase());
+    });
 
     return Object.fromEntries(sortedMeasures);
 }

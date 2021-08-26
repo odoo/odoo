@@ -4,7 +4,7 @@ import { BORDER_WHITE, DEFAULT_BG } from "@web/views/graph/colors";
 import { click, triggerEvent } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { dialogService } from "@web/core/dialog/dialog_service";
-import { GraphArchParser } from "@web/views/graph/graph_view";
+import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
 import { makeView } from "./helpers";
 import { registry } from "@web/core/registry";
 import { setupControlPanelServiceRegistry } from "@web/../tests/search/helpers";
@@ -1797,14 +1797,28 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getChart(graph).config.type, "pie");
     });
 
-    QUnit.skip("title props", async function (assert) {
+    QUnit.test("string attribute", async function (assert) {
         assert.expect(1);
-        /** @todo review CSS */
         const graph = await makeView({
             serverData,
             type: "graph",
             resModel: "foo",
             arch: `<graph string="Partners"/>`,
+        });
+        assert.strictEqual(
+            graph.el.querySelector(".o_graph_view .o_content label").innerText,
+            "Partners"
+        );
+    });
+
+    QUnit.test("title prop", async function (assert) {
+        assert.expect(1);
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `<graph/>`,
+            title: "Partners",
         });
         assert.strictEqual(
             graph.el.querySelector(".o_graph_view .o_content label").innerText,
@@ -1903,7 +1917,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("process default view description", async function (assert) {
         assert.expect(1);
         const propsFromArch = new GraphArchParser().parse();
-        assert.deepEqual(propsFromArch, { fields: {}, fieldModif: {} });
+        assert.deepEqual(propsFromArch, { fields: {}, fieldModif: {}, groupBy: [] });
     });
 
     QUnit.test("process simple arch (no field tag)", async function (assert) {
@@ -1916,6 +1930,7 @@ QUnit.module("Views", (hooks) => {
             disableLinking: true,
             fields,
             fieldModif: {},
+            groupBy: [],
             mode: "line",
             order: "ASC",
         });
@@ -1926,6 +1941,7 @@ QUnit.module("Views", (hooks) => {
             disableLinking: false,
             fields,
             fieldModif: {},
+            groupBy: [],
             stacked: false,
             title: "Title",
         });
@@ -2074,7 +2090,7 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, ["Undefined", "red"]);
     });
 
-    QUnit.skip("save params succeeds", async function (assert) {
+    QUnit.test("save params succeeds", async function (assert) {
         assert.expect(4);
         const expectedContexts = [
             {
@@ -2121,6 +2137,18 @@ QUnit.module("Views", (hooks) => {
                     </graph>
                 `,
             searchViewId: false,
+            searchViewArch: `
+                <search>
+                    <filter name="false_domain" string="False Domain" domain="[(0, '=', 1)]"/>
+                    <filter name="filter_with_context"
+                        string="Filter With Context"
+                        domain="[]"
+                        context="{ 'graph_measure': 'foo', 'graph_mode': 'line', 'graph_groupbys': ['color_id'] }"
+                        />
+                    <filter name="group_by_color" string="Color" context="{ 'group_by': 'color_id' }"/>
+                    <filter name="group_by_product" string="Product" context="{ 'group_by': 'product_id' }"/>
+                </search>
+            `,
         });
 
         await toggleFavoriteMenu(graph);
@@ -2179,7 +2207,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("correctly use group_by key from the context", async function (assert) {
-        assert.expect(16);
+        assert.expect(8);
         const recs = serverData.models.foo.records;
         const lastOne = recs[recs.length - 1];
         lastOne.color_id = 14;
@@ -2201,22 +2229,16 @@ QUnit.module("Views", (hooks) => {
                         />
                 </search>
             `,
+            context: {
+                search_default_filter_with_context: 1,
+            },
         });
-        checkLabels(assert, graph, ["xphone", "xpad"]);
-        checkLegend(assert, graph, "Count");
-        checkModeIs(assert, graph, "bar");
-        assert.strictEqual(getXAxeLabel(graph), "Product");
-        assert.strictEqual(getYAxeLabel(graph), "Count");
-        let { mode } = getGraphModelMetaData(graph);
-        assert.strictEqual(mode, "bar");
-        await toggleFilterMenu(graph);
-        await toggleMenuItem(graph, "Filter With Context");
         checkLabels(assert, graph, ["red", "black"]);
         checkLegend(assert, graph, "Foo");
         checkModeIs(assert, graph, "line");
         assert.strictEqual(getXAxeLabel(graph), "Color");
         assert.strictEqual(getYAxeLabel(graph), "Foo");
-        mode = getGraphModelMetaData(graph).mode;
+        const mode = getGraphModelMetaData(graph).mode;
         assert.strictEqual(mode, "line");
     });
 
@@ -2271,7 +2293,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "the active measure description is the arch string attribute in priority",
         async function (assert) {
             assert.expect(8);
@@ -3220,4 +3242,79 @@ QUnit.module("Views", (hooks) => {
         await switchView(webClient, "graph");
         assert.hasClass(getModeButton(webClient, "line"), "active");
     });
+
+    QUnit.test(
+        "fallback on initial groupby when the groupby from control panel has 0 length",
+        async function (assert) {
+            assert.expect(2);
+            const graph = await makeView({
+                serverData,
+                type: "graph",
+                resModel: "foo",
+                arch: `
+                    <graph type="line">
+                        <field name="product_id"/>
+                    </graph>
+                `,
+                searchViewArch: `
+                    <search>
+                        <filter name="group_by_foo" string="Foo" domain="[]" context="{ 'group_by': 'foo'}"/>
+                    </search>
+                `,
+                context: {
+                    search_default_group_by_foo: 1,
+                },
+            });
+            checkLabels(assert, graph, ["3", "53", "2", "24", "4", "63", "42", "48"]);
+            await toggleGroupByMenu(graph);
+            await toggleMenuItem(graph, "Foo");
+            checkLabels(assert, graph, ["xphone", "xpad"]);
+        }
+    );
+
+    QUnit.test(
+        "change mode, stacked, or order via the graph buttons does not reload datapoints, change measure does",
+        async function (assert) {
+            assert.expect(13);
+            const graph = await makeView({
+                serverData,
+                type: "graph",
+                resModel: "foo",
+                arch: `
+                    <graph type="line">
+                        <field name="product_id"/>
+                    </graph>
+                `,
+                mockRPC: function (_, args) {
+                    if (args.method === "web_read_group") {
+                        assert.step(JSON.stringify(args.kwargs.fields));
+                    }
+                },
+            });
+
+            checkModeIs(assert, graph, "line");
+
+            await selectMode(graph, "bar");
+
+            checkModeIs(assert, graph, "bar");
+            assert.hasClass(graph.el.querySelector(`[data-tooltip="Stacked"]`), "active");
+
+            await click(graph.el.querySelector(`[data-tooltip="Stacked"]`));
+
+            assert.doesNotHaveClass(graph.el.querySelector(`[data-tooltip="Stacked"]`), "active");
+            assert.doesNotHaveClass(graph.el.querySelector(`[data-tooltip="Ascending"]`), "active");
+
+            await click(graph.el.querySelector(`[data-tooltip="Ascending"]`));
+
+            assert.hasClass(graph.el.querySelector(`[data-tooltip="Ascending"]`), "active");
+
+            await toggleMenu(graph, "Measures");
+            await toggleMenuItem(graph, "Foo");
+
+            assert.verifySteps([
+                `["__count"]`, // first load
+                `["__count","foo:sum"]`, // reload due to change in measure
+            ]);
+        }
+    );
 });

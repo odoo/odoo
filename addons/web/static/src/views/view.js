@@ -90,6 +90,8 @@ const STANDARD_PROPS = new Set([
 
     "globalState",
 
+    "activateFavorite",
+
     // LEGACY: remove this later (clean when mappings old state <-> new state are established)
     "searchPanel",
     "searchModel",

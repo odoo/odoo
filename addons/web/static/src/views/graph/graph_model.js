@@ -1,22 +1,21 @@
 /** @odoo-module **/
 
+import { buildSampleORM } from "../helpers/sample_server";
+import { computeReportMeasures } from "../helpers/utils";
 import { getGroupBy } from "@web/search/utils/group_by";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { Model } from "@web/views/helpers/model";
-import { ORM } from "@web/core/orm_service";
+import { Model } from "../helpers/model";
 import { rankInterval } from "@web/search/utils/dates";
-import { SampleServer } from "@web/views/helpers/sample_server";
 import { sortBy } from "@web/core/utils/arrays";
-import { computeReportMeasures } from "../helpers/utils";
 
 export const SEP = " / ";
-export const MODES = ["bar", "line", "pie"];
 
-// Remove and directly do computations in graph model?
 class DateClasses {
-    // actually we have a matrix of values and undefined. An equivalence class is formed of defined values of a column.
-    // So nothing has to do with dates but we only use Dateclasses to manage identification of dates.
+    // We view the param "array" as a matrix of values and undefined.
+    // An equivalence class is formed of defined values of a column.
+    // So nothing has to do with dates but we only use Dateclasses to manage
+    // identification of dates.
     /**
      * @param {(any[])[]} array
      */
@@ -90,11 +89,9 @@ export class GraphModel extends Model {
         this.keepLast = new KeepLast();
         this._fakeORM = null;
 
-        this.firstLoad = true;
         this.initialGroupBy = null;
 
         this.metaData = params;
-
         this.data = null;
     }
 
@@ -103,83 +100,85 @@ export class GraphModel extends Model {
     //--------------------------------------------------------------------------
 
     /**
-     * @param {Object} [searchParams={}]
+     * @param {Object} [searchParams]
+     * @param {Object} [searchParams.context]
+     * @param {Object[]} [searchParams.domains]
+     * @param {string[]} [searchParams.groupBy]
      */
-    async load(searchParams = {}) {
+    async load(searchParams) {
         const { context, domains, groupBy } = searchParams;
         const metaData = Object.assign({}, this.metaData, { context, domains });
-        if (!this.firstLoad || !metaData.groupBy) {
-            metaData.groupBy = groupBy;
-        }
-        this._normalize(metaData);
+
+        metaData.measure = context.graph_measure || metaData.measure;
+        metaData.mode = context.graph_mode || metaData.mode;
+
         if (!this.initialGroupBy) {
-            this.initialGroupBy = metaData.groupBy;
-        } else if (metaData.groupBy.length === 0) {
-            metaData.groupBy = this.initialGroupBy;
+            this.initialGroupBy = context.graph_groupbys || this.metaData.groupBy; // = arch groupBy --> change that
         }
+        metaData.groupBy = groupBy.length ? groupBy : this.initialGroupBy;
+
+        this._normalize(metaData);
+
         metaData.measures = computeReportMeasures(
             metaData.fields,
             metaData.fieldModif,
             [metaData.measure],
             metaData.additionalMeasures
         );
-        await this._fetchData(metaData);
-        this.firstLoad = false;
+
+        await this._fetchDataPoints(metaData);
+
+        this._prepareData();
     }
 
     /**
+     * Only supposed to be called to change one or several parameters among
+     * "measure", "mode", "order", and "stacked".
      * @param {Object} params
      */
     async updateMetaData(params) {
         const metaData = Object.assign({}, this.metaData, params);
-        await this._fetchData(metaData);
+
+        if ("measure" in params) {
+            await this._fetchDataPoints(metaData);
+        } else {
+            await this.keepLast.add(Promise.resolve());
+            this.metaData = metaData;
+        }
+
+        this._prepareData();
+
         this.notify();
     }
 
     //--------------------------------------------------------------------------
-    // Private
+    // Protected
     //--------------------------------------------------------------------------
 
     /**
+     * Fetch the data points (possibly sample ones) determined by the metaData.
+     * This function has several side effects. It can alter metaData
+     * (e.g. change metaData.useSampleModel value) and set this.metaData and
+     * this.dataPoints (sometimes this._fakeORM).
+     * @protected
      * @param {Object} metaData
      */
-    async _fetchData(metaData) {
+    async _fetchDataPoints(metaData) {
         let dataPoints = await this.keepLast.add(this._loadDataPoints(metaData));
-
-        this.metaData = metaData;
-        this.data = null;
-
-        if (this.metaData.useSampleModel && dataPoints.length === 0) {
-            if (!this._fakeORM) {
-                // would be good to reuse MockServer from tests and data generation from SampleServer?
-                // or do something else?
-                const sampleServer = new SampleServer(
-                    this.metaData.resModel,
-                    Object.assign({ __count: { type: "integer" } }, this.metaData.fields)
-                );
-                const fakeRPC = async (_, params) => {
-                    const { kwargs, method, model } = params;
-                    const { groupby: groupBy } = kwargs;
-                    return sampleServer.mockRpc({ method, model, ...kwargs, groupBy });
-                };
-                this._fakeORM = new ORM(fakeRPC, this.user);
-            }
-            dataPoints = await this.keepLast.add(this._loadDataPoints(this.metaData, true));
+        if (metaData.useSampleModel && dataPoints.length === 0) {
+            dataPoints = await this.keepLast.add(this._loadDataPoints(metaData, true));
         } else {
-            this.metaData.useSampleModel = false;
-            this._fakeORM = null;
+            metaData.useSampleModel = false;
         }
-
-        const processedDataPoints = this._processDataPoints(dataPoints);
-        if (this._isValidData(processedDataPoints)) {
-            this.data = this._getData(processedDataPoints);
-        }
+        this.metaData = metaData;
+        this.dataPoints = dataPoints;
     }
 
     /**
      * Separates dataPoints coming from the read_group(s) into different
      * datasets. This function returns the parameters data and labels used
      * to produce the charts.
+     * @protected
      * @param {Object[]}
      * @returns {Object}
      */
@@ -268,6 +267,7 @@ export class GraphModel extends Model {
 
     /**
      * Determines the dataset to which the data point belongs.
+     * @protected
      * @param {Object} dataPoint
      * @returns {string}
      */
@@ -288,6 +288,7 @@ export class GraphModel extends Model {
     }
 
     /**
+     * @protected
      * @param {Object[]} dataPoints
      * @returns {DateClasses}
      */
@@ -303,7 +304,43 @@ export class GraphModel extends Model {
     }
 
     /**
-     * Determines whether the set of data points is good. If not this.data will be (re)set to null
+     * Eventually filters and sort data points.
+     * @protected
+     * @returns {Object[]}
+     */
+    _getProcessedDataPoints() {
+        const { domains, groupBy, mode, order } = this.metaData;
+        let processedDataPoints = [];
+        if (mode === "line") {
+            processedDataPoints = this.dataPoints.filter(
+                (dataPoint) => dataPoint.labels[0] !== this.env._t("Undefined")
+            );
+        } else {
+            processedDataPoints = this.dataPoints.filter((dataPoint) => dataPoint.count !== 0);
+        }
+
+        if (order !== null && mode !== "pie" && domains.length === 1 && groupBy.length > 0) {
+            // group data by their x-axis value, and then sort datapoints
+            // based on the sum of values by group in ascending/descending order
+            const groupedDataPoints = {};
+            for (const dataPt of processedDataPoints) {
+                const key = dataPt.labels[0]; // = x-axis value under the current assumptions
+                if (!groupedDataPoints[key]) {
+                    groupedDataPoints[key] = [];
+                }
+                groupedDataPoints[key].push(dataPt);
+            }
+            const groups = Object.values(groupedDataPoints);
+            const groupTotal = (group) => group.reduce((sum, dataPt) => sum + dataPt.value, 0);
+            processedDataPoints = sortBy(groups, groupTotal, order.toLowerCase()).flat();
+        }
+
+        return processedDataPoints;
+    }
+
+    /**
+     * Determines whether the set of data points is good. If not, this.data will be (re)set to null
+     * @protected
      * @param {Object[]}
      * @returns {boolean}
      */
@@ -331,12 +368,23 @@ export class GraphModel extends Model {
      * with correct fields for each domain.  We have to do some light processing
      * to separate date groups in the field list, because they can be defined
      * with an aggregation function, such as my_date:week.
+     * @protected
      * @param {Object} metaData
-     * @param {boolean} [useFakeORM=false]
+     * @param {boolean} [sample=false]
      * @returns {Object[]}
      */
-    async _loadDataPoints(metaData, useFakeORM = false) {
+    async _loadDataPoints(metaData, sample = false) {
         const { measure, domains, fields, groupBy, resModel } = metaData;
+
+        if (sample && !this._fakeORM) {
+            this._fakeORM = buildSampleORM(
+                resModel,
+                Object.assign({ __count: { type: "integer" } }, fields),
+                this.user
+            );
+        }
+        const orm2use = sample ? this._fakeORM : this.orm;
+
         const measures = ["__count"];
         if (measure !== "__count") {
             let { group_operator, type } = fields[measure];
@@ -356,7 +404,7 @@ export class GraphModel extends Model {
         // for instance [1, "ABC"] [3, "ABC"] should be distinguished.
         domains.forEach((domain, originIndex) => {
             proms.push(
-                (useFakeORM ? this._fakeORM : this.orm)
+                orm2use
                     .webReadGroup(
                         resModel,
                         domain.arrayRepr,
@@ -428,15 +476,17 @@ export class GraphModel extends Model {
     }
 
     /**
-     * Normalize the keys "groupBy", "measure", and "mode".
+     * Process metaData.groupBy in order to keep only the finest interval option for
+     * elements based on date/datetime field (e.g. 'date:year'). This means that
+     * 'week' is prefered to 'month'. The field stays at the place of its first occurence.
+     * For instance,
+     * ['foo', 'date:month', 'bar', 'date:week'] becomes ['foo', 'date:week', 'bar'].
+     * @protected
      * @param {Object} metaData
      */
     _normalize(metaData) {
-        const { context, fields } = metaData;
-        const { graph_measure, graph_mode, graph_groupbys } = context || {};
-
+        const { fields } = metaData;
         const groupBy = [];
-        metaData.groupBy = graph_groupbys || metaData.groupBy;
         for (const gb of metaData.groupBy) {
             let ngb = gb;
             if (typeof gb === "string") {
@@ -466,52 +516,22 @@ export class GraphModel extends Model {
                 }
             }
         }
-
         metaData.groupBy = processedGroupBy;
 
-        metaData.measure = graph_measure || metaData.measure;
-        if (!(metaData.measure in metaData.fields)) {
+        if (metaData.measure === "__count__") {
             metaData.measure = "__count";
-        }
-        metaData.mode = graph_mode || metaData.mode;
-        if (!MODES.includes(metaData.mode)) {
-            metaData.mode = "bar";
         }
     }
 
     /**
-     * Eventually filters and sort data points.
-     * @param {Object[]} dataPoints
-     * @returns {Object[]}
+     * @protected
      */
-    _processDataPoints(dataPoints) {
-        const { domains, groupBy, mode, order } = this.metaData;
-        let processedDataPoints = [];
-        if (mode === "line") {
-            processedDataPoints = dataPoints.filter(
-                (dataPoint) => dataPoint.labels[0] !== this.env._t("Undefined")
-            );
-        } else {
-            processedDataPoints = dataPoints.filter((dataPoint) => dataPoint.count !== 0);
+    async _prepareData() {
+        const processedDataPoints = this._getProcessedDataPoints();
+        this.data = null;
+        if (this._isValidData(processedDataPoints)) {
+            this.data = this._getData(processedDataPoints);
         }
-
-        if (order !== null && mode !== "pie" && domains.length === 1 && groupBy.length > 0) {
-            // group data by their x-axis value, and then sort datapoints
-            // based on the sum of values by group in ascending/descending order
-            const groupedDataPoints = {};
-            for (const dataPt of processedDataPoints) {
-                const key = dataPt.labels[0]; // = x-axis value under the current assumptions
-                if (!groupedDataPoints[key]) {
-                    groupedDataPoints[key] = [];
-                }
-                groupedDataPoints[key].push(dataPt);
-            }
-            const groups = Object.values(groupedDataPoints);
-            const groupTotal = (group) => group.reduce((sum, dataPt) => sum + dataPt.value, 0);
-            processedDataPoints = sortBy(groups, groupTotal, order.toLowerCase()).flat();
-        }
-
-        return processedDataPoints;
     }
 }
 GraphModel.services = ["orm", "user"];

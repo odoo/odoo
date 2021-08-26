@@ -24,16 +24,16 @@ export class hrTimesheetGraphModel extends GraphModel {
      * Override processDataPoints to take into account the analytic line uom.
      * @override
      */
-    _processDataPoints(dataPoints) {
+    _getProcessedDataPoints() {
         const currentCompany = this.companyService.currentCompany;
         const factor = currentCompany.timesheet_uom_factor || 1;
         if (factor !== 1 && FIELDS.includes(this.metaData.measure)) {
             // recalculate the Duration values according to the timesheet_uom_factor
-            for (const dataPt of dataPoints) {
+            for (const dataPt of this.dataPoints) {
                 dataPt.value *= factor;
             }
         }
-        return super._processDataPoints(...arguments);
+        return super._getProcessedDataPoints(...arguments);
     }
 }
 hrTimesheetGraphModel.services = [...GraphModel.services, "company"];
