@@ -76,7 +76,7 @@ class SaleOrder(models.Model):
         for order in self:
             pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
             dates_list = [date for date in pickings.mapped('date_done') if date]
-            order.effective_date = min(dates_list).date() if dates_list else False
+            order.effective_date = fields.Date.context_today(order, min(dates_list)) if dates_list else False
 
     @api.depends('picking_policy')
     def _compute_expected_date(self):
