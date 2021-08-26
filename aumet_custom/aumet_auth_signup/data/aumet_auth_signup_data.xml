@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="aumet_reset_password_email" model="mail.template">
+        <field name="name">Aumet Reset Password</field>
+        <field name="subject">Password reset</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="email_from">"${object.company_id.name | safe}" &lt;${(object.company_id.email or user.email) | safe}&gt;</field>
+        <field name="email_to">${object.email_formatted | safe}</field>
+        <field name="body_html" type="html">
+            <table>
+                <tr style="text-align: center;">
+                    <td style="background:#3CB9A8;width: 600px;height: 130px;">
+                        <img style="width:372px;height: 102px;"
+                             src="/logo.png"
+                             data-original-title="" title="" aria-describedby="tooltip393871"/>
+                    </td>
+                </tr>
+                <tr style="text-align: center;">
+                    <td style="width:600px;height: 406px;background: #FFFFFF;">
+                        <p style="position: static;
+height: 68px;
+left: 10%;
+right: 10%;
+top: 162px;
+font-family: Cairo;
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 67px;
+text-align: center;
+color: #1A2028;
+flex: none;
+order: 1;
+flex-grow: 0;
+margin: 32px 0px;">Forgot your
+                            password?
+                        </p>
+                        <p style="position: static;
+height: 34px;
+left: 10%;
+right: 10%;
+top: 262px;
+font-family: Inter;
+font-style: normal;
+font-weight: normal;
+font-size: 14px;
+line-height: 17px;
+text-align: center;
+color: #1A2028;
+flex: none;
+order: 2;
+flex-grow: 0;
+margin: 32px 0px;
+">If you didnt request this, then please ignore this email. If you did, click
+                            the button below to return to Pharmacy and reset your password.
+                        </p>
+                        <a href="${object.signup_url}" style="
+padding:10px;
+text-decoration: none;
+background: linear-gradient(180deg, #3CB9A8 0%, rgba(60, 185, 168, 0.62) 99.99%, rgba(60, 185, 168, 0) 100%);
+border-radius: 5px;
+font-family: Cairo;
+font-style: normal;
+font-weight: 600;
+font-size: 14px;
+line-height: 26px;
+text-align: center;
+color: #FFFFFF;
+">Reset your password
+                        </a>
+
+                    </td>
+                </tr>
+            </table>
+        </field>
+        <field name="lang">${object.lang}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+</odoo>
