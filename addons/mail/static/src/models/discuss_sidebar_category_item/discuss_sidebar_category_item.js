@@ -14,14 +14,10 @@ function factory(dependencies) {
          * @override
          */
         _created() {
-            this.onCancelRenaming = this.onCancelRenaming.bind(this);
             this.onClick = this.onClick.bind(this);
             this.onClickCommandLeave = this.onClickCommandLeave.bind(this);
-            this.onClickCommandRename = this.onClickCommandRename.bind(this);
             this.onClickCommandSettings = this.onClickCommandSettings.bind(this);
             this.onClickCommandUnpin = this.onClickCommandUnpin.bind(this);
-            this.onClickedEditableText = this.onClickedEditableText.bind(this);
-            this.onValidateEditableText = this.onValidateEditableText.bind(this);
         }
 
         //--------------------------------------------------------------------------
@@ -86,14 +82,6 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
-        _computeHasRenameCommand() {
-            return this.channelType === 'chat';
-        }
-
-        /**
-         * @private
-         * @returns {boolean}
-         */
         _computeHasSettingsCommand() {
             return this.channelType === 'channel';
         }
@@ -112,14 +100,6 @@ function factory(dependencies) {
          */
         _computeIsActive() {
             return this.messaging.discuss && this.channel === this.messaging.discuss.thread;
-        }
-
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsRenaming() {
-            return this.messaging.discuss && this.hasRenameCommand && this.messaging.discuss.renamingThreads.includes(this.channel);
         }
 
         /**
@@ -152,13 +132,6 @@ function factory(dependencies) {
         /**
          * @param {MouseEvent} ev
          */
-        onCancelRenaming(ev) {
-            this.messaging.discuss.cancelThreadRenaming(this.channel);
-        }
-
-        /**
-         * @param {MouseEvent} ev
-         */
         onClick(ev) {
             if (isEventHandled(ev, 'EditableText.click')) {
                 return;
@@ -175,14 +148,6 @@ function factory(dependencies) {
                 await this._askAdminConfirmation();
             }
             this.channel.unsubscribe();
-        }
-
-        /**
-         * @param {MouseEvent} ev
-         */
-        onClickCommandRename(ev) {
-            ev.stopPropagation();
-            this.messaging.discuss.setThreadRenaming(this.channel);
         }
 
         /**
@@ -209,25 +174,6 @@ function factory(dependencies) {
         onClickCommandUnpin(ev) {
             ev.stopPropagation();
             this.channel.unsubscribe();
-        }
-
-        /**
-         * Stop propagation to prevent selecting this item.
-         *
-         * @param {CustomEvent} ev
-         */
-        onClickedEditableText(ev) {
-            ev.stopPropagation();
-        }
-
-        /**
-         * @param {CustomEvent} ev
-         * @param {Object} ev.detail
-         * @param {string} ev.detail.newName
-         */
-        onValidateEditableText(ev) {
-            ev.stopPropagation();
-            this.messaging.discuss.onValidateEditableText(this.channel, ev.detail.newName);
         }
 
         /**
@@ -277,12 +223,6 @@ function factory(dependencies) {
             compute: '_computeHasLeaveCommand',
         }),
         /**
-         * Boolean determines whether the item has a "rename" command.
-         */
-        hasRenameCommand: attr({
-            compute: '_computeHasRenameCommand',
-        }),
-        /**
          * Boolean determines whether the item has a "settings" command.
          */
         hasSettingsCommand: attr({
@@ -305,12 +245,6 @@ function factory(dependencies) {
          */
         isActive: attr({
             compute: '_computeIsActive',
-        }),
-        /**
-         * Boolean determines whether the item is currently being renamed.
-         */
-        isRenaming: attr({
-            compute: '_computeIsRenaming',
         }),
         /**
          * Boolean determines whether the item has any unread messages.

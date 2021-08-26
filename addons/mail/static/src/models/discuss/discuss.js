@@ -10,14 +10,6 @@ function factory(dependencies) {
 
         //----------------------------------------------------------------------
         // Public
-        //----------------------------------------------------------------------
-
-        /**
-         * @param {mail.thread} thread
-         */
-        cancelThreadRenaming(thread) {
-            this.update({ renamingThreads: unlink(thread) });
-        }
 
         clearIsAddingItem() {
             this.update({
@@ -162,15 +154,6 @@ function factory(dependencies) {
         }
 
         /**
-         * @param {mail.thread} thread
-         * @param {string} newName
-         */
-        onValidateEditableText(thread, newName) {
-            this.update({ renamingThreads: unlink(thread) });
-            thread.setCustomName(newName);
-        }
-
-        /**
          * Open thread from init active id. `initActiveId` is used to refer to
          * a thread that we may not have full data yet, such as when messaging
          * is not yet initialized.
@@ -229,13 +212,6 @@ function factory(dependencies) {
                 isLog: !message.is_discussion && !message.is_notification
             });
             this.focus();
-        }
-
-        /**
-         * @param {mail.thread} thread
-         */
-        setThreadRenaming(thread) {
-            this.update({ renamingThreads: link(thread) });
         }
 
         /**
@@ -465,7 +441,6 @@ function factory(dependencies) {
         menu_id: attr({
             default: null,
         }),
-        renamingThreads: one2many('mail.thread'),
         /**
          * The message that is currently selected as being replied to in Inbox.
          * There is only one reply composer shown at a time, which depends on

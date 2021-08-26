@@ -56,19 +56,6 @@
     }
 }
 
-.o_DiscussSidebarCategoryItem_name {
-    @include text-truncate();
-    margin-left: 10px;
-
-    &.o-editable {
-        margin-right: $o-mail-discuss-sidebar-scrollbar-width;
-    }
-}
-
-.o_DiscussSidebarCategoryItem_nameInput {
-    width: 100%;
-}
-
 .o_DiscussSidebarCategoryItem_threadIcon {
     @include o-position-absolute($bottom: 0, $right: 0);
 
@@ -116,10 +103,4 @@
     &.o-item-unread {
         font-weight: bold;
     }
-}
-
-.o_DiscussSidebarCategoryItem_nameInput{
-    outline: none;
-    border: none;
-    border-radius: 2px;
 }
