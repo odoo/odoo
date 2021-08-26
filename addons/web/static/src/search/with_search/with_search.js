@@ -80,7 +80,9 @@ export class WithSearch extends Component {
 }
 
 WithSearch.defaultProps = {
+    action: { id: false },
     componentProps: {},
+    view: { id: false },
 };
 WithSearch.props = {
     Component: Function,
@@ -88,8 +90,23 @@ WithSearch.props = {
 
     resModel: String,
 
-    actionId: { type: [Number, false], optional: 1 },
+    action: {
+        type: Object,
+        shape: {
+            id: [Number, false],
+            type: { type: [String, false], optional: 1 },
+        },
+        optional: 1,
+    },
     displayName: { type: String, optional: 1 },
+    view: {
+        type: Object,
+        shape: {
+            id: [Number, false],
+            type: { type: [String, false], optional: 1 },
+        },
+        optional: 1,
+    },
 
     globalState: { type: Object, optional: 1 },
 

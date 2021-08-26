@@ -102,7 +102,7 @@ function registerView(name, LegacyView) {
                 context: this.props.context,
             };
             const options = {
-                actionId: this.props.actionId,
+                actionId: this.props.action.id,
                 loadActionMenus: this.props.loadActionMenus,
                 loadIrFilters: this.props.loadIrFilters,
             };

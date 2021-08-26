@@ -388,7 +388,10 @@ function makeActionManager(env) {
         const flags = action.flags || {};
         const viewProps = Object.assign({}, props, {
             actionFlags: Object.assign({}, flags, flags[view.type]), // review system
-            actionId: action.id || false,
+            action: {
+                id: action.id || false,
+                type: action.type || false,
+            },
             context,
             display: { mode: target === "new" ? "inDialog" : target },
             displayName: action.display_name || action.name,
@@ -428,7 +431,8 @@ function makeActionManager(env) {
 
         // LEGACY CODE COMPATIBILITY: remove when all views will be written in owl
         if (view.isLegacy) {
-            Object.assign(viewProps, { action, View: view });
+            const legacyActionInfo = { ...action, ...viewProps.action };
+            Object.assign(viewProps, { action: legacyActionInfo, View: view });
         }
         // END LEGACY CODE COMPATIBILITY
 

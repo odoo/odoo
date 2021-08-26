@@ -59,10 +59,12 @@ function hasValues(section) {
         return true;
     }
     switch (type) {
-        case "category":
+        case "category": {
             return values && values.size > 1; // false item ignored
-        case "filter":
+        }
+        case "filter": {
             return values && values.size > 0;
+        }
     }
 }
 
@@ -104,11 +106,11 @@ function execute(op, source, target) {
     target.searchItems = searchItems;
 
     target.sections = op(sections);
-    for (const [_, section] of target.sections) {
+    for (const [, section] of target.sections) {
         section.values = op(section.values);
         if (section.groups) {
             section.groups = op(section.groups);
-            for (const [_, group] of section.groups) {
+            for (const [, group] of section.groups) {
                 group.values = op(group.values);
             }
         }
@@ -155,7 +157,7 @@ export class SearchModel extends EventBus {
      * @param {number|false} [config.searchViewId=false]
      * @param {Object[]} [config.irFilters=[]]
      *
-     * @param {number|false} [config.actionId=false]
+     * @param {Object} [config.action={id:false}]
      * @param {boolean} [config.activateFavorite=true]
      * @param {Object} [config.context={}]
      * @param {String} [config.displayName=""]
@@ -168,6 +170,7 @@ export class SearchModel extends EventBus {
      * @param {string[]} [config.orderBy=[]]
      * @param {string[]} [config.searchMenuTypes=["filter", "groupBy", "favorite"]]
      * @param {Object} [config.state]
+     * @param {Object} [config.view={id:false}]
      */
     async load(config) {
         const { resModel } = config;
@@ -176,10 +179,11 @@ export class SearchModel extends EventBus {
         }
         this.resModel = resModel;
 
-        const { actionId, displayName } = config;
+        const { action, displayName, view } = config;
 
-        this.actionId = actionId || false;
+        this.action = action || { id: false };
         this.displayName = displayName || "";
+        this.view = view || { id: false };
 
         // used to avoid useless recomputations
         this._context = null;
@@ -214,7 +218,7 @@ export class SearchModel extends EventBus {
                     views: [[searchViewId, "search"]],
                 },
                 {
-                    actionId: this.actionId,
+                    actionId: this.action.id,
                     loadIrFilters: loadIrFilters || false,
                 }
             );
@@ -411,6 +415,13 @@ export class SearchModel extends EventBus {
     }
 
     /**
+     * @returns {Object}
+     */
+    get comparison() {
+        return this._getComparison();
+    }
+
+    /**
      * @returns {Context} should be imported from context.js?
      */
     get context() {
@@ -577,7 +588,7 @@ export class SearchModel extends EventBus {
         const serverSideId = await this.orm.call("ir.filters", "create_or_replace", [
             {
                 name: description,
-                action_id: this.actionId,
+                action_id: this.action.id,
                 model_id: this.resModel,
                 domain: domain.toString(),
                 is_default: isDefault,
@@ -824,8 +835,9 @@ export class SearchModel extends EventBus {
         switch (searchItem.type) {
             case "dateFilter":
             case "dateGroupBy":
-            case "field":
+            case "field": {
                 return;
+            }
         }
         const index = this.query.findIndex((queryElem) => queryElem.searchItemId === searchItemId);
         if (index >= 0) {
@@ -1452,25 +1464,28 @@ export class SearchModel extends EventBus {
             for (const activeItem of group.activeItems) {
                 const searchItem = this.searchItems[activeItem.searchItemId];
                 switch (searchItem.type) {
-                    case "field":
+                    case "field": {
                         type = "field";
                         title = searchItem.description;
                         for (const autocompleteValue of activeItem.autocompletValues) {
                             values.push(autocompleteValue.label);
                         }
                         break;
-                    case "groupBy":
+                    }
+                    case "groupBy": {
                         type = "groupBy";
                         values.push(searchItem.description);
                         break;
-                    case "dateGroupBy":
+                    }
+                    case "dateGroupBy": {
                         type = "groupBy";
                         for (const intervalId of activeItem.intervalIds) {
                             const option = this.intervalOptions.find((o) => o.id === intervalId);
                             values.push(`${searchItem.description}: ${option.description}`);
                         }
                         break;
-                    case "dateFilter":
+                    }
+                    case "dateFilter": {
                         type = "filter";
                         const periodDescription = this._getDateFilterDomain(
                             searchItem,
@@ -1479,9 +1494,11 @@ export class SearchModel extends EventBus {
                         );
                         values.push(`${searchItem.description}: ${periodDescription}`);
                         break;
-                    default:
+                    }
+                    default: {
                         type = searchItem.type;
                         values.push(searchItem.description);
+                    }
                 }
             }
             const facet = {
@@ -1739,7 +1756,7 @@ export class SearchModel extends EventBus {
         const { searchItemId } = activeItem;
         const searchItem = this.searchItems[searchItemId];
         switch (searchItem.type) {
-            case "field":
+            case "field": {
                 // for <field> nodes, a dynamic context (like context="{'field1': self}")
                 // should set {'field1': [value1, value2]} in the context
                 let context = {};
@@ -1771,14 +1788,17 @@ export class SearchModel extends EventBus {
                         searchItem.defaultAutocompleteValue.value;
                 }
                 return context;
+            }
             case "favorite":
-            case "filter":
+            case "filter": {
                 //Return a deep copy of the filter/favorite to avoid the view to modify the context
                 return makeContext(
                     searchItem.context && JSON.parse(JSON.stringify(searchItem.context))
                 );
-            default:
+            }
+            default: {
                 return null;
+            }
         }
     }
 
@@ -1789,19 +1809,23 @@ export class SearchModel extends EventBus {
         const { searchItemId } = activeItem;
         const searchItem = this.searchItems[searchItemId];
         switch (searchItem.type) {
-            case "field":
+            case "field": {
                 return this._getFieldDomain(searchItem, activeItem.autocompletValues);
-            case "dateFilter":
+            }
+            case "dateFilter": {
                 const { dateFilterId } = this._getActiveComparison() || {};
                 if (this.searchMenuTypes.has("comparison") && dateFilterId === searchItemId) {
                     return new Domain([]);
                 }
                 return this._getDateFilterDomain(searchItem, activeItem.generatorIds);
+            }
             case "filter":
-            case "favorite":
+            case "favorite": {
                 return searchItem.domain;
-            default:
+            }
+            default: {
                 return null;
+            }
         }
     }
 
@@ -1809,15 +1833,19 @@ export class SearchModel extends EventBus {
         const { searchItemId } = activeItem;
         const searchItem = this.searchItems[searchItemId];
         switch (searchItem.type) {
-            case "dateGroupBy":
+            case "dateGroupBy": {
                 const { fieldName } = searchItem;
                 return activeItem.intervalIds.map((intervalId) => `${fieldName}:${intervalId}`);
-            case "groupBy":
+            }
+            case "groupBy": {
                 return [searchItem.fieldName];
-            case "favorite":
+            }
+            case "favorite": {
                 return searchItem.groupBys;
-            default:
+            }
+            default: {
                 return null;
+            }
         }
     }
 
