@@ -164,6 +164,7 @@ class StockMove(models.Model):
     package_level_id = fields.Many2one('stock.package_level', 'Package Level', check_company=True, copy=False)
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs', readonly=True)
     display_assign_serial = fields.Boolean(compute='_compute_display_assign_serial')
+    display_clear_serial = fields.Boolean(compute='_compute_display_clear_serial')
     next_serial = fields.Char('First SN')
     next_serial_count = fields.Integer('Number of SN')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', check_company=True, index=True)
@@ -185,6 +186,12 @@ class StockMove(models.Model):
                 not move.picking_type_id.use_existing_lots
                 and not move.origin_returned_move_id.id
             )
+
+    @api.depends('display_assign_serial', 'move_line_ids', 'move_line_nosuggest_ids')
+    def _compute_display_clear_serial(self):
+        self.display_clear_serial = False
+        for move in self:
+            move.display_clear_serial = move.display_assign_serial and move._get_move_lines()
 
     @api.depends('picking_id.priority')
     def _compute_priority(self):
