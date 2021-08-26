@@ -42,8 +42,8 @@
 # Víctor Martínez <victor.martinez@tecnativa.com>, 2020
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2021
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2021
 # David Vidal <david.vidal@trespinos.es>, 2021
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -51,7 +51,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: David Vidal <david.vidal@trespinos.es>, 2021\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -315,7 +315,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        HOla ${object.partner_id.name},<br/><br/>\n"
+"        Hola ${object.partner_id.name},<br/><br/>\n"
 "        Nos complace informarle que su pedido ha sido enviado.\n"
 "        %if object.carrier_tracking_ref:\n"
 "            Su referencia de pedido es\n"
@@ -1928,7 +1928,7 @@ msgstr "Descripción"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Delivery Orders"
-msgstr "Descripción para pedidos de entrega"
+msgstr "Descripción para las órdenes de entrega"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -1949,7 +1949,7 @@ msgstr "Descripción de Picking"
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingout
 #: model:ir.model.fields,field_description:stock.field_product_template__description_pickingout
 msgid "Description on Delivery Orders"
-msgstr "Descripción en los pedidos de Entrega"
+msgstr "Descripción para las órdenes de entrega"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_picking
@@ -2229,10 +2229,10 @@ msgid ""
 "            location to the Stock location. Each report can be performed on\n"
 "            physical, partner or virtual locations."
 msgstr ""
-"Cada operación de stock en Odoo mueve los productos de una\n"
+"Cada operación de existencias en Odoo mueve los productos de una\n"
 "            ubicación a otra. Por ejemplo, si recibe productos\n"
 "            de un proveedor, Odoo moverá los productos de la ubicación del\n"
-"            Vendedor a la ubicación de Stock. Se puede analizar informes\n"
+"            proveedor a la ubicación de existencias. Se pueden realizar informes\n"
 "            por ubicaciones físicas, de terceros o virtuales."
 
 #. module: stock
@@ -5524,14 +5524,14 @@ msgid ""
 "done"
 msgstr ""
 "Enviar un mensaje de texto SMS de confirmación automática cuando se realicen"
-" los pedidos de entrega"
+" las órdenes de entrega"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Send an automatic confirmation email when Delivery Orders are done"
 msgstr ""
-"Envíe un correo electrónico de confirmación automática cuando se realicen "
-"los pedidos de entrega"
+"Enviar un correo electrónico de confirmación automática cuando se realicen "
+"las órdenes de entrega"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
@@ -6516,7 +6516,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "This note is added to delivery orders."
-msgstr "Esta nota se agrega a los pedidos de entrega."
+msgstr "Esta nota se agrega a las órdenes de entrega."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -6938,6 +6938,13 @@ msgid "Unreserve"
 msgstr "Anular reserva"
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr "Búsqueda en %s no soportada fuera de un ajuste de inventario"
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "UoM"
@@ -7041,7 +7048,7 @@ msgstr "Ubicación de proveedor"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor Locations"
-msgstr "Ubicaciones de Vendedor"
+msgstr "Ubicaciones de proveedor"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__3

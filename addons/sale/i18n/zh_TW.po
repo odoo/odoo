@@ -12,6 +12,7 @@
 # Michael Yeung, 2019
 # shu-zhang kuo <feit.tw@gmail.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# Benson White <Benson.Dr@Gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
+"Last-Translator: Benson White <Benson.Dr@Gmail.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2138,7 +2139,7 @@ msgstr "毛利"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
 msgid "Mark Quotation as Sent"
-msgstr ""
+msgstr "標記報價單為已發送"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -2406,7 +2407,7 @@ msgstr "僅整數值是有效的。"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
-msgstr ""
+msgstr "只有草稿訂單可以標記為直接傳送."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
@@ -3683,6 +3684,9 @@ msgid ""
 "%s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"下列產品不限於本公司%s，因為它們已在其他公司的報價或銷售訂單中使用:\n"
+"%s\n"
+"你可以將這些產品存檔，然后根據公司的限制重新建立它們，或者將它們作為共用產品保留."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -3714,13 +3718,13 @@ msgstr "訂單未處於需要客戶簽名的狀態。"
 msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
 "total is %r but acquirer replied with %r."
-msgstr ""
+msgstr "儘管來自收購人(%s)的因應:訂單全部是%r，但是收購者用%r回答."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "訂單數量已更新."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference

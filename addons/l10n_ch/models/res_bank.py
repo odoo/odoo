@@ -271,7 +271,8 @@ class ResPartnerBank(models.Model):
         different.
         """
         self.ensure_one()
-        return self.acc_type == 'iban' \
+        return self.sanitized_acc_number.startswith('CH')\
+               and self.acc_type == 'iban'\
                and self._check_qr_iban_range(self.sanitized_acc_number)
 
     @api.model

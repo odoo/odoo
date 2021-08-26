@@ -167,9 +167,17 @@ class Orderpoint(models.Model):
 
     def _quantity_in_progress(self):
         res = super(Orderpoint, self)._quantity_in_progress()
-        for poline in self.env['purchase.order.line'].search([('state','in',('draft','sent','to approve')),('orderpoint_id','in',self.ids)]):
-            if poline.product_uom.category_id == poline.orderpoint_id.product_uom.category_id:
-                res[poline.orderpoint_id.id] += poline.product_uom._compute_quantity(poline.product_qty, poline.orderpoint_id.product_uom, round=False)
+        purchase_lines_in_progress = self.env['purchase.order.line'].search([
+            ('state','in',('draft','sent','to approve')),
+            '|',
+                ('orderpoint_id','in',self.ids),
+                ('move_dest_ids.product_id', 'in', self.mapped('product_id.id'))
+        ])
+        for poline in purchase_lines_in_progress:
+            orderpoints = self.filtered(lambda x: x.product_id == poline.product_id)
+            for orderpoint in orderpoints:
+                if poline.product_uom.category_id == orderpoint.product_uom.category_id:
+                    res[orderpoint.id] += poline.product_uom._compute_quantity(poline.product_qty, orderpoint.product_uom, round=False)
         return res
 
     def action_view_purchase(self):

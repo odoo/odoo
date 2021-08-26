@@ -27,6 +27,9 @@ msgid ""
 "signature of events sent by Stripe to Odoo. Failing to set this field in "
 "Odoo will disable the webhook system for this acquirer entirely."
 msgstr ""
+"Якщо ви вмикаєте веб -хуки, цей секретний ключ використовується для "
+"перевірки електронного підпису подій, надісланих компанією Stripe в Odoo. "
+"Якщо не встановити це поле в Odoo, система веб -хук повністю вимкнеться."
 
 #. module: payment_stripe_checkout_webhook
 #: model:ir.model,name:payment_stripe_checkout_webhook.model_payment_acquirer
@@ -46,7 +49,7 @@ msgstr "ID призначення платежу Stripe"
 #. module: payment_stripe_checkout_webhook
 #: model:ir.model.fields,field_description:payment_stripe_checkout_webhook.field_payment_acquirer__stripe_webhook_secret
 msgid "Stripe Webhook Secret"
-msgstr ""
+msgstr "Секретний ключ Stripe Webhook"
 
 #. module: payment_stripe_checkout_webhook
 #: code:addons/payment_stripe_checkout_webhook/models/payment.py:54
