@@ -107,9 +107,9 @@ class ProductExpiryReport(models.Model):
                             each.get('location_id')).display_name
                     if each['product_category'] not in vals:
                         vals[each.get('product_category')] = [
-                            {'barcode': each.get('barcode'),
-                             'name': each.get('name'),
+                            {'name': each.get('name'),
                              'product_id': each.get('product_name'),
+                             'barcode': each.get('barcode'),
                              'location_name': location_name,
                              'default_code': each.get('default_code') or '--------',
                              'expiration_date': each.get('expiration_date').strftime('%Y-%m-%d'),
@@ -118,8 +118,7 @@ class ProductExpiryReport(models.Model):
                                  each.get('id')).product_qty if each.get('id') else False, }]
                     else:
                         vals[each.get('product_category')].append(
-                            {'barcode': each.get('barcode'),
-                             'name': each.get('name'),
+                            {'name': each.get('name'),
                              'product_id': each.get('product_name'),
                              'barcode': each.get('barcode'),
                              'location_name': location_name,
@@ -138,8 +137,7 @@ class ProductExpiryReport(models.Model):
                             each.get('location_id')).display_name
                     if location_name not in vals:
                         vals[location_name] = [
-                            {'barcode': each.get('barcode'),
-                             'name': each.get('name'),
+                            {'name': each.get('name'),
                              'product_id': each.get('product_name'),
                              'barcode': each.get('barcode'),
                              'product_category': each.get('product_category'),
@@ -150,9 +148,7 @@ class ProductExpiryReport(models.Model):
                                  each.get('id')).product_qty if each.get('id') else False, }]
                     else:
                         vals[location_name].append(
-                            {
-                             'barcode': each.get('barcode'),
-                             'name': each.get('name'),
+                            {'name': each.get('name'),
                              'product_id': each.get('product_name'),
                              'barcode': each.get('barcode'),
                              'product_category': each.get('product_category'),
@@ -208,9 +204,9 @@ class ProductExpiryReport(models.Model):
                 worksheet.write(row_index, 1, key)
                 row_index += 2
                 if value not in [vals.get('num_day'), vals.get('today_date')]:
-                    worksheet.write(row_index, 0, "Barcode", bold)
-                    worksheet.write(row_index, 1, "Lot/Serial number", bold)
-                    worksheet.write(row_index, 2, "Product", bold)
+                    worksheet.write(row_index, 0, "Lot/Serial number", bold)
+                    worksheet.write(row_index, 1, "Product", bold)
+                    worksheet.write(row_index, 2, "Barcode", bold)
                     if vals.get('group_by') == 'location':
                         worksheet.write(row_index, 3, "Category", bold)
                     elif vals.get('group_by') == 'category':
