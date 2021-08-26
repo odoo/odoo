@@ -1,15 +1,13 @@
 /** @odoo-module **/
 
 import { Domain } from "@web/core/domain";
-import { symmetricalDifference } from "@web/core/utils/arrays";
+import { cartesian, sections, sortBy, symmetricalDifference } from "@web/core/utils/arrays";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { cartesian, sections } from "@web/core/utils/arrays";
-import { Model } from "../helpers/model";
-import { buildSampleORM } from "@web/views/helpers/sample_server";
 import { computeVariation } from "@web/core/utils/numbers";
 import { DEFAULT_INTERVAL } from "@web/search/utils/dates";
-import { sortBy } from "@web/core/utils/arrays";
-import { computeReportMeasures } from "../helpers/utils";
+import { Model } from "@web/views/helpers/model";
+import { buildSampleORM } from "@web/views/helpers/sample_server";
+import { computeReportMeasures, processMeasure } from "@web/views/helpers/utils";
 
 /**
  * Pivot Model
@@ -684,7 +682,7 @@ export class PivotModel extends Model {
         searchParams = JSON.parse(JSON.stringify(searchParams)); //This to prevent errors in the Dashboard
 
         const activeMeasures =
-            this._processMeasures(searchParams.context.pivot_measures) || this.meta.activeMeasures;
+            processMeasure(searchParams.context.pivot_measures) || this.meta.activeMeasures;
         const meta = this._buildMeta({ activeMeasures });
         if (!this.reload) {
             meta.rowGroupBys =
@@ -1475,30 +1473,6 @@ export class PivotModel extends Model {
 
         if (meta.sortedColumn) {
             this._sortRows(meta.sortedColumn, config);
-        }
-    }
-    /**
-     * In the preview implementation of the pivot view (a.k.a. version 2),
-     * the virtual field used to display the number of records was named
-     * __count__, whereas __count is actually the one used in xml. So
-     * basically, activating a filter specifying __count as measures crashed.
-     * Unfortunately, as __count__ was used in the JS, all filters saved as
-     * favorite at that time were saved with __count__, and not __count.
-     * So in order the make them still work with the new implementation, we
-     * handle both __count__ and __count.
-     *
-     * This function replaces in the given array of measures occurences of
-     * '__count__' by '__count'.
-     *
-     * @private
-     * @param {Array[string] || undefined} measures
-     * @returns {Array[string] || undefined}
-     */
-    _processMeasures(measures) {
-        if (measures) {
-            return measures.map((measure) => {
-                return measure === "__count__" ? "__count" : measure;
-            });
         }
     }
     /**
