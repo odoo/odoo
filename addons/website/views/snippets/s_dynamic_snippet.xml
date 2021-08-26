@@ -26,7 +26,7 @@
             <we-select string="Fetched elements" data-name="number_of_records_opt" data-attribute-name="numberOfRecords" data-no-preview="true">
                 <we-button t-foreach="range(1, 17)" t-as="value" t-att-data-select-data-attribute="value" t-esc="value"/>
             </we-select>
-            <we-title class="mt-2"><t t-esc="grouping_message"/></we-title>
+            <we-title class="mt-2 o_grouping_message"><t t-esc="grouping_message"/></we-title>
             <we-select string="⌙ Desktop" data-name="number_of_elements_opt" data-attribute-name="numberOfElements" data-no-preview="true"><!-- &emsp; -->
                 <we-button data-select-data-attribute="1">1</we-button>
                 <we-button data-select-data-attribute="2">2</we-button>

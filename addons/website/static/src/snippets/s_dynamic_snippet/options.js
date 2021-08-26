@@ -48,8 +48,26 @@ const dynamicSnippetOptions = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUIVisibility() {
+        await this._super(...arguments);
+        const template = this._getCurrentTemplate();
+        const groupingMessage = this.el.querySelector('.o_grouping_message');
+        groupingMessage.classList.toggle('d-none', !!template.numOfEl && !!template.numOfElSm);
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    _getCurrentTemplate: function () {
+        return this.dynamicFilterTemplates[this.$target.get(0).dataset['templateKey']];
+    },
 
     _getTemplateClass: function (templateKey) {
         return templateKey.replace(/.*\.dynamic_filter_template_/, "s_");
@@ -65,6 +83,19 @@ const dynamicSnippetOptions = options.Class.extend({
             // Hide if exaclty one is available: show when none to help understand what is missing
             return Object.keys(this.dynamicFilters).length !== 1;
         }
+
+        if (widgetName === 'number_of_elements_opt') {
+            return !this._getCurrentTemplate().numOfEl;
+        }
+
+        if (widgetName === 'number_of_elements_small_devices_opt') {
+            return !this._getCurrentTemplate().numOfElSm;
+        }
+
+        if (widgetName === 'number_of_records_opt') {
+            return !this._getCurrentTemplate().numOfElFetch;
+        }
+
         return this._super.apply(this, arguments);
     },
     /**
@@ -74,10 +105,10 @@ const dynamicSnippetOptions = options.Class.extend({
      */
     _refreshPublicWidgets: function () {
         return this._super.apply(this, arguments).then(() => {
-            const selectedTemplateId = this.$target.get(0).dataset['templateKey'];
+            const template = this._getCurrentTemplate();
             this.$target.find('.missing_option_warning').toggleClass(
                 'd-none',
-                !!this.dynamicFilterTemplates[selectedTemplateId]
+                !!template
             );
         });
     },
@@ -219,6 +250,17 @@ const dynamicSnippetOptions = options.Class.extend({
             this.$target.removeClass(this._getTemplateClass(oldTemplate));
         }
         this.$target.addClass(this._getTemplateClass(newTemplate));
+
+        const template = this.dynamicFilterTemplates[newTemplate];
+        if (template.numOfEl) {
+            this.$target[0].dataset.numberOfElements = template.numOfEl;
+        }
+        if (template.numOfElSm) {
+            this.$target[0].dataset.numberOfElementsSmallDevices = template.numOfElSm;
+        }
+        if (template.numOfElFetch) {
+            this.$target[0].dataset.numberOfRecords = template.numOfElFetch;
+        }
     },
     /**
      * Sets the option value.

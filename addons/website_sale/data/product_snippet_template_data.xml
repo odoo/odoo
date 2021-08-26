@@ -63,7 +63,7 @@
         </template>
 
         <template id="dynamic_filter_template_product_product_mini_image" name="Image only">
-            <t t-foreach="records" t-as="data">
+            <t t-foreach="records" t-as="data" data-number-of-elements="4" data-number-of-elements-sm="1" data-number-of-elements-fetch="8">
                 <t t-set="record" t-value="data['_record']"/>
                 <div class="card h-100" t-att-data-url="record.website_url">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
