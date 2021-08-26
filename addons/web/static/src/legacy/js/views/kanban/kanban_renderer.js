@@ -491,51 +491,42 @@ var KanbanRenderer = BasicRenderer.extend({
      *
      * @override
      */
-    _setState: function () {
+    _setState() {
         this._super(...arguments);
+        const groupedBy = this.state.groupedBy[0];
+        const groupByFieldName = viewUtils.getGroupByField(groupedBy);
+        const field = this.state.fields[groupByFieldName] || {};
+        const fieldInfo = this.state.fieldsInfo.kanban[groupByFieldName] || {};
 
-        var groupByField = this.state.groupedBy[0];
-        var cleanGroupByField = viewUtils.getGroupByField(groupByField);
-        var groupByFieldAttrs = this.state.fields[cleanGroupByField];
-        var groupByFieldInfo = this.state.fieldsInfo.kanban[cleanGroupByField];
-        // Deactivate the drag'n'drop:
+        const group_by_tooltip = fieldInfo.options && fieldInfo.options.group_by_tooltip;
+        const grouped_by_date = ["date", "datetime"].includes(field.type);
+        const grouped_by_m2m = field.type === "many2many";
+        const grouped_by_m2o = field.type === "many2one";
+        const readonly = !!field.readonly || !!fieldInfo.readonly;
+        const relation = (grouped_by_m2o || grouped_by_m2m) && field.relation;
+        const quick_create = this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(this.state);
+
+        // Deactivate the drag'n'drop either:
         // - if the groupedBy field is readonly (on the field attrs or in the view)
+        // - if the groupedBy field is of type many2many
         // - for date and datetime if :
         //   - allowGroupRangeValue is not true
-        var readonly = false;
-        var draggable = true;
-        var grouped_by_date = false;
-        if (groupByFieldAttrs) {
-            if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
-                draggable = false;
-                grouped_by_date = true;
-            }
-            if (groupByFieldAttrs.readonly !== undefined) {
-                readonly = groupByFieldAttrs.readonly;
-            }
-        }
-        if (groupByFieldInfo) {
-            if (grouped_by_date) {
-                draggable = groupByFieldInfo.allowGroupRangeValue;
-            }
-            if (!readonly && groupByFieldInfo.readonly !== undefined) {
-                readonly = groupByFieldInfo.readonly;
-            }
-        }
-        draggable = !readonly && draggable;
-        this.groupedByM2O = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2one');
-        var relation = this.groupedByM2O && groupByFieldAttrs.relation;
-        var groupByTooltip = groupByFieldInfo && groupByFieldInfo.options.group_by_tooltip;
-        this.columnOptions = _.extend(this.columnOptions, {
-            draggable: draggable,
-            group_by_tooltip: groupByTooltip,
-            groupedBy: groupByField,
-            grouped_by_m2o: this.groupedByM2O,
-            grouped_by_date: grouped_by_date,
-            relation: relation,
-            quick_create: this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(this.state),
+        const draggable = !readonly && !grouped_by_m2m &&
+            (!grouped_by_date || fieldInfo.allowGroupRangeValue);
+
+        Object.assign(this.columnOptions, {
+            draggable,
+            groupedBy,
+            grouped_by_date,
+            grouped_by_m2o,
+            grouped_by_m2m,
+            group_by_tooltip,
+            quick_create,
+            relation,
         });
-        this.createColumnEnabled = this.groupedByM2O && this.columnOptions.group_creatable;
+
+        this.createColumnEnabled = grouped_by_m2o && this.columnOptions.group_creatable;
+        this.groupedByM2O = grouped_by_m2o;
     },
     /**
      * Moves the focus on the first card of the next column in a given direction
