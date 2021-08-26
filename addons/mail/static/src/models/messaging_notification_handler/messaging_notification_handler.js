@@ -750,7 +750,9 @@ function factory(dependencies) {
                     notificationTitle = owl.utils.escape(authorName);
                 }
             }
-            const notificationContent = htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE);
+            const notificationContent = owl.utils.escape(
+                htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE)
+            );
             this.env.services['bus_service'].sendNotification(notificationTitle, notificationContent);
             messaging.update({ outOfFocusUnreadMessageCounter: increment() });
             const titlePattern = messaging.outOfFocusUnreadMessageCounter === 1
