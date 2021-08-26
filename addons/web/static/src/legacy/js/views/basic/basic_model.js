@@ -647,6 +647,7 @@ var BasicModel = AbstractModel.extend({
             groupsOffset: element.groupsOffset,
             id: element.id,
             isDirty: element.isDirty,
+            isM2MGrouped: element.isM2MGrouped,
             isNew: element.isNew,
             isOpen: element.isOpen,
             isSample: this.isSampleModel,
@@ -1205,6 +1206,9 @@ var BasicModel = AbstractModel.extend({
                 }
             });
             prom.then(function () {
+                self._updateDuplicateRecords(record.id, (id) => {
+                    Object.assign(self.localData[id].data, record.data);
+                });
                 record._isDirty = false;
             });
             return prom;
@@ -4098,6 +4102,13 @@ var BasicModel = AbstractModel.extend({
         var res_ids = params.res_ids || [];
         var data = params.data || (type === 'record' ? {} : []);
         var context = params.context;
+        var fields = _.extend({
+            display_name: {type: 'char'},
+            id: {type: 'integer'},
+        }, params.fields);
+
+        const groupedBy = params.groupedBy || [];
+        let isM2MGrouped = false;
         if (type === 'record') {
             res_id = params.res_id || (params.data && params.data.id);
             if (res_id) {
@@ -4112,12 +4123,11 @@ var BasicModel = AbstractModel.extend({
             var isValueArray = params.value instanceof Array;
             res_id = isValueArray ? params.value[0] : undefined;
             value = isValueArray ? params.value[1] : params.value;
+            isM2MGrouped = groupedBy.some((group) => {
+                const [fieldName] = group.split(':');
+                return fields[fieldName].type === "many2many";
+            });
         }
-
-        var fields = _.extend({
-            display_name: {type: 'char'},
-            id: {type: 'integer'},
-        }, params.fields);
 
         var dataPoint = {
             _cache: type === 'list' ? {} : undefined,
@@ -4131,11 +4141,12 @@ var BasicModel = AbstractModel.extend({
             domain: params.domain || [],
             fields: fields,
             fieldsInfo: params.fieldsInfo,
-            groupedBy: params.groupedBy || [],
+            groupedBy,
             groupsCount: 0,
             groupsLimit: type === 'list' && params.groupsLimit || null,
             groupsOffset: 0,
             id: `${params.modelName}_${++this.__id}`,
+            isM2MGrouped,
             isOpen: params.isOpen,
             limit: type === 'record' ? 1 : (params.limit || Number.MAX_SAFE_INTEGER),
             loadMoreOffset: 0,
@@ -4959,6 +4970,10 @@ var BasicModel = AbstractModel.extend({
         }
         if (options.groupBy !== undefined) {
             element.groupedBy = options.groupBy;
+            element.isM2MGrouped = element.groupedBy.some((group) => {
+                const [fieldName] = group.split(':');
+                return element.fields[fieldName].type === "many2many";
+            });
         }
         if (options.limit !== undefined) {
             element.limit = options.limit;
@@ -5272,6 +5287,40 @@ var BasicModel = AbstractModel.extend({
                 x2mList.data.push(dataPoint.id);
                 x2mList._cache[res_id] = dataPoint.id;
             });
+        });
+    },
+    /**
+     * Used to apply a updateFn to other records with same res_id, that are
+     * under the same topmost list groupedby many2many.
+     *
+     * When a list datapoint is grouped by many2many, same res_id record could
+     * be in multiple groups, so use this method to apply the same callback to
+     * each one of them.
+     *
+     * @protected
+     * @param {string} recordID local resource
+     * @param {(recordID: string)=>void} updateFn called for each record datapoint
+     *  representing the same res_id record
+     */
+    _updateDuplicateRecords(recordID, updateFn) {
+        const { model, res_id } = this.localData[recordID];
+        // Get the topmost groupedby m2m list
+        const getTopmostID = () => {
+            let element = this.localData[recordID];
+            while (element.parentID && this.localData[element.parentID].type === "list") {
+                element = this.localData[element.parentID];
+            }
+            return element.type === "list" && element.isM2MGrouped ? element.id : false;
+        };
+        const topmostID = getTopmostID();
+        if (!topmostID) {
+            return;
+        }
+        const topmostList = this.get(topmostID);
+        utils.traverse_records(topmostList, (r) => {
+            if (r.res_id === res_id && r.id !== recordID) {
+                updateFn(r.id);
+            }
         });
     },
     /**

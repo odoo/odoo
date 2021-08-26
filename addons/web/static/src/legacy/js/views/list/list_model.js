@@ -73,12 +73,20 @@
                     context: context,
                 });
             }).then(function (results) {
-                results.forEach(function (data) {
-                    var record = _.findWhere(records, {res_id: data.id});
+                const updateLocalRecord = (id, data) => {
+                    const record = self.localData[id];
                     record.data = _.extend({}, record.data, data);
                     record._changes = {};
                     record._isDirty = false;
                     self._parseServerData(fieldNames, record, record.data);
+                };
+
+                results.forEach(function (data) {
+                    const record = _.findWhere(records, { res_id: data.id });
+                    updateLocalRecord(record.id, data);
+
+                    // Also update same resId records
+                    self._updateDuplicateRecords(record.id, (id) => updateLocalRecord(id, data));
                 });
             }).then(function () {
                 if (!list.groupedBy.length) {
