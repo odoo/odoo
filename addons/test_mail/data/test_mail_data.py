@@ -884,6 +884,42 @@ OyI+T2RvbzwvYT4uCjwvcD4KPC9kaXY+CiAgICAgICAg
 --92726A5F09.1555335666/mail2.test.ironsky--
 """
 
+MAIL_NO_BODY = '''\
+Return-Path: <{email_from}>
+Delivered-To: catchall@xxxx.xxxx
+Received: from in66.mail.ovh.net (unknown [10.101.4.66])
+    by vr38.mail.ovh.net (Postfix) with ESMTP id 4GLCGr70Kyz1myr75
+    for <catchall@xxxx.xxxx>; Thu,  8 Jul 2021 10:30:12 +0000 (UTC)
+X-Comment: SPF check N/A for local connections - client-ip=213.186.33.59; helo=mail663.ha.ovh.net; envelope-from={email_from}; receiver=catchall@xxxx.xxxx 
+Authentication-Results: in66.mail.ovh.net; dkim=none; dkim-atps=neutral
+Delivered-To: xxxx.xxxx-{email_to}
+X-ME-Helo: opme11oxm23aub.bagnolet.francetelecom.fr
+X-ME-Auth: ZnJlZGVyaWMuYmxhY2hvbjA3QG9yYW5nZS5mcg==
+X-ME-Date: Thu, 08 Jul 2021 12:30:11 +0200
+X-ME-IP: 86.221.151.111
+Date: Thu, 8 Jul 2021 12:30:11 +0200 (CEST)
+From: =?UTF-8?Q?Fr=C3=A9d=C3=A9ric_BLACHON?= <{email_from}>
+Reply-To: 
+    =?UTF-8?Q?Fr=C3=A9d=C3=A9ric_BLACHON?= <{email_from}>
+To: {email_to}
+Message-ID: <1024471522.82574.1625740211606.JavaMail.open-xchange@opme11oxm23aub.bagnolet.francetelecom.fr>
+Subject: transport autorisation 19T
+MIME-Version: 1.0
+Content-Type: multipart/mixed; 
+    boundary="----=_Part_82573_178179506.1625740211587"
+
+------=_Part_82573_178179506.1625740211587
+MIME-Version: 1.0
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+ </head><body style="font-family: arial,helvetica,sans-serif; font-size: 13pt"></body></html>
+'''
+
 MAIL_NO_FINAL_RECIPIENT = """\
 Return-Path: <bounce-md_9656353.6125275c.v1-f28f7746389e45f0bfbf9faefe9e0dc8@mandrillapp.com>
 Delivered-To: catchall@xxxx.xxxx
