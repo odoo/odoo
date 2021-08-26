@@ -71,6 +71,8 @@ WITH all_moves_stage_task AS (
       JOIN ir_model_fields imf ON mtv.field = imf.id
                               AND imf.model = 'project.task'
                               AND imf.name = 'stage_id'
+      JOIN project_task_type_rel pttr ON pttr.type_id = mtv.old_value_integer
+                              AND pttr.project_id = pt.project_id
      WHERE pt.active
 
     --We compute the last reached stage
