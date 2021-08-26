@@ -50,6 +50,7 @@
                 <field name="website_sequence" widget="handle"/>
             </field>
             <field name="website_id" position="after">
+                <field name="public_categ_ids" widget="many2many_tags" string="Categories" optional="show"/>
                 <field name="is_published" string="Is Published" optional="hide"/>
             </field>
         </field>
