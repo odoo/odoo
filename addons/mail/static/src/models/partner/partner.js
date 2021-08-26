@@ -5,8 +5,6 @@ import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_
 import { insert, link, unlinkAll } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
-import utils from 'web.utils';
-
 function factory(dependencies) {
 
     class Partner extends dependencies['mail.model'] {
@@ -427,6 +425,14 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeIsOnline() {
+            return ['online', 'away'].includes(this.im_status);
+        }
+
+        /**
+         * @private
          * @returns {string|undefined}
          */
         _computeNameOrDisplayName() {
@@ -466,6 +472,12 @@ function factory(dependencies) {
             required: true,
         }),
         im_status: attr(),
+        /**
+         * States whether this partner is online.
+         */
+        isOnline: attr({
+            compute: '_computeIsOnline',
+        }),
         memberThreads: many2many('mail.thread', {
             inverse: 'members',
         }),

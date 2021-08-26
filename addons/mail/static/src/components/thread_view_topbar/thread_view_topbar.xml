@@ -59,6 +59,16 @@
                             </t>
                         </Popover>
                     </t>
+                    <t t-if="threadViewTopBar.thread and threadViewTopBar.thread.hasMemberListFeature and threadViewTopBar.threadView.hasMemberList and !threadViewTopBar.threadView.isMemberListOpened">
+                        <button class="o_ThreadViewTopbar_showMemberListButton o_ThreadViewTopbar_button" title="Show Member List" t-on-click="threadViewTopBar.onClickShowMemberList">
+                            <i class="fa fa-lg fa-users"/>
+                        </button>
+                    </t>
+                    <t t-if="threadViewTopBar.thread and threadViewTopBar.thread.hasMemberListFeature and threadViewTopBar.threadView.hasMemberList and threadViewTopBar.threadView.isMemberListOpened">
+                        <button class="o_ThreadViewTopbar_hideMemberListButton o_ThreadViewTopbar_button o-active" title="Hide Member List" t-on-click="threadViewTopBar.onClickHideMemberList">
+                            <i class="fa fa-lg fa-users"/>
+                        </button>
+                    </t>
                 </div>
             </t>
         </div>

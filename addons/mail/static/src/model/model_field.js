@@ -358,6 +358,11 @@ export class ModelField {
                             hasChanged = true;
                         }
                         break;
+                    case 'insert-and-unlink':
+                        if (this._setRelationInsertAndUnlink(record, newVal, options)) {
+                            hasChanged = true;
+                        }
+                        break;
                     case 'link':
                         if (this._setRelationLink(record, newVal, options)) {
                             hasChanged = true;
@@ -515,6 +520,23 @@ export class ModelField {
         const OtherModel = record.models[this.to];
         const newValue = record.modelManager._insert(OtherModel, data);
         return this._setRelationReplace(record, newValue, options);
+    }
+
+    /**
+     * Set on this relational field in 'insert-and-unlink' mode. Basically
+     * data provided during set on this relational field contain data to insert
+     * records, which themselves must be unlinked from this field.
+     *
+     * @private
+     * @param {mail.model} record
+     * @param {Object|Object[]} data
+     * @param {Object} [options]
+     * @returns {boolean} whether the value changed for the current field
+     */
+    _setRelationInsertAndUnlink(record, data, options) {
+        const OtherModel = record.models[this.to];
+        const newValue = record.modelManager._insert(OtherModel, data);
+        return this._setRelationUnlink(record, newValue, options);
     }
 
     /**

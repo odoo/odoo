@@ -114,6 +114,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'is_pinned': True,
                     'last_interest_dt': channel_general.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in channel_general._channel_last_message_ids()),
+                    'memberCount': len(self.env.ref('base.group_user').users | user_root),
                     'message_needaction_counter': 0,
                     'message_unread_counter': 5,
                     'name': 'general',
@@ -134,6 +135,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'last_interest_dt': channel_public_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in channel_public_1._channel_last_message_ids()),
                     'message_needaction_counter': 1,
+                    'memberCount': 5,
                     'message_unread_counter': 0,
                     'name': 'public 1',
                     'public': 'public',
@@ -152,6 +154,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'is_pinned': True,
                     'last_interest_dt': channel_public_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in channel_public_2._channel_last_message_ids()),
+                    'memberCount': 5,
                     'message_needaction_counter': 0,
                     'message_unread_counter': 0,
                     'name': 'public 2',
@@ -171,6 +174,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'is_pinned': True,
                     'last_interest_dt': channel_group_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in channel_group_1._channel_last_message_ids()),
+                    'memberCount': 5,
                     'message_needaction_counter': 0,
                     'message_unread_counter': 0,
                     'name': 'group 1',
@@ -190,6 +194,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'is_pinned': True,
                     'last_interest_dt': channel_group_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in channel_group_2._channel_last_message_ids()),
+                    'memberCount': 5,
                     'message_needaction_counter': 0,
                     'message_unread_counter': 0,
                     'name': 'group 2',
@@ -209,6 +214,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'is_pinned': True,
                     'last_interest_dt': channel_private_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in channel_private_1._channel_last_message_ids()),
+                    'memberCount': 5,
                     'message_needaction_counter': 0,
                     'message_unread_counter': 0,
                     'name': 'private 1',
@@ -228,6 +234,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'is_pinned': True,
                     'last_interest_dt': channel_private_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in channel_private_2._channel_last_message_ids()),
+                    'memberCount': 5,
                     'message_needaction_counter': 0,
                     'message_unread_counter': 0,
                     'name': 'private 2',
@@ -247,6 +254,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'is_pinned': True,
                     'last_interest_dt': channel_dm_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': False,
+                    'memberCount': 2,
                     'members': [
                         {
                             'active': True,
@@ -304,6 +312,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'is_pinned': True,
                     'last_interest_dt': channel_dm_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': False,
+                    'memberCount': 2,
                     'members': [
                         {
                             'active': True,
@@ -361,6 +370,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'is_pinned': True,
                     'last_interest_dt': channel_dm_3.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': False,
+                    'memberCount': 2,
                     'members': [
                         {
                             'active': True,
@@ -418,6 +428,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'is_pinned': True,
                     'last_interest_dt': channel_dm_4.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': False,
+                    'memberCount': 2,
                     'members': [
                         {
                             'active': True,
@@ -475,6 +486,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'is_pinned': True,
                     'last_interest_dt': channel_livechat_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in channel_livechat_1._channel_last_message_ids()),
+                    'memberCount': 2,
                     'livechat_visitor': {
                         'country': False,
                         'id': self.users[1].partner_id.id,
@@ -538,6 +550,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'is_pinned': True,
                     'last_interest_dt': channel_livechat_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in channel_livechat_2._channel_last_message_ids()),
+                    'memberCount': 2,
                     'livechat_visitor': {
                         'country': (self.env.ref('base.be').id, 'Belgium'),
                         'id': False,

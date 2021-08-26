@@ -1,0 +1,49 @@
+.o_ChannelMemberList {
+    overflow-y: auto;
+}
+
+.o_ChannelMemberList_avatar {
+    object-fit: cover;
+}
+
+.o_ChannelMemberList_avatarContainer {
+    width: 32px;
+    height: 32px;
+}
+
+.o_ChannelMemberList_member {
+    &:first-child {
+        margin-top: map-get($spacers, 3);
+    }
+
+    &:last-child {
+        margin-bottom: map-get($spacers, 3);
+    }
+}
+
+.o_ChannelMemberList_name {
+    min-width: 0;
+}
+
+.o_ChannelMemberList_partnerImStatusIcon {
+    @include o-position-absolute($bottom: 0, $right: 0);
+
+    &:not(.o-mobile) {
+        font-size: x-small;
+    }
+}
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ChannelMemberList_avatarContainer {
+    cursor: pointer;
+}
+
+.o_ChannelMemberList_name {
+    cursor: pointer;
+}
+
+.o_ChannelMemberList_partnerImStatusIcon {
+    color: theme-color('light'); // same as background of parent
+}
