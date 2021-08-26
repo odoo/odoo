@@ -7119,7 +7119,7 @@ QUnit.module('Views', {
             "the kanban view should not be ungrouped");
 
         kanban.update({domain: []}); // 1st update on kanban view
-        kanban.update({groupBy: false}); // 2n update on kanban view
+        kanban.update({groupBy: []}); // 2n update on kanban view
         prom.resolve(); // simulate slow 1st update of kanban view
 
         await nextTick();

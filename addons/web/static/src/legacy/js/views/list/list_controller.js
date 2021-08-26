@@ -312,12 +312,14 @@ var ListController = BasicController.extend({
      * @override
      * @param {string} id a basicmodel valid resource handle.  It is supposed to
      *   be a record from the list view.
+     * @param {Object} [options] render options
      * @returns {Promise}
      */
-    _confirmSave: function (id) {
-        var state = this.model.get(this.handle);
-        return this._updateRendererState(state, { noRender: true })
-            .then(this._setMode.bind(this, 'readonly', id));
+    _confirmSave(id, options = {}) {
+        const state = this.model.get(this.handle);
+        return this._updateRendererState(state, { noRender: !state.isM2MGrouped, ...options }).then(
+            this._setMode.bind(this, "readonly", id)
+        );
     },
     /**
      * Deletes records matching the current domain. We limit the number of
@@ -423,6 +425,7 @@ var ListController = BasicController.extend({
      * @private
      */
     _getActionMenuItems: function (state) {
+        const { isM2MGrouped } = state;
         if (!this.hasActionMenus || !this.selectedRecords.length) {
             return null;
         }
@@ -434,7 +437,7 @@ var ListController = BasicController.extend({
                 callback: () => this._onExportData()
             });
         }
-        if (this.archiveEnabled) {
+        if (this.archiveEnabled && !isM2MGrouped) {
             otherActionItems.push({
                 description: _t("Archive"),
                 callback: () => {
@@ -450,7 +453,7 @@ var ListController = BasicController.extend({
                 callback: () => this._toggleArchiveState(false)
             });
         }
-        if (this.activeActions.delete) {
+        if (this.activeActions.delete && !isM2MGrouped) {
             otherActionItems.push({
                 description: _t("Delete"),
                 callback: () => this._onDeleteSelectedRecords()
@@ -492,13 +495,10 @@ var ListController = BasicController.extend({
                 this.model.saveRecords(this.handle, recordId, validRecordIds, Object.keys(changes))
                     .then(async () => {
                         this.updateButtons('readonly');
-                        const state = this.model.get(this.handle);
-                        // We need to check the current multi-editable state here
-                        // in case the selection is changed. If there are changes
-                        // and the list was multi-editable, we do not want to select
-                        // the next row.
+                        // If there are changes and the list was multi-editable,
+                        // we do not want to select the next row.
                         this.selectedRecords = [];
-                        await this._updateRendererState(state, {
+                        await this._confirmSave(this.handle, {
                             keepWidths: true,
                             selectedRecords: [],
                         });
@@ -909,6 +909,19 @@ var ListController = BasicController.extend({
         } finally {
             this._enableButtons();
         }
+    },
+    /**
+     * Overridden to always reload the main record when grouped by M2M.
+     *
+     * @override
+     */
+    _onReload(ev) {
+        const { isM2MGrouped } = this.model.get(this.handle);
+        if (isM2MGrouped) {
+            // Ask for the main record to be reloaded.
+            ev.data.db_id = this.handle;
+        }
+        this._super(...arguments);
     },
     /**
      * Called when the renderer displays an editable row and the user tries to
