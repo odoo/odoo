@@ -11,4 +11,3 @@ class MarketplaceProduct(models.Model):
     is_locked = fields.Boolean(string="is archived")
     marketplace_id = fields.Integer(string="Marketplace id")
     uom = fields.Char(string="Unit of measure")
-

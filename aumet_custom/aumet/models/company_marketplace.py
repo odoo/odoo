@@ -16,10 +16,9 @@ class MarketplaceUser(models.Model):
     marketplace_token = fields.Char(string="Token")
     marketplace_pharmacy_id = fields.Char(string="Marketplace Pharmacy ID")
 
-
     def write(self, vals):
 
-        if "marketplace_email"  in vals  and "marketplace_password" in vals:
+        if "marketplace_email" in vals and "marketplace_password" in vals:
             if "marketplace_password" not in vals:
                 raise ValidationError("Password can't be empty")
 

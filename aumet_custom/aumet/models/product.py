@@ -9,6 +9,7 @@ class ProductTemplate(models.Model):
     scientific_name = fields.Many2one('aumet.scientific_name', string='Scientific Name', required=False)
     marketplace_product = fields.Many2one('aumet.marketplace_product', string='Marketplace Product', required=False)
     is_marketplace_item = fields.Boolean(string="Is from marketplace")
+    payment_method = fields.Many2one("aumet.payment_method", string="payment method")
 
     price_unit = fields.Float(
         'Unit Price', compute='_compute_standard_price', store=False)
@@ -26,7 +27,3 @@ class ProductTemplate(models.Model):
     @api.depends('marketplace_reference')
     def compute_referenced(self):
         self.marketplace_referenced = True if self.marketplace_product else False
-
-    def onchange(self, values, field_name, field_onchange):
-        data = super(ProductTemplate, self).onchange(values, field_name, field_onchange)
-        return data

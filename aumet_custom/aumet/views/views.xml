@@ -8,8 +8,6 @@
 
             <xpath expr="//field[@name='price_unit']" position="after">
                 <field name="bonus"/>
-                <field name="payment_method" widget="many2one"/>
-
             </xpath>
         </field>
     </record>
@@ -36,23 +34,21 @@
     </record>
 
 
-<!--    <record id="res_partner_form_extend" model="ir.ui.view">-->
-<!--        <field name="name">res.partner.aumet</field>-->
-<!--        <field name="model">res.partner</field>-->
-<!--        <field name="priority">20</field>-->
-<!--        <field name="inherit_id" ref="base.view_partner_form"/>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <xpath expr="//field[@name='email']" position="after">-->
-<!--                <label for="marketplace_id" colspan="2"/>-->
-<!--                <field name="marketplace_id" string="Distributor in marketplace"/>-->
+    <record id="res_partner_form_extend" model="ir.ui.view">
+        <field name="name">res.partner.aumet</field>
+        <field name="model">res.partner</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
 
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="marketplace_id" string="Distributor in marketplace"/>
 
-<!--                <label for="is_in_marketplace"/>-->
-<!--                <field name="is_in_marketplace" string="is linked to marketplace"/>-->
+                <field name="is_in_marketplace" string="is linked to marketplace"/>
 
-<!--            </xpath>-->
-<!--        </field>-->
-<!--    </record>-->
+            </xpath>
+        </field>
+    </record>
 
     <record id="aumet_marketplace_search_view" model="ir.ui.view">
         <field name="name">aumet.marketplace_product.search</field>
@@ -85,7 +81,7 @@
 
 
     <record id="product_template_form_view" model="ir.ui.view">
-        <field name="name">product.template.form.inherit</field>
+        <field name="name">aumet.product.template.form.inherit</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
@@ -95,43 +91,15 @@
             <xpath expr="//page[@name='general_information']" position="inside">
                 <group name="Aumet">
                     <group>
-                        <field name="scientific_name" string="Scientific Name"/>
                         <field name="marketplace_product" string="Product in marketplace"/>
                         <field name="is_marketplace_item"/>
+                        <field name="payment_method"/>
                     </group>
                 </group>
             </xpath>
         </field>
     </record>
-    <record id="menu_product_scientific_name" model="ir.actions.act_window">
-        <field name="name">Scientific Names</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">aumet.scientific_name</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="context">{"search_default_consumable": 1, 'default_type': 'product'}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No product found. Let's create one!
-            </p>
-            <p>
-                Track your stock quantities by creating storable products.
-            </p>
-        </field>
-    </record>
 
-
-    <record id="view_warehouse_orderpoint_tree_aumet" model="ir.ui.view">
-        <field name="inherit_id" ref="stock.view_warehouse_orderpoint_tree_editable_config"/>
-
-        <field name="name">stock.warehouse.orderpoint.tree.aumet</field>
-        <field name="model">stock.warehouse.orderpoint</field>
-        <field name="arch" type="xml">
-            <xpath expr="//tree/field[@name='product_max_qty']" position="after">
-                <field name="payment_method" />
-            </xpath>
-
-        </field>
-    </record>
 
     <record id="purchase_order_form_aumet" model="ir.ui.view">
         <field name="name">purchase.order.inherited.aumet</field>
@@ -143,13 +111,10 @@
             </xpath>
 
             <xpath expr="//field[@name='state']" position="replace">
-                <field name="state" widget="statusbar" statusbar_visible="draft,in marketplace,sent,purchase" readonly="1"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,in marketplace,sent,purchase"
+                       readonly="1"/>
             </xpath>
         </field>
     </record>
-
-
-    <menuitem id="menu_product_scientific_name" name="Scientific Names" action="menu_product_scientific_name"
-              parent="stock.menu_stock_inventory_control" sequence="5"/>
 
 </odoo>
