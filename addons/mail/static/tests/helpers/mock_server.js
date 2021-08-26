@@ -200,6 +200,10 @@ MockServer.include({
             const name = args.args[1] || args.kwargs.name;
             return this._mockMailChannelChannelSetCustomName(ids, name);
         }
+        if (args.model === 'mail.channel' && args.method === 'create_group') {
+            const partners_to = args.args[0] || args.kwargs.partners_to;
+            return this._mockMailChannelCreateGroup(partners_to);
+        }
         if (args.model === 'mail.channel' && args.method === 'execute_command_leave') {
             return this._mockMailChannelExecuteCommandLeave(args);
         }
@@ -269,6 +273,12 @@ MockServer.include({
             const name = args.args[0] || args.kwargs.search;
             const limit = args.args[1] || args.kwargs.limit;
             return this._mockResPartnerImSearch(name, limit);
+        }
+        if (args.model === 'res.partner' && args.method === 'search_for_channel_invite') {
+            const search_term = args.args[0] || args.kwargs.search_term;
+            const channel_id = args.args[1] || args.kwargs.channel_id;
+            const limit = args.args[2] || args.kwargs.limit;
+            return this._mockResPartnerSearchForChannelInvite(search_term, channel_id, limit);
         }
         // mail.thread methods (can work on any model)
         if (args.method === 'message_subscribe') {
@@ -874,6 +884,26 @@ MockServer.include({
             { custom_channel_name: name },
         ]);
         this._mockMailChannel_broadcast([channel.id], [this.currentPartnerId]);
+    },
+    /**
+     * Simulates the `/mail/create_group` route.
+     *
+     * @private
+     * @param {integer[]} partners_to
+     * @returns {Object}
+     */
+    async _mockMailChannelCreateGroup(partners_to) {
+        const partners = this._getRecords('res.partner', [['id', 'in', partners_to]]);
+        const id = this._mockCreate('mail.channel', {
+            channel_type: 'group',
+            is_pinned: true,
+            members: [[6, 0, partners.map(partner => partner.id)]],
+            name: '',
+            public: 'private',
+            state: 'open',
+        });
+        this._mockMailChannel_broadcast(id, partners.map(partner => partner.id));
+        return this._mockMailChannelChannelInfo([id])[0];
     },
     /**
      * Simulates `execute_command_leave` on `mail.channel`.
@@ -1840,6 +1870,48 @@ MockServer.include({
                 "name": partner.name,
             }
         ]));
+    },
+    /**
+     * Simulates `search_for_channel_invite` on `res.partner`.
+     *
+     * @private
+     * @param {string} [search_term='']
+     * @param {integer} [channel_id]
+     * @param {integer} [limit=30]
+     * @returns {Object[]}
+     */
+    _mockResPartnerSearchForChannelInvite(search_term, channel_id, limit = 30) {
+        search_term = search_term.toLowerCase(); // simulates ILIKE
+        // simulates domain with relational parts (not supported by mock server)
+        const matchingPartners = [...this._mockResPartnerMailPartnerFormat(
+            this._getRecords('res.users', [])
+            .filter(user => {
+                const partner = this._getRecords('res.partner', [['id', '=', user.partner_id]])[0];
+                // user must have a partner
+                if (!partner) {
+                    return false;
+                }
+                // not current partner
+                if (partner.id === this.currentPartnerId) {
+                    return false;
+                }
+                // no name is considered as return all
+                if (!search_term) {
+                    return true;
+                }
+                if (partner.name && partner.name.toLowerCase().includes(search_term)) {
+                    return true;
+                }
+                return false;
+            })
+            .map(user => user.partner_id)
+        ).values()];
+        const count = matchingPartners.length;
+        matchingPartners.length = Math.min(count, limit);
+        return {
+            count,
+            partners: matchingPartners
+        };
     },
     /**
      * Simulates `_message_fetch_failed` on `res.partner`.

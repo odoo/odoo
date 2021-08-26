@@ -1210,6 +1210,9 @@ function factory(dependencies) {
             if (this.channel_type === 'chat' && this.correspondent) {
                 return this.custom_channel_name || this.correspondent.nameOrDisplayName;
             }
+            if (this.channel_type === 'group') {
+                return this.name || this.members.map(partner => partner.nameOrDisplayName).join(', ');
+            }
             return this.name;
         }
 
@@ -1226,10 +1229,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasInviteFeature() {
-            if (this.model !== 'mail.channel') {
-                return false;
-            }
-            return this.channel_type === 'channel';
+            return this.model === 'mail.channel';
         }
 
         /**
@@ -1248,7 +1248,7 @@ function factory(dependencies) {
         * @returns {boolean}
         */
         _computeIsChannelDescriptionChangeable() {
-            return this.model === 'mail.channel' && this.channel_type === 'channel';
+            return this.model === 'mail.channel' && ['channel', 'group'].includes(this.channel_type);
         }
 
         /**
@@ -1258,7 +1258,7 @@ function factory(dependencies) {
         _computeIsChannelRenamable() {
             return (
                 this.model === 'mail.channel' &&
-                ['chat', 'channel'].includes(this.channel_type)
+                ['chat', 'channel', 'group'].includes(this.channel_type)
             );
         }
 
@@ -1267,7 +1267,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasMemberListFeature() {
-            return this.model === 'mail.channel' && ['channel'].includes(this.channel_type);
+            return this.model === 'mail.channel' && ['channel', 'group'].includes(this.channel_type);
         }
 
         /**

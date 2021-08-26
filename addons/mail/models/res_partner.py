@@ -135,9 +135,9 @@ class Partner(models.Model):
         """Returns the channels of the partner."""
         self.ensure_one()
         channels = self.env['mail.channel']
-        # get the channels
+        # get the channels and groups
         channels |= self.env['mail.channel'].search([
-            ('channel_type', '=', 'channel'),
+            ('channel_type', 'in', ('channel', 'group')),
             ('channel_partner_ids', 'in', [self.id]),
         ])
         # get the pinned direct messages

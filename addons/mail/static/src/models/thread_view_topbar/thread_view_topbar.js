@@ -294,6 +294,9 @@ function factory(dependencies) {
             if (newName && this.thread.channel_type === 'channel' && newName !== this.thread.name) {
                 this.thread.rename(newName);
             }
+            if (this.thread.channel_type === 'group' && newName !== this.thread.name) {
+                this.thread.rename(newName);
+            }
         }
 
         /**
@@ -305,7 +308,7 @@ function factory(dependencies) {
                 isEditingThreadDescription: false,
                 pendingThreadDescription: clear(),
             });
-            if (this.thread.channel_type === 'channel' && newDescription !== this.thread.description) {
+            if (newDescription !== this.thread.description) {
                 this.thread.changeDescription(newDescription);
             }
         }

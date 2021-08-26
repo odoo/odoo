@@ -241,7 +241,7 @@ function factory(dependencies) {
                     newItemPlaceholderText: this.env._t("Find or start a conversation..."),
                     serverStateKey: 'is_discuss_sidebar_category_chat_open',
                     sortComputeMethod: 'last_action',
-                    supportedChannelTypes: ['chat'],
+                    supportedChannelTypes: ['chat', 'group'],
                 }),
             });
         }
