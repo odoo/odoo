@@ -694,7 +694,7 @@ class configmanager(object):
                 # try to make +rx placeholder dir, will need manual +w to activate it
                 os.makedirs(d, 0o500)
             except OSError:
-                logging.getLogger(__name__).debug('Failed to create addons data dir %s', d)
+                logging.getLogger(__name__).error('Failed to create addons data dir %s', d)
         return d
 
     @property
