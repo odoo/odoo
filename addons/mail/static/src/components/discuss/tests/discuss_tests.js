@@ -23,14 +23,16 @@ QUnit.module('discuss_tests.js', {
         beforeEach(this);
 
         this.start = async params => {
-            const { afterEvent, env, widget } = await start(Object.assign({}, params, {
+            const res = await start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
                 data: this.data,
                 hasDiscuss: true,
             }));
+            const { afterEvent, env, widget } = res;
             this.afterEvent = afterEvent;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -48,6 +50,34 @@ QUnit.test('messaging not created', async function (assert) {
     });
     assert.containsOnce(document.body, '.o_Discuss_messagingNotInitialized', "should display messaging not initialized");
     messagingBeforeCreationDeferred.resolve();
+});
+
+QUnit.test('discuss should be marked as opened if the component is already rendered and messaging becomes created afterwards', async function (assert) {
+    assert.expect(1);
+
+    const messagingBeforeCreationDeferred = makeTestPromise();
+    await this.start({
+        messagingBeforeCreationDeferred,
+        waitUntilMessagingCondition: 'none',
+    });
+
+    await afterNextRender(() => messagingBeforeCreationDeferred.resolve());
+    assert.ok(
+        this.messaging.discuss.isOpen,
+        "discuss should be marked as opened if the component is already rendered and messaging becomes created afterwards"
+    );
+});
+
+QUnit.test('discuss should be marked as closed when the component is unmounted', async function (assert) {
+    assert.expect(1);
+
+    const { widget } = await this.start();
+
+    await afterNextRender(() => widget.destroy());
+    assert.notOk(
+        this.messaging.discuss.isOpen,
+        "discuss should be marked as closed when the component is unmounted"
+    );
 });
 
 QUnit.test('messaging not initialized', async function (assert) {
