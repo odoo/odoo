@@ -5,11 +5,11 @@
         <field name="name">project.collaborator.view.form</field>
         <field name="model">project.collaborator</field>
         <field name="arch" type="xml">
-            <form string="Project Collaborator">
+            <form string="Project Collaborator" create="0" edit="0">
                 <sheet>
                     <group>
-                        <field name="partner_id" options="{'no_create': True}" />
                         <field name="project_id" options="{'no_create': True}" />
+                        <field name="partner_id" options="{'no_create': True}" />
                     </group>
                 </sheet>
             </form>
@@ -20,9 +20,9 @@
         <field name="name">project.collaborator.view.tree</field>
         <field name="model">project.collaborator</field>
         <field name="arch" type="xml">
-            <tree string="Project Collaborators" edit="1" editable="bottom">
-                <field name="partner_id" options="{'no_create': True}"/>
+            <tree string="Project Collaborators" create="0">
                 <field name="project_id" options="{'no_create': True}"/>
+                <field name="partner_id" options="{'no_create': True}"/>
             </tree>
         </field>
     </record>
