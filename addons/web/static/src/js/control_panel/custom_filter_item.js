@@ -118,9 +118,9 @@ odoo.define('web.CustomFilterItem', function (require) {
                     }
                     break;
                 case 'datetime':
-                    condition.value = [moment('00:00:00', 'hh:mm:ss')];
+                    condition.value = [moment('00:00:00', 'hh:mm:ss').utcOffset(0, true)];
                     if (operator.symbol === 'between') {
-                        condition.value.push(moment('23:59:59', 'hh:mm:ss'));
+                        condition.value.push(moment('23:59:59', 'hh:mm:ss').utcOffset(0, true));
                     }
                     break;
                 case 'selection':
