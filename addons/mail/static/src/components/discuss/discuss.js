@@ -2,6 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { link, unlink } from '@mail/model/model_field_command';
+import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -24,27 +25,18 @@ export class Discuss extends Component {
         // bind since passed as props
         this._onMobileAddItemHeaderInputSelect = this._onMobileAddItemHeaderInputSelect.bind(this);
         this._onMobileAddItemHeaderInputSource = this._onMobileAddItemHeaderInputSource.bind(this);
+        useUpdate({ func: () => this._update() });
     }
 
-    mounted() {
+    _update() {
         if (!this.discuss) {
             return;
         }
         this.discuss.update({ isOpen: true });
         if (this.discuss.thread) {
             this.trigger('o-push-state-action-manager');
-        } else if (this.discuss.messaging.isInitialized) {
+        } else if (!this._activeThreadCache && this.discuss.messaging.isInitialized) {
             this.discuss.openInitThread();
-        }
-        this._updateLocalStoreProps();
-    }
-
-    patched() {
-        if (!this.discuss) {
-            return;
-        }
-        if (this.discuss.thread) {
-            this.trigger('o-push-state-action-manager');
         }
         if (
             this.discuss.thread &&
