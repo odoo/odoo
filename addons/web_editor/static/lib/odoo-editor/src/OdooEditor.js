@@ -1677,7 +1677,7 @@ export class OdooEditor extends EventTarget {
                     setCursor(range.endContainer, range.endOffset);
                 }
                 // Check for url after user insert a space so we won't transform an incomplete url.
-                if (ev.data.includes(' ') && selection && selection.anchorNode) {
+                if (ev.data && ev.data.includes(' ') && selection && selection.anchorNode) {
                     ev.preventDefault();
                     this._convertUrlInElement(closestElement(selection.anchorNode));
                     this.execCommand('insertText', ev.data);
