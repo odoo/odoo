@@ -17,7 +17,37 @@ class ProjectCollaborator(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        collaborator = self.env['project.collaborator'].search([], limit=1)
         project_collaborators = super().create(vals_list)
         non_authenticated_collaborator = project_collaborators.partner_id.filtered(lambda partner: not partner.user_ids)
         non_authenticated_collaborator._create_portal_users()
+        if not collaborator:
+            self._toggle_project_sharing_portal_rules(True)
         return project_collaborators
+
+    def unlink(self):
+        res = super().unlink()
+        # Check if it remains at least a collaborator in all shared projects.
+        collaborator = self.env['project.collaborator'].search([], limit=1)
+        if not collaborator:  # then disable the project sharing feature
+            self._toggle_project_sharing_portal_rules(False)
+        return res
+
+    @api.model
+    def _toggle_project_sharing_portal_rules(self, active):
+        """ Enable/disable project sharing feature
+
+            When the first collaborator is added in the model then we need to enable the feature.
+            In the inverse case, if no collaborator is stored in the model then we disable the feature.
+            To enable/disable the feature, we just need to enable/disable the ir.model.access and ir.rule
+            added to portal user that we do not want to give when we know the project sharing is unused.
+
+            :param active: contains boolean value, True to enable the project sharing feature, otherwise we disable the feature.
+        """
+        access_project_sharing_portal = self.env.ref('project.access_project_sharing_task_portal').sudo()
+        if access_project_sharing_portal.active != active:
+            access_project_sharing_portal.write({'active': active})
+
+        task_portal_ir_rule = self.env.ref('project.project_task_rule_portal_project_sharing').sudo()
+        if task_portal_ir_rule.active != active:
+            task_portal_ir_rule.write({'active': active})

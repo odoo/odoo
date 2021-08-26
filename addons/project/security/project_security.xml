@@ -149,6 +149,7 @@
     <record id="project_task_rule_portal_project_sharing" model="ir.rule">
         <field name="name">Project/Task: portal users: portal user can edit with project sharing feature</field>
         <field name="model_id" ref="project.model_project_task"/>
+        <field name="active">0</field>
         <field name="domain_force">[
             ('project_id.privacy_visibility', '=', 'portal'),
             ('active', '=', True),

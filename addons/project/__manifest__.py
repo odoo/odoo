@@ -23,6 +23,7 @@
     'data': [
         'security/project_security.xml',
         'security/ir.model.access.csv',
+        'security/ir.model.access.xml',
         'data/digest_data.xml',
         'report/project_report_views.xml',
         'report/project_task_burndown_chart_report_views.xml',
@@ -55,6 +56,7 @@
     'installable': True,
     'auto_install': False,
     'application': True,
+    'post_init_hook': '_project_post_init',
     'assets': {
         'web.assets_backend': [
             'project/static/src/css/project.css',
