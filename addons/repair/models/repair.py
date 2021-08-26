@@ -20,7 +20,7 @@ class Repair(models.Model):
     _name = 'repair.order'
     _description = 'Repair Order'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _order = 'create_date desc'
+    _order = 'priority desc, create_date desc'
 
     name = fields.Char(
         'Repair Reference',
@@ -65,6 +65,7 @@ class Repair(models.Model):
              "* The \'To be Invoiced\' status is used to generate the invoice before or after repairing done.\n"
              "* The \'Done\' status is set when repairing is completed.\n"
              "* The \'Cancelled\' status is used when user cancel repair order.")
+    schedule_date = fields.Date("Scheduled Date")
     location_id = fields.Many2one(
         'stock.location', 'Location',
         index=True, readonly=True, required=True, check_company=True,
@@ -118,6 +119,7 @@ class Repair(models.Model):
     amount_total = fields.Float('Total', compute='_amount_total', store=True)
     tracking = fields.Selection(string='Product Tracking', related="product_id.tracking", readonly=False)
     invoice_state = fields.Selection(string='Invoice State', related='invoice_id.state')
+    priority = fields.Selection([('0', 'Normal'), ('1', 'Urgent')], default='0', string="Priority", help="Important repair order")
 
     @api.depends('partner_id')
     def _compute_default_address_id(self):
