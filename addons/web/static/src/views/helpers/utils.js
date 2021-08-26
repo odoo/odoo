@@ -8,11 +8,25 @@ import { _t } from "@web/core/l10n/translation";
  * @param {string} str
  * @returns {boolean}
  */
-export function archParseBoolean(str) {
+export const archParseBoolean = (str) => {
     return str !== "False" && str !== "false" && str !== "0" && str !== "";
-}
+};
 
-export function computeReportMeasures(fields, fieldAttrs, activeMeasures, additionalMeasures = []) {
+/**
+ * TODO: doc
+ *
+ * @param {Object} fields
+ * @param {Object} fieldAttrs
+ * @param {string[]} activeMeasures
+ * @param {string[]} [additionalMeasures=[]]
+ * @returns {Object}
+ */
+export const computeReportMeasures = (
+    fields,
+    fieldAttrs,
+    activeMeasures,
+    additionalMeasures = []
+) => {
     const measures = {
         __count: { name: "__count", string: _t("Count"), type: "integer" },
     };
@@ -59,4 +73,26 @@ export function computeReportMeasures(fields, fieldAttrs, activeMeasures, additi
     });
 
     return Object.fromEntries(sortedMeasures);
-}
+};
+
+/**
+ * In the preview implementation of reporting views, the virtual field used to
+ * display the number of records was named __count__, whereas __count is
+ * actually the one used in xml. So basically, activating a filter specifying
+ * __count as measures crashed. Unfortunately, as __count__ was used in the JS,
+ * all filters saved as favorite at that time were saved with __count__, and
+ * not __count. So in order the make them still work with the new
+ * implementation, we handle both __count__ and __count.
+ *
+ * This function replaces occurences of '__count__' by '__count' in the given
+ * element(s).
+ *
+ * @param {any | any[]} [measures]
+ * @returns {any}
+ */
+export const processMeasure = (measure) => {
+    if (Array.isArray(measure)) {
+        return measure.map(processMeasure);
+    }
+    return measure === "__count__" ? "__count" : measure;
+};
