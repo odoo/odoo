@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import { buildSampleORM } from "../helpers/sample_server";
-import { computeReportMeasures } from "../helpers/utils";
+import { sortBy } from "@web/core/utils/arrays";
+import { KeepLast } from "@web/core/utils/concurrency";
+import { rankInterval } from "@web/search/utils/dates";
 import { getGroupBy } from "@web/search/utils/group_by";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
-import { KeepLast } from "@web/core/utils/concurrency";
-import { Model } from "../helpers/model";
-import { rankInterval } from "@web/search/utils/dates";
-import { sortBy } from "@web/core/utils/arrays";
+import { Model } from "@web/views/helpers/model";
+import { buildSampleORM } from "@web/views/helpers/sample_server";
+import { computeReportMeasures, processMeasure } from "@web/views/helpers/utils";
 
 export const SEP = " / ";
 
@@ -518,9 +518,7 @@ export class GraphModel extends Model {
         }
         metaData.groupBy = processedGroupBy;
 
-        if (metaData.measure === "__count__") {
-            metaData.measure = "__count";
-        }
+        metaData.measure = processMeasure(metaData.measure);
     }
 
     /**
