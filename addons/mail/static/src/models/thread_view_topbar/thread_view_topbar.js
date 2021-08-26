@@ -13,8 +13,10 @@ function factory(dependencies) {
          */
         _created() {
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
+            this.onClickHideMemberList = this.onClickHideMemberList.bind(this);
             this.onClickInboxMarkAllAsRead = this.onClickInboxMarkAllAsRead.bind(this);
             this.onClickInviteButton = this.onClickInviteButton.bind(this);
+            this.onClickShowMemberList = this.onClickShowMemberList.bind(this);
             this.onClickTopbarThreadName = this.onClickTopbarThreadName.bind(this);
             this.onClickUnstarAll = this.onClickUnstarAll.bind(this);
             this.onInputThreadNameInput = this.onInputThreadNameInput.bind(this);
@@ -43,6 +45,16 @@ function factory(dependencies) {
         // Public
         //----------------------------------------------------------------------
 
+       /**
+         * Handles click on the "hide member list" button.
+         *
+         * @param {Event} ev
+         */
+        onClickHideMemberList(ev) {
+            this.threadView.update({ isMemberListOpened: false });
+            this.threadView.addComponentHint('member-list-hidden');
+        }
+
         /**
          * Handles click on the "mark all as read" button of Inbox.
          *
@@ -63,6 +75,15 @@ function factory(dependencies) {
             }
             this.threadView.channelInvitationForm.update({ doFocusOnSearchInput: true });
             this.threadView.channelInvitationForm.searchPartnersToInvite();
+        }
+
+        /**
+         * Handles click on the "show member list" button.
+         *
+         * @param {Event} ev
+         */
+        onClickShowMemberList(ev) {
+            this.threadView.update({ isMemberListOpened: true });
         }
 
         /**
@@ -279,7 +300,7 @@ function factory(dependencies) {
          * @private
          */
         _applyThreadChangeDescription() {
-            const newDescription = this.pendingThreadDescription || "";
+            const newDescription = this.pendingThreadDescription || "";
             this.update({
                 isEditingThreadDescription: false,
                 pendingThreadDescription: clear(),
