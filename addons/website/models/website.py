@@ -110,7 +110,7 @@ class Website(models.Model):
     auth_signup_uninvited = fields.Selection([
         ('b2b', 'On invitation'),
         ('b2c', 'Free sign up'),
-    ], string='Customer Account', default='b2b')
+    ], string='Customer Account', default='b2c')
 
     @api.onchange('language_ids')
     def _onchange_language_ids(self):
