@@ -60,6 +60,10 @@ class TestEmailParsing(TestMailCommon):
         # message without Final-Recipient
         self.env['mail.thread'].message_parse(self.from_string(test_mail_data.MAIL_NO_FINAL_RECIPIENT))
 
+        # message with empty body (including only void characters)
+        res = self.env['mail.thread'].message_parse(self.from_string(test_mail_data.MAIL_NO_BODY))
+        self.assertEqual(res['body'], '\n \n', 'Gateway should not crash with void content')
+
     def test_message_parse_eml(self):
         # Test that the parsing of mail with embedded emails as eml(msg) which generates empty attachments, can be processed.
         mail = self.format(test_mail_data.MAIL_EML_ATTACHMENT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
