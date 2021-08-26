@@ -38,8 +38,8 @@ class SaleOrderLine(models.Model):
             sale_line.qty_delivered += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in sale_line.pos_order_line_ids if sale_line.product_id.type != 'service'], 0)
 
     @api.depends('pos_order_line_ids.qty')
-    def _get_invoice_qty(self):
-        super()._get_invoice_qty()
+    def _compute_qty_invoiced(self):
+        super()._compute_qty_invoiced()
         for sale_line in self:
             sale_line.qty_invoiced += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in sale_line.pos_order_line_ids], 0)
 
