@@ -167,7 +167,7 @@ odoo.define('/web/static/src/js/libs/fullcalendar.js', function () {
                     showNonCurrentDates: false,
                     views: {
                         dayGridMonth: {
-                            columnHeaderText: (date) => moment(date).format("ddd")[0],
+                            columnHeaderText: (date) => moment(date).format("ddd").slice(0,3),
                         },
                     },
                     selectMinDistance: 5, // needed to not trigger select when click
