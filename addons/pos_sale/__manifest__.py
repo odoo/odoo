@@ -31,6 +31,7 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
             'pos_sale/static/src/css/pos_sale.css',
             'pos_sale/static/src/js/models.js',
             'pos_sale/static/src/js/SetSaleOrderButton.js',
+            'pos_sale/static/src/js/OrderManagementScreen/MobileSaleOrderManagementScreen.js',
             'pos_sale/static/src/js/OrderManagementScreen/SaleOrderFetcher.js',
             'pos_sale/static/src/js/OrderManagementScreen/SaleOrderList.js',
             'pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementControlPanel.js',
