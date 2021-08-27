@@ -112,8 +112,7 @@ class Collector:
         # todo add entry count limit
         self._entries.append({
             'stack': self._get_stack_trace(frame),
-            # make a copy of the current context, because it will change
-            'exec_context': dict(getattr(self.profiler.init_thread, 'exec_context', ())),
+            'exec_context': getattr(self.profiler.init_thread, 'exec_context', ()),
             'start': time.time(),
             **(entry or {}),
         })
@@ -281,17 +280,15 @@ class ExecutionContext:
     """
     def __init__(self, **context):
         self.context = context
-        self.stack_trace_level = None
+        self.previous_context = None
 
     def __enter__(self):
         current_thread = threading.current_thread()
-        self.stack_trace_level = stack_size()
-        if not hasattr(current_thread, 'exec_context'):
-            current_thread.exec_context = {}
-        current_thread.exec_context[self.stack_trace_level] = self.context
+        self.previous_context = getattr(current_thread, 'exec_context', ())
+        current_thread.exec_context = self.previous_context + ((stack_size(), self.context),)
 
     def __exit__(self, *_args):
-        threading.current_thread().exec_context.pop(self.stack_trace_level)
+        threading.current_thread().exec_context = self.previous_context
 
 
 class Profiler:

@@ -34,48 +34,48 @@ class TestProfileAccess(TransactionCase):
 class TestSpeedscope(BaseCase):
     def example_profile(self):
         return {
-            'init_stack_trace': [['/path/tp/file_1.py', 135, '__main__', 'main()']],
+            'init_stack_trace': [['/path/to/file_1.py', 135, '__main__', 'main()']],
             'result': [{  # init frame
                 'start': 2.0,
-                'context': {},
+                'exec_context': (),
                 'stack': [
-                    ['/path/tp/file_1.py', 10, 'main', 'do_stuff1(test=do_tests)'],
+                    ['/path/to/file_1.py', 10, 'main', 'do_stuff1(test=do_tests)'],
                     ['/path/to/file_1.py', 101, 'do_stuff1', 'cr.execute(query, params)'],
                 ],
             }, {
                 'start': 3.0,
-                'context': {},
+                'exec_context': (),
                 'stack': [
-                    ['/path/tp/file_1.py', 10, 'main', 'do_stuff1(test=do_tests)'],
+                    ['/path/to/file_1.py', 10, 'main', 'do_stuff1(test=do_tests)'],
                     ['/path/to/file_1.py', 101, 'do_stuff1', 'cr.execute(query, params)'],
                     ['/path/to/sql_db.py', 650, 'execute', 'res = self._obj.execute(query, params)'],
                 ],
             }, {  # duplicate frame
                 'start': 4.0,
-                'context': {},
+                'exec_context': (),
                 'stack': [
-                    ['/path/tp/file_1.py', 10, 'main', 'do_stuff1(test=do_tests)'],
+                    ['/path/to/file_1.py', 10, 'main', 'do_stuff1(test=do_tests)'],
                     ['/path/to/file_1.py', 101, 'do_stuff1', 'cr.execute(query, params)'],
                     ['/path/to/sql_db.py', 650, 'execute', 'res = self._obj.execute(query, params)'],
                 ],
             }, {  # other frame
                 'start': 6.0,
-                'context': {},
+                'exec_context': (),
                 'stack': [
-                    ['/path/tp/file_1.py', 10, 'main', 'do_stuff1(test=do_tests)'],
+                    ['/path/to/file_1.py', 10, 'main', 'do_stuff1(test=do_tests)'],
                     ['/path/to/file_1.py', 101, 'do_stuff1', 'check'],
                     ['/path/to/sql_db.py', 650, 'check', 'assert x = y'],
                 ],
             }, {  # out of frame
                 'start': 10.0,
-                'context': {},
+                'exec_context': (),
                 'stack': [
-                    ['/path/tp/file_1.py', 10, 'main', 'do_stuff1(test=do_tests)'],
+                    ['/path/to/file_1.py', 10, 'main', 'do_stuff1(test=do_tests)'],
                     ['/path/to/file_1.py', 101, 'do_stuff1', 'for i in range(10):'],
                 ],
             }, {  # final frame
                 'start': 10.35,
-                'context': {},
+                'exec_context': (),
                 'stack': None,
             }],
         }
@@ -179,7 +179,8 @@ class TestSpeedscope(BaseCase):
         self.assertNotIn('query', async_profile[1]['stack'])
         self.assertNotIn('time', async_profile[1]['stack'])
         self.assertEqual(async_profile[1]['stack'], async_profile[2]['stack'])
-        # this last assertion is not really usefull but ensure that the samples are consistent with the sql one, just missing que query
+        # this last assertion is not really useful but ensures that the samples
+        # are consistent with the sql one, just missing tue query
 
         sp = Speedscope(init_stack_trace=[])
         sp.add('sql', async_profile)
@@ -187,18 +188,148 @@ class TestSpeedscope(BaseCase):
         sp.add_output(['sql', 'traces'], complete=False)
         res = sp.make()
         profile_combined = res['profiles'][0]
-        events = [(e['at']+2, e['type'], res['shared']['frames'][e['frame']]['name']) for e in profile_combined['events']]
+        events = [
+            (e['at']+2, e['type'], res['shared']['frames'][e['frame']]['name'])
+            for e in profile_combined['events']
+        ]
         self.assertEqual(events, [
+            # pylint: disable=bad-continuation
             (2.0, 'O', 'main'),
-            (2.0, 'O', 'do_stuff1'),
-            (2.5, 'O', 'execute'),
-            (2.5, 'O', "sql('SELECT 1')"),
-            (5.5, 'C', "sql('SELECT 1')"), # select ends at 5.5 as expected despite another concurent frame at 3 and 4
-            (5.5, 'C', 'execute'),
-            (6.0, 'O', 'check'),
-            (10.0, 'C', 'check'),
-            (10.35, 'C', 'do_stuff1'),
+                (2.0, 'O', 'do_stuff1'),
+                    (2.5, 'O', 'execute'),
+                        (2.5, 'O', "sql('SELECT 1')"),
+                        (5.5, 'C', "sql('SELECT 1')"),  # select ends at 5.5 as expected despite another concurent frame at 3 and 4
+                    (5.5, 'C', 'execute'),
+                    (6.0, 'O', 'check'),
+                    (10.0, 'C', 'check'),
+                (10.35, 'C', 'do_stuff1'),
             (10.35, 'C', 'main'),
+        ])
+
+    def test_converts_context(self):
+        stack = [
+            ['file.py', 10, 'level1', 'level1'],
+            ['file.py', 11, 'level2', 'level2'],
+        ]
+        profile = {
+            'init_stack_trace': [['file.py', 1, 'level0', 'level0)']],
+            'result': [{  # init frame
+                'start': 2.0,
+                'exec_context': ((2, {'a': '1'}), (3, {'b': '1'})),
+                'stack': list(stack),
+            }, {
+                'start': 3.0,
+                'exec_context': ((2, {'a': '1'}), (3, {'b': '2'})),
+                'stack': list(stack),
+            }, {  # final frame
+                'start': 10.35,
+                'exec_context': (),
+                'stack': None,
+            }],
+        }
+        sp = Speedscope(init_stack_trace=profile['init_stack_trace'])
+        sp.add('profile', profile['result'])
+        sp.add_output(['profile'], complete=True)
+        res = sp.make()
+        events = [
+            (e['type'], res['shared']['frames'][e['frame']]['name'])
+            for e in res['profiles'][0]['events']
+        ]
+        self.assertEqual(events, [
+            # pylint: disable=bad-continuation
+            ('O', 'level0'),
+                ('O', 'a=1'),
+                    ('O', 'level1'),
+                        ('O', 'b=1'),
+                            ('O', 'level2'),
+                            ('C', 'level2'),
+                        ('C', 'b=1'),
+                        ('O', 'b=2'),
+                            ('O', 'level2'),
+                            ('C', 'level2'),
+                        ('C', 'b=2'),
+                    ('C', 'level1'),
+                ('C', 'a=1'),
+            ('C', 'level0'),
+        ])
+
+    def test_converts_context_nested(self):
+        stack = [
+            ['file.py', 10, 'level1', 'level1'],
+            ['file.py', 11, 'level2', 'level2'],
+        ]
+        profile = {
+            'init_stack_trace': [['file.py', 1, 'level0', 'level0)']],
+            'result': [{  # init frame
+                'start': 2.0,
+                'exec_context': ((3, {'a': '1'}), (3, {'b': '1'})),  # two contexts at the same level
+                'stack': list(stack),
+            }, {  # final frame
+                'start': 10.35,
+                'exec_context': (),
+                'stack': None,
+            }],
+        }
+        sp = Speedscope(init_stack_trace=profile['init_stack_trace'])
+        sp.add('profile', profile['result'])
+        sp.add_output(['profile'], complete=True)
+        res = sp.make()
+        events = [
+            (e['type'], res['shared']['frames'][e['frame']]['name'])
+            for e in res['profiles'][0]['events']
+        ]
+        self.assertEqual(events, [
+            # pylint: disable=bad-continuation
+            ('O', 'level0'),
+                ('O', 'level1'),
+                    ('O', 'a=1'),
+                        ('O', 'b=1'),
+                            ('O', 'level2'),
+                            ('C', 'level2'),
+                        ('C', 'b=1'),
+                    ('C', 'a=1'),
+                ('C', 'level1'),
+            ('C', 'level0'),
+        ])
+
+    def test_converts_context_lower(self):
+        stack = [
+            ['file.py', 10, 'level4', 'level4'],
+            ['file.py', 11, 'level5', 'level5'],
+        ]
+        profile = {
+            'init_stack_trace': [
+                ['file.py', 1, 'level0', 'level0'],
+                ['file.py', 1, 'level1', 'level1'],
+                ['file.py', 1, 'level2', 'level2'],
+                ['file.py', 1, 'level3', 'level3'],
+            ],
+            'result': [{  # init frame
+                'start': 2.0,
+                'exec_context': ((2, {'a': '1'}), (6, {'b': '1'})),
+                'stack': list(stack),
+            }, {  # final frame
+                'start': 10.35,
+                'exec_context': (),
+                'stack': None,
+            }],
+        }
+        sp = Speedscope(init_stack_trace=profile['init_stack_trace'])
+        sp.add('profile', profile['result'])
+        sp.add_output(['profile'], complete=False)
+        res = sp.make()
+        events = [
+            (e['type'], res['shared']['frames'][e['frame']]['name'])
+            for e in res['profiles'][0]['events']
+        ]
+        self.assertEqual(events, [
+            # pylint: disable=bad-continuation
+            ('O', 'level4'),
+                ('O', 'b=1'),
+                    ('O', 'level5'),
+                    ('C', 'level5'),
+                ('C', 'b=1'),
+            ('C', 'level4'),
         ])
 
 
@@ -223,10 +354,28 @@ class TestProfiling(TransactionCase):
                 stack_level = profiler.stack_size()
                 with ExecutionContext(letter=letter):
                     self.env.cr.execute('SELECT 1')
-        stack_level = profiler.stack_size()
         entries = p.collectors[0].entries
-        self.assertEqual(entries[0]['exec_context'][stack_level], {'letter': 'a'})
-        self.assertEqual(entries[1]['exec_context'][stack_level], {'letter': 'b'})
+        self.assertEqual(entries.pop(0)['exec_context'], ((stack_level, {'letter': 'a'}),))
+        self.assertEqual(entries.pop(0)['exec_context'], ((stack_level, {'letter': 'b'}),))
+
+    def test_execution_context_nested(self):
+        """
+        This test checks that an execution can be nested at the same level of the stack.
+        """
+        with Profiler(db=None, collectors=['sql']) as p:
+            stack_level = profiler.stack_size()
+            with ExecutionContext(letter='a'):
+                self.env.cr.execute('SELECT 1')
+                with ExecutionContext(letter='b'):
+                    self.env.cr.execute('SELECT 1')
+                with ExecutionContext(letter='c'):
+                    self.env.cr.execute('SELECT 1')
+                self.env.cr.execute('SELECT 1')
+        entries = p.collectors[0].entries
+        self.assertEqual(entries.pop(0)['exec_context'], ((stack_level, {'letter': 'a'}),))
+        self.assertEqual(entries.pop(0)['exec_context'], ((stack_level, {'letter': 'a'}), (stack_level, {'letter': 'b'})))
+        self.assertEqual(entries.pop(0)['exec_context'], ((stack_level, {'letter': 'a'}), (stack_level, {'letter': 'c'})))
+        self.assertEqual(entries.pop(0)['exec_context'], ((stack_level, {'letter': 'a'}),))
 
     def test_sync_recorder(self):
         def a():
