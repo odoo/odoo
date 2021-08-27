@@ -15,7 +15,7 @@ class BarcodeRule(models.Model):
         ondelete={'gs1-128': 'set default'})
     type = fields.Selection(
         selection_add=[
-            ('qty_done', 'Quantity'),
+            ('quantity', 'Quantity'),
             ('location', 'Location'),
             ('location_dest', 'Destination location'),
             ('lot', 'Lot number'),
@@ -25,7 +25,7 @@ class BarcodeRule(models.Model):
             ('package_type', 'Packaging Type'),
             ('packaging_date', 'Packaging Date'),
         ], ondelete={
-            'qty_done': 'set default',
+            'quantity': 'set default',
             'location': 'set default',
             'location_dest': 'set default',
             'lot': 'set default',

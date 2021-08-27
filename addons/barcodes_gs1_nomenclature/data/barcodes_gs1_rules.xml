@@ -109,12 +109,12 @@
             <field name="gs1_content_type">date</field>
         </record>
 
-        <record id="barcode_rule_gs1_16" model="barcode.rule">
+        <record id="barcode_rule_gs1_17" model="barcode.rule">
             <field name="name">Expiration date (YYMMDD)</field>
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">109</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(16)(\d{6})</field>
+            <field name="pattern">(17)(\d{6})</field>
             <field name="type">expiration_date</field>
             <field name="gs1_content_type">date</field>
         </record>
@@ -127,7 +127,7 @@
             <field name="encoding">gs1-128</field>
             <field name="pattern">(30)(\d{0,8})</field>
             <field name="associated_uom_id" ref="uom.product_uom_unit"/>
-            <field name="type">qty_done</field>
+            <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
             <field name="gs1_decimal_usage">False</field>
         </record>
@@ -139,7 +139,7 @@
             <field name="encoding">gs1-128</field>
             <field name="pattern">(37)(\d{0,8})</field>
             <field name="associated_uom_id" ref="uom.product_uom_unit"/>
-            <field name="type">qty_done</field>
+            <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
             <field name="gs1_decimal_usage">False</field>
         </record>
@@ -151,7 +151,7 @@
             <field name="encoding">gs1-128</field>
             <field name="pattern">(310[0-5])(\d{6})</field>
             <field name="associated_uom_id" ref="uom.product_uom_kgm"/>
-            <field name="type">qty_done</field>
+            <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
             <field name="gs1_decimal_usage">True</field>
         </record>
@@ -163,7 +163,7 @@
             <field name="encoding">gs1-128</field>
             <field name="pattern">(311[0-5])(\d{6})</field>
             <field name="associated_uom_id" ref="uom.product_uom_meter"/>
-            <field name="type">qty_done</field>
+            <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
             <field name="gs1_decimal_usage">True</field>
         </record>
@@ -175,7 +175,7 @@
             <field name="encoding">gs1-128</field>
             <field name="pattern">(315[0-5])(\d{6})</field>
             <field name="associated_uom_id" ref="uom.product_uom_litre"/>
-            <field name="type">qty_done</field>
+            <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
             <field name="gs1_decimal_usage">True</field>
         </record>
@@ -187,7 +187,7 @@
             <field name="encoding">gs1-128</field>
             <field name="pattern">(321[0-5])(\d{6})</field>
             <field name="associated_uom_id" ref="uom.product_uom_inch"/>
-            <field name="type">qty_done</field>
+            <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
             <field name="gs1_decimal_usage">True</field>
         </record>
@@ -199,7 +199,7 @@
             <field name="encoding">gs1-128</field>
             <field name="pattern">(357[0-5])(\d{6})</field>
             <field name="associated_uom_id" ref="uom.product_uom_oz"/>
-            <field name="type">qty_done</field>
+            <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
             <field name="gs1_decimal_usage">True</field>
         </record>
