@@ -53,4 +53,11 @@
     </div>
   </t>
 
+  <t t-name="web.AppIconCommand" owl="1">
+    <div class="o_command_default">
+        <span t-esc="props.name"/>
+        <img class="o_app_icon" t-attf-src="{{props.webIconData}}"/>
+    </div>
+  </t>
+
 </templates>
