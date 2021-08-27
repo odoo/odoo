@@ -12,7 +12,7 @@
                 <div class="header state">State</div>
             </div>
             <div class="order-list">
-                <t t-foreach="props.orders" t-as="order">
+                <t t-foreach="props.orders" t-as="order" t-key="order.id">
                     <SaleOrderRow order="order" highlightedOrder="highlightedOrder" />
                 </t>
             </div>
