@@ -1797,7 +1797,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getChart(graph).config.type, "pie");
     });
 
-    QUnit.test("string attribute", async function (assert) {
+    QUnit.skip("string attribute", async function (assert) {
         assert.expect(1);
         const graph = await makeView({
             serverData,
@@ -1811,7 +1811,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.test("title prop", async function (assert) {
+    QUnit.skip("title prop", async function (assert) {
         assert.expect(1);
         const graph = await makeView({
             serverData,
