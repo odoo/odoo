@@ -39,7 +39,7 @@ function factory(dependencies) {
             switch (this.channelType) {
                 case 'channel':
                 case 'group':
-                    return `/web/image/mail.channel/${this.channelId}/image_128`;
+                    return `/web/image/mail.channel/${this.channelId}/avatar_128?unique=${this.channel.avatarCacheKey}`;
                 case 'chat':
                     return this.channel.correspondent.avatarUrl;
             }
@@ -124,9 +124,12 @@ function factory(dependencies) {
         _computeHasThreadIcon() {
             switch (this.channelType) {
                 case 'channel':
+                    return this.channel.public === 'private';
                 case 'chat':
                 case 'group':
                     return true;
+                case 'group':
+                    return false;
             }
         }
 

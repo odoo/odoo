@@ -7,6 +7,17 @@ from odoo import models, fields, api
 from odoo.tools import html_escape, file_open
 
 
+def get_hsl_from_seed(seed):
+    hashed_seed = sha512(seed.encode()).hexdigest()
+    # full range of colors, in degree
+    hue = int(hashed_seed[0:2], 16) * 360 / 255
+    # colorful result but not too flashy, in percent
+    sat = int(hashed_seed[2:4], 16) * ((70 - 40) / 255) + 40
+    # not too bright and not too dark, in percent
+    lig = 45
+    return f'hsl({hue:.0f}, {sat:.0f}%, {lig:.0f}%)'
+
+
 class AvatarMixin(models.AbstractModel):
     _name = 'avatar.mixin'
     _inherit = ['image.mixin']
@@ -52,12 +63,7 @@ class AvatarMixin(models.AbstractModel):
 
     def _avatar_generate_svg(self):
         initial = html_escape(self[self._avatar_name_field][0].upper())
-        seed = self[self._avatar_name_field] + str(self.create_date.timestamp())
-        hashed_seed = sha512(seed.encode()).hexdigest()
-        hue = int(hashed_seed[0:2], 16) * 360 / 255
-        sat = int(hashed_seed[2:4], 16) * ((70 - 40) / 255) + 40
-        lig = 45
-        bgcolor = html_escape(f'hsl({hue}, {sat}%, {lig}%)')
+        bgcolor = get_hsl_from_seed(self[self._avatar_name_field] + str(self.create_date.timestamp()))
         return b64encode((
             "<?xml version='1.0' encoding='UTF-8' ?>"
             "<svg height='180' width='180' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>"

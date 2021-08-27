@@ -34,7 +34,7 @@ export class ThreadPreview extends Component {
         if (this.thread.correspondent) {
             return this.thread.correspondent.avatarUrl;
         }
-        return `/web/image/mail.channel/${this.thread.id}/image_128`;
+        return `/web/image/mail.channel/${this.thread.id}/avatar_128?unique=${this.thread.avatarCacheKey}`;
     }
 
     /**

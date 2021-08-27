@@ -3,14 +3,25 @@
 
 import base64
 import logging
+from hashlib import sha512
 from uuid import uuid4
 
-from odoo import _, api, fields, models, modules, tools, Command
+from odoo import _, api, fields, models, tools, Command
+from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
+
+channel_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 530.06">
+<circle cx="265.03" cy="265.03" r="265.03" fill="#875a7b"/>
+<path d="M416.74,217.29l5-28a8.4,8.4,0,0,0-8.27-9.88H361.09l10.24-57.34a8.4,8.4,0,0,0-8.27-9.88H334.61a8.4,8.4,0,0,0-8.27,6.93L315.57,179.4H246.5l10.24-57.34a8.4,8.4,0,0,0-8.27-9.88H220a8.4,8.4,0,0,0-8.27,6.93L201,179.4H145.6a8.42,8.42,0,0,0-8.28,6.93l-5,28a8.4,8.4,0,0,0,8.27,9.88H193l-16,89.62H121.59a8.4,8.4,0,0,0-8.27,6.93l-5,28a8.4,8.4,0,0,0,8.27,9.88H169L158.73,416a8.4,8.4,0,0,0,8.27,9.88h28.45a8.42,8.42,0,0,0,8.28-6.93l10.76-60.29h69.07L273.32,416a8.4,8.4,0,0,0,8.27,9.88H310a8.4,8.4,0,0,0,8.27-6.93l10.77-60.29h55.38a8.41,8.41,0,0,0,8.28-6.93l5-28a8.4,8.4,0,0,0-8.27-9.88H337.08l16-89.62h55.38A8.4,8.4,0,0,0,416.74,217.29ZM291.56,313.84H222.5l16-89.62h69.07Z" fill="#ffffff"/>
+</svg>'''
+group_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 530.06">
+<circle cx="265.03" cy="265.03" r="265.03" fill="#875a7b"/>
+<path d="m184.356059,265.030004c-23.740561,0.73266 -43.157922,10.11172 -58.252302,28.136961l-29.455881,0c-12.0169,0 -22.128621,-2.96757 -30.335161,-8.90271s-12.309921,-14.618031 -12.309921,-26.048671c0,-51.730902 9.08582,-77.596463 27.257681,-77.596463c0.87928,0 4.06667,1.53874 9.56217,4.61622s12.639651,6.19167 21.432451,9.34235s17.512401,4.72613 26.158581,4.72613c9.8187,0 19.563981,-1.68536 29.236061,-5.05586c-0.73266,5.4223 -1.0991,10.25834 -1.0991,14.508121c0,20.370061 5.93514,39.127962 17.805421,56.273922zm235.42723,140.025346c0,17.585601 -5.34888,31.470971 -16.046861,41.655892s-24.912861,15.277491 -42.645082,15.277491l-192.122688,0c-17.732221,0 -31.947101,-5.09257 -42.645082,-15.277491s-16.046861,-24.070291 -16.046861,-41.655892c0,-7.7669 0.25653,-15.350691 0.76937,-22.751371s1.53874,-15.387401 3.07748,-23.960381s3.48041,-16.523211 5.82523,-23.850471s5.4955,-14.471411 9.45226,-21.432451s8.49978,-12.89618 13.628841,-17.805421c5.12906,-4.90924 11.393931,-8.82951 18.794611,-11.76037s15.570511,-4.3964 24.509931,-4.3964c1.46554,0 4.61622,1.57545 9.45226,4.72613s10.18492,6.6678 16.046861,10.55136c5.86194,3.88356 13.702041,7.40068 23.520741,10.55136s19.710601,4.72613 29.675701,4.72613s19.857001,-1.57545 29.675701,-4.72613s17.658801,-6.6678 23.520741,-10.55136c5.86194,-3.88356 11.21082,-7.40068 16.046861,-10.55136s7.98672,-4.72613 9.45226,-4.72613c8.93942,0 17.109251,1.46554 24.509931,4.3964s13.665551,6.85113 18.794611,11.76037c5.12906,4.90924 9.67208,10.844381 13.628841,17.805421s7.10744,14.105191 9.45226,21.432451s4.28649,15.277491 5.82523,23.850471s2.56464,16.559701 3.07748,23.960381s0.76937,14.984471 0.76937,22.751371zm-225.095689,-280.710152c0,15.534021 -5.4955,28.796421 -16.486501,39.787422s-24.253401,16.486501 -39.787422,16.486501s-28.796421,-5.4955 -39.787422,-16.486501s-16.486501,-24.253401 -16.486501,-39.787422s5.4955,-28.796421 16.486501,-39.787422s24.253401,-16.486501 39.787422,-16.486501s28.796421,5.4955 39.787422,16.486501s16.486501,24.253401 16.486501,39.787422zm154.753287,84.410884c0,23.300921 -8.24325,43.194632 -24.729751,59.681133s-36.380212,24.729751 -59.681133,24.729751s-43.194632,-8.24325 -59.681133,-24.729751s-24.729751,-36.380212 -24.729751,-59.681133s8.24325,-43.194632 24.729751,-59.681133s36.380212,-24.729751 59.681133,-24.729751s43.194632,8.24325 59.681133,24.729751s24.729751,36.380212 24.729751,59.681133zm126.616325,49.459502c0,11.43064 -4.10338,20.113531 -12.309921,26.048671s-18.318261,8.90271 -30.335161,8.90271l-29.455881,0c-15.094381,-18.025241 -34.511741,-27.404301 -58.252302,-28.136961c11.87028,-17.145961 17.805421,-35.903862 17.805421,-56.273922c0,-4.24978 -0.36644,-9.08582 -1.0991,-14.508121c9.67208,3.3705 19.417361,5.05586 29.236061,5.05586c8.64618,0 17.365781,-1.57545 26.158581,-4.72613s15.936951,-6.26487 21.432451,-9.34235s8.68289,-4.61622 9.56217,-4.61622c18.171861,0 27.257681,25.865561 27.257681,77.596463zm-28.136961,-133.870386c0,15.534021 -5.4955,28.796421 -16.486501,39.787422s-24.253401,16.486501 -39.787422,16.486501s-28.796421,-5.4955 -39.787422,-16.486501s-16.486501,-24.253401 -16.486501,-39.787422s5.4955,-28.796421 16.486501,-39.787422s24.253401,-16.486501 39.787422,-16.486501s28.796421,5.4955 39.787422,16.486501s16.486501,24.253401 16.486501,39.787422z" fill="#ffffff"/>
+</svg>'''
 
 
 class Channel(models.Model):
@@ -31,10 +42,6 @@ class Channel(models.Model):
             res['alias_contact'] = 'everyone' if res.get('public', 'private') == 'public' else 'followers'
         return res
 
-    def _get_default_image(self):
-        image_path = modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
-        return base64.b64encode(open(image_path, 'rb').read())
-
     # description
     name = fields.Char('Name', required=True, translate=True)
     active = fields.Boolean(default=True, help="Set active to false to hide the channel without removing it.")
@@ -45,7 +52,8 @@ class Channel(models.Model):
         string='Channel Type', default='channel', help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration).")
     is_chat = fields.Boolean(string='Is a chat', compute='_compute_is_chat')
     description = fields.Text('Description')
-    image_128 = fields.Image("Image", max_width=128, max_height=128, default=_get_default_image)
+    image_128 = fields.Image("Image", max_width=128, max_height=128)
+    avatar_128 = fields.Image("Avatar", max_width=128, max_height=128, compute='_compute_avatar_128')
     channel_partner_ids = fields.Many2many(
         'res.partner', string='Members',
         compute='_compute_channel_partner_ids', inverse='_inverse_channel_partner_ids',
@@ -76,6 +84,19 @@ class Channel(models.Model):
     def _compute_is_chat(self):
         for record in self:
             record.is_chat = record.channel_type == 'chat'
+
+    @api.depends('channel_type', 'image_128', 'uuid')
+    def _compute_avatar_128(self):
+        for record in self:
+            record.avatar_128 = record.image_128 or record._generate_avatar()
+
+    def _generate_avatar(self):
+        if self.channel_type not in ('channel', 'group'):
+            return False
+        avatar = group_avatar if self.channel_type == 'group' else channel_avatar
+        bgcolor = get_hsl_from_seed(self.uuid)
+        avatar = avatar.replace('fill="#875a7b"', f'fill="{bgcolor}"')
+        return base64.b64encode(avatar.encode())
 
     @api.depends('channel_last_seen_partner_ids.partner_id')
     def _compute_channel_partner_ids(self):
@@ -128,7 +149,7 @@ class Channel(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        defaults = self.default_get(['image_128', 'public'])
+        defaults = self.default_get(['public'])
 
         access_types = []
         for vals in vals_list:
@@ -152,10 +173,6 @@ class Channel(models.Model):
                 (0, 0, {'partner_id': pid})
                 for pid in partner_ids_to_add if pid not in membership_pids
             ]
-
-            # ensure image at quick create
-            if not vals.get('image_128'):
-                vals['image_128'] = defaults['image_128']
 
             # save visibility, apply public visibility for create then set back after creation
             # to avoid ACLS issue
@@ -191,10 +208,19 @@ class Channel(models.Model):
 
     def write(self, vals):
         result = super(Channel, self).write(vals)
-
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
-
+        if 'image_128' in vals:
+            notifications = []
+            for channel in self:
+                notifications.append([(self._cr.dbname, 'mail.channel', channel.id), {
+                    'type': 'mail.channel_update',
+                    'payload': {
+                        'id': channel.id,
+                        'avatarCacheKey': channel._get_avatar_cache_key(),
+                    },
+                }])
+            self.env['bus.bus'].sendmany(notifications)
         return result
 
     def init(self):
@@ -557,6 +583,7 @@ class Channel(models.Model):
         channel_last_message_ids = dict((r['id'], r['message_id']) for r in self._channel_last_message_ids())
         for channel in self:
             info = {
+                'avatarCacheKey': channel._get_avatar_cache_key(),
                 'id': channel.id,
                 'name': channel.name,
                 'description': channel.description,
@@ -968,6 +995,11 @@ class Channel(models.Model):
             limit=30
         )
         return [('insert', partners)]
+
+    def _get_avatar_cache_key(self):
+        if not self.avatar_128:
+            return 'no-avatar'
+        return sha512(self.avatar_128).hexdigest()
 
     # ------------------------------------------------------------
     # COMMANDS
