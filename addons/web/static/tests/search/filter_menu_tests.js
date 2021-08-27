@@ -429,12 +429,10 @@ QUnit.module("Search", (hooks) => {
         });
     });
 
-    QUnit.skip("Filter with JSON-parsable domain works", async function (assert) {
-        /** @todo still usefull? Should we replace underscore here? */
+    QUnit.test("Filter with JSON-parsable domain works", async function (assert) {
         assert.expect(1);
 
-        const originalDomain = [["foo", "=", "Gently Weeps"]];
-        const xml_domain = JSON.stringify(originalDomain);
+        const xml_domain = "[[&quot;foo&quot;,&quot;=&quot;,&quot;Gently Weeps&quot;]]";
 
         const controlPanel = await makeWithSearch(
             { serverData },
@@ -445,7 +443,7 @@ QUnit.module("Search", (hooks) => {
                 searchMenuTypes: ["filter"],
                 searchViewArch: `
                     <search>
-                        <filter string="Foo" name="gently_weeps" domain="${_.escape(xml_domain)}"/>
+                        <filter string="Foo" name="gently_weeps" domain="${xml_domain}"/>
                     </search>
                 `,
                 context: { search_default_gently_weeps: 1 },
@@ -454,7 +452,7 @@ QUnit.module("Search", (hooks) => {
 
         assert.deepEqual(
             getDomain(controlPanel),
-            originalDomain,
+            [["foo", "=", "Gently Weeps"]],
             "A JSON parsable xml domain should be handled just like any other"
         );
     });
