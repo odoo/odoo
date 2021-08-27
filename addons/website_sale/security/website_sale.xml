@@ -12,6 +12,11 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <record id="group_show_uom_price" model="res.groups">
+        <field name="name">UOM Price Display for eCommerce</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
     <record id="sales_team.group_sale_manager" model="res.groups">
         <field name="implied_ids" eval="[(4, ref('website.group_website_publisher'))]"/>
     </record>

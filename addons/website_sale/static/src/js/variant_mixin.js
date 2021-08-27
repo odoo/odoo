@@ -11,11 +11,25 @@ var VariantMixin = require('sale.VariantMixin');
  * @param {string} uri The uri to adapt
  */
 VariantMixin._getUri = function (uri) {
-    if (this.isWebsite){
+    if (this.isWebsite) {
         return uri + '_website';
     } else {
         return uri;
     }
+};
+const originalOnChangeCombination = VariantMixin._onChangeCombination;
+VariantMixin._onChangeCombination = function (ev, $parent, combination) {
+    const $pricePerUom = $parent.find(".o_base_unit_price:first .oe_currency_value");
+    if ($pricePerUom) {
+        if (combination.is_combination_possible !== false && combination.base_unit_price != 0) {
+            $pricePerUom.parents(".o_base_unit_price_wrapper").removeClass("d-none");
+            $pricePerUom.text(this._priceToStr(combination.base_unit_price));
+            $parent.find(".oe_custom_base_unit:first").text(combination.base_unit_name);
+        } else {
+            $pricePerUom.parents(".o_base_unit_price_wrapper").addClass("d-none");
+        }
+    }
+    originalOnChangeCombination.apply(this, [ev, $parent, combination]);
 };
 
 const originalToggleDisable = VariantMixin._toggleDisable;
