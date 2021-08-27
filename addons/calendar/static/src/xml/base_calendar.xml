@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
+
+    <t t-name="calendar.CalendarView" t-extend="CalendarView">
+        <t t-jquery="div.o_calendar_sidebar" t-operation="append">
+            <div id="calendar_sync" class="o_calendar_sync container inline btn-group"/>
+        </t>
+    </t>
+
     <div t-name="calendar.RecurrentEventUpdate">
         <div class="form-check o_radio_item">
             <input name="recurrence-update" type="radio" class="form-check-input o_radio_input" checked="true" value="self_only" id="self_only"/>
