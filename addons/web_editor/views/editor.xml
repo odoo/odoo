@@ -260,4 +260,14 @@
         </div>
     </colorpicker>
 </template>
+
+<template id="report_assets_common" inherit_id="web.report_assets_common">
+    <xpath expr="//t" position="inside">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
+    </xpath>
+    <xpath expr="link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.common.scss"/>
+    </xpath>
+</template>
+
 </odoo>
