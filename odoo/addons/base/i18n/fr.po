@@ -62,7 +62,6 @@
 # Fernanda Marques <fem@odoo.com>, 2020
 # Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
-# Vallen Delobel <edv@odoo.com>, 2020
 # Julien Goergen <jgo@odoo.com>, 2020
 # Christelle Pinchart <cpi@odoo.com>, 2020
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2020
@@ -79,6 +78,8 @@
 # Alexandra Jubert <aju@odoo.com>, 2021
 # Martin Trigaux, 2021
 # Tivisse <yti@odoo.com>, 2021
+# Vallen Delobel <edv@odoo.com>, 2021
+# Camille Dantinne <cmd@odoo.com>, 2021
 # Gwladys Jouble <g.jouble@vieconnect.io>, 2021
 # 
 msgid ""
@@ -8634,6 +8635,14 @@ msgid ""
 "                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"<b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Adresse de l'entreprise</b>\n"
+"<b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Adresse de facturation</b>\n"
+"<b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Adresse de livraison</b>\n"
+"<b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Autre adresse</b>\n"
+"<b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Adresse privée</b>\n"
+"<b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Adresse</b>\n"
+"</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -10481,7 +10490,7 @@ msgstr "Validations"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_approvals_purchase
 msgid "Approvals - Purchase"
-msgstr ""
+msgstr "Approbations - Achat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_approvals_purchase_stock
@@ -13548,7 +13557,7 @@ msgstr "Jours"
 #: model:ir.module.module,shortdesc:base.module_account_debit_note
 #: model:ir.module.module,summary:base.module_account_debit_note
 msgid "Debit Notes"
-msgstr ""
+msgstr "Notes de débit"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
@@ -18033,7 +18042,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_iot
 msgid "IoT for PoS"
-msgstr ""
+msgstr "IoT pour PdV"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_iot
@@ -18765,6 +18774,8 @@ msgid ""
 "Let the system try to select the right account, taxes and/or product for "
 "your vendor bills"
 msgstr ""
+"Laissez le système essayer de sélectionner le bon compte, les bonnes taxes "
+"et/ou le bon produit pour vos factures fournisseurs."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_referral
@@ -22652,7 +22663,7 @@ msgstr "Opportunité vers devis."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting_crm
 msgid "Opportunity to Rental"
-msgstr ""
+msgstr "Opportunité de location"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_partner_merge_automatic_wizard__state__option
@@ -28872,7 +28883,7 @@ msgstr "Utilisez les programmes de promotion et de coupon sur votre eCommerce"
 #. module: base
 #: model:ir.module.module,summary:base.module_coupon
 msgid "Use discount coupons in different sales channels."
-msgstr ""
+msgstr "Utilisez des coupons de réduction dans différents canaux de vente."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon

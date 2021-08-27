@@ -210,7 +210,7 @@ class CrmLead(models.Model):
         for lead in self:
             lead_values = {
                 'expected_revenue': values['expected_revenue'],
-                'probability': values['probability'],
+                'probability': values['probability'] or False,
                 'priority': values['priority'],
                 'date_deadline': values['date_deadline'] or False,
             }

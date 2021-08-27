@@ -36,7 +36,7 @@ models.PosModel = models.PosModel.extend({
     },
 
     disallowLineQuantityChange() {
-        let result = _super_posmodel.disallowLineQuantityChange();
+        let result = _super_posmodel.disallowLineQuantityChange.bind(this)();
         return this.is_french_country() || result;
     }
 });

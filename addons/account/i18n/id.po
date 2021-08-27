@@ -34,6 +34,7 @@
 # Altela Eleviansyah Pramardhika <altela_pramardhika@yahoo.com>, 2021
 # Daffi Prabowo <hammet217@gmail.com>, 2021
 # Abdul Munif Hanafi <amunifhanafi@gmail.com>, 2021
+# Mashanz <mangatkk@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -41,7 +42,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Abdul Munif Hanafi <amunifhanafi@gmail.com>, 2021\n"
+"Last-Translator: Mashanz <mangatkk@gmail.com>, 2021\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -160,7 +161,7 @@ msgstr "%s (rounding)"
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid "%s is not a stored field"
-msgstr ""
+msgstr "%s bukan sebuah field tersimpan"
 
 #. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
@@ -176,13 +177,13 @@ msgstr "-> Tampilkan entri yang sudah direkonsiliasi secara parsial"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
-msgstr ""
+msgstr ". Anda mungkin ingin memasukan angka lebih tinggi di sini."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "... (%s other)"
-msgstr ""
+msgstr "... (%s lainya)"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -4778,12 +4779,12 @@ msgstr "Nama Tampilan"
 #: model:ir.model.fields,field_description:account.field_account_move__display_qr_code
 #: model:ir.model.fields,field_description:account.field_account_payment__display_qr_code
 msgid "Display QR-code"
-msgstr ""
+msgstr "Tampilkan kode QR"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__qr_code
 msgid "Display QR-code on invoices"
-msgstr ""
+msgstr "Tampilkan kode QR dalam invoice"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_currency__display_rounding_warning
@@ -13970,6 +13971,18 @@ msgid ""
 msgstr ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
+
+#. module: account
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"You can not archive a journal containing draft journal entries.\n"
+"\n"
+"To proceed:\n"
+"1/ click on the top-right button 'Journal Entries' from this journal form\n"
+"2/ then filter on 'Draft' entries\n"
+"3/ select them all and post or delete them through the action menu"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0

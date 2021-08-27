@@ -544,3 +544,41 @@ class TestSaleOrder(TestSaleCommon):
         sale_order.user_id = self.user_not_in_team
         sale_order.onchange_user_id()
         self.assertEqual(sale_order.team_id.id, self.crm_team1.id, 'Should not reset the team to default')
+
+    def test_discount_and_untaxed_subtotal(self):
+        """When adding a discount on a SO line, this test ensures that the untaxed amount to invoice is
+        equal to the untaxed subtotal"""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'product_uom_qty': 38,
+                'price_unit': 541.26,
+                'discount': 2.00,
+            })]
+        })
+        sale_order.action_confirm()
+        line = sale_order.order_line
+        self.assertEqual(line.untaxed_amount_to_invoice, 0)
+
+        line.qty_delivered = 38
+        # (541.26 - 0.02 * 541.26) * 38 = 20156.5224 ~= 20156.52
+        self.assertEqual(line.price_subtotal, 20156.52)
+        self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)
+
+        # Same with an included-in-price tax
+        sale_order = sale_order.copy()
+        line = sale_order.order_line
+        line.tax_id = [(0, 0, {
+            'name': 'Super Tax',
+            'amount_type': 'percent',
+            'amount': 15.0,
+            'price_include': True,
+        })]
+        sale_order.action_confirm()
+        self.assertEqual(line.untaxed_amount_to_invoice, 0)
+
+        line.qty_delivered = 38
+        # (541,26 / 1,15) * ,98 * 38 = 17527,410782609 ~= 17527.41
+        self.assertEqual(line.price_subtotal, 17527.41)
+        self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)

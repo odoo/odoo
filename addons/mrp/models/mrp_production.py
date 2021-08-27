@@ -193,11 +193,11 @@ class MrpProduction(models.Model):
 
     move_raw_ids = fields.One2many(
         'stock.move', 'raw_material_production_id', 'Components',
-        copy=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain=[('scrapped', '=', False)])
     move_finished_ids = fields.One2many(
         'stock.move', 'production_id', 'Finished Products',
-        copy=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain=[('scrapped', '=', False)])
     move_byproduct_ids = fields.One2many('stock.move', compute='_compute_move_byproduct_ids', inverse='_set_move_byproduct_ids')
     finished_move_line_ids = fields.One2many(
@@ -637,24 +637,16 @@ class MrpProduction(models.Model):
         else:
             self.move_raw_ids = [(2, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
 
-    @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
+    @api.onchange('product_id')
+    def _onchange_move_finished_product(self):
+        self.move_finished_ids = [(5,)]
+        if self.product_id:
+            self._create_update_move_finished()
+
+    @api.onchange('bom_id', 'product_qty', 'product_uom_id')
     def _onchange_move_finished(self):
         if self.product_id and self.product_qty > 0:
-            list_move_finished = []
-            moves_finished_values = self._get_moves_finished_values()
-            moves_byproduct_dict = {move.byproduct_id.id: move for move in self.move_finished_ids.filtered(lambda m: m.byproduct_id)}
-            move_finished = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id)
-            for move_finished_values in moves_finished_values:
-                if move_finished_values.get('byproduct_id') in moves_byproduct_dict:
-                    # update existing entries
-                    list_move_finished += [(1, moves_byproduct_dict[move_finished_values['byproduct_id']].id, move_finished_values)]
-                elif move_finished_values.get('product_id') == self.product_id.id and move_finished:
-                    list_move_finished += [(1, move_finished.id, move_finished_values)]
-                else:
-                    # add new entries
-                    list_move_finished += [(0, 0, move_finished_values)]
-            self.move_finished_ids = [(5, 0, 0)]
-            self.move_finished_ids = list_move_finished
+            self._create_update_move_finished()
         else:
             self.move_finished_ids = [(2, move.id) for move in self.move_finished_ids.filtered(lambda m: m.bom_line_id)]
 
@@ -811,6 +803,19 @@ class MrpProduction(models.Model):
             workorders_to_delete.unlink()
         return super(MrpProduction, self).unlink()
 
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        # covers at least 2 cases: backorders generation (follow default logic for moves copying)
+        # and copying a done MO via the form (i.e. copy only the non-cancelled moves since no backorder = cancelled finished moves)
+        if not default or 'move_finished_ids' not in default:
+            move_finished_ids = self.move_finished_ids
+            if self.state != 'cancel':
+                move_finished_ids = self.move_finished_ids.filtered(lambda m: m.state != 'cancel' and m.product_qty != 0.0)
+            default['move_finished_ids'] = [(0, 0, move.copy_data()[0]) for move in move_finished_ids]
+        if not default or 'move_raw_ids' not in default:
+            default['move_raw_ids'] = [(0, 0, move.copy_data()[0]) for move in self.move_raw_ids.filtered(lambda m: m.product_qty != 0.0)]
+        return super(MrpProduction, self).copy_data(default=default)
+
     def action_toggle_is_locked(self):
         self.ensure_one()
         self.is_locked = not self.is_locked
@@ -886,6 +891,29 @@ class MrpProduction(models.Model):
                     byproduct.product_id.id, qty, byproduct.product_uom_id.id,
                     byproduct.operation_id.id, byproduct.id))
         return moves
+
+    def _create_update_move_finished(self):
+        """ This is a helper function to support complexity of onchange logic for MOs.
+        It is important that the special *2Many commands used here remain as long as function
+        is used within onchanges.
+        """
+        # keep manual entries
+        list_move_finished = [(4, move.id) for move in self.move_finished_ids.filtered(
+            lambda m: not m.byproduct_id and m.product_id != self.product_id)]
+        list_move_finished = []
+        moves_finished_values = self._get_moves_finished_values()
+        moves_byproduct_dict = {move.byproduct_id.id: move for move in self.move_finished_ids.filtered(lambda m: m.byproduct_id)}
+        move_finished = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id)
+        for move_finished_values in moves_finished_values:
+            if move_finished_values.get('byproduct_id') in moves_byproduct_dict:
+                # update existing entries
+                list_move_finished += [(1, moves_byproduct_dict[move_finished_values['byproduct_id']].id, move_finished_values)]
+            elif move_finished_values.get('product_id') == self.product_id.id and move_finished:
+                list_move_finished += [(1, move_finished.id, move_finished_values)]
+            else:
+                # add new entries
+                list_move_finished += [(0, 0, move_finished_values)]
+        self.move_finished_ids = list_move_finished
 
     def _get_moves_raw_values(self):
         moves = []
@@ -1383,7 +1411,7 @@ class MrpProduction(models.Model):
             return name
         seq_back = "-" + "0" * (SIZE_BACK_ORDER_NUMERING - 1 - int(math.log10(sequence))) + str(sequence)
         regex = re.compile(r"-\d+$")
-        if regex.search(name):
+        if regex.search(name) and sequence > 1:
             return regex.sub(seq_back, name)
         return name + seq_back
 
@@ -1406,6 +1434,7 @@ class MrpProduction(models.Model):
         for production in self:
             if production.backorder_sequence == 0:  # Activate backorder naming
                 production.backorder_sequence = 1
+            production.name = self._get_name_backorder(production.name, production.backorder_sequence)
             backorder_mo = production.copy(default=production._get_backorder_mo_vals())
             if close_mo:
                 production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')).write({
@@ -1438,8 +1467,6 @@ class MrpProduction(models.Model):
                     wo.qty_producing = wo.qty_remaining
                 if wo.qty_producing == 0:
                     wo.action_cancel()
-
-            production.name = self._get_name_backorder(production.name, production.backorder_sequence)
 
             # We need to adapt `duration_expected` on both the original workorders and their
             # backordered workorders. To do that, we use the original `duration_expected` and the

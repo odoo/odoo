@@ -12,7 +12,7 @@
 # grazziano <gra.negocia@gmail.com>, 2020
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2020
 # Silmar <pinheirosilmar@gmail.com>, 2020
-# rogeriojlle <rogerio.s.machado@gmail.com>, 2020
+# Rogerio Scholz Machado <rogerio.s.machado@gmail.com>, 2020
 # Vanderlei P. Romera <vanderleiromera@gmail.com>, 2020
 # Éder Brito <britoederr@gmail.com>, 2021
 # 
@@ -295,6 +295,15 @@ msgid "Exception(s):"
 msgstr "Exceções:"
 
 #. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"For the product %s, the warehouse of the operation type (%s) is inconsistent"
+" with the location (%s) of the reordering rule (%s). Change the operation "
+"type or cancel the request for quotation."
+msgstr ""
+
+#. module: purchase_stock
 #. openerp-web
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
@@ -448,8 +457,8 @@ msgid ""
 "Odoo is not able to generate the anglo saxon entries. The total valuation of"
 " %s is zero."
 msgstr ""
-"O Odoo não é capaz de gerar as entradas anglo-saxões. A avaliação total de "
-"%s é zero."
+"O Odoo não é capaz de gerar as entradas anglo-saxônicas. A avaliação total "
+"de %s é zero."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph

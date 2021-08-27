@@ -12,7 +12,7 @@ This should help for reconciliation on the bank statements where the old IBAN co
     """,
     'version': '1.0',
     'author': 'Odoo S.A',
-    'category': 'Localization',
+    'category': 'Hidden',
     'depends': ['l10n_ch'],
     'data': [
         'views/res_bank_views.xml',

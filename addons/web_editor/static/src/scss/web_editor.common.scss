@@ -720,7 +720,11 @@ blockquote {
                 &:active {
                     &, h6 { // Quick fix: sometimes we use h6 in dropdowns
                         @include gradient-bg($-btn-primary-color);
-                        color: color-yiq($-btn-primary-color);
+                        color: color-yiq($-btn-primary-color) !important;
+
+                        @include hover-focus {
+                            color: color-yiq($-btn-primary-color) !important;
+                        }
                     }
                 }
             }

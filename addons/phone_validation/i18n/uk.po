@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2020
 # ТАрас <tratatuta@i.ua>, 2020
+# Yevhen Babii <eugene.babiy@gmail.com>, 2021
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
@@ -26,7 +27,7 @@ msgstr ""
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 #, python-format
 msgid " Please correct the number and try again."
-msgstr ""
+msgstr "Виправте номер та спробуйте ще раз."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction
@@ -110,7 +111,7 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__create_date
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
@@ -189,7 +190,7 @@ msgstr ""
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Impossible number %s: probably invalid number of digits."
-msgstr ""
+msgstr "Недійсний номер %s: ймовірно, неправильна кількість цифр."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
@@ -198,7 +199,7 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Визначає, чи номер телефону у чорносу списку є мобільним номером. Допомагає "
+"Визначає, чи номер телефону у чорному списку є мобільним номером. Допомагає "
 "розрізнити, який номер у чорному списку, коли в моделі є поле як мобільного,"
 " так і телефону."
 
@@ -217,7 +218,7 @@ msgstr ""
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Invalid number %s: probably incorrect prefix."
-msgstr ""
+msgstr "Недійсний номер %s: ймовірно невірний префікс."
 
 #. module: phone_validation
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
@@ -239,7 +240,7 @@ msgstr "Стежить"
 #: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin____last_update
 #: model:ir.model.fields,field_description:phone_validation.field_res_partner____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Останні зміни"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__write_uid
@@ -355,7 +356,7 @@ msgstr "Причина"
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
 msgid "Remove phone from blacklist"
-msgstr ""
+msgstr "Вилучити телефон з чорного списку"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized
@@ -366,18 +367,18 @@ msgstr "Очищений номер"
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Unable to parse %(phone)s: %(error)s"
-msgstr ""
+msgstr "Неможливо розпізнати %(phone)s: %(error)s"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
 msgid "Unblacklist"
-msgstr ""
+msgstr "Забрати з чорного списку"
 
 #. module: phone_validation
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 #, python-format
 msgid "Unblacklisting Reason: %s"
-msgstr ""
+msgstr "Причина Вилучення з Чорного Списку: %s"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_unread
@@ -394,4 +395,4 @@ msgstr "Кількість непрочитаних повідомлень"
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "phone_blacklist_removal"
-msgstr ""
+msgstr "phone_blacklist_removal"
