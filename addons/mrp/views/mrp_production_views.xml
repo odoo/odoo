@@ -17,8 +17,6 @@
                     <field name="date_planned_start" readonly="1" optional="show" widget="remaining_days"/>
                     <field name="date_deadline" widget="remaining_days" attrs="{'invisible': [('state', 'in', ['done', 'cancel'])]}" optional="hide"/>
                     <field name="product_id" readonly="1" optional="show"/>
-                    <field name="production_duration_expected" attrs="{'invisible': [('production_duration_expected', '=', 0)]}" widget="float_time" sum="Total expected duration"/>
-                    <field name="production_real_duration" attrs="{'invisible': [('production_real_duration', '=', 0)]}" widget="float_time" sum="Total real duration"/>
                     <field name="lot_producing_id" optional="hide"/>
                     <field name="bom_id" readonly="1" optional="hide"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
@@ -27,6 +25,8 @@
                     <field name="reservation_state" optional="show" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
                     <field name="product_uom_id" string="UoM" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
+                    <field name="production_duration_expected" attrs="{'invisible': [('production_duration_expected', '=', 0)]}" groups="mrp.group_mrp_routings" widget="float_time" sum="Total expected duration" optional="show"/>
+                    <field name="production_real_duration" attrs="{'invisible': [('production_real_duration', '=', 0)]}" groups="mrp.group_mrp_routings" widget="float_time" sum="Total real duration" optional="show"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
                     <field name="state" 
                            decoration-success="state in ('done', 'to_close')"
