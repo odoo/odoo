@@ -104,6 +104,8 @@ const AttendeeCalendarPopover = CalendarPopover.extend({
 
 
 const AttendeeCalendarRenderer = CalendarRenderer.extend({
+    template: 'calendar.CalendarView',
+
 	config: _.extend({}, CalendarRenderer.prototype.config, {
         CalendarPopover: AttendeeCalendarPopover,
         eventTemplate: 'Calendar.calendar-box',
