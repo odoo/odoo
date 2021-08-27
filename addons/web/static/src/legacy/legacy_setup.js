@@ -8,6 +8,7 @@ import {
     makeLegacySessionService,
     makeLegacyDialogMappingService,
     makeLegacyCrashManagerService,
+    makeLegacyCommandService,
 } from "./utils";
 import * as AbstractService from "web.AbstractService";
 import * as legacyEnv from "web.env";
@@ -43,6 +44,8 @@ export const legacySetupProm = new Promise((resolve) => {
     serviceRegistry.add("legacy_crash_manager", makeLegacyCrashManagerService(legacyEnv));
     const legacyDialogMappingService = makeLegacyDialogMappingService(legacyEnv);
     serviceRegistry.add("legacy_dialog_mapping", legacyDialogMappingService);
+    const legacyCommandService = makeLegacyCommandService(legacyEnv);
+    serviceRegistry.add("legacy_command", legacyCommandService);
     await Promise.all([whenReady(), session.is_bound]);
     legacyEnv.qweb.addTemplates(session.owlTemplates);
     legacySetupResolver(legacyEnv);

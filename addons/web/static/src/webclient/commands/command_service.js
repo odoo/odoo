@@ -19,6 +19,7 @@ const { xml } = owl.tags;
 
 /**
  * @typedef {{
+ *  activeElement?: HTMLElement;
  *  category?: string;
  *  global?: boolean;
  *  hotkey?: string;
@@ -27,7 +28,6 @@ const { xml } = owl.tags;
 
 /**
  * @typedef {Command & CommandOptions & {
- *  activeElement?: HTMLElement;
  *  removeHotkey?: ()=>void;
  * }} CommandRegistration
  */
@@ -114,13 +114,14 @@ export const commandService = {
                 throw new Error("A Command must have a name and an action function.");
             }
 
-            const registration = Object.assign({}, command, options, { activeElement: null });
+            const registration = Object.assign({}, command, options);
 
             if (registration.hotkey) {
                 registration.removeHotkey = hotkeyService.add(
                     registration.hotkey,
                     registration.action,
                     {
+                        activeElement: registration.activeElement,
                         global: registration.global,
                     }
                 );
@@ -128,13 +129,14 @@ export const commandService = {
 
             const token = nextToken++;
             registeredCommands.set(token, registration);
-
-            // Due to the way elements are mounted in the DOM by Owl (bottom-to-top),
-            // we need to wait the next micro task tick to set the context activate
-            // element of the subscription.
-            Promise.resolve().then(() => {
-                registration.activeElement = ui.activeElement;
-            });
+            if (!options.activeElement) {
+                // Due to the way elements are mounted in the DOM by Owl (bottom-to-top),
+                // we need to wait the next micro task tick to set the context activate
+                // element of the subscription.
+                Promise.resolve().then(() => {
+                    registration.activeElement = ui.activeElement;
+                });
+            }
 
             return token;
         }

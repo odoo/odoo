@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
+import core from 'web.core';
 import fieldRegistry from 'web.field_registry';
-import { Many2OneAvatar } from 'web.relational_fields';
-import { FieldMany2ManyTagsAvatar, KanbanMany2ManyTagsAvatar, ListMany2ManyTagsAvatar } from 'web.relational_fields';
+import { FieldMany2ManyTagsAvatar, KanbanMany2ManyTagsAvatar, ListMany2ManyTagsAvatar, Many2OneAvatar } from 'web.relational_fields';
+import session from 'web.session';
 
 const { Component } = owl;
 
@@ -58,6 +59,124 @@ export const Many2OneAvatarUser = Many2OneAvatar.extend(M2XAvatarMixin, {
         'click .o_m2o_avatar > img': '_onAvatarClicked',
     }),
 
+    on_attach_callback() {
+        console.log("on_attach_callback ", this.mode)
+
+        this._registerCommandAssignTo()
+    },
+    on_detach_callback(){
+        this._unregisterCommandAssignTo()
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+     _registerCommandAssignTo() {
+        const self = this;
+        if (self.viewType === "form") {
+            let provide = async (env, options) => {
+                if (self.isDestroyed()) {
+                    return
+                }
+                const records = await self._searchAssignTo(options.searchValue, 10)
+                return records.map((record) => ({
+                    name: record[1],
+                    action: () => {
+                        if (self.isDestroyed()) {
+                            return
+                        }
+                        self.reinitialize({ id: record[0], display_name: record[1] });
+                    }
+                }))
+            }
+            let getCommandDefinition = (env) => ({
+                name: env._t("Assign to ..."),
+                options: {
+                    activeElement: env.services.ui.getActiveElementOf(self.el),
+                    category: "smart_action",
+                    hotkey: "alt+i",
+                },
+                async action() {
+                    return env.services.command.openPalette({
+                        emptyMessageByNamespace: { "default": env._t("No users found") },
+                        placeholder: env._t("Select a user..."),
+                        providers: [{ provide }],
+                    })
+                },
+            });
+            core.bus.trigger("set_legacy_command", "web.Many2OneAvatar.assignTo", getCommandDefinition, self.el);
+
+
+            getCommandDefinition = (env) => ({
+                name: env._t("Assign/unassign to me"),
+                options: {
+                    activeElement: env.services.ui.getActiveElementOf(self.el),
+                    category: "smart_action",
+                    hotkey: "alt+shift+i",
+                },
+                action() {
+                    if (self.isDestroyed()) {
+                        return
+                    }
+                    if (self.value.res_id === session.user_id[0]) {
+                        self._setValue({
+                            operation: 'DELETE',
+                            ids: [session.user_id[0]],
+                            });
+                    } else {
+                        self.reinitialize({ id: session.user_id[0], display_name: session.name });
+                    }
+                },
+            });
+            core.bus.trigger("set_legacy_command", "web.Many2OneAvatar.assignToMe", getCommandDefinition);
+        }
+    },
+
+    /**
+     * @override
+     * @private
+     */
+    _unregisterCommandAssignTo() {
+        core.bus.trigger("remove_legacy_command", "web.Many2OneAvatar.assignTo");
+        core.bus.trigger("remove_legacy_command", "web.Many2OneAvatar.assignToMe");
+    },
+
+    /**
+     * @override
+     * @private
+     */
+    _searchAssignTo(searchValue, limit) {
+        const value = searchValue.trim();
+        const domain = this.record.getDomain(this.recordParams);
+        const context = Object.assign(
+            this.record.getContext(this.recordParams),
+            this.additionalContext,
+        );
+
+        // Exclude black-listed ids from the domain
+        const blackListedIds = this._getSearchBlacklist();
+        if (blackListedIds.length) {
+            domain.push(['id', 'not in', blackListedIds]);
+        }
+
+        const nameSearch = this._rpc({
+            model: this.field.relation,
+            method: "name_search",
+            kwargs: {
+                name: value,
+                args: domain,
+                operator: "ilike",
+                limit: limit + 1,
+                context,
+            }
+        });
+        return this.orderer.add(nameSearch);
+    },
     //----------------------------------------------------------------------
     // Handlers
     //----------------------------------------------------------------------
@@ -99,7 +218,108 @@ const M2MAvatarMixin = Object.assign(M2XAvatarMixin, {
     },
 });
 
-export const Many2ManyAvatarUser = FieldMany2ManyTagsAvatar.extend(M2MAvatarMixin, {});
+export const Many2ManyAvatarUser = FieldMany2ManyTagsAvatar.extend(M2MAvatarMixin, {
+
+    on_attach_callback() {
+        this._registerCommandAssignTo()
+    },
+    on_detach_callback(){
+        this._unregisterCommandAssignTo()
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+     _registerCommandAssignTo() {
+        const self = this;
+        if (self.viewType === "form") {
+            const provide = async (env, options) => {
+                if (self.isDestroyed()) {
+                    return
+                }
+                const many2one = new Many2OneAvatarUser(self, self.name, self.record, {
+                    mode: 'edit',
+                    noOpen: true,
+                    noCreate: !self.canCreate,
+                    viewType: self.viewType,
+                    attrs: self.attrs,
+                });
+                many2one._getSearchBlacklist = function () {
+                    return self.value.res_ids;
+                };
+                const records = await many2one._searchAssignTo(options.searchValue, 10)
+                return records.map((record) => ({
+                    name: record[1],
+                    action: () => {
+                        if (self.isDestroyed()) {
+                            return
+                        }
+                        self._setValue({
+                            operation: 'ADD_M2M',
+                            ids: { id: record[0], display_name: record[1] }
+                        });
+                    },
+                }))
+            };
+            let getCommandDefinition = (env) => ({
+                name: env._t("Assign to ..."),
+                options: {
+                    activeElement: env.services.ui.getActiveElementOf(self.el),
+                    category: "smart_action",
+                    hotkey: "alt+i",
+                },
+                action() {
+                    return env.services.command.openPalette({
+                        emptyMessageByNamespace: { "default": env._t("No users found") },
+                        placeholder: env._t("Select a user..."),
+                        providers: [{ provide }],
+                    })
+                },
+            })
+            core.bus.trigger("set_legacy_command", "web.FieldMany2ManyTagsAvatar.assignTo", getCommandDefinition)
+
+            getCommandDefinition = (env) => ({
+                name: env._t("Assign/unassign to me"),
+                options: {
+                    activeElement: env.services.ui.getActiveElementOf(self.el),
+                    category: "smart_action",
+                    hotkey: "alt+shift+i",
+                },
+                action() {
+                    if (self.isDestroyed()) {
+                        return
+                    }
+                    if (self.value.res_ids.includes(session.user_id[0])) {
+                        self._setValue({
+                            operation: 'DELETE',
+                            ids: [session.user_id[0]],
+                            });
+                    } else {
+                        self._setValue({
+                            operation: 'ADD_M2M',
+                            ids: { id:  session.user_id[0], display_name: session.name }
+                        });
+                    }
+                },
+            });
+            core.bus.trigger("set_legacy_command", "web.Many2OneAvatar.assignToMe", getCommandDefinition);
+        }
+    },
+
+    /**
+     * @override
+     * @private
+     */
+     _unregisterCommandAssignTo() {
+        core.bus.trigger("remove_legacy_command", "web.FieldMany2ManyTagsAvatar.assignTo");
+        core.bus.trigger("remove_legacy_command", "web.Many2OneAvatar.assignToMe");
+     }
+});
 
 export const KanbanMany2ManyAvatarUser = KanbanMany2ManyTagsAvatar.extend(M2MAvatarMixin, {});
 

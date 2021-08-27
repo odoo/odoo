@@ -79,10 +79,18 @@ export const uiService = {
             activeElems = activeElems.filter((x) => x !== el);
             bus.trigger("active-element-changed", ui.activeElement);
         }
+        function getActiveElementOf(el) {
+            for (const activeElement of [...activeElems].reverse()) {
+                if (activeElement.contains(el)) {
+                    return activeElement;
+                }
+            }
+        }
 
         Object.assign(ui, {
             activateElement,
             deactivateElement,
+            getActiveElementOf,
         });
         Object.defineProperty(ui, "activeElement", {
             get() {

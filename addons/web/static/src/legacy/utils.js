@@ -120,6 +120,41 @@ export function makeLegacyDialogMappingService(legacyEnv) {
     };
 }
 
+/**
+ * Deploys a service allowing legacy to add/remove commands.
+ *
+ * @param {object} legacyEnv
+ * @returns a wowl deployable service
+ */
+export function makeLegacyCommandService(legacyEnv) {
+    return {
+        dependencies: ["command"],
+        start(env) {
+            const { command } = env.services;
+
+            const commandRemoveMap = new Map();
+
+            function setLegacyCommand(uniqueId, getCommandDefinition) {
+                console.log("setLegacyCommand ", uniqueId);
+                const { name, action, options } = getCommandDefinition(env);
+                removeLegacyCommand(uniqueId);
+                commandRemoveMap.set(uniqueId, command.add(name, action, options));
+            }
+
+            function removeLegacyCommand(uniqueId) {
+                if (commandRemoveMap.has(uniqueId)) {
+                    const removeCommand = commandRemoveMap.get(uniqueId);
+                    removeCommand();
+                    commandRemoveMap.delete(uniqueId);
+                }
+            }
+
+            legacyEnv.bus.on("set_legacy_command", null, setLegacyCommand);
+            legacyEnv.bus.on("remove_legacy_command", null, removeLegacyCommand);
+        },
+    };
+}
+
 export function makeLegacySessionService(legacyEnv, session) {
     return {
         dependencies: ["user"],

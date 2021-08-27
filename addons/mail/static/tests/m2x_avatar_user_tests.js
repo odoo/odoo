@@ -1,11 +1,17 @@
 /** @odoo-module **/
 
+import { Many2OneAvatarUser } from '@mail/js/m2x_avatar_user';
 import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
-
+import { click, legacyExtraNextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import { createWebClient, doAction } from '@web/../tests/webclient/helpers';
+import { registry } from "@web/core/registry";
+import { makeLegacyCommandService } from "@web/legacy/utils";
+import core from 'web.core';
 import FormView from 'web.FormView';
 import KanbanView from 'web.KanbanView';
 import ListView from 'web.ListView';
-import { Many2OneAvatarUser } from '@mail/js/m2x_avatar_user';
+import session from 'web.session';
+import makeTestEnvironment from "web.test_env";
 import { dom, mock, nextTick } from 'web.test_utils';
 
 
@@ -21,7 +27,7 @@ QUnit.module('mail', {}, function () {
                 'foo': {
                     fields: {
                         user_id: { string: "User", type: 'many2one', relation: 'res.users' },
-                        user_ids: { string: "Users", type: "many2many", relation: 'res.users' },
+                        user_ids: { string: "Users", type: "many2many", relation: 'res.users',  default:[] },
                     },
                     records: [
                         { id: 1, user_id: 11, user_ids: [11, 23], },
@@ -406,6 +412,197 @@ QUnit.module('mail', {}, function () {
         ]);
 
         form.destroy();
+    });
+
+    QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to..."', async function (assert) {
+        assert.expect(4);
+
+        const legacyEnv = makeTestEnvironment({ bus: core.bus });
+        const serviceRegistry = registry.category("services");
+        serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
+
+        const views = {
+            'foo,false,form': '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
+            'foo,false,search': '<search></search>',
+        };
+        const models = {
+            'foo': this.data.foo,
+            'res.partner': this.data['res.partner'],
+            'res.users': this.data['res.users'],
+        }
+        const serverData = { models, views}
+        const webClient = await createWebClient({serverData});
+        await doAction(webClient, {
+            res_id: 1,
+            type: 'ir.actions.act_window',
+            target: 'current',
+            res_model: 'foo',
+            'view_mode': 'form',
+            'views': [[false, 'form']],
+        });
+        assert.strictEqual(webClient.el.querySelector(".o_m2o_avatar > span").textContent, "Mario")
+
+        triggerHotkey("control+k")
+        await nextTick();
+        const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Assign to ...ALT + I")
+        assert.ok(idx >= 0);
+
+        await click([...webClient.el.querySelectorAll(".o_command")][idx])
+        await nextTick();
+        assert.deepEqual([...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent), [
+            "Your Company, Mitchell Admin",
+            "Public user",
+            "Mario",
+            "Luigi",
+            "Yoshi",
+          ])
+        await click(webClient.el, "#o_command_3")
+        await legacyExtraNextTick();
+        assert.strictEqual(webClient.el.querySelector(".o_m2o_avatar > span").textContent, "Luigi")
+    });
+
+    QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to me"', async function (assert) {
+        assert.expect(4);
+
+        patchWithCleanup(session, { user_id: [7] })
+        const legacyEnv = makeTestEnvironment({ bus: core.bus });
+        const serviceRegistry = registry.category("services");
+        serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
+
+        const views = {
+            'foo,false,form': '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
+            'foo,false,search': '<search></search>',
+        };
+        const models = {
+            'foo': this.data.foo,
+            'res.partner': this.data['res.partner'],
+            'res.users': this.data['res.users'],
+        }
+        const serverData = { models, views}
+        const webClient = await createWebClient({serverData});
+        await doAction(webClient, {
+            res_id: 1,
+            type: 'ir.actions.act_window',
+            target: 'current',
+            res_model: 'foo',
+            'view_mode': 'form',
+            'views': [[false, 'form']],
+        });
+        assert.strictEqual(webClient.el.querySelector(".o_m2o_avatar > span").textContent, "Mario")
+        triggerHotkey("control+k")
+        await nextTick();
+        const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Assign/unassign to meALT + SHIFT + I")
+        assert.ok(idx >= 0);
+
+        // Assign me (Luigi)
+        triggerHotkey("alt+shift+i")
+        await legacyExtraNextTick();
+        assert.strictEqual(webClient.el.querySelector(".o_m2o_avatar > span").textContent, "Luigi")
+
+        // Unassign me
+        triggerHotkey("control+k");
+        await nextTick();
+        await click([...webClient.el.querySelectorAll(".o_command")][idx])
+        await legacyExtraNextTick();
+        assert.strictEqual(webClient.el.querySelector(".o_m2o_avatar > span").textContent, "")
+    });
+
+    QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to..."', async function (assert) {
+        assert.expect(4);
+
+        const legacyEnv = makeTestEnvironment({ bus: core.bus });
+        const serviceRegistry = registry.category("services");
+        serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
+
+        const views = {
+            'foo,false,form': '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
+            'foo,false,search': '<search></search>',
+        };
+        const models = {
+            'foo': this.data.foo,
+            'res.partner': this.data['res.partner'],
+            'res.users': this.data['res.users'],
+        }
+        const serverData = { models, views}
+        const webClient = await createWebClient({serverData});
+        await doAction(webClient, {
+            res_id: 1,
+            type: 'ir.actions.act_window',
+            target: 'current',
+            res_model: 'foo',
+            'view_mode': 'form',
+            'views': [[false, 'form']],
+        });
+        let userNames = [...webClient.el.querySelectorAll(".o_tag_badge_text")].map((el => el.textContent));
+        assert.deepEqual(userNames, ["Mario", "Yoshi"]);
+
+        triggerHotkey("control+k")
+        await nextTick();
+        const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Assign to ...ALT + I")
+        assert.ok(idx >= 0);
+
+        await click([...webClient.el.querySelectorAll(".o_command")][idx])
+        await nextTick();
+        assert.deepEqual([...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent), [
+            "Your Company, Mitchell Admin",
+            "Public user",
+            "Luigi"
+          ]);
+
+        await click(webClient.el, "#o_command_2");
+        await legacyExtraNextTick();
+        userNames = [...webClient.el.querySelectorAll(".o_tag_badge_text")].map(el => el.textContent);
+        assert.deepEqual(userNames, ["Mario", "Yoshi", "Luigi"]);
+    });
+
+    QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to me"', async function (assert) {
+        assert.expect(4);
+
+        patchWithCleanup(session, { user_id: [7] })
+        const legacyEnv = makeTestEnvironment({ bus: core.bus });
+        const serviceRegistry = registry.category("services");
+        serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
+
+        const views = {
+            'foo,false,form': '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
+            'foo,false,search': '<search></search>',
+        };
+        const models = {
+            'foo': this.data.foo,
+            'res.partner': this.data['res.partner'],
+            'res.users': this.data['res.users'],
+        }
+        const serverData = { models, views}
+        const webClient = await createWebClient({serverData});
+        await doAction(webClient, {
+            res_id: 1,
+            type: 'ir.actions.act_window',
+            target: 'current',
+            res_model: 'foo',
+            'view_mode': 'form',
+            'views': [[false, 'form']],
+        });
+        let userNames = [...webClient.el.querySelectorAll(".o_tag_badge_text")].map((el => el.textContent));
+        assert.deepEqual(userNames, ["Mario", "Yoshi"]);
+
+        triggerHotkey("control+k");
+        await nextTick();
+        const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Assign/unassign to meALT + SHIFT + I");
+        assert.ok(idx >= 0);
+
+        // Assign me (Luigi)
+        triggerHotkey("alt+shift+i");
+        await legacyExtraNextTick();
+        userNames = [...webClient.el.querySelectorAll(".o_tag_badge_text")].map((el => el.textContent));
+        assert.deepEqual(userNames, ["Mario", "Yoshi", "Luigi"]);
+
+        // Unassign me
+        triggerHotkey("control+k");
+        await nextTick();
+        await click([...webClient.el.querySelectorAll(".o_command")][idx]);
+        await legacyExtraNextTick();
+        userNames = [...webClient.el.querySelectorAll(".o_tag_badge_text")].map((el => el.textContent));
+        assert.deepEqual(userNames, ["Mario", "Yoshi"]);
     });
 
 });
