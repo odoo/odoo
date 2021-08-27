@@ -35,8 +35,8 @@ class SaleOrder(models.Model):
                         values['warning'] = self.warning_stock
         return values
 
-    def _website_product_id_change(self, order_id, product_id, qty=0):
-        res = super(SaleOrder, self)._website_product_id_change(order_id, product_id, qty=qty)
+    def _website_product_id_change(self, order_id, product_id, qty=0, **kwargs):
+        res = super(SaleOrder, self)._website_product_id_change(order_id, product_id, qty=qty, **kwargs)
         product = self.env['product.product'].browse(product_id)
         res['customer_lead'] = product.sale_delay
         return res

@@ -102,7 +102,7 @@ class SaleOrder(models.Model):
 
         return self.env['sale.order.line'].sudo().search(domain)
 
-    def _website_product_id_change(self, order_id, product_id, qty=0):
+    def _website_product_id_change(self, order_id, product_id, qty=0, **kwargs):
         order = self.sudo().browse(order_id)
         product_context = dict(self.env.context)
         product_context.setdefault('lang', order.partner_id.lang)
@@ -201,7 +201,7 @@ class SaleOrder(models.Model):
 
             product_id = product.id
 
-            values = self._website_product_id_change(self.id, product_id, qty=1)
+            values = self._website_product_id_change(self.id, product_id, qty=1, **kwargs)
 
             # add no_variant attributes that were not received
             for ptav in combination.filtered(lambda ptav: ptav.attribute_id.create_variant == 'no_variant' and ptav not in received_no_variant_values):
@@ -260,7 +260,7 @@ class SaleOrder(models.Model):
         else:
             # update line
             no_variant_attributes_price_extra = [ptav.price_extra for ptav in order_line.product_no_variant_attribute_value_ids]
-            values = self.with_context(no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra))._website_product_id_change(self.id, product_id, qty=quantity)
+            values = self.with_context(no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra))._website_product_id_change(self.id, product_id, qty=quantity, **kwargs)
             order = self.sudo().browse(self.id)
             if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
                 product_context.update({
