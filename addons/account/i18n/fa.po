@@ -294,7 +294,7 @@ msgstr ""
 "            لطفا نسبت به تسویه فاکتور در موعد مقرر اقدام فرمایید.\n"
 "            % if object.payment_reference:\n"
 "                <br/><br/>\n"
-"                لطفا از شناسه زیر را برای پرداخت استفاده کنید: <strong"
+"                 لطفا از این شناسه برای پرداخت استفاده کنید: <strong"
 ">${object.payment_reference}</strong>.\n"
 "            % endif\n"
 "        % endif\n"
@@ -5992,7 +5992,7 @@ msgid ""
 "Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
 " '_draft' or ''}"
 msgstr ""
-"فاکتور_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and"
 " '_draft' or ''}"
 
 #. module: account
@@ -12597,18 +12597,6 @@ msgid ""
 msgstr ""
 "شما می‌توانید مدل‌های مختلف برای هر نوع شماره پیگیری را انتخاب کنید. مورد"
 " پیش‌فرض شماره پیگیری کنویست است."
-
-#. module: account
-#: code:addons/account/models/account_journal.py:0
-#, python-format
-msgid ""
-"You can not archive a journal containing draft journal entries.\n"
-"\n"
-"To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
-"3/ select them all and post or delete them through the action menu"
-msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0

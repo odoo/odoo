@@ -1,34 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * auth_oauth
+# 	* auth_oauth
 #
-# Translators:
-# Martin Trigaux, 2018
-# Hamid Darabi, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
+# Amir <a.soleimani@kenevist.ir>, 2021.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 10:46+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
-"Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
-"Language: fa\n"
+"POT-Creation-Date: 2021-08-14 06:27+0000\n"
+"PO-Revision-Date: 2021-08-14 11:20+0430\n"
+"Last-Translator: Amir <a.soleimani@kenevist.ir>\n"
+"Language-Team: English <a.soleimani@kenevist.ir>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: \n"
+"Language: en_GB\n"
+"X-Generator: Lokalize 19.12.3\n"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.providers
 msgid "- or -"
-msgstr ""
+msgstr "- یا -"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
-msgstr ""
+msgstr "آموزش"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:0
@@ -39,12 +37,12 @@ msgstr "امکان دسترسی وجود ندارد"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__auth_oauth_google_enabled
 msgid "Allow users to sign in with Google"
-msgstr ""
+msgstr "امکان ورود کاربران با استفاده از گوگل"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Allow users to sign in with their Google account"
-msgstr ""
+msgstr "امکان ورود کاربران با استفاده از حساب گوگل"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__enabled
@@ -54,7 +52,7 @@ msgstr "مجاز"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__auth_endpoint
 msgid "Authentication URL"
-msgstr "آدرس URL احراز هویت"
+msgstr "آدرس اینترنتی احراز هویت"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
@@ -75,7 +73,7 @@ msgstr "شناسه مشتری"
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Client ID:"
-msgstr ""
+msgstr "شناسه مشتری:"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_config_settings
@@ -95,10 +93,13 @@ msgstr "ایجاد شده در"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__data_endpoint
 msgid "Data URL"
-msgstr ""
+msgstr "آدرس اینترنتی داده"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__display_name
 msgid "Display Name"
 msgstr "نام نمایشی"
 
@@ -110,15 +111,21 @@ msgstr "مستندات"
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Google Authentication"
-msgstr ""
+msgstr "احراز هویت گوگل"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__id
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__id
 msgid "ID"
 msgstr "شناسه"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider____last_update
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter____last_update
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "آخرین تغییر در"
 
@@ -135,94 +142,94 @@ msgstr "آخرین به‌روزرسانی در"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_auth_oauth_provider__body
 msgid "Link text in Login Dialog"
-msgstr ""
+msgstr "متن لینک در پیام حین ورود"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_facebook
 msgid "Log in with Facebook"
-msgstr ""
+msgstr "ورود با فیس‌بوک"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_google
 msgid "Log in with Google"
-msgstr ""
+msgstr "ورود با گوگل"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_openerp
 msgid "Log in with Odoo.com"
-msgstr ""
+msgstr "ورود با odoo.com"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_access_token
 msgid "OAuth Access Token"
-msgstr ""
+msgstr "توکن دسترسی OAuth"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_provider_id
 msgid "OAuth Provider"
-msgstr ""
+msgstr "ارائه دهنده OAuth"
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "OAuth Providers"
-msgstr ""
+msgstr "ارائه دهندگان OAuth"
 
 #. module: auth_oauth
 #: model:ir.model.constraint,message:auth_oauth.constraint_res_users_uniq_users_oauth_provider_oauth_uid
 msgid "OAuth UID must be unique per provider"
-msgstr ""
+msgstr "UID برای هر ارائه دهنده OAuth باید یکتا باشد"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_uid
 msgid "OAuth User ID"
-msgstr ""
+msgstr "ID کاربری OAuth"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_auth_oauth_provider
 msgid "OAuth2 provider"
-msgstr ""
+msgstr "ارائه دهنده OAuth2"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_users_form
 msgid "Oauth"
-msgstr ""
+msgstr "OAuth"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users__oauth_uid
 msgid "Oauth Provider user_id"
-msgstr ""
+msgstr "ID کاربری ارائه دهنده OAuth"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__name
 msgid "Provider name"
-msgstr ""
+msgstr "نام ارائه دهنده"
 
 #. module: auth_oauth
 #: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
 msgid "Providers"
-msgstr ""
+msgstr "ارائه دهندگان"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__scope
 msgid "Scope"
-msgstr ""
+msgstr "محدوده"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__sequence
 msgid "Sequence"
-msgstr "دنباله"
+msgstr "ترتیب"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__server_uri_google
 msgid "Server uri"
-msgstr ""
+msgstr "uri سرور"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:0
 #, python-format
 msgid "Sign up is not allowed on this database."
-msgstr ""
+msgstr "امکان ورود به این پایگاه داده میسر نمی‌باشد"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
@@ -237,7 +244,7 @@ msgstr "کاربران"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
 msgid "Validation URL"
-msgstr ""
+msgstr "آدرس اینترنتی ارزیابی"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:0
@@ -247,14 +254,17 @@ msgid ""
 "Please ask for an invitation and be sure to follow the link in your "
 "invitation email."
 msgstr ""
+"شما به این پایگاه داده دسترسی ندارید یا دعوت‌نامه شما منقضی شده است."
+"لطفا درخواست دعوت‌نامه کنید و حتما لینک دعوت‌نامه ارسال شده به ایمیل خود را"
+" دنبال کنید."
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
-msgstr ""
+msgstr "arch"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
-msgstr ""
+msgstr "به عنوان مثال، 1234-xyz.apps.googleusercontent.com"
