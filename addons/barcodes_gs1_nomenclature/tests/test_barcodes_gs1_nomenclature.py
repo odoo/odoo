@@ -70,7 +70,7 @@ class TestBarcodeGS1Nomenclature(TestBarcodeNomenclature):
         default_barcode_rule_vals = {
             'default_encoding': 'gs1-128',
             'default_barcode_nomenclature_id': barcode_nomenclature.id,
-            'default_type': 'qty_done',
+            'default_type': 'quantity',
             'default_gs1_content_type': 'measure',
         }
         # Creates a rule who don't take any decimal.
