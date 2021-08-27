@@ -341,169 +341,169 @@ odoo.define('web.owl_dialog_tests', function (require) {
             parent.unmount();
             parent.destroy();
         });
-    });
 
-    QUnit.test("Z-index toggling and interactions", async function (assert) {
-        assert.expect(3);
+        QUnit.test("Z-index toggling and interactions", async function (assert) {
+            assert.expect(3);
 
-        function createCustomModal(className) {
-            const $modal = $(
-                `<div role="dialog" class="${className}" tabindex="-1">
-                    <div class="modal-dialog medium">
-                        <div class="modal-content">
-                            <main class="modal-body">The modal body</main>
+            function createCustomModal(className) {
+                const $modal = $(
+                    `<div role="dialog" class="${className}" tabindex="-1">
+                        <div class="modal-dialog medium">
+                            <div class="modal-content">
+                                <main class="modal-body">The modal body</main>
+                            </div>
                         </div>
-                    </div>
-                </div>`
-            ).appendTo('body').modal();
-            const modal = $modal[0];
-            modal.destroy = function () {
-                $modal.modal('hide');
-                this.remove();
-            };
-            return modal;
-        }
-
-        class Parent extends Component {
-            constructor() {
-                super(...arguments);
-                this.state = useState({ showSecondDialog: true });
+                    </div>`
+                ).appendTo('body').modal();
+                const modal = $modal[0];
+                modal.destroy = function () {
+                    $modal.modal('hide');
+                    this.remove();
+                };
+                return modal;
             }
-        }
-        Parent.components = { Dialog };
-        Parent.env = makeTestEnvironment();
-        Parent.template = xml`
-            <div>
-                <Dialog/>
-                <Dialog t-if="state.showSecondDialog"/>
-            </div>`;
 
-        const parent = new Parent();
-        await parent.mount(testUtils.prepareTarget());
+            class Parent extends Component {
+                constructor() {
+                    super(...arguments);
+                    this.state = useState({ showSecondDialog: true });
+                }
+            }
+            Parent.components = { Dialog };
+            Parent.env = makeTestEnvironment();
+            Parent.template = xml`
+                <div>
+                    <Dialog/>
+                    <Dialog t-if="state.showSecondDialog"/>
+                </div>`;
 
-        const frontEndModal = createCustomModal('modal');
-        const backEndModal = createCustomModal('modal o_technical_modal');
+            const parent = new Parent();
+            await parent.mount(testUtils.prepareTarget());
 
-        // querySelector will target the first modal (the static one).
-        const owlIndexBefore = getComputedStyle(document.querySelector('.o_dialog .modal')).zIndex;
-        const feZIndexBefore = getComputedStyle(frontEndModal).zIndex;
-        const beZIndexBefore = getComputedStyle(backEndModal).zIndex;
+            const frontEndModal = createCustomModal('modal');
+            const backEndModal = createCustomModal('modal o_technical_modal');
 
-        parent.state.showSecondDialog = false;
-        await testUtils.nextTick();
+            // querySelector will target the first modal (the static one).
+            const owlIndexBefore = getComputedStyle(document.querySelector('.o_dialog .modal')).zIndex;
+            const feZIndexBefore = getComputedStyle(frontEndModal).zIndex;
+            const beZIndexBefore = getComputedStyle(backEndModal).zIndex;
 
-        assert.ok(owlIndexBefore < getComputedStyle(document.querySelector('.o_dialog .modal')).zIndex,
-            "z-index of the owl dialog should be incremented since the active modal was destroyed");
-        assert.strictEqual(feZIndexBefore, getComputedStyle(frontEndModal).zIndex,
-            "z-index of front-end modals should not be impacted by Owl Dialog activity system");
-        assert.strictEqual(beZIndexBefore, getComputedStyle(backEndModal).zIndex,
-            "z-index of custom back-end modals should not be impacted by Owl Dialog activity system");
+            parent.state.showSecondDialog = false;
+            await testUtils.nextTick();
 
-        parent.destroy();
-        frontEndModal.destroy();
-        backEndModal.destroy();
-    });
+            assert.ok(owlIndexBefore < getComputedStyle(document.querySelector('.o_dialog .modal')).zIndex,
+                "z-index of the owl dialog should be incremented since the active modal was destroyed");
+            assert.strictEqual(feZIndexBefore, getComputedStyle(frontEndModal).zIndex,
+                "z-index of front-end modals should not be impacted by Owl Dialog activity system");
+            assert.strictEqual(beZIndexBefore, getComputedStyle(backEndModal).zIndex,
+                "z-index of custom back-end modals should not be impacted by Owl Dialog activity system");
 
-    QUnit.test("remove tabindex on inactive dialog", async (assert) => {
-        const serverData = {
-            actions: {
-                1: {
-                    id: 1,
-                    flags: { initialDate: new Date(2020, 6, 13) },
-                    name: "Test",
-                    res_model: "event",
-                    type: "ir.actions.act_window",
-                    views: [[false, "calendar"]],
-                },
-                2: {
-                    id: 2,
-                    name: "Test",
-                    res_model: "event",
-                    target: "new",
-                    type: "ir.actions.act_window",
-                    views: [[2, "form"]],
-                },
-            },
-            models: {
-                event: {
-                    fields: {
-                        id: { type: "integer" },
-                        display_name: { type: "char" },
-                        start: { type: "date" },
+            parent.destroy();
+            frontEndModal.destroy();
+            backEndModal.destroy();
+        });
+
+        QUnit.test("remove tabindex on inactive dialog", async (assert) => {
+            const serverData = {
+                actions: {
+                    1: {
+                        id: 1,
+                        flags: { initialDate: new Date(2020, 6, 13) },
+                        name: "Test",
+                        res_model: "event",
+                        type: "ir.actions.act_window",
+                        views: [[false, "calendar"]],
                     },
-                    records: [{ id: 1, display_name: "Event 1", start: "2020-07-13" }],
-                    methods: {
-                        async check_access_rights() {
-                            return true;
-                        },
-                        async get_formview_id() {
-                            return false;
-                        },
+                    2: {
+                        id: 2,
+                        name: "Test",
+                        res_model: "event",
+                        target: "new",
+                        type: "ir.actions.act_window",
+                        views: [[2, "form"]],
                     },
                 },
-            },
-            views: {
-                "event,false,calendar": `<calendar date_start="start" event_open_popup="true" />`,
-                "event,false,search": `<search />`,
-                "event,false,form": `
-                    <form><sheet>
-                        <field name="display_name" />
-                        <button type="action" name="2">Click me</button>
-                    </sheet></form>
-                `,
-                "event,2,form": `<form><sheet><field name="display_name" /></sheet></form>`,
-            },
-        };
+                models: {
+                    event: {
+                        fields: {
+                            id: { type: "integer" },
+                            display_name: { type: "char" },
+                            start: { type: "date" },
+                        },
+                        records: [{ id: 1, display_name: "Event 1", start: "2020-07-13" }],
+                        methods: {
+                            async check_access_rights() {
+                                return true;
+                            },
+                            async get_formview_id() {
+                                return false;
+                            },
+                        },
+                    },
+                },
+                views: {
+                    "event,false,calendar": `<calendar date_start="start" event_open_popup="true" />`,
+                    "event,false,search": `<search />`,
+                    "event,false,form": `
+                        <form><sheet>
+                            <field name="display_name" />
+                            <button type="action" name="2">Click me</button>
+                        </sheet></form>
+                    `,
+                    "event,2,form": `<form><sheet><field name="display_name" /></sheet></form>`,
+                },
+            };
 
-        const webClient = await createWebClient({ serverData });
-        await doAction(webClient, 1);
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, 1);
 
-        await testUtils.dom.click(webClient.el.querySelector(`.fc-event[data-event-id="1"]`));
-        await testUtils.dom.click(webClient.el.querySelector(`.o_cw_popover_edit`));
+            await testUtils.dom.click(webClient.el.querySelector(`.fc-event[data-event-id="1"]`));
+            await testUtils.dom.click(webClient.el.querySelector(`.o_cw_popover_edit`));
 
-        assert.containsNone(webClient.el, ".o_dialog");
-        assert.containsOnce(webClient.el, ".modal");
-        assert.containsOnce(webClient.el, ".modal[tabindex='-1']");
+            assert.containsNone(webClient.el, ".o_dialog");
+            assert.containsOnce(webClient.el, ".modal");
+            assert.containsOnce(webClient.el, ".modal[tabindex='-1']");
 
-        assert.strictEqual(
-            webClient.el.querySelector(`.o_field_widget[name="display_name"]`).value,
-            "Event 1"
-        );
-        await testUtils.fields.editInput(
-            webClient.el.querySelector(`.o_field_widget[name="display_name"]`),
-            "legacy"
-        );
-        assert.strictEqual(
-            webClient.el.querySelector(`.o_field_widget[name="display_name"]`).value,
-            "legacy"
-        );
+            assert.strictEqual(
+                webClient.el.querySelector(`.o_field_widget[name="display_name"]`).value,
+                "Event 1"
+            );
+            await testUtils.fields.editInput(
+                webClient.el.querySelector(`.o_field_widget[name="display_name"]`),
+                "legacy"
+            );
+            assert.strictEqual(
+                webClient.el.querySelector(`.o_field_widget[name="display_name"]`).value,
+                "legacy"
+            );
 
-        await testUtils.dom.click(webClient.el.querySelector(`button[name="2"]`));
-        assert.containsOnce(webClient.el, ".o_dialog");
-        assert.containsN(webClient.el, ".modal", 2);
-        assert.containsOnce(webClient.el, ".modal:not([tabindex='-1'])");
-        assert.containsOnce(webClient.el, ".o_dialog .modal[tabindex='-1']");
+            await testUtils.dom.click(webClient.el.querySelector(`button[name="2"]`));
+            assert.containsOnce(webClient.el, ".o_dialog");
+            assert.containsN(webClient.el, ".modal", 2);
+            assert.containsOnce(webClient.el, ".modal:not([tabindex='-1'])");
+            assert.containsOnce(webClient.el, ".o_dialog .modal[tabindex='-1']");
 
-        assert.strictEqual(
-            webClient.el.querySelector(`.o_dialog .o_field_widget[name="display_name"]`).value,
-            ""
-        );
-        await testUtils.fields.editInput(
-            webClient.el.querySelector(`.o_dialog .o_field_widget[name="display_name"]`),
-            "wowl"
-        );
-        assert.strictEqual(
-            webClient.el.querySelector(`.o_dialog .o_field_widget[name="display_name"]`).value,
-            "wowl"
-        );
+            assert.strictEqual(
+                webClient.el.querySelector(`.o_dialog .o_field_widget[name="display_name"]`).value,
+                ""
+            );
+            await testUtils.fields.editInput(
+                webClient.el.querySelector(`.o_dialog .o_field_widget[name="display_name"]`),
+                "wowl"
+            );
+            assert.strictEqual(
+                webClient.el.querySelector(`.o_dialog .o_field_widget[name="display_name"]`).value,
+                "wowl"
+            );
 
-        await testUtils.dom.click(webClient.el.querySelector(`.o_dialog .modal-header .close`));
-        assert.containsNone(webClient.el, ".o_dialog");
-        assert.containsOnce(webClient.el, ".modal");
-        assert.containsOnce(webClient.el, ".modal[tabindex='-1']");
+            await testUtils.dom.click(webClient.el.querySelector(`.o_dialog .modal-header .close`));
+            assert.containsNone(webClient.el, ".o_dialog");
+            assert.containsOnce(webClient.el, ".modal");
+            assert.containsOnce(webClient.el, ".modal[tabindex='-1']");
 
-        await testUtils.dom.click(webClient.el.querySelector(`.modal-header .close`));
-        assert.containsNone(webClient.el, ".o_dialog");
-        assert.containsNone(webClient.el, ".modal");
+            await testUtils.dom.click(webClient.el.querySelector(`.modal-header .close`));
+            assert.containsNone(webClient.el, ".o_dialog");
+            assert.containsNone(webClient.el, ".modal");
+        });
     });
 });
