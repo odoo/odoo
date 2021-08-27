@@ -138,6 +138,12 @@ const Wysiwyg = Widget.extend({
                     if (!$field.hasClass('o_editable_date_field_format_changed')) {
                         $linkedFieldNodes.text($field.data('oe-original-with-format'));
                         $linkedFieldNodes.addClass('o_editable_date_field_format_changed');
+                        $linkedFieldNodes.filter('.oe_hide_on_date_edit').addClass('d-none');
+                        setTimeout(() => {
+                            // we might hide the clicked date, focus the one
+                            // supposed to be editable
+                            Wysiwyg.setRange($linkedFieldNodes.filter(':not(.oe_hide_on_date_edit)')[0]);
+                        }, 0);
                     }
                 }
                 if ($field.data('oe-type') === "monetary") {
