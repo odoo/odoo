@@ -5,16 +5,13 @@ import {
     editFavoriteName,
     editSearch,
     getFacetTexts,
-    isItemSelected,
     saveFavorite,
     setupControlPanelServiceRegistry,
-    toggleComparisonMenu,
     toggleFavoriteMenu,
-    toggleMenuItem,
     toggleSaveFavorite,
     validateSearch,
 } from "./helpers";
-import { patchDate, triggerEvent } from "@web/../tests/helpers/utils";
+import { triggerEvent } from "@web/../tests/helpers/utils";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { FavoriteMenu } from "@web/search/favorite_menu/favorite_menu";
 import { registry } from "@web/core/registry";
@@ -39,10 +36,6 @@ async function toggleShareCheckBox(comp) {
     const checkbox = comp.el.querySelectorAll("input[type='checkbox']")[1];
     checkbox.checked = !checkbox.checked;
     await triggerEvent(checkbox, null, "change");
-}
-
-function getDomain(comp) {
-    return comp.env.searchModel.domain;
 }
 
 let serverData;
@@ -71,8 +64,8 @@ QUnit.module("Search", (hooks) => {
 
     QUnit.module("CustomFavoriteItem");
 
-    QUnit.test("simple rendering with no favorite", async function (assert) {
-        assert.expect(8);
+    QUnit.test("simple rendering", async function (assert) {
+        assert.expect(3);
 
         const controlPanel = await makeWithSearch(
             { serverData },
@@ -85,23 +78,7 @@ QUnit.module("Search", (hooks) => {
             }
         );
 
-        assert.containsOnce(controlPanel, "div.o_favorite_menu > button i.fa.fa-star");
-        assert.strictEqual(
-            controlPanel.el
-                .querySelector("div.o_favorite_menu > button span")
-                .innerText.trim()
-                .toUpperCase(),
-            "FAVORITES"
-        );
-
         await toggleFavoriteMenu(controlPanel);
-        assert.containsNone(controlPanel, ".dropdown-divider");
-        assert.containsOnce(controlPanel, ".o_add_favorite");
-        assert.strictEqual(
-            controlPanel.el.querySelector(".o_add_favorite > button").innerText.trim(),
-            "Save current search"
-        );
-
         await toggleSaveFavorite(controlPanel);
         assert.strictEqual(
             controlPanel.el.querySelector('.o_add_favorite input[type="text"]').value,
@@ -302,43 +279,6 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test(
-        "default favorite is not activated if activateFavorite is set to false",
-        async function (assert) {
-            assert.expect(3);
-
-            const controlPanel = await makeWithSearch(
-                {
-                    serverData,
-                },
-                {
-                    resModel: "foo",
-                    Component: ControlPanel,
-                    searchMenuTypes: ["favorite"],
-                    searchViewId: false,
-                    irFilters: [
-                        {
-                            context: "{}",
-                            domain: "[('foo', '=', 'a')]",
-                            id: 7,
-                            is_default: true,
-                            name: "My favorite",
-                            sort: "[]",
-                            user_id: [2, "Mitchell Admin"],
-                        },
-                    ],
-                    activateFavorite: false,
-                }
-            );
-
-            await toggleFavoriteMenu(controlPanel);
-
-            assert.notOk(isItemSelected(controlPanel, "My favorite"));
-            assert.deepEqual(getDomain(controlPanel), []);
-            assert.deepEqual(getFacetTexts(controlPanel), []);
-        }
-    );
-
-    QUnit.test(
         "favorites have unique descriptions (the submenus of the favorite menu are correctly updated)",
         async function (assert) {
             assert.expect(5);
@@ -537,48 +477,6 @@ QUnit.module("Search", (hooks) => {
         // assert.isVisible(filterNameInput, "should display an input field for the filter name");
         // await testUtils.fields.editInput(filterNameInput, "Awesome Test Customer Filter");
         // await click(document.querySelector(".o_add_favorite button.btn-primary"));
-        // form.destroy();
-    });
-
-    QUnit.skip("modal loads saved search filters", async function (assert) {
-        /** @todo I don't know yet how to convert this test */
-        // assert.expect(1);
-        // const data = {
-        //     partner: {
-        //         fields: {
-        //             bar: { string: "Bar", type: "many2one", relation: "partner" },
-        //         },
-        //         // 10 records so that the Search button shows
-        //         records: Array.apply(null, Array(10)).map(function (_, i) {
-        //             return { id: i, display_name: "Record " + i, bar: 1 };
-        //         }),
-        //     },
-        // };
-        // const form = await createView({
-        //     arch: `
-        //     <form string="Partners">
-        //         <sheet>
-        //             <group>
-        //                 <field name="bar"/>
-        //             </group>
-        //         </sheet>
-        //     </form>`,
-        //     data,
-        //     model: "partner",
-        //     res_id: 1,
-        //     View: FormView,
-        //     interceptsPropagate: {
-        //         load_views: function (ev) {
-        //             assert.ok(
-        //                 ev.data.options.load_filters,
-        //                 "opening dialog should load the filters"
-        //             );
-        //         },
-        //     },
-        // });
-        // await testUtils.form.clickEdit(form);
-        // await testUtils.fields.many2one.clickOpenDropdown("bar");
-        // await testUtils.fields.many2one.clickItem("bar", "Search");
         // form.destroy();
     });
 });
