@@ -61,7 +61,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             formatFloat(10200000, { humanReadable: true, decimals: 2, minDigits: 2 }),
-            "10.2M"
+            "10.20M"
         );
         assert.strictEqual(
             formatFloat(1020, { humanReadable: true, decimals: 2, minDigits: 1 }),
@@ -69,15 +69,15 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             formatFloat(1002, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "1k"
+            "1.00k"
         );
         assert.strictEqual(
             formatFloat(101, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "101"
+            "101.00"
         );
         assert.strictEqual(
             formatFloat(64.2, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "64"
+            "64.20"
         );
         assert.strictEqual(formatFloat(1e18, { humanReadable: true }), "1E");
         assert.strictEqual(
@@ -110,7 +110,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             formatFloat(-10200000, { humanReadable: true, decimals: 2, minDigits: 2 }),
-            "-10.2M"
+            "-10.20M"
         );
         assert.strictEqual(
             formatFloat(-1020, { humanReadable: true, decimals: 2, minDigits: 1 }),
@@ -118,15 +118,15 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             formatFloat(-1002, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "-1k"
+            "-1.00k"
         );
         assert.strictEqual(
             formatFloat(-101, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "-101"
+            "-101.00"
         );
         assert.strictEqual(
             formatFloat(-64.2, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "-64"
+            "-64.20"
         );
         assert.strictEqual(formatFloat(-1e18, { humanReadable: true }), "-1E");
         assert.strictEqual(
@@ -235,9 +235,14 @@ QUnit.module("Fields", (hooks) => {
             formatMonetary(1234567.654, { currencyId: 10, noSymbol: true }),
             "1,234,567.65"
         );
+        assert.deepEqual(formatMonetary(8.0, { currencyId: 10, humanReadable: true }), "8.00 €");
         assert.deepEqual(
             formatMonetary(1234567.654, { currencyId: 10, humanReadable: true }),
-            "1M €"
+            "1.23M €"
+        );
+        assert.deepEqual(
+            formatMonetary(1990000.001, { currencyId: 10, humanReadable: true }),
+            "1.99M €"
         );
         assert.deepEqual(
             formatMonetary(1234567.654, { currencyId: 44, digits: [69, 1] }),

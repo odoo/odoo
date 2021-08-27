@@ -36,7 +36,9 @@ function insertThousandsSep(number, thousandsSep = ",", grouping = [3, 0]) {
  * @private
  * @param {number} number to format
  * @param {Object} [options] Options to format
- * @param {number} [options.decimals=0] maximum number of decimals to use
+ * @param {number} [options.decimals=0] number of decimals to use
+ *    if minDigits > 1 is used and effective on the number then decimals
+ *    will be shrunk to zero, to avoid displaying irrelevant figures ( 0.01 compared to 1000 )
  * @param {number} [options.minDigits=1]
  *    the minimum number of digits to preserve when switching to another
  *    level of thousands (e.g. with a value of '2', 4321 will still be
@@ -44,11 +46,11 @@ function insertThousandsSep(number, thousandsSep = ",", grouping = [3, 0]) {
  * @returns {string}
  */
 function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
-    number = Math.round(number);
     const decimals = options.decimals || 0;
     const minDigits = options.minDigits || 1;
     const d2 = Math.pow(10, decimals);
     const numberMagnitude = +number.toExponential().split("e+")[1];
+    number = Math.round(number * d2) / d2;
     // the case numberMagnitude >= 21 corresponds to a number
     // better expressed in the scientific format.
     if (numberMagnitude >= 21) {
@@ -72,7 +74,10 @@ function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
         }
     }
     const { decimalPoint, grouping, thousandsSep } = l10n;
-    const [integerPart, decimalPart] = String(number).split(".");
+
+    // determine if we should keep the decimals (we don't want to display 1,020.02k for 1020020)
+    const decimalsToKeep = number >= 1000 ? 0 : decimals;
+    const [integerPart, decimalPart] = number.toFixed(decimalsToKeep).split(".");
     const int = insertThousandsSep(sign * Number(integerPart), thousandsSep, grouping);
     if (!decimalPart) {
         return int + symbol;
@@ -282,7 +287,13 @@ export function formatMonetary(value, options = {}) {
     const currency = session.currencies[currencyId];
     const digits = (currency && currency.digits) || options.digits;
 
-    const formatted = options.humanReadable ? humanNumber(value) : formatFloat(value, { digits });
+    let formatted;
+    if (options.humanReadable) {
+        formatted = humanNumber(value, { decimals: digits[1] });
+    } else {
+        formatted = formatFloat(value, { digits });
+    }
+
     if (!currency || options.noSymbol) {
         return formatted;
     }
