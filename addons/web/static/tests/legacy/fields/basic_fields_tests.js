@@ -14,6 +14,11 @@ var session = require('web.session');
 var testUtils = require('web.test_utils');
 var testUtilsDom = require('web.test_utils_dom');
 var field_registry = require('web.field_registry');
+const  makeTestEnvironment = require("web.test_env");
+const { makeLegacyCommandService } = require("@web/legacy/utils");
+const { registry } = require("@web/core/registry");
+const { legacyExtraNextTick, patchWithCleanup, triggerHotkey, nextTick, click } = require("@web/../tests/helpers/utils");
+const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 
 var createView = testUtils.createView;
 var patchDate = testUtils.mock.patchDate;
@@ -6564,6 +6569,48 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('priority widget edited by the smart action "Set priority..."', async function (assert) {
+        assert.expect(4);
+
+        const legacyEnv = makeTestEnvironment({ bus: core.bus });
+        const serviceRegistry = registry.category("services");
+        serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
+
+        const views = {
+            'partner,false,form': '<form>' +
+                     '<field name="selection" widget="priority"/>' +
+                  '</form>',
+            'partner,false,search': '<search></search>',
+        };
+        const serverData = { models: this.data, views}
+        const webClient = await createWebClient({serverData});
+        await doAction(webClient, {
+            res_id: 1,
+            type: 'ir.actions.act_window',
+            target: 'current',
+            res_model: 'partner',
+            'view_mode': 'form',
+            'views': [[false, 'form']],
+        });
+        assert.containsOnce(webClient, ".fa-star")
+
+        triggerHotkey("control+k")
+        await nextTick();
+        const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Set priority...ALT + R")
+        assert.ok(idx >= 0);
+
+        await click([...webClient.el.querySelectorAll(".o_command")][idx])
+        await nextTick();
+        assert.deepEqual([...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent), [
+            "Normal",
+            "Blocked",
+            "Done"
+          ])
+        await click(webClient.el, "#o_command_2")
+        await legacyExtraNextTick();
+        assert.containsN(webClient, ".fa-star", 2)
+    });
+
     QUnit.module('StateSelection Widget');
 
     QUnit.test('state_selection widget in form view', async function (assert) {
@@ -6819,6 +6866,48 @@ QUnit.module('basic_fields', {
             "there should not be a dropdown");
 
         list.destroy();
+    });
+
+    QUnit.test('state_selection edited by the smart action "Set kanban state..."', async function (assert) {
+        assert.expect(4);
+
+        const legacyEnv = makeTestEnvironment({ bus: core.bus });
+        const serviceRegistry = registry.category("services");
+        serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
+
+        const views = {
+            'partner,false,form': '<form>' +
+                     '<field name="selection" widget="state_selection"/>' +
+                  '</form>',
+            'partner,false,search': '<search></search>',
+        };
+        const serverData = { models: this.data, views}
+        const webClient = await createWebClient({serverData});
+        await doAction(webClient, {
+            res_id: 1,
+            type: 'ir.actions.act_window',
+            target: 'current',
+            res_model: 'partner',
+            'view_mode': 'form',
+            'views': [[false, 'form']],
+        });
+        assert.containsOnce(webClient, ".o_status_red")
+
+        triggerHotkey("control+k")
+        await nextTick();
+        const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Set kanban state...ALT + SHIFT + R")
+        assert.ok(idx >= 0);
+
+        await click([...webClient.el.querySelectorAll(".o_command")][idx])
+        await nextTick();
+        assert.deepEqual([...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent), [
+            "Normal",
+            "Blocked",
+            "Done"
+          ])
+        await click(webClient.el, "#o_command_2")
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_status_green")
     });
 
 
