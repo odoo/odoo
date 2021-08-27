@@ -2003,7 +2003,9 @@
     @extend %o-preview-alpha-background;
     font-family: sans-serif !important;
     font-size: 15px !important;
-    padding: $o-we-sidebar-content-field-spacing $o-we-sidebar-content-field-spacing $o-we-sidebar-content-field-spacing*.8;
+    // Include border in padding to avoid that gradient background color gets
+    // redrawn on each side.
+    padding: $o-we-item-border-width + $o-we-sidebar-content-field-spacing $o-we-item-border-width + $o-we-sidebar-content-field-spacing $o-we-item-border-width + $o-we-sidebar-content-field-spacing * .8;
 }
 .o_we_cc_preview_wrapper > * {
     margin-bottom: 0 !important;
