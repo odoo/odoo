@@ -571,6 +571,11 @@
         </xpath>
     </template>
 
+    <template id="base_unit_price" name="Product Bas eunit price">
+        (<span class="o_base_unit_price" t-field="product.base_unit_price" t-options="{'display_currency': website.currency_id}"/>
+         / <span class="oe_custom_base_unit" t-field="product.base_unit_name"/>)
+    </template>
+
     <template id="product" name="Product" track="1">
 
         <t t-set="combination" t-value="product._get_first_possible_combination()"/>
@@ -629,7 +634,12 @@
                             <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                 <div class="js_product js_main_product mb-3">
-                                    <t t-call="website_sale.product_price" />
+                                    <div>
+                                        <t t-call="website_sale.product_price" />
+                                        <small class="ml-1 text-muted o_base_unit_price_wrapper d-none" groups="website_sale.group_show_uom_price">
+                                            <t t-call='website_sale.base_unit_price'/>
+                                        </small>
+                                    </div>
                                     <t t-placeholder="select">
                                         <input type="hidden" class="product_id" name="product_id" t-att-value="product_variant.id" />
                                         <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id" />
@@ -787,7 +797,7 @@
     </template>
 
     <template id="product_price">
-      <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt-2 mb-3">
+      <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price d-inline-block mt-2 mb-3">
           <h3 class="css_editable_mode_hidden">
               <span class="oe_price" style="white-space: nowrap;" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
               <span itemprop="price" style="display:none;" t-esc="combination_info['price']"/>
@@ -1054,7 +1064,7 @@
                         </td>
                         <td class="text-center td-price" name="price">
                             <t t-set="combination" t-value="line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids"/>
-                            <t t-set="combination_info" t-value="line.product_id.product_tmpl_id._get_combination_info(combination, pricelist=website_sale_order.pricelist_id)"/>
+                            <t t-set="combination_info" t-value="line.product_id.product_tmpl_id._get_combination_info(combination, pricelist=website_sale_order.pricelist_id, add_qty=line.product_uom_qty)"/>
 
                             <t t-set="list_price_converted" t-value="website.currency_id._convert(combination_info['list_price'], website_sale_order.currency_id, website_sale_order.company_id, date)"/>
                             <t groups="account.group_show_line_subtotals_tax_excluded" t-if="(website_sale_order.pricelist_id.discount_policy == 'without_discount' and website_sale_order.currency_id.compare_amounts(list_price_converted, line.price_reduce_taxexcl) == 1) or website_sale_order.currency_id.compare_amounts(line.price_unit, line.price_reduce) == 1" name="order_line_discount">
@@ -1065,6 +1075,9 @@
                                 <del t-attf-class="#{'text-danger mr8'}" style="white-space: nowrap;" t-esc="list_price_converted" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
                             </t>
                             <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" groups="account.group_show_line_subtotals_tax_included" />
+                            <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price" class="cart_product_base_unit_price d-block text-muted" groups="website_sale.group_show_uom_price">
+                                <t t-call='website_sale.base_unit_price'><t t-set='product' t-value='line.product_id' /></t>
+                            </small>
                         </td>
                         <td class="td-action">
                             <a href='#' aria-label="Remove from cart" title="Remove from cart" class='js_delete_product no-decoration'> <small><i class='fa fa-trash-o'></i></small></a>

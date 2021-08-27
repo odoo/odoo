@@ -30,6 +30,7 @@
         'views/res_config_settings_views.xml',
         'views/digest_views.xml',
         'views/website_sale_visitor_views.xml',
+        'views/base_unit_view.xml'
     ],
     'demo': [
         'data/demo.xml',

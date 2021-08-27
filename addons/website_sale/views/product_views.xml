@@ -98,6 +98,43 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="product_template_only_website_form_view">
+        <field name="name">product.template.product.only.website.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='uom_id']" position="after">
+                <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
+                <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="o_row">
+                    <field name="base_unit_count" attrs="{'invisible': [('product_variant_count', '>', 1)]}" />
+                    <field name="base_unit_id" options="{'no_open': True}" attrs="{'invisible': [('product_variant_count', '>', 1)]}" />
+                    <span attrs="{'invisible': ['|', ('base_unit_price','=', 0), ('product_variant_count', '>', 1)]}">
+                        (<field name="base_unit_price"/> / <field name="base_unit_name"/>)
+                    </span>
+                    <span class='text-muted' attrs="{'invisible': [('product_variant_count', '&lt;=', 1)]}">Based on variants</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_product_normal_website_form_view">
+        <field name="name">product.product.normal.view.website</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='uom_id']" position="after">
+                <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
+                <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="o_row">
+                    <field name="base_unit_count"/>
+                    <field name="base_unit_id" options="{'no_open': True}"/>
+                    <span attrs="{'invisible': [('base_unit_price','=', 0)]}">
+                        (<field name="base_unit_price"/> / <field name="base_unit_name"/>)
+                    </span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="product_template_form_view">
         <field name="name">product.template.product.website.form</field>
         <field name="model">product.template</field>
@@ -133,6 +170,16 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
         <field name="arch" type="xml">
+            <field name="standard_price" position="after">
+                <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
+                <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="o_row">
+                    <field name="base_unit_count"/>
+                    <field name="base_unit_id" options="{'no_open': True}"/>
+                    <span attrs="{'invisible': [('base_unit_price','=', 0)]}">
+                        (<field name="base_unit_price"/> / <field name="base_unit_name"/>)
+                    </span>
+                </div>
+            </field>
             <sheet position="inside">
                 <group name="product_variant_images" string="Extra Variant Media">
                     <field name="product_variant_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add a Media" nolabel="1"/>
