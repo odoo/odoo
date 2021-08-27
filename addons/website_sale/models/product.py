@@ -207,6 +207,52 @@ class ProductTemplate(models.Model):
 
     product_template_image_ids = fields.One2many('product.image', 'product_tmpl_id', string="Extra Product Media", copy=True)
 
+    base_unit_count = fields.Float('Base Unit Count', required=True, default=0,
+                                   compute='_compute_base_unit_count', inverse='_set_base_unit_count', store=True,
+                                   help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this product.")
+    base_unit_id = fields.Many2one('website.base.unit', string='Custom Unit of Measure',
+                                   compute='_compute_base_unit_id', inverse='_set_base_unit_id', store=True,
+                                   help="Define a custom unit to display in the price per unit of measure field.")
+    base_unit_price = fields.Monetary("Price Per Unit", currency_field="currency_id", compute="_compute_base_unit_price")
+    base_unit_name = fields.Char(compute='_compute_base_unit_name', help='Displays the custom unit for the products if defined or the selected unit of measure otherwise.')
+
+    @api.depends('product_variant_ids', 'product_variant_ids.base_unit_count')
+    def _compute_base_unit_count(self):
+        self.base_unit_count = 0
+        for template in self.filtered(lambda template: len(template.product_variant_ids) == 1):
+            template.base_unit_count = template.product_variant_ids.base_unit_count
+
+    def _set_base_unit_count(self):
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.base_unit_count = template.base_unit_count
+
+    @api.depends('product_variant_ids', 'product_variant_ids.base_unit_count')
+    def _compute_base_unit_id(self):
+        self.base_unit_id = self.env['website.base.unit']
+        for template in self.filtered(lambda template: len(template.product_variant_ids) == 1):
+            template.base_unit_id = template.product_variant_ids.base_unit_id
+
+    def _set_base_unit_id(self):
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.base_unit_id = template.base_unit_id
+
+    @api.depends('price', 'lst_price', 'base_unit_count')
+    def _compute_base_unit_price(self):
+        for template in self:
+            template.base_unit_price = template.base_unit_count and (template.price or template.lst_price) / template.base_unit_count
+
+    @api.depends('uom_name', 'base_unit_id.name')
+    def _compute_base_unit_name(self):
+        for template in self:
+            template.base_unit_name = template.base_unit_id.name or template.uom_name
+
+    def _prepare_variant_values(self, combination):
+        variant_dict = super()._prepare_variant_values(combination)
+        variant_dict['base_unit_count'] = self.base_unit_count
+        return variant_dict
+
     def _get_website_accessory_product(self):
         domain = self.env['website'].sale_product_domain()
         return self.accessory_product_ids.filtered_domain(domain)
@@ -294,9 +340,14 @@ class ProductTemplate(models.Model):
             parent_combination=parent_combination, only_template=only_template)
 
         if self.env.context.get('website_id'):
+            context = dict(self.env.context, ** {
+                'quantity': self.env.context.get('quantity', add_qty),
+                'pricelist': pricelist and pricelist.id
+            })
+
+            product = (self.env['product.product'].browse(combination_info['product_id']) or self).with_context(context)
             partner = self.env.user.partner_id
             company_id = current_website.company_id
-            product = self.env['product.product'].browse(combination_info['product_id']) or self
 
             tax_display = self.user_has_groups('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
             fpos = self.env['account.fiscal.position'].sudo().get_fiscal_position(partner.id)
@@ -317,6 +368,8 @@ class ProductTemplate(models.Model):
             has_discounted_price = pricelist.currency_id.compare_amounts(list_price, price) == 1
 
             combination_info.update(
+                base_unit_name=product.base_unit_name,
+                base_unit_price=product.base_unit_price,
                 price=price,
                 list_price=list_price,
                 has_discounted_price=has_discounted_price,
@@ -451,12 +504,40 @@ class Product(models.Model):
 
     website_url = fields.Char('Website URL', compute='_compute_product_website_url', help='The full URL to access the document through the website.')
 
+    base_unit_count = fields.Float('Base Unit Count', required=True, default=1, help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this product.")
+    base_unit_id = fields.Many2one('website.base.unit', string='Custom Unit of Measure', help="Define a custom unit to display in the price per unit of measure field.")
+    base_unit_price = fields.Monetary("Price Per Unit", currency_field="currency_id", compute="_compute_base_unit_price")
+    base_unit_name = fields.Char(compute='_compute_base_unit_name', help='Displays the custom unit for the products if defined or the selected unit of measure otherwise.')
+
+    @api.depends('price', 'lst_price', 'base_unit_count')
+    def _compute_base_unit_price(self):
+        for product in self:
+            if not product.id:
+                product.base_unit_price = 0
+            else:
+                product.base_unit_price = product.base_unit_count and (product.price or product.lst_price) / product.base_unit_count
+
+    @api.depends('uom_name', 'base_unit_id')
+    def _compute_base_unit_name(self):
+        for product in self:
+            product.base_unit_name = product.base_unit_id.name or product.uom_name
+
+    @api.constrains('base_unit_count')
+    def _check_base_unit_count(self):
+        if any(product.base_unit_count < 0 for product in self):
+            raise ValidationError(_('The value of Base Unit Count must be greater than 0. Use 0 to hide the price per unit on this product.'))
+
     @api.depends_context('lang')
     @api.depends('product_tmpl_id.website_url', 'product_template_attribute_value_ids')
     def _compute_product_website_url(self):
         for product in self:
             attributes = ','.join(str(x) for x in product.product_template_attribute_value_ids.ids)
             product.website_url = "%s#attr=%s" % (product.product_tmpl_id.website_url, attributes)
+
+    def _prepare_variant_values(self, combination):
+        variant_dict = super()._prepare_variant_values(combination)
+        variant_dict['base_unit_count'] = self.base_unit_count
+        return variant_dict
 
     def website_publish_button(self):
         self.ensure_one()

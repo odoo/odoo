@@ -642,11 +642,7 @@ class ProductTemplate(models.Model):
                     if combination in existing_variants:
                         current_variants_to_activate += existing_variants[combination]
                     else:
-                        current_variants_to_create.append({
-                            'product_tmpl_id': tmpl_id.id,
-                            'product_template_attribute_value_ids': [(6, 0, combination.ids)],
-                            'active': tmpl_id.active,
-                        })
+                        current_variants_to_create.append(tmpl_id._prepare_variant_values(combination))
                         if len(current_variants_to_create) > 1000:
                             raise UserError(_(
                                 'The number of variants to generate is too high. '
@@ -681,6 +677,14 @@ class ProductTemplate(models.Model):
         self.flush()
         self.invalidate_cache()
         return True
+
+    def _prepare_variant_values(self, combination):
+        self.ensure_one()
+        return {
+            'product_tmpl_id': self.id,
+            'product_template_attribute_value_ids': [(6, 0, combination.ids)],
+            'active': self.active
+        }
 
     def has_dynamic_attributes(self):
         """Return whether this `product.template` has at least one dynamic

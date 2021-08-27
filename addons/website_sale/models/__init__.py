@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import account_move
+from . import base_unit
 from . import crm_team
 from . import ir_http
 from . import mail_compose_message
