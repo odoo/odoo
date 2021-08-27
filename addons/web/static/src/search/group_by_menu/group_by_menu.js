@@ -4,6 +4,7 @@ import { CustomGroupByItem } from "./custom_group_by_item";
 import { FACET_ICONS, GROUPABLE_TYPES } from "../utils/misc";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { sortBy } from "@web/core/utils/arrays";
+import { useBus } from "@web/core/utils/hooks";
 
 const { Component } = owl;
 
@@ -20,6 +21,8 @@ export class GroupByMenu extends Component {
             }
         }
         this.fields = sortBy(fields, "string");
+
+        useBus(this.env.searchModel, "update", this.render);
     }
 
     /**

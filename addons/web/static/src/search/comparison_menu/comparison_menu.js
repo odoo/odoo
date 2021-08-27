@@ -1,12 +1,15 @@
 /** @odoo-module **/
 
 import { FACET_ICONS } from "../utils/misc";
+import { useBus } from "@web/core/utils/hooks";
 
 const { Component } = owl;
 
 export class ComparisonMenu extends Component {
     setup() {
         this.icon = FACET_ICONS.comparison;
+
+        useBus(this.env.searchModel, "update", this.render);
     }
 
     /**

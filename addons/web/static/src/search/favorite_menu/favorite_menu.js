@@ -3,6 +3,7 @@
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { FACET_ICONS } from "../utils/misc";
 import { registry } from "@web/core/registry";
+import { useBus } from "@web/core/utils/hooks";
 import { useService } from "@web/core/utils/hooks";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
@@ -13,6 +14,8 @@ export class FavoriteMenu extends Component {
     setup() {
         this.icon = FACET_ICONS.favorite;
         this.dialogService = useService("dialog");
+
+        useBus(this.env.searchModel, "update", this.render);
     }
 
     /**
