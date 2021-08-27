@@ -104,9 +104,16 @@ const Wysiwyg = Widget.extend({
             function () {
                 self.odooEditor.observerUnactive();
                 const $field = $(this);
-                if (($field.data('oe-type') === "datetime" || $field.data('oe-type') === "date") && !$field.hasClass('o_editable_date_field_format_changed')) {
-                    $field.text($field.data('oe-original-with-format'));
-                    $field.addClass('o_editable_date_field_format_changed');
+                if (($field.data('oe-type') === "datetime" || $field.data('oe-type') === "date")) {
+                    let selector = '[data-oe-id="' + $field.data('oe-id') + '"]';
+                    selector += '[data-oe-field="' + $field.data('oe-field') + '"]';
+                    selector += '[data-oe-model="' + $field.data('oe-model') + '"]';
+                    const $linkedFieldNodes = self.$editable.find(selector).addBack(selector);
+                    $linkedFieldNodes.addClass('o_editable_date_field_linked');
+                    if (!$field.hasClass('o_editable_date_field_format_changed')) {
+                        $linkedFieldNodes.text($field.data('oe-original-with-format'));
+                        $linkedFieldNodes.addClass('o_editable_date_field_format_changed');
+                    }
                 }
                 if ($field.data('oe-type') === "monetary") {
                     $field.attr('contenteditable', false);
@@ -1494,6 +1501,9 @@ const Wysiwyg = Widget.extend({
         return new Promise(function () {});
     },
     _onDocumentMousedown: function (e) {
+        if (!e.target.classList.contains('o_editable_date_field_linked')) {
+            this.$editable.find('.o_editable_date_field_linked').removeClass('o_editable_date_field_linked');
+        }
         if (e.target.closest('.oe-toolbar')) {
             this._onToolbar = true;
         } else {
