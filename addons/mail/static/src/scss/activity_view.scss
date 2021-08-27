@@ -2,6 +2,8 @@
     height: 100%;
     > table {
         background-color: white;
+        border-collapse: separate; /* Don't collapse */
+        border-spacing: 0;
         thead > tr > th:first-of-type {
             min-width: 300px;
         }
@@ -17,7 +19,7 @@
                 width: 100%;
             }
             &:before {
-                top: -1px;
+                top: -2px;
                 border-top: 2px solid #E0E2E6;
             }
             &:after {
