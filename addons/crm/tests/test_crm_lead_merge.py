@@ -86,6 +86,73 @@ class TestLeadMerge(TestLeadMergeCommon):
 
     @users('user_sales_manager')
     @mute_logger('odoo.models.unlink')
+    def test_lead_merge_address_not_propagated(self):
+        """All addresses have the same number of non-empty address fields, take the first one (lead_w_contact)
+        because it's the lead that has the best confidence level after being sorted with '_sort_by_confidence_level'"""
+        initial_address = {
+            'street': 'Test street',
+            'street2': 'Test street2',
+            'city': 'Test City',
+            'zip': '5000',
+            'state_id': False,
+            'country_id': self.env.ref('base.be'),
+        }
+        self.lead_w_contact.write(initial_address)
+
+        (self.leads - self.lead_w_contact).write({
+            'street': 'Other street',
+            'street2': 'Other street2',
+            'city': 'Other City',
+            'zip': '6666',
+            'state_id': self.env.ref('base.state_us_1'),
+            'country_id': False,
+        })
+
+        leads = self.env['crm.lead'].browse(self.leads.ids)._sort_by_confidence_level(reverse=True)
+        with self.assertLeadMerged(self.lead_w_contact, leads, **initial_address):
+            leads._merge_opportunity(auto_unlink=False, max_length=None)
+
+    @users('user_sales_manager')
+    @mute_logger('odoo.models.unlink')
+    def test_lead_merge_address_propagated(self):
+        """Test that the address with the most non-empty fields is propagated.
+
+        Should take the address of "lead_w_partner" (maximum number of non-empty address
+        fields and with an highest rank than "lead_w_email_lost")
+        """
+        self.leads.write({
+            'street': 'Original street',
+            'street2': False,
+            'city': False,
+            'zip': False,
+            'state_id': False,
+            'country_id': False,
+        })
+        new_address = {
+            'street': 'New street',
+            'street2': False,
+            'city': 'New City',
+            'zip': False,
+            'state_id': False,
+            'country_id': False,
+        }
+        self.lead_w_partner.write(new_address)
+        self.lead_w_email_lost.write({
+            'street': 'Other street',
+            'street2': False,
+            'city': 'Other City',
+            'zip': False,
+            'state_id': False,
+            'country_id': False,
+        })
+
+        leads = self.env['crm.lead'].browse(self.leads.ids)._sort_by_confidence_level(reverse=True)
+
+        with self.assertLeadMerged(self.lead_w_contact, leads, **new_address):
+            leads._merge_opportunity(auto_unlink=False, max_length=None)
+
+    @users('user_sales_manager')
+    @mute_logger('odoo.models.unlink')
     def test_lead_merge_internals(self):
         """ Test internals of merge wizard. In this test leads are ordered as
 
@@ -234,10 +301,40 @@ class TestLeadMerge(TestLeadMergeCommon):
         # ensure initial data
         (self.lead_w_partner_company | self.lead_1).write({'type': 'opportunity', 'probability': 50})
         leads = self.env['crm.lead'].browse(self.leads.ids)._sort_by_confidence_level(reverse=True)
+
+        # lead_w_partner is lost, check that the "lost_reason" is not propagated
+        # because "lead_1" is not lost
+        lost_reason = self.env['crm.lost.reason'].create({'name': 'Test Reason'})
+        self.lead_w_partner.write({
+            'lost_reason': lost_reason,
+            'probability': 0,
+        })
+
+        all_tags = self.leads.mapped('tag_ids')
+
         with self.assertLeadMerged(self.lead_1, leads,
                                    name='Nibbler Spacecraft Request',
                                    partner_id=self.contact_company_1,
-                                   priority='2'):
+                                   priority='2',
+                                   lost_reason=False,
+                                   tag_ids=all_tags):
+            leads._merge_opportunity(auto_unlink=False, max_length=None)
+
+    @users('user_sales_manager')
+    @mute_logger('odoo.models.unlink')
+    def test_merge_method_propagate_lost_reason(self):
+        """Check that the lost reason is propagated to the final lead if it's lost."""
+        self.leads.write({
+            'probability': 0,
+            'automated_probability': 50,  # Do not automatically update the probability
+        })
+
+        lost_reason = self.env['crm.lost.reason'].create({'name': 'Test Reason'})
+        self.lead_w_partner.lost_reason = lost_reason
+
+        leads = self.env['crm.lead'].browse(self.leads.ids)._sort_by_confidence_level(reverse=True)
+
+        with self.assertLeadMerged(leads[0], leads, lost_reason=lost_reason):
             leads._merge_opportunity(auto_unlink=False, max_length=None)
 
     @users('user_sales_manager')

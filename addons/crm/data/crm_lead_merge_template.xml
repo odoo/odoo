@@ -40,14 +40,33 @@
                 <div t-if="lead.priority">
                     Priority: <span t-field="lead.priority"/>
                 </div>
+                <div t-if="lead.lost_reason">
+                    Lost Reason: <span t-field="lead.lost_reason"/>
+                </div>
                 <div>
                     Created on: <span t-field="lead.create_date"/>
                 </div>
                 <div t-if="lead.date_action_last">
                     Last Action: <span t-field="lead.date_action_last"/>
                 </div>
+                <div t-if="lead.date_deadline">
+                    Expected Closing: <span t-field="lead.date_deadline"/>
+                </div>
                 <div t-if="not is_html_empty(lead.description)">
                     Notes: <span t-field="lead.description"/>
+                </div>
+                <div t-if="lead.lang_id" name="lang_id">
+                    Language: <span t-field="lead.lang_id"/>
+                </div>
+                <div t-if="lead.referred" name="referred">
+                    Referred By: <span t-field="lead.referred"/>
+                </div>
+                <div t-if="lead.tag_ids" name="tag_ids" class="d-flex flex-row">
+                    Tags:
+                    <div class="ml-2 d-flex flex-row">
+                        <div t-foreach="lead.tag_ids" t-as="tag" t-esc="tag.name"
+                            t-attf-class="badge badge-pill o_tag_color_#{tag.color} d-inline-block"/>
+                    </div>
                 </div>
                 <div t-if="lead.user_id" class="mt-3">
                     Salesperson: <span t-field="lead.user_id"/>
@@ -85,10 +104,14 @@
                         <div t-if="lead.website">
                             Website: <span t-field="lead.website"/>
                         </div>
+                        <div t-if="lead.function">
+                            Job Position: <span t-field="lead.function"/>
+                        </div>
                     </div>
                 </div>
                 <div class="mt-3"
-                        t-if="lead.street or lead.street2 or lead.zip or lead.city or lead.state_id or lead.country_id">
+                        t-if="lead.street or lead.street2 or lead.zip or lead.city or lead.state_id or lead.country_id"
+                        name="address">
                     <div class="font-weight-bold">
                         Address:
                     </div>
