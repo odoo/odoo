@@ -121,14 +121,26 @@ class Speedscope:
         return self.frames_indexes[frame]
 
     def stack_to_ids(self, stack, context, stack_offset=0):
+        """
+            :param stack: A list of hashable frame
+            :param context: an iterable of (level, value) ordered by level
+            :param stack_offset: offeset level for stack
+
+            Assemble stack and context and return a list of ids representing
+            this stack, adding each corresponding context at the corresponding
+            level.
+        """
         stack_ids = []
-        for level, frame in enumerate(stack):
-            if context:
-                current_frame_level = stack_offset + level + 1
-                frame_context = context.get(str(current_frame_level)) or context.get(current_frame_level)
-                if frame_context:
-                    context_frame = (', '.join('%s=%s' % item for item in frame_context.items()), '', '')
-                    stack_ids.append(self.get_frame_id(context_frame))
+        context_iterator = iter(context)
+        context_level, context_value = next(context_iterator, (None, None))
+        # consume iterator until we are over stack_offset
+        while context_level is not None and context_level < stack_offset:
+            context_level, context_value = next(context_iterator, (None, None))
+        for level, frame in enumerate(stack, start=stack_offset + 1):
+            while context_level == level:
+                context_frame = (", ".join(f"{k}={v}" for k, v in context_value.items()), '', '')
+                stack_ids.append(self.get_frame_id(context_frame))
+                context_level, context_value = next(context_iterator, (None, None))
             stack_ids.append(self.get_frame_id(frame))
         return stack_ids
 
