@@ -30,3 +30,6 @@ class Lead(models.Model):
         self.sudo().write({
             'registration_ids': [(4, registration.id) for registration in opportunities.sudo().registration_ids]
         })
+
+    def _merge_get_fields(self):
+        return super(Lead, self)._merge_get_fields() + ['event_lead_rule_id', 'event_id']
