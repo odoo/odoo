@@ -33,31 +33,31 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     # description
     'name',
     'user_id',
+    'color',
     'company_id',
+    'lang_id',
     'team_id',
+    'referred',
     # pipeline
     'stage_id',
     # revenues
     'expected_revenue',
+    'recurring_plan',
+    'recurring_revenue',
     # dates
     'create_date',
     'date_action_last',
+    'date_deadline',
     # partner / contact
     'partner_id',
     'title',
     'partner_name',
     'contact_name',
     'email_from',
+    'function',
     'mobile',
     'phone',
     'website',
-    # address
-    'street',
-    'street2',
-    'zip',
-    'city',
-    'state_id',
-    'country_id',
 ]
 
 # Subset of partner fields: sync any of those
@@ -1224,6 +1224,7 @@ class Lead(models.Model):
         if fnames is None:
             fnames = self._merge_get_fields()
         fcallables = self._merge_get_fields_specific()
+        address_values = self._merge_get_fields_address()
 
         # helpers
         def _get_first_not_null(attr, opportunities):
@@ -1244,6 +1245,8 @@ class Lead(models.Model):
             fcallable = fcallables.get(field_name)
             if fcallable and callable(fcallable):
                 data[field_name] = fcallable(field_name, self)
+            elif field_name in address_values:
+                data[field_name] = address_values[field_name]
             elif not fcallable and field.type in ('many2many', 'one2many'):
                 continue
             else:
@@ -1321,15 +1324,36 @@ class Lead(models.Model):
 
         return opportunities_head
 
+    def _merge_get_fields_address(self):
+        """The address fields are propagated as a whole.
+
+        The address is taken from the lead with the most non-empty address field
+        (sorted by highest rank if multiple lead have the same amount of non-empty
+        fields).
+        """
+        source_lead = max(self, key=lambda lead: len(list(
+            lead[field] for field in PARTNER_ADDRESS_FIELDS_TO_SYNC
+            if lead[field]
+        )))
+        return {fname: source_lead[fname] for fname in PARTNER_ADDRESS_FIELDS_TO_SYNC}
+
     def _merge_get_fields_specific(self):
         return {
             'description': lambda fname, leads: '<br/><br/>'.join(desc for desc in leads.mapped('description') if not is_html_empty(desc)),
             'type': lambda fname, leads: 'opportunity' if any(lead.type == 'opportunity' for lead in leads) else 'lead',
             'priority': lambda fname, leads: max(leads.mapped('priority')) if leads else False,
+            'tag_ids': lambda fname, leads: leads.mapped('tag_ids'),
+            'lost_reason': lambda fname, leads:
+                False if leads and leads[0].probability
+                else next((lead.lost_reason for lead in leads if lead.lost_reason), False),
         }
 
     def _merge_get_fields(self):
-        return list(CRM_LEAD_FIELDS_TO_MERGE) + list(self._merge_get_fields_specific().keys())
+        return (
+            CRM_LEAD_FIELDS_TO_MERGE
+            + list(self._merge_get_fields_specific().keys())
+            + PARTNER_ADDRESS_FIELDS_TO_SYNC
+        )
 
     def _merge_dependences(self, opportunities):
         """ Merge dependences (messages, attachments,activities, calendar events,

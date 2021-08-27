@@ -159,3 +159,9 @@ class Lead(models.Model):
                 values=template_values,
                 subtype_id=self.env.ref('mail.mt_note').id
             )
+
+    def _merge_get_fields_specific(self):
+        return {
+            ** super(Lead, self)._merge_get_fields_specific(),
+            'iap_enrich_done': lambda fname, leads: any(lead.iap_enrich_done for lead in leads),
+        }
