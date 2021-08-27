@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 from datetime import datetime
 from unittest.mock import patch
 
 from odoo import Command, fields
+from odoo.addons.mail.models.mail_channel import channel_avatar, group_avatar
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, Form
 from odoo.tests.common import users
-from odoo.tools import mute_logger
+from odoo.tools import html_escape, mute_logger
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -436,6 +438,40 @@ class TestChannelInternals(MailCommon):
         ])
         self.assertEqual(len(messages_2), 1)
         self.assertEqual(messages_1, messages_2)
+
+    def test_channel_should_generate_correct_default_avatar(self):
+        channel = self.env['mail.channel'].create({'name': '', 'uuid': 'test-uuid'})
+        bgcolor = html_escape('hsl(288, 51%, 45%)')  # depends on uuid
+        expceted_avatar_channel = (channel_avatar.replace('fill="#875a7b"', f'fill="{bgcolor}"')).encode()
+        expected_avatar_group = (group_avatar.replace('fill="#875a7b"', f'fill="{bgcolor}"')).encode()
+
+        channel.channel_type = 'group'
+        self.assertEqual(base64.b64decode(channel.avatar_128), expected_avatar_group)
+
+        channel.channel_type = 'channel'
+        self.assertEqual(base64.b64decode(channel.avatar_128), expceted_avatar_channel)
+
+        channel.image_128 = base64.b64encode(("<svg/>").encode())
+        self.assertEqual(channel.avatar_128, channel.image_128)
+
+    def test_channel_write_should_send_notification_if_image_128_changed(self):
+        channel = self.env['mail.channel'].create({'name': '', 'uuid': 'test-uuid'})
+        # do the operation once before the assert to grab the value to expect
+        channel.image_128 = base64.b64encode(("<svg/>").encode())
+        avatar_cache_key = channel._get_avatar_cache_key()
+        channel.image_128 = False
+        self.env['bus.bus'].search([]).unlink()
+        with self.assertBus(
+            [(self.cr.dbname, 'mail.channel', channel.id)],
+            [{
+                "type": "mail.channel_update",
+                "payload": {
+                    "id": channel.id,
+                    "avatarCacheKey": avatar_cache_key,
+                },
+            }]
+        ):
+            channel.image_128 = base64.b64encode(("<svg/>").encode())
 
     def test_multi_company_chat(self):
         self._activate_multi_company()
