@@ -111,6 +111,7 @@ class Contract(models.Model):
             domain = [
                 ('id', '!=', contract.id),
                 ('employee_id', '=', contract.employee_id.id),
+                ('company_id', '=', contract.company_id.id),
                 '|',
                     ('state', 'in', ['open', 'close']),
                     '&',
