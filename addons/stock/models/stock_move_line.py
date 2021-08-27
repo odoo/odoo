@@ -58,6 +58,8 @@ class StockMoveLine(models.Model):
     location_dest_id = fields.Many2one('stock.location', 'To', domain="[('usage', '!=', 'view')]", check_company=True, required=True)
     lots_visible = fields.Boolean(compute='_compute_lots_visible')
     picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
+    picking_type_id = fields.Many2one(
+        'stock.picking.type', 'Operation type', compute='_compute_picking_type_id')
     picking_type_use_create_lots = fields.Boolean(related='picking_id.picking_type_id.use_create_lots', readonly=True)
     picking_type_use_existing_lots = fields.Boolean(related='picking_id.picking_type_id.use_existing_lots', readonly=True)
     picking_type_entire_packs = fields.Boolean(related='picking_id.picking_type_id.show_entire_packs', readonly=True)
@@ -80,6 +82,13 @@ class StockMoveLine(models.Model):
                 line.lots_visible = picking.picking_type_id.use_existing_lots or picking.picking_type_id.use_create_lots
             else:
                 line.lots_visible = line.product_id.tracking != 'none'
+
+    @api.depends('picking_id')
+    def _compute_picking_type_id(self):
+        self.picking_type_id = False
+        for line in self:
+            if line.picking_id:
+                line.picking_type_id = line.picking_id.picking_type_id
 
     @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
     def _compute_product_qty(self):
