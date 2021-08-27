@@ -34,7 +34,11 @@ QUnit.module('discuss_sidebar_category_item_tests.js', {
 QUnit.test('channel - avatar: should have correct avatar', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({ id: 20 });
+    this.data['mail.channel'].records.push({
+        avatarCacheKey: '100111',
+        id: 20,
+    });
+
     await this.start();
 
     const channelItem = document.querySelector(`
@@ -53,8 +57,54 @@ QUnit.test('channel - avatar: should have correct avatar', async function (asser
 
     assert.strictEqual(
         channelItem.querySelector(`:scope .o_DiscussSidebarCategoryItem_image`).dataset.src,
-        '/web/image/mail.channel/20/image_128',
+        '/web/image/mail.channel/20/avatar_128?unique=100111',
         'should link to the correct picture source'
+    );
+
+});
+
+QUnit.test('channel - avatar: should update avatar url from bus', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({
+        avatarCacheKey: '101010',
+        id: 20,
+     });
+
+    await this.start();
+
+    const channelItemAvatar = document.querySelector(`
+        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
+            this.messaging.models['mail.thread'].findFromIdentifyingData({
+                id: 20,
+                model: 'mail.channel',
+            }).localId
+        }"] .o_DiscussSidebarCategoryItem_image
+    `);
+
+    assert.strictEqual(
+        channelItemAvatar.dataset.src,
+        '/web/image/mail.channel/20/avatar_128?unique=101010',
+    );
+
+    await afterNextRender(() => {
+        this.env.services.rpc({
+            model: 'mail.channel',
+            method: 'write',
+            args: [[20], { image_128: 'This field does not matter' }],
+        });
+    });
+    const result = await this.env.services.rpc({
+        model: 'mail.channel',
+        method: 'read',
+        args: [[20], ['avatarCacheKey']],
+    });
+    const newCacheKey = result[0]['avatarCacheKey'];
+
+    // FIXME: current test framework does not replace `src` with `data-src` during the re-rendering.
+    assert.strictEqual(
+        channelItemAvatar.getAttribute('src'),
+        `/web/image/mail.channel/20/avatar_128?unique=${newCacheKey}`,
     );
 });
 

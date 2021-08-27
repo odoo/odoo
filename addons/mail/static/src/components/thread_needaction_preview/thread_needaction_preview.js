@@ -38,7 +38,7 @@ export class ThreadNeedactionPreview extends Component {
             return this.thread.correspondent.avatarUrl;
         }
         if (this.thread.model === 'mail.channel') {
-            return `/web/image/mail.channel/${this.thread.id}/image_128`;
+            return `/web/image/mail.channel/${this.thread.id}/avatar_128?unique=${this.thread.avatarCacheKey}`;
         }
         return '/mail/static/src/img/smiley/avatar.jpg';
     }

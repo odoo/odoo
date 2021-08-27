@@ -68,6 +68,8 @@ export class MockModels {
             },
             'mail.channel': {
                 fields: {
+                    // In python this is not a real field but a compute. Here for simplicity.
+                    avatarCacheKey: { string: "Avatar Cache Key", type: "datetime", default() { moment.utc().format("YYYYMMDDHHmmss"); } },
                     channel_type: { string: "Channel Type", type: "selection", default: 'channel' },
                     // In python this belongs to mail.channel.partner. Here for simplicity.
                     custom_channel_name: { string: "Custom channel name", type: 'char' },

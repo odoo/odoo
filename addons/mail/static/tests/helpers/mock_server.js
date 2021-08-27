@@ -223,6 +223,10 @@ MockServer.include({
             const context = args.kwargs.context;
             return this._mockMailChannelNotifyTyping(ids, is_typing, context);
         }
+        if (args.model === 'mail.channel' && args.method === 'write' && 'image_128' in args.args[1]) {
+            const ids = args.args[0];
+            return this._mockMailChannelWriteImage128(ids[0]);
+        }
         // mail.message methods
         if (args.model === 'mail.message' && args.method === 'mark_all_as_read') {
             const domain = args.args[0] || args.kwargs.domain;
@@ -993,6 +997,31 @@ MockServer.include({
         const mentionSuggestions = mentionSuggestionsFilter(this.data['mail.channel'].records, search, limit);
 
         return mentionSuggestions;
+    },
+    /**
+     * Simulates `write` on `mail.channel` when `image_128` changes.
+     *
+     * @param {integer} id
+     */
+    _mockMailChannelWriteImage128(id) {
+        this._mockWrite('mail.channel', [
+            [id],
+            {
+                avatarCacheKey: moment.utc().format("YYYYMMDDHHmmss"),
+            },
+        ]);
+        const avatarCacheKey = this._getRecords('mail.channel', [['id', '=', id]])[0].avatarCacheKey;
+        const notification = [
+            ['dbName', 'mail.channel', id],
+            {
+                type: 'mail.channel_update',
+                payload: {
+                    id: 20,
+                    avatarCacheKey: avatarCacheKey,
+                },
+            },
+        ];
+        this._widget.call('bus_service', 'trigger', 'notification', [notification]);
     },
     /**
      * Simulates `message_post` on `mail.channel`.

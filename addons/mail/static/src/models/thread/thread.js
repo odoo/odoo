@@ -168,6 +168,9 @@ function factory(dependencies) {
          */
         static convertData(data) {
             const data2 = {};
+            if ('avatarCacheKey' in data) {
+                data2.avatarCacheKey = data.avatarCacheKey;
+            }
             if ('description' in data) {
                 data2.description = data.description;
             }
@@ -1809,6 +1812,11 @@ function factory(dependencies) {
         attachments: many2many('mail.attachment', {
             inverse: 'threads',
         }),
+        /**
+         * Cache key to force a reload of the avatar when avatar is changed.
+         * It only makes sense for channels.
+         */
+        avatarCacheKey: attr(),
         cache: one2one('mail.thread_cache', {
             default: create(),
             inverse: 'thread',

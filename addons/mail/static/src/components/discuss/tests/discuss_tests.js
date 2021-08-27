@@ -434,7 +434,7 @@ QUnit.test('sidebar: add channel', async function (assert) {
 });
 
 QUnit.test('sidebar: basic channel rendering', async function (assert) {
-    assert.expect(13);
+    assert.expect(12);
 
     // channel expected to be found in the sidebar,
     // with a random unique id and name that  will be referenced in the test
@@ -459,11 +459,6 @@ QUnit.test('sidebar: basic channel rendering', async function (assert) {
     assert.notOk(
         channel.classList.contains('o-active'),
         "should not be active by default"
-    );
-    assert.strictEqual(
-        channel.querySelectorAll(`:scope .o_ThreadIcon`).length,
-        1,
-        "should have an icon"
     );
     assert.strictEqual(
         channel.querySelectorAll(`:scope .o_DiscussSidebarCategoryItem_name`).length,
@@ -623,10 +618,9 @@ QUnit.test('sidebar: public/private channel rendering', async function (assert) 
             }).localId
         }"]
     `);
-    assert.strictEqual(
-        channel1.querySelectorAll(`:scope .o_ThreadIcon_channelPublic`).length,
-        1,
-        "channel1 (public) has hashtag icon"
+    assert.notOk(
+        channel1.querySelectorAll(`:scope .o_ThreadIcon`).length,
+        "channel1 (public) should not have any icon"
     );
     assert.strictEqual(
         channel2.querySelectorAll(`:scope .o_ThreadIcon_channelPrivate`).length,
