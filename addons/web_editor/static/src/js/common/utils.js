@@ -25,6 +25,7 @@ const EDITOR_COLOR_CSS_VARIABLES = [...COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES];
 for (let i = 1; i <= 5; i++) {
     EDITOR_COLOR_CSS_VARIABLES.push(`o-color-${i}`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-bg`);
+    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-bg-gradient`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-headings`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-text`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-primary`);

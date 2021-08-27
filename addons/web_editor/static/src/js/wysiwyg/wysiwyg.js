@@ -1653,7 +1653,12 @@ export class Wysiwyg extends Component {
         const stylesToCopy = weUtils.EDITOR_COLOR_CSS_VARIABLES;
 
         for (const style of stylesToCopy) {
-            element.style.setProperty(`--we-cp-${style}`, weUtils.getCSSVariableValue(style));
+            let value = weUtils.getCSSVariableValue(style);
+            if (value.startsWith("'") && value.endsWith("'")) {
+                // Gradient values are recovered within a string.
+                value = value.substring(1, value.length - 1);
+            }
+            element.style.setProperty(`--we-cp-${style}`, value);
         }
 
         element.classList.toggle('o_we_has_btn_outline_primary',
