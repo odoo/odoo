@@ -11,6 +11,16 @@ class StockMoveLine(models.Model):
     workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True)
     production_id = fields.Many2one('mrp.production', 'Production Order', check_company=True)
 
+    @api.depends('production_id')
+    def _compute_picking_type_id(self):
+        line_to_remove = self.env['stock.move.line']
+        for line in self:
+            if not line.production_id:
+                continue
+            line.picking_type_id = line.production_id.picking_type_id
+            line_to_remove |= line
+        return super(StockMoveLine, self - line_to_remove)._compute_picking_type_id()
+
     @api.model_create_multi
     def create(self, values):
         res = super(StockMoveLine, self).create(values)
