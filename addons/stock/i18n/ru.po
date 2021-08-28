@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 11:23+0000\n"
+"POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
 "Last-Translator: ILMIR <karamov@it-projects.info>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
@@ -400,6 +400,11 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "<span>Assign Serial Numbers</span>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
+msgid "<span>Clear All</span>"
 msgstr ""
 
 #. module: stock
@@ -1203,6 +1208,11 @@ msgid "Choose your date"
 msgstr "Выберите свою дату"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
+msgid "Clear Lines"
+msgstr ""
+
+#. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -1297,6 +1307,7 @@ msgid "Configuration"
 msgstr "Настройка"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.package_level_form_edit_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
@@ -1556,6 +1567,14 @@ msgstr "Создал"
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__create_date
 msgid "Created on"
 msgstr "Создан"
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"Creating a new warehouse will automatically activate the Storage Locations "
+"setting"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__create_date
@@ -2016,6 +2035,7 @@ msgid "Difference different than zero"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.package_level_form_edit_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
@@ -3847,6 +3867,13 @@ msgstr "многошаговые маршруты"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
 msgid "Multiple Quantity"
 msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_inventory__my_activity_date_deadline
+#: model:ir.model.fields,field_description:stock.field_stock_picking__my_activity_date_deadline
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Крайний срок моей активности "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -7553,6 +7580,7 @@ msgstr "Предупреждение о недостаточном количе�
 #: code:addons/stock/models/stock_move.py:0
 #: code:addons/stock/models/stock_move_line.py:0
 #: code:addons/stock/models/stock_move_line.py:0
+#: code:addons/stock/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__warning
 #, python-format
 msgid "Warning"
@@ -7834,6 +7862,14 @@ msgstr "Вы можете удалить только черновик пере�
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 "Вы можете обработать только 1.0 %s товаров с уникальным серийным номером."
+
+#. module: stock
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You can't desactivate the multi-location if you have more than once "
+"warehouse by company"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:0
@@ -8207,20 +8243,4 @@ msgstr ""
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "should be replenished to reach the maximum of"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/res_config_settings.py:0
-#, python-format
-msgid ""
-"You can't desactivate the multi-location if you have more than once "
-"warehouse by company"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_warehouse.py:0
-#, python-format
-msgid ""
-"Creating a new warehouse will automatically activate the Storage Locations "
-"setting"
 msgstr ""

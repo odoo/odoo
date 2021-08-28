@@ -808,7 +808,10 @@ class MrpProduction(models.Model):
         # covers at least 2 cases: backorders generation (follow default logic for moves copying)
         # and copying a done MO via the form (i.e. copy only the non-cancelled moves since no backorder = cancelled finished moves)
         if not default or 'move_finished_ids' not in default:
-            default['move_finished_ids'] = [(0, 0, move.copy_data()[0]) for move in self.move_finished_ids.filtered(lambda m: m.state != 'cancel' and m.product_qty != 0.0)]
+            move_finished_ids = self.move_finished_ids
+            if self.state != 'cancel':
+                move_finished_ids = self.move_finished_ids.filtered(lambda m: m.state != 'cancel' and m.product_qty != 0.0)
+            default['move_finished_ids'] = [(0, 0, move.copy_data()[0]) for move in move_finished_ids]
         if not default or 'move_raw_ids' not in default:
             default['move_raw_ids'] = [(0, 0, move.copy_data()[0]) for move in self.move_raw_ids.filtered(lambda m: m.product_qty != 0.0)]
         return super(MrpProduction, self).copy_data(default=default)

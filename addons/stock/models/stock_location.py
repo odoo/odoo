@@ -63,7 +63,7 @@ class Location(models.Model):
 
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
 
-    @api.depends('name', 'location_id.complete_name')
+    @api.depends('name', 'location_id.complete_name', 'usage')
     def _compute_complete_name(self):
         for location in self:
             if location.location_id and location.usage != 'view':

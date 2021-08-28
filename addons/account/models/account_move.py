@@ -3603,7 +3603,7 @@ class AccountMoveLine(models.Model):
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
 
-    @api.onchange('amount_currency', 'currency_id', 'debit', 'credit', 'tax_ids', 'account_id', 'price_unit')
+    @api.onchange('amount_currency', 'currency_id', 'debit', 'credit', 'tax_ids', 'account_id', 'price_unit', 'quantity')
     def _onchange_mark_recompute_taxes(self):
         ''' Recompute the dynamic onchange based on taxes.
         If the edited line is a tax line, don't recompute anything as the user must be able to
@@ -4907,7 +4907,7 @@ class AccountMoveLine(models.Model):
                 'move_id': move_line.id,
                 'user_id': move_line.move_id.invoice_user_id.id or self._uid,
                 'partner_id': move_line.partner_id.id,
-                'company_id': move_line.analytic_account_id.company_id.id or self.env.company.id,
+                'company_id': move_line.analytic_account_id.company_id.id or move_line.move_id.company_id.id,
             })
         return result
 

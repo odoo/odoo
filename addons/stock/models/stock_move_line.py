@@ -674,3 +674,7 @@ class StockMoveLine(models.Model):
             else:
                 aggregated_move_lines[line_key]['qty_done'] += move_line.qty_done
         return aggregated_move_lines
+
+    def _compute_sale_price(self):
+        # To Override
+        pass
