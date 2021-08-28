@@ -631,7 +631,7 @@ class ProductProduct(models.Model):
             candidate_quantity = abs(candidate.quantity)
             if candidate.stock_move_id.id in returned_quantities:
                 candidate_quantity -= returned_quantities[candidate.stock_move_id.id]
-            if float_is_zero(candidate_quantity, precision_rounding=candidate.uom_id.rounding):
+            if float_is_zero(candidate.quantity, precision_rounding=candidate.uom_id.rounding):
                 continue  # correction entries
             if not float_is_zero(qty_invoiced, precision_rounding=candidate.uom_id.rounding):
                 qty_ignored = min(qty_invoiced, candidate_quantity)
@@ -767,4 +767,3 @@ class ProductCategory(models.Model):
             account_moves = self.env['account.move'].create(move_vals_list)
             account_moves.post()
         return res
-

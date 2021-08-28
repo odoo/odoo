@@ -515,6 +515,26 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 0)
         self.assertEqual(self.product1.standard_price, 1.01)
 
+    def test_average_price_unit_with_correction_layer(self):
+        self.product1.standard_price = 10
+        self.assertEqual(self.product1.qty_available, 0)
+
+        # deliver when empty stock
+        out_move = self._make_out_move(self.product1, 10, force_assign=True, create_picking=True)
+        self.assertEqual(out_move._get_price_unit(), 10)
+
+        # resupply afterwards
+        self._make_in_move(self.product1, 10, unit_cost=20)
+        self.assertEqual(out_move._get_price_unit(), 20, 'Value of negative delivery was not corrected after receipt')
+
+        # return products that were delivered while negative stock
+        return_move = self._make_return(out_move, 10)
+        self.assertEqual(return_move._get_price_unit(), 20, 'Return move must be valued with value of origin move')
+
+        # compute average price per unit for move with returns
+        average_price_unit = self.product1._compute_average_price(0, 10, out_move | return_move)
+        self.assertEqual(average_price_unit, 20, 'Wrong average price')
+
 
 class TestStockValuationFIFO(TestStockValuationCommon):
     def setUp(self):
@@ -898,4 +918,3 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         # An accounting entry should only be created for the emptying now that the category is manual.
         self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 2)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
-
