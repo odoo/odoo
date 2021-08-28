@@ -34,21 +34,21 @@
     </record>
 
 
-    <record id="res_partner_form_extend" model="ir.ui.view">
-        <field name="name">res.partner.aumet</field>
-        <field name="model">res.partner</field>
-        <field name="priority">20</field>
-        <field name="inherit_id" ref="base.view_partner_form"/>
-        <field name="arch" type="xml">
+<!--    <record id="res_partner_form_extend" model="ir.ui.view">-->
+<!--        <field name="name">res.partner.aumet</field>-->
+<!--        <field name="model">res.partner</field>-->
+<!--        <field name="priority">20</field>-->
+<!--        <field name="inherit_id" ref="base.view_partner_form"/>-->
+<!--        <field name="arch" type="xml">-->
 
-            <xpath expr="//field[@name='category_id']" position="after">
-                <field name="marketplace_id" string="Distributor in marketplace"/>
+<!--            <xpath expr="//field[@name='category_id']" position="after">-->
+<!--                <field name="marketplace_id" string="Distributor in marketplace"/>-->
 
-                <field name="is_in_marketplace" string="is linked to marketplace"/>
+<!--                <field name="is_in_marketplace" string="is linked to marketplace"/>-->
 
-            </xpath>
-        </field>
-    </record>
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
 
     <record id="aumet_marketplace_search_view" model="ir.ui.view">
         <field name="name">aumet.marketplace_product.search</field>
