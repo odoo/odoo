@@ -14,17 +14,17 @@ class AccountMove(models.Model):
         inverse_name='move_id')
     edi_state = fields.Selection(
         selection=[('to_send', 'To Send'), ('sent', 'Sent'), ('to_cancel', 'To Cancel'), ('cancelled', 'Cancelled')],
-        string="Electronic invoicing",
+        string="E-invoice state",
         store=True,
         compute='_compute_edi_state',
         help='The aggregated state of all the EDIs with web-service of this move')
     edi_error_count = fields.Integer(
         compute='_compute_edi_error_count',
         help='How many EDIs are in error for this move ?')
-    edi_blocking_level = fields.Selection(
+    edi_blocking_level = fields.Selection(string="E-invoice Blocking Level",
         selection=[('info', 'Info'), ('warning', 'Warning'), ('error', 'Error')],
         compute='_compute_edi_error_message')
-    edi_error_message = fields.Html(
+    edi_error_message = fields.Html(string="E-invoice Error Message",
         compute='_compute_edi_error_message')
     edi_web_services_to_process = fields.Text(
         compute='_compute_edi_web_services_to_process',

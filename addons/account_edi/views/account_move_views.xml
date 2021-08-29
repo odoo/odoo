@@ -16,6 +16,8 @@
             <field name="arch" type="xml">
                 <field name="state" position="before">
                     <field name="edi_state" optional="hide"/>
+                    <field name="edi_blocking_level" optional="hide"/>
+                    <field name="edi_error_message" optional="hide"/>
                 </field>
             </field>
         </record>
@@ -27,6 +29,8 @@
             <field name="arch" type="xml">
                 <field name="state" position="before">
                     <field name="edi_state" optional="hide"/>
+                    <field name="edi_blocking_level" optional="hide"/>
+                    <field name="edi_error_message" optional="hide"/>
                 </field>
             </field>
         </record>
@@ -39,6 +43,10 @@
                 <xpath expr="//search/group/filter[@name='status']" position="after">
                     <filter string="Electronic invoicing state" name="edi_state" context="{'group_by': 'edi_state'}" />
                 </xpath>
+                <filter name="to_check" position="after">
+                    <separator/>
+                    <filter string="Processing E-invoice" name="edi_to_process" domain="[('edi_state', 'in', [('to_send'), ('to_cancel')])]"/>
+                </filter>
             </field>
         </record>
 
