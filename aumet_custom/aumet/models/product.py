@@ -6,7 +6,6 @@ from odoo import fields, models, api
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
-    scientific_name = fields.Many2one('aumet.scientific_name', string='Scientific Name', required=False)
     marketplace_product = fields.Many2one('aumet.marketplace_product', string='Marketplace Product', required=False)
     is_marketplace_item = fields.Boolean(string="Is from marketplace")
     payment_method = fields.Many2one("aumet.payment_method", string="payment method")
