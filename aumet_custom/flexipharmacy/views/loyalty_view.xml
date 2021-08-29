@@ -21,7 +21,7 @@
             <field name="view_mode">tree</field>
         </record>
 
-        <menuitem id="main_menu" name="Loyalty Points" parent="point_of_sale.menu_point_root"/>
+        <menuitem id="main_menu" name="Loyalty Points" parent="point_of_sale.menu_point_root" groups="flexipharmacy.group_pos_manage_promotion_wallet_gift_loyalty"/>
         <menuitem id="sub_menu_earned" name="Earned Points" parent="flexipharmacy.main_menu"
                   action="flexipharmacy.action_view_pos_earned_loyalty"/>
 

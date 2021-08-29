@@ -168,8 +168,8 @@
             </field>
         </record>
 
-        <menuitem id="pos_promotion_menu" parent="point_of_sale.menu_point_root"
-                  name="Pos Promotion"/>
+        <menuitem id="pos_promotion_menu" parent="point_of_sale.menu_point_root" groups="flexipharmacy.group_pos_manage_promotion_wallet_gift_loyalty"
+                  name="Pos Promotion" />
         <menuitem id="pos_promotion_sub_menu" parent="pos_promotion_menu" action="promotion_view_action_id"
                   name="Pos Promotion"/>
     </data>

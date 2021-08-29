@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_backend" name="disable_quick_create_assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/disable_quick_create/static/src/js/disable_quick_create.js"></script>
+        </xpath>
+    </template>
+
+</odoo>
