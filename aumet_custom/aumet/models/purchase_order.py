@@ -25,19 +25,6 @@ class PurchaseOrder(models.Model):
     def button_marketplace(self):
         pass
 
-
-    def load(self, fields, data):
-        print("%%%%%%%%%%%%%%%%")
-        print(fields, data)
-        create_result = super(PurchaseOrder, self).load(fields, data)
-
-        print(create_result)
-
-    def onchange1(self, values, field_name, field_onchange):
-        result = super(PurchaseOrder, self).onchange(values, field_name, field_onchange)
-        print("*&*&*&*&*&*&*&")
-        return result
-
     @api.depends('order_line.product_id','order_line.product_id.marketplace_product.marketplace_id')
     def create1(self, vals_list):
         print("#$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
