@@ -1,4 +1,4 @@
-sudo apt-get install libsasl2-dev python-dev libldap2-dev libssl-dev
+sudo apt-get install libsasl2-dev python-dev libldap2-dev libssl-dev -y
 sudo apt-get install gcc -y
 sudo apt-get install g++ -y
 sudo apt-get install python3-dev -y
