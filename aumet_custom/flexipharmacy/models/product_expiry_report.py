@@ -46,8 +46,11 @@ class ProductExpiryReport(models.Model):
             return self.print_product_expiry_report('xls')
 
     def print_product_expiry_report(self, report_type):
-        if self.num_expiry_days <= 0:
-            raise UserError('Number Of Expiry Days should be greater then 0')
+        # if self.num_expiry_days <= 0:
+        #     raise UserError('Number Of Expiry Days should be greater then 0')
+        expiry_days_where = " AND spl.expiration_date <= '%s'"%(date.today())
+        if self.num_expiry_days:
+            expiry_days_where = " AND spl.expiration_date >= '%s' AND spl.expiration_date <= '%s' "%(date.today() , date.today() + timedelta(days=self.num_expiry_days))
 
         location_ids = self.location_ids.ids or self.env['stock.location'].search([('usage', '=', 'internal')]).ids
         category_ids = self.category_ids.ids or self.env['product.category'].search([]).ids
@@ -60,12 +63,10 @@ class ProductExpiryReport(models.Model):
                                 LEFT JOIN product_product pp on spl.product_id = pp.id
                                 LEFT JOIN product_template pt on pp.product_tmpl_id  = pt.id
                                 LEFT JOIN product_category pc on pt.categ_id = pc.id
-                        WHERE spl.expiration_date <= '%s' AND
-                                    spl.expiration_date >= '%s' AND
-                                    pc.id IN %s order by pp.default_code''' % (
-            (date.today() + timedelta(days=self.num_expiry_days)),
-            date.today(),
+                        WHERE pc.id IN %s''' % (
             "(%s)" % ','.join(map(str, category_ids)))
+        query += expiry_days_where
+        query += 'order by pp.default_code'
         self.env.cr.execute(query)
         res1 = self.env.cr.dictfetchall()
 
