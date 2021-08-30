@@ -697,8 +697,13 @@ class PosSession(models.Model):
     def _create_combine_account_payment(self, payment_method, amounts):
         outstanding_account = payment_method.outstanding_account_id or self.company_id.account_journal_payment_debit_account_id
         destination_account = self._get_receivable_account(payment_method)
+
+        if float_compare(amounts['amount'], 0, precision_rounding=self.currency_id.rounding) < 0:
+            # revert the accounts because account.payment doesn't accept negative amount.
+            outstanding_account, destination_account = destination_account, outstanding_account
+
         account_payment = self.env['account.payment'].create({
-            'amount': amounts['amount'],
+            'amount': abs(amounts['amount']),
             'journal_id': payment_method.journal_id.id,
             'force_outstanding_account_id': outstanding_account.id,
             'destination_account_id':  destination_account.id,
