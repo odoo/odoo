@@ -862,6 +862,7 @@ class ResourceCalendarAttendance(models.Model):
 class ResourceResource(models.Model):
     _name = "resource.resource"
     _description = "Resources"
+    _order = "name"
 
     @api.model
     def default_get(self, fields):
