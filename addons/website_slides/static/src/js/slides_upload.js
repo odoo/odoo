@@ -4,6 +4,7 @@ import { qweb as QWeb, _t } from 'web.core';
 import Dialog from 'web.Dialog';
 import publicWidget from 'web.public.widget';
 import utils from 'web.utils';
+import wUtils from 'website.utils';
 
 var SlideUploadDialog = Dialog.extend({
     template: 'website.slide.upload.modal',
@@ -124,7 +125,7 @@ var SlideUploadDialog = Dialog.extend({
      *
      * @private
      */
-    _formValidateGetValues: function (forcePublished) {
+    _formValidateGetValues: async function (forcePublished) {
         var canvas = this.$('#data_canvas')[0];
         var values = _.extend({
             'channel_id': this.channelID,
@@ -150,18 +151,19 @@ var SlideUploadDialog = Dialog.extend({
         } else if (values['slide_type'] === 'webpage') {
             _.extend(values, {
                 'mime_type': 'text/html',
-                'image_1920': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
+                'image_1920': this.file.type === 'image/svg+xml' ? await this._svgToPNG() : this.file.data,
             });
         } else if (/^image\/.*/.test(this.file.type)) {
+            const fileData = this.file.type === 'image/svg+xml' ? await this._svgToPNG() : this.file.data;
             if (values['slide_type'] === 'presentation') {
                 _.extend(values, {
                     'slide_type': 'infographic',
                     'mime_type': this.file.type === 'image/svg+xml' ? 'image/png' : this.file.type,
-                    'datas': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data
+                    'datas': fileData,
                 });
             } else {
                 _.extend(values, {
-                    'image_1920': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
+                    'image_1920': fileData,
                 });
             }
         }
@@ -364,18 +366,18 @@ var SlideUploadDialog = Dialog.extend({
         this.$('.o_slide_preview').addClass('d-none');
     },
     /**
-     * @private
+     * TODO: Remove this part, as now SVG support in image resize tools is
+     * included?
+     * Python PIL does not support SVG, so converting SVG to PNG.
+     *
+     * @returns {Promise<string>}
      */
-    // TODO: Remove this part, as now SVG support in image resize tools is included
-    //Python PIL does not support SVG, so converting SVG to PNG
-    _svgToPng: function () {
-        var img = this.$el.find('img#slide-image')[0];
-        var canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        canvas.getContext('2d').drawImage(img, 0, 0);
-        return canvas.toDataURL('image/png').split(',')[1];
+    _svgToPNG: async function () {
+        const imgEl = this.$el.find('img#slide-image')[0];
+        const png = await wUtils.svgToPNG(imgEl);
+        return png.split(',')[1];
     },
+
     //--------------------------------------------------------------------------
     // Handler
     //--------------------------------------------------------------------------
@@ -589,21 +591,27 @@ var SlideUploadDialog = Dialog.extend({
             this.modulesToInstallStatus = null;
         }
     },
-
-    _onClickFormSubmit: function (ev) {
-        var self = this;
-        var $btn = $(ev.currentTarget);
-        if (this._formValidate()) {
-            var values = this._formValidateGetValues($btn.hasClass('o_w_slide_upload_published')); // get info before changing state
-            var oldType = this.get('state');
-            this.set('state', '_upload');
-            return this._rpc({
-                route: '/slides/add_slide',
-                params: values,
-            }).then(function (data) {
-                self._onFormSubmitDone(data, oldType);
-            });
+    /**
+     * @private
+     * @returns {Promise}
+     */
+    _onClickFormSubmit: async function (ev) {
+        if (!this._formValidate()) {
+            return;
         }
+
+        // Get info before changing state
+        const forcePublished = $(ev.currentTarget).hasClass('o_w_slide_upload_published');
+        const values = await this._formValidateGetValues(forcePublished);
+
+        var oldType = this.get('state');
+        this.set('state', '_upload');
+
+        const data = await this._rpc({
+            route: '/slides/add_slide',
+            params: values,
+        });
+        this._onFormSubmitDone(data, oldType);
     },
 
     _onFormSubmitDone: function (data, oldType) {

@@ -275,6 +275,82 @@ function sendRequest(route, params) {
     form.submit();
 }
 
+/**
+ * Converts a base64 SVG into a base64 PNG.
+ *
+ * @param {string|HTMLImageElement} src - an URL to a SVG or a *loaded* image
+ *      with such an URL. This allows the call to potentially be a bit more
+ *      efficient in that second case.
+ * @returns {Promise<string>} a base64 PNG (as result of a Promise)
+ */
+async function svgToPNG(src) {
+    function checkImg(imgEl) {
+        // Firefox does not support drawing SVG to canvas unless it has width
+        // and height attributes set on the root <svg>.
+        return (imgEl.naturalHeight !== 0);
+    }
+    function toPNGViaCanvas(imgEl) {
+        const canvas = document.createElement('canvas');
+        canvas.width = imgEl.width;
+        canvas.height = imgEl.height;
+        canvas.getContext('2d').drawImage(imgEl, 0, 0);
+        return canvas.toDataURL('image/png');
+    }
+
+    // In case we receive a loaded image and that this image is not problematic,
+    // we can convert it to PNG directly.
+    if (src instanceof HTMLImageElement) {
+        const loadedImgEl = src;
+        if (checkImg(loadedImgEl)) {
+            return toPNGViaCanvas(loadedImgEl);
+        }
+        src = loadedImgEl.src;
+    }
+
+    // At this point, we either did not receive a loaded image or the received
+    // loaded image is problematic => we have to do some asynchronous code.
+    return new Promise(resolve => {
+        const imgEl = new Image();
+        imgEl.onload = () => {
+            if (checkImg(imgEl)) {
+                resolve(imgEl);
+                return;
+            }
+
+            // Set arbitrary height on image and attach it to the DOM to force
+            // width computation.
+            imgEl.height = 1000;
+            imgEl.style.opacity = 0;
+            document.body.appendChild(imgEl);
+
+            const request = new XMLHttpRequest();
+            request.open('GET', imgEl.src, true);
+            request.onload = () => {
+                // Convert the data URI to a SVG element
+                const parser = new DOMParser();
+                const result = parser.parseFromString(request.responseText, 'text/xml');
+                const svgEl = result.getElementsByTagName("svg")[0];
+
+                // Add the attributes Firefox needs and remove the image from
+                // the DOM.
+                svgEl.setAttribute('width', imgEl.width);
+                svgEl.setAttribute('height', imgEl.height);
+                imgEl.remove();
+
+                // Convert the SVG element to a data URI
+                const svg64 = btoa(new XMLSerializer().serializeToString(svgEl));
+                const finalImg = new Image();
+                finalImg.onload = () => {
+                    resolve(finalImg);
+                };
+                finalImg.src = `data:image/svg+xml;base64,${svg64}`;
+            };
+            request.send();
+        };
+        imgEl.src = src;
+    }).then(loadedImgEl => toPNGViaCanvas(loadedImgEl));
+}
+
 return {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
@@ -282,5 +358,6 @@ return {
     prompt: prompt,
     sendRequest: sendRequest,
     websiteDomain: websiteDomain,
+    svgToPNG: svgToPNG,
 };
 });
