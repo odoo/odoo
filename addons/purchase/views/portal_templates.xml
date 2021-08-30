@@ -22,12 +22,12 @@
         <t t-call="portal.portal_docs_entry">
             <t t-set="title">Requests for Quotation</t>
             <t t-set="url" t-value="'/my/rfq'"/>
-            <t t-set="placeholder_count" t-value="'rfq_count'"/>
+            <t t-set="description_data" t-value="purchase_rfq_counters"/>
         </t>
         <t t-call="portal.portal_docs_entry">
             <t t-set="title">Purchase Orders</t>
             <t t-set="url" t-value="'/my/purchase'"/>
-            <t t-set="placeholder_count" t-value="'purchase_count'"/>
+            <t t-set="description_data" t-value="purchase_counters"/>
         </t>
     </xpath>
   </template>

@@ -297,7 +297,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "See Quotations",
-        trigger: '.o_portal_docs a:contains("Quotations") .badge:containsExact(2)',
+        trigger: '.o_portal_docs a:contains("Quotations"):has(span[data-placeholder_count="quotation_count"]:containsExact(2))',
     },
 
     // enable extra step on website checkout and check extra step on checkout process

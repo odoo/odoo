@@ -74,7 +74,7 @@ tour.register('totportal_login_enabled', {
     }
 }, {
     content: "check we're logged in",
-    trigger: "h3:contains(Documents)",
+    trigger: "h3:contains(Overview)",
     run: () => {}
 }, {
     content: "go back to security",
@@ -118,7 +118,7 @@ tour.register('totportal_login_disabled', {
     trigger: 'button:contains("Log in")',
 }, {
     content: "check we're logged in",
-    trigger: "h3:contains(Documents)",
+    trigger: "h3:contains(Overview)",
     run: () => {}
 }]);
 });

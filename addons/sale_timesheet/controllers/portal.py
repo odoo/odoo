@@ -28,6 +28,26 @@ class PortalAccount(portal.PortalAccount):
 
 class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
 
+    def _prepare_portal_counters_values(self, counters):
+        values = super()._prepare_portal_counters_values(counters)
+        if 'billed_hours' in counters:
+            Timesheet = request.env['account.analytic.line']
+            domain = Timesheet._timesheet_get_portal_domain()
+            domain = expression.AND([domain, ['&', ('timesheet_invoice_id', '!=', False), ('timesheet_invoice_id.state', '!=', 'cancel')]])
+            timesheets = Timesheet.sudo().search(domain)
+            values['billed_hours'] = round(sum(timesheet.unit_amount for timesheet in timesheets), 2)
+        return values
+
+    def _prepare_portal_overview_values(self):
+        values = super()._prepare_portal_overview_values()
+        values['hr_timesheet_counters'].append(
+            {
+                'description': _("Billed Hours"),
+                'counter': 'billed_hours',
+            },
+        )
+        return values
+
     def _get_searchbar_inputs(self):
         searchbar_inputs = super()._get_searchbar_inputs()
         searchbar_inputs.update(

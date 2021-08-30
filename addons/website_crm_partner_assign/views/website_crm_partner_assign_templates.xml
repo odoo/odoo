@@ -204,12 +204,12 @@
             <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Leads</t>
                 <t t-set="url" t-value="'/my/leads'"/>
-                <t t-set="placeholder_count" t-value="'lead_count'"/>
+                <t t-set="description_data" t-value="website_crm_partner_assign_lead_counters"/>
             </t>
             <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Opportunities</t>
                 <t t-set="url" t-value="'/my/opportunities'"/>
-                <t t-set="placeholder_count" t-value="'opp_count'"/>
+                <t t-set="description_data" t-value="website_crm_partner_assign_opp_counters"/>
             </t>
         </xpath>
     </template>

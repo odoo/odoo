@@ -86,7 +86,8 @@
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
         <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb mb-0 py-2 flex-grow-1 row">
             <li class="breadcrumb-item ml-1"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
-            <li t-if="page_name == 'my_details'" class="breadcrumb-item">Details</li>
+            <li t-if="page_name == 'my_details'" class="breadcrumb-item active"><t t-esc="page_title"/></li>
+            <li t-if="page_name == 'security'" class="breadcrumb-item active"><t t-esc="page_title"/></li>
         </ol>
     </template>
 
@@ -97,6 +98,28 @@
             <a t-att-href="backend_url"><i class="fa fa-arrow-right mr-1"/>Back to edit mode</a>
         </div>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
+    </template>
+
+    <template id="portal_side_bar" name="My Account">
+        <div id="o_my_sidebar" class="pt-3 pt-lg-0 col-12 col-md col-lg-4 col-xl-3 o_my_sidebar">
+            <div class="o_my_contact" t-if="sales_user">
+                <t t-call="portal.portal_contact"/>
+            </div>
+            <div class="o_portal_my_account">
+                <h4>My Account</h4>
+                <hr class="mt-1 mb-0"/>
+                <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
+            </div>
+            <div class="o_portal_my_account_menu mt-3">
+                <hr class="mt-1 mb-1"/>
+                <div class="row">
+                    <a role="button" href="/my/account" t-attf-class="btn btn-link #{'o_portal_bold' if page_name == 'my_details' else ''}">Manage Address</a>
+                </div>
+                <div class="row">
+                    <a role="button" href="/my/security" t-attf-class="btn btn-link #{'o_portal_bold' if page_name == 'security' else ''}">Password &amp; Security</a>
+                </div>
+            </div>
+        </div>
     </template>
 
     <template id="portal_layout" name="Portal Layout">
@@ -115,30 +138,18 @@
             </div>
             <div id="wrap" class='o_portal_wrap'>
                 <div class="container mb64">
-                    <t t-if="my_details">
+                    <t t-if="show_side_bar">
                         <div class="row justify-content-between mt-4">
-                            <div t-attf-class="col-12 col-md col-lg-6">
+                            <div t-attf-class="col-12 col-md col-lg-8">
                                 <t t-out="0"/>
                             </div>
-                            <div id="o_my_sidebar" class="pt-3 pt-lg-0 col-12 col-md col-lg-4 col-xl-3 o_my_sidebar">
-                                <div class="o_my_contact" t-if="sales_user">
-                                    <t t-call="portal.portal_contact"/>
-                                </div>
-                                <div class="o_portal_my_details">
-                                    <h4>Details <a role="button" href="/my/account" class="btn btn-sm btn-link"><i class="fa fa-pencil"/> Edit</a></h4>
-                                    <hr class="mt-1 mb-0"/>
-                                    <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
-                                </div>
-                                <div class="o_portal_my_security mt-3">
-                                    <h4>Account Security </h4>
-                                    <hr class="mt-1 mb-1"/>
-                                    <a href="/my/security"><i class="fa fa-pencil mx-1"/>Edit Security Settings</a>
-                                </div>
-                            </div>
+                            <t t-call="portal.portal_side_bar"></t>
                         </div>
                     </t>
                     <t t-else="">
-                        <t t-out="0"/>
+                        <div class="mt-4">
+                            <t t-out="0"/>
+                        </div>
                     </t>
                 </div>
             </div>
@@ -160,26 +171,31 @@
             <t t-set="my_details" t-value="True"/>
             <div class="o_portal_my_home">
                 <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
-                <h3>Documents</h3>
-                <div class="o_portal_docs list-group">
+                <div class="col-12 col-xl order-xl-1">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h3 class="o_page_header mt16 mb4">Overview</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row mt8 o_portal_docs"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="oe_structure" id="oe_structure_portal_my_home_2"/>
         </t>
     </template>
 
-    <template id="portal_docs_entry" name="My Portal Docs Entry">
-        <a t-att-href="url" t-att-title="title" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-            <t t-esc="title"/>
-            <t t-if='count'>
-                <span class="badge badge-secondary badge-pill" t-esc="count"/>
+    <template id="portal_my_home_account" name="My Account Menu" customize_show="True" inherit_id="portal.portal_my_home" priority="99">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">My Account</t>
+                <t t-set="url" t-value="'/my/account'"/>
+                <t t-set="description_data" t-value="my_account_description"/>
             </t>
-            <t t-elif="placeholder_count">
-                <span class="badge badge-secondary badge-pill" t-att-data-placeholder_count="placeholder_count">
-                    <i class="fa fa-spin fa-circle-o-notch"></i>
-                </span>
-            </t>
-        </a>
+        </xpath>
     </template>
 
     <template id="portal_table" name="My Portal Table">
@@ -350,9 +366,33 @@
         </div>
     </template>
 
+    <template id="portal_docs_entry" name="My Portal Docs Entry">
+        <div class="col-md-12 col-lg-3 p-2 one_kanban">
+            <div t-attf-class="card o_portal_overview_card #{ 'o_portal_card_default_bg' if title == 'My Account' else '' }">
+                <div class="card-body p-0">
+                    <a t-att-href="url" t-att-title="title" t-attf-class="list-group-item list-group-item-action border-0 #{ 'o_portal_card_default_bg o_portal_card_default_bg_action' if title == 'My Account' else '' }">
+                        <span class="row mb-1"><span class="col-12 text-center o_portal_overview_card_title"><t t-esc="title"/></span></span>
+                        <span t-foreach="description_data" t-as="line_data" class="row">
+                            <span class="col-12 text-center">
+                                <span t-if="'counter' in line_data" t-att-data-placeholder_count="line_data['counter']">
+                                    <i class="fa fa-spin fa-circle-o-notch"></i>
+                                </span>
+                                <span>
+                                    <t t-esc="line_data['description']"/>
+                                </span>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </template>
+
     <template id="portal_my_details">
         <t t-call="portal.portal_layout">
-            <t t-set="additional_title">Contact Details</t>
+            <t t-set="page_title" t-value="'Contact Details'"/>
+            <t t-set="additional_title" t-value="page_title"/>
+            <t t-set="show_side_bar" t-value="True"/>
             <form action="/my/account" method="post">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <div class="row o_portal_details">
@@ -448,8 +488,9 @@
 
     <template id="portal_my_security">
         <t t-call="portal.portal_layout"><div class="o_portal_security_body">
-            <t t-set="additional_title">Security</t>
-            <t t-set="no_breadcrumbs" t-value="1"/>
+            <t t-set="page_title" t-value="'Password &amp; Security'"/>
+            <t t-set="additional_title"><t t-esc="page_title"/></t>
+            <t t-set="show_side_bar" t-value="True"/>
             <div class="alert alert-danger" role="alert" t-if="get_error(errors)">
                 <t t-esc="errors"/>
             </div>

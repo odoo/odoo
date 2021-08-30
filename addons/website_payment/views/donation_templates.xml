@@ -101,14 +101,13 @@
 
     <!-- Display of /donation/pay -->
     <template id="website_payment.donation_pay" name="Donation payment">
-        <t t-call="portal.frontend_layout">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_name" t-value="'payment'"/>
             <t t-set="page_title" t-value="'Donation'"/>
             <t t-set="additional_title"><t t-out="page_title"/></t>
             <div class="wrap">
                 <div class="oe_structure" id="oe_structure_website_payment_donation_1"/>
                 <div class="container mb-3">
-                    <!-- Portal breadcrumb -->
-                    <t t-call="payment.portal_breadcrumb"/>
                     <!-- Payment page -->
                     <div class="row">
                         <div class="col-lg-7">

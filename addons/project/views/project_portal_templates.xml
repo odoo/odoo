@@ -35,12 +35,12 @@
             <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Projects</t>
                 <t t-set="url" t-value="'/my/projects'"/>
-                <t t-set="placeholder_count" t-value="'project_count'"/>
+                <t t-set="description_data" t-value="project_counters"/>
             </t>
             <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Tasks</t>
                 <t t-set="url" t-value="'/my/tasks'"/>
-                <t t-set="placeholder_count" t-value="'task_count'"/>
+                <t t-set="description_data" t-value="project_task_counters"/>
             </t>
         </xpath>
     </template>

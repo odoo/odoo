@@ -32,12 +32,28 @@ class WebsiteAccount(CustomerPortal):
             ('type', '=', 'opportunity')
         ]
 
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
+    def _prepare_portal_counters_values(self, counters):
+        values = super()._prepare_portal_counters_values(counters)
         if 'lead_count' in counters:
             values['lead_count'] = request.env['crm.lead'].search_count(self.get_domain_my_lead(request.env.user))
         if 'opp_count' in counters:
             values['opp_count'] = request.env['crm.lead'].search_count(self.get_domain_my_opp(request.env.user))
+        return values
+
+    def _prepare_portal_overview_values(self):
+        values = super()._prepare_portal_overview_values()
+        values['website_crm_partner_assign_lead_counters'] = [
+            {
+                'description': _("New Leads"),
+                'counter': 'lead_count',
+            },
+        ]
+        values['website_crm_partner_assign_opp_counters'] = [
+            {
+                'description': _("Opportunities"),
+                'counter': 'opp_count',
+            },
+        ]
         return values
 
     @http.route(['/my/leads', '/my/leads/page/<int:page>'], type='http', auth="user", website=True)

@@ -2,16 +2,16 @@
 <odoo>
 
     <!-- Integration of a conditional "Manage payment methods" link in /my -->
-    <template id="pay_meth_link" inherit_id="portal.portal_layout">
-        <xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
+    <template id="pay_meth_link" inherit_id="portal.portal_side_bar">
+        <xpath expr="//a[@href='/my/account']/.." position="after">
             <t t-set="partner" t-value="request.env.user.partner_id"/>
             <t t-set="acquirers_allowing_tokenization"
                t-value="request.env['payment.acquirer'].sudo()._get_compatible_acquirers(request.env.company.id, partner.id, allow_tokenization=True, is_validation=True)"/>
             <t t-set="existing_tokens" t-value="partner.payment_token_ids + partner.commercial_partner_id.sudo().payment_token_ids"/>
             <!-- Only show the link if a token can be created or if one already exists -->
-            <div t-if="acquirers_allowing_tokenization or existing_tokens"
-                 class='manage_payment_method mt16'>
-                <a href="/my/payment_method">Manage payment methods</a>
+            <div t-if="acquirers_allowing_tokenization or existing_tokens" class='row manage_payment_method'>
+                <a role="button" href="/my/payment_method"
+                    t-attf-class="btn btn-link #{'o_portal_bold' if page_name == 'payment' else ''}">Manage Payment Methods</a>
             </div>
         </xpath>
     </template>
@@ -21,13 +21,12 @@
         <!-- Variables description:
             - 'partner_is_different' - Whether the partner logged in is the one making the payment
         -->
-        <t t-call="portal.frontend_layout">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_name" t-value="'payment'"/>
             <t t-set="page_title" t-value="'Payment'"/>
             <t t-set="additional_title"><t t-esc="page_title"/></t>
             <div class="wrap">
                 <div class="container">
-                    <!-- Portal breadcrumb -->
-                    <t t-call="payment.portal_breadcrumb"/>
                     <!-- Payment page -->
                     <div class="row">
                         <div class="col-lg-7">
@@ -66,16 +65,16 @@
 
     <!-- Display of /my/payment_methods -->
     <template id="payment_methods" name="Payment Methods">
-        <t t-call="portal.frontend_layout">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_name" t-value="'payment'"/>
             <t t-set="page_title" t-value="'Payment Methods'"/>
             <t t-set="additional_title"><t t-esc="page_title"/></t>
+            <t t-set="show_side_bar" t-value="True"/>
             <div class="wrap">
                 <div class="container">
-                    <!-- Portal breadcrumb -->
-                    <t t-call="payment.portal_breadcrumb"/>
                     <!-- Manage page -->
                     <div class="row">
-                        <div class="col-lg-7">
+                        <div class="col-lg-12">
                             <t t-if="acquirers or tokens" t-call="payment.manage"/>
                             <div t-else="" class="alert alert-warning">
                                 <p><strong>No suitable payment acquirer could be found.</strong></p>
@@ -90,17 +89,16 @@
 
     <!-- Display of /payment/status -->
     <template id="payment_status" name="Payment Status">
-        <t t-call="portal.frontend_layout">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_name" t-value="'payment'"/>
             <t t-set="page_title" t-value="'Payment Status'"/>
             <t t-set="additional_title"><t t-esc="page_title"/></t>
             <div class="wrap">
                 <div class="container">
-                    <!-- Portal breadcrumb -->
-                    <t t-call="payment.portal_breadcrumb"/>
                     <!-- Status page -->
                     <div name="o_payment_status">
                         <div name="o_payment_status_content"
-                             class="col-sm-6 col-sm-offset-3">
+                             class="col-sm-6 col-sm-offset-3 alert alert-warning">
                             <!-- The content is generated in JavaScript -->
                         </div>
                     </div>
@@ -116,13 +114,12 @@
             - 'message' - The acquirer message configured for the given transaction state
             - 'status' - The alert class to use for the message
         -->
-        <t t-call="portal.frontend_layout">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_name" t-value="'payment'"/>
             <t t-set="page_title" t-value="'Payment Confirmation'"/>
             <t t-set="additional_title"><t t-esc="page_title"/></t>
             <div class="wrap">
                 <div class="container">
-                    <!-- Portal breadcrumb -->
-                    <t t-call="payment.portal_breadcrumb"/>
                     <!-- Confirmation page -->
                     <div class="row">
                         <div class="col-lg-6">
@@ -182,26 +179,10 @@
         </t>
     </template>
 
-    <!-- Breadcrumb for the portal -->
-    <template id="portal_breadcrumb">
-        <!-- Variables description:
-            - 'page_title' - The title of the breadcrumb item
-        -->
-        <div class="row">
-            <div class="col-md-6">
-                <ol class="breadcrumb mt8">
-                    <li class="breadcrumb-item">
-                        <a href="/my/home">
-                            <i class="fa fa-home"
-                               role="img"
-                               title="Home"
-                               aria-label="Home"/>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><t t-esc="page_title"/></li>
-                </ol>
-            </div>
-        </div>
+    <template id="portal_breadcrumbs" name="Payment Methods Breadcrumb" inherit_id="portal.portal_breadcrumbs" priority="10">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'payment'" class="breadcrumb-item active"><t t-esc="page_title"/></li>
+        </xpath>
     </template>
 
 </odoo>

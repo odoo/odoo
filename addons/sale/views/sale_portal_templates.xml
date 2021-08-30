@@ -23,12 +23,12 @@
             <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Quotations</t>
                 <t t-set="url" t-value="'/my/quotes'"/>
-                <t t-set="placeholder_count" t-value="'quotation_count'"/>
+                <t t-set="description_data" t-value="sale_quotation_counters"/>
             </t>
             <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Sales Orders</t>
                 <t t-set="url" t-value="'/my/orders'"/>
-                <t t-set="placeholder_count" t-value="'order_count'"/>
+                <t t-set="description_data" t-value="sale_order_counters"/>
             </t>
         </xpath>
     </template>
