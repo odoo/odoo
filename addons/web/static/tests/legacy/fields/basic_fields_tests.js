@@ -5317,6 +5317,31 @@ QUnit.module('basic_fields', {
         unpatchDate();
     });
 
+    QUnit.test('remaining_days field with quickedit', async function (assert) {
+        assert.expect(4);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="datetime" widget="remaining_days"/></form>',
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, 'div.o_field_widget[name=datetime]');
+
+        // open the datetime picker with quick edit
+        await testUtils.dom.click(form.$('div.o_field_widget[name=datetime]'));
+        await testUtils.nextTick(); // wait for quick edit
+
+        assert.containsOnce(form, '.o_form_view.o_form_editable');
+        assert.strictEqual(document.activeElement, form.$('.o_datepicker_input[name=datetime]')[0]);
+        assert.containsOnce(document.body, '.bootstrap-datetimepicker-widget',
+            "should initialize 1 date picker");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMonetary');
 
     QUnit.test('monetary field in form view', async function (assert) {

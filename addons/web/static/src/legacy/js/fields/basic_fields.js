@@ -1067,6 +1067,7 @@ var FieldDateTime = FieldDate.extend({
 const RemainingDays = AbstractField.extend({
     description: _lt("Remaining Days"),
     supportedFieldTypes: ['date', 'datetime'],
+    isQuickEditable: true,
 
     /**
      * @override
@@ -1121,6 +1122,15 @@ const RemainingDays = AbstractField.extend({
             return new datepicker.DateWidget(this, this.datepickerOptions);
         }
         return new datepicker.DateTimeWidget(this, this.datepickerOptions);
+    },
+    /**
+     * @private
+     * @override
+     */
+    _quickEdit: function () {
+        if (this.datewidget) {
+            this.datewidget.$input.click();
+        }
     },
     /**
      * Displays date/datetime picker in edit mode.
