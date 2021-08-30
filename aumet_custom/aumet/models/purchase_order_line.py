@@ -5,20 +5,11 @@ from odoo import models, fields, api
 
 _logger = logging.getLogger(__name__)
 
+
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
     bonus = fields.Integer("Bonus")
-
-    price_unit = fields.Float(
-        'Unit Price', compute='_compute_standard_price', store=False)
-
-    @api.depends()
-    def _compute_standard_price(self):
-        try:
-            self.price_unit = self.product_id.marketplace_product.unit_price
-        except Exception as exc1:
-            print(exc1)
 
     @api.depends("product_id")
     def calculate_possible_payment_methods(self):
@@ -29,15 +20,15 @@ class PurchaseOrderLine(models.Model):
     def create(self, vals_list):
         result = super(PurchaseOrderLine, self).create(vals_list)
         preftech = (result.product_id.with_prefetch())
-
-        _logger.info("About to place order in marketplace")
-        item_add_line_result = CartAPI.add_item_to_cart(
-            self.env.user.marketplace_token,
-            self.env.user.marketplace_pharmacy_id,
-            result.product_id.marketplace_product.marketplace_id,
-            result.product_uom_qty,
-            result.bonus,
-            preftech.payment_method.marketplace_payment_method_id)
+        if result.product_id.is_marketplace_item:
+            _logger.info("About to place order in marketplace")
+            item_add_line_result = CartAPI.add_item_to_cart(
+                self.env.user.marketplace_token,
+                self.env.user.marketplace_pharmacy_id,
+                result.product_id.marketplace_product.marketplace_id,
+                result.product_uom_qty,
+                result.bonus,
+                preftech.payment_method.marketplace_payment_method_id)
 
         return result
 
@@ -60,6 +51,4 @@ class PurchaseOrderLine(models.Model):
         except Exception as exc1:
             pass
 
-        data = super(PurchaseOrderLine, self).onchange(values, field_name, field_onchange)
-
-        return data
+        return super(PurchaseOrderLine, self).onchange(values, field_name, field_onchange)
