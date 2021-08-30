@@ -182,7 +182,7 @@ class CustomerPortal(Controller):
         """
         return {
             'my_account_description': [{
-                'description': _("Addresses, Payments, Security"),
+                'description': _("Addresses, Payments, Security, Users"),
             }]
         }
 
@@ -308,10 +308,65 @@ class CustomerPortal(Controller):
     def on_account_update(self, values, partner):
         pass
 
+    def _get_commercial_partners_and_users(self):
+        partner = request.env.user.partner_id
+        commercial_partners = partner.commercial_partner_id.child_ids
+        portal_users = commercial_partners.filtered(lambda partner: partner.user_ids and partner.user_ids[0].has_group('base.group_portal')) \
+                                          .mapped(lambda partner: partner.user_ids[0] if partner.user_ids else partner.user_ids)
+        return commercial_partners, portal_users
+
+    def _prepare_users_accesses_values(self):
+        values = self._prepare_portal_layout_values()
+        values.update({
+            'page_name': 'users_accesses',
+            'get_message': get_message,
+        })
+        return values
+
+    @route('/my/users_accesses', type='http', auth='user', website=True, methods=['POST'])
+    def users_accesses_invitation(self, portal_user_id=None, user_email=None, **kw):
+        portal_user_id = int(portal_user_id) if isinstance(portal_user_id, str) and portal_user_id.isdecimal() else None
+        user_email = user_email.strip() if isinstance(user_email, str) else None
+
+        values = self._prepare_users_accesses_values()
+        commercial_partners, portal_users = self._get_commercial_partners_and_users()
+
+        success_message = {'success': _("Invitation sent")}
+        if portal_user_id:
+            if portal_user_id in portal_users.ids:
+                invited_partner = portal_users.browse(portal_user_id).partner_id
+                try:
+                    invited_partner.action_resend_portal_access_invitation()
+                    values['success'] = success_message
+                except UserError as e:
+                    values['errors'] = {'error': str(e)}
+            else:
+                values['errors'] = {'error': _("The partner does not exists or you do not have the rights to reinvite them, please ask an administrator to do it for you.")}
+        elif user_email:
+            invited_partner = commercial_partners.filtered(lambda partner: partner.email == user_email)
+            if invited_partner:
+                try:
+                    invited_partner.action_grant_portal_access()
+                    values['success'] = success_message
+                    portal_users += invited_partner.user_ids[0]
+                except UserError as e:
+                    values['errors'] = {'error': str(e)}
+            else:
+                values['errors'] = {'error': _('No registered partner with the email "%(email)s" in your company, please ask an administrator to register it first.',
+                                               email=user_email)}
+        values['portal_users'] = portal_users.sorted(lambda user: user.name)
+        return request.render("portal.portal_my_users_accesses", values)
+
+    @route('/my/users_accesses', type='http', auth='user', website=True, methods=['GET'])
+    def users_accesses(self, **kw):
+        values = self._prepare_users_accesses_values()
+        values['portal_users'] = self._get_commercial_partners_and_users()[1].sorted(lambda user: user.name)
+        return request.render("portal.portal_my_users_accesses", values)
+
     @route('/my/security', type='http', auth='user', website=True, methods=['GET', 'POST'])
     def security(self, **post):
         values = self._prepare_portal_layout_values()
-        values['get_error'] = get_error
+        values['get_message'] = get_message
         values['page_name'] = 'security'
 
         if request.httprequest.method == 'POST':
@@ -560,9 +615,9 @@ class CustomerPortal(Controller):
             reporthttpheaders.append(('Content-Disposition', content_disposition(filename)))
         return request.make_response(report, headers=reporthttpheaders)
 
-def get_error(e, path=''):
+def get_message(e, path=''):
     """ Recursively dereferences `path` (a period-separated sequence of dict
-    keys) in `e` (an error dict or value), returns the final resolution IIF it's
+    keys) in `e` (an message dict or value), returns the final resolution IIF it's
     an str, otherwise returns None
     """
     for k in (path.split('.') if path else []):

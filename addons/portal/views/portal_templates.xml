@@ -93,7 +93,7 @@
                 </li>
                 <li t-if="page_title == 'Address'" class="breadcrumb-item active"><t t-esc="page_title"/></li>
             </t>
-            <li t-if="page_name == 'security'" class="breadcrumb-item active"><t t-esc="page_title"/></li>
+            <li t-if="page_name in ('security', 'users_accesses')" class="breadcrumb-item active"><t t-esc="page_title"/></li>
         </ol>
     </template>
 
@@ -107,7 +107,7 @@
     </template>
 
     <template id="portal_side_bar" name="My Account">
-        <div id="o_my_sidebar" class="pt-3 pt-lg-0 col-12 col-md col-lg-4 col-xl-3 o_my_sidebar">
+        <div id="o_my_sidebar" class="pt-3 pt-lg-0 col-12 col-md col-lg-3 o_my_sidebar">
             <div class="o_my_contact" t-if="sales_user">
                 <t t-call="portal.portal_contact"/>
             </div>
@@ -123,6 +123,9 @@
                 </div>
                 <div class="row">
                     <a role="button" href="/my/security" t-attf-class="btn btn-link #{'font-weight-bold' if page_name == 'security' else ''}">Password &amp; Security</a>
+                </div>
+                <div class="row">
+                    <a role="button" href="/my/users_accesses" t-attf-class="btn btn-link #{'font-weight-bold' if page_name == 'users_accesses' else ''}">Users Accesses</a>
                 </div>
             </div>
         </div>
@@ -146,7 +149,7 @@
                 <div class="container mb64">
                     <t t-if="show_side_bar">
                         <div class="row justify-content-between mt-4">
-                            <div t-attf-class="col-12 col-md col-lg-8">
+                            <div t-attf-class="col-12 col-md col-lg-9">
                                 <t t-out="0"/>
                             </div>
                             <t t-call="portal.portal_side_bar"></t>
@@ -590,12 +593,68 @@
         </t>
     </template>
 
+    <template id="portal_my_users_accesses">
+        <t t-call="portal.portal_layout"><div>
+            <t t-set="page_title" t-value="'Users Accesses'"/>
+            <t t-set="additional_title" t-value="page_title"/>
+            <t t-set="show_side_bar" t-value="True"/>
+            <t t-if="not portal_users">
+                <div class="alert alert-warning mt8" role="alert">
+                    There is no portal user.
+                </div>
+            </t>
+            <t t-else="">
+                <t t-call="portal.portal_table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th class="text-right">Last connection date</th>
+                        </tr>
+                    </thead>
+                    <tr t-foreach="portal_users" t-as="portal_user">
+                        <td><span t-field="portal_user.name" t-att-title="portal_user.name"/></td>
+                        <td><span t-field="portal_user.email" t-att-title="portal_user.email"/></td>
+                        <td class="text-right">
+                            <form t-if="not portal_user.login_date" action="/my/users_accesses" method="post">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <input type="hidden" name="portal_user_id" t-att-value="portal_user.id"/>
+                                <button type="submit" class="btn btn-primary btn-sm" title="This portal user has never logged in">
+                                    <i class="fa fa-envelope"/> Resend Invitation</button>
+                            </form>
+                            <span t-else="" t-field="portal_user.login_date"/>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </div>
+        <div class="o_portal_users_accesses_form">
+            <section>
+                <div class="alert alert-success" role="alert" t-if="get_message(success, 'success')">
+                    <t t-esc="success['success']"/>
+                </div>
+                <div class="alert alert-danger" role="alert" t-if="get_message(errors, 'error')">
+                    <t t-esc="errors['error']"/>
+                </div>
+                <form action="/my/users_accesses" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="d-flex">
+                        <input type="email" class="form-control form-control mx-auto"
+                            name="user_email" required="required"
+                            placeholder="Enter an email address to invite a partner from your company to this portal"/>
+                        <button type="submit" class="btn btn-primary col-3 ml-1">Add User</button>
+                    </div>
+                </form>
+            </section>
+        </div></t>
+    </template>
+
     <template id="portal_my_security">
         <t t-call="portal.portal_layout"><div class="o_portal_security_body">
             <t t-set="page_title" t-value="'Password &amp; Security'"/>
             <t t-set="additional_title"><t t-esc="page_title"/></t>
             <t t-set="show_side_bar" t-value="True"/>
-            <div class="alert alert-danger" role="alert" t-if="get_error(errors)">
+            <div class="alert alert-danger" role="alert" t-if="get_message(errors)">
                 <t t-esc="errors"/>
             </div>
             <section>
@@ -604,7 +663,7 @@
                 <div class="alert alert-success" role="alert" t-if="success and success.get('password')">
                     Password Updated!
                 </div>
-                <div class="alert alert-danger" role="alert" t-if="get_error(errors, 'password')">
+                <div class="alert alert-danger" role="alert" t-if="get_message(errors, 'password')">
                     <t t-esc="errors['password']"/>
                 </div>
                 <form action="/my/security" method="post" class="oe_reset_password_form">
@@ -612,29 +671,29 @@
                     <input type="hidden" name="op" value="password"/>
                     <div class="form-group">
                         <label for="current">Current Password</label>
-                        <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.old') else '' }}"
+                        <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_message(errors, 'password.old') else '' }}"
                                id="current" name="old"
                                autocomplete="current-password" required="required"/>
                         <div class="invalid-feedback">
-                            <t t-esc="get_error(errors, 'password.old')"/>
+                            <t t-esc="get_message(errors, 'password.old')"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="new">New Password</label>
-                        <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.new1') else '' }}"
+                        <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_message(errors, 'password.new1') else '' }}"
                                id="new" name="new1"
                                autocomplete="new-password" required="required"/>
                         <div class="invalid-feedback">
-                            <t t-esc="get_error(errors, 'password.new1')"/>
+                            <t t-esc="get_message(errors, 'password.new1')"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="new2">Confirm New Password</label>
-                        <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.new2') else '' }}"
+                        <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_message(errors, 'password.new2') else '' }}"
                                id="new2" name="new2"
                                autocomplete="new-password" required="required"/>
                         <div class="invalid-feedback">
-                            <t t-esc="get_error(errors, 'password.new2')"/>
+                            <t t-esc="get_message(errors, 'password.new2')"/>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Confirm</button>
