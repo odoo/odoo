@@ -1,39 +1,47 @@
 // Boolean Toggle widget
 div.o_boolean_toggle.custom-control.custom-checkbox {
-    $line-height-computed: $line-height-base * $font-size-base;
-    $slider-width: $line-height-computed * 1.5;
-    $font-size: $font-size-base * 1.2;
+    $font-size: $font-size-base * 1.3;
+    $line-height-forced: $font-size * 1.25;
+    $slider-width: $line-height-forced * 1.5;
 
     display: inline-block;
-    padding-left: $slider-width + 0.25rem;
+    padding-left: $slider-width;
+    line-height: $line-height-forced;
 
     > label.custom-control-label {
         > i {
+            text-align: center;
+            line-height: $line-height-forced;
+            width: $font-size;
             color: white;
             cursor: pointer;
             font-size: $font-size;
             position: absolute;
-            top: 2px;
             &.fa-times-circle {
-                right: 15px;
+                right: $slider-width - $font-size * 1.15;
             }
             &.fa-check-circle {
-                right: 7px;
+                right: $font-size * 0.15;
             }
         }
         &::before,
         &::after {
             content: "";
             top: 0;
-            left: -($slider-width + 0.25rem);
+            left: -($slider-width);
+            width: 0;
         }
         &::before {
             width: $slider-width;
+            right: 0;
             height: 100%;
             background-color: #a0a0a0 !important;
             border-radius: 100px;
             outline: none !important;
         }
+    }
+    > input.custom-control-input {
+        width: 0;
     }
     > input.custom-control-input:checked + label.custom-control-label {
         &::before {
@@ -41,6 +49,14 @@ div.o_boolean_toggle.custom-control.custom-checkbox {
         }
         &::after {
             background-image: none;
+        }
+        > i.fa-times-circle {
+            display: none;
+        }
+    }
+    > input.custom-control-input:not(:checked) + label.custom-control-label {
+        > i.fa-check-circle {
+            display: none;
         }
     }
 }

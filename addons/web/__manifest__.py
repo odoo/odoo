@@ -350,6 +350,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/web.zoomodoo.scss',
             'web/static/src/legacy/scss/color_picker.scss',
             'web/static/src/legacy/scss/fontawesome_overridden.scss',
+            'web/static/src/webclient/boolean_toggle/boolean_toggle.scss',
+            'web/static/src/core/checkbox/checkbox.scss',
         ],
         'web._assets_common_scripts': [
             'web/static/lib/underscore/underscore.js',
