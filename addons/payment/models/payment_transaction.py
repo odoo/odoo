@@ -309,17 +309,17 @@ class PaymentTransaction(models.Model):
         for tx in self:
             tx._send_void_request()
 
-    def action_refund(self, refund_amount=None):
+    def action_refund(self, amount_to_refund=None):
         """ Check the state of the transactions and request their refund.
 
-        :param float refund_amount: The amount to be refunded
+        :param float amount_to_refund: The amount to be refunded
         :return: None
         """
         if any(tx.state != 'done' for tx in self):
             raise ValidationError(_("Only confirmed transactions can be refunded."))
 
         for tx in self:
-            tx._send_refund_request(refund_amount)
+            tx._send_refund_request(amount_to_refund)
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
@@ -536,7 +536,7 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         self._log_sent_message()
 
-    def _send_refund_request(self, refund_amount=None, create_refund_transaction=True):
+    def _send_refund_request(self, amount_to_refund=None, create_refund_transaction=True):
         """ Request the provider of the acquirer handling the transaction to refund it.
 
         For an acquirer to support refunds, it must override this method and request a refund
@@ -544,18 +544,19 @@ class PaymentTransaction(models.Model):
 
         Note: self.ensure_one()
 
-        :param float refund_amount: The amount to be refunded
+        :param float amount_to_refund: The amount to be refunded
         :param bool create_refund_transaction: Whether a refund transaction should be created
-        :return: The refund transaction if any, or `None`
+        :return: The refund transaction if any
         :rtype: recordset of `payment.transaction`
         """
         self.ensure_one()
 
-        refund_tx = None
         if create_refund_transaction:
-            refund_tx = self._create_refund_transaction(refund_amount=refund_amount)
+            refund_tx = self._create_refund_transaction(amount_to_refund=amount_to_refund)
             refund_tx._log_sent_message()
-        return refund_tx
+            return refund_tx
+        else:
+            return self.env['payment.transaction']
 
     def _send_capture_request(self):
         """ Request the provider of the acquirer handling the transaction to capture it.
@@ -581,11 +582,11 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-    def _create_refund_transaction(self, refund_amount=None, **custom_create_values):
+    def _create_refund_transaction(self, amount_to_refund=None, **custom_create_values):
         """ Create a new transaction with operation 'refund' and link it to the current transaction.
 
-        :param float refund_amount: The strictly positive amount to refund, in the same currency as
-                                    the source transaction
+        :param float amount_to_refund: The strictly positive amount to refund, in the same currency
+                                       as the source transaction
         :return: The refund transaction
         :rtype: recordset of `payment.transaction`
         """
@@ -594,7 +595,7 @@ class PaymentTransaction(models.Model):
         return self.create({
             'acquirer_id': self.acquirer_id.id,
             'reference': self._compute_reference(self.provider, prefix=f'R-{self.reference}'),
-            'amount': -(refund_amount or self.amount),
+            'amount': -(amount_to_refund or self.amount),
             'currency_id': self.currency_id.id,
             'operation': 'refund',
             'source_transaction_id': self.id,
