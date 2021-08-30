@@ -3,13 +3,17 @@
 
 .custom-control.custom-checkbox .custom-control-input {
   // Force default bts default border color
-  &:not(:checked):not(:indeterminate):not(:disabled) ~ .custom-control-label:before {
+  &:not(:checked):not(:indeterminate) ~ .custom-control-label:before {
     border-color: $custom-control-indicator-border-color;
   }
 
   &:disabled {
     ~ .custom-control-label {
       cursor: not-allowed;
+
+      > i {
+        cursor: not-allowed;
+      }
 
       &:before {
         border-color: $custom-control-indicator-checked-disabled-bg;
