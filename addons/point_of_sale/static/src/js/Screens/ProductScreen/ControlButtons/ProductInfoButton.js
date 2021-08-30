@@ -21,9 +21,9 @@ odoo.define('point_of_sale.ProductInfoButton', function(require) {
         }
         onClick() {
             const orderline = this.env.pos.get_order().get_selected_orderline();
-            const product = orderline.get_product();
-            const quantity = orderline.get_quantity();
             if (orderline) {
+                const product = orderline.get_product();
+                const quantity = orderline.get_quantity();
                 this.showPopup('ProductInfoPopup', { product, quantity });
             }
         }
