@@ -72,7 +72,7 @@ export class OpenMilestone extends MilestoneComponent {
         super(...arguments);
         this.milestone = useState(this.props.milestone);
         this.state.colorClass = this.milestone.is_deadline_exceeded ? "o_milestone_danger" : "";
-        this.state.checkboxIcon = this.milestone.is_reached ? "fa-check-square" : "fa-square-o";
+        this.state.checkboxIcon = this.milestone.is_reached ? "fa-check-square-o" : "fa-square-o";
     }
 
     get OPEN_PROJECT_MILESTONE() {
@@ -87,7 +87,7 @@ export class OpenMilestone extends MilestoneComponent {
         if (nextProps.milestone) {
             this.milestone = nextProps.milestone;
             this.state.colorClass = this.milestone.is_deadline_exceeded ? "o_milestone_danger" : "";
-            this.state.checkboxIcon = this.milestone.is_reached ? "fa-check-square" : "fa-square-o";
+            this.state.checkboxIcon = this.milestone.is_reached ? "fa-check-square-o" : "fa-square-o";
         }
         if (nextProps.context) {
             this.contextValue = nextProps.context;
