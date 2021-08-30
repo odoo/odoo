@@ -646,6 +646,27 @@
             </field>
         </record>
 
+        <record id="action_get_picking_type_operations" model="ir.actions.act_window">
+            <field name="name">Operations</field>
+            <field name="res_model">stock.move.line</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('stock.view_move_line_tree_detailed')})]"/>
+            <field name="domain">[('picking_type_id', '=', active_id), ('picking_id', '!=', False)]</field>
+            <field name="context">{
+                'search_default_todo': '1',
+            }</field>
+            <field name="search_view_id" ref="stock_move_line_view_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No operations found. Let's create a tranfer !
+                </p>
+                <p>
+                    Transfers allow you to move products from one location to another.
+                </p>
+            </field>
+        </record>
+
         <record id="action_picking_form" model="ir.actions.act_window">
             <field name="name">New Transfer</field>
             <field name="res_model">stock.picking</field>
@@ -763,6 +784,9 @@
                                                 </div>
                                                 <div role="menuitem">
                                                     <a name="get_action_picking_tree_waiting" type="object">Waiting</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="%(action_get_picking_type_operations)d" type="action">Operations</a>
                                                 </div>
                                             </div>
                                             <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">

@@ -57,6 +57,8 @@ class StockMoveLine(models.Model):
     location_id = fields.Many2one('stock.location', 'From', domain="[('usage', '!=', 'view')]", check_company=True, required=True)
     location_dest_id = fields.Many2one('stock.location', 'To', domain="[('usage', '!=', 'view')]", check_company=True, required=True)
     lots_visible = fields.Boolean(compute='_compute_lots_visible')
+    picking_type_id = fields.Many2one(related='picking_id.picking_type_id', readonly=True)
+    picking_partner_id = fields.Many2one(related='picking_id.partner_id', readonly=True)
     picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation type', compute='_compute_picking_type_id')
