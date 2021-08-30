@@ -5,6 +5,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
+var wUtils = require('website.utils');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -152,20 +153,38 @@ var SlideUploadDialog = Dialog.extend({
                 'datas': this.file.data
             });
         } else if (values['slide_type'] === 'webpage') {
+            let fileData = this.file.type === 'image/svg+xml' ? this.__svgToPNG() : this.file.data;
+            if (fileData instanceof Promise) {
+                const fileDataProm = fileData;
+                this.__svgLoadingExec = () => fileDataProm.then(result => values['image_1920'] = result);
+                fileData = this._svgToPng();
+            }
             _.extend(values, {
                 'mime_type': 'text/html',
-                'image_1920': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
+                'image_1920': fileData,
             });
         } else if (/^image\/.*/.test(this.file.type)) {
+            let fileData = this.file.type === 'image/svg+xml' ? this.__svgToPNG() : this.file.data;
+            let fileDataProm;
+            if (fileData instanceof Promise) {
+                fileDataProm = fileData;
+                fileData = this._svgToPng();
+            }
             if (values['slide_type'] === 'presentation') {
+                if (fileDataProm) {
+                    this.__svgLoadingExec = () => fileDataProm.then(result => values['datas'] = result);
+                }
                 _.extend(values, {
                     'slide_type': 'infographic',
                     'mime_type': this.file.type === 'image/svg+xml' ? 'image/png' : this.file.type,
-                    'datas': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data
+                    'datas': fileData,
                 });
             } else {
+                if (fileDataProm) {
+                    this.__svgLoadingExec = () => fileDataProm.then(result => values['image_1920'] = result);
+                }
                 _.extend(values, {
-                    'image_1920': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
+                    'image_1920': fileData,
                 });
             }
         }
@@ -373,13 +392,22 @@ var SlideUploadDialog = Dialog.extend({
     // TODO: Remove this part, as now SVG support in image resize tools is included
     //Python PIL does not support SVG, so converting SVG to PNG
     _svgToPng: function () {
-        var img = this.$el.find('img#slide-image')[0];
-        var canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        canvas.getContext('2d').drawImage(img, 0, 0);
-        return canvas.toDataURL('image/png').split(',')[1];
+        return this.__svgToPNG(true);
     },
+    /**
+     * Bug fixed version of the original _svgToPng, it can return a Promise
+     *
+     * @returns {Promise<string>|string}
+     */
+    __svgToPNG: function (noAsync = false) {
+        const imgEl = this.$el.find('img#slide-image')[0];
+        const result = wUtils.svgToPNG(imgEl, noAsync);
+        if (typeof(result) === 'string') {
+            return result.split(',')[1];
+        }
+        return result.then(png => png.split(',')[1]);
+    },
+
     //--------------------------------------------------------------------------
     // Handler
     //--------------------------------------------------------------------------
@@ -601,9 +629,18 @@ var SlideUploadDialog = Dialog.extend({
             var values = this._formValidateGetValues($btn.hasClass('o_w_slide_upload_published')); // get info before changing state
             var oldType = this.get('state');
             this.set('state', '_upload');
-            return this._rpc({
-                route: '/slides/add_slide',
-                params: values,
+
+            return new Promise(async resolve => {
+                if (this.__svgLoadingExec) {
+                    await this.__svgLoadingExec();
+                }
+                delete this.__svgLoadingExec;
+                resolve();
+            }).then(() => {
+                return this._rpc({
+                    route: '/slides/add_slide',
+                    params: values,
+                });
             }).then(function (data) {
                 self._onFormSubmitDone(data, oldType);
             });
