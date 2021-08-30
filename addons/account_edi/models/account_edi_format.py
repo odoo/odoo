@@ -497,7 +497,10 @@ class AccountEdiFormat(models.Model):
             if value is not None:
                 domains.append(domain)
 
-        domain = expression.OR(domains)
+        domain = expression.AND([
+            expression.OR(domains),
+            [('company_id', 'in', [False, self.env.company.id])],
+        ])
         return self.env['res.partner'].search(domain, limit=1)
 
     def _retrieve_product(self, name=None, default_code=None, barcode=None):
@@ -517,7 +520,10 @@ class AccountEdiFormat(models.Model):
             if value is not None:
                 domains.append([domain])
 
-        domain = expression.OR(domains)
+        domain = expression.AND([
+            expression.OR(domains),
+            [('company_id', 'in', [False, self.env.company.id])],
+        ])
         return self.env['product.product'].search(domain, limit=1)
 
     def _retrieve_tax(self, amount, type_tax_use):
@@ -527,12 +533,11 @@ class AccountEdiFormat(models.Model):
         :param type_tax_use:    The type of the tax.
         :returns:               A tax or an empty recordset if not found.
         '''
-        domains = [
-            [('amount', '=', float(amount))],
-            [('type_tax_use', '=', type_tax_use)]
-        ]
-
-        return self.env['account.tax'].search(expression.AND(domains), order='sequence ASC', limit=1)
+        return self.env['account.tax'].search([
+            ('amount', '=', float(amount)),
+            ('type_tax_use', '=', type_tax_use),
+            ('company_id', '=', self.env.company.id),
+        ], limit=1)
 
     def _retrieve_currency(self, code):
         '''Search all currencies and find one that matches the code.
