@@ -19,6 +19,28 @@
             </tree>
         </field>
     </record>
+    <record id="view_move_line_tree_detailed" model="ir.ui.view">
+        <field name="name">stock.move.line.tree.detailed</field>
+        <field name="model">stock.move.line</field>
+        <field name="priority">25</field>
+        <field name="arch" type="xml">
+            <tree string="Move Lines" create="0" default_order="date">
+                <field name="date" optional="hide"/>
+                <field name="picking_id"/>
+                <field name="picking_partner_id"/>
+                <field name="product_id"/>
+                <field name="lot_id" groups="stock.group_production_lot" optional="hide"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations" />
+                <field name="location_dest_id" groups="stock.group_stock_multi_locations" />
+                <field name="package_id" groups="stock.group_tracking_lot"/>
+                <field name="qty_done" string="Quantity Done" optional="hide"/>
+                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" optional="hide" string="Unit of Measure" groups="uom.group_uom"/>
+                <field name="company_id" groups="base.group_multi_company" force_save="1" optional="hide"/>
+                <field name="state" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
+            </tree>
+        </field>
+    </record>
+
     <record id="view_move_line_form" model="ir.ui.view">
         <field name="name">stock.move.line.form</field>
         <field name="model">stock.move.line</field>
@@ -97,6 +119,8 @@
                     <filter string="Product" name="groupby_product_id" domain="[]" context="{'group_by': 'product_id'}"/>
                     <filter string="Status" name="by_state" domain="[]"  context="{'group_by': 'state'}"/>
                     <filter string="Date" name="by_date" domain="[]" context="{'group_by': 'date'}"/>
+                    <filter string="Transfers" name="by_picking" domain="[]" context="{'group_by': 'picking_id'}"/>
+                    <filter string="Location" name="by_location" domain="[]" context="{'group_by': 'location_id'}"/>
                 </group>
             </search>
         </field>
@@ -147,8 +171,8 @@
             </field>
     </record>
 
-    <menuitem 
-        action="stock_move_line_action" 
-        id="stock_move_line_menu" 
+    <menuitem
+        action="stock_move_line_action"
+        id="stock_move_line_menu"
         parent="stock.menu_warehouse_report" sequence="150"/>
 </odoo>
