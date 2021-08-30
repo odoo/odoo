@@ -54,9 +54,9 @@ ProductConfiguratorWidget.include({
         return this._rpc({
             model: 'product.product',
             method: 'read',
-            args: [productId, ['event_ok']],
+            args: [productId, ['detailed_type']],
         }).then(function (result) {
-            if (Array.isArray(result) && result.length && result[0].event_ok) {
+            if (Array.isArray(result) && result.length && result[0].detailed_type === 'event') {
                 self._openEventConfigurator({
                         default_product_id: productId
                     },

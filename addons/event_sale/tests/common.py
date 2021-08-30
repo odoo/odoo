@@ -15,7 +15,6 @@ class TestEventSaleCommon(TestEventCommon, TestSalesCommon):
             'name': 'Test Registration Product',
             'description_sale': 'Mighty Description',
             'list_price': 10,
-            'event_ok': True,
             'standard_price': 30.0,
-            'type': 'service',
+            'detailed_type': 'event',
         })
