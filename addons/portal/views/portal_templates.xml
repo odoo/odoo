@@ -599,6 +599,7 @@
                 <t t-esc="errors"/>
             </div>
             <section>
+                <h1> Password &amp; Security </h1>
                 <h3>Change Password</h3>
                 <t t-set="path">password</t>
                 <div class="alert alert-success" role="alert" t-if="success and success.get('password')">
@@ -611,7 +612,7 @@
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" name="op" value="password"/>
                     <div class="form-group">
-                        <label for="current">Password:</label>
+                        <label for="current">Current Password</label>
                         <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.old') else '' }}"
                                id="current" name="old"
                                autocomplete="current-password" required="required"/>
@@ -620,7 +621,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="new">New Password:</label>
+                        <label for="new">New Password</label>
                         <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.new1') else '' }}"
                                id="new" name="new1"
                                autocomplete="new-password" required="required"/>
@@ -629,7 +630,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="new2">Verify New Password:</label>
+                        <label for="new2">Confirm New Password</label>
                         <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.new2') else '' }}"
                                id="new2" name="new2"
                                autocomplete="new-password" required="required"/>
@@ -637,7 +638,7 @@
                             <t t-esc="get_error(errors, 'password.new2')"/>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-danger">Change Password</button>
+                    <button type="submit" class="btn btn-primary">Confirm</button>
                 </form>
             </section>
         </div></t>

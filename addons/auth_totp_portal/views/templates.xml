@@ -11,51 +11,65 @@
                 <t t-esc="env.ref('auth_totp.view_totp_wizard').sudo().get_combined_arch()"/>
             </div>
             <section>
-                <h3>Two-factor authentication</h3>
+                <h3>2FA: Two-factor authentication</h3>
                 <t t-if="not user_id.totp_enabled">
                     <div class="alert alert-secondary" role="status">
                         <i class="fa fa-warning"/>
                         Two-factor authentication not enabled
                     </div>
-                    <button type="button" class="btn btn-secondary" id="auth_totp_portal_enable">
-                        Enable two-factor authentication
-                    </button>
                 </t>
-                <t t-else="">
-                    <span class="text-success">
-                        <i class="fa fa-check-circle"/>
-                        Two-factor authentication enabled
+                <div class="form-group">
+                    <span>
+                        Two-factor authentication
                     </span>
-                    <button type="button" class="btn btn-link" id="auth_totp_portal_disable">
-                        (Disable two-factor authentication)
-                    </button>
-                    <t t-if="len(user_id.totp_trusted_device_ids)">
-                        <table class="table o_main_table">
-                            <thead>
-                                <tr>
-                                    <th><strong>Trusted Device</strong></th>
-                                    <th><strong>Added On</strong></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr t-foreach="user_id.totp_trusted_device_ids" t-as="td">
-                                    <td>
-                                        <span t-field="td.name"/>
-                                    </td>
-                                    <td>
-                                        <span t-field="td.create_date"/>
-                                    </td>
-                                    <td>
-                                        <i class="fa fa-trash text-danger" type="button" t-att-id="td.id"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="o_boolean_toggle custom-control custom-checkbox ml-4" name="auth_totp_portal_toggle">
+                        <input type="checkbox" t-att-id="'auth_totp_portal_disable' if user_id.totp_enabled else 'auth_totp_portal_enable'"
+                            class="custom-control-input" t-att-checked="'checked' if user_id.totp_enabled else None"/>
+                        <label t-att-for="'auth_totp_portal_disable' if user_id.totp_enabled else 'auth_totp_portal_enable'" class="custom-control-label">
+                            &#8203;
+                            <i t-attf-class="fa {{ 'fa-check-circle' if user_id.totp_enabled else 'fa-times-circle' }}"></i>
+                        </label>
+                    </div>
+                </div>
+                <t t-if="user_id.totp_enabled and len(user_id.totp_trusted_device_ids)">
+                    <table class="table o_main_table">
+                        <thead>
+                            <tr>
+                                <th><strong>Trusted Device</strong></th>
+                                <th><strong>Added On</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="user_id.totp_trusted_device_ids" t-as="td">
+                                <td>
+                                    <span t-field="td.name"/>
+                                </td>
+                                <td>
+                                    <span t-field="td.create_date"/>
+                                </td>
+                                <td>
+                                    <i class="fa fa-trash text-danger" type="button" t-att-id="td.id"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="form-group">
                         <button class="btn btn-primary" type="button" id="auth_totp_portal_revoke_all_devices">
                             Revoke All
                         </button>
-                    </t>
+                    </div>
                 </t>
+                <div class="form-group">
+                    <span class="o_portal_2fa_hint_opacity">
+                        Two-factor authentication ("2FA") is a system of double authentication. The first one is your usual
+                        password and the second one is a code you get from a phone app or a sms.
+                    </span>
+                </div>
+                <div class="form-group">
+                    <span class="o_portal_2fa_hint_opacity">
+                        Odoo advises you to install a 2FA phone based authenticator like Authy on your phone.
+                    </span>
+                </div>
             </section>
         </xpath>
     </template>
