@@ -30,7 +30,12 @@
         <t t-if="object.deadline">
             Please answer the survey for <t t-out="format_date(object.deadline) or ''">05/05/2021</t>.<br/><br/>
         </t>
-        Thank you for your participation.
+        <t t-if="object.survey_id.certification">
+            We wish you good luck!
+        </t>
+        <t t-else="">
+            Thank you in advance for your participation.
+        </t>
     </p>
 </div>
             </field>
@@ -62,10 +67,11 @@
             <tr><td style="padding:15px 20px 10px 20px;">
                 <p>Dear <span t-out="object.partner_id.name or 'participant'">participant</span></p>
                 <p>
-                    Here is, in attachment, your certification document for
-                        <strong t-out="object.survey_id.display_name or ''">Feedback Form</strong>
+                    Please find attached your
+                        <strong t-out="object.survey_id.display_name or ''">Furniture Creation</strong>
+                    certification
                 </p>
-                <p>Congratulations for succeeding the test!</p>
+                <p>Congratulations for passing the test!</p>
             </td></tr>
         </tbody>
     </table>
