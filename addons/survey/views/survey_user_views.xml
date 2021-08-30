@@ -17,7 +17,7 @@
                 <filter string="Quizz passed" name="scoring_success" domain="[('scoring_success','=', True)]"/>
                 <separator/>
                 <filter string="Test Entries" name="test" domain="[('test_entry','=', True)]"/>
-                <filter string="Except Test Entries" name="not_test" domain="[('test_entry','=', False)]" invisible="1"/>
+                <filter string="Exclude Test Entries" name="not_test" domain="[('test_entry','=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
                     <filter string="Email" name="group_by_email" domain="[]" context="{'group_by': 'email'}"/>
@@ -63,7 +63,7 @@
                             <field name="scoring_success" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
                         </group>
                     </group>
-                    <field name="user_input_line_ids" mode="tree" attrs="{'readonly': False}">
+                    <field name="user_input_line_ids" mode="tree" attrs="{'readonly': True}">
                         <tree>
                             <field name="question_sequence" invisible="1"/>
                             <field name="question_id"/>
@@ -103,7 +103,7 @@
         <field name="name">survey.user_input.view.kanban</field>
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
-            <kanban create="false">
+            <kanban create="false" group_create="false">
                 <field name="survey_id"/>
                 <field name="create_date"/>
                 <field name="partner_id"/>
@@ -140,9 +140,11 @@
         <field name="search_view_id" ref="survey_user_input_view_search"/>
         <field name="context">{'search_default_group_by_survey': True}</field>
         <field name="help" type="html">
-          <p class="o_view_nocontent_empty_folder">
-            Nobody has replied to your surveys yet
-          </p>
+            <p class="o_view_nocontent_empty_folder">
+                No answers yet!
+            </p><p>
+                You can share your links through different means: email, invite shortcut, live presentation, ...
+            </p>
         </field>
     </record>
 
@@ -220,13 +222,7 @@
     <menuitem name="Participations"
         id="menu_survey_type_form1"
         action="action_survey_user_input"
-        parent="survey_menu_user_inputs"
+        parent="menu_surveys"
         sequence="1"/>
-    <menuitem name="Detailed Answers"
-        id="menu_survey_response_line_form"
-        action="survey_user_input_line_action"
-        parent="survey_menu_user_inputs"
-        sequence="4"
-        groups="base.group_no_one"/>
 </data>
 </odoo>

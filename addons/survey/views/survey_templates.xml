@@ -151,7 +151,8 @@
                 <t t-else="">
                     <div t-if="survey.is_time_limited">
                         <p>
-                            <span>Time limit for this survey: </span>
+                            <span t-if="not survey.certification">Time limit for this survey: </span>
+                            <span t-else="">Time limit for this certification: </span>
                             <span class="font-weight-bold text-danger" t-field="survey.time_limit" t-options="{'widget': 'duration', 'unit': 'minute'}"></span>
                         </p>
                     </div>
@@ -402,7 +403,7 @@
     </template>
 
     <template id="question_suggested_value_image" name="Image from the question suggested answer">
-        <t t-if="question.allow_value_image and label.value_image">
+        <t t-if="label.value_image">
             <!-- Directly use field or route if the user doesn't have access rights -->
             <div t-if="not env.user.has_group('survey.group_survey_user')"
                 class="d-flex my-3 justify-content-center">

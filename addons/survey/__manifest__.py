@@ -14,7 +14,7 @@ each question may have multiple answers. Different users may give different
 answers of question and according to that survey is done. Partners are also
 sent mails with personal token for the invitation of the survey.
     """,
-    'summary': 'Create surveys and analyze answers',
+    'summary': 'Send your surveys or share them live.',
     'website': 'https://www.odoo.com/app/surveys',
     'depends': [
         'auth_signup',
@@ -26,7 +26,6 @@ sent mails with personal token for the invitation of the survey.
         'views/survey_report_templates.xml',
         'views/survey_reports.xml',
         'data/mail_template_data.xml',
-        'data/ir_actions_data.xml',
         'security/survey_security.xml',
         'security/ir.model.access.csv',
         'views/survey_menus.xml',
@@ -96,6 +95,7 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/js/survey_renderers.js',
             'survey/static/src/js/survey_views.js',
             'survey/static/src/scss/survey_survey_views.scss',
+            'survey/static/src/scss/survey_question_views.scss',
         ],
         'web.assets_tests': [
             'survey/static/tests/**/*',
