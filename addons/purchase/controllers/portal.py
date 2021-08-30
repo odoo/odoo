@@ -16,8 +16,8 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 class CustomerPortal(portal.CustomerPortal):
 
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
+    def _prepare_portal_counters_values(self, counters):
+        values = super()._prepare_portal_counters_values(counters)
         PurchaseOrder = request.env['purchase.order']
         if 'rfq_count' in counters:
             values['rfq_count'] = PurchaseOrder.search_count([
@@ -27,6 +27,20 @@ class CustomerPortal(portal.CustomerPortal):
             values['purchase_count'] = PurchaseOrder.search_count([
                 ('state', 'in', ['purchase', 'done', 'cancel'])
             ]) if PurchaseOrder.check_access_rights('read', raise_exception=False) else 0
+        return values
+
+    def _prepare_portal_overview_values(self):
+        values = super()._prepare_portal_overview_values()
+        values.update({
+            'purchase_rfq_counters': [{
+                'description': _("Requests for Quotation"),
+                'counter': 'rfq_count',
+            }],
+            'purchase_counters': [{
+                'description': _("Current Orders"),
+                'counter': 'purchase_count',
+            }]
+        })
         return values
 
     def _render_portal(self, template, page, date_begin, date_end, sortby, filterby, domain, searchbar_filters, default_filter, url, history, page_name, key):

@@ -18,12 +18,26 @@ from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
 
 class ProjectCustomerPortal(CustomerPortal):
 
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
+    def _prepare_portal_counters_values(self, counters):
+        values = super()._prepare_portal_counters_values(counters)
         if 'project_count' in counters:
             values['project_count'] = request.env['project.project'].search_count([])
         if 'task_count' in counters:
             values['task_count'] = request.env['project.task'].search_count([])
+        return values
+
+    def _prepare_portal_overview_values(self):
+        values = super()._prepare_portal_overview_values()
+        values.update({
+            'project_counters': [{
+                'description': _("Projects"),
+                'counter': 'project_count',
+            }],
+            'project_task_counters': [{
+                'description': _("Tasks"),
+                'counter': 'task_count',
+            }],
+        })
         return values
 
     # ------------------------------------------------------------

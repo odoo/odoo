@@ -32,16 +32,36 @@ class WebsiteAccount(CustomerPortal):
             ('type', '=', 'opportunity')
         ]
 
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
+    def _prepare_portal_counters_values(self, counters):
+        values = super()._prepare_portal_counters_values(counters)
         if 'lead_count' in counters:
             values['lead_count'] = request.env['crm.lead'].search_count(self.get_domain_my_lead(request.env.user))
         if 'opp_count' in counters:
             values['opp_count'] = request.env['crm.lead'].search_count(self.get_domain_my_opp(request.env.user))
         return values
 
+    def _prepare_portal_overview_values(self):
+        values = super()._prepare_portal_overview_values()
+        values.update({
+            'website_crm_partner_assign_lead_counters': [{
+                'description': _("New Leads"),
+                'counter': 'lead_count',
+            }],
+            'website_crm_partner_assign_opp_counters': [{
+                'description': _("Opportunities"),
+                'counter': 'opp_count',
+            }]
+        })
+        values['group_use_lead'] = self._get_group_use_lead()
+        return values
+
+    def _get_group_use_lead(self):
+        return request.env['res.users'].with_context(active_test=False).sudo().search([('login', '=', '__system__')]).has_group('crm.group_use_lead')
+
     @http.route(['/my/leads', '/my/leads/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_leads(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
+        if not self._get_group_use_lead():
+            return request.redirect('/my/opportunities')
         values = self._prepare_portal_layout_values()
         CrmLead = request.env['crm.lead']
         domain = self.get_domain_my_lead(request.env.user)
@@ -150,6 +170,8 @@ class WebsiteAccount(CustomerPortal):
 
     @http.route(['''/my/lead/<model('crm.lead', "[('type','=', 'lead')]"):lead>'''], type='http', auth="user", website=True)
     def portal_my_lead(self, lead, **kw):
+        if not self._get_group_use_lead():
+            return request.redirect('/my/opportunities')
         if lead.type != 'lead':
             raise NotFound()
         return request.render("website_crm_partner_assign.portal_my_lead", {'lead': lead})

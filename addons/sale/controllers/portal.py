@@ -17,8 +17,8 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager, get_rec
 
 class CustomerPortal(portal.CustomerPortal):
 
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
+    def _prepare_portal_counters_values(self, counters):
+        values = super()._prepare_portal_counters_values(counters)
         partner = request.env.user.partner_id
 
         SaleOrder = request.env['sale.order']
@@ -33,6 +33,20 @@ class CustomerPortal(portal.CustomerPortal):
                 ('state', 'in', ['sale', 'done'])
             ]) if SaleOrder.check_access_rights('read', raise_exception=False) else 0
 
+        return values
+
+    def _prepare_portal_overview_values(self):
+        values = super()._prepare_portal_overview_values()
+        values.update({
+            'sale_quotation_counters': [{
+                'description': _("Quotations"),
+                'counter': 'quotation_count',
+            }],
+            'sale_order_counters': [{
+                'description': _("Current Orders"),
+                'counter': 'order_count',
+            }]
+        })
         return values
 
     #

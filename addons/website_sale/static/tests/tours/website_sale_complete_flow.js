@@ -152,7 +152,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "See Quotations",
-        trigger: '.o_portal_docs a:contains("Quotations")',
+        trigger: '.o_portal_overview a:contains("Quotations")',
     },
     // Sign in as admin change config auth_signup -> b2b, sale_show_tax -> total and Logout
     {
@@ -297,7 +297,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "See Quotations",
-        trigger: '.o_portal_docs a:contains("Quotations") .badge:containsExact(2)',
+        trigger: '.o_portal_overview a:contains("Quotations"):has(span[data-placeholder_count="quotation_count"]:containsExact(2))',
     },
 
     // enable extra step on website checkout and check extra step on checkout process

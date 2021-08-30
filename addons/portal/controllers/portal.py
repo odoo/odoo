@@ -139,22 +139,42 @@ class CustomerPortal(Controller):
             'page_name': 'home',
         }
 
-    def _prepare_home_portal_values(self, counters):
+    def _prepare_portal_counters_values(self, counters):
         """Values for /my & /my/home routes template rendering.
 
-        Includes the record count for the displayed badges.
-        where 'coutners' is the list of the displayed badges
-        and so the list to compute.
+        Includes the record count for the displayed menu elements.
+        where 'counters' is the list of the displayed counters in the menu
+        elements and so the list to compute.
         """
         return {}
 
+    def _prepare_portal_overview_values(self):
+        """Values for /my & /my/home routes template rendering.
+
+        Includes the desired counters (optional) and descriptions (mandatory
+        for each description_data) for the displayed menu elements
+        Expected values format:
+        {
+            'description_data_name': [{
+                'description': 'translated description',
+                'counter': 'counter_name',  # name sent to /my/counters
+            }, ...], ...
+        }
+        """
+        return {
+            'my_account_description': [{
+                'description': _("Addresses, Payments, Security"),
+            }]
+        }
+
     @route(['/my/counters'], type='json', auth="user", website=True)
     def counters(self, counters, **kw):
-        return self._prepare_home_portal_values(counters)
+        return self._prepare_portal_counters_values(counters)
 
     @route(['/my', '/my/home'], type='http', auth="user", website=True)
     def home(self, **kw):
         values = self._prepare_portal_layout_values()
+        values.update(self._prepare_portal_overview_values())
         return request.render("portal.portal_my_home", values)
 
     @route(['/my/account'], type='http', auth='user', website=True)
@@ -208,6 +228,7 @@ class CustomerPortal(Controller):
     def security(self, **post):
         values = self._prepare_portal_layout_values()
         values['get_error'] = get_error
+        values['page_name'] = 'security'
 
         if request.httprequest.method == 'POST':
             values.update(self._update_password(

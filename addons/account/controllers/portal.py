@@ -10,12 +10,20 @@ from odoo.http import request
 
 class PortalAccount(CustomerPortal):
 
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
+    def _prepare_portal_counters_values(self, counters):
+        values = super()._prepare_portal_counters_values(counters)
         if 'invoice_count' in counters:
             invoice_count = request.env['account.move'].search_count(self._get_invoices_domain()) \
                 if request.env['account.move'].check_access_rights('read', raise_exception=False) else 0
             values['invoice_count'] = invoice_count
+        return values
+
+    def _prepare_portal_overview_values(self):
+        values = super()._prepare_portal_overview_values()
+        values['account_counters'] = [{
+            'description': _("Invoices"),
+            'counter': 'invoice_count',
+        }]
         return values
 
     # ------------------------------------------------------------

@@ -10,7 +10,7 @@
             <div class="d-none" id="totp_wizard_view">
                 <t t-esc="env.ref('auth_totp.view_totp_wizard').sudo().get_combined_arch()"/>
             </div>
-            <section>
+            <section class="mt-4">
                 <h3>Two-factor authentication</h3>
                 <t t-if="not user_id.totp_enabled">
                     <div class="alert alert-secondary" role="status">

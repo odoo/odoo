@@ -31,16 +31,16 @@
     </template>
 
     <template id="portal_my_home" name="Show Projects / Tasks" customize_show="True" inherit_id="portal.portal_my_home" priority="40">
-        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
-            <t t-call="portal.portal_docs_entry">
+        <xpath expr="//div[hasclass('o_portal_overview')]" position="inside">
+            <t t-call="portal.portal_overview_card">
                 <t t-set="title">Projects</t>
                 <t t-set="url" t-value="'/my/projects'"/>
-                <t t-set="placeholder_count" t-value="'project_count'"/>
+                <t t-set="description_data" t-value="project_counters"/>
             </t>
-            <t t-call="portal.portal_docs_entry">
+            <t t-call="portal.portal_overview_card">
                 <t t-set="title">Tasks</t>
                 <t t-set="url" t-value="'/my/tasks'"/>
-                <t t-set="placeholder_count" t-value="'task_count'"/>
+                <t t-set="description_data" t-value="project_task_counters"/>
             </t>
         </xpath>
     </template>

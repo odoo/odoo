@@ -200,16 +200,16 @@
     </template>
 
     <template id="portal_my_home_lead" name="Show Leads / Opps" customize_show="True" inherit_id="portal.portal_my_home" priority="15">
-        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
-            <t t-call="portal.portal_docs_entry">
+        <xpath expr="//div[hasclass('o_portal_overview')]" position="inside">
+            <t t-if="group_use_lead" t-call="portal.portal_overview_card">
                 <t t-set="title">Leads</t>
                 <t t-set="url" t-value="'/my/leads'"/>
-                <t t-set="placeholder_count" t-value="'lead_count'"/>
+                <t t-set="description_data" t-value="website_crm_partner_assign_lead_counters"/>
             </t>
-            <t t-call="portal.portal_docs_entry">
+            <t t-call="portal.portal_overview_card">
                 <t t-set="title">Opportunities</t>
                 <t t-set="url" t-value="'/my/opportunities'"/>
-                <t t-set="placeholder_count" t-value="'opp_count'"/>
+                <t t-set="description_data" t-value="website_crm_partner_assign_opp_counters"/>
             </t>
         </xpath>
     </template>
