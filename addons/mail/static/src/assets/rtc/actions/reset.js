@@ -1,0 +1,84 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        Resets the state of the model and cleanly ends all connections and
+        streams.
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            Rtc/reset
+        [Action/params]
+            record
+                [type]
+                    Rtc
+        [Action/behavior]
+            {if}
+                @record
+                .{Rtc/_peerConnections}
+            .{then}
+                :peerTokens
+                    {Dict/keys}
+                        @record
+                        .{Rtc/_peerConnections}
+                {foreach}
+                    @peerTokens
+                .{as}
+                    token
+                .{do}
+                    {Rtc/_removePeer}
+                        [0]
+                            @record
+                        [1]
+                            @token
+            {if}
+                @record
+                .{Rtc/disconnectAudioMonitor}
+            .{then}
+                @record
+                .{Rtc/disconnectAudioMonitor}
+                .{Function/call}
+            {if}
+                @record
+                .{Rtc/audioTrack}
+            .{then}
+                {Track/stop}
+                    @record
+                    .{Rtc/audioTrack}
+            {if}
+                @record
+                .{Rtc/videoTrack}
+            .{then}
+                {Track/stop}
+                    @record
+                    .{Rtc/videoTrack}
+            {Record/update}
+                [0]
+                    @record
+                [1]
+                    [Rtc/_dataChannels]
+                        {Record/empty}
+                    [Rtc/disconnectAudioMonitor]
+                        {Record/empty}
+                    [Rtc/_fallBackTimeouts]
+                        {Record/empty}
+                    [Rtc/_outGoingCallTokens]
+                        {Record/empty}
+                    [Rtc/_peerConnections]
+                        {Record/empty}
+                    [Rtc/audioTrack]
+                        {Record/empty}
+                    [Rtc/currentRtcSession]
+                        {Record/empty}
+                    [Rtc/logs]
+                        {Record/empty}
+                    [Rtc/sendDisplay]
+                        {Record/empty}
+                    [Rtc/sendUserVideo]
+                        {Record/empty}
+                    [Rtc/videoTrack]
+                        {Record/empty}
+`;

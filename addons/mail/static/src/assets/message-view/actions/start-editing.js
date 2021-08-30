@@ -1,0 +1,78 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        Starts editing this message.
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            MessageView/startEditing
+        [Action/params]
+            record
+                [type]
+                    MessageView
+        [Action/behavior]
+            :parser
+                {Record/insert}
+                    [Record/models]
+                        DOMParser
+            :htmlDoc
+                {DOMParser/parseFromString}
+                    [0]
+                        @parser
+                    [1]
+                        @record
+                        .{MessageView/message}
+                        .{Message/body}
+                        .{String/replaceAll}
+                            [0]
+                                <br>
+                            [1]
+                                \n
+                        .{String/replaceAll}
+                            [0]
+                                </br>
+                            [1]
+                                \n
+                    [2]
+                        text/html
+            :textInputContent
+                @htmlDoc
+                .{Dict/get}
+                    body
+                .{Dict/get}
+                    textContent
+            {Record/update}
+                [0]
+                    @record
+                [1]
+                    [MessageView/composerForEditing]
+                        {Record/insert}
+                            [Record/models]
+                                Composer
+                            [Composer/isLastStateChangeProgrammatic]
+                                true
+                            [Composer/mentionedPartners]
+                                @record
+                                .{MessageView/message}
+                                .{Message/recipients}
+                            [Composer/textInputContent]
+                                @textInputContent
+                            [Composer/textInputCursorEnd]
+                                @textInputContent
+                                .{Collection/length}
+                            [Composer/textInputCursorStart]
+                                @textInputContent
+                                .{Collection/length}
+                            [Composer/textInputSelectionDirection]
+                                none
+                    [MessageView/composerViewInEditing]
+                        {Record/insert}
+                            [Record/models]
+                                ComposerView
+                            [ComposerView/doFocus]
+                                true
+`;

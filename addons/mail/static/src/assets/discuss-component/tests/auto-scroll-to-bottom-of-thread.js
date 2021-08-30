@@ -1,0 +1,147 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            auto-scroll to bottom of thread
+        [Test/model]
+            DiscussComponent
+        [Test/assertions]
+            2
+        [Test/scenario]
+            {Dev/comment}
+                AKU TODO: thread specific test
+                channel expected to be rendered, with a random unique id that will be
+                referenced in the test
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                [0]
+                    [Record/models]
+                        mail.channel
+                    [mail.channel/id]
+                        20
+                    {foreach}
+                        {Record/insert}
+                            [Record/models]
+                                Range
+                            [start]
+                                0
+                            [end]
+                                25
+                    .{as}
+                        i
+                    .{do}
+                        {entry}
+                            [Record/models]
+                                mail.message
+                            [mail.message/body]
+                                not empty
+                            [mail.message/model]
+                                mail.channel
+                            [mail.message/res_id]
+                                20
+            @testEnv
+            .{UI/waitUntilEvent}
+                [eventName]
+                    o-component-message-list-scrolled
+                [message]
+                    should wait until channel 20 scrolled to its last message initially
+                [predicate]
+                    {Record/insert}
+                        [Record/models]
+                            Function
+                        [Function/in]
+                            scrollTop
+                            thread
+                        [Function/out]
+                            @thread
+                            .{Thread/model}
+                            .{=}
+                                mail.channel
+                            .{&}
+                                @thread
+                                .{Thread/id}
+                                .{=}
+                                    20
+                            .{&}
+                                @scrollTop
+                                .{=}
+                                    @thread
+                                    .{Thread/threadViews}
+                                    .{Collection/first}
+                                    .{ThreadView/messageListComponents}
+                                    .{Collection/first}
+                                    .{web.Element/scrollHeight}
+                                    .{-}
+                                        @thread
+                                        .{Thread/threadViews}
+                                        .{Collection/first}
+                                        .{ThreadView/messageListComponents}
+                                        .{Collection/first}
+                                        .{web.Element/clientHeight}
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    DiscussComponent
+            @testEnv
+            .{Thread/open}
+                @testEnv
+                .{Record/findById}
+                    [Thread/id]
+                        20
+                    [Thread/model]
+                        mail.channel
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/length}
+                    .{=}
+                        25
+                []
+                    should have 25 messages
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/threadViews}
+                    .{Collection/first}
+                    .{ThreadView/messageListComponents}
+                    .{Collection/first}
+                    .{web.Element/scrollTop}
+                    .{=}
+                        @testEnv
+                        .{Discuss/thread}
+                        .{Thread/threadViews}
+                        .{Collection/first}
+                        .{ThreadView/messageListComponents}
+                        .{Collection/first}
+                        .{web.Element/scrollHeight}
+                        .{-}
+                            @testEnv
+                            .{Discuss/thread}
+                            .{Thread/threadViews}
+                            .{Collection/first}
+                            .{ThreadView/messageListComponents}
+                            .{Collection/first}
+                            .{web.Element/clientHeight}
+                []
+                    should have scrolled to bottom of thread
+`;

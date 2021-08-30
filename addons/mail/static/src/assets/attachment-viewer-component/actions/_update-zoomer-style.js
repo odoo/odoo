@@ -1,0 +1,96 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        Update the style of the zoomer based on translate transformation. Changes
+        are directly applied on zoomer, instead of triggering re-render and
+        defining them in the template, for performance reasons.
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            AttachmentViewerComponent/_updateZoomerStyle
+        [Action/params]
+            record
+        [Action/behavior]
+            :tx
+                {if}
+                    @record
+                    .{AttachmentViewerComponent/viewImage}
+                    .{web.Element/offsetWidth}
+                    .{*}
+                        @record
+                        .{AttachmentViewerComponent/record}
+                        .{AttachmentViewer/scale}
+                    .{>}
+                        @record
+                        .{AttachmentViewerComponent/zoomer}
+                        .{web.Element/offsetWidth}
+                .{then}
+                    @record
+                    .{AttachmentViewerComponent/translateX}
+                    .{+}
+                        @record
+                        .{AttachmentViewerComponent/translateDx}
+                .{else}
+                    0
+            :ty
+                {if}
+                    @record
+                    .{AttachmentViewerComponent/viewImage}
+                    .{web.Element/offsetHeight}
+                    .{*}
+                        @record
+                        .{AttachmentViewerComponent/record}
+                        .{AttachmentViewer/scale}
+                    .{>}
+                        @record
+                        .{AttachmentViewerComponent/zoomer}
+                        .{web.Element/offsetHeight}
+                .{then}
+                    @record
+                    .{AttachmentViewerComponent/translateY}
+                    .{+}
+                        @record
+                        .{AttachmentViewerComponent/translateDy}
+                .{else}
+                    0
+            {if}
+                @tx
+                .{=}
+                    0
+            .{then}
+                {Record/update}
+                    [0]
+                        @record
+                    [1]
+                        [AttachmentViewerComponent/translateX]
+                            0
+            {if}
+                @ty
+                .{=}
+                    0
+            .{then}
+                {Record/update}
+                    [0]
+                        @record
+                    [1]
+                        [AttachmentViewerComponent/translateY]
+                            0
+            {Record/update}
+                [0]
+                    @record
+                    .{AttachmentViewerComponent/zoomer}
+                [1]
+                    [web.Element/style]
+                        {web.scss/transform} 
+                            {web.scss/translate}
+                                [0]
+                                    @tx
+                                    px
+                                [1]
+                                    @ty
+                                    px
+`;

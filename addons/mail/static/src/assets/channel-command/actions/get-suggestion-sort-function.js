@@ -1,0 +1,100 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        Returns a sort function to determine the order of display of channel
+        commands in the suggestion list.
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            ChannelCommand/getSuggestionSortFunction
+        [Action/params]
+            searchTerm
+            [thread]
+                [description]
+                    prioritize result in the context of given thread
+        [Action/behavior]
+            :cleanedSearchTerm
+                {Utils/cleanSearchTerm}
+                    @searchTerm
+            {Record/insert}
+                [Record/models]
+                    Function
+                [Function/in]
+                    item1
+                    item2
+                [Function/out]
+                    :isTypeSpecific1
+                        @item1
+                        .{ChannelCommand/channelTypes}
+                    :isTypeSpecific2
+                        @item2
+                        .{ChannelCommand/channelTypes}
+                    {if}
+                        @isTypeSpecific1
+                        .{&}
+                            @isTypeSpecific2
+                            .{isFalsy}
+                    .{then}
+                        -1
+                        {break}
+                    {if}
+                        @isTypeSpecific1
+                        .{isFalsy}
+                        .{&}
+                            @isTypeSpecific2
+                    .{then}
+                        1
+                        {break}
+                    :cleanedName1
+                        {Utils/cleanSearchTerm}
+                            @item1
+                            .{ChannelCommand/name}
+                    :cleanedName2
+                        {Utils/cleanSearchTerm}
+                            @item2
+                            .{ChannelCommand/name}
+                    {if}
+                        @cleanedName1
+                        .{String/startsWith}
+                            @cleanedSearchTerm
+                        .{&}
+                            @cleanedName2
+                            .{String/startsWith}
+                                @cleanedSearchTerm
+                            .{isFalsy}
+                    .{then}
+                        -1
+                    .{elif}
+                        @cleanedName1
+                        .{String/startsWith}
+                            @cleanedSearchTerm
+                        .{isFalsy}
+                        .{&}
+                            @cleanedName2
+                            .{String/startsWith}
+                                @cleanedSearchTerm
+                    .{then}
+                        1
+                    .{elif}
+                        @cleanedName1
+                        .{<}
+                            @cleanedName2
+                    .{then}
+                        -1
+                    .{elif}
+                        @cleanedName1
+                        .{>}
+                            @cleanedName2
+                    .{then}
+                        1
+                    .{else}
+                        @item1
+                        .{ChannelCommand/id}
+                        .{-}
+                            @item2
+                            .{ChannelCommand/id}
+`;

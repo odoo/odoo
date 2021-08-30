@@ -1,0 +1,66 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Model
+        [Model/name]
+            ActivityComponent
+        [Model/fields]
+            activityView
+        [Model/template]
+            root
+                sidebar
+                    user
+                        userAvatar
+                        iconContainer
+                            icon
+                core
+                    info
+                        dueDateText
+                            dueDateTextIn
+                        summary
+                        type
+                        userName
+                        detailsButton
+                            detailsButtonIcon
+                    details
+                        descriptionList
+                            descriptionType
+                                descriptionTypeLabel
+                                descriptionTypeValue
+                            descriptionCreator
+                                descriptionCreatorLabel
+                                detailsCreation
+                                    detailsCreationDatetime
+                                    detailsCreatorAvatar
+                                    detailsCreator
+                            descriptionAssignee
+                                descriptionAssigneeLabel
+                                detailsAssignation
+                                    detailsAssignationUserAvatar
+                                    detailsAssignationUserName
+                            descriptionDueOn
+                                descriptionDueOnLabel
+                                detailsDueDate
+                                    deadlineDateText
+                    note
+                    mailTemplates
+                        mailTemplateForeach
+                    tools
+                        markDoneButton
+                            markDoneButtonIcon
+                            markDoneButtonLabel
+                        markDonePopover
+                        uploadButton
+                            uploadButtonIcon
+                            uploadButtonLabel
+                        editButton
+                            editButtonIcon
+                            editButtonLabel
+                        cancelButton
+                            cancelButtonIcon
+                            cancelButtonLabel
+`;

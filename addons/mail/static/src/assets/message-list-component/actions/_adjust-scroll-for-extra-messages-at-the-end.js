@@ -1,0 +1,66 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            MessageListComponent/_adjustScrollForExtraMessagesAtTheEnd
+        [Action/params]
+            record
+                [type]
+                    MessageListComponent
+        [Action/behavior]
+            {if}
+                {MessageListComponent/_getScrollableElement}
+                    @record
+                .{isFalsy}
+                .{|}
+                    @record
+                    .{MessageListComponent/hasScrollAdjust}
+                    .{isFalsy}
+            .{then}
+                {break}
+            {if}
+                @record
+                .{MessageListComponent/messageListView}
+                .{MessageListView/threadViewOwner}
+                .{ThreadView/hasAutoScrollOnMessageReceived}
+                .{isFalsy}
+            .{then}
+                {if}
+                    @record
+                    .{MessageListComponent/order}
+                    .{=}
+                        desc
+                    .{&}
+                        @record
+                        .{MessageListComponent/_willPatchSnapshot}
+                .{then}
+                    :scrollHeight
+                        @record
+                        .{MessageListComponent/_willPatchSnapshot}
+                        .{Dict/get}
+                            scrollHeight
+                    :scrollTop
+                        @record
+                        .{MessageListComponent/_willPatchSnapshot}
+                        .{Dict/get}
+                            scrollHeight
+                    {MessageListComponent/setScrollTop}
+                        [0]
+                            @record
+                        [1]
+                            {MessageListComponent/_getScrollableElement}
+                                @record
+                            .{web.Element/scrollHeight}
+                            .{-}
+                                @scrollHeight
+                            .{+}
+                                @scrollTop
+            .{else}
+                {MessageListComponent/_scrollToEnd}
+                    @record
+`;

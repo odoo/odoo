@@ -1,0 +1,279 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            receive several other members typing status "is typing"
+        [Test/model]
+            ThreadTextualTypingStatusComponent
+        [Test/assertions]
+            6
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                []
+                    [Record/models]
+                        mail.channel
+                    [mail.channel/id]
+                        20
+                    [mail.channel/members]
+                        []
+                            @record
+                            .{Test/data}
+                            .{Data/currentPartnerId}
+                        []
+                            10
+                        []
+                            11
+                        []
+                            12
+                []
+                    [Record/models]
+                        res.partner
+                    [res.partner/id]
+                        10
+                    [res.partner/name]
+                        Other10
+                []
+                    [Record/models]
+                        res.partner
+                    [res.partner/id]
+                        11
+                    [res.partner/name]
+                        Other11
+                []
+                    [Record/models]
+                        res.partner
+                    [res.partner/id]
+                        12
+                    [res.partner/name]
+                        Other12
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            :thread
+                @testEnv
+                .{Record/findById}
+                    [Thread/id]
+                        20
+                    [Thread/model]
+                        mail.channel
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    ThreadTextualTypingStatusComponent
+                [ThreadTextualTypingStatusComponent/thread]
+                    @thread
+            {Test/assert}
+                []
+                    @thread
+                    .{Thread/threadTextualTypingStatusComponents}
+                    .{Collection/first}
+                    .{web.Element/textContent}
+                    .{=}
+                        {String/empty}
+                []
+                    Should display no one is currently typing
+
+            {Dev/comment}
+                simulate receive typing notification from other10 (is typing)
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{Env/owlEnv}
+                .{Dict/get}
+                    services
+                .{Dict/get}
+                    bus_service
+                .{Dict/get}
+                    trigger
+                .{Function/call}
+                    [0]
+                        notification
+                    [1]
+                        [type]
+                            mail.channel.partner/typing_status
+                        [payload]
+                            [channel_id]
+                                20
+                            [is_typing]
+                                true
+                            [partner_id]
+                                10
+                            [partner_name]
+                                Other10
+            {Test/assert}
+                []
+                    @thread
+                    .{Thread/threadTextualTypingStatusComponents}
+                    .{Collection/first}
+                    .{ThreadTextualTypingStatusComponent/textContent}
+                    .{=}
+                        Other10 is typing...
+                []
+                    Should display that 'Other10' member is typing
+
+            {Dev/comment}
+                simulate receive typing notification from other11 (is typing)
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{Env/owlEnv}
+                .{Dict/get}
+                    services
+                .{Dict/get}
+                    bus_service
+                .{Dict/get}
+                    trigger
+                .{Function/call}
+                    [0]
+                        notification
+                    [1]
+                        [type]
+                            mail.channel.partner/typing_status
+                        [payload]
+                            [channel_id]
+                                20
+                            [is_typing]
+                                true
+                            [partner_id]
+                                11
+                            [partner_name]
+                                Other11
+            {Test/assert}
+                []
+                    @thread
+                    .{Thread/threadTextualTypingStatusComponents}
+                    .{Collection/first}
+                    .{web.Element/textContent}
+                    .{=}
+                        Other10 and Other11 are typing...
+                []
+                    Should display that members 'Other10' and 'Other11' are typing (order: longer typer named first)
+
+            {Dev/comment}
+                simulate receive typing notification from other12 (is typing)
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{Env/owlEnv}
+                .{Dict/get}
+                    services
+                .{Dict/get}
+                    bus_service
+                .{Dict/get}
+                    trigger
+                .{Function/call}
+                    [0]
+                        notification
+                    [1]
+                        [type]
+                            mail.channel.partner/typing_status
+                        [payload]
+                            [channel_id]
+                                20
+                            [is_typing]
+                                true
+                            [partner_id]
+                                12
+                            [partner_name]
+                                Other12
+            {Test/assert}
+                []
+                    @thread
+                    .{Thread/threadTextualTypingStatusComponents}
+                    .{Collection/first}
+                    .{ThreadTextualTypingStatusComponent/textContent}
+                    .{=}
+                        Other10, Other11 and more are typing...
+                []
+                    Should display that members 'Other10', 'Other11' and more (at least 1 extra member) are typing (order: longer typer named first)
+
+            {Dev/comment}
+                simulate receive typing notification from other10 (no longer is typing)
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{Env/owlEnv}
+                .{Dict/get}
+                    services
+                .{Dict/get}
+                    bus_service
+                .{Dict/get}
+                    trigger
+                .{Function/call}
+                    [0]
+                        notification
+                    [1]
+                        [type]
+                            mail.channel.partner/typing_status
+                        [payload]
+                            [channel_id]
+                                20
+                            [is_typing]
+                                false
+                            [partner_id]
+                                10
+                            [partner_name]
+                                Other10
+            {Test/assert}
+                []
+                    @thread
+                    .{Thread/threadTextualTypingStatusComponents}
+                    .{Collection/first}
+                    .{web.Element/textContent}
+                    .{=}
+                        Other11 and Other12 are typing...
+                []
+                    Should display that members 'Other11' and 'Other12' are typing ('Other10' stopped typing)
+
+            {Dev/comment}
+                simulate receive typing notification from other10 (is typing again)
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{Env/owlEnv}
+                .{Dict/get}
+                    services
+                .{Dict/get}
+                    bus_service
+                .{Dict/get}
+                    trigger
+                .{Function/call}
+                    [0]
+                        notification
+                    [1]
+                        [type]
+                            mail.channel.partner/typing_status
+                        [payload]
+                            [channel_id]
+                                20
+                            [is_typing]
+                                true
+                            [partner_id]
+                                10
+                            [partner_name]
+                                Other10
+            {Test/assert}
+                []
+                    @thread
+                    .{Thread/threadTextualTypingStatusComponents}
+                    .{Collection/first}
+                    .{web.Element/textContent}
+                    .{=}
+                        Other11, Other12 and more are typing...
+                []
+                    Should display that members 'Other11' and 'Other12' and more (at least 1 extra member) are typing (order by longer typer, 'Other10' just recently restarted typing)
+`;

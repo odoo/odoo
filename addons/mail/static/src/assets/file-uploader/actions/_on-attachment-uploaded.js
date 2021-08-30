@@ -1,0 +1,66 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            FileUploader/_onAttachmentUploaded
+        [Action/params]
+            attachmentData
+                [type]
+                    Object
+            composer
+                [type]
+                    Composer
+            thread
+                [type]
+                    Thread
+            record
+                [type]
+                    FileUploader
+        [Action/returns]
+            Attachment
+        [Action/behavior]
+            {if}
+                @attachmentData
+                .{Dict/get}
+                    error
+                .{|}
+                    @attachmentData
+                    .{Dict/has}
+                        id
+                    .{isFalsy}
+            .{then}
+                {Env/owlEnv}
+                .{Dict/get}
+                    services
+                .{Dict/get}
+                    notification
+                .{Dict/get}
+                    notify
+                .{Function/call}
+                    [type]
+                        danger
+                    [message]
+                        @attachmentData
+                        .{Dict/get}
+                            error
+            .{else}
+                {Record/insert}
+                    [Record/models]
+                        Attachment
+                    [Attachment/composer]
+                        @composer
+                    [Attachment/originThread]
+                        {if}
+                            @composer
+                            .{isFalsy}
+                            .{&}
+                                @thread
+                        .{then}
+                            @thread
+                    @attachmentData
+`;

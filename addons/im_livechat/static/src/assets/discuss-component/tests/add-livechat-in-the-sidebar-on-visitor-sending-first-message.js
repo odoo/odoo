@@ -1,0 +1,160 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            add livechat in the sidebar on visitor sending first message
+        [Test/feature]
+            im_livechat
+        [Test/model]
+            DiscussComponent
+        [Test/assertions]
+            4
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                []
+                    [Record/models]
+                        res.users
+                    [res.users/id]
+                        @record
+                        .{Test/data}
+                        .{Data/currentUserId}
+                    [res.users/im_status]
+                        online
+                []
+                    [Record/models]
+                        im_livechat.channel
+                    [im_livechat.channel/id]
+                        10
+                    [im_livechat.channel/user_ids]
+                        @record
+                        .{Test/data}
+                        .{Data/currentUserId}
+                []
+                    [Record/models]
+                        mail.channel
+                    [mail.channel/anonymous_name]
+                        Visitor (Belgium)
+                    [mail.channel/channel_type]
+                        livechat
+                    [mail.channel/country_id]
+                        10
+                    [mail.channel/id]
+                        10
+                    [mail.channel/is_pinned]
+                        false
+                    [mail.channel/livechat_channel_id]
+                        10
+                    [mail.channel/livechat_operator_id]
+                        @record
+                        .{Test/data}
+                        .{Data/currentPartnerId}
+                    [mail.channel/members]
+                        [0]
+                            @record
+                            .{Test/data}
+                            .{Data/publicPartnerId}
+                        [1]
+                            @record
+                            .{Test/data}
+                            .{Data/currentPartnerId}
+                []
+                    [Record/models]
+                        res.country
+                    [res.country/code]
+                        be
+                    [res.country/id]
+                        10
+                    [res.country/name]
+                        Belgium
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    DiscussComponent
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/discussSidebarComponents}
+                    .{Collection/first}
+                    .{DiscussSidebarComponent/categoryLivechat}
+                    .{isFalsy}
+                []
+                    should not have any livechat in the sidebar initially
+
+            {Dev/comment}
+                simulate livechat visitor sending a message
+            :channel
+                @testEnv
+                .{Record/findById}
+                    [mail.channel/id]
+                        10
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{Env/owlEnv}
+                .{Dict/get}
+                    services
+                .{Dict/get}
+                    rpc
+                .{Function/call}
+                    [route]
+                        /mail/chat_post
+                    [params]
+                        [context]
+                            [mockedUserId]
+                                false
+                        [uuid]
+                            @channel
+                            .{mail.channel/uuid}
+                        [message_content]
+                            new message
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/discussSidebarComponents}
+                    .{Collection/first}
+                    .{DiscussSidebarComponent/categoryLivechat}
+                []
+                    should have a channel category livechat in the side bar after receiving first message
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/discussSidebarComponents}
+                    .{Collection/first}
+                    .{DiscussSidebarComponent/categoryLivechat}
+                    .{DiscussSidebarCategoryComponent/item}
+                    .{Collection/length}
+                    .{=}
+                        1
+                []
+                    should have a livechat in the sidebar after receiving first message
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/discussSidebarComponents}
+                    .{Collection/first}
+                    .{DiscussSidebarComponent/categoryLivechat}
+                    .{DiscussSidebarCategoryComponent/item}
+                    .{Collection/first}
+                    .{web.Element/textContent}
+                    .{=}
+                        Visitor (Belgium)
+                []
+                    should have visitor name and country as livechat name
+`;

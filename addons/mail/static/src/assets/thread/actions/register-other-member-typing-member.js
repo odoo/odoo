@@ -1,0 +1,76 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        Called to register a new other member partner that is typing
+        something.
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            Thread/registerOtherMemberTypingMember
+        [Action/params]
+            thread
+                [type]
+                    Thread
+            partner
+                [type]
+                    Partner
+        [Action/behavior]
+            :timer
+                {Record/insert}
+                    [Record/models]
+                        Timer
+                    [Timer/timeout]
+                        {Record/doAsync}
+                            [0]
+                                @thread
+                            [1]
+                                {Thread/_onOtherMemberLongTypingTimeout}
+                                    [0]
+                                        @thread
+                                    [1]
+                                        @partner
+                    [Timer/duration]
+                        60000
+                    [Timer/partner]
+                        @partner
+            {Record/update}
+                [0]
+                    @thread
+                [1]
+                    [Thread/_otherMembersLongTypingTimers]
+                        {Field/add}
+                            @timer
+            {Timer/start}
+                @timer
+            :newOrderedTypingMemberLocalIds
+                @thread
+                .{Thread/orderedTypingMemberLocalIds}
+                .{Collection/filter}
+                    {Record/insert}
+                        [Record/models]
+                            Function
+                        [Function/in]
+                            item
+                        [Function/out]
+                            @item
+                            .{!=}
+                                @partner
+                                .{Record/id}
+            @newOrderedTypingMemberLocalIds
+            .{Collection/push}
+                @partner
+                .{Record/id}
+            {Record/update}
+                [0]
+                    @thread
+                [1]
+                    [Thread/orderedTypingMemberLocalIds]
+                        @newOrderedTypingMemberLocalIds
+                    [Thread/typingMembers]
+                        {Field/add}
+                            @partner
+`;

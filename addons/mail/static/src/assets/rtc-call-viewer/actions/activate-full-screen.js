@@ -1,0 +1,82 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            RtcCallViewer/activateFullScreen
+        [Action/params]
+            record
+                [type]
+                    RtcCallViewer
+        [Action/behavior]
+            :el
+                {web.Browser/document}
+                .{web.Document/body}
+            {try}
+                {if}
+                    @el
+                    .{web.Element/requestFullscreen}
+                .{then}
+                    @el
+                    .{web.Element/requestFullscreen}
+                    .{Function/call}
+                .{elif}
+                    @el
+                    .{web.Element/mozRequestFullScreen}
+                .{then}
+                    @el
+                    .{web.Element/mozRequestFullScreen}
+                    .{Function/call}
+                .{elif}
+                    @el
+                    .{web.Element/webkitRequestFullscreen}
+                .{then}
+                    @el
+                    .{web.Element/webkitRequestFullscreen}
+                    .{Function/call}
+                {if}
+                    {Record/exists}
+                        @record
+                .{then}
+                    {Record/update}
+                        [0]
+                            @record
+                        [1]
+                            [RtcCallViewer/isFullScreen]
+                                true
+            .{catch}
+                {Record/insert}
+                    [Record/models]
+                        Function
+                    [Function/in]
+                        error
+                    [Function/out]
+                        {if}
+                            {Record/exists}
+                                @record
+                        .{then}
+                            {Record/update}
+                                [0]
+                                    @record
+                                [1]
+                                    [RtcCallViewer/isFullScreen]
+                                        false
+                        @env
+                        .{Env/owlEnv}
+                        .{Dict/get}
+                            services
+                        .{Dict/get}
+                            notification
+                        .{Dict/get}
+                            notify
+                        .{Function/call}
+                            [message]
+                                {Locale/text}
+                                    The FullScreen mode was denied by the browser
+                            [type]
+                                warning
+`;

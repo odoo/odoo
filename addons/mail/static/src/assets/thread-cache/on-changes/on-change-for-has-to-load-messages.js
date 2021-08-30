@@ -1,0 +1,160 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            onChange
+        [onChange/name]
+            onChangeForHasToLoadMessages
+        [onChange/model]
+            ThreadCache
+        [onChange/dependencies]
+            ThreadCache/hasLoadingFailed
+            ThreadCache/isCacheRefreshRequested
+            ThreadCache/isLoaded
+            ThreadCache/isLoading
+            ThreadCache/thread
+                Thread/isTemporary
+            ThreadCache/threadViews
+        [onChange/compute]
+            {if}
+                @record
+                .{ThreadCache/thread}
+                .{isFalsy}
+            .{then}
+                {Dev/comment}
+                    happens during destroy or compute executed in wrong order
+                {Record/update}
+                    [0]
+                        @record
+                    [1]
+                        [ThreadCache/hasToLoadMessages]
+                            false
+            .{elif}
+                @record
+                .{ThreadCache/hasLoadingFailed}
+            .{then}
+                {Record/update}
+                    [0]
+                        @record
+                    [1]
+                        [ThreadCache/hasToLoadMessages]
+                            false
+            .{elif}
+                {Dev/comment}
+                    mark hint as processed
+                @record
+                .{ThreadCache/thread}
+                .{Thread/isTemporary}
+            .{then}
+                {Dev/comment}
+                    temporary threads don't exist on the server
+                {Record/update}
+                    [0]
+                        @record
+                    [1]
+                        [ThreadCache/hasToLoadMessages]
+                            false
+                        [ThreadCache/isCacheRefreshRequested]
+                            {if}
+                                @record
+                                .{ThreadCache/isCacheRefreshRequested}
+                            .{then}
+                                false
+                            .{else}
+                                undefined
+            .{elif}
+                @record
+                .{ThreadCache/isCacheRefreshRequested}
+                .{isFalsy}
+                .{&}
+                    @record
+                    .{ThreadCache/threadViews}
+                    .{Collection/length}
+                    .{=}
+                        0
+            .{then}
+                {Dev/comment}
+                    don't load message that won't be used
+                {Record/update}
+                    [0]
+                        @record
+                    [1]
+                        [ThreadCache/hasToLoadMessages]
+                            false
+            .{elif}
+                @record
+                .{ThreadCache/isLoading}
+            .{then}
+                {Dev/comment}
+                    avoid duplicate RPC
+                {Record/update}
+                    [0]
+                        @record
+                    [1]
+                        [ThreadCache/hasToLoadMessages]
+                            false
+                        [ThreadCache/isCacheRefreshRequested]
+                            {if}
+                                @record
+                                .{ThreadCache/isCacheRefreshRequested}
+                            .{then}
+                                false
+                            .{else}
+                                undefined
+            .{elif}
+                @record
+                .{ThreadCache/isCacheRefreshRequested}
+                .{isFalsy}
+                .{&}
+                    @record
+                    .{ThreadCache/isLoaded}
+            .{then}
+                {Dev/comment}
+                    avoid duplicate RPC
+                {Record/update}
+                    [0]
+                        @record
+                    [1]
+                        [ThreadCache/hasToLoadMessages]
+                            false
+            .{elif}
+                @record
+                .{ThreadCache/isLoaded}
+            .{then}
+                {Dev/comment}
+                    Ignore request if it is already loaded or loading. Indeed
+                    messages are automatically sync with server updates already,
+                    so there is never a need to refresh it past the first time.
+                {Record/update}
+                    [0]
+                        @record
+                    [1]
+                        [ThreadCache/hasToLoadMessages]
+                            false
+                        [ThreadCache/isCacheRefreshRequested]
+                            {if}
+                                @record
+                                .{ThreadCache/isCacheRefreshRequested}
+                            .{then}
+                                false
+                            .{else}
+                                undefined
+            .{else}
+                {Record/update}
+                    [0]
+                        @record
+                    [1]
+                        [ThreadCache/hasToLoadMessages]
+                            true
+                        [ThreadCache/isCacheRefreshRequested]
+                            {if}
+                                @record
+                                .{ThreadCache/isCacheRefreshRequested}
+                            .{then}
+                                false
+                            .{else}
+                                undefined
+`;

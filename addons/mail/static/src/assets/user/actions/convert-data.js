@@ -1,0 +1,74 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            User/convertData
+        [Action/params]
+            data
+                [type]
+                    Object
+        [Action/returns]
+            Object
+        [Action/behavior]
+            :data2
+                {Record/insert}
+                    [Record/models]
+                        Object
+            {if}
+                @data
+                .{Dict/hasKey}
+                    id
+            .{then}
+                {Record/update}
+                    [0]
+                        @data2
+                    [1]
+                        [User/id]
+                            @data
+                            .{Dict/get}
+                                id
+            {if}
+                @data
+                .{Dict/hasKey}
+                    partner_id
+            .{then}
+                {if}
+                    @data
+                    .{Dict/get}
+                        partner_id
+                    .{isFalsy}
+                .{then}
+                    {Record/update}
+                        [0]
+                            @data2
+                        [1]
+                            [User/partner]
+                                {Record/empty}
+                .{else}
+                    :partnerNameGet
+                        @data
+                        .{Dict/get}
+                            partner_id
+                    :partnerData
+                        [Record/models]
+                            Partner
+                        [Partner/displayName]
+                            @partnerNameGet
+                            .{Collection/second}
+                        [Partner/id]
+                            @partnerNameGet
+                            .{Collection/first}
+                    {Record/update}
+                        [0]
+                            @data2
+                        [1]
+                            [User/partner]
+                                {Record/insert}
+                                    @partnerData
+            @data2
+`;

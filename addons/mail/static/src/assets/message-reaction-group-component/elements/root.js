@@ -1,0 +1,61 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Element
+        [Element/name]
+            root
+        [Element/model]
+            MessageReactionGroupComponent
+        [web.Element/class]
+            d-flex
+        [web.Element/title]
+            @record
+            .{MessageReactionGroupComponent/messageReactionGroup}
+            .{MessageReactionGroup/summary}
+        [Element/onClick]
+            {MessageReactionGroup/onClick}
+                [0]
+                    @record
+                    .{MessageReactionGroupComponent/messageReactionGroup}
+                [1]
+                    @ev
+        [web.Element/style]
+            [web.scss/border-radius]
+                {scss/$o-mail-rounded-rectangle-border-radius-sm}
+            [web.scss/cursor]
+                pointer
+            [web.scss/background]
+                {scss/$white}
+            [web.scss/border-color]
+                {scss/gray}
+                    200
+            [web.scss/border-style]
+                solid
+            [web.scss/border-width]
+                {scss/$border-width}
+            {if}
+                @record
+                .{MessageReactionGroupComponent/messageReactionGroup}
+                .{MessageReactionGroup/hasUserReacted}
+            .{then}
+                [web.scss/border-color]
+                    {scss/$o-brand-primary}
+                [web.scss/background-color]
+                    {scss/rgba}
+                        {scss/$o-brand-primary}
+                        .1
+            .{elif}
+                @field
+                .{web.Element/isHover}
+            .{then}
+                [web.scss/border-color]
+                    {scss/gray}
+                        400
+                [web.scss/background-color]
+                    {scss/gray}
+                        200
+`;

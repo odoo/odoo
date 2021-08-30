@@ -1,0 +1,152 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            message list with a full page of empty messages should show load more if there are other messages
+        [Test/model]
+            ThreadViewComponent
+        [Test/isTechnical]
+            true
+        [Test/assertions]
+            2
+        [Test/scenario]
+            {Dev/comment}
+                Technical assumptions :
+                - /mail/channel/messages fetching exactly 30 messages,
+                - empty messages not being displayed
+                - auto-load more being triggered on scroll, not automatically when the 30 first messages are empty
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                []
+                    [Record/models]
+                        mail.channel
+                    [mail.channel/id]
+                        11
+                {foreach}
+                    {Record/insert}
+                        [Record/models]
+                            Range
+                        [init]
+                            0
+                        [start]
+                            30
+                .{do}
+                    []
+                        [Record/models]
+                            mail.message
+                        [mail.message/body]
+                            not empty
+                        [mail.message/model]
+                            mail.channel
+                        [mail.message/res_id]
+                            11
+                {foreach}
+                    {Record/insert}
+                        [Record/models]
+                            Range
+                        [init]
+                            0
+                        [start]
+                            30
+                .{do}
+                    []
+                        [Record/models]
+                            mail.message
+                        [mail.message/model]
+                            mail.channel
+                        [mail.message/res_id]
+                            11
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            :threadViewer
+                @testEnv
+                .{Record/insert}
+                    [Record/models]
+                        ThreadViewer
+                    [ThreadViewer/hasThreadView]
+                        true
+                    [ThreadViewer/order]
+                        asc
+                    [ThreadViewer/thread]
+                        @testEnv
+                        .{Record/insert}
+                            [Record/models]
+                                Thread
+                            [Thread/id]
+                                11
+                            [Thread/model]
+                                mail.channel
+            @testEnv
+            .{UI/afterEvent}
+                [eventName]
+                    o-thread-view-hint-processed
+                [func]
+                    @testEnv
+                    .{Record/insert}
+                        [Record/models]
+                            ThreadViewComponent
+                        [ThreadViewComponent/threadView]
+                            @threadViewer
+                            .{ThreadViewer/threadView}
+                [message]
+                    should wait until thread becomes loaded with messages
+                [predicate]
+                    {Record/insert}
+                        [Record/models]
+                            Function
+                        [Function/in]
+                            hint
+                            threadViewer
+                        [Function/out]
+                            @hint
+                            .{Hint/type}
+                            .{=}
+                                messages-loaded
+                            .{&}
+                                @threadViewer
+                                .{ThreadViewer/thread}
+                                .{Thread/model}
+                                .{=}
+                                    mail.channel
+                            .{&}
+                                @threadViewer
+                                .{ThreadViewer/thread}
+                                .{Thread/id}
+                                .{=}
+                                    11
+            {Test/assert}
+                []
+                    @threadViewer
+                    .{ThreadViewer/threadView}
+                    .{ThreadView/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/length}
+                    .{=}
+                        0
+                []
+                    No message should be shown as all 30 first messages are empty
+            {Test/assert}
+                []
+                    @threadViewer
+                    .{ThreadViewer/threadView}
+                    .{ThreadView/messageListComponents}
+                    .{Collection/first}
+                    .{MessageListComponent/loadMore}
+                []
+                    Load more button should be shown as there are more messages to show
+`;

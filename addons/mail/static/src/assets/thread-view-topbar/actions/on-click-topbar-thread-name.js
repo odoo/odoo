@@ -1,0 +1,74 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            ThreadViewTopbar/onClickTopbarThreadName
+        [Action/params]
+            record
+                [type]
+                    ThreadViewTopbar
+        [Action/behavior]
+            {if}
+                @record
+                .{ThreadViewTopbar/thread}
+                .{isFalsy}
+                .{|}
+                    @record
+                    .{ThreadViewTopbar/thread}
+                    .{Thread/isChannelRenamable}
+                    .{isFalsy}
+            .{then}
+                {Dev/comment}
+                    Guests cannot edit thread name
+                {break}
+            {if}
+                {Env/isCurrentUserGuest}
+            .{then}
+                {break}
+            {Record/update}
+                [0]
+                    @record
+                [1]
+                    [ThreadViewTopbar/doFocusOnThreadNameInput]
+                        true
+                    [ThreadViewTopbar/doSetSelectionDirectionOnThreadNameInput]
+                        {if}
+                            {web.Browser/selection}
+                            .{web.Selection/anchorOffset}
+                            .{<}
+                                {web.Browser/selection}
+                                .{web.Selection/focusOffset}
+                        .{then}
+                            forward
+                        .{else}
+                            backward
+                    [ThreadViewTopbar/doSetSelectionEndOnThreadNameInput]
+                        {Math/max}
+                            [0]
+                                {web.Browser/selection}
+                                .{web.Selection/focusOffset}
+                            [1]
+                                {web.Browser/selection}
+                                .{web.Selection/anchorOffset}
+                    [ThreadViewTopbar/doSetSelectionStartOnThreadNameInput]
+                        {Math/min}
+                            [0]
+                                {web.Browser/selection}
+                                .{web.Selection/focusOffset}
+                            [1]
+                                {web.Browser/selection}
+                                .{web.Selection/anchorOffset}
+                    [ThreadViewTopbar/isEditingThreadName]
+                        true
+                    [ThreadViewTopbar/isMouseOverThreadName]
+                        false
+                    [ThreadViewTopbar/pendingThreadName]
+                        @record
+                        .{ThreadViewTopbar/thread}
+                        .{Thread/displayName}
+`;

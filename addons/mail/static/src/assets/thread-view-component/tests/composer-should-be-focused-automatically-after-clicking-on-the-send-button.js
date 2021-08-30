@@ -1,0 +1,91 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            composer should be focused automatically after clicking on the send button
+        [Test/model]
+            ThreadViewComponent
+        [Test/isFocusRequired]
+            true
+        [Test/assertions]
+            1
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    mail.channel
+                [mail.channel/id]
+                    20
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            :thread
+                @testEnv
+                .{Record/findById}
+                    [Thread/id]
+                        20
+                    [Thread/model]
+                        mail.channel
+            :threadViewer
+                @testEnv
+                .{Record/insert}
+                    [Record/models]
+                        ThreadViewer
+                    [ThreadViewer/hasThreadView]
+                        true
+                    [ThreadViewer/thread]
+                        @thread
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    ThreadViewComponent
+                [ThreadViewComponent/threadView]
+                    @threadViewer
+                    .{ThreadViewer/threadView}
+            @testEnv
+            .{UI/focus}
+                @threadViewer
+                .{ThreadViewer/threadView}
+                .{ThreadView/thread}
+                .{Thread/composer}
+                .{Composer/composerTextInputComponents}
+                .{Collection/first}
+                .{ComposerTextInputComponent/textarea}
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{UI/insertText}
+                    Dummy Message
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{UI/click}
+                    @threadViewer
+                    .{ThreadViewer/threadView}
+                    .{ThreadView/thread}
+                    .{Thread/composer}
+                    .{Composer/composerViewComponents}
+                    .{Collection/first}
+                    .{ComposerViewComponent/buttonSend}
+            {Test/assert}
+                []
+                    @threadViewer
+                    .{ThreadViewer/threadView}
+                    .{ThreadView/composerView}
+                    .{ComposerView/isFocused}
+                []
+                    composer should be focused automatically after clicking on the send button
+`;

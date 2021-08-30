@@ -1,0 +1,91 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            inbox & starred mailboxes
+        [Test/model]
+            Thread
+        [Test/assertions]
+            10
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Env/inbox}
+                []
+                    should have mailbox inbox
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Env/starred}
+                []
+                    should have mailbox starred
+            {Test/assert}
+                @testEnv
+                .{Env/inbox}
+                .{Thread/model}
+                .{=}
+                    mail.box
+            {Test/assert}
+                @testEnv
+                .{Env/inbox}
+                .{Thread/counter}
+                .{=}
+                    0
+            {Test/assert}
+                @testEnv
+                .{Env/inbox}
+                .{Thread/id}
+                .{=}
+                    inbox
+            {Test/assert}
+                @testEnv
+                .{Env/inbox}
+                .{Thread/name}
+                .{=}
+                    Inbox
+                    {Dev/comment}
+                        language-dependent
+            {Test/assert}
+                @testEnv
+                .{Env/starred}
+                .{Thread/model}
+                .{=}
+                    mail.box
+            {Test/assert}
+                @testEnv
+                .{Env/starred}
+                .{Thread/counter}
+                .{=}
+                    0
+            {Test/assert}
+                @testEnv
+                .{Env/starred}
+                .{Thread/id}
+                .{=}
+                    starred
+            {Test/assert}
+                @testEnv
+                .{Env/starred}
+                .{Thread/name}
+                .{=}
+                    Starred
+                    {Dev/comment}
+                        language-dependent
+`;

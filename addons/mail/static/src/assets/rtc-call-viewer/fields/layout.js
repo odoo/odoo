@@ -1,0 +1,83 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        Determines the layout use for the tiling of the participant cards.
+    {Record/insert}
+        [Record/models]
+            Field
+        [Field/name]
+            layout
+        [Field/model]
+            RtcCallViewer
+        [Field/type]
+            attr
+        [Field/target]
+            Boolean
+        [Field/default]
+            false
+        [Field/compute]
+            {if}
+                @record
+                .{RtcCallViewer/threadView}
+                .{isFalsy}
+            .{then}
+                tiled
+            .{elif}
+                @record
+                .{RtcCallViewer/isMinimized}
+            .{then}
+                tiled
+            .{elif}
+                @record
+                .{RtcCallViewer/threadView}
+                .{ThreadView/thread}
+                .{Thread/rtc}
+                .{isFalsy}
+            .{then}
+                tiled
+            .{elif}
+                @record
+                .{RtcCallViewer/mainParticipantCard}
+                .{isFalsy}
+            .{then}
+                tiled
+            .{elif}
+                @record
+                .{RtcCallViewer/threadView}
+                .{ThreadView/thread}
+                .{Thread/rtcSessions}
+                .{Collection/length}
+                .{+}
+                    @record
+                    .{RtcCallViewer/threadView}
+                    .{ThreadView/thread}
+                    .{Thread/invitedPartners}
+                    .{Collection/length}
+                .{+}
+                    @record
+                    .{RtcCallViewer/threadView}
+                    .{ThreadView/thread}
+                    .{Thread/invitedGuests}
+                    .{Collection/length}
+                .{<}
+                    2
+            .{then}
+                tiled
+            .{elif}
+                @record
+                .{RtcCallViewer/threadView}
+                .{ThreadViewer/compact}
+                .{&}
+                    {Env/userSetting}
+                    .{UserSetting/rtcLayout}
+                    .{=}
+                        sidebar
+            .{then}
+                spotlight
+            .{else}
+                {Env/userSetting}
+                .{UserSetting/rtcLayout}
+`;

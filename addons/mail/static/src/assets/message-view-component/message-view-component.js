@@ -1,0 +1,70 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Model
+        [Model/name]
+            MessageViewComponent
+        [Model/fields]
+            _intervalId
+            _isReadMoreByIndex
+            _lastPrettyBody
+            _lastReadMoreIndex
+            hasAuthorOpenChat
+            isActive
+            isClicked
+            isHovered
+            isSelected
+            messageView
+        [Model/template]
+            root
+                messageInReplyToView
+                actionListContainer
+                    actionList
+                highlightIndicatorContainer
+                    highlightIndicator
+                sidebar
+                    authorAvatarContainer
+                        authorAvatar
+                        partnerImStatusIcon
+                    dateSquashed
+                    seenIndicatorSquashed
+                core
+                    header
+                        authorNameStandard
+                        authorNameGuest
+                        authorNameEmailFrom
+                        authorNameAnonymous
+                        headerDate
+                        seenIndicatorNonSquashed
+                        originThread
+                            originThreadBeforeLink
+                            originThreadLink
+                        notificationFailure
+                            notificationFailureIcon
+                        notificationNonFailure
+                            notificationNonFailureIcon
+                        notificationNonFailurePopover
+                    subject
+                    content
+                        prettyBody
+                        composer
+                        subtypeDescription
+                        trackingValues
+                            trackingValueContainerForeach
+                    attachmentList
+                    reactionContainer
+                        reactionForeach
+       [Model/actions]
+            MessageViewComponent/_insertReadMoreLess
+            MessageViewComponent/getTrackingValues
+            MessageViewComponent/isBottomVisible
+            MessageViewComponent/isPartiallyVisible
+            MessageViewComponent/scrollIntoView
+        [Model/lifecycles]
+            onUpdate
+            onWillUnmount
+`;

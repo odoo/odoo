@@ -1,0 +1,73 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        Remove this attachment globally.
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            Attachment/remove
+        [Action/params]
+            attachment
+        [Action/behavior]
+            {if}
+                @attachment
+                .{Attachment/isUnlinkPending}
+            .{then}
+                {break}
+            {if}
+                @attachment
+                .{Attachment/isUploading}
+                .{isFalsy}
+            .{then}
+                {Record/update}
+                    [0]
+                        @attachment
+                    [1]
+                        [Attachment/isUnlinkPending]
+                            true
+                {try}
+                    {Record/doAsync}
+                        []
+                            @attachment
+                        []
+                            @env
+                            .{Env/owlEnv}
+                            .{Dict/get}
+                                services
+                            .{Dict/get}
+                                rpc
+                            .{Function/call}
+                                [0]
+                                    [route]
+                                        /mail/attachment/delete
+                                    [params]
+                                        [access_token]
+                                            @attachment
+                                            .{Attachment/accessToken}
+                                        [attachment_id]
+                                            @attachment
+                                            .{Attachment/id}
+                                [1]
+                                    [shadow]
+                                        true
+                .{finally}
+                    {Record/update}
+                        [0]
+                            @attachment
+                        [1]
+                            [Attachment/isUnlinkPending]
+                                false
+            .{elif}
+                @attachment
+                .{Attachment/uploadingAbortController}
+            .{then}
+                @attachment
+                .{Attachment/uploadingAbortController}
+                .{AbortController/abort}
+            {Record/delete}
+                @attachment
+`;

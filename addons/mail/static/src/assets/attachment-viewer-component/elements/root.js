@@ -1,0 +1,92 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Element
+        [Element/name]
+            root
+        [Element/model]
+            AttachmentViewerComponent
+        [Element/onClick]
+            {if}
+                @record
+                .{AttachmentViewerComponent/attachmentViewer}
+                .{AttachmentViewer/isDragging}
+                .{isFalsy}
+            .{then}
+                {Dev/comment}
+                    TODO: clicking on the background should probably be handled by
+                    the dialog?
+                    task-2092965
+                {AttachmentViewerComponent/_close}
+                    @record
+        [Element/onKeydown]
+            {switch}
+                @ev
+                .{web.KeyboardEvent/key}
+            .{case}
+                [ArrowRight]
+                    {AttachmentViewerComponent/_next}
+                        @record
+                    {web.Event/stopPropagation}
+                        @ev
+                [ArrowLeft]
+                    {AttachmentViewerComponent/_previous}
+                        @record
+                    {web.Event/stopPropagation}
+                        @ev
+                [Escape]
+                    {AttachmentViewerComponent/_close}
+                        @record
+                    {web.Event/stopPropagation}
+                        @ev
+                [q]
+                    {AttachmentViewerComponent/_close}
+                        @record
+                    {web.Event/stopPropagation}
+                        @ev
+                [r]
+                    {AttachmentViewerComponent/_rotate}
+                        @record
+                    {web.Event/stopPropagation}
+                        @ev
+                [+]
+                    {AttachmentViewerComponent/_zoomIn}
+                        @record
+                    {web.Event/stopPropagation}
+                        @ev
+                [-]
+                    {AttachmentViewerComponent/_zoomOut}
+                        @record
+                    {web.Event/stopPropagation}
+                        @ev
+                [0]
+                    {AttachmentViewerComponent/_zoomReset}
+                        @record
+                    {web.Event/stopPropagation}
+                        @ev
+        [web.Element/tabindex]
+            0
+        [web.Element/style]
+            [web.scss/display]
+                flex
+            [web.scss/width]
+                {scss/map-get}
+                    {scss/$sizes}
+                    100
+            [web.scss/height]
+                {scss/map-get}
+                    {scss/$sizes}
+                    100
+            [web.scss/flex-flow]
+                column
+            [web.scss/align-items]
+                center
+            [web.scss/z-index]
+                -1
+            [web.scss/outline]
+                none
+`;

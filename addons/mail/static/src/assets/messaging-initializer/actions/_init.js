@@ -1,0 +1,160 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            MessagingInitializer/_init
+        [Action/params]
+            messagingInitializer
+                [type]
+                    MessagingInitializer
+            channels
+                [type]
+                    Collection<Object>
+            commands
+                [type]
+                    Collection<Object>
+            companyName
+                [type]
+                    String
+            currentGuest
+                [type]
+                    Object
+            current_partner
+                [type]
+                    Object
+            current_user_id
+                [type]
+                    Object
+            current_user_settings
+                [type]
+                    Object
+            mail_failures
+                [type]
+                    Object
+            menu_id
+                [type]
+                    Integer
+            needaction_inbox_counter
+                [type]
+                    Integer
+                [default]
+                    0
+            partner_root
+                [type]
+                    Object
+            public_partners
+                [type]
+                    Collection<Object>
+            shortcodes
+                [type]
+                    Collection<Object>
+            starred_counter
+                [type]
+                    Integer
+                [default]
+                    0
+        [Action/behavior]
+            {Dev/comment}
+                partners first because the rest of the code relies on them
+            {MessagingInitializer/_initPartners}
+                [0]
+                    @messagingInitializer
+                [1]
+                    [currentGuest]
+                        @currentGuest
+                    [current_partner]
+                        @current_partner
+                    [current_user_id]
+                        @current_user_id
+                    [partner_root]
+                        @partner_root
+                    [public_partners]
+                        @public_partners
+            {Dev/comment}
+                mailboxes after partners and before other initializers
+                that might manipulate threads or messages
+            {MessagingInitializer/_initMailboxes}
+                [0]
+                    @messagingInitializer
+                [1]
+                    [needaction_inbox_counter]
+                        @needaction_inbox_counter
+                    [starred_counter]
+                        @starred_counter
+            {Dev/comment}
+                init mail user settings
+            {if}
+                @current_user_settings
+            .{then}
+                {MessagingInitializer/_initResUsersSettings}
+                    [0]
+                        @messagingInitializer
+                    [1]
+                        @current_user_settings
+            .{else}
+                {Record/update}
+                    [0]
+                        @env
+                    [1]
+                        [Env/userSetting]
+                            {Record/insert}
+                                [Record/models]
+                                    UserSetting
+                                [UserSetting/id]
+                                    -1
+                                    {Dev/comment}
+                                        fake id for guest
+            {Dev/comment}
+                various suggestions in no particular order
+            {MessagingInitializer/_initCannedResponses}
+                [0]
+                    @messagingInitializer
+                [1]
+                    @shortcodes
+            {if}
+                {Env/isCurrentUserGuest}
+                .{isFalsy}
+            .{then}
+                {Dev/comment}
+                    FIXME: guests should have (at least some) commands available
+                {MessagingInitializer/_initCommands}
+                    [0]
+                        @messagingInitializer
+                    [1]
+                        @commands
+            {Dev/comment}
+                channels when the rest of messaging is ready
+            {Record/doAsync}
+                [0]
+                    @messagingInitializer
+                [1]
+                    {MessagingInitializer/_initChannels}
+                        [0]
+                            @messagingInitializer
+                        [1]
+                            @channels
+            {Dev/comment}
+                failures after channels
+            {MessagingInitializer/_initMailFailures}
+                [0]
+                    @messagingInitializer
+                [1]
+                    @mail_failures
+            {Record/update}
+                [0]
+                    {Env/discuss}
+                [1]
+                    [Discuss/menuId]
+                        @menu_id
+            {Record/update}
+                [0]
+                    @env
+                [1]
+                    [Env/companyName]
+                        @companyName
+`;

@@ -1,0 +1,142 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            click on "unfollow" button
+        [Test/model]
+            FollowButtonComponent
+        [Test/assertions]
+            7
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                []
+                    [Record/models]
+                        mail.followers
+                    [mail.followers/id]
+                        1
+                    [mail.followers/is_active]
+                        true
+                    [mail.followers/is_editable]
+                        true
+                    [mail.followers/partner_id]
+                        @record
+                        .{Test/data}
+                        .{Data/currentPartnerId}
+                    [mail.followers/res_id]
+                        100
+                    [mail.followers/res_model]
+                        res.partner
+                []
+                    [Record/models]
+                        res.partner
+                    [res.partner/id]
+                        100
+                    [res.partner/message_follower_ids]
+                        1
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+                [Server/mockRPC]
+                    {Record/insert}
+                        [Record/models]
+                            Function
+                        [Function/in]
+                            route
+                            args
+                            original
+                        [Function/out]
+                            {if}
+                                @route
+                                .{String/includes}
+                                    message_unsubscribe
+                            .{then}
+                                {Test/step}
+                                    rpc:message_unsubscribe
+                            @original
+            :thread
+                @testEnv
+                .{Record/insert}
+                    [Record/models]
+                        Thread
+                    [Thread/id]
+                        100
+                    [Thread/model]
+                        res.partner
+            @testEnv
+            .{Thread/follow}
+                @thread
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    FollowButtonComponent
+                [FollowButtonComponent/thread]
+                    @thread
+            {Test/assert}
+                []
+                    @thread
+                    .{Thread/followButtonComponents}
+                    .{Collection/length}
+                    .{=}
+                        1
+                []
+                    should have follow button component
+            {Test/assert}
+                []
+                    @thread
+                    .{Thread/followButtonComponents}
+                    .{Collection/first}
+                    .{FollowButtonComponent/follow}
+                    .{isFalsy}
+                []
+                    should not have button follow
+            {Test/assert}
+                []
+                    @thread
+                    .{Thread/followButtonComponents}
+                    .{Collection/first}
+                    .{FollowButtonComponent/unfollow}
+                []
+                    should have button unfollow
+
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{UI/click}
+                    @thread
+                    .{Thread/followButtonComponents}
+                    .{Collection/first}
+                    .{FollowButtonComponent/unfollow}
+            {Test/verifySteps}
+                rpc:message_unsubscribe
+            {Test/assert}
+                []
+                    @thread
+                    .{Thread/followButtonComponents}
+                    .{Collection/first}
+                    .{FollowButtonComponent/follow}
+                []
+                    should have follow button after clicked on unfollow
+            {Test/assert}
+                []
+                    @thread
+                    .{Thread/followButtonComponents}
+                    .{Collection/first}
+                    .{FollowButtonComponent/unfollow}
+                    .{isFalsy}
+                []
+                    should not have unfollow button after clicked on unfollow
+`;

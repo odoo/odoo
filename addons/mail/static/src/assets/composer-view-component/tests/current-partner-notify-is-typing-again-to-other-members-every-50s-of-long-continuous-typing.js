@@ -1,0 +1,147 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            current partner notify is typing again to other members every 50s of long continuous typing
+        [Test/model]
+            ComposerViewComponent
+        [Test/assertions]
+            4
+        [Test/scenario]
+            {Dev/comment}
+                channel that is expected to be rendered
+                with a random unique id that will be referenced in the test
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+                    [Env/usingTimeControl]
+                        true
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    mail.channel
+                [mail.channel/id]
+                    20
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+                [Server/mockRPC]
+                    {Record/insert}
+                        [Record/models]
+                            Function
+                        [Function/in]
+                            route
+                            args
+                            original
+                        [Function/out]
+                            {if}
+                                @args
+                                .{Dict/get}
+                                    method
+                                .{=}
+                                    notify_typing
+                            .{then}
+                                {Test/step}
+                                    notify_typing:
+                                    .{+}
+                                        @args
+                                        .{Dict/get}
+                                            kwargs
+                                        .{Dict/get}
+                                            is_typing
+                            @original
+            :thread
+                @testEnv
+                .{Record/findById}
+                    [Thread/id]
+                        20
+                    [Thread/model]
+                        mail.channel
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    ComposerViewComponent
+                [ComposerViewComponent/composer]
+                    @thread
+                    .{Thread/composer}
+                [ComposerViewComponent/hasThreadTyping]
+                    true
+            @testEnv
+            .{UI/focus}
+                @thread
+                .{Thread/composer}
+                .{Composer/composerTextInputComponents}
+                .{Collection/first}
+                .{web.Element/textarea}
+            @testEnv
+            .{UI/insertText}
+                a
+            @testEnv
+            .{UI/keydown}
+                [0]
+                    @thread
+                    .{Thread/composer}
+                    .{Composer/composerTextInputComponents}
+                    .{Collection/first}
+                    .{ComposerTextInputComponent/textarea}
+                [1]
+                    [key]
+                        a
+            {Test/verifySteps}
+                []
+                    notify_typing:true
+                []
+                    should have notified current partner is typing
+
+            {Dev/comment}
+                simulate current partner typing a character every 2.5 seconds for 50 seconds straight.
+            :totalTimeElapsed
+                0
+            :elapseTickTime
+                2.5
+                .{*}
+                    1000
+            {while}
+                @totalTimeElapsed
+                .{<}
+                    50
+                    .{*}
+                        1000
+            .{do}
+                @testEnv
+                .{UI/insertText}
+                    a
+                @testEnv
+                .{UI/keydown}
+                    [0]
+                        @thread
+                        .{Thread/composer}
+                        .{Composer/composerTextInputComponents}
+                        .{Collection/first}
+                        .{ComposerTextInputComponent/textarea}
+                    [1]
+                        [key]
+                            a
+                :totalTimeElapsed
+                    @totalTimeElapsed
+                    .{+}
+                        @elapseTickTime
+                @testEnv
+                .{Time/advance}
+                    @elapseTickTime
+            {Test/verifySteps}
+                []
+                    notify_typing:true
+                []
+                    should have notified current partner is still typing after 50s of straight typing
+`;

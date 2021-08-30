@@ -1,0 +1,74 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Element
+        [Element/name]
+            component
+        [Element/model]
+            DialogComponent
+        [Field/target]
+            @record
+            .{DialogComponent/dialog}
+            .{Dialog/componentName}
+        [Element/isPresent]
+            @record
+            .{DialogComponent/dialog}
+            .{Dialog/record}
+        {entry}
+            [key]
+                @record
+                .{DialogComponent/dialog}
+                .{Dialog/componentName}
+                .{+}
+                    /record
+            [value]
+                @record
+                .{DialogComponent/dialog}
+                .{Dialog/record}
+            {entry}
+                [key]
+                    @record
+                    .{DialogComponent/dialog}
+                    .{Dialog/componentName}
+                    .{+}
+                        /className
+                [value]
+                    @record
+                    .{DialogComponent/dialog}
+                    .{Dialog/componentClassName}
+        [web.Element/style]
+            {if}
+                @record
+                .{DialogComponent/dialog}
+                .{Dialog/componentSize}
+                .{=}
+                    large
+            .{then}
+                [web.scss/min-width]
+                    {Math/min}
+                        [0]
+                            95vw
+                        [1]
+                            {web.scss/$o-modal-lg}
+                [web.scss/max-width]
+                    95vw
+            .{elif}
+                @record
+                .{DialogComponent/dialog}
+                .{Dialog/componentSize}
+                .{=}
+                    medium
+            .{then}
+                [web.scss/min-width]
+                    {Math/min}
+                        [0]
+                            95vw
+                        [1]
+                            {web.scss/$o-modal-md}
+                [web.scss/max-width]
+                    95vw
+`;

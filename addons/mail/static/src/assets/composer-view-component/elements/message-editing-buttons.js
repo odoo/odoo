@@ -1,0 +1,69 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Element
+        [Element/name]
+            messageEditingButtons
+        [Element/model]
+            ComposerViewComponent
+        [Element/isPresent]
+            @record
+            .{ComposerViewComponent/composerView}
+            .{ComposerView/messageViewInEditing}
+        [web.Element/tag]
+            span
+        [web.Element/class]
+            text-muted
+        [Element/slot]
+            {String/sprintf}
+                [0]
+                    escape to %s, enter to %s
+                [1]
+                    {Record/insert}
+                        [Record/models]
+                            Element
+                        [Element/name]
+                            messageEditingCancel
+                        [Element/model]
+                            ComposerViewComponent
+                        [web.Element/tag]
+                            a
+                        [web.Element/href]
+                            #
+                        [Element/onClick]
+                            {ComposerView/onClickCancelLink}
+                                [0]
+                                    @record
+                                    .{ComposerViewComponent/composerView}
+                                [1]
+                                    @ev
+                        [web.Element/textContent]
+                            {Locale/text}
+                                cancel
+                [2]
+                    {Record/insert}
+                        [Record/models]
+                            Element
+                        [Element/name]
+                            messageEditingSave
+                        [Element/model]
+                            ComposerViewComponent
+                        [web.Element/tag]
+                            a
+                        [web.Element/href]
+                            #
+                        [Element/onClick]
+                            {ComposerView/onClickSaveLink}
+                                [0]
+                                    @record
+                                    .{ComposerViewComponent/composerView}
+                                [1]
+                                    @ev
+                        [web.Element/textContent]
+                            {Locale/text}
+                                save
+`;

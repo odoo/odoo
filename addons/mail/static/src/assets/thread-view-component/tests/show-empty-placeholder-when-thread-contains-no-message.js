@@ -1,0 +1,108 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            show empty placeholder when thread contains no message
+        [Test/model]
+            ThreadViewComponent
+        [Test/assertions]
+            2
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    mail.channel
+                [mail.channel/id]
+                    11
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            :threadViewer
+                @testEnv
+                .{Record/insert}
+                    [Record/models]
+                        ThreadViewer
+                    [ThreadViewer/hasThreadView]
+                        true
+                    [ThreadViewer/thread]
+                        @testEnv
+                        .{Record/insert}
+                            [Record/models]
+                                Thread
+                            [Thread/id]
+                                11
+                            [Thread/model]
+                                mail.channel
+            @testEnv
+            .{UI/afterEvent}
+                [eventName]
+                    o-thread-view-hint-processed
+                [func]
+                    @testEnv
+                    .{Record/insert}
+                        [Record/models]
+                            ThreadViewComponent
+                        [ThreadViewComponent/threadView]
+                            @threadViewer
+                            .{ThreadViewer/threadView}
+                [message]
+                    should wait until thread becomes loaded with messages
+                [predicate]
+                    {Record/insert}
+                        [Record/models]
+                            Function
+                        [Function/in]
+                            hint
+                            threadViewer
+                        [Function/out]
+                            @hint
+                            .{Hint/type}
+                            .{=}
+                                messages-loaded
+                            .{&}
+                                @threadViewer
+                                .{ThreadViewer/thread}
+                                .{Thread/model}
+                                .{=}
+                                    mail.channel
+                            .{&}
+                                @threadViewer
+                                .{ThreadViewer/thread}
+                                .{Thread/id}
+                                .{=}
+                                    11
+            {Test/assert}
+                []
+                    @threadViewer
+                    .{ThreadViewer/threadView}
+                    .{ThreadView/messageListComponents}
+                    .{Collection/first}
+                    .{MessageListComponent/empty}
+                []
+                    message list empty placeholder should be shown as thread does not contain any messages
+            {Test/assert}
+                []
+                    @threadViewer
+                    .{ThreadViewer/threadView}
+                    .{ThreadView/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/length}
+                    .{=}
+                        0
+                []
+                    no message should be shown as thread does not contain any
+`;

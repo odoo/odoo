@@ -1,0 +1,88 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            Rtc/_onKeyup
+        [Action/params]
+            ev
+                [type]
+                    KeyboardEvent
+            record
+                [type]
+                    Rtc
+        [Action/behavior]
+            {Collection/removeAt}
+                [0]
+                    @record
+                    .{Rtc/_fallBackTimeouts}
+                [1]
+                    @token
+            :peerConnection
+                @record
+                .{Rtc/_peerConnections}
+                .{Collection/at}
+                    @token
+            {if}
+                @peerConnection
+                .{isFalsy}
+                .{|}
+                    @record
+                    .{Rtc/channel}
+                    .{isFalsy}
+            .{then}
+                {break}
+            {if}
+                {Set/has}
+                    [0]
+                        @record
+                        .{Rtc/_outGoingCallTokens}
+                    [1]
+                        @token
+            .{then}
+                {break}
+            {if}
+                @peerConnection
+                .{RTCPeerConnection/iceConnectionState}
+                .{=}
+                    connected
+            .{then}
+                {break}
+            {Rtc/_addLogEntry}
+                [0]
+                    @record
+                [1]
+                    @token
+                [2]
+                    calling back to recover 
+                    .{+}
+                        @peerConnection
+                        .{Dict/get}
+                            iceConnectionState
+                    .{+}
+                        connection, reason: 
+                    .{+}
+                        @reason
+            {Rtc/_notifyPeers}
+                [0]
+                    @record
+                [1]
+                    @token
+                [2]
+                    [event]
+                        disconnect
+            {Rtc/_removePeer}
+                [0]
+                    @record
+                [1]
+                    @token
+            {Rtc/_callPeer}
+                [0]
+                    @record
+                [1]
+                    @token
+`;

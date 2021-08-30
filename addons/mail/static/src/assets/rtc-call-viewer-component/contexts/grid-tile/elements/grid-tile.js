@@ -1,0 +1,61 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Element
+        [Element/name]
+            gridTile
+        [Element/model]
+            RtcCallViewerComponent:gridTile
+        [Record/models]
+           RtcCallViewerComponent/participantCard
+        [Element/isPresent]
+            @record
+            .{RtcCallViewerComponent/rtcCallViewer}
+            .{RtcCallViewer/filterVideoGrid}
+            .{isFalsy}
+            .{|}
+                @record
+                .{RtcCallViewerComponent:gridTile/participantCard}
+                .{RtcCallParticipantCard/rtcSession}
+                .{&}
+                    @record
+                    .{RtcCallViewerComponent:gridTile/participantCard}
+                    .{RtcCallParticipantCard/rtcSession}
+                    .{RtcSession/videoStream}
+        [Field/target]
+            RtcCallParticipantCardComponent
+        [RtcCallParticipantCardComponent/callParticipantCard]
+            @record
+            .{RtcCallViewerComponent:gridTile/participantCard}
+        [web.Element/class]
+            mw-100
+        [web.Element/style]
+            [web.scss/width]
+                100%
+            [web.scss/aspect-ratio]
+                16/9
+            [web.scss/width]
+                @record
+                .{RtcCallViewerComponent/tileWidth}
+                .{+}
+                    px
+            [web.scss/height]
+                @record
+                .{RtcCallViewerComponent/tileHeight}
+                .{+}
+                    px
+            [web.scss/min-width]
+                @record
+                .{RtcCallViewerComponent/tileWidth}
+                .{+}
+                    px
+            [web.scss/min-height]
+                @record
+                .{RtcCallViewerComponent/tileHeight}
+                .{+}
+                    px
+`;

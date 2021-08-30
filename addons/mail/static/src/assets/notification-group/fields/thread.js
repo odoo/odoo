@@ -1,0 +1,69 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        Related thread when the notification group concerns a single thread.
+    {Record/insert}
+        [Record/models]
+            Field
+        [Field/name]
+            thread
+        [Field/model]
+            NotificationGroup
+        [Field/type]
+            one
+        [Field/target]
+            Thread
+        [Field/compute]
+            :notificationsThreadIds
+                @record
+                .{NotificationGroup/notifications}
+                .{Collection/filter}
+                    {Record/insert}
+                        [Record/models]
+                            Function
+                        [Function/in]
+                            item
+                        [Function/out]
+                            @item
+                            .{Notification/message}
+                            .{&}
+                                @item
+                                .{Notification/message}
+                                .{Message/originThread}
+                .{Collection/map}
+                    {Record/insert}
+                        [Record/models]
+                            Function
+                        [Function/in]
+                            item
+                        [Function/out]
+                            @item
+                            .{Notification/message}
+                            .{Message/originThread}
+                            .{Thread/id}
+            :threadIds
+                {Record/insert}
+                    [Record/models]
+                        Set
+                    @notificationsThreadIds
+            {if}
+                @threadIds
+                .{Set/size}
+                .{!=}
+                    1
+            .{then}
+                {Record/empty}
+            .{else}
+                {Record/insert}
+                    [Record/models]
+                        Thread
+                    [Thread/id]
+                        @notificationsThreadIds
+                        .{Collection/first}
+                    [Thread/model]
+                        @record
+                        .{NotificationGroup/resModel}
+`;

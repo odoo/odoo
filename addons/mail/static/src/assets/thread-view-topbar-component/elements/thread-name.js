@@ -1,0 +1,62 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Element
+        [Element/name]
+            threadName
+        [Element/model]
+            ThreadViewTopbarComponent
+        [Record/models]
+            ThreadViewTopbarComponent/editableItem
+            ThreadViewTopbarComponent/threadNameStyle
+        [Element/isPresent]
+            @record
+            .{ThreadViewTopbarComponent/threadViewTopbar}
+            .{threadViewTopbar/thread}
+            .{&}
+                @record
+                .{ThreadViewTopbarComponent/threadViewTopbar}
+                .{ThreadViewTopbar/isEditingThreadName}
+                .{isFalsy}
+        [web.Element/class]
+            flex-shrink-0
+            px-1
+            text-truncate
+            lead
+            font-weight-bold
+        [web.Element/title]
+            @record
+            .{ThreadViewTopbarComponent/threadViewTopbar}
+            .{threadViewTopbar/thread}
+            .{Thread/displayName}
+        [Element/onClick]
+            {ThreadViewTopbar/onClickTopbarThreadName}
+                [0]
+                    @record
+                    .{ThreadViewTopbarComponent/threadViewTopbar}
+                [1]
+                    @ev
+        [Element/onMouseenter]
+            {ThreadViewTopBar/onMouseEnterTopBarThreadName}
+                [0]
+                    @record
+                    .{ThreadViewTopbarComponent/threadViewTopbar}
+                [1]
+                    @ev
+        [Element/onMouseleave]
+            {ThreadViewTopBar/onMouseLeaveTopBarThreadName}
+                [0]
+                    @record
+                    .{ThreadViewTopbarComponent/threadViewTopbar}
+                [1]
+                    @ev
+        [web.Element/textContent]
+            @record
+            .{ThreadViewTopbarComponent/threadViewTopbar}
+            .{threadViewTopbar/thread}
+            .{Thread/displayName}
+`;

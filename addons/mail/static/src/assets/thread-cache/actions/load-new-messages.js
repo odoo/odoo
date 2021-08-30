@@ -1,0 +1,74 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            ThreadCache/loadNewMessages
+        [Action/params]
+            threadCache
+                [type]
+                    ThreadCache
+        [Action/returns]
+            Collection<Message>
+        [Action/behavior]
+            {if}
+                @threadCache
+                .{ThreadCache/isLoading}
+            .{then}
+                {break}
+            {if}
+                @threadCache
+                .{ThreadCache/isLoaded}
+                .{isFalsy}
+            .{then}
+                {Record/update}
+                    [0]
+                        @threadCache
+                    [1]
+                        [ThreadCache/isCacheRefreshRequested]
+                            true
+                {break}
+            :messageIds
+                @threadCache
+                .{ThreadCache/fetchedMessages}
+                .{Collection/map}
+                    {Record/insert}
+                        [Record/models]
+                            Function
+                        [Function/in]
+                            item
+                        [Function/out]
+                            @item
+                            .{Message/id}
+            :fetchedMessages
+                {ThreadCache/_loadMessages}
+                    [limit]
+                        false
+                    [minIds]
+                        {Math/max}
+                            @messageIds
+            {if}
+                @fetchedMessages
+                .{isFalsy}
+            .{then}
+                {break}
+            {foreach}
+                @threadCache
+                .{ThreadCache/threadViews}
+            .{as}
+                threadView
+            .{do}
+                {ThreadView/addComponentHint}
+                    [0]
+                        @threadView
+                    [1]
+                        new-messages-loaded
+                    [2]
+                        [fetchedMessages]
+                            @fetchedMessages
+            @fetchedMessages
+`;

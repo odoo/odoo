@@ -1,0 +1,152 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            simplest layout + editable
+        [Test/model]
+            AttachmentListComponent
+        [Test/assertions]
+            6
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+                [Server/mockRPC]
+                    {Record/insert}
+                        [Record/models]
+                            Function
+                        [Function/in]
+                            route
+                            args
+                            original
+                        [Function/out]
+                            {if}
+                                @route
+                                .{String/includes}
+                                    web/image/750
+                            .{then}
+                                {Test/assert}
+                                    []
+                                        @route
+                                        .{String/includes}
+                                            /200x200
+                                    []
+                                        should fetch image with 200x200 pixels ratio
+                                {Test/step}
+                                    fetch_image
+                            @original
+            :attachment
+                @testEnv
+                .{Record/insert}
+                    [Record/models]
+                        Attachment
+                    [Attachment/filename]
+                        test.txt
+                    [Attachment/id]
+                        750
+                    [Attachment/mimetype]
+                        text/plain
+                    [Attachment/name]
+                        test.txt
+            :message
+                @testEnv
+                .{Record/insert}
+                    [Record/models]
+                        Message
+                    [Message/attachments]
+                        {Field/add}
+                            @attachment
+                    [Message/author]
+                        @testEnv
+                        .{Env/currentPartner}
+                    [Message/body]
+                        <p>Test</p>
+                    [Message/id]
+                        100
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    MessageViewComponent
+                [MessageViewComponent/messageView]
+                    {Record/insert}
+                        [Record/models]
+                            MessageView
+                        [MessageView/message]
+                            @message
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Record/all}
+                        [Record/models]
+                            AttachmentCardComponent
+                    .{Collection/first}
+                    .{AttachmentCardComponent/image}
+                []
+                    attachment should have an image part
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Record/all}
+                        [Record/models]
+                            AttachmentCardComponent
+                    .{Collection/first}
+                    .{AttachmentCardComponent/details}
+                []
+                    attachment should not have a details part
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Record/all}
+                        [Record/models]
+                            AttachmentCardComponent
+                    .{Collection/first}
+                    .{AttachmentCardComponent/aside}
+                []
+                    attachment should have an aside part
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Record/all}
+                        [Record/models]
+                            AttachmentCardComponent
+                    .{Collection/first}
+                    .{AttachmentCardComponent/asideItem}
+                    .{Collection/length}
+                    .{=}
+                        2
+                []
+                    attachment should have two aside item
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Record/all}
+                        [Record/models]
+                            AttachmentCardComponent
+                    .{Collection/first}
+                    .{AttachmentCardComponent/asideItemUnlink}
+                []
+                    attachment should have a delete button
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Record/all}
+                        [Record/models]
+                            AttachmentCardComponent
+                    .{Collection/first}
+                    .{AttachmentCardComponent/asideItemDownload}
+                []
+                    attachment should have a download button
+`;

@@ -1,0 +1,38 @@
+// ------------------------------------------------------------------
+// Variables
+// ------------------------------------------------------------------
+
+$o-thread-typing-icon-size-medium: 5px;
+$o-thread-typing-icon-size-small: 3px;
+
+// ------------------------------------------------------------------
+// Animation
+// ------------------------------------------------------------------
+
+@keyframes o_ThreadTypingIconComponent_dot_animationBounce_sizeMedium_animation {
+    0%, 40%, 100% {
+        transform: initial;
+    }
+    20% {
+        transform: translateY(-$o-thread-typing-icon-size-medium);
+    }
+}
+
+@keyframes o_ThreadTypingIconComponent_dot_animationBounce_sizeSmall_animation {
+    0%, 40%, 100% {
+        transform: initial;
+    }
+    20% {
+        transform: translateY(-$o-thread-typing-icon-size-small);
+    }
+}
+
+
+@keyframes o_ThreadTypingIconComponent_dot_animationPulse_animation {
+    0%, 40%, 100% {
+        opacity: initial;
+    }
+    20% {
+        opacity: 25%;
+    }
+}

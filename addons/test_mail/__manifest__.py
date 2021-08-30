@@ -26,6 +26,9 @@ tests independently to functional aspects of other models. """,
         'web.tests_assets': [
             'test_mail/static/tests/helpers/*',
         ],
+        'web.assets_backend': [
+            'test_mail/static/src/assets/**/*.js',
+        ],
     },
     'installable': True,
     'application': False,

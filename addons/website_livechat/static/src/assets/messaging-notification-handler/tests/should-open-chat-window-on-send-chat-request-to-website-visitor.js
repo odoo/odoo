@@ -1,0 +1,150 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            should open chat window on send chat request to website visitor
+        [Test/feature]
+            website_livechat
+        [Test/model]
+            MessagingNotificationHandler
+        [Test/assertions]
+            3
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    website.visitor
+                [website.visitor/display_name]
+                    Visitor #11
+                [website.visitor/id]
+                    11
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    ChatWindowManagerComponent
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    View
+                [arch]
+                    {qweb}
+                        <form>
+                            <header>
+                                <button name="action_send_chat_request" string="Send chat request" class="btn btn-primary" type="button"/>
+                            </header>
+                            <field name="name"/>
+                        </form>
+                [model]
+                    website.visitor
+                [res_id]
+                    11
+                [View]
+                    FormView
+            {Test/intercept}
+                [0]
+                    execute_action
+                [1]
+                    {Record/insert}
+                        [Record/models]
+                            Function
+                        [Function/in]
+                            payload
+                        [Function/out]
+                            @testEnv
+                            .{Env/owlEnv}
+                            .{Dict/get}
+                                services
+                            .{Dict/get}
+                                rpc
+                            .{Function/call}
+                                [route]
+                                    /web/dataset/call_button
+                                [params]
+                                    [args]
+                                        @payload
+                                        .{Dict/get}
+                                            data
+                                        .{Dict/get}
+                                            env
+                                        .{Dict/get}
+                                            resIDs
+                                    [kwargs]
+                                        [context]
+                                            @payload
+                                            .{Dict/get}
+                                                data
+                                            .{Dict/get}
+                                                env
+                                            .{Dict/get}
+                                                context
+                                    [method]
+                                        @payload
+                                        .{Dict/get}
+                                            data
+                                        .{Dict/get}
+                                            action_data
+                                        .{Dict/get}
+                                            name
+                                    [model]
+                                        @payload
+                                        .{Dict/get}
+                                            data
+                                        .{Dict/get}
+                                            env
+                                        .{Doct/get}
+                                            model
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{UI/click}
+                    @testEnv
+                    .{web.Browser/document}
+                    .{web.Document/querySelector}
+                        button[name="action_send_chat_request"]
+            {Test/assert}
+                []
+                    @testEnv
+                    .{ChatWindowManager/chatWindows}
+                    .{Collection/length}
+                    .{=}
+                        1
+                []
+                    should have a chat window open after sending chat request to website visitor
+            {Test/assert}
+                []
+                    @testEnv
+                    .{ChatWindowManager/chatWindows}
+                    .{Collection/first}
+                    .{ChatWindow/isFocused}
+                []
+                    chat window of livechat should be focused on open
+            {Test/assert}
+                []
+                    @testEnv
+                    .{ChatWindowManager/chatWindows}
+                    .{Collection/first}
+                    .{ChatWindow/chatWindowHeaderComponents}
+                    .{Collection/first}
+                    .{ChatWindowHeaderComponent/name}
+                    .{web.Element/textContent}
+                    .{=}
+                        Visitor #11
+                []
+                    chat window of livechat should have name of visitor in the name
+`;

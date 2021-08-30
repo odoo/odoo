@@ -1,0 +1,75 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        Opens the given thread in Discuss, and opens Discuss if necessary.
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            Discuss/openThread
+        [Action/params]
+            discuss
+                [type]
+                    Discuss
+            thread
+                [type]
+                    Thread
+            focus
+                [type]
+                    Boolean
+        [Action/behavior]
+            {Record/update}
+                [0]
+                    @discuss
+                [1]
+                    [Discuss/thread]
+                        @thread
+            :condition
+                {if}
+                    @focus
+                    .{!=}
+                        undefined
+                .{then}
+                    @focus
+                .{else}
+                    {Device/isMobileDevice}
+                    .{isFalsy}
+            {if}
+                @condition
+            .{then}
+                {Discuss/focus}
+                    @discuss
+            {if}
+                @discuss
+                .{Discuss/discussView}
+                .{isFalsy}
+            .{then}
+                @env
+                .{Env/owlEnv}
+                .{Dict/get}
+                    bus
+                .{Dict/get}
+                    trigger
+                .{Function/call}
+                    [0]
+                        do-action
+                    [1]
+                        [action]
+                            mail.action_discuss
+                        [options]
+                            [active_id]
+                                {Discuss/threadToActiveId}
+                                    [0]
+                                        @discuss
+                                    [1]
+                                        @discuss
+                                        .{Discuss/thread}
+                            [clear_breadcrumbs]
+                                false
+                            [on_reverse_breadcrumb]
+                                {Discuss/close}
+                                    @discuss
+`;

@@ -1,0 +1,101 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            channel - counter: should have correct value of needaction threads if category is folded and with needaction messages
+        [Test/model]
+            DiscussSidebarCategoryComponent
+        [Test/assertions]
+            1
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                [0]
+                    [Record/models]
+                        mail.channel
+                    [mail.channel/id]
+                        20
+                [1]
+                    [Record/models]
+                        mail.channel
+                    [mail.channel/id]
+                        30
+                [2]
+                    [Record/models]
+                        mail.message
+                    [mail.message/body]
+                        message 1
+                    [mail.message/id]
+                        100
+                    [mail.message/model]
+                        mail.channel
+                    [mail.message/res_id]
+                        20
+                [3]
+                    [Record/models]
+                        mail.message
+                    [mail.message/body]
+                        message_2
+                    [mail.message/id]
+                        200
+                    [mail.message/model]
+                        mail.channel
+                    [mail.message/res_id]
+                        30
+                [4]
+                    [Record/models]
+                        mail.notification
+                    [mail.notification/notification_type]
+                        inbox
+                    [mail.notification/mail_message_id]
+                        100
+                    [mail.notification/res_partner_id]
+                        @record
+                        .{Test/data}
+                        .{Data/currentPartnerId}
+                [5]
+                    [Record/models]
+                        mail.notification
+                    [mail.notification/notification_type]
+                        inbox
+                    [mail.notification/mail_message_id]
+                        200
+                    [mail.notification/res_partner_id]
+                        @record
+                        .{Test/data}
+                        .{Data/currentPartnerId}
+                [6]
+                    [Record/models]
+                        res.users.settings
+                    [res.users.settings/user_id]
+                        @record
+                        .{Test/data}
+                        .{Data/currentUserId}
+                    [res.users.settings/is_discuss_sidebar_category_channel_open]
+                        false
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/categoryChannel}
+                    .{DiscussSidebarCategory/counter}
+                    .{=}
+                        2
+                []
+                    should have correct value of needaction threads if category is folded and with needaction messages
+`;

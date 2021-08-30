@@ -1,0 +1,77 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        Checks whether this partner has a related user and links them if
+        applicable.
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            Partner/checkIsUser
+        [Action/params]
+            partner
+                [type]
+                    Partner
+        [Action/behavior]
+            :userIds
+                {Record/doAsync}
+                    [0]
+                        @partner
+                    [1]
+                        @env
+                        .{Env/owlEnv}
+                        .{Dict/get}
+                            services
+                        .{Dict/get}
+                            rpc
+                        .{Function/call}
+                            [0]
+                                [model]
+                                    res.users
+                                [method]
+                                    search
+                                [args]
+                                    {Record/insert}
+                                        [Record/models]
+                                            Collection
+                                        {Record/insert}
+                                            [Record/models]
+                                                Collection
+                                            partner_id
+                                            .{=}
+                                                @partner
+                                                .{Partner/id}
+                                [kwargs]
+                                    [context]
+                                        [active_test]
+                                            false
+                            [1]
+                                [shadow]
+                                    true
+            {Record/update}
+                [0]
+                    @partner
+                [1]
+                    [Partner/hasCheckedUser]
+                        true
+            {if}
+                @userIds
+                .{Collection/length}
+                .{>}
+                    0
+            .{then}
+                {Record/update}
+                    [0]
+                        @partner
+                    [1]
+                        [Partner/user]
+                            {Record/insert}
+                                [Record/models]
+                                    User
+                                [User/id]
+                                    @userIds
+                                    .{Collection/first}
+`;

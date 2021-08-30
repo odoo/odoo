@@ -1,0 +1,104 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        States the composer state that is displayed by this composer view.
+    {Record/insert}
+        [Record/models]
+            Field
+        [Field/name]
+            composer
+        [Field/model]
+            ComposerView
+        [Field/type]
+            one
+        [Field/target]
+            Composer
+        [Field/inverse]
+            Composer/composerViews
+        [Field/compute]
+                {if}
+                    @record
+                    .{ComposerView/threadView}
+                .{then}
+                    {Dev/comment}
+                        When replying to a message, always use the composer
+                        from that message's thread
+                    {if}
+                        @record
+                        .{ComposerView/threadView}
+                        .{&}
+                            @record
+                            .{ComposerView/threadView}
+                            .{ThreadView/replyingToMessageView}
+                    .{then}
+                        @record
+                        .{ComposerView/threadView}
+                        .{ThreadView/replyingToMessageView}
+                        .{MessageView/message}
+                        .{Message/originThread}
+                        .{Thread/composer}
+                        {break}
+                    {if}
+                        @record
+                        .{ComposerView/threadView}
+                        .{ThreadView/thread}
+                        .{&}
+                            @record
+                            .{ComposerView/threadView}
+                            .{ThreadView/thread}
+                            .{Thread/composer}
+                    .{then}
+                        @record
+                        .{ComposerView/threadView}
+                        .{ThreadView/thread}
+                        .{Thread/composer}
+                        {break}
+                {if}
+                    @record
+                    .{ComposerView/threadView}
+                    .{ThreadView/thread}
+                    .{&}
+                        @record
+                        .{ComposerView/threadView}
+                        .{ThreadView/thread}
+                        .{Thread/composer}
+                .{then}
+                    @record
+                    .{ComposerView/threadView}
+                    .{ThreadView/thread}
+                    .{Thread/composer}
+                    {break}
+            {if}
+                @record
+                .{ComposerView/messageViewInEditing}
+                .{&}
+                    @record
+                    .{ComposerView/messageViewInEditing}
+                    .{MessageView/composerForEditing}
+            .{then}
+                @record
+                .{ComposerView/messageViewInEditing}
+                .{MessageView/composerForEditing}
+            .{elif}
+                @record
+                .{ComposerView/chatter}
+                .{&}
+                    @record
+                    .{ComposerView/chatter}
+                    .{Chatter/thread}
+                .{&}
+                    @record
+                    .{ComposerView/chatter}
+                    .{Chatter/thread}
+                    .{Thread/composer}
+            .{then}
+                @record
+                .{ComposerView/chatter}
+                .{Chatter/thread}
+                .{Thread/composer}
+            .{else}
+                {Record/empty}
+`;

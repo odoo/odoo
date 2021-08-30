@@ -1,0 +1,103 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            highlight the message mentioning the current user inside the channel
+        [Test/model]
+            ThreadViewComponent
+        [Test/assertions]
+            1
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                []
+                    [Record/models]
+                        mail.channel
+                    [mail.channel/channel_type]
+                        channel
+                    [mail.channel/id]
+                        20
+                    [mail.channel/is_pinned]
+                        true
+                    [mail.channel/name]
+                        General
+                []
+                    [Record/models]
+                        mail.message
+                    [mail.message/author_id]
+                        7
+                    [mail.message/body]
+                        hello @Admin
+                    [mail.message/id]
+                        100
+                    [mail.message/model]
+                        mail.channel
+                    [mail.message/partner_ids]
+                        @record
+                        .{Test/data}
+                        .{Data/currentPartnerId}
+                    [mail.message/res_id]
+                        20
+                []
+                    [Record/models]
+                        res.partner
+                    [res.partner/display_name]
+                        Test Partner
+                    [res.partner/id]
+                        7
+                []
+                    [Record/models]
+                        res.users
+                    [res.users/partner_id]
+                        7
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            :thread
+                @testEnv
+                .{Record/findById}
+                    [Thread/id]
+                        20
+                    [Thread/model]
+                        mail.channel
+            :threadViewer
+                @testEnv
+                .{Record/insert}
+                    [Record/models]
+                        ThreadViewer
+                    [ThreadViewer/hasThreadView]
+                        true
+                    [ThreadViewer/thread]
+                        @thread
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    ThreadViewComponent
+                [ThreadViewComponent/threadView]
+                    @threadViewer
+                    .{ThreadViewer/threadView}
+            {Test/assert}
+                []
+                    @threadViewer
+                    .{ThreadViewer/threadView}
+                    .{ThreadView/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/first}
+                    .{Message/isHighlighted}
+                []
+                    message should be highlighted
+`;

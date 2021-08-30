@@ -1,0 +1,84 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Element
+        [Element/name]
+            formViewDialog
+        [Element/model]
+            ComposerSuggestedRecipientComponent
+        [Field/target]
+            FormViewDialogComponentAdapter
+        [Element/isPresent]
+            @record
+            .{ComposerSuggestedRecipientComponent/suggestedRecipientInfo}
+            .{SuggestedRecipientInfo/partner}
+            .{isFalsy}
+        [FormViewDialogComponentAdapter/Component]
+            FormViewDialog
+        [FormViewDialogComponentAdapter/setFormViewDialogWidget]
+            {Record/insert}
+                [Record/models]
+                    Function
+                [Function/in]
+                    widget
+                [Function/out]
+                    {Record/update}
+                        [0]
+                            @record
+                        [1]
+                            [ComposerSuggestedRecipientComponent/_dialogWidget]
+                                @widget
+        [FormViewDialogComponentAdapter/params]
+            [context]
+                [active_id]
+                    @record
+                    .{ComposerSuggestedRecipientComponent/suggestedRecipientInfo}
+                    .{suggestedRecipientInfo/thread}
+                    .{Thread/id}
+                [active_model]
+                    mail.compose.message
+                [default_email]
+                    @record
+                    .{ComposerSuggestedRecipientComponent/suggestedRecipientInfo}
+                    .{SuggestedRecipientInfo/email}
+                [default_name]
+                    @record
+                    .{ComposerSuggestedRecipientComponent/suggestedRecipientInfo}
+                    .{SuggestedRecipientInfo/name}
+                [force_email]
+                    true
+                [ref]
+                    compound_context
+            [disable_multiple_selection]
+                true
+            [on_saved]
+                {if}
+                    @record
+                    .{ComposerSuggestedRecipientComponent/suggestedRecipientInfo}
+                    .{isFalsy}
+                    .{|}
+                        @record
+                        .{ComposerSuggestedRecipientComponent/suggestedRecipientInfo}
+                        .{SuggestedRecipientInfo/thread}
+                        .{isFalsy}
+                .{then}
+                    {break}
+                {Thread/fetchData}
+                    [0]
+                        @record
+                        .{ComposerSuggestedRecipientComponent/suggestedRecipientInfo}
+                        .{SuggestedRecipientInfo/thread}
+                    [1]
+                        suggestedRecipients
+            [res_id]
+                false
+            [res_model]
+                res.partner
+            [title]
+                {Locale/text}
+                    Please complete customer's information
+`;

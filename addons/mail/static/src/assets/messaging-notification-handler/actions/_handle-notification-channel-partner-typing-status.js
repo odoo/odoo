@@ -1,0 +1,93 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            MessagingNotificationHandler/_handleNotificationChannelPartnerTypingStatus
+        [Action/params]
+            notificationHandler
+                [type]
+                    MessagingNotificationHandler
+            channel_id
+                [type]
+                    Integer
+            is_typing
+                [type]
+                    Boolean
+            partner_id
+                [type]
+                    Integer
+            partner_name
+                [type]
+                    String
+        [Action/behavior]
+            :channel
+                {Record/findById}
+                    [Thread/id]
+                        @channel_id
+                    [Thread/model]
+                        mail.channel
+            {if}
+                @channel
+                .{isFalsy}
+            .{then}
+                {break}
+            :partner
+                {Record/insert}
+                    [Record/models]
+                        Partner
+                    [Partner/id]
+                        @partner_id
+                    [Partner/name]
+                        @partner_name
+            {if}
+                @partner
+                .{=}
+                    {Env/currentPartner}
+            .{then}
+                {Dev/comment}
+                    Ignore management of current partner is typing
+                    notification.
+                {break}
+            {if}
+                @is_typing
+            .{then}
+                {if}
+                    @channel
+                    .{Thread/typingMembers}
+                    .{Collection/includes}
+                        @partner
+                .{then}
+                    {Thread/refreshOtherMemberTypingMember}
+                        [0]
+                            @channel
+                        [1]
+                            @partner
+                .{else}
+                    {Thread/registerOtherMemberTypingMember}
+                        [0]
+                            @channel
+                        [1]
+                            @partner
+            .{else}
+                {if}
+                    @channel
+                    .{Thread/typingMembers}
+                    .{Collection/includes}
+                        @partner
+                    .{isFalsy}
+                .{then}
+                    {Dev/comment}
+                        Ignore no longer typing notifications of members
+                        that are not registered as typing something.
+                    {break}
+                {Thread/unregisterOtherMemberTypingMember}
+                    [0]
+                        @channel
+                    [1]
+                        @partner
+`;

@@ -1,0 +1,203 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            first unseen message should be directly preceded by the new message separator if there is a transient message just before it while composer is not focused
+        [Test/model]
+            ThreadViewComponent
+        [Test/isFocusRequired]
+            true
+        [Test/assertions]
+            3
+        [Test/scenario]
+            {Dev/comment}
+                The goal of removing the focus is to ensure the thread is not marked as seen automatically.
+                Indeed that would trigger set_last_seen_message no matter what, which is already covered by other tests.
+                The goal of this test is to cover the conditions specific to transient messages,
+                and the conditions from focus would otherwise shadow them.
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                []
+                    [Record/models]
+                        mail.channel
+                    [mail.channel/channel_type]
+                        channel
+                    [mail.channel/id]
+                        20
+                    [mail.channel/is_pinned]
+                        true
+                    [mail.channel/name]
+                        General
+                    [mail.channel/uuid]
+                        channel20uuid
+                []
+                    [Record/models]
+                        mail.channel_command
+                    [mail.channel_command/name]
+                        who
+                []
+                    {Dev/comment}
+                        Needed partner & user to allow simulation of message reception
+                    [Record/models]
+                        res.partner
+                    [res.partner/id]
+                        11
+                    [res.partner/name]
+                        Foreigner partner
+                []
+                    [Record/models]
+                        res.users
+                    [res.users/id]
+                        42
+                    [res.users/name]
+                        Foreigner user
+                    [res.users/partner_id]
+                        11
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            :thread
+                @testEnv
+                .{Record/findById}
+                    [Thread/id]
+                        20
+                    [Thread/model]
+                        mail.channel
+            :threadViewer
+                @testEnv
+                .{Record/insert}
+                    [Record/models]
+                        ThreadViewer
+                    [ThreadViewer/hasThreadView]
+                        true
+                    [ThreadViewer/thread]
+                        @thread
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    ThreadViewComponent
+                [ThreadViewComponent/threadView]
+                    @threadViewer
+                    .{ThreadViewer/threadView}
+            {Dev/comment}
+                send a command that leads to receiving a transient message
+            @testEnv
+            .{UI/focus}
+                @threadViewer
+                .{ThreadViewer/threadView}
+                .{threadView/thread}
+                .{Thread/composer}
+                .{Composer/composerTextInputComponents}
+                .{Collection/first}
+                .{ComposerTextInputComponent/textarea}
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{UI/insertText}
+                    /who
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{UI/click}
+                    @threadViewer
+                    .{ThreadViewer/threadView}
+                    .{threadView/thread}
+                    .{Thread/composer}
+                    .{Composer/composerViewComponents}
+                    .{Collection/first}
+                    .{ComposerViewComponent/buttonSend}
+            {Dev/comment}
+                composer is focused by default, we remove that focus
+            @testEnv
+            .{UI/blur}
+                @threadViewer
+                .{ThreadViewer/threadView}
+                .{threadView/thread}
+                .{Thread/composer}
+                .{Composer/composerTextInputComponents}
+                .{Collection/first}
+                .{ComposerTextInputComponent/textarea}
+            {Dev/comment}
+                simulate receiving a message
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{Env/owlEnv}
+                .{Dict/get}
+                    services
+                .{Dict/get}
+                    rpc
+                .{Function/call}
+                    [route]
+                        /mail/chat_post
+                    [params]
+                        [context]
+                            [mockedUserId]
+                                42
+                        [message_content]
+                            test
+                        [uuid]
+                            channel20uuid
+            {Test/assert}
+                []
+                    @threadViewer
+                    .{ThreadViewer/threadView}
+                    .{ThreadView/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/length}
+                    .{=}
+                        2
+                []
+                    should display 2 messages (the transient & the received message), after posting a command
+            {Test/assert}
+                []
+                    @threadViewer
+                    .{ThreadViewer/threadView}
+                    .{ThreadView/messageListComponents}
+                    .{Collection/first}
+                    .{MessageListComponent/separatorNewMessages}
+                []
+                    separator should be shown as a message has been received
+            {Test/assert}
+                []
+                    @testEnv
+                    .{UI/getPosition}
+                        @testEnv
+                        .{Record/find}
+                            [Record/models]
+                                Message
+                            {Record/insert}
+                                [Record/models]
+                                    Function
+                                [Function/in]
+                                    m
+                                [Function/out]
+                                    @m
+                                    .{Message/isTransient}
+                        .{Message/messageComponents}
+                        .{Collection/first}
+                    .{<}
+                        @testEnv
+                        .{UI/getPosition}
+                            @threadViewer
+                            .{ThreadViewer/threadView}
+                            .{ThreadView/messageListComponents}
+                            .{Collection/first}
+                            .{MessageListComponent/separatorNewMessages}
+                []
+                    separator should be shown just after transient message
+`;

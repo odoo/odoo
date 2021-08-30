@@ -1,0 +1,77 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            UserSetting/convertData
+        [Action/params]
+            data
+                [type]
+                    Object
+        [Action/returns]
+            Object
+        [Action/behavior]
+            :data2
+                {Record/insert}
+                    [Record/models]
+                        Object
+            {if}
+                @data
+                .{Dict/hasKey}
+                    use_push_to_talk
+            .{then}
+                {Record/update}
+                    [0]
+                        @data2
+                    [1]
+                        [UserSetting/usePushToTalk]
+                            @data
+                            .{Dict/get}
+                                use_push_to_talk
+            {if}
+                @data
+                .{Dict/hasKey}
+                    push_to_talk_key
+            .{then}
+                {Record/update}
+                    [0]
+                        @data2
+                    [1]
+                        [UserSetting/pushToTalkKey]
+                            @data
+                            .{Dict/get}
+                                push_to_talk_key
+                            .{|}
+                                {String/empty}
+            {if}
+                @data
+                .{Dict/hasKey}
+                    voice_active_duration
+            .{then}
+                {Record/update}
+                    [0]
+                        @data2
+                    [1]
+                        [UserSetting/voiceActiveDuration]
+                            @data
+                            .{Dict/get}
+                                voice_active_duration
+            {if}
+                @data
+                .{Dict/hasKey}
+                    id
+            .{then}
+                {Record/update}
+                    [0]
+                        @data2
+                    [1]
+                        [UserSetting/id]
+                            @data
+                            .{Dict/get}
+                                id
+            @data2
+`;

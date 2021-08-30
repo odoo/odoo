@@ -1,0 +1,210 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            rendering of inbox message
+        [Test/model]
+            DiscussComponent
+        [Test/assertions]
+            8
+        [Test/scenario]
+            {Dev/comment}
+                AKU TODO: kinda message specific test
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                []
+                    [Record/models]
+                        res.partner
+                    [res.partner/id]
+                        20
+                    [res.partner/name]
+                        Refactoring
+                []
+                    [Record/models]
+                        mail.message
+                    [mail.message/body]
+                        not empty
+                    [mail.message/id]
+                        100
+                    [mail.message/model]
+                        res.partner
+                    [mail.message/needaction]
+                        true
+                    [mail.message/needaction_partner_ids]
+                        @record
+                        .{Test/data}
+                        .{Data/currentPartnerId}
+                        {Dev/comment}
+                            for consistency
+                    [mail.message/res_id]
+                        20
+                []
+                    [Record/models]
+                        mail.notification
+                    [mail.notification/mail_message_id]
+                        100
+                    [mail.notification/notification_status]
+                        sent
+                    [mail.notification/notification_type]
+                        inbox
+                    [mail.notification/res_partner_id]
+                        @record
+                        .{Test/data}
+                        .{Data/currentPartnerId}
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    DiscussComponent
+            @testEnv
+            .{Utils/waitUntilEvent}
+                [eventName]
+                    o-thread-view-hint-processed
+                [message]
+                    should wait until inbox displayed its messages
+                [predicate]
+                    {Record/insert}
+                        [Record/models]
+                            Function
+                        [Function/in]
+                            hint
+                            threadViewer
+                        [Function/out]
+                            @hint
+                            .{Hint/type}
+                            .{=}
+                                messages-loaded
+                            .{&}
+                                @threadViewer
+                                .{ThreadViewer/thread}
+                                .{Thread/model}
+                                .{=}
+                                    mail.box
+                            .{&}
+                                @threadViewer
+                                .{ThreadViewer/thread}
+                                .{Thread/id}
+                                .{=}
+                                    inbox
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/length}
+                    .{=}
+                        1
+                []
+                    should display a message
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/first}
+                    .{Message/messageComponents}
+                    .{Collection/first}
+                    .{MessageViewComponent/originThread}
+                []
+                    should display origin thread of message
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/first}
+                    .{Message/messageComponents}
+                    .{Collection/first}
+                    .{MessageViewComponent/originThread}
+                    .{web.Element/textContent}
+                    .{=}
+                         on Refactoring
+                []
+                    should display origin thread name
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/first}
+                    .{Message/actionList}
+                    .{MessageActionList/messageActionListComponents}
+                    .{Collection/first}
+                    .{MessageActionListComponent/action}
+                    .{Collection/length}
+                    .{=}
+                        4
+                []
+                    should display 4 actions
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/first}
+                    .{Message/actionList}
+                    .{MessageActionList/messageActionListComponents}
+                    .{Collection/first}
+                    .{MessageActionListComponent/actionReaction}
+                []
+                    should have action to add a reaction
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/first}
+                    .{Message/actionList}
+                    .{MessageActionList/messageActionListComponents}
+                    .{Collection/first}
+                    .{MessageActionListComponent/actionStar}
+                []
+                    should display star action
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/first}
+                    .{Message/actionList}
+                    .{MessageActionList/messageActionListComponents}
+                    .{Collection/first}
+                    .{MessageActionListComponent/actionReply}
+                []
+                    should display reply action
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/first}
+                    .{Message/actionList}
+                    .{MessageActionList/messageActionListComponents}
+                    .{Collection/first}
+                    .{MessageActionListComponent/actionMarkAsRead}
+                []
+                    should display mark as read action
+`;

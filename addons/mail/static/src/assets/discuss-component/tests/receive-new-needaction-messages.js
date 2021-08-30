@@ -1,0 +1,257 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            receive new needaction messages
+        [Test/model]
+            DiscussComponent
+        [Test/assertions]
+            12
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env}
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    DiscussComponent
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Env/inbox}
+                    .{Thread/discussSidebarCategoryItemComponents}
+                    .{Collection/length}
+                    .{=}
+                        1
+                []
+                    should have inbox in sidebar
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{=}
+                        @testEnv
+                        .{Env/inbox}
+                []
+                    inbox should be current discuss thread
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Env/inbox}
+                    .{Thread/discussSidebarCategoryItemComponents}
+                    .{Collection/first}
+                    .{DiscussSidebarCategoryItemComponent/counter}
+                    .{isFalsy}
+                []
+                    inbox item in sidebar should not have any counter
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/length}
+                    .{=}
+                        0
+                []
+                    should have no messages in inbox initially
+
+            {Dev/comment}
+                simulate receiving a new needaction message
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{Env/owlEnv}
+                .{Dict/get}
+                    services
+                .{Dict/get}
+                    bus_service
+                .{Dict/get}
+                    trigger
+                .{Function/call}
+                    [0]
+                        notification
+                    [1]
+                        [type]
+                            mail.message/inbox
+                        [payload]
+                            [body]
+                                not empty
+                            [id]
+                                100
+                            [needaction_partner_ids]
+                                3
+                            [model]
+                                res.partner
+                            [res_id]
+                                20
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Env/inbox}
+                    .{Thread/discussSidebarCategoryItemComponents}
+                    .{Collection/first}
+                    .{DiscussSidebarCategoryItemComponent/counter}
+                []
+                    inbox item in sidebar should now have counter
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Env/inbox}
+                    .{Thread/discussSidebarCategoryItemComponents}
+                    .{Collection/first}
+                    .{DiscussSidebarCategoryItemComponent/counter}
+                    .{web.Element/textContent}
+                    .{=}
+                        1
+                []
+                    inbox item in sidebar should have counter of '1'
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/length}
+                    .{=}
+                        1
+                []
+                    should have one message in inbox
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/first}
+                    .{=}
+                        @testEnv
+                        .{Record/findById}
+                            [Message/id]
+                                100
+                []
+                    should display newly received needaction message
+
+            {Dev/comment}
+                simulate receiving another new needaction message
+            @testEnv
+            .{Component/afterNextRender}
+                :data2
+                    [body]
+                        not empty
+                    [id]
+                        101
+                    [needaction_partner_ids]
+                        3
+                    [model]
+                        res.partner
+                    [res_id]
+                        20
+                :notifications2
+                    {Record/insert}
+                        [Record/models]
+                            Collection
+                        {Record/insert}
+                            [Record/models]
+                                Collection
+                            [0]
+                                {Record/insert}
+                                    [Record/models]
+                                        Collection
+                                    [0]
+                                        my-db
+                                    [1]
+                                        ir.needaction
+                                    [2]
+                                        3
+                            [1]
+                                @data2
+                @testEnv
+                .{Env/owlEnv}
+                .{Dict/get}
+                    services
+                .{Dict/get}
+                    bus_service
+                .{Dict/get}
+                    trigger
+                .{Function/call}
+                    [0]
+                        notification
+                    [1]
+                        [type]
+                            mail.channel/new_message
+                        [payload]
+                            [id]
+                                20
+                            [message]
+                                [id]
+                                    126
+                                [model]
+                                    mail.channel
+                                [res_id]
+                                    20
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Env/inbox}
+                    .{Thread/discussSidebarCategoryItemComponents}
+                    .{Collection/first}
+                    .{DiscussSidebarCategoryItemComponent/counter}
+                    .{web.Element/textContent}
+                    .{=}
+                        2
+                []
+                    inbox item in sidebar should have counter of '2'
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/length}
+                    .{=}
+                        2
+                []
+                    should have 2 messages in inbox
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/first}
+                    .{=}
+                        @testEnv
+                        .{Record/findById}
+                            [Message/id]
+                                100
+                []
+                    should still display 1st needaction message
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/second}
+                    .{=}
+                        @testEnv
+                        .{Record/findById}
+                            [Message/id]
+                                101
+                []
+                    should display 2nd needaction message
+`;

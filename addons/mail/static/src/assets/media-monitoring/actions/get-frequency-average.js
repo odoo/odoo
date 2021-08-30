@@ -1,0 +1,97 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            MediaMonitoring/getFrequencyAverage
+        [Action/params]
+            analyzer
+                [type]
+                    AnalyzerNode
+            lowerFrequency
+                [type]
+                    Integer
+                [description]
+                    lower bound for relevant frequencies to monitor
+            higherFrequency
+                [type]
+                    Integer
+                [description]
+                    upper bound for relevant frequencies to monitor
+        [Action/returns]
+            Number
+                [description]
+                    normalized [0...1] average quantity of the relevant frequencies
+        [Action/behavior]
+            :frequencies
+                {Record/insert}
+                    [Record/models]
+                        Uint8Array
+                    @analyser
+                    .{AnalyzerNode/frequencyBinCount}
+            {AnalyzerNode/getByteFrequencyData}
+                [0]
+                    @analyzer
+                [1]
+                    @frequencies
+            :sampleRate
+                @analyser
+                .{AnalyzerNode/context}
+                .{Context/sampleRate}
+            :startIndex
+                {MediaMonitoring/_getFrequencyIndex}
+                    [0]
+                        @lowerFrequency
+                    [1]
+                        @sampleRate
+                    [2]
+                        @analyser
+                        .{AnalyzerNode/frequencyBinCount}
+            :endIndex
+                {MediaMonitoring/_getFrequencyIndex}
+                    [0]
+                        @higherFrequency
+                    [1]
+                        @sampleRate
+                    [2]
+                        @analyser
+                        .{AnalyzerNode/frequencyBinCount}
+            :count
+                @endIndex
+                .{-}
+                    @startIndex
+            :sum
+                0
+            {foreach}
+                {Record/insert}
+                    [Record/models]
+                        Range
+                    [start]
+                        @startIndex
+                    [end]
+                        @endIndex
+            .{as}
+                index
+            .{do}
+                :sum
+                    @sum
+                    .{+}
+                        @frequencies
+                        .{Collection/at}
+                            @index
+                        .{/}
+                            255
+            {if}
+                @count
+                .{isFalsy}
+            .{then}
+                0
+            .{else}
+                @sum
+                .{/}
+                    @count
+`;

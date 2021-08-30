@@ -1,0 +1,67 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Model
+        [Model/name]
+            ComposerViewComponent
+        [Model/fields]
+            attachments
+            composerView
+            dropzoneVisible
+            hasCurrentPartnerAvatar
+            hasDiscardButton
+            hasFollowers
+            hasFooter
+            hasHeader
+            hasMentionSuggestionsBelowPosition
+            hasSendButton
+            hasThreadName
+            hasThreadTyping
+            isCompact
+            isExpandable
+            showAttachmentsExtensions
+            showAttachmentsFilenames
+        [Model/template]
+            root
+                dropZone
+                coreHeader
+                    replyingToMessage
+                    threadName
+                    followers
+                    suggestedRecipientList
+                sidebarMain
+                    currentPartnerAvatar
+                    currentGuestAvatar
+                coreMain
+                    textInput
+                    buttons
+                        toolButtons
+                            toolButtonSeparator
+                            primaryToolButtons
+                                buttonEmojis
+                                    buttonEmojisIcon
+                                emojisPopoverView
+                                buttonEmoji
+                                buttonAttachment
+                            secondaryToolButtons
+                                buttonFullComposer
+                        actionButtonsNotCompact
+                            buttonSend
+                                buttonSendIcon
+                            buttonDiscard
+                coreFooter
+                    threadTextualTypingStatus
+                    attachmentList
+                    actionButtonsCompact
+                        buttonSend
+                        buttonDiscard
+                    messageEditingButtons
+        [Model/actions]
+            ComposerViewComponent/_onClickAddAttachment
+            ComposerViewComponent/_postMessage
+            ComposerViewComponent/getCurrentPartnerAvatar
+`;

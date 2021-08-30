@@ -1,0 +1,73 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        States the message views used to display this messages.
+    {Record/insert}
+        [Record/models]
+            Field
+        [Field/name]
+            messageViews
+        [Field/model]
+            ThreadView
+        [Field/type]
+            many
+        [Field/target]
+            MessageView
+        [Field/isCausal]
+            true
+        [Field/inverse]
+            MessageView/threadView
+        [Field/compute]
+            {if}
+                @record
+                .{ThreadView/threadCache}
+                .{isFalsy}
+            .{then}
+                {Record/empty}
+                {break}
+            :orderedMessages
+                @record
+                .{ThreadView/threadCache}
+                .{ThreadCache/orderedNonEmptyMessages}
+            {if}
+                @record
+                .{ThreadView/order}
+                .{=}
+                    desc
+            .{then}
+                {Collection/reverse}
+                    @orderedMessages
+            :messageViewsData
+                {Record/insert}
+                    [Record/models]
+                        Collection
+            {foreach}
+                @orderedMessages
+            .{as}
+                message
+            .{do}
+                {Collection/push}
+                    [0]
+                        @messageViewsData
+                    [1]
+                        {Record/insert}
+                            [Record/models]
+                                MessageView
+                            [MessageView/isSquashed]
+                                {ThreadView/_shouldMessageBeSquashed}
+                                    [0]
+                                        @record
+                                    [1]
+                                        @prevMessage
+                                    [2]
+                                        @message
+                            [MessageView/message]
+                                @message
+                :prevMessage
+                    @message
+            {Record/insert}
+                @messageViewsData
+`;

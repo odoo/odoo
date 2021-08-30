@@ -1,0 +1,224 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            mark a single message as read should only move this message to "History" mailbox
+        [Test/model]
+            DiscussComponent
+        [Test/assertions]
+            9
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                [0]
+                    [Record/models]
+                        mail.message
+                    [mail.message/body]
+                        not empty
+                    [mail.message/id]
+                        1
+                    [mail.message/needaction]
+                        true
+                    [mail.message/needaction_partner_ids]
+                        @record
+                        .{Test/data}
+                        .{Data/currentPartnerId}
+                [1]
+                    [Record/models]
+                        mail.message
+                    [mail.message/body]
+                        not empty
+                    [mail.message/id]
+                        2
+                    [mail.message/needaction]
+                        true
+                    [mail.message/needaction_partner_ids]
+                        @record
+                        .{Test/data}
+                        .{Data/currentPartnerId}
+                [2]
+                    [Record/models]
+                        mail.notification
+                    [mail.notification/notification_type]
+                        inbox
+                    [mail.notification/mail_message_id]
+                        1
+                    [mail.notification/res_partner_id]
+                        @record
+                        .{Test/data}
+                        .{Data/currentPartnerId}
+                [3]
+                    [Record/models]
+                        mail.notification
+                    [mail.notification/notification_type]
+                        inbox
+                    [mail.notification/mail_message_id]
+                        2
+                    [mail.notification/res_partner_id]
+                        @record
+                        .{Test/data}
+                        .{Data/currentPartnerId}
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    DiscussComponent
+            @testEnv
+            .{Thread/open}
+                @testEnv
+                .{Record/findById}
+                    [Thread/id]
+                        history
+                    [Thread/model]
+                        mail.box
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{=}
+                        @testEnv
+                        .{Env/history}
+                []
+                    history mailbox should initially be the active thread
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/threadViews}
+                    .{Collection/first}
+                    .{ThreadView/messageListComponents}
+                    .{Collection/first}
+                    .{MessageListComponent/empty}
+                []
+                    history mailbox should initially be empty
+
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{UI/click}
+                    @testEnv
+                    .{Env/inbox}
+                    .{Thread/discussSidebarCategoryItemComponents}
+                    .{Collection/first}
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{=}
+                        @testEnv
+                        .{Env/inbox}
+                []
+                    inbox mailbox should be active thread after clicking on it
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/length}
+                    .{=}
+                        2
+                []
+                    inbox mailbox should have 2 messages
+
+            @testEnv
+            .{UI/click}
+                @testEnv
+                .{Record/findById}
+                    [Message/id]
+                        1
+                .{Message/messageComponents}
+                .{Collection/first}
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{UI/click}
+                    @testEnv
+                    .{Record/findById}
+                        [Message/id]
+                            1
+                    .{Message/actionList}
+                    .{MessageActionList/messageActionListComponents}
+                    .{Collection/first}
+                    .{MessageActionListComponent/actionMarkAsRead}
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Record/findById}
+                        [Message/id]
+                            1
+                    .{Message/messageComponents}
+                    .{Collection/length}
+                    .{=}
+                        1
+                []
+                    inbox mailbox should have one less message after clicking mark as read
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Record/findById}
+                        [Message/id]
+                            2
+                    .{Message/messageComponents}
+                    .{Collection/length}
+                    .{=}
+                        1
+                []
+                    message still in inbox should be the one not marked as read
+
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{UI/click}
+                    @testEnv
+                    .{Env/history}
+                    .{Thread/discussSidebarCategoryItemComponents}
+                    .{Collection/first}
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{=}
+                        @testEnv
+                        .{Env/history}
+                []
+                    history mailbox should be active after clicking on it
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/thread}
+                    .{Thread/cache}
+                    .{ThreadCache/messages}
+                    .{Collection/length}
+                    .{=}
+                        1
+                []
+                    history mailbox should have only 1 message after mark as read
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Record/findById}
+                        [Message/id]
+                            1
+                    .{Message/messageComponents}
+                    .{Collection/length}
+                    .{=}
+                        1
+                []
+                    message moved in history should be the one marked as read
+`;

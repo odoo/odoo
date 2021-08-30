@@ -1,0 +1,71 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Element
+        [Element/name]
+            unfollow
+        [Element/model]
+            FollowButtonComponent
+        [web.Element/tag]
+            button
+        [web.Element/class]
+            btn
+            btn-link
+        [Record/models]
+            Focusable
+        [Element/isPresent]
+            @record
+            .{FollowButtonComponent/thread}
+            .{Thread/isCurrentPartnerFollowing}
+        [web.Element/isDisabled]
+            @record
+            .{FollowButtonComponent/isDisabled}
+        [Element/onClick]
+            {Thread/unfollow}
+                @record
+                .{FollowButtonComponent/thread}
+        [Element/onMouseenter]
+            {Record/update}
+                [0]
+                    @record
+                [1]
+                    [FollowButtonComponent/isUnfollowButtonHighlighted]
+                        true
+        [Element/onMouseleave]
+            {Record/update}
+                [0]
+                    @record
+                [1]
+                    [FollowButtonComponent/isUnfollowButtonHighlighted]
+                        false
+        [web.Element/style]
+            [web.scss/color]
+                {scss/gray}
+                    600
+            {if}
+                @record
+                .{FollowButtonComponent/isUnfollowButtonHighlighted}
+                .{isFalsy}
+            .{then}
+                [web.scss/color]
+                    {scss/o-text-color}
+                        success
+            {if}
+                @record
+                .{FollowButtonComponent/isUnfollowButtonHighlighted}
+            .{then}
+                [web.scss/color]
+                    {scss/o-text-color}
+                        warning
+            {if}
+                @field
+                .{web.Element/isFocused}
+            .{then}
+                [web.scss/background-color]
+                    {scss/gray}
+                        200
+`;

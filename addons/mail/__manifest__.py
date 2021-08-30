@@ -111,6 +111,9 @@
             'mail/static/src/scss/variables/primary_variables.scss',
         ],
         'web.assets_backend': [
+            'mail/static/src/define.js',
+            'mail/static/src/assets/**/*.js',
+            'mail/static/src/core/**/*.js',
             # depends on BS variables, can't be loaded in assets_primary or assets_secondary
             'mail/static/src/scss/variables/derived_variables.scss',
             # defines mixins and variables used by multiple components

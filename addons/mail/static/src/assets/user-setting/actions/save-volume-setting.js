@@ -1,0 +1,61 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            UserSetting/saveVolumeSetting
+        [Action/params]
+            guestId
+                [type]
+                    Integer
+            partnerId
+                [type]
+                    Integer
+            volume
+                [type]
+                    Float
+            record
+                [type]
+                    UserSetting
+        [Action/behavior]
+            {if}
+                @record
+                .{UserSetting/volumeSettingsTimeouts}
+                .{Collection/at}
+                    @partnerId
+            .{then}
+                {Browser/clearTimeout}
+                    @record
+                    .{UserSetting/volumeSettingsTimeouts}
+                    .{Collection/at}
+                        @partnerId
+            {Record/update}
+                [0]
+                    @record
+                [1]
+                    [UserSetting/volumeSettingsTimeouts]
+                        @record
+                        .{UserSetting/volumeSettingsTimeouts}
+                        {entry}
+                            [key]
+                                @partnerId
+                            [value]
+                                {Browser/setTimeout}
+                                    [0]
+                                        {UserSetting/_onSaveVolumeSettingTimeout}
+                                            [0]
+                                                @record
+                                            [1]
+                                                [guestId]
+                                                    @guestId
+                                                [partnerId]
+                                                    @partnerId
+                                                [volume]
+                                                    @volume
+                                    [1]
+                                        5000
+`;

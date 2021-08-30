@@ -1,0 +1,70 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            DiscussMobileMailboxSelectionComponent/getOrderedMailboxes
+        [Action/behavior]
+            {Record/all}
+                [Record/models]
+                    Thread
+                {Record/insert}
+                    [Record/models]
+                        Function
+                    [Function/in]
+                        item
+                    [Function/out]
+                        @item
+                        .{Thread/isPinned}
+                        .{&}
+                            @item
+                            .{Thread/model}
+                            .{=}
+                                mail.box
+            .{Collection/sort}
+                {Record/insert}
+                    [Record/models]
+                        Function
+                    [Function/in]
+                        item1
+                        item2
+                    [Function/out]
+                        {if}
+                            @item1
+                            .{=}
+                                {Env/inbox}
+                        .{then}
+                            -1
+                        .{elif}
+                            @item2
+                            .{=}
+                                {Env/inbox}
+                        .{then}
+                            1
+                        .{elif}
+                            @item1
+                            .{=}
+                                {Env/starred}
+                        .{then}
+                            -1
+                        .{elif}
+                            @item2
+                            .{=}
+                                {Env/starred}
+                        .{then}
+                            1
+                        .{elif}
+                            @item1
+                            .{Thread/displayName}
+                            .{<}
+                                @item2
+                                .{Thread/displayName}
+                        .{then}
+                            -1
+                        .{else}
+                            1
+`;

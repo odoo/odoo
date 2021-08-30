@@ -1,0 +1,78 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        Determines the source URL to use for the image.
+    {Record/insert}
+        [Record/models]
+            Field
+        [Field/name]
+            imageUrl
+        [Field/model]
+            AttachmentViewer
+        [Field/type]
+            attr
+        [Field/target]
+            String
+        [Field/isReadonly]
+            true
+        [Field/compute]
+            {if}
+                @record
+                .{AttachmentViewer/attachment}
+                .{isFalsy}
+            .{then}
+                {break}
+            {if}
+                @record
+                .{AttachmentViewer/attachment}
+                .{Attachment/accessToken}
+                .{isFalsy}
+                .{&}
+                    @record
+                    .{AttachmentViewer/attachment}
+                    .{Attachment/originThread}
+                .{&}
+                    @record
+                    .{AttachmentViewer/attachment}
+                    .{Attachment/originThread}
+                    .{Thread/model}
+                    .{=}
+                        mail.channel
+            .{then}
+                /mail/channel/
+                .{+}
+                    @record
+                    .{AttachmentViewer/attachment}
+                    .{Attachment/originThread}
+                    .{Thread/id}
+                .{+}
+                    /image/
+                .{+}
+                    @record
+                    .{AttachmentViewer/attachment}
+                    .{Attachment/id}
+            .{else}
+                :accessToken
+                    {if}
+                        @record
+                        .{AttachmentViewer/attachment}
+                        .{Attachment/accessToken}
+                    .{then}
+                        ?access_token=
+                        .{+}
+                            @record
+                            .{AttachmentViewer/attachment}
+                            .{Attachment/accessToken}
+                    .{else}
+                        {String/empty}
+                /web/image/
+                .{+}
+                    @record
+                    .{AttachmentViewer/attachment}
+                    .{Attachment/id}
+                .{+}
+                    @accessToken
+`;

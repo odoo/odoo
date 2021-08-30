@@ -1,0 +1,104 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            channel - avatar: should update avatar url from bus
+        [Test/model]
+            DiscussSidebarCategoryItemComponent
+        [Test/assertions]
+            2
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    mail.channel
+                [mail.channel/avatarCacheKey]
+                    101010
+                [mail.channel/id]
+                    20
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            :channelItemAvatar
+                @testEnv
+                .{Record/findById}
+                    [Thread/id]
+                        20
+                    [Thread/model]
+                        mail.channel
+                .{Thread/discussSidebarCategoryItemComponents}
+                .{Collection/first}
+                .{DiscussSidebarCategoryItemComponent/image}
+            {Test/assert}
+                @channelItemAvatar
+                .{web.Element/src}
+                .{=}
+                    /web/image/mail.channel/20/avatar_128?unique=101010
+
+            @testEnv
+            .{UI/afterNextRender}
+                @testEnv
+                .{Env/owlEnv}
+                .{Dict/get}
+                    services
+                .{Dict/get}
+                    rpc
+                .{Function/call}
+                    [model]
+                        mail.channel
+                    [method]
+                        write
+                    [args]
+                        [0]
+                            [0]
+                                20
+                        [1]
+                            [image_128]
+                                This field does not matter
+            :result
+                @testEnv
+                .{Env/owlEnv}
+                .{Dict/get}
+                    services
+                .{Dict/get}
+                    rpc
+                .{Function/call}
+                    [model]
+                        mail.channel
+                    [method]
+                        read
+                    [args]
+                        [0]
+                            [0]
+                                20
+                        [1]
+                            [0]
+                                avatarCacheKey
+            :newCacheKey
+                @result
+                .{Collection/first}
+                .{Dict/get}
+                    avatarCacheKey
+            {Dev/comment}
+                FIXME: current test framework does not replace 'src' with 'data-src' during the re-rendering.
+            {Test/assert}
+                @channelItemAvatar
+                .{web.Element/src}
+                .{=}
+                    /web/image/mail.channel/20/avatar_128?unique=
+                    .{+}
+                        @newCacheKey
+`;

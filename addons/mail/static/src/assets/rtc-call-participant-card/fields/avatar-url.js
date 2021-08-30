@@ -1,0 +1,71 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        The relative url of the image that represents the card.
+    {Record/insert}
+        [Record/models]
+            Field
+        [Field/name]
+            avatarUrl
+        [Field/model]
+            RtcCallParticipantCard
+        [Field/type]
+            attr
+        [Field/target]
+            String
+        [Field/compute]
+            {if}
+                @record
+                .{RtcCallParticipantCard/channel}
+                .{isFalsy}
+            .{then}
+                {break}
+            {if}
+                @record
+                .{RtcCallParticipantCard/rtcSession}
+            .{then}
+                @record
+                .{RtcCallParticipantCard/rtcSession}
+                .{RtcSession/avatarUrl}
+            .{elif}
+                @record
+                .{RtcCallParticipantCard/invitedPartner}
+            .{then}
+                /mail/channel/
+                .{+}
+                    @record
+                    .{RtcCallParticipantCard/channel}
+                    .{Thread/id}
+                .{+}
+                    /partner/
+                .{+}
+                    @record
+                    .{RtcCallParticipantCard/invitedPartner}
+                    .{Partner/id}
+                .{+}
+                    /avatar_128
+            .{elif}
+                @record
+                .{RtcCallParticipantCard/invitedGuest}
+            .{then}
+                /mail/channel/
+                .{+}
+                    @record
+                    .{RtcCallParticipantCard/channel}
+                    .{Thread/id}
+                .{+}
+                    /guest/
+                .{+}
+                    @record
+                    .{RtcCallParticipantCard/invitedGuest}
+                    .{Guest/id}
+                .{+}
+                    /avatar_128?unique=
+                .{+}
+                    @record
+                    .{RtcCallParticipantCard/invitedGuest}
+                    .{Guest/name}
+`;

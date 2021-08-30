@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="mail.MessageViewComponent" t-inherit-mode="extension">
+
+        <!--
+            It was decided that the information displayed for snailmail messages
+            has to be different than for standard messages, see task-1907998.
+        -->
+        <xpath expr="//NotificationPopoverComponent" position="replace">
+            <t t-if="message.type(mself) === 'snailmail'">
+                <SnailmailNotificationPopoverComponent message="message"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+
+</templates>

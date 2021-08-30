@@ -1,0 +1,76 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Element
+        [Element/name]
+            button
+        [Element/model]
+            RtcOptionListComponent
+        [Record/models]
+            Hoverable
+        [web.Element/tag]
+            button
+        [web.Element/style]
+            [web.scss/display]
+                flex
+            [web.scss/margin]
+                {scss/map-get}
+                    {scss/$spacers}
+                    1
+            [web.scss/align-items]
+                center
+            [web.scss/color]
+                {scss/gray}
+                    800
+            [web.scss/background]
+                none
+            [web.scss/border]
+                none
+            [web.scss/outline]
+                none
+            [web.scss/cursor]
+                pointer
+            [web.scss/border-radius]
+                5px
+            [web.scss/color]
+                {scss/gray}
+                    800
+            {if}
+                @field
+                .{web.Element/isHover}
+            .{then}
+                [web.scss/background-color]
+                    {scss/gray}
+                        100
+                [web.scss/box-shadow]
+                    0px
+                    0px
+                    1px
+                    1px
+                    {scss/gray}
+                        300
+                    inset
+            {if}
+                @field
+                .{web.Element/isActive}
+            .{then}
+                [web.scss/background-color]
+                    {scss/gray}
+                        200
+                [web.scss/box-shadow]
+                    0px
+                    0px
+                    1px
+                    1px
+                    {scss/gray}
+                        400
+                    inset
+            {web.scss/include}
+                {web.scss/hover-focus}
+                    [web.scss/outline]
+                        none
+`;

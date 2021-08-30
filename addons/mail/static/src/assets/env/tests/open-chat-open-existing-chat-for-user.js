@@ -1,0 +1,132 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            openChat: open existing chat for user
+        [Test/model]
+            Env
+        [Test/assertions]
+            5
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                [0]
+                    [Record/models]
+                        mail.channel
+                    [mail.channel/channel_type]
+                        chat
+                    [mail.channel/id]
+                        10
+                    [mail.channel/members]
+                        [0]
+                            @record
+                            .{Test/data}
+                            .{Data/currentPartnerId}
+                        [1]
+                            14
+                    [mail.channel/public]
+                        private
+                [1]
+                    [Record/models]
+                        res.partner
+                    [res.partner/id]
+                        14
+                [2]
+                    [Record/models]
+                        res.users
+                    [res.users/id]
+                        11
+                    [res.users/partner_id]
+                        14
+            @testEnv
+                {Record/insert}
+                    [Record/models]
+                        Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            :existingChat
+                @testEnv
+                .{Record/find}
+                    [Record/models]
+                        Thread
+                    {Record/insert}
+                        [Record/models]
+                            Function
+                        [Function/in]
+                            thread
+                        [Function/out]
+                            @thread
+                            .{Thread/channelType}
+                            .{=}
+                                chat
+                            .{&}
+                                @thread
+                                .{Thread/correspondent}
+                            .{&}
+                                @thread
+                                .{Thread/correspondent}
+                                .{Partner/id}
+                                .{=}
+                                    14
+                            .{&}
+                                @thread
+                                .{Thread/model}
+                                .{=}
+                                    mail.channel
+                            .{&}
+                                @thread
+                                .{Thread/public}
+                                .{=}
+                                    private
+            {Test/assert}
+                []
+                    @existingChat
+                []
+                    a chat should initially exist with the target partner
+            {Test/assert}
+                []
+                    @existingChat
+                    .{Thread/threadViews}
+                    .{Collection/length}
+                    .{=}
+                        0
+                []
+                    the chat should not be displayed in a 'ThreadView'
+
+            @testEnv
+            .{Env/openChat}
+                [partnerId]
+                    14
+            {Test/assert}
+                []
+                    @existingChat
+                []
+                    a chat should still exist with the target partner
+            {Test/assert}
+                []
+                    @existingChat
+                    .{Thread/id}
+                    .{=}
+                        10
+                []
+                    the chat should be the existing chat
+            {Test/assert}
+                []
+                    @existingChat
+                    .{Thread/threadViews}
+                    .{Collection/length}
+                    .{=}
+                        1
+                []
+                    the chat should now be displayed in a 'ThreadView'
+`;

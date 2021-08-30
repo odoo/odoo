@@ -1,0 +1,76 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Element
+        [Element/name]
+            button
+        [Element/model]
+            DiscussMobileMailboxSelectionComponent:button
+        [web.Element/tag]
+            button
+        [web.Element/class]
+            btn
+            btn-secondary
+            {if}
+                @record
+                .{DiscussMobileMailboxSelectionComponent/discuss}
+                .{Discuss/thread}
+                .{=}
+                    @record
+                    .{DiscussMobileMailboxSelectionComponent:button/mailbox}
+            .{then}
+                active
+                o-isActive
+        [Element/onClick]
+            {if}
+                @ev
+                .{web.MouseEvent/currentTarget}
+                .{web.Element/dataset}
+                .{Dict/hasKey}
+                    mailboxLocalId
+                .{isFalsy}
+            .{then}
+                {break}
+            {Thread/open}
+                {Record/get}
+                    @ev
+                    .{web.MouseEvent/currentTarget}
+                    .{web.Element/dataset}
+                    .{Dict/valueAt}
+                        mailboxLocalId
+        [web.Element/data-mailbox-local-id]
+            @record
+            .{DiscussMobileMailboxSelectionComponent:button/mailbox}
+            .{Record/id}
+        [web.Element/type]
+            button
+        [web.Element/textContent]
+            @record
+            .{DiscussMobileMailboxSelectionComponent:button/mailbox}
+            .{Thread/name}
+        [web.Element/style]
+            [web.scss/flex]
+                1
+                1
+                0
+            [web.scss/padding]
+                {scss/map-get}
+                    {scss/$spacers}
+                    2
+            [web.scss/z-index]
+                1
+            {if}
+                @record
+                .{DiscussMobileMailboxSelectionComponent/discuss}
+                .{Discuss/thread}
+                .{=}
+                    @record
+                    .{DiscussMobileMailboxSelectionComponent:button/mailbox}
+            .{then}
+                [web.scss/z-index]
+                    2
+`;

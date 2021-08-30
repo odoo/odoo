@@ -1,0 +1,12 @@
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+// TODO FIXME o-isOpen on the button should be enough.
+// Style of button when popover is "open" comes from web.Popover, and we can't
+// define a modifier on .o-ComposerViewComponent-button due to not being aware of Popover's
+// state in context of template. https://github.com/odoo/owl/issues/693
+.o_is_open .o-ComposerViewComponent-toolButton {
+    background-color: gray('200');
+}

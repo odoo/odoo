@@ -1,0 +1,71 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            MessageView/onComponentUpdate
+        [Action/params]
+            record
+                [type]
+                    MessageView
+        [Action/behavior]
+            {if}
+                {Record/exists}
+                    @record
+                .{isFalsy}
+            .{then}
+                {break}
+            {if}
+                @record
+                .{MessageView/doHighlight}
+                .{&}
+                    @record
+                    .{MessageView/component}
+            .{then}
+                {web.Element/scrollIntoView}
+                    [0]
+                        @record
+                        .{MessageView/component}
+                        .{MessageViewComponent/root}
+                    [1]
+                        [behavior]
+                            smooth
+                        [block]
+                            center
+                {MessageView/highlight}
+                    @record
+                {Record/update}
+                    [0]
+                        @record
+                    [1]
+                        [MessageView/doHighlight]
+                            {Record/empty}
+            {if}
+                @record
+                .{MessageView/threadView}
+                .{&}
+                    @record
+                    .{MessageView/threadView}
+                    .{ThreadView/lastMessageView}
+                    .{=}
+                        @record
+                .{&}
+                    @record
+                    .{MessageView/component}
+                .{&}
+                    @record
+                    .{MessageView/component}
+                    .{MessageViewComponent/isPartiallyVisible}
+            .{then}
+                {ThreadView/handleVisibleMessage}
+                    [0]
+                        @record
+                        .{MessageView/threadView}
+                    [1]
+                        @record
+                        .{MessageView/message}
+`;

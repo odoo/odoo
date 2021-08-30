@@ -1,0 +1,93 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        Manually updating the volume field as it will not update based on
+        the change of the volume property of the audioElement alone.
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            RtcSession/setVolume
+        [Action/params]
+            volume
+                [type]
+                    Float
+            record
+                [type]
+                    RtcSession
+        [Action/behavior]
+            {Record/update}
+                [0]
+                    @record
+                [1]
+                    @volume
+            {if}
+                @record
+                .{RtcSession/audioElement}
+            .{then}
+                {Record/update}
+                    [0]
+                        @record
+                        .{RtcSession/audioElement}
+                    [1]
+                        [Audio/volume]
+                            @volume
+            {if}
+                @record
+                .{RtcSession/isOwnSession}
+            .{then}
+                {break}
+            {if}
+                @record
+                .{RtcSession/partner}
+                .{&}
+                    @record
+                    .{RtcSession/partner}
+                    .{Partner/volumeSetting}
+            .{then}
+                {Record/update}
+                    [0]
+                        @record
+                        .{RtcSession/partner}
+                        .{Partner/volumeSetting}
+                    [1]
+                        [VolumeSetting/volume]
+                            @volume
+            {if}
+                @record
+                .{RtcSession/guest}
+                .{&}
+                    @record
+                    .{RtcSession/guest}
+                    .{Guest/volumeSetting}
+            .{then}
+                {Record/update}
+                    [0]
+                        @record
+                        .{RtcSession/guest}
+                        .{Guest/volumeSetting}
+                    [1]
+                        [VolumeSetting/volume]
+                            @volume
+            {if}
+                {Env/isCurrentUserGuest}
+            .{then}
+                {break}
+            {UserSetting/saveVolumeSetting}
+                [0]
+                    {Env/userSetting}
+                [1]
+                    [partnerId]
+                        @record
+                        .{RtcSession/partner}
+                        .{Partner/id}
+                    [guestId]
+                        @record
+                        .{RtcSession/guest}
+                        .{Guest/id}
+                    [volume]
+                        @volume
+`;

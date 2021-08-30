@@ -1,0 +1,131 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            out of office message on direct chat with out of office partner
+        [Test/feature]
+            hr_holidays
+        [Test/model]
+            ThreadViewComponent
+        [Test/assertions]
+            2
+        [Test/scenario]
+            {Dev/comment}
+                Returning date of the out of office partner,
+                simulates he'll be back in a month
+            :returningDate
+                {Moment/utc}
+                .{Moment/add}
+                    1
+                    month
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                [0]
+                    [Record/models]
+                        mail.channel
+                    [mail.channel/channel_type]
+                        chat
+                    [mail.channel/id]
+                        20
+                    [mail.channel/members]
+                        [0]
+                            @record
+                            .{Test/data}
+                            .{Data/currentPartnerId}
+                        [1]
+                            11
+                {Dev/comment}
+                    Needed partner & user to allow simulation of message reception
+                [1]
+                    [Record/models]
+                        res.partner
+                    [res.partner/id]
+                        11
+                    [res.partner/name]
+                        Foreigner partner
+                    [res.partner/out_of_office_date_end]
+                        {Moment/format}
+                            [0]
+                                @returningDate
+                            [1]
+                                YYYY-MM-DD
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            :thread
+                @testEnv
+                .{Record/findById}
+                    [Thread/id]
+                        20
+                    [Thread/model]
+                        mail.channel
+            :threadViewer
+                @testEnv
+                .{Record/insert}
+                    [Record/models]
+                        ThreadViewer
+                    [ThreadViewer/hasThreadView]
+                        true
+                    [ThreadViewer/thread]
+                        @thread
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    ThreadViewComponent
+                [ThreadViewComponent/threadView]
+                    @threadViewer
+                    .{ThreadViewer/threadView}
+            {Test/assert}
+                []
+                    @thread
+                    .{Thread/threadViews}
+                    .{Collection/first}
+                    .{ThreadView/threadViewComponents}
+                    .{Collection/first}
+                    .{ThreadViewComponent/outOfOffice}
+                []
+                    should have an out of office alert on thread view
+            :formattedDate
+                @returningDate
+                .{Moment/toDate}
+                .{Date/toLocaleDateString}
+                    [0]
+                        @testEnv
+                        .{Locale/language}
+                        .{String/replace}
+                            [0]
+                                /_/g
+                            [1]
+                                -
+                    [1]
+                        [day]
+                            numeric
+                        [month]
+                            short
+            {Test/assert}
+                []
+                    @thread
+                    .{Thread/threadViews}
+                    .{Collection/first}
+                    .{ThreadView/threadViewComponents}
+                    .{Collection/first}
+                    .{ThreadViewComponent/outOfOffice}
+                    .{web.Element/textContent}
+                    .{String/includes}
+                        @formattedDate
+                []
+                    out of office message should mention the returning date
+`;

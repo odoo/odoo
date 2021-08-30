@@ -1,0 +1,76 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Model
+        [Model/name]
+            ComposerView
+        [Model/fields]
+            _hasMentionRpcInProgress
+            _nextMentionRpcFunction
+            activeSuggestedRecord
+            attachmentList
+            buttonEmojisRef
+            chatter
+            component
+            composer
+            device
+            doFocus
+            emojisPopoverView
+            extraSuggestedRecords
+            fileUploader
+            hasSuggestions
+            hasToScrollToActiveSuggestion
+            isFocused
+            mainSuggestedRecords
+            messageViewInEditing
+            sendButtonText
+            sendShortcuts
+            suggestionDelimiter
+            suggestionDelimiterPosition
+            suggestionModelName
+            suggestionSearchTerm
+            textInputComponent
+            threadView
+        [Model/id]
+            ComposerView/threadView
+            .{|}
+                ComposerView/messageViewInEditing
+            .{|}
+                ComposerView/chatter
+        [Model/onChanges]
+            _onChangeComposer
+            _onChangeDetectSuggestionDelimiterPosition
+            _onChangeUpdateSuggestionList
+        [Model/actions]
+            ComposerView/_executeOrQueueFunction
+            ComposerView/_generateEmojisOnHtml
+            ComposerView/_generateMentionsLinks
+            ComposerView/_getCommandFromText
+            ComposerView/_updateSuggestionList
+            ComposerView/closeSuggestions
+            ComposerView/contains
+            ComposerView/discard
+            ComposerView/handleCurrentPartnerIsTyping
+            ComposerView/insertIntoTextInput
+            ComposerView/insertSuggestion
+            ComposerView/onClickButtonEmojis
+            ComposerView/onClickCancelLink
+            ComposerView/onClickCaptureGlobal
+            ComposerView/onClickEmoji
+            ComposerView/onClickSaveLink
+            ComposerView/onClickStopReplying
+            ComposerView/onKeydownButtonEmojis
+            ComposerView/openFullComposer
+            ComposerView/postMessage
+            ComposerView/setFirstSuggestionActive
+            ComposerView/setLastSuggestionActive
+            ComposerView/setNextSuggestionActive
+            ComposerView/setPreviousSuggestionActive
+            ComposerView/updateMessage
+        [Model/lifecycles]
+            onDelete
+`;

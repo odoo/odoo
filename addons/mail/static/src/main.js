@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { setup } from '@mail/core/model/setup';
+
 import { ChatWindowService } from '@mail/services/chat_window_service/chat_window_service';
 import { DialogService } from '@mail/services/dialog_service/dialog_service';
 import { MessagingService } from '@mail/services/messaging/messaging';
@@ -14,3 +16,5 @@ serviceRegistry.add('messaging', MessagingService);
 serviceRegistry.add('systray_service', SystrayService);
 
 action_registry.add('mail.widgets.discuss', DiscussWidget);
+
+setup();

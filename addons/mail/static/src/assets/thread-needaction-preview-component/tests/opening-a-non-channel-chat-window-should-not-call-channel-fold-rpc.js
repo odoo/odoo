@@ -1,0 +1,167 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            opening a non-channel chat window should not call "channel_fold" RPC
+        [Test/model]
+            ThreadNeedactionPreviewComponent
+        [Test/isTechnical]
+            true
+        [Test/assertions]
+            3
+        [Test/scenario]
+            {Dev/comment}
+                channel_fold should not be called when opening non-channels in chat
+                window, because there is no server sync of fold state for them.
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                []
+                    [Record/models]
+                        mail.message
+                    [mail.message/id]
+                        21
+                    [mail.message/model]
+                        res.partner
+                    [mail.message/needaction]
+                        true
+                    [mail.message/needaction_partner_ids]
+                        @record
+                        .{Test/data}
+                        .{Data/currentPartnerId}
+                    [mail.message/res_id]
+                        11
+                []
+                    [Record/models]
+                        mail.notification
+                    [mail.notification/mail_message_id]
+                        21
+                    [mail.notification/notification_status]
+                        sent
+                    [mail.notification/notification_type]
+                        inbox
+                    [mail.notification/res_partner_id]
+                        @record
+                        .{Test/data}
+                        .{Data/currentPartnerId}
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+                [Server/mockRPC]
+                    {Record/insert}
+                        [Record/models]
+                            Function
+                        [Function/in]
+                            route
+                            args
+                            original
+                        [Function/out]
+                            {if}
+                                @route
+                                .{String/includes}
+                                    channel_fold
+                            .{then}
+                                :message
+                                    should not call channel_fold when opening a non-channel chat window
+                                {Test/step}
+                                    @message
+                                {Console/error}
+                                    @message
+                                {Error/raise}
+                                    @message
+                            @original;
+            @testEnv
+            .{Record/insert}
+                []
+                    [Record/models]
+                        ChatWindowManagerComponent
+                []
+                    [Record/models]
+                        MessagingMenuComponent
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{UI/afterEvent}
+                    [eventName]
+                        o-thread-cache-loaded-messages
+                    [func]
+                        @testEnv
+                        .{UI/click}
+                            @testEnv
+                            .{MessagingMenu/messagingMenuComponents}
+                            .{Collection/first}
+                            .{MessagingMenuComponent/toggler}
+                    [message]
+                        should wait until inbox loaded initial needaction messages
+                    [predicate]
+                        {Record/insert}
+                            [Record/models]
+                                Function
+                            [Function/in]
+                                threadCache
+                            [Function/out]
+                                @threadCache
+                                .{ThreadCache/thread}
+                                .{Thread/model}
+                                .{=}
+                                    mail.box
+                                .{&}
+                                    @threadCache
+                                    .{ThreadCache/thread}
+                                    .{Thread/id}
+                                    .{=}
+                                        inbox
+            {Test/assert}
+                []
+                    @testEnv
+                    .{MessagingMenu/messagingMenuComponents}
+                    .{Collection/first}
+                    .{MessagingMenuComponent/notificationList}
+                    .{NotificationListComponent/threadNeedactionPreview}
+                    .{Collection/length}
+                    .{=}
+                        1
+                []
+                    should have a preview initially
+            {Test/assert}
+                []
+                    @testEnv
+                    .{ChatWindowManager/chatWindows}
+                    .{Collection/length}
+                    .{=}
+                        0
+                []
+                    should have no chat window initially
+
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{UI/click}
+                    @testEnv
+                    .{MessagingMenu/messagingMenuComponents}
+                    .{Collection/first}
+                    .{MessagingMenuComponent/notificationList}
+                    .{NotificationListComponent/threadNeedactionPreview}
+                    .{Collection/first}
+            {Test/assert}
+                []
+                    @testEnv
+                    .{ChatWindowManager/chatWindows}
+                    .{Collection/length}
+                    .{=}
+                        1
+                []
+                    should have opened the chat window on clicking on the preview
+`;

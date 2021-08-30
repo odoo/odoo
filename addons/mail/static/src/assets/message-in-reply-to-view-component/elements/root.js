@@ -1,0 +1,68 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Element
+        [Element/name]
+            root
+        [Element/model]
+            MessageInReplyToViewComponent
+        [web.Element/tag]
+            small
+        [web.Element/class]
+            text-small
+            pt-1
+            pr-2
+            position-relative
+        [web.Element/style]
+            [web.scss/display]
+                block
+            [web.scss/overflow]
+                hidden
+            [web.scss/white-space]
+                nowrap
+            [web.scss/text-overflow]
+                ellipsis
+            [web.scss/padding-left]
+                {scss/$o-mail-message-sidebar-width}
+            {web.scss/selector}
+                [0]
+                    &::before
+                [1]
+                    {web.scss/include}
+                        {web.scss/o-position-absolute}
+                            [$left]
+                                {scss/$o-mail-message-sidebar-width}
+                                .{/}
+                                    2
+                            [$bottom]
+                                0
+                    [web.scss/content]
+                        {String/empty}
+                    [web.scss/display]
+                        inline-block
+                    [web.scss/border-left]
+                        {scss/$border-width}
+                        solid
+                        currentColor
+                    [web.scss/border-top]
+                        {scss/$border-width}
+                        solid
+                        currentColor
+                    [web.scss/border-radius]
+                        {scss/$o-mail-rounded-rectangle-border-radius-sm}
+                        0
+                        0
+                        0
+                    [web.scss/height]
+                        .75em
+                    [web.scss/width]
+                        2em
+                    [web.scss/margin-bottom]
+                        .25em
+                    [web.scss/opacity]
+                        .5
+`;

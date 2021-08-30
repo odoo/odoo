@@ -1,0 +1,68 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Element
+        [Element/name]
+            tab
+        [Element/model]
+            MobileMessagingNavbarComponent:tab
+        [web.Element/class]
+            {if}
+                @record
+                .{MobileMessagingNavbarComponent/mobileMessagingNavbarView}
+                .{MobileMessagingNavbarView/activeTabId}
+                .{=}
+                    @record
+                    .{MobileMessagingNavbarComponent:tab/tab}
+                    .{Tab/id}
+            .{then}
+                o-isActive
+        [Element/onClick]
+            {MobileMessagingNavbarView/onClick}
+                [0]
+                    @record
+                    .{MobileMessagingNavbarComponent/mobileMessagingNavbarView}
+                [1]
+                    @record
+                    .{MobileMessagingNavbarComponent:tab/tab}
+                    .{Tab/id}
+        [web.Element/data-tab-id]
+            @record
+            .{MobileMessagingNavbarComponent:tab/tab}
+            .{Tab/id}
+        [web.Element/style]
+            [web.scss/display]
+                flex
+            [web.scss/flex-flow]
+                column
+            [web.scss/align-items]
+                center
+            [web.scss/flex]
+                1
+                1
+                0
+            [web.scss/padding]
+                {scss/map-get}
+                    {scss/$spacers}
+                    2
+            [web.scss/box-shadow]
+                1px
+                0
+                0
+                {scss/gray}
+                    400
+            {if}
+                @record
+                .{MobileMessagingNavbarComponent/activeTabId}
+                .{=}
+                    @record
+                    .{MobileMessagingNavbarComponent:tab/tab}
+                    .{Tab/id}
+            .{then}
+                [web.scss/color]
+                    {scss/$o-brand-primary}
+`;

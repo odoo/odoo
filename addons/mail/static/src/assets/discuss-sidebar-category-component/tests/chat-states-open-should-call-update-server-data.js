@@ -1,0 +1,115 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            chat - states: open should call update server data
+        [Test/model]
+            DiscussSidebarCategoryComponent
+        [Test/assertions]
+            2
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                [0]
+                    [Record/models]
+                        mail.channel
+                    [mail.channel/id]
+                        20
+                [1]
+                    [Record/models]
+                        res.users.settings
+                    [res.users.settings/user_id]
+                        @record
+                        .{Test/data}
+                        .{Data/currentUserId}
+                    [res.users.settings/is_discuss_sidebar_category_chat_open]
+                        false
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            :initalSettings
+                @testEnv
+                .{Env/owlEnv}
+                .{Dict/get}
+                    services
+                .{Dict/get}
+                    rpc
+                .{Function/call}
+                    [model]
+                        res.users.settings
+                    [method]
+                        _find_or_create_for_user
+                    [args]
+                        {Record/insert}
+                            [Record/models]
+                                Collection
+                            {Record/insert}
+                                [Record/models]
+                                    Collection
+                                @record
+                                .{Test/data}
+                                .{Data/currentUserId}
+            {Test/assert}
+                []
+                    @initalSettings
+                    .{Dict/get}
+                        is_discuss_sidebar_category_chat_open
+                    .{=}
+                        false
+                []
+                    the value in server side should be false
+        
+            @testEnv
+            .{UI/afterNextRender}
+                @testEnv
+                .{UI/click}
+                    @testEnv
+                    .{Discuss/categoryChat}
+                    .{DiscussSidebarCategory/discussSidebarCategoryComponents}
+                    .{Collection/first}
+                    .{DiscussSidebarCategoryComponent/title}
+            :newSettings
+                @testEnv
+                .{Env/owlEnv}
+                .{Dict/get}
+                    services
+                .{Dict/get}
+                    rpc
+                .{Function/call}
+                    [model]
+                        res.users.settings
+                    [method]
+                        _find_or_create_for_user
+                    [args]
+                        {Record/insert}
+                            [Record/models]
+                                Collection
+                            {Record/insert}
+                                [Record/models]
+                                    Collection
+                                @record
+                                .{Test/data}
+                                .{Data/currentUserId}
+            {Test/assert}
+                []
+                    @newSettings
+                    .{Dict/get}
+                        is_discuss_sidebar_category_chat_open
+                    .{=}
+                        true
+                []
+                    the value in server side should be true
+`;

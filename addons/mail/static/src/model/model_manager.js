@@ -146,6 +146,11 @@ export class ModelManager {
         const messaging = this.models['Messaging'].insert(values);
         Object.assign(odoo.__DEBUG__, { messaging });
         this.messagingCreatedPromise.resolve();
+        if (!window.$$ready) {
+            window.$$ready = $.Deferred();
+        }
+        window.$$ready.resolve();
+        window.$$messaging = messaging;
         await this.messaging.start();
         this.messagingInitializedPromise.resolve();
     }

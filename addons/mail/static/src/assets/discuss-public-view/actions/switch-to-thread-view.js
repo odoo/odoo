@@ -1,0 +1,82 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        Creates and displays the thread view and clears the welcome view.
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            DiscussPublicView/switchToThreadView
+        [Action/params]
+            record
+                [type]
+                    DiscussPublicView
+        [Action/behavior]
+            {Record/update}
+                [0]
+                    @record
+                [1]
+                    [DiscussPublicView/threadViewer]
+                        {Record/insert}
+                            [Record/models]
+                                ThreadViewer
+                            [ThreadViewer/extraClass]
+                                flex-grow-1
+                            [ThreadViewer/hasMemberList]
+                                true
+                            [ThreadViewer/hasThreadView]
+                                true
+                            [ThreadViewer/hasTopbar]
+                                true
+                            [ThreadViewer/thread]
+                                @record
+                                .{DiscussPublicView/channel}
+                    [DiscussPublicView/welcomeView]
+                        {Record/empty}
+            {if}
+                @record
+                .{DiscussPublicView/isChannelTokenSecret}
+            .{then}
+                {Dev/comment}
+                    Change the URL to avoid leaking the invitation link.
+                {web.Browser/history}
+                .{Dict/get}
+                    replaceState
+                .{Function/call}
+                    [0]
+                        {web.Browser/history}
+                        .{Dict/get}
+                            state
+                    [1]
+                        null
+                    [2]
+                        /discuss/channel/
+                        .{+}
+                            @record
+                            .{DiscussPublicView/channel}
+                            .{Thread/id}
+                        .{+}
+                            {web.Browser/location}
+                            .{web.Location/search}
+            {if}
+                @record
+                .{DiscussPublicView/channel}
+                .{Thread/defaultDisplayMode}
+                .{=}
+                    video_full_screen
+            .{then}
+                {Thread/toggleCall}
+                    [0]
+                        @record
+                        .{DiscussPublicView/channel}
+                    [1]
+                        [startWithVideo]
+                            true
+                {RtcCallViewer/activateFullScreen}
+                    @record
+                    .{DiscussPublicView/threadView}
+                    .{ThreadView/rtcCallViewer}
+`;

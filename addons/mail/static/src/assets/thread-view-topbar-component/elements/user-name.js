@@ -1,0 +1,71 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Element
+        [Element/name]
+            userName
+        [Element/model]
+            ThreadViewTopbarComponent
+        [Record/models]
+            ThreadViewTopbarComponent/editableItem
+        [Element/isPresent]
+            @record
+            .{ThreadViewTopbarComponent/threadViewTopbar}
+            .{ThreadViewTopbar/isEditingGuestName}
+            .{isFalsy}
+        [web.Element/tag]
+            span
+        [web.Element/class]
+            px-1
+            font-weight-bold
+            text-truncate
+        [Element/onClick]
+            {ThreadViewTopbar/onClickUserName}
+                [0]
+                    @record
+                    .{ThreadViewTopbarComponent/threadViewTopbar}
+                [1]
+                    @ev
+        [Element/onMouseenter]
+            {ThreadViewTopbar/onMouseenterUserName}
+                [0]
+                    @record
+                    .{ThreadViewTopbarComponent/threadViewTopbar}
+                [1]
+                    @ev
+        [Element/onMouseleave]
+            {ThreadViewTopbar/onMouseleaveUserName}
+                [0]
+                    @record
+                    .{ThreadViewTopbarComponent/threadViewTopbar}
+                [1]
+                    @ev
+        [web.Element/textContext]
+            {if}
+                {Env/isCurrentUserGuest}
+            .{then}
+                {Env/currentGuest}
+                .{Guest/name}
+            .{else}
+                {Env/currentUser}
+                .{User/nameOrDisplayName}
+        [web.Element/style]
+            {if}
+                @record
+                .{ThreadViewTopbarComponent/threadViewTopbar}
+                .{ThreadViewTopbar/isMouseOverUserInfo}
+                .{&}
+                    {Env/isCurrentUserGuest}
+            .{then}
+                [web.scss/background-color]
+                    {scss/$white}
+                [web.scss/border-color]
+                    {scss/$border-color}
+            .{else}
+                [web.scss/border-color]
+                    transparent
+`;

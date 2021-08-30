@@ -1,0 +1,190 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            mail template: preview mail
+        [Test/model]
+            ActivityComponent
+        [Test/assertions]
+            10
+        [Test/scenario]
+            :bus
+                {Record/insert}
+                    [Record/models]
+                        Bus
+            {Bus/on}
+                [0]
+                    @bus
+                [1]
+                    do-action
+                [2]
+                    null
+                [3]
+                    {Record/insert}
+                        [Record/models]
+                            Function
+                        [Function/in]
+                            payload
+                        [Function/out]
+                            {Test/step}
+                                do_action
+                            {Test/assert}
+                                []
+                                    @payload
+                                    .{Dict/get}
+                                        action
+                                    .{Dict/get}
+                                        context
+                                    .{Dict/get}
+                                        default_res_id
+                                    .{=}
+                                        42
+                                []
+                                    Action should have the activity res id as default res id in context
+                            {Test/assert}
+                                []
+                                    @payload
+                                    .{Dict/get}
+                                        action
+                                    .{Dict/get}
+                                        context
+                                    .{Dict/get}
+                                        default_model
+                                    .{=}
+                                        res.partner
+                                []
+                                    Action should have the activity res model as default model in context
+                            {Test/assert}
+                                []
+                                    @payload
+                                    .{Dict/get}
+                                        action
+                                    .{Dict/get}
+                                        context
+                                    .{Dict/get}
+                                        default_use_template
+                                []
+                                    Action should have true as default use_template in context
+                            {Test/assert}
+                                []
+                                    @payload
+                                    .{Dict/get}
+                                        action
+                                    .{Dict/get}
+                                        context
+                                    .{Dict/get}
+                                        default_template_id
+                                    .{=}
+                                        1
+                                []
+                                    Action should have the selected mail template id as default template id in context
+                            {Test/assert}
+                                []
+                                    @payload
+                                    .{Dict/get}
+                                        action
+                                    .{Dict/get}
+                                        type
+                                    .{=}
+                                        ir.actions.act_window
+                                []
+                                    Action should be of type "ir.actions.act_window"
+                            {Test/assert}
+                                []
+                                    @payload
+                                    .{Dict/get}
+                                        action
+                                    .{Dict/get}
+                                        res_model
+                                    .{=}
+                                        mail.compose.message
+                                []
+                                    Action should have "mail.compose.message" as res_model
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+                    [Env/owlEnv]
+                        [bus]
+                            @bus
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            @testEnv
+            .{Record/insert}
+                []
+                    [Record/models]
+                        res.partner
+                    [res.partner/activity_ids]
+                        12
+                    [res.partner/id]
+                        42
+                []
+                    [Record/models]
+                        mail.template
+                    [mail.template/id]
+                        1
+                    [mail.template/name]
+                        Dummy mail template
+                []
+                    [Record/models]
+                        mail.activity
+                    [mail.activity/activity_type_id]
+                        1
+                    [mail.activity/id]
+                        12
+                    [mail.activity/mail_template_ids]
+                        1
+                    [mail.activity/res_id]
+                        42
+                    [mail.activity/res_model]
+                        res.partner
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    ChatterContainerComponent
+                [ChatterContainerComponent/threadId]
+                    42
+                [ChatterContainerComponent/threadModel]
+                    res.partner
+            {Test/assert}
+                []
+                    @activity
+                    .{Activity/activityComponents}
+                    .{Collection/length}
+                    .{=}
+                        1
+                []
+                    should have activity component
+            {Test/assert}
+                []
+                    @activity
+                    .{Activity/activityComponents}
+                    .{Collection/first}
+                    .{ActivityComponent/preview}
+                []
+                    should have activity mail template name preview button
+
+            @testEnv
+            .{UI/click}
+                @activity
+                .{Activity/mailTemplates}
+                .{Collection/first}
+                .{MailTemplate/mailTemplateComponents}
+                .{Collection/first}
+                .{MailTemplateComponent/preview}
+            {Test/verifySteps}
+                []
+                    do_action
+                []
+                    should have called 'compose email' action correctly
+`;

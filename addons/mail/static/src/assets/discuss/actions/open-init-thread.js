@@ -1,0 +1,69 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        Opens thread from init active id if the thread exists.
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            Discuss/openInitThread
+        [Action/params]
+            discuss
+        [Action/behavior]
+            :model
+                {if}
+                    @discuss
+                    .{Discuss/initActiveId}
+                    .{Value/isNumber}
+                .{then}
+                    mail.channel
+                .{else}
+                    @discuss
+                    .{Discuss/initActiveId}
+                    .{String/split}
+                        _
+                    .{Collection/first}
+            :id
+                {if}
+                    @discuss
+                    .{Discuss/initActiveId}
+                    .{Value/isNumber}
+                .{then}
+                    @discuss
+                    .{Discuss/initActiveId}
+                .{else}
+                    @discuss
+                    .{Discuss/initActiveId}
+                    .{String/split}
+                        _
+                    .{Collection/second}
+            :thread
+                {Record/findById}
+                    [Thread/id]
+                        @id
+                    [Thread/model]
+                        @model
+            {if}
+                @thread
+                .{isFalsy}
+            .{then}
+                {break}
+            {Thread/open}
+                @thread
+            {if}
+                {Device/isMobile}
+                .{&}
+                    @thread
+                    .{Thread/channelType}
+            .{then}
+                {Record/update}
+                    [0]
+                        @discuss
+                    [1]
+                        [Discuss/activeMobileNavbarTabId]
+                            @thread
+                            .{Thread/channelType}
+`;

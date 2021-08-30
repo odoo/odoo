@@ -1,0 +1,73 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Element
+        [Element/name]
+            button
+        [Element/model]
+            ChatterTopbarComponent
+        [Record/models]
+            Focusable
+            Hoverable
+        [web.Element/style]
+            [web.scss/margin-bottom]
+                {-}
+                    {scss/$border-width}
+                {Dev/comment}
+                    Needed to allow "overriding" of the bottom border
+            [web.scss/border-radius]
+                0
+            {if}
+                @field
+                .{web.Element/isHover}
+                .{|}
+                    @field
+                    .{web.Element/isFocused}
+            .{then}
+                [web.scss/background-color]
+                    {scss/gray}
+                        200
+            {if}
+                @field
+                .{web.Element/isActive}
+            .{then}
+                {web.scss/include}
+                    {scss/o-hover-text-color}
+                        {scss/$o-brand-odoo}
+                        {scss/$link-hover-color}
+                [web.scss/background-color]
+                    {scss/gray}
+                        100
+                [web.scss/border-right-color]
+                    {scss/$border-color}
+                {scss/selector}
+                    [0]
+                        &:not(:first-of-type)
+                    [1]
+                        [web.scss/border-left-color]
+                            {scss/$border-color}
+            {if}
+                @record
+                .{ChatterTopbarComponent/chatter}
+                .{Chatter/hasExternalBorder}
+            .{then}
+                {web.scss/selector}
+                    [0]
+                        &:first-of-type
+                    [1]
+                        [web.scss/border-left-color]
+                            {scss/$border-color}
+                [web.scss/border-top-color]
+                    {scss/$border-color}
+            {if}
+                @field
+                .{web.Element/isFocused}
+            .{then}
+                [web.scss/background-color]
+                    {scss/gray}
+                        200
+`;

@@ -1,0 +1,127 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            display partner mention suggestions on typing "@"
+        [Test/model]
+            ComposerViewComponent
+        [Test/assertions]
+            3
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                [0]
+                    [Record/models]
+                        mail.channel
+                    [mail.channel/id]
+                        20
+                [1]
+                    [Record/models]
+                        res.partner
+                    [res.partner/email]
+                        testpartner@odoo.com
+                    [res.partner/id]
+                        11
+                    [res.partner/name]
+                        TestPartner
+                [2]
+                    [Record/models]
+                        res.partner
+                    [res.partner/email]
+                        testpartner2@odoo.com
+                    [res.partner/id]
+                        12
+                    [res.partner/name]
+                        TestPartner2
+                [3]
+                    [Record/models]
+                        res.users
+                    [res.users/partner_id]
+                        11
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            :thread
+                @testEnv
+                .{Record/findById}
+                    [Thread/id]
+                        20
+                    [Thread/model]
+                        mail.channel
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    ComposerViewComponent
+                [ComposerViewComponent/composer]
+                    @thread
+                    .{Thread/composer}
+            {Test/assert}
+                []
+                    @thread
+                    .{Thread/composer}
+                    .{Composer/composerSuggestionListComponents}
+                    .{Collection/length}
+                    .{=}
+                        0
+                []
+                    mention suggestions list should not be present
+
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{UI/focus}
+                    @thread
+                    .{Thread/composer}
+                    .{Composer/composerTextInputComponents}
+                    .{Collection/first}
+                    .{ComposerTextInputComponent/textarea}
+                @testEnv
+                .{UI/insertText}
+                    @
+                @testEnv
+                .{UI/keydown}
+                    @thread
+                    .{Thread/composer}
+                    .{Composer/composerTextInputComponents}
+                    .{Collection/first}
+                    .{ComposerTextInputComponent/textarea}
+                @testEnv
+                .{UI/keyup}
+                    @thread
+                    .{Thread/composer}
+                    .{Composer/composerTextInputComponents}
+                    .{Collection/first}
+                    .{ComposerTextInputComponent/textarea}
+            {Test/assert}
+                []
+                    @thread
+                    .{Thread/composer}
+                    .{Composer/composerSuggestionListComponents}
+                    .{Collection/length}
+                    .{=}
+                        1
+                []
+                    should display mention suggestions on typing '@'
+            {Test/assert}
+                []
+                    @thread
+                    .{Thread/composer}
+                    .{Composer/composerSuggestionListComponents}
+                    .{Collection/first}
+                    .{ComposerSuggestionListComponent/separator}
+                []
+                    should have a separator
+`;

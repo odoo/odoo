@@ -1,0 +1,70 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Element
+        [Element/name]
+            button
+        [Element/model]
+            RtcControllerComponent
+        [web.Element/tag]
+            button
+        [Model/fields]
+            isActive
+        [web.Element/style]
+            [web.scss/margin]
+                {scss/map-get}
+                    {scss/$spacers}
+                    1
+            [web.scss/padding]
+                {scss/map-get}
+                    {scss/$spacers}
+                    4
+            [web.scss/display]
+                flex
+            {if}
+                @record
+                .{RtcControllerComponent/rtcController}
+                .{&}
+                    @record
+                    .{RtcControllerComponent/rtcController}
+                    .{RtcController/isSmall}
+            .{then}
+                [web.scss/padding]
+                    {scss/map-get}
+                        {scss/$spacers}
+                        3
+            [web.scss/color]
+                white
+            [web.scss/background]
+                none
+            [web.scss/border]
+                none
+            [web.scss/outline]
+                none
+            [web.scss/border-radius]
+                50%
+            [web.scss/background-color]
+                {scss/gray}
+                    800
+            {if}
+                @field
+                .{web.Element/isHover}
+            .{then}
+                [web.scss/background-color]
+                    {scss/gray}
+                        700
+            {if}
+                @field
+                .{RtcControllerComponent/button/isActive}
+            .{then}
+                [web.scss/opacity]
+                    1
+            {web.scss/include}
+                {scss/hover-focus}
+                    [web.scss/outline]
+                        none
+`;

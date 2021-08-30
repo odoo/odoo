@@ -1,0 +1,94 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        Cleans up a peer by closing all its associated content and the connection.
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            Rtc/_removePeer
+        [Action/params]
+            token
+                [type]
+                    String
+            record
+                [type]
+                    Rtc
+        [Action/behavior]
+            :rtcSession
+                {Record/findById}
+                    [RtcSession/id]
+                        @token
+            {if}
+                @rtcSession
+            .{then}
+                {RtcSession/reset}
+                    @rtcSession
+            :dataChannel
+                @record
+                .{Rtc/_dataChannels}
+                .{Collection/at}
+                    @token
+            {if}
+                @dataChannel
+            .{then}
+                {DataChannel/close}
+                    @dataChannel
+            {Dict/deleteAt}
+                [0]
+                    @record
+                    .{Rtc/_dataChannels}
+                [1]
+                    @token
+            :peerConnection
+                @record
+                .{Rtc/_peerConnections}
+                .{Collection/at}
+                    @token
+            {if}
+                @peerConnection
+            .{then}
+                {Rtc/_removeRemoteTracks}
+                    [0]
+                        @record
+                    [1]
+                        @peerConnection
+                {RTCPeerConnection/close}
+                    @peerConnection
+            {Collection/removeAt}
+                [0]
+                    @record
+                    .{Rtc/_peerConnections}
+                [1]
+                    @token
+            {Browser/clearTimeout}
+                @record
+                .{Rtc/_fallBackTimeouts}
+                .{Collection/at}
+                    @token
+            {Collection/removeAt}
+                [0]
+                    @record
+                    .{Rtc/_fallBackTimeouts}
+                [1]
+                    @token
+            {Set/delete}
+                [0]
+                    @record
+                    .{Rtc/_outGoingCallTokens}
+                [1]
+                    @token
+            {Rtc/_addLogEntry}
+                [0]
+                    @record
+                [1]
+                    @token
+                [2]
+                    peer removed
+                [3]
+                    [step]
+                        peer removed
+`;

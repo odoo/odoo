@@ -1,0 +1,110 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            Mobile: opening a chat window should not update channel state on the server
+        [Test/model]
+            ChatWindowManagerComponent
+        [Test/assertions]
+            2
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+                    [Env/owlEnv]
+                        [device]
+                            [isMobile]
+                                true
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    mail.channel
+                [mail.channel/id]
+                    20
+                [mail.channel/state]
+                    closed
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            @testEnv
+            .{Record/insert}
+                []
+                    [Record/models]
+                        ChatWindowManagerComponent
+                []
+                    [Record/models]
+                        MessagingMenuComponent
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{UI/click}
+                    @testEnv
+                    .{MessagingMenu/messagingMenuComponents}
+                    .{Collection/first}
+                    .{MessagingMenuComponent/toggler}
+            @testEnv
+            .{Component/afterNextRender}
+                @testEnv
+                .{UI/click}
+                    @testEnv
+                    .{Record/findById}
+                        [Thread/id]
+                            20
+                        [Thread/model]
+                            mail.channel
+                    .{Thread/threadPreviewComponents}
+                    .{Collection/first}
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Record/findById}
+                        [Thread/id]
+                            20
+                        [Thread/model]
+                            mail.channel
+                    .{Thread/chatWindows}
+                    .{Collection/length}
+                    .{=}
+                        1
+                []
+                    should have a chat window after clicking on thread preview
+
+            :channels
+                @testEnv
+                .{Env/owlEnv}
+                .{Dict/get}
+                    services
+                .{Dict/get}
+                    rpc
+                .{Function/call}
+                    [0]
+                        [model]
+                            mail.channel
+                        [method]
+                            read
+                        [args]
+                            20
+                    [1]
+                        [shadow]
+                            true
+            {Test/assert}
+                []
+                    @channels
+                    .{Collection/first}
+                    .{Dict/get}
+                        state
+                    .{=}
+                        closed
+                []
+                    opening a chat window in mobile should not update channel state on the server
+`;

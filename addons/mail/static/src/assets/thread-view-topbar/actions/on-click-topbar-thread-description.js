@@ -1,0 +1,89 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Dev/comment}
+        Handles click on the "thread description" of this top bar.
+    {Record/insert}
+        [Record/models]
+            Action
+        [Action/name]
+            ThreadViewTopbar/onClickTopbarThreadDescription
+        [Action/params]
+            ev
+                [type]
+                    MouseEvent
+            record
+                [type]
+                    ThreadViewTopbar
+        [Action/behavior]
+            {if}
+                @record
+                .{ThreadViewTopbar/thread}
+                .{isFalsy}
+                .{|}
+                    @record
+                    .{ThreadViewTopbar/thread}
+                    .{Thread/isChannelDescriptionChangeable}
+                    .{isFalsy}
+            .{then}
+                {Dev/comment}
+                    Guests cannot edit description
+                {break}
+            {if}
+                {Env/isCurrentUserGuest}
+            .{then}
+                {break}
+            :selection
+                {web.Browser/getSelection}
+            {Record/update}
+                [0]
+                    @record
+                [1]
+                    [ThreadViewTopbar/doFocusOnThreadDescriptionInput]
+                        true
+                    [ThreadViewTopbar/doSetSelectionDirectionOnThreadDescriptionInput]
+                        {if}
+                            @selection
+                            .{Dict/get}
+                                anchorOffset
+                            .{<}
+                                @selection
+                                .{Dict/get}
+                                    focusOffset
+                        .{then}
+                            forward
+                        .{else}
+                            backward
+                    [ThreadViewTopbar/doSetSelectionEndOnThreadDescriptionInput]
+                        {Math.max}
+                            [0]
+                                @selection
+                                .{Dict/get}
+                                    focusOffset
+                            [1]
+                                @selection
+                                .{Dict/get}
+                                    anchorOffset
+                    [ThreadViewTopbar/doSetSelectionStartOnThreadDescriptionInput]
+                        {Math/min}
+                            [0]
+                                @selection
+                                .{Dict/get}
+                                    focusOffset
+                            [1]
+                                @selection
+                                .{Dict/get}
+                                    anchorOffset
+                    [ThreadViewTopbar/isEditingThreadDescription]
+                        true
+                    [ThreadViewTopbar/isMouseOverThreadDescription]
+                        false
+                    [ThreadViewTopbar/pendingThreadDescription]
+                        @record
+                        .{ThreadViewTopbar/thread}
+                        .{Thread/description}
+                        .{|}
+                            {Record/empty}
+`;

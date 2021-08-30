@@ -1,0 +1,124 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            do not add livechat in the sidebar on visitor typing
+        [Test/feature]
+            im_livechat
+        [Test/model]
+            DiscussComponent
+        [Test/assertions]
+            2
+        [Test/scenario]
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+            @testEnv
+            .{Record/insert}
+                [0]
+                    [Record/models]
+                        res.users
+                    [res.users/id]
+                        @record
+                        .{Test/data}
+                        .{Data/currentUserId}
+                    [res.users/im_status]
+                        online
+                [1]
+                    [Record/models]
+                        im_livechat.channel
+                    [im_livechat.channel/id]
+                        10
+                    [im_livechat.channel/user_ids]
+                        @record
+                        .{Test/data}
+                        .{Data/currentUserId}
+                [2]
+                    [Record/models]
+                        mail.channel
+                    [mail.channel/channel_type]
+                        livechat
+                    [mail.channel/id]
+                        10
+                    [mail.channel/is_pinned]
+                        false
+                    [mail.channel/livechat_channel_id]
+                        10
+                    [mail.channel/livechat_operator_id]
+                        @record
+                        .{Test/data}
+                        .{Data/currentPartnerId}
+                    [mail.channel/members]
+                        [0]
+                            @record
+                            .{Test/data}
+                            .{Data/publicPartnerId}
+                        [1]
+                            @record
+                            .{Test/data}
+                            .{Data/currentPartnerId}
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    DiscussComponent
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/discussSidebarComponents}
+                    .{Collection/first}
+                    .{DiscussSidebarComponent/categoryLivechat}
+                    .{isFalsy}
+                []
+                    should not have any livechat in the sidebar initially
+
+            {Dev/comment}
+                simulate livechat visitor typing
+            :channel
+                @testEnv
+                .{Record/findById}
+                    [mail.channel/id]
+                        10
+            @testEnv
+            .{Env/owlEnv}
+            .{Dict/get}
+                services
+            .{Dict/get}
+                rpc
+            .{Function/call}
+                [route]
+                    /im_livechat/notify_typing
+                [params]
+                    [context]
+                        [mockedPartnerId]
+                            @record
+                            .{Test/data}
+                            .{Data/publicPartnerId}
+                    [is_typing]
+                        true
+                    [uuid]
+                        @channel
+                        .{mail.channel/uuid}
+            {Utils/nextAnimationFrame}
+            {Test/assert}
+                []
+                    @testEnv
+                    .{Discuss/discussSidebarComponents}
+                    .{Collection/first}
+                    .{DiscussSidebarComponent/categoryLivechatLivechat}
+                    .{isFalsy}
+                []
+                    should still not have any livechat in the sidebar after visitor started typing
+`;

@@ -1,0 +1,151 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Test
+        [Test/name]
+            data-oe-id & data-oe-model link redirection on click
+        [Test/model]
+            ActivityComponent
+        [Test/assertions]
+            7
+        [Test/scenario]
+            :bus
+                {Record/insert}
+                    [Record/models]
+                        Bus
+            {Bus/on}
+                [0]
+                    @bus
+                [1]
+                    do-action
+                [2]
+                    null
+                [3]
+                    {Record/insert}
+                        [Record/models]
+                            Function
+                        [Function/in]
+                            payload
+                        [Function/out]
+                            {Test/assert}
+                                []
+                                    @payload
+                                    .{Dict/get}
+                                        action
+                                    .{Dict/get}
+                                        type
+                                    .{=}
+                                        ir.actions.act_window
+                                []
+                                    action should open view
+                            {Test/assert}
+                                []
+                                    @payload
+                                    .{Dict/get}
+                                        action
+                                    .{Dict/get}
+                                        res_model
+                                    .{=}
+                                        some.model
+                                []
+                                    action should open view on 'some.model' model
+                            {Test/assert}
+                                []
+                                    @payload
+                                    .{Dict/get}
+                                        action
+                                    .{Dict/get}
+                                        res_id
+                                    .{=}
+                                        250
+                                []
+                                    action should open view on 250
+                            {Test/step}
+                                do-action:openFormView_some.model_250
+            :testEnv
+                {Record/insert}
+                    [Record/models]
+                        Env
+                    [Env/owlEnv]
+                        [bus]
+                            @bus
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    Server
+                [Server/data]
+                    @record
+                    .{Test/data}
+            @testEnv
+            .{Record/insert}
+                []
+                    [Record/models]
+                        res.partner
+                    [res.partner/activity_ids]
+                        12
+                    [res.partner/id]
+                        100
+                []
+                    [Record/models]
+                        mail.activity
+                    [mail.activity/activity_category]
+                        default
+                    [mail.activity/activity_type_id]
+                        1
+                    [mail.activity/can_write]
+                        true
+                    [mail.activity/id]
+                        12
+                    [mail.activity/note]
+                        <p><a href="#" data-oe-id="250" data-oe-model="some.model">some.model_250</a></p>
+                    [mail.activity/res_id]
+                        100
+                    [mail.activity/res_model]
+                        res.partner
+            @testEnv
+            .{Record/insert}
+                [Record/models]
+                    ChatterContainerComponent
+                [ChatterContainerComponent/threadId]
+                    100
+                [ChatterContainerComponent/threadModel]
+                    res.partner
+            {Test/assert}
+                []
+                    @activity
+                    .{Activity/activityComponents}
+                    .{Collection/first}
+                    .{Activity/note}
+                []
+                    activity should have a note
+            {Test/assert}
+                []
+                    @activity
+                    .{Activity/activityComponents}
+                    .{Collection/first}
+                    .{Activity/note}
+                    .{web.Element/htmlContent}
+                    .{String/includes}
+                        <a
+                []
+                    activity note should have a link
+
+            @testEnv
+            .{UI/click}
+                @activity
+                .{Activity/activityComponents}
+                .{Collection/first}
+                .{Activity/note}
+                .{web.Element/htmlContent}
+                .{web.Document/querySelector}
+                    a
+            {Test/verifySteps}
+                []
+                    do-action:openFormView_some.model_250
+                []
+                    should have open form view on related record after click on link
+`;

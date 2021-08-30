@@ -1,0 +1,62 @@
+/** @odoo-module **/
+
+import { Define } from '@mail/define';
+
+export default Define`
+    {Record/insert}
+        [Record/models]
+            Model
+        [Model/name]
+            Env
+        [Model/fields]
+            allRecords
+            autofetchPartnerImStatus
+            cannedResponses
+            chatWindowManager
+            commands
+            companyName
+            currentGuest
+            currentPartner
+            currentUser
+            device
+            dialogManager
+            disableAnimation
+            discuss
+            focusedRtcSession
+            history
+            inbox
+            initializedPromise
+            initializer
+            isCurrentUserGuest
+            isInitialized
+            isNotificationPermissionDefault
+            isQunitTest
+            loadingBaseDelayDuration
+            locale
+            messagingBus
+            messagingMenu
+            nextGuestNameInputId
+            notificationHandler
+            outOfFocusUnreadMessageCounter
+            partnerRoot
+            publicPartners
+            ringingThreads
+            rtc
+            soundEffects
+            starred
+            time
+            userSetting
+        [Model/actions]
+            Env/_handleGlobalWindowFocus
+            Env/getChat
+            Env/openChat
+            Env/openDocument
+            Env/openProfile
+            Env/refreshIsNotificationPermissionDefault
+            Env/start
+            Env/stop
+            Env/toggleFocusedRtcSession
+        [Model/onChanges]
+            Env/_onChangeFocusedRtcSession
+            Env/_onChangeRingingThreads
+`;
