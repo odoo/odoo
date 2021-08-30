@@ -558,6 +558,14 @@ class Project(models.Model):
             return self.env.ref('project.mt_project_stage_change')
         return super()._track_subtype(init_values)
 
+    def _mail_get_message_subtypes(self):
+        res = super()._mail_get_message_subtypes()
+        if len(self) == 1:
+            dependency_subtype = self.env.ref('project.mt_project_task_dependency_change')
+            if not self.allow_task_dependencies and dependency_subtype in res:
+                res -= dependency_subtype
+        return res
+
     # ---------------------------------------------------
     #  Actions
     # ---------------------------------------------------
@@ -1643,6 +1651,16 @@ class Task(models.Model):
         elif 'stage_id' in init_values:
             return self.env.ref('project.mt_task_stage')
         return super(Task, self)._track_subtype(init_values)
+
+    def _mail_get_message_subtypes(self):
+        res = super()._mail_get_message_subtypes()
+        if len(self) == 1:
+            dependency_subtype = self.env.ref('project.mt_task_dependency_change')
+            if ((self.project_id and not self.project_id.allow_task_dependencies)\
+                or (not self.project_id and not self.user_has_groups('project.group_project_task_dependencies')))\
+                and dependency_subtype in res:
+                res -= dependency_subtype
+        return res
 
     def _notify_get_groups(self, msg_vals=None):
         """ Handle project users and managers recipients that can assign
