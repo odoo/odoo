@@ -79,16 +79,25 @@ class PaymentTransaction(models.Model):
         feedback_data = {'reference': self.reference, 'response': res_content}
         self._handle_feedback_data('authorize', feedback_data)
 
-    def _send_refund_request(self, refund_amount=None, create_refund_transaction=True):
+    def _send_refund_request(self, amount_to_refund=None, create_refund_transaction=True):
         """ Override of payment to send a refund request to Authorize.
 
         Note: self.ensure_one()
 
-        :return: None
+        :param float amount_to_refund: The amount to refund
+        :param bool create_refund_transaction: Whether a refund transaction should be created or not
+        :return: The refund transaction if any
+        :rtype: recordset of `payment.transaction`
         """
-        super()._send_refund_request(refund_amount=refund_amount, create_refund_transaction=False)
         if self.provider != 'authorize':
-            return
+            return super()._send_refund_request(
+                amount_to_refund=amount_to_refund,
+                create_refund_transaction=create_refund_transaction,
+            )
+
+        refund_tx = super()._send_refund_request(
+            amount_to_refund=amount_to_refund, create_refund_transaction=False
+        )
 
         authorize_API = AuthorizeAPI(self.acquirer_id)
         rounded_amount = round(self.amount, self.currency_id.decimal_places)
@@ -99,6 +108,8 @@ class PaymentTransaction(models.Model):
         # data in order to go through the centralized `_handle_feedback_data` method.
         feedback_data = {'reference': self.reference, 'response': res_content}
         self._handle_feedback_data('authorize', feedback_data)
+
+        return refund_tx
 
     def _send_capture_request(self):
         """ Override of payment to send a capture request to Authorize.
@@ -188,7 +199,9 @@ class PaymentTransaction(models.Model):
                 self._set_authorized()
                 if self.tokenize and not self.token_id:
                     self._authorize_tokenize()
-                self._send_refund_request(create_refund_transaction=False)  # In last step because it calls _handle_feedback_data()
+                if self.operation == 'validation':
+                    # Void the transaction. In last step because it calls _handle_feedback_data()
+                    self._send_refund_request(create_refund_transaction=False)
             elif status_type == 'void':
                 if self.operation == 'validation':  # Validation txs are authorized and then voided
                     self._set_done()  # If the refund went through, the validation tx is confirmed
