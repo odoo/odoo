@@ -76,13 +76,13 @@ class MrpWorkorder(models.Model):
         compute='_compute_dates_planned',
         inverse='_set_dates_planned',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        store=True, copy=False)
+        store=True, copy=False, required=True)
     date_planned_finished = fields.Datetime(
         'Scheduled End Date',
         compute='_compute_dates_planned',
         inverse='_set_dates_planned',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        store=True, copy=False)
+        store=True, copy=False, required=True)
     date_start = fields.Datetime(
         'Start Date', copy=False,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
