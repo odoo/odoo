@@ -145,8 +145,10 @@ class AccountEdiFormat(models.Model):
         # self could be a single record (editing) or be empty (new).
         with Form(invoice.with_context(default_move_type=default_move_type,
                                        account_predictive_bills_disable_prediction=True)) as invoice_form:
+            self_ctx = self.with_company(invoice.company_id)
+
             partner_type = invoice_form.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
-            invoice_form.partner_id = self._retrieve_partner(
+            invoice_form.partner_id = self_ctx._retrieve_partner(
                 name=_find_value(f"/ram:{partner_type}/ram:Name"),
                 mail=_find_value(f"//ram:{partner_type}//ram:URIID[@schemeID='SMTP']"),
                 vat=_find_value(f"//ram:{partner_type}/ram:SpecifiedTaxRegistration/ram:ID"),
@@ -154,7 +156,7 @@ class AccountEdiFormat(models.Model):
 
             # Delivery partner
             if 'partner_shipping_id' in invoice._fields:
-                invoice_form.partner_shipping_id = self._retrieve_partner(
+                invoice_form.partner_shipping_id = self_ctx._retrieve_partner(
                     name=_find_value("//ram:ShipToTradeParty/ram:Name"),
                     mail=_find_value("//ram:ShipToTradeParty//ram:URIID[@schemeID='SMTP']"),
                     vat=_find_value("//ram:ShipToTradeParty/ram:SpecifiedTaxRegistration/ram:ID"),
@@ -216,7 +218,7 @@ class AccountEdiFormat(models.Model):
                         name = _find_value('.//ram:SpecifiedTradeProduct/ram:Name', element)
                         if name:
                             invoice_line_form.name = name
-                        invoice_line_form.product_id = self._retrieve_product(
+                        invoice_line_form.product_id = self_ctx._retrieve_product(
                             default_code=_find_value('.//ram:SpecifiedTradeProduct/ram:SellerAssignedID', element),
                             name=_find_value('.//ram:SpecifiedTradeProduct/ram:Name', element),
                             barcode=_find_value('.//ram:SpecifiedTradeProduct/ram:GlobalID', element)
@@ -252,7 +254,7 @@ class AccountEdiFormat(models.Model):
                         tax_element = element.xpath('.//ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax/ram:RateApplicablePercent', namespaces=tree.nsmap)
                         invoice_line_form.tax_ids.clear()
                         for eline in tax_element:
-                            tax = self._retrieve_tax(
+                            tax = self_ctx._retrieve_tax(
                                 amount=eline.text,
                                 type_tax_use=invoice_form.journal_id.type
                             )
