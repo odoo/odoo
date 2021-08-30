@@ -49,7 +49,7 @@ class SurveyQuestion(models.Model):
     def default_get(self, fields):
         defaults = super(SurveyQuestion, self).default_get(fields)
         if (not fields or 'question_type' in fields):
-            defaults['question_type'] = False if defaults.get('is_page') == True else 'text_box'
+            defaults['question_type'] = False if defaults.get('is_page') else 'simple_choice'
         return defaults
 
     # question generic data
@@ -70,18 +70,18 @@ class SurveyQuestion(models.Model):
         related='survey_id.questions_selection', readonly=True,
         help="If randomized is selected, add the number of random questions next to the section.")
     random_questions_count = fields.Integer(
-        'Random questions count', default=1,
+        '# Questions Randomly Picked', default=1,
         help="Used on randomized sections to take X random questions from all the questions of that section.")
     # question specific
     page_id = fields.Many2one('survey.question', string='Page', compute="_compute_page_id", store=True)
     question_type = fields.Selection([
+        ('simple_choice', 'Multiple choice: only one answer'),
+        ('multiple_choice', 'Multiple choice: multiple answers allowed'),
         ('text_box', 'Multiple Lines Text Box'),
         ('char_box', 'Single Line Text Box'),
         ('numerical_box', 'Numerical Value'),
         ('date', 'Date'),
         ('datetime', 'Datetime'),
-        ('simple_choice', 'Multiple choice: only one answer'),
-        ('multiple_choice', 'Multiple choice: multiple answers allowed'),
         ('matrix', 'Matrix')], string='Question Type',
         compute='_compute_question_type', readonly=False, store=True)
     is_scored_question = fields.Boolean(
@@ -104,7 +104,6 @@ class SurveyQuestion(models.Model):
     suggested_answer_ids = fields.One2many(
         'survey.question.answer', 'question_id', string='Types of answers', copy=True,
         help='Labels used for proposed choices: simple choice, multiple choice and columns of matrix')
-    allow_value_image = fields.Boolean('Images on answers', help='Display images in addition to answer label. Valid only for simple / multiple choice questions.')
     # -- matrix
     matrix_subtype = fields.Selection([
         ('simple', 'One choice per row'),
@@ -125,7 +124,7 @@ class SurveyQuestion(models.Model):
     comments_message = fields.Char('Comment Message', translate=True, default=lambda self: _("If other, please specify:"))
     comment_count_as_answer = fields.Boolean('Comment Field is an Answer Choice')
     # question validation
-    validation_required = fields.Boolean('Validate entry')
+    validation_required = fields.Boolean('Validate entry', compute='_compute_validation_required', readonly=False, store=True)
     validation_email = fields.Boolean('Input must be an email')
     validation_length_min = fields.Integer('Minimum Text Length', default=0)
     validation_length_max = fields.Integer('Maximum Text Length', default=0)
@@ -259,6 +258,12 @@ class SurveyQuestion(models.Model):
         for question in self:
             if question.question_type != 'char_box':
                 question.save_as_nickname = False
+
+    @api.depends('question_type')
+    def _compute_validation_required(self):
+        for question in self:
+            if not question.validation_required or question.question_type not in ['char_box', 'numerical_box', 'date', 'datetime']:
+                question.validation_required = False
 
     @api.depends('is_conditional')
     def _compute_triggering_question_id(self):
@@ -584,13 +589,17 @@ class SurveyQuestionAnswer(models.Model):
     _order = 'sequence, id'
     _description = 'Survey Label'
 
+    # question and question related fields
     question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade')
     matrix_question_id = fields.Many2one('survey.question', string='Question (as matrix row)', ondelete='cascade')
+    question_type = fields.Selection(related='question_id.question_type')
     sequence = fields.Integer('Label Sequence order', default=10)
+    scoring_type = fields.Selection(related='question_id.scoring_type')
+    # answer related fields
     value = fields.Char('Suggested value', translate=True, required=True)
     value_image = fields.Image('Image', max_width=256, max_height=256)
-    is_correct = fields.Boolean('Is a correct answer')
-    answer_score = fields.Float('Score for this choice', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
+    is_correct = fields.Boolean('Correct')
+    answer_score = fields.Float('Score', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
 
     @api.constrains('question_id', 'matrix_question_id')
     def _check_question_not_empty(self):

@@ -256,19 +256,19 @@ class TestAccess(common.TestSurveyCommon):
 
         # Create: own survey only
         answer_own = self.env['survey.user_input'].create({'survey_id': survey_own.id})
-        answer_line_own = self.env['survey.user_input.line'].create({'question_id': question_own.id, 'answer_type': 'numerical_box', 'value_numerical_box': 3, 'user_input_id': answer_own.id})
+        with self.assertRaises(AccessError):
+            self.env['survey.user_input.line'].create({'question_id': question_own.id, 'answer_type': 'numerical_box', 'value_numerical_box': 3, 'user_input_id': answer_own.id})
 
         # Read: always
         answers = self.env['survey.user_input'].search([('survey_id', 'in', [survey_own.id, self.survey.id])])
         self.assertEqual(answers, answer_own | self.answer_0)
 
         answer_lines = self.env['survey.user_input.line'].search([('survey_id', 'in', [survey_own.id, self.survey.id])])
-        self.assertEqual(answer_lines, answer_line_own | self.answer_0_0 | self.answer_0_1)
+        self.assertEqual(answer_lines, self.answer_0_0 | self.answer_0_1)
 
         self.env['survey.user_input'].browse(answer_own.ids).read(['state'])
         self.env['survey.user_input'].browse(self.answer_0.ids).read(['state'])
 
-        self.env['survey.user_input.line'].browse(answer_line_own.ids).read(['value_numerical_box'])
         self.env['survey.user_input.line'].browse(self.answer_0_0.ids).read(['value_numerical_box'])
 
         # Create: own survey only (moved after read because DB not correctly rollbacked with assertRaises)
