@@ -67,6 +67,8 @@ class AccountEdiFormat(models.Model):
             return self._find_value(xpath, element, namespaces)
 
         with Form(invoice.with_context(account_predictive_bills_disable_prediction=True)) as invoice_form:
+            self_ctx = self.with_company(invoice.company_id.id)
+
             # Reference
             elements = tree.xpath('//cbc:ID', namespaces=namespaces)
             if elements:
@@ -97,7 +99,7 @@ class AccountEdiFormat(models.Model):
                 invoice_form.invoice_incoterm_id = self.env['account.incoterms'].search([('code', '=', elements[0].text)], limit=1)
 
             # Partner
-            invoice_form.partner_id = self._retrieve_partner(
+            invoice_form.partner_id = self_ctx._retrieve_partner(
                 name=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:Name'),
                 phone=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:Telephone'),
                 mail=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:ElectronicMail'),
@@ -109,7 +111,7 @@ class AccountEdiFormat(models.Model):
             for eline in lines_elements:
                 with invoice_form.invoice_line_ids.new() as invoice_line_form:
                     # Product
-                    invoice_line_form.product_id = self._retrieve_product(
+                    invoice_line_form.product_id = self_ctx._retrieve_product(
                         default_code=_find_value('cac:Item/cac:SellersItemIdentification/cbc:ID', eline),
                         name=_find_value('cac:Item/cbc:Name', eline),
                         barcode=_find_value('cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID=\'0160\']', eline)
@@ -141,7 +143,7 @@ class AccountEdiFormat(models.Model):
                     tax_element = eline.xpath('cac:TaxTotal/cac:TaxSubtotal', namespaces=namespaces)
                     invoice_line_form.tax_ids.clear()
                     for eline in tax_element:
-                        tax = self._retrieve_tax(
+                        tax = self_ctx._retrieve_tax(
                             amount=_find_value('cbc:Percent', eline),
                             type_tax_use=invoice_form.journal_id.type
                         )
