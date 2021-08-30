@@ -43,7 +43,7 @@
                 <attribute name="string">Sales End</attribute>
             </field>
             <field name="name" position="after">
-                <field name="product_id" context="{'default_event_ok': 1}"/>
+                <field name="product_id" context="{'default_detailed_type': 'event'}"/>
             </field>
             <field name="description" position="after">
                 <field name="price"/>
@@ -57,7 +57,7 @@
         <field name="inherit_id" ref="event.event_event_ticket_view_form_from_event"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="product_id" context="{'default_event_ok':1}"/>
+                <field name="product_id" context="{'default_detailed_type': 'event'}"/>
             </field>
             <field name="description" position="after">
                 <field name="price"/>
@@ -98,4 +98,3 @@
         </field>
     </record>
 </data></odoo>
-
