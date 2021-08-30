@@ -429,7 +429,7 @@ odoo.define("web.Model", function (require) {
          */
         async _notifyComponents() {
             const rev = ++this.rev;
-            const subscriptions = this.subscriptions.update;
+            const subscriptions = this.subscriptions.update || [];
             const groups = partitionBy(subscriptions, (s) =>
                 s.owner ? s.owner.__owl__.depth : -1
             );
