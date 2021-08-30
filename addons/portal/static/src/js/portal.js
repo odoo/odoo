@@ -6,11 +6,15 @@ const Dialog = require('web.Dialog');
 const {_t, qweb} = require('web.core');
 const ajax = require('web.ajax');
 
-publicWidget.registry.portalDetails = publicWidget.Widget.extend({
-    selector: '.o_portal_details',
+publicWidget.registry.portalAddress = publicWidget.Widget.extend({
+    selector: '.o_portal_address',
     events: {
         'change select[name="country_id"]': '_onCountryChange',
+        'click .js_confirm_main_address': '_onClickConfirmMainAddress',
     },
+    xmlDependencies: [
+        '/portal/static/src/xml/portal_address_warnings.xml',
+    ],
 
     /**
      * @override
@@ -20,7 +24,7 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
 
         this.$state = this.$('select[name="state_id"]');
         this.$stateOptions = this.$state.filter(':enabled').find('option:not(:first)');
-        this._adaptAddressForm();
+        this._adaptAddressForm(this._getCountryId());
 
         return def;
     },
@@ -32,13 +36,19 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _adaptAddressForm: function () {
-        var $country = this.$('select[name="country_id"]');
-        var countryID = ($country.val() || 0);
+    _adaptAddressForm: function (countryID) {
         this.$stateOptions.detach();
         var $displayedState = this.$stateOptions.filter('[data-country_id=' + countryID + ']');
         var nb = $displayedState.appendTo(this.$state).show().length;
         this.$state.parent().toggle(nb >= 1);
+    },
+
+    /**
+     * @private
+     */
+    _getCountryId: function () {
+        var $country = this.$('select[name="country_id"]');
+        return ($country.val() || 0);
     },
 
     //--------------------------------------------------------------------------
@@ -49,7 +59,67 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
      * @private
      */
     _onCountryChange: function () {
-        this._adaptAddressForm();
+        this._adaptAddressForm(this._getCountryId());
+    },
+
+    _onClickConfirmMainAddress: async function (ev) {
+        ev.preventDefault();
+
+        let form = $(ev.currentTarget.form);
+        let data = form.serializeArray().reduce(function(data, {name, value}) {
+            if (name in data) {
+                if (Array.isArray(data[name])) {
+                    data[name].append(value);
+                } else {
+                    data[name] = [data[name], value];
+                }
+            } else {
+                data[name] = value;
+            }
+            return data;
+        }, {});
+        await this._rpc({
+            route: "/my/main_address_confirmation_warnings",
+            params: {
+                data: data,
+            },
+        }).then(warnings => {
+            if (!warnings.length) {
+                form.submit();
+            } else {
+                warnings = warnings.map(warning => warning.split("\n"));
+                let dialog = new Dialog(null, {
+                    title: _t("Warning"),
+                    size: 'medium',
+                    $content: qweb.render('portal.portal_warning_confirmation', {
+                        warnings: warnings, // format : each warning will be the item of a list, and can contain multiple lines (array of array of lines)
+                    }),
+                    buttons: [{
+                        text: _t("PROCEED"), classes: 'btn btn-primary',
+                        click() {
+                            form.submit();
+                        }
+                    }, {
+                        text: _t('CANCEL'), classes: 'btn btn-secondary', close: true
+                    }]
+                }).open();
+            }
+        });
+    }
+});
+
+publicWidget.registry.portalDetails = publicWidget.Widget.extend({
+    selector: '.o_portal_details',
+    events: {
+        'click .js_delete_address': '_onClickDeleteAddress',
+    },
+
+    _onClickDeleteAddress: function (ev) {
+        ev.preventDefault();
+        const confirmCallback = () => {
+            $(ev.currentTarget.form).submit();
+        };
+        let dialog = Dialog.confirm(this, _t("Are you sure you want to delete this address?"), { confirm_callback: confirmCallback });
     },
 });
 

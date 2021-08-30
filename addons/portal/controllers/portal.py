@@ -8,6 +8,7 @@ import logging
 import math
 import re
 
+from itertools import chain
 from werkzeug import urls
 
 from odoo import fields as odoo_fields, http, tools, _, SUPERUSER_ID
@@ -118,8 +119,26 @@ def _build_url_w_params(url_string, query_params, remove_duplicates=True):
 
 class CustomerPortal(Controller):
 
-    MANDATORY_BILLING_FIELDS = ["name", "phone", "email", "street", "city", "country_id"]
-    OPTIONAL_BILLING_FIELDS = ["zipcode", "state_id", "vat", "company_name"]
+    """format of the following dicts : key = model_field_name : value = view_field_name
+    we use this format because the address form will contain fields from various models
+    (i.e. bank informations) and view variable names can not always be identical to field names
+    """
+    # names fields for res.partner
+    MANDATORY_PARTNER_FIELDS = {
+        "name": "name",
+        "phone": "phone",
+        "email": "email",
+        "street": "street",
+        "city": "city",
+        "country_id": "country_id",
+        "type": "type",
+    }
+    OPTIONAL_PARTNER_FIELDS = {
+        "zip": "zipcode",
+        "state_id": "state_id",
+        "vat": "vat",
+        "company_name": "company_name",
+    }
 
     _items_per_page = 80
 
@@ -167,6 +186,100 @@ class CustomerPortal(Controller):
             }]
         }
 
+    def _is_own_partner_address(self, partner, address_id):
+        """Checks whether address_id is the id of a res.partner representing:
+            - the main address of partner (partner.id)
+            - an invoice address from partner.child_ids
+            - a delivery address from partner.child_ids
+        """
+        # if address_id is partner's main address
+        if partner.id == address_id:
+            return True
+        # if address_id partner's secondary address
+        return address_id in partner.child_ids.filtered(lambda partner: partner.type in ['invoice', 'delivery']).ids
+
+    def _render_portal_my_address(self, values):
+        response = request.render("portal.portal_my_address", values)
+        response.headers['X-Frame-Options'] = 'DENY'
+        return response
+
+    def _prepare_address_form_values(self, address_id=None):
+        values = self._prepare_portal_layout_values()
+
+        partner = request.env.user.partner_id
+        address = request.env['res.partner'].with_context(show_address=1).browse(address_id) if address_id else False
+
+        if address:
+            fields = {**self.MANDATORY_PARTNER_FIELDS, **self.OPTIONAL_PARTNER_FIELDS}
+            # add address data
+            values.update({value: getattr(address, key) for key, value in fields.items()})
+
+        countries = request.env['res.country'].sudo().search([])
+        states = request.env['res.country.state'].sudo().search([])
+
+        values.update({
+            'partner': partner,
+            'address': address,
+            'countries': countries,
+            'states': states,
+            'has_check_vat': hasattr(request.env['res.partner'], 'check_vat'),
+            'page_name': 'my_details',
+        })
+        return values
+
+    @route(['/my/address/create', '/my/address/<int:address_id>/update'], type='http', auth='user', website=True, methods=['GET', 'POST'])
+    def address_write(self, address_id=None, redirect=None, **post):
+        partner = request.env.user.partner_id
+        if address_id is not None and not self._is_own_partner_address(partner, address_id):
+            return request.redirect(redirect or '/my/account')
+
+        Partner = request.env['res.partner'].with_context(show_address=1).sudo()
+        address = Partner.browse(address_id) if address_id else False
+        is_main_address = address and address.id == partner.id
+        fields = {**self.MANDATORY_PARTNER_FIELDS, **self.OPTIONAL_PARTNER_FIELDS}
+
+        data = {key: post.get(value, False) for key, value in fields.items()}
+        error, error_message = self.details_form_validate(data, validate_main_address=is_main_address)
+        if not error:
+            if address:
+                self.on_account_update(data, partner)
+                address.write(data)
+            else:
+                data['parent_id'] = partner.id
+                address = Partner.create(data)
+            return request.redirect(redirect or '/my/account')
+
+        values = {
+            **self._prepare_address_form_values(address_id),
+            'error': error,
+            'error_message': error_message,
+            'redirect': redirect,
+        }
+        return self._render_portal_my_address(values)
+
+    @route(['/my/address/<int:address_id>/delete'], type='http', auth='user', website=True, methods=['GET', 'POST'])
+    def address_delete(self, address_id, redirect=None, **kw):
+        partner = request.env.user.partner_id
+        if not self._is_own_partner_address(partner, address_id) or address_id == partner.id:
+            return request.redirect(redirect or '/my/account')
+
+        address_sudo = request.env['res.partner'].browse(address_id).sudo()
+        address_sudo.unlink()
+
+        return request.redirect(redirect or '/my/account')
+
+    @route(['/my/address', '/my/address/<int:address_id>'], type='http', auth='user', website=True, methods=['GET', 'POST'])
+    def address_read(self, address_id=None, redirect=None, **kw):
+        partner = request.env.user.partner_id
+        if address_id is not None and not self._is_own_partner_address(partner, address_id):
+            return request.redirect(redirect or '/my/account')
+
+        values = {
+            **self._prepare_address_form_values(address_id),
+            'redirect': redirect
+        }
+        return self._render_portal_my_address(values)
+
     @route(['/my/counters'], type='json', auth="user", website=True)
     def counters(self, counters, **kw):
         return self._prepare_portal_counters_values(counters)
@@ -175,51 +288,22 @@ class CustomerPortal(Controller):
     def home(self, **kw):
         values = self._prepare_portal_layout_values()
         values.update(self._prepare_portal_overview_values())
+        values['company'] = request.env.company
         return request.render("portal.portal_my_home", values)
 
     @route(['/my/account'], type='http', auth='user', website=True)
     def account(self, redirect=None, **post):
         values = self._prepare_portal_layout_values()
+
         partner = request.env.user.partner_id
-        values.update({
-            'error': {},
-            'error_message': [],
-        })
-
-        if post and request.httprequest.method == 'POST':
-            error, error_message = self.details_form_validate(post)
-            values.update({'error': error, 'error_message': error_message})
-            values.update(post)
-            if not error:
-                values = {key: post[key] for key in self.MANDATORY_BILLING_FIELDS}
-                values.update({key: post[key] for key in self.OPTIONAL_BILLING_FIELDS if key in post})
-                for field in set(['country_id', 'state_id']) & set(values.keys()):
-                    try:
-                        values[field] = int(values[field])
-                    except:
-                        values[field] = False
-                values.update({'zip': values.pop('zipcode', '')})
-                self.on_account_update(values, partner)
-                partner.sudo().write(values)
-                if redirect:
-                    return request.redirect(redirect)
-                return request.redirect('/my/home')
-
-        countries = request.env['res.country'].sudo().search([])
-        states = request.env['res.country.state'].sudo().search([])
 
         values.update({
-            'partner': partner,
-            'countries': countries,
-            'states': states,
-            'has_check_vat': hasattr(request.env['res.partner'], 'check_vat'),
-            'redirect': redirect,
             'page_name': 'my_details',
+            'partner': partner,
+            'invoice_addresses': partner.child_ids.filtered(lambda address: address.type == 'invoice'),
+            'delivery_addresses': partner.child_ids.filtered(lambda address: address.type == 'delivery'),
         })
-
-        response = request.render("portal.portal_my_details", values)
-        response.headers['X-Frame-Options'] = 'DENY'
-        return response
+        return request.render("portal.portal_my_details", values)
 
     def on_account_update(self, values, partner):
         pass
@@ -344,44 +428,69 @@ class CustomerPortal(Controller):
 
         return attachment_sudo.unlink()
 
-    def details_form_validate(self, data):
+    @http.route(['/my/main_address_confirmation_warnings'], type='json', auth="user", website=True)
+    def main_address_confirmation_warnings(self, data, **kw):
+        return [_("Are you sure you want to edit your main address?")]
+
+    def details_form_validate(self, data, validate_main_address=True):
         error = dict()
         error_message = []
 
         # Validation
-        for field_name in self.MANDATORY_BILLING_FIELDS:
+        for field_name in self.MANDATORY_PARTNER_FIELDS:
             if not data.get(field_name):
-                error[field_name] = 'missing'
+                error[self.MANDATORY_PARTNER_FIELDS[field_name]] = 'missing'
 
         # email validation
         if data.get('email') and not tools.single_email_re.match(data.get('email')):
             error["email"] = 'error'
             error_message.append(_('Invalid Email! Please enter a valid email address.'))
 
+        # country_id and state_id validation and formatting
+        for field in set(['country_id', 'state_id']) & set(data.keys()):
+            try:
+                data[field] = int(data[field]) if data[field] else False
+            except ValueError:
+                data[field] = False
+                error[field] = 'error'
+
+        # type validation
+        if not validate_main_address and data.get('type') and not data['type'] in set(['delivery', 'invoice']):
+            error['type'] = 'error'
+
         # vat validation
         partner = request.env.user.partner_id
-        if data.get("vat") and partner and partner.vat != data.get("vat"):
+        if validate_main_address and data.get("vat") and partner and partner.vat != data.get("vat"):
             if partner.can_edit_vat():
                 if hasattr(partner, "check_vat"):
                     if data.get("country_id"):
-                        data["vat"] = request.env["res.partner"].fix_eu_vat_number(int(data.get("country_id")), data.get("vat"))
+                        data["vat"] = request.env["res.partner"].fix_eu_vat_number(data.get("country_id"), data.get("vat"))
                     partner_dummy = partner.new({
                         'vat': data['vat'],
-                        'country_id': (int(data['country_id'])
-                                       if data.get('country_id') else False),
+                        'country_id': data['country_id'],
                     })
                     try:
                         partner_dummy.check_vat()
-                    except ValidationError:
+                    except ValidationError as err:
                         error["vat"] = 'error'
+                        error_message.append(err.message)
             else:
+                error["vat"] = 'error'
                 error_message.append(_('Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'))
+
+        # company_name validation
+        if validate_main_address and partner and not partner.can_edit_vat() and data.get("company_name") != partner.company_name:
+            if partner.commercial_company_name == data["company_name"]:
+                data["company_name"] = partner.company_name
+            else:
+                error["company_name"] = 'error'
+                error_message.append(_('Changing your company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'))
 
         # error message for empty required fields
         if [err for err in error.values() if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
 
-        unknown = [k for k in data if k not in self.MANDATORY_BILLING_FIELDS + self.OPTIONAL_BILLING_FIELDS]
+        unknown = [k for k in data if k not in chain(self.MANDATORY_PARTNER_FIELDS.keys(), self.OPTIONAL_PARTNER_FIELDS.keys())]
         if unknown:
             error['common'] = 'Unknown field'
             error_message.append("Unknown field '%s'" % ','.join(unknown))

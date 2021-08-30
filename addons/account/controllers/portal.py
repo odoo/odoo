@@ -115,11 +115,11 @@ class PortalAccount(CustomerPortal):
     # My Home
     # ------------------------------------------------------------
 
-    def details_form_validate(self, data):
-        error, error_message = super(PortalAccount, self).details_form_validate(data)
+    def details_form_validate(self, data, validate_main_address=True):
+        error, error_message = super(PortalAccount, self).details_form_validate(data, validate_main_address)
         # prevent VAT/name change if invoices exist
         partner = request.env['res.users'].browse(request.uid).partner_id
-        if not partner.can_edit_vat():
+        if validate_main_address and not partner.can_edit_vat():
             if 'vat' in data and (data['vat'] or False) != (partner.vat or False):
                 error['vat'] = 'error'
                 error_message.append(_('Changing VAT number is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))

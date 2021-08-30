@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="portal.portal_warning_confirmation">
+        <div>
+            <t t-foreach="warnings" t-as="warning">
+                <p>
+                    <t t-foreach="warning" t-as="warning_line">
+                        <span><t t-esc="warning_line"></t></span><br/>
+                    </t>
+                </p>
+            </t>
+        </div>
+    </t>
+</templates>
