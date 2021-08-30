@@ -53,7 +53,7 @@ class MrpBom(models.Model):
     ready_to_produce = fields.Selection([
         ('all_available', ' When all components are available'),
         ('asap', 'When components for 1st operation are available')], string='Manufacturing Readiness',
-        default='asap', help="Defines when a Manufacturing Order is considered as ready to be started", required=True)
+        default='all_available', help="Defines when a Manufacturing Order is considered as ready to be started", required=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', domain="[('code', '=', 'mrp_operation'), ('company_id', '=', company_id)]",
         check_company=True,
