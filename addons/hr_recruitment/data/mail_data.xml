@@ -50,6 +50,13 @@
         <field name="parent_id" ref="mt_applicant_hired"/>
         <field name="relation_field">job_id</field>
     </record>
+    <record id="mt_job_applicant_new" model="mail.message.subtype">
+        <field name="name">New Applicant</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="False"/>
+        <field name="parent_id" ref="mt_applicant_new" />
+        <field name="relation_field">job_id</field>
+    </record>
 
     <!-- Department-related (parent) subtypes for messaging / Chatter -->
     <record id="mt_department_new" model="mail.message.subtype">
