@@ -58,3 +58,41 @@ class TestRecruitmentProcess(TestHrCommon):
         applicant_meeting = applicant.action_makeMeeting()
         self.assertEqual(applicant_meeting['context']['default_name'], 'Application for the post of Jr.application Programmer.',
             'Applicant name does not match.')
+
+    def test_01_hr_application_notification(self):
+        new_job_application_mt = self.env.ref(
+            "hr_recruitment.mt_job_applicant_new"
+        )
+        new_application_mt = self.env.ref(
+            "hr_recruitment.mt_applicant_new"
+        )
+        user = self.env["res.users"].with_context(no_reset_password=True).create(
+            {
+                "name": "user_1",
+                "login": "user_1",
+                "email": "user_1@example.com",
+                "groups_id": [
+                    (4, self.env.ref("hr.group_hr_manager").id),
+                    (4, self.env.ref("hr_recruitment.group_hr_recruitment_manager").id),
+                ],
+            }
+        )
+        job = self.env["hr.job"].create({"name": "Test Job for Notification"})
+        # Make test user follow Test HR Job
+        self.env["mail.followers"].create(
+            {
+                "res_model": "hr.job",
+                "res_id": job.id,
+                "partner_id": user.partner_id.id,
+                "subtype_ids": [(4, new_job_application_mt.id)],
+            }
+        )
+        application = self.env["hr.applicant"].create(
+            {"name": "Test Job Application for Notification", "job_id": job.id}
+        )
+        new_application_message = application.message_ids.filtered(
+            lambda m: m.subtype_id == new_application_mt
+        )
+        self.assertTrue(
+            user.partner_id in new_application_message.notified_partner_ids
+        )
