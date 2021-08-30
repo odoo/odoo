@@ -166,8 +166,25 @@
                             <span>minutes</span>
                         </div>
                     </group>
+                    <group>
+                        <field name="production_id"/>
+                    </group>
                 </group>
                 <notebook>
+                <page string="Components" name="components">
+                    <field name="move_raw_ids" readonly="1">
+                        <tree>
+                            <field name="state" invisible="1"/>
+                            <field name="product_type" invisible="1"/>
+                            <field name="product_id"/>
+                            <field name="product_qty" string="To Consume"/>
+                            <field name="reserved_availability" string ="Reserved"/>
+                            <field name="quantity_done" string="Consumed"/>
+                            <field name="product_qty_available" string="On Hand" attrs="{'invisible': [('product_type', '!=', 'product')]}"/>
+                            <field name="product_virtual_available" string="Forecasted" attrs="{'invisible': [('product_type', '!=', 'product')]}"/>
+                        </tree>
+                    </field>
+                </page>
                 <page string="Time Tracking" name="time_tracking" groups="mrp.group_mrp_manager">
                     <group>
                         <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id, 'default_workorder_id': id}">

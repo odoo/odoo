@@ -131,6 +131,7 @@ class TestMrpCommon(common2.TestStockCommon):
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
             'product_uom_id': cls.uom_dozen.id,
+            'ready_to_produce': 'asap',
             'consumption': 'flexible',
             'product_qty': 2.0,
             'operation_ids': [
