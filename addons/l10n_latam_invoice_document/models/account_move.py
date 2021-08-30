@@ -54,6 +54,7 @@ class AccountMove(models.Model):
         string='Document Number', readonly=True, states={'draft': [('readonly', False)]})
     l10n_latam_use_documents = fields.Boolean(related='journal_id.l10n_latam_use_documents')
     l10n_latam_manual_document_number = fields.Boolean(compute='_compute_l10n_latam_manual_document_number', string='Manual Number')
+    l10n_latam_document_type_id_code = fields.Char(related='l10n_latam_document_type_id.code', string='Doc Type')
 
     @api.depends('l10n_latam_document_type_id')
     def _compute_name(self):
