@@ -181,7 +181,7 @@ class CustomerPortal(Controller):
         """
         return {
             'my_account_description': [{
-                'description': _("Addresses, Payments, Security"),
+                'description': _("Addresses, Payments, Security, Users"),
             }]
         }
 
@@ -321,10 +321,50 @@ class CustomerPortal(Controller):
     def on_account_update(self, values, partner):
         pass
 
+    @route('/my/users_accesses', type='http', auth='user', website=True, methods=['GET', 'POST'])
+    def users_accesses(self, **kw):
+        values = self._prepare_portal_layout_values()
+        values['page_name'] = 'users_accesses'
+        partner = request.env.user.partner_id
+        partners = partner.commercial_partner_id.child_ids
+        group_portal = 'base.group_portal'
+        users = partners.filtered(lambda partner: partner.user_ids and partner.user_ids[0].has_group(group_portal)) \
+                        .mapped(lambda partner: partner.user_ids[0] if partner.user_ids else partner.user_ids)
+
+        if request.httprequest.method == 'POST':
+            success_message = {'success': _("Invitation sent")}
+            if 'portal_user_id' in kw:
+                if kw['portal_user_id'].isdecimal() and int(kw['portal_user_id']) in users.ids:
+                    invited_partner = users.browse(int(kw['portal_user_id'])).partner_id
+                    try:
+                        invited_partner.action_resend_portal_access_invitation()
+                        values['success'] = success_message
+                    except UserError as e:
+                        values['errors'] = {'error': str(e)}
+                else:
+                    values['errors'] = {'error': _("The partner does not exists or you do not have the rights to reinvite them, please ask an administrator to do it for you.")}
+            elif 'new_user_email' in kw:
+                invited_partner = partners.filtered(lambda partner: partner.email == kw['new_user_email'].strip())
+                if invited_partner:
+                    try:
+                        invited_partner.action_grant_portal_access()
+                        values['success'] = success_message
+                        users += invited_partner.user_ids[0]
+                    except UserError as e:
+                        values['errors'] = {'error': str(e)}
+                else:
+                    values['errors'] = {'error': _("No registered partner with the following email in your company, please ask an administrator to register it first. %(email)s",
+                                                   email=kw['new_user_email'].strip())}
+        values.update({
+            'portal_users': users.sorted(lambda user: user.name),
+            'get_message': get_message,
+        })
+        return request.render("portal.portal_my_users_accesses", values)
+
     @route('/my/security', type='http', auth='user', website=True, methods=['GET', 'POST'])
     def security(self, **post):
         values = self._prepare_portal_layout_values()
-        values['get_error'] = get_error
+        values['get_message'] = get_message
         values['page_name'] = 'security'
 
         if request.httprequest.method == 'POST':
@@ -561,9 +601,9 @@ class CustomerPortal(Controller):
             reporthttpheaders.append(('Content-Disposition', content_disposition(filename)))
         return request.make_response(report, headers=reporthttpheaders)
 
-def get_error(e, path=''):
+def get_message(e, path=''):
     """ Recursively dereferences `path` (a period-separated sequence of dict
-    keys) in `e` (an error dict or value), returns the final resolution IIF it's
+    keys) in `e` (an message dict or value), returns the final resolution IIF it's
     an str, otherwise returns None
     """
     for k in (path.split('.') if path else []):
