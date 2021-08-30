@@ -5,7 +5,7 @@ var FormController = require('web.FormController');
 
 /**
  * This controller is overridden to allow configuring sale_order_lines through a popup
- * window when a product with 'event_ok' is selected.
+ * window when a product with 'detailed_type' == 'event' is selected.
  *
  * This allows keeping an editable list view for sales order and remove the noise of
  * those 2 fields ('event_id' + 'event_ticket_id')

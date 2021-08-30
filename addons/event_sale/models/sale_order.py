@@ -66,7 +66,12 @@ class SaleOrderLine(models.Model):
     event_ticket_id = fields.Many2one(
         'event.event.ticket', string='Event Ticket',
         help="Choose an event ticket and it will automatically create a registration for this event ticket.")
-    event_ok = fields.Boolean(related='product_id.event_ok', readonly=True)
+    event_ok = fields.Boolean(compute='_compute_event_ok')
+
+    @api.depends('product_id.detailed_type')
+    def _compute_event_ok(self):
+        for record in self:
+            record.event_ok = record.product_id.detailed_type == 'event'
 
     @api.depends('state', 'event_id')
     def _compute_product_uom_readonly(self):
