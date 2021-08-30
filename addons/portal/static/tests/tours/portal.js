@@ -14,7 +14,7 @@ tour.register('portal_load_homepage', {
         },
         {
             content: "Load my account details",
-            trigger: 'input[value="Joel Willis"]'
+            trigger: 'span[itemprop*="name"]:first:contains("Joel Willis")'
         }
     ]
 );

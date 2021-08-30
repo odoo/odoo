@@ -6,8 +6,8 @@ const Dialog = require('web.Dialog');
 const {_t, qweb} = require('web.core');
 const ajax = require('web.ajax');
 
-publicWidget.registry.portalDetails = publicWidget.Widget.extend({
-    selector: '.o_portal_details',
+publicWidget.registry.portalAddress = publicWidget.Widget.extend({
+    selector: '.o_portal_address',
     events: {
         'change select[name="country_id"]': '_onCountryChange',
     },
@@ -20,7 +20,7 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
 
         this.$state = this.$('select[name="state_id"]');
         this.$stateOptions = this.$state.filter(':enabled').find('option:not(:first)');
-        this._adaptAddressForm();
+        this._adaptAddressForm(this._getCountryId());
 
         return def;
     },
@@ -32,13 +32,19 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _adaptAddressForm: function () {
-        var $country = this.$('select[name="country_id"]');
-        var countryID = ($country.val() || 0);
+    _adaptAddressForm: function (countryID) {
         this.$stateOptions.detach();
         var $displayedState = this.$stateOptions.filter('[data-country_id=' + countryID + ']');
         var nb = $displayedState.appendTo(this.$state).show().length;
         this.$state.parent().toggle(nb >= 1);
+    },
+
+    /**
+     * @private
+     */
+    _getCountryId: function () {
+        var $country = this.$('select[name="country_id"]');
+        return ($country.val() || 0);
     },
 
     //--------------------------------------------------------------------------
@@ -49,7 +55,22 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
      * @private
      */
     _onCountryChange: function () {
-        this._adaptAddressForm();
+        this._adaptAddressForm(this._getCountryId());
+    },
+});
+
+publicWidget.registry.portalDetails = publicWidget.Widget.extend({
+    selector: '.o_portal_details',
+    events: {
+        'click .js_delete_address': '_onClickDeleteAddress',
+    },
+
+    _onClickDeleteAddress: function (ev) {
+        ev.preventDefault();
+        const confirmCallback = () => {
+            $(ev.currentTarget.form).submit();
+        };
+        let dialog = Dialog.confirm(this, _t("Are you sure you want to delete this address?"), { confirm_callback: confirmCallback });
     },
 });
 
