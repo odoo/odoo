@@ -126,7 +126,6 @@ function factory(dependencies) {
                 case 'channel':
                     return this.channel.public === 'private';
                 case 'chat':
-                case 'group':
                     return true;
                 case 'group':
                     return false;
