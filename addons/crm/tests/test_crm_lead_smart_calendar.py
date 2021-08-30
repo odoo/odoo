@@ -131,5 +131,5 @@ class TestCRMLeadSmartCalendar(TestCrmCommon):
             'stop': datetime(2020, 12, 13, 22),
         })
         self.assertEqual(len(event.attendee_ids), 2)
-        self.assertEqual(event.attendee_ids[0].partner_id, self.user_sales_leads.partner_id)
-        self.assertEqual(event.attendee_ids[1].partner_id, self.contact_1)
+        self.assertIn(self.user_sales_leads.partner_id, event.attendee_ids.partner_id)
+        self.assertIn(self.contact_1, event.attendee_ids.partner_id)
