@@ -513,7 +513,7 @@ class ResourceCalendar(models.Model):
             start_dt, end_dt, resources=resource, domain=domain, tz=tz
         )[resource.id]
 
-    def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
+    def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, include_leave_intervals=True):
         """ Return the effective work intervals between the given datetimes. """
         if not resources:
             resources = self.env['resource.resource']
@@ -522,10 +522,15 @@ class ResourceCalendar(models.Model):
             resources_list = list(resources)
 
         attendance_intervals = self._attendance_intervals_batch(start_dt, end_dt, resources, tz=tz)
-        leave_intervals = self._leave_intervals_batch(start_dt, end_dt, resources, domain, tz=tz)
-        return {
-            r.id: (attendance_intervals[r.id] - leave_intervals[r.id]) for r in resources_list
-        }
+        if include_leave_intervals:
+            leave_intervals = self._leave_intervals_batch(start_dt, end_dt, resources, domain, tz=tz)
+            return {
+                r.id: (attendance_intervals[r.id] - leave_intervals[r.id]) for r in resources_list
+            }
+        else:
+            return {
+                r.id: attendance_intervals[r.id] for r in resources_list
+            }
 
     def _unavailable_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         if resource is None:
@@ -617,6 +622,12 @@ class ResourceCalendar(models.Model):
         def interval_dt(interval):
             return interval[1 if match_end else 0]
 
+        def get_work_intervals(range_start, range_end, resource, include_leave_intervals=True):
+            return sorted(
+                self._work_intervals_batch(range_start, range_end, resource, include_leave_intervals=include_leave_intervals)[resource.id],
+                key=lambda i: abs(interval_dt(i) - dt),
+            )
+
         if resource is None:
             resource = self.env['resource.resource']
 
@@ -632,10 +643,13 @@ class ResourceCalendar(models.Model):
 
         if not range_start <= dt <= range_end:
             return None
-        work_intervals = sorted(
-            self._work_intervals_batch(range_start, range_end, resource)[resource.id],
-            key=lambda i: abs(interval_dt(i) - dt),
-        )
+
+        work_intervals = get_work_intervals(range_start, range_end, resource)
+        if not work_intervals:
+            # If work_intervals is empty, it means the employee is not working on that day.
+            # If the employee is on leave, default the shift start and end time to the employee's calendar
+            work_intervals = get_work_intervals(range_start, range_end, resource, include_leave_intervals=False)
+
         return interval_dt(work_intervals[0]) if work_intervals else None
 
     # --------------------------------------------------
@@ -946,16 +960,16 @@ class ResourceResource(models.Model):
         end, revert_end_tz = make_aware(end)
         result = {}
         for resource in self:
-            calendar_start = resource.calendar_id._get_closest_work_time(start, resource=resource)
-            search_range = None
             tz = timezone(resource.tz)
-            if calendar_start and start.astimezone(tz).date() == end.astimezone(tz).date():
+            calendar_start = resource.calendar_id._get_closest_work_time(start.replace(tzinfo=tz), resource=resource)
+            search_range = None
+            if calendar_start and start.astimezone(start.tzinfo).date() == end.astimezone(end.tzinfo).date():
                 # Make sure to only search end after start
                 search_range = (
-                    start,
-                    end + relativedelta(days=1, hour=0, minute=0, second=0),
+                    start.replace(tzinfo=tz),
+                    end.replace(tzinfo=tz) + relativedelta(days=1, hour=0, minute=0, second=0),
                 )
-            calendar_end = resource.calendar_id._get_closest_work_time(end, match_end=True, resource=resource, search_range=search_range)
+            calendar_end = resource.calendar_id._get_closest_work_time(end.replace(tzinfo=tz), match_end=True, resource=resource, search_range=search_range)
             result[resource] = (
                 calendar_start and revert_start_tz(calendar_start),
                 calendar_end and revert_end_tz(calendar_end),
