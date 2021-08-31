@@ -42,10 +42,30 @@ class AccountFiscalPosition(models.Model):
     # To be used in hiding the 'Federal States' field('attrs' in view side) when selected 'Country' has 0 states.
     states_count = fields.Integer(compute='_compute_states_count')
     foreign_vat = fields.Char(string="Foreign Tax ID", help="The tax ID of your company in the region mapped by this fiscal position.")
+    foreign_vat_header_mode = fields.Selection(
+        selection=[('templates_found', "Templates Found"), ('no_template', "No Template")],
+        compute='_compute_foreign_vat_header_mode',
+        help="Technical field used to display a banner on top of foreign vat fiscal positions, "
+             "in order to ease the instantiation of foreign taxes when possible."
+    )
 
     def _compute_states_count(self):
         for position in self:
             position.states_count = len(position.country_id.state_ids)
+
+    @api.depends('foreign_vat', 'country_id')
+    def _compute_foreign_vat_header_mode(self):
+        for record in self:
+            if not record.foreign_vat or not record.country_id:
+                record.foreign_vat_header_mode = None
+                continue
+
+            if self.env['account.tax'].search([('country_id', '=', record.country_id.id)], limit=1):
+                record.foreign_vat_header_mode = None
+            elif self.env['account.tax.template'].search([('chart_template_id.country_id', '=', record.country_id.id)], limit=1):
+                record.foreign_vat_header_mode = 'templates_found'
+            else:
+                record.foreign_vat_header_mode = 'no_template'
 
     @api.constrains('zip_from', 'zip_to')
     def _check_zip(self):
@@ -203,6 +223,10 @@ class AccountFiscalPosition(models.Model):
             fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, False)
 
         return fp or self.env['account.fiscal.position']
+
+    def action_create_foreign_taxes(self):
+        self.ensure_one()
+        self.env['account.tax.template']._try_instantiating_foreign_taxes(self.country_id, self.company_id)
 
 
 class AccountFiscalPositionTax(models.Model):
