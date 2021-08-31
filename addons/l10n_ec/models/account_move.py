@@ -219,23 +219,23 @@ class AccountMove(models.Model):
                 return self._get_ec_formatted_sequence()
         return super()._get_starting_sequence()
 
-    def _get_last_sequence_domain(self, relaxed=False):
-        l10n_latam_document_type_model = self.env['l10n_latam.document.type']
-        where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
-        if self.country_code == "EC" and self.journal_id.l10n_latam_use_documents and self.move_type in (
-            "out_invoice",
-            "out_refund",
-            "in_invoice",
-            "in_refund",
-        ):
-            internal_type = self._get_l10n_ec_internal_type()
-            document_types = l10n_latam_document_type_model.search([
-                ('internal_type', '=', internal_type),
-                ('country_id.code', '=', 'EC'),
-            ])
-            if document_types:
-                where_string += """
-                AND l10n_latam_document_type_id in %(l10n_latam_document_type_id)s
-                """
-                param["l10n_latam_document_type_id"] = tuple(document_types.ids)
-        return where_string, param
+    # def _get_last_sequence_domain(self, relaxed=False):
+    #     l10n_latam_document_type_model = self.env['l10n_latam.document.type']
+    #     where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
+    #     if self.country_code == "EC" and self.l10n_latam_use_documents and self.move_type in (
+    #         "out_invoice",
+    #         "out_refund",
+    #         "in_invoice",
+    #         "in_refund",
+    #     ):
+    #         internal_type = self._get_l10n_ec_internal_type()
+    #         document_types = l10n_latam_document_type_model.search([
+    #             ('internal_type', '=', internal_type),
+    #             ('country_id.code', '=', 'EC'),
+    #         ])
+    #         if document_types:
+    #             where_string += """
+    #             AND l10n_latam_document_type_id in %(l10n_latam_document_type_id)s
+    #             """
+    #             param["l10n_latam_document_type_id"] = tuple(document_types.ids)
+    #     return where_string, param
