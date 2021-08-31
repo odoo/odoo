@@ -51,10 +51,11 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         });
         this.oeStructureSelector = '#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]';
         this.oeFieldSelector = '#wrapwrap [data-oe-field]';
+        this.oeCoverSelector = '#wrapwrap [data-res-model][data-name="Cover"]';
         if (options.savableSelector) {
             this.savableSelector = options.savableSelector;
         } else {
-            this.savableSelector = `${this.oeStructureSelector}, ${this.oeFieldSelector}`;
+            this.savableSelector = `${this.oeStructureSelector}, ${this.oeFieldSelector}, ${this.oeCoverSelector}`;
         }
         this.editableFromEditorMenu = options.editableFromEditorMenu || this.editableFromEditorMenu;
         this._editorAutoStart = (context.editable && window.location.search.indexOf('enable_editor') >= 0);
