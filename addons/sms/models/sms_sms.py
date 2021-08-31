@@ -45,6 +45,43 @@ class SmsSms(models.Model):
         ('sms_optout', 'Opted Out'),
     ], copy=False)
 
+    def action_set_canceled(self):
+        self.state = 'canceled'
+        notifications = self.env['mail.notification'].sudo().search([
+            ('sms_id', 'in', self.ids),
+            # sent is sent -> cannot reset
+            ('notification_status', 'not in', ['canceled', 'sent']),
+        ])
+        if notifications:
+            notifications.write({'notification_status': 'canceled'})
+            if not self._context.get('sms_skip_msg_notification', False):
+                notifications.mail_message_id._notify_message_notification_update()
+
+    def action_set_error(self, failure_type):
+        self.state = 'error'
+        self.failure_type = failure_type
+        notifications = self.env['mail.notification'].sudo().search([
+            ('sms_id', 'in', self.ids),
+            # sent can be set to error due to IAP feedback
+            ('notification_status', '!=', 'exception'),
+        ])
+        if notifications:
+            notifications.write({'notification_status': 'exception', 'failure_type': failure_type})
+            if not self._context.get('sms_skip_msg_notification', False):
+                notifications.mail_message_id._notify_message_notification_update()
+
+    def action_set_outgoing(self):
+        self.state = 'outgoing'
+        notifications = self.env['mail.notification'].sudo().search([
+            ('sms_id', 'in', self.ids),
+            # sent is sent -> cannot reset
+            ('notification_status', 'not in', ['ready', 'sent']),
+        ])
+        if notifications:
+            notifications.write({'notification_status': 'ready', 'failure_type': False})
+            if not self._context.get('sms_skip_msg_notification', False):
+                notifications.mail_message_id._notify_message_notification_update()
+
     def send(self, delete_all=False, auto_commit=False, raise_exception=False):
         """ Main API method to send SMS.
 
@@ -58,9 +95,6 @@ class SmsSms(models.Model):
             # auto-commit if asked except in testing mode
             if auto_commit is True and not getattr(threading.currentThread(), 'testing', False):
                 self._cr.commit()
-
-    def set_outgoing(self):
-        self.state = 'outgoing'
 
     def resend_failed(self):
         sms_to_send = self.filtered(lambda sms: sms.state == 'error')
@@ -87,9 +121,6 @@ class SmsSms(models.Model):
                 'type': notification_type,
             }
         }
-
-    def cancel(self):
-        self.state = 'canceled'
 
     @api.model
     def _process_queue(self, ids=None):
