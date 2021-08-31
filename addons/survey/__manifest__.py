@@ -73,9 +73,9 @@ sent mails with personal token for the invitation of the survey.
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
             'web/static/lib/bootstrap/scss/_variables.scss',
-            'survey/static/src/css/survey_print.css',
-            'survey/static/src/css/survey_result.css',
-            'survey/static/src/scss/survey_form.scss',
+            'survey/static/src/css/survey_templates_print.css',
+            'survey/static/src/css/survey_templates_result.css',
+            'survey/static/src/scss/survey_templates_form.scss',
         ],
         'survey.survey_user_input_session_assets': [
             'survey/static/src/js/libs/chartjs-plugin-datalabels.min.js',
@@ -89,10 +89,10 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/scss/survey_reports.scss',
         ],
         'web.assets_backend': [
-            'survey/static/src/css/survey_result.css',
+            'survey/static/src/css/survey_templates_result.css',
             'survey/static/src/js/fields_section_one2many.js',
             'survey/static/src/js/fields_form_page_description.js',
-            'survey/static/src/scss/survey_views.scss',
+            'survey/static/src/scss/survey_survey_views.scss',
         ],
         'web.assets_tests': [
             'survey/static/tests/**/*',
