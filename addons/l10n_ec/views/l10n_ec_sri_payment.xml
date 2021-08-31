@@ -2,7 +2,7 @@
 <odoo>
     <record id="account_l10n_ec_sri_payment" model="ir.ui.view">
         <field name="name">l10n.ec.sri.payment.form</field>
-        <field name="model">l10n.ec.sri.payment</field>
+        <field name="model">l10n_ec.sri.payment</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
@@ -13,7 +13,7 @@
 
     <record id="action_account_l10n_ec_sri_payment_tree" model="ir.actions.act_window">
         <field name="name">Payment Methods SRI</field>
-        <field name="res_model">l10n.ec.sri.payment</field>
+        <field name="res_model">l10n_ec.sri.payment</field>
         <field name="view_mode">tree,form</field>
     </record>
 

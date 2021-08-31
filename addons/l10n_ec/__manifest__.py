@@ -65,7 +65,7 @@ Master Data:
         # Other data
         "data/account_chart_template_configure_data.xml",
         "data/l10n_latam.document.type.csv",
-        "data/l10n.ec.sri.payment.csv",
+        "data/l10n_ec.sri.payment.csv",
         "views/account_tax_view.xml",
         "views/l10n_latam_document_type_view.xml",
         "views/l10n_ec_sri_payment.xml",

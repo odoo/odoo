@@ -6,7 +6,7 @@ from odoo import fields, models
 
 class SriPayment(models.Model):
 
-    _name = "l10n.ec.sri.payment"
+    _name = "l10n_ec.sri.payment"
 
     name = fields.Char("Name")
     code = fields.Char("Code")

@@ -130,7 +130,7 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_ec_sri_payment_id = fields.Many2one(
-        comodel_name="l10n.ec.sri.payment",
+        comodel_name="l10n_ec.sri.payment",
         string="Payment Method (SRI)",
     )
 
@@ -221,7 +221,7 @@ class AccountMove(models.Model):
 
     def _get_last_sequence_domain(self, relaxed=False):
         l10n_latam_document_type_model = self.env['l10n_latam.document.type']
-        if self.country_code == "EC" and self.move_type in (
+        if self.country_code == "EC" and self.journal_id.l10n_latam_use_documents and self.move_type in (
             "out_invoice",
             "out_refund",
             "in_invoice",
