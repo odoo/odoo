@@ -308,7 +308,7 @@ class PurchaseOrderLine(models.Model):
                     if move.state == 'done':
                         if move.location_dest_id.usage == "supplier":
                             if move.to_refund:
-                                total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                                total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                         elif move.origin_returned_move_id and move.origin_returned_move_id._is_dropshipped() and not move._is_dropshipped_returned():
                             # Edge case: the dropship is returned to the stock, no to the supplier.
                             # In this case, the received quantity on the PO is set although we didn't
@@ -323,9 +323,9 @@ class PurchaseOrderLine(models.Model):
                                 [("id", "child_of", move.warehouse_id.view_location_id.id)]
                             )
                         ):
-                            total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                            total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                         else:
-                            total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                            total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                 line._track_qty_received(total)
                 line.qty_received = total
 
