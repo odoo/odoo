@@ -110,7 +110,7 @@ class AccountTax(models.Model):
     tax_exigibility = fields.Selection(
         [('on_invoice', 'Based on Invoice'),
          ('on_payment', 'Based on Payment'),
-        ], string='Tax Due', default='on_invoice',
+        ], string='Tax Exigibility', default='on_invoice',
         help="Based on Invoice: the tax is due as soon as the invoice is validated.\n"
         "Based on Payment: the tax is due as soon as the payment of the invoice is received.")
     cash_basis_transition_account_id = fields.Many2one(string="Cash Basis Transition Account",

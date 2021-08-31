@@ -472,9 +472,9 @@ class AccountChartTemplate(models.Model):
             # Get the default accounts
             default_account = False
             if journal['type'] == 'sale':
-                default_account = acc_template_ref.get(self.property_account_income_categ_id.id)
+                default_account = acc_template_ref.get(self.property_account_income_categ_id).id
             elif journal['type'] == 'purchase':
-                default_account = acc_template_ref.get(self.property_account_expense_categ_id.id)
+                default_account = acc_template_ref.get(self.property_account_expense_categ_id).id
 
             return default_account
 
@@ -525,7 +525,7 @@ class AccountChartTemplate(models.Model):
         ]
         for field, model in todo_list:
             account = self[field]
-            value = acc_template_ref[account.id] if account else False
+            value = acc_template_ref[account].id if account else False
             if value:
                 PropertyObj._set_default(field, model, value, company=company)
 
@@ -536,7 +536,7 @@ class AccountChartTemplate(models.Model):
         ]
         for stock_property in stock_properties:
             account = getattr(self, stock_property)
-            value = account and acc_template_ref[account.id] or False
+            value = account and acc_template_ref[account].id or False
             if value:
                 company.write({stock_property: value})
         return True
@@ -604,18 +604,13 @@ class AccountChartTemplate(models.Model):
         self.generate_account_groups(company)
 
         # writing account values after creation of accounts
-        for key, value in generated_tax_res['account_dict']['account.tax'].items():
+        for tax, value in generated_tax_res['account_dict']['account.tax'].items():
             if value['cash_basis_transition_account_id']:
-                AccountTaxObj.browse(key).write({
-                    'cash_basis_transition_account_id': account_ref.get(value['cash_basis_transition_account_id'], False),
-                })
+                tax.cash_basis_transition_account_id = account_ref.get(value['cash_basis_transition_account_id'])
 
-        AccountTaxRepartitionLineObj = self.env['account.tax.repartition.line']
-        for key, value in generated_tax_res['account_dict']['account.tax.repartition.line'].items():
+        for repartition_line, value in generated_tax_res['account_dict']['account.tax.repartition.line'].items():
             if value['account_id']:
-                AccountTaxRepartitionLineObj.browse(key).write({
-                    'account_id': account_ref.get(value['account_id']),
-                })
+                repartition_line.account_id = account_ref.get(value['account_id'])
 
         # Set the company accounts
         self._load_company_accounts(account_ref, company)
@@ -638,15 +633,15 @@ class AccountChartTemplate(models.Model):
     def _load_company_accounts(self, account_ref, company):
         # Set the default accounts on the company
         accounts = {
-            'default_cash_difference_income_account_id': self.default_cash_difference_income_account_id.id,
-            'default_cash_difference_expense_account_id': self.default_cash_difference_expense_account_id.id,
-            'account_journal_suspense_account_id': self.account_journal_suspense_account_id.id,
-            'account_journal_payment_debit_account_id': self.account_journal_payment_debit_account_id.id,
-            'account_journal_payment_credit_account_id': self.account_journal_payment_credit_account_id.id,
-            'account_cash_basis_base_account_id': self.property_cash_basis_base_account_id.id,
-            'account_default_pos_receivable_account_id': self.default_pos_receivable_account_id.id,
-            'income_currency_exchange_account_id': self.income_currency_exchange_account_id.id,
-            'expense_currency_exchange_account_id': self.expense_currency_exchange_account_id.id,
+            'default_cash_difference_income_account_id': self.default_cash_difference_income_account_id,
+            'default_cash_difference_expense_account_id': self.default_cash_difference_expense_account_id,
+            'account_journal_suspense_account_id': self.account_journal_suspense_account_id,
+            'account_journal_payment_debit_account_id': self.account_journal_payment_debit_account_id,
+            'account_journal_payment_credit_account_id': self.account_journal_payment_credit_account_id,
+            'account_cash_basis_base_account_id': self.property_cash_basis_base_account_id,
+            'account_default_pos_receivable_account_id': self.default_pos_receivable_account_id,
+            'income_currency_exchange_account_id': self.income_currency_exchange_account_id,
+            'expense_currency_exchange_account_id': self.expense_currency_exchange_account_id,
         }
 
         values = {}
@@ -708,7 +703,7 @@ class AccountChartTemplate(models.Model):
         self.ensure_one()
         tax_ids = []
         for tax in account_template.tax_ids:
-            tax_ids.append(tax_template_ref[tax.id])
+            tax_ids.append(tax_template_ref[tax].id)
         val = {
                 'name': account_template.name,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
@@ -745,7 +740,7 @@ class AccountChartTemplate(models.Model):
             template_vals.append((account_template, vals))
         accounts = self._create_records_with_xmlid('account.account', template_vals, company)
         for template, account in zip(acc_template, accounts):
-            acc_template_ref[template.id] = account.id
+            acc_template_ref[template] = account
         return acc_template_ref
 
     def generate_account_groups(self, company):
@@ -798,12 +793,12 @@ class AccountChartTemplate(models.Model):
             'match_partner_ids': [(6, None, account_reconcile_model.match_partner_ids.ids)],
             'match_partner_category_ids': [(6, None, account_reconcile_model.match_partner_category_ids.ids)],
             'line_ids': [(0, 0, {
-                'account_id': acc_template_ref[line.account_id.id],
+                'account_id': acc_template_ref[line.account_id].id,
                 'label': line.label,
                 'amount_type': line.amount_type,
                 'force_tax_included': line.force_tax_included,
                 'amount_string': line.amount_string,
-                'tax_ids': [[4, tax_template_ref[tax.id], 0] for tax in line.tax_ids],
+                'tax_ids': [[4, tax_template_ref[tax].id, 0] for tax in line.tax_ids],
             }) for line in account_reconcile_model_lines],
         }
 
@@ -879,14 +874,14 @@ class AccountChartTemplate(models.Model):
         for position, fp in zip(positions, fps):
             for tax in position.tax_ids:
                 tax_template_vals.append((tax, {
-                    'tax_src_id': tax_template_ref[tax.tax_src_id.id],
-                    'tax_dest_id': tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
+                    'tax_src_id': tax_template_ref[tax.tax_src_id].id,
+                    'tax_dest_id': tax.tax_dest_id and tax_template_ref[tax.tax_dest_id].id or False,
                     'position_id': fp.id,
                 }))
             for acc in position.account_ids:
                 account_template_vals.append((acc, {
-                    'account_src_id': acc_template_ref[acc.account_src_id.id],
-                    'account_dest_id': acc_template_ref[acc.account_dest_id.id],
+                    'account_src_id': acc_template_ref[acc.account_src_id].id,
+                    'account_dest_id': acc_template_ref[acc.account_dest_id].id,
                     'position_id': fp.id,
                 }))
         self._create_records_with_xmlid('account.fiscal.position.tax', tax_template_vals, company)
@@ -950,14 +945,132 @@ class AccountTaxTemplate(models.Model):
             res.append((record.id, name))
         return res
 
+    @api.model
+    def _try_instantiating_foreign_taxes(self, country, company):
+        """ This function is called in multivat setup, when a company needs to submit a
+        tax report in a foreign country.
+
+        It searches for tax templates in the provided countries and instantiates the
+        ones it find in the provided company.
+
+        Tax accounts are not kept from the templates (this wouldn't make sense,
+        as they don't belong to the same CoA as the one installed on the company).
+        Instead, we search existing tax accounts for approximately equivalent accounts
+        and use their prefix to create new accounts. Doing this gives a roughly correct suggestion
+        that then needs to be reviewed by the user to ensure its consistency.
+        It is intended as a shortcut to avoid hours of encoding, not as an out-of-the-box, always
+        correct solution.
+        """
+        def create_foreign_tax_account(existing_account, additional_label):
+            new_code = self.env['account.account']._search_new_account_code(existing_account.company_id, len(existing_account.code), existing_account.code[:-2])
+            return self.env['account.account'].create({
+                'name': f"{existing_account.name} - {additional_label}",
+                'code': new_code,
+                'user_type_id': existing_account.user_type_id.id,
+                'company_id': existing_account.company_id.id,
+            })
+
+        def get_existing_tax_account(foreign_tax_rep_line, force_tax=None):
+            company = foreign_tax_rep_line.company_id
+            sign_comparator = '<' if foreign_tax_rep_line.factor_percent < 0 else '>'
+
+            search_domain = [
+                ('account_id', '!=', False),
+                ('factor_percent', sign_comparator, 0),
+                ('company_id', '=', company.id),
+                '|',
+                '&', ('invoice_tax_id.type_tax_use', '=', tax_rep_line.invoice_tax_id.type_tax_use),
+                     ('invoice_tax_id.country_id', '=', company.account_fiscal_country_id.id),
+                '&', ('refund_tax_id.type_tax_use', '=', tax_rep_line.refund_tax_id.type_tax_use),
+                     ('refund_tax_id.country_id', '=', company.account_fiscal_country_id.id),
+            ]
+
+            if force_tax:
+                search_domain += [
+                    '|', ('invoice_tax_id.id', 'in', force_tax.ids),
+                    ('refund_tax_id.id', 'in', force_tax.ids),
+                ]
+
+            return self.env['account.tax.repartition.line'].search(search_domain, limit=1).account_id
+
+
+        taxes_in_country = self.env['account.tax'].search([
+            ('country_id', '=', country.id),
+            ('company_id', '=', company.id)
+        ])
+
+        if taxes_in_country:
+            return
+
+        templates_to_instantiate = self.env['account.tax.template'].with_context(active_test=False).search([('chart_template_id.country_id', '=', country.id)])
+        default_company_taxes = company.account_sale_tax_id + company.account_purchase_tax_id
+        rep_lines_accounts = templates_to_instantiate._generate_tax(company)['account_dict']
+
+        new_accounts_map = {}
+
+        # Handle tax repartition line accounts
+        tax_rep_lines_accounts_dict = rep_lines_accounts['account.tax.repartition.line']
+        for tax_rep_line, account_dict in tax_rep_lines_accounts_dict.items():
+            account_template = account_dict['account_id']
+            rep_account = new_accounts_map.get(account_template)
+
+            if not rep_account:
+
+                existing_account = get_existing_tax_account(tax_rep_line, force_tax=default_company_taxes)
+
+                if not existing_account:
+                    # If the default taxes were not enough to provide the account
+                    # we need, search on all other taxes.
+                    existing_account = get_existing_tax_account(tax_rep_line)
+
+                if existing_account:
+                    rep_account = create_foreign_tax_account(existing_account, _("Foreign tax account (%s)", country.code))
+                    new_accounts_map[account_template] = rep_account
+
+            tax_rep_line.account_id = rep_account
+
+        # Handle cash basis taxes transtion account
+        caba_transition_dict = rep_lines_accounts['account.tax']
+        for tax, account_dict in caba_transition_dict.items():
+            transition_account_template = account_dict['cash_basis_transition_account_id']
+
+            if transition_account_template:
+                transition_account = new_accounts_map.get(transition_account_template)
+
+                if not transition_account:
+                    rep_lines = tax.invoice_repartition_line_ids + tax.refund_repartition_line_ids
+                    tax_accounts = rep_lines.account_id
+
+                    if tax_accounts:
+                        transition_account = create_foreign_tax_account(tax_accounts[0], _("Cash basis transition account"))
+
+                tax.cash_basis_transition_account_id = transition_account
+
+        # Setup tax closing accounts on foreign tax groups ; we don't want to use the domestic accounts
+        groups = self.env['account.tax.group'].search([('country_id', '=', country.id)])
+        group_property_fields = [
+            'property_tax_payable_account_id',
+            'property_tax_receivable_account_id',
+            'property_advance_tax_payment_account_id'
+        ]
+
+        property_company = self.env['ir.property'].with_company(company)
+        groups_company = groups.with_company(company)
+        for property_field in group_property_fields:
+            default_acc = property_company._get(property_field, 'account.tax.group')
+            if default_acc:
+                groups_company.write({
+                    property_field: create_foreign_tax_account(default_acc, _("Foreign account (%s)", country.code))
+                })
+
     def _get_tax_vals(self, company, tax_template_to_tax):
         """ This method generates a dictionary of all the values for the tax that will be created.
         """
         # Compute children tax ids
         children_ids = []
         for child_tax in self.children_tax_ids:
-            if tax_template_to_tax.get(child_tax.id):
-                children_ids.append(tax_template_to_tax[child_tax.id])
+            if tax_template_to_tax.get(child_tax):
+                children_ids.append(tax_template_to_tax[child_tax].id)
         self.ensure_one()
         val = {
             'name': self.name,
@@ -1011,7 +1124,7 @@ class AccountTaxTemplate(models.Model):
             # create taxes in batch
             tax_template_vals = []
             for template in templates:
-                if all(child.id in tax_template_to_tax for child in template.children_tax_ids):
+                if all(child in tax_template_to_tax for child in template.children_tax_ids):
                     vals = template._get_tax_vals(company, tax_template_to_tax)
 
                     if self.chart_template_id.country_id:
@@ -1030,10 +1143,10 @@ class AccountTaxTemplate(models.Model):
 
             # fill in tax_template_to_tax and todo_dict
             for tax, (template, vals) in zip(taxes, tax_template_vals):
-                tax_template_to_tax[template.id] = tax.id
+                tax_template_to_tax[template] = tax
                 # Since the accounts have not been created yet, we have to wait before filling these fields
-                todo_dict['account.tax'][tax.id] = {
-                    'cash_basis_transition_account_id': template.cash_basis_transition_account_id.id,
+                todo_dict['account.tax'][tax] = {
+                    'cash_basis_transition_account_id': template.cash_basis_transition_account_id,
                 }
 
                 # We also have to delay the assignation of accounts to repartition lines
@@ -1047,8 +1160,8 @@ class AccountTaxTemplate(models.Model):
                     # We assume template and tax repartition lines are in the same order
                     template_account = all_template_rep_lines[i].account_id
                     if template_account:
-                        todo_dict['account.tax.repartition.line'][all_tax_rep_lines[i].id] = {
-                            'account_id': template_account.id,
+                        todo_dict['account.tax.repartition.line'][all_tax_rep_lines[i]] = {
+                            'account_id': template_account,
                         }
 
         if any(template.tax_exigibility == 'on_payment' for template in self):

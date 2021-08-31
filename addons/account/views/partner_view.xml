@@ -6,6 +6,27 @@
             <field name="model">account.fiscal.position</field>
             <field name="arch" type="xml">
                 <form string="Fiscal Position">
+                    <div groups="account.group_account_manager"
+                         class="alert alert-info mb-0"
+                         role="alert"
+                         attrs="{'invisible': [('foreign_vat_header_mode', '=', False)]}">
+
+                        <div attrs="{'invisible': [('foreign_vat_header_mode', '!=', 'templates_found')]}">
+                            Click
+                            <button
+                                string="here"
+                                type="object"
+                                name="action_create_foreign_taxes"
+                                class="oe_link"
+                                style="padding: 0; vertical-align: baseline;"/>
+                            to create the taxes for this country.
+                        </div>
+
+                        <span attrs="{'invisible': [('foreign_vat_header_mode', '!=', 'no_template')]}">
+                            No tax template found for this country. Please install the corresponding localization module.
+                        </span>
+                    </div>
+
                     <sheet>
                     <div class="oe_button_box" name="button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
@@ -14,6 +35,7 @@
                             <field name="active" invisible="1"/>
                             <field name="states_count" invisible="1"/>
                             <field name="company_country_id" invisible="1"/>
+                            <field name="foreign_vat_header_mode" invisible="1"/>
                             <field name="name"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
