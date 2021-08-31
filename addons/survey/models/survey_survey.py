@@ -89,6 +89,7 @@ class Survey(models.Model):
     answer_count = fields.Integer("Registered", compute="_compute_survey_statistic")
     answer_done_count = fields.Integer("Attempts", compute="_compute_survey_statistic")
     answer_score_avg = fields.Float("Avg Score %", compute="_compute_survey_statistic")
+    answer_duration_avg = fields.Float("Average Duration", compute="_compute_answer_duration_avg", help="Average duration of the survey (in hours)")
     success_count = fields.Integer("Success", compute="_compute_survey_statistic")
     success_ratio = fields.Integer("Success Ratio", compute="_compute_survey_statistic")
     # scoring
@@ -189,13 +190,34 @@ class Survey(models.Model):
             if item['scoring_success']:
                 stat[item['survey_id'][0]]['success_count'] += item['__count']
 
-        for survey_id, values in stat.items():
-            avg_total = stat[survey_id].pop('answer_score_avg_total')
-            stat[survey_id]['answer_score_avg'] = avg_total / (stat[survey_id]['answer_done_count'] or 1)
-            stat[survey_id]['success_ratio'] = (stat[survey_id]['success_count'] / (stat[survey_id]['answer_done_count'] or 1.0))*100
+        for survey_stats in stat.values():
+            avg_total = survey_stats.pop('answer_score_avg_total')
+            survey_stats['answer_score_avg'] = avg_total / (survey_stats['answer_done_count'] or 1)
+            survey_stats['success_ratio'] = (survey_stats['success_count'] / (survey_stats['answer_done_count'] or 1.0))*100
 
         for survey in self:
             survey.update(stat.get(survey._origin.id, default_vals))
+
+    @api.depends('user_input_ids.survey_id', 'user_input_ids.start_datetime', 'user_input_ids.end_datetime')
+    def _compute_answer_duration_avg(self):
+        result_per_survey_id = {}
+        if self.ids:
+            self.env.cr.execute(
+                """SELECT survey_id,
+                          avg((extract(epoch FROM end_datetime)) - (extract (epoch FROM start_datetime)))
+                     FROM survey_user_input
+                    WHERE survey_id = any(%s) AND state = 'done'
+                          AND end_datetime IS NOT NULL
+                          AND start_datetime IS NOT NULL
+                 GROUP BY survey_id""",
+                [self.ids]
+            )
+            result_per_survey_id = dict(self.env.cr.fetchall())
+
+        for survey in self:
+            # as avg returns None if nothing found, set 0 if it's the case.
+            survey.answer_duration_avg = (result_per_survey_id.get(survey.id) or 0) / 3600
+
 
     @api.depends('question_and_page_ids')
     def _compute_page_and_question_ids(self):
@@ -872,7 +894,7 @@ class Survey(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'name': "Test Survey",
-            'target': 'self',
+            'target': '_blank',
             'url': '/survey/test/%s' % self.access_token,
         }
 
@@ -933,7 +955,7 @@ class Survey(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'name': "Open Session Manager",
-            'target': 'self',
+            'target': '_blank',
             'url': '/survey/session/manage/%s' % self.access_token
         }
 
