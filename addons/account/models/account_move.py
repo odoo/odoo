@@ -2249,6 +2249,14 @@ class AccountMove(models.Model):
         move.message_subscribe(list(all_followers_ids))
         return move
 
+    def _check_negative_amount(self):
+        """ Check invoice for negative amount
+        You can overwrite this in localization modules.
+        """
+        for move in self:
+            if move.is_invoice(include_receipts=True) and float_compare(move.amount_total, 0.0, precision_rounding=move.currency_id.rounding) < 0:
+                raise UserError(_("You cannot validate an invoice with a negative total amount. You should create a credit note instead. Use the action menu to transform it into a credit note or refund."))
+
     def post(self):
         # `user_has_group` won't be bypassed by `sudo()` since it doesn't change the user anymore.
         if not self.env.su and not self.env.user.has_group('account.group_account_invoice'):
@@ -2268,8 +2276,7 @@ class AccountMove(models.Model):
                 elif move.is_purchase_document():
                     raise UserError(_("The field 'Vendor' is required, please complete it to validate the Vendor Bill."))
 
-            if move.is_invoice(include_receipts=True) and float_compare(move.amount_total, 0.0, precision_rounding=move.currency_id.rounding) < 0:
-                raise UserError(_("You cannot validate an invoice with a negative total amount. You should create a credit note instead. Use the action menu to transform it into a credit note or refund."))
+            move._check_negative_amount()
 
             # Handle case when the invoice_date is not set. In that case, the invoice_date is set at today and then,
             # lines are recomputed accordingly.
