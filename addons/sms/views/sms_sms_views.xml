@@ -7,8 +7,8 @@
             <form string="SMS">
                 <header>
                     <button name="send" string="Send Now" type="object" states='outgoing' class="oe_highlight"/>
-                    <button name="set_outgoing" string="Retry" type="object" states='error,canceled'/>
-                    <button name="cancel" string="Cancel" type="object" states='error,outgoing'/>
+                    <button name="action_set_outgoing" string="Retry" type="object" states='error,canceled'/>
+                    <button name="action_set_canceled" string="Cancel" type="object" states='error,outgoing'/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>

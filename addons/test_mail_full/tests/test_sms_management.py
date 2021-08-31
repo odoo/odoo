@@ -2,36 +2,116 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestMailFullRecipients
+from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 
-class TestSMSWizards(TestMailFullCommon, TestMailFullRecipients):
+class TestSMSActionsCommon(TestMailFullCommon, TestMailFullRecipients):
 
     @classmethod
     def setUpClass(cls):
-        super(TestSMSWizards, cls).setUpClass()
+        super(TestSMSActionsCommon, cls).setUpClass()
         cls.test_record = cls.env['mail.test.sms'].with_context(**cls._test_context).create({
             'name': 'Test',
             'customer_id': cls.partner_1.id,
         })
         cls.test_record = cls._reset_mail_context(cls.test_record)
         cls.msg = cls.test_record.message_post(body='TEST BODY', author_id=cls.partner_employee.id)
+        cls.sms_p1 = cls.env['sms.sms'].create({
+            'body': 'TEST BODY',
+            'failure_type': 'sms_number_format',
+            'mail_message_id': cls.msg.id,
+            'number': cls.partner_1.mobile,
+            'partner_id': cls.partner_1.id,
+            'state': 'error',
+        })
         cls.notif_p1 = cls.env['mail.notification'].create({
             'mail_message_id': cls.msg.id,
             'res_partner_id': cls.partner_1.id,
+            'sms_id': cls.sms_p1.id,
             'sms_number': cls.partner_1.mobile,
             'notification_type': 'sms',
             'notification_status': 'exception',
             'failure_type': 'sms_number_format',
         })
+        cls.sms_p2 = cls.env['sms.sms'].create({
+            'body': 'TEST BODY',
+            'failure_type': 'sms_credit',
+            'mail_message_id': cls.msg.id,
+            'number': cls.partner_2.mobile,
+            'partner_id': cls.partner_2.id,
+            'state': 'error',
+        })
         cls.notif_p2 = cls.env['mail.notification'].create({
             'mail_message_id': cls.msg.id,
             'res_partner_id': cls.partner_2.id,
+            'sms_id': cls.sms_p2.id,
             'sms_number': cls.partner_2.mobile,
             'notification_type': 'sms',
             'notification_status': 'exception',
             'failure_type': 'sms_credit',
         })
 
+
+@tagged('sms_management')
+class TestSMSActions(TestSMSActionsCommon):
+
+    def test_sms_set_cancel(self):
+        self._reset_bus()
+        self.sms_p1.action_set_canceled()
+        self.assertEqual(self.sms_p1.state, 'canceled')
+
+        self.assertMessageBusNotifications(self.msg)
+        self.assertSMSNotification([
+            {'partner': self.partner_1, 'number': self.notif_p1.sms_number, 'state': 'canceled', 'failure_type': 'sms_number_format'},
+            {'partner': self.partner_2, 'number': self.notif_p2.sms_number, 'state': 'exception', 'failure_type': 'sms_credit'}
+        ], 'TEST BODY', self.msg, check_sms=False)    # do not check new sms as they already exist
+
+        self._reset_bus()
+        self.sms_p2.with_context(sms_skip_msg_notification=True).action_set_canceled()
+        self.assertEqual(self.sms_p2.state, 'canceled')
+
+        self.assertEqual(self.env['bus.bus'].search([]), self.env['bus.bus'], 'SMS: no bus notifications unless asked')
+        self.assertSMSNotification([
+            {'partner': self.partner_1, 'number': self.notif_p1.sms_number, 'state': 'canceled', 'failure_type': 'sms_number_format'},
+            {'partner': self.partner_2, 'number': self.notif_p2.sms_number, 'state': 'canceled', 'failure_type': 'sms_credit'}
+        ], 'TEST BODY', self.msg, check_sms=False)    # do not check new sms as they already exist
+
+
+    def test_sms_set_error(self):
+        self._reset_bus()
+        (self.sms_p1 + self.sms_p2).with_context(sms_skip_msg_notification=True).action_set_canceled()
+        self.assertEqual(self.sms_p1.state, 'canceled')
+        self.assertEqual(self.sms_p2.state, 'canceled')
+        self.assertEqual(self.env['bus.bus'].search([]), self.env['bus.bus'], 'SMS: no bus notifications unless asked')
+
+        (self.sms_p1 + self.sms_p2).action_set_error('sms_server')
+        self.assertEqual(self.sms_p1.state, 'error')
+        self.assertEqual(self.sms_p2.state, 'error')
+
+        self.assertMessageBusNotifications(self.msg)
+        self.assertSMSNotification([
+            {'partner': self.partner_1, 'number': self.notif_p1.sms_number, 'state': 'exception', 'failure_type': 'sms_server'},
+            {'partner': self.partner_2, 'number': self.notif_p2.sms_number, 'state': 'exception', 'failure_type': 'sms_server'}
+        ], 'TEST BODY', self.msg, check_sms=False)    # do not check new sms as they already exist
+
+    def test_sms_set_outgoing(self):
+        self._reset_bus()
+        (self.sms_p1 + self.sms_p2).action_set_outgoing()
+        self.assertEqual(self.sms_p1.state, 'outgoing')
+        self.assertEqual(self.sms_p2.state, 'outgoing')
+
+        self.assertMessageBusNotifications(self.msg)
+        self.assertSMSNotification([
+            {'partner': self.partner_1, 'number': self.notif_p1.sms_number, 'state': 'ready'},
+            {'partner': self.partner_2, 'number': self.notif_p2.sms_number, 'state': 'ready'}
+        ], 'TEST BODY', self.msg, check_sms=False)    # do not check new sms as they already exist
+
+
+@tagged('sms_management')
+class TestSMSWizards(TestSMSActionsCommon):
+
+    @mute_logger('odoo.addons.sms.models.sms_sms')
     def test_sms_resend(self):
         self._reset_bus()
 
@@ -47,6 +127,7 @@ class TestSMSWizards(TestMailFullCommon, TestMailFullRecipients):
         ], 'TEST BODY', self.msg, check_sms=True)
         self.assertMessageBusNotifications(self.msg)
 
+    @mute_logger('odoo.addons.sms.models.sms_sms')
     def test_sms_resend_update_number(self):
         self._reset_bus()
 
@@ -76,6 +157,7 @@ class TestSMSWizards(TestMailFullCommon, TestMailFullRecipients):
         ], 'TEST BODY', self.msg, check_sms=False)
         self.assertMessageBusNotifications(self.msg)
 
+    @mute_logger('odoo.addons.sms.models.sms_sms')
     def test_sms_resend_internals(self):
         self._reset_bus()
         self.assertSMSNotification([
@@ -91,6 +173,7 @@ class TestSMSWizards(TestMailFullCommon, TestMailFullRecipients):
             with self.mockSMSGateway():
                 wizard.action_resend()
 
+    @mute_logger('odoo.addons.sms.models.sms_sms')
     def test_sms_resend_w_cancel(self):
         self._reset_bus()
 
