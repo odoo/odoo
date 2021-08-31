@@ -7,14 +7,10 @@ class AccountJournal(models.Model):
 
     l10n_ec_entity = fields.Char(string="Emission Entity", size=3, default="001")
     l10n_ec_emission = fields.Char(string="Emission Point", size=3, default="001")
-    l10n_ec_company_partner_id = fields.Many2one(
-        comodel_name="res.partner",
-        related="company_id.partner_id",
-    )
     l10n_ec_emission_address_id = fields.Many2one(
         comodel_name="res.partner",
         string="Emission address",
-        domain="['|', ('id', '=', l10n_ec_company_partner_id), '&', ('id', 'child_of', l10n_ec_company_partner_id), ('type', '!=', 'contact')]",
+        domain="['|', ('id', '=', company_partner_id), '&', ('id', 'child_of', company_partner_id), ('type', '!=', 'contact')]",
     )
 
     l10n_ec_emission_type = fields.Selection(
