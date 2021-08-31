@@ -1437,6 +1437,9 @@ exports.PosModel = Backbone.Model.extend({
         });
         product_model.loaded(this, product);
     },
+    htmlToImgLetterRendering() {
+        return false;
+    },
 });
 
 /**
