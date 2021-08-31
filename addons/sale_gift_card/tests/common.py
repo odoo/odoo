@@ -45,8 +45,8 @@ class TestSaleGiftCardCommon(TestSaleProductAttributeValueCommon):
         })
         cls.product_gift_card = cls.env['product.product'].create({
             'name': 'Gift Card 50',
+            'detailed_type': 'gift',
             'list_price': 50,
             'sale_ok': True,
             'taxes_id': False,
-            'is_gift_card': True
         })

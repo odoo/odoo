@@ -5,7 +5,7 @@
         <record id="pay_with_gift_card_product" model="product.product">
             <field name="name">Gift Card</field>
             <field name="list_price">0</field>
-            <field name="type">service</field>
+            <field name="detailed_type">service</field>
             <field name="purchase_ok" eval="False"/>
             <field name="sale_ok" eval="False"/>
             <field name="image_1920" type="base64" file="gift_card/static/img/gift_card.png"/>
@@ -15,9 +15,8 @@
         <record id="gift_card_product_50" model="product.product">
             <field name="name">Gift Card</field>
             <field name="list_price">50</field>
-            <field name="type">service</field>
+            <field name="detailed_type">gift</field>
             <field name="purchase_ok" eval="False"/>
-            <field name="is_gift_card" eval="True"/>
             <field name="image_1920" type="base64" file="gift_card/static/img/gift_card.png"/>
         </record>
     </data>
