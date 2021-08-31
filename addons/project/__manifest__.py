@@ -59,6 +59,7 @@
     'post_init_hook': '_project_post_init',
     'assets': {
         'web.assets_backend': [
+            'project/static/src/project_control_panel/*',
             'project/static/src/css/project.css',
             'project/static/src/js/project_activity.js',
             'project/static/src/js/project_control_panel.js',
@@ -85,7 +86,7 @@
             'project/static/src/js/portal_rating.js',
         ],
         'web.assets_qweb': [
-            'project/static/src/xml/**/*',
+            'project/static/src/**/*.xml',
         ],
         'web.qunit_suite_tests': [
             'project/static/tests/burndown_chart_tests.js',
