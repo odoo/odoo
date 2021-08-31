@@ -5004,7 +5004,12 @@ var BasicModel = AbstractModel.extend({
             element.offset = _.indexOf(element.res_ids, element.res_id);
         }
         var loadOptions = _.pick(options, 'fieldNames', 'viewType');
-        return this._load(element, loadOptions).then(function (result) {
+        return this._load(element, loadOptions).then((result) => {
+            if (element.type === 'record' && options.reload_duplicates) {
+                this._updateDuplicateRecords(element.id, (id) => {
+                    Object.assign(this.localData[id].data, element.data);
+                });
+            }
             return result.id;
         });
     },

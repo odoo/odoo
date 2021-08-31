@@ -580,7 +580,7 @@ var KanbanActivity = BasicActivity.extend({
      * @private
      */
     _reload: function () {
-        this.trigger_up('reload', { db_id: this.record_id, keepChanges: true });
+        this.trigger_up('reload', { db_id: this.record_id, keepChanges: true, reload_duplicates: true });
     },
     /**
      * @override

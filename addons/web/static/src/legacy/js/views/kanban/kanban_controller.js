@@ -112,8 +112,11 @@ var KanbanController = BasicController.extend({
      * @returns {Promise}
      */
     _confirmSave: function (id) {
-        var data = this.model.get(this.handle, {raw: true});
-        var grouped = data.groupedBy.length;
+        const state = this.model.get(this.handle);
+        const grouped = state.groupedBy.length;
+        if (grouped && state.isM2MGrouped) {
+            return this._updateRendererState(state);
+        }
         if (grouped) {
             var columnState = this.model.getColumn(id);
             return this.renderer.updateColumn(columnState.id, columnState);

@@ -847,10 +847,11 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         ev.stopPropagation(); // prevent other controllers from handling this request
         var data = ev && ev.data || {};
         var handle = data.db_id;
+        const reload_duplicates = data.reload_duplicates;
         var prom;
         if (handle) {
             // reload the relational field given its db_id
-            prom = this.model.reload(handle).then(this._confirmSave.bind(this, handle));
+            prom = this.model.reload(handle, { reload_duplicates }).then(this._confirmSave.bind(this, handle));
         } else {
             // no db_id given, so reload the main record
             prom = this.reload({

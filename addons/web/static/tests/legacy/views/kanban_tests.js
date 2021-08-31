@@ -2731,6 +2731,50 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('update duplicate records in other groups when groupby many2many field in kanban views', async function (assert) {
+        assert.expect(7);
+
+        this.data.partner.records[0].category_ids = [6, 7];
+        this.data.partner.records[1].category_ids = [7, 8];
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                `<kanban class="o_kanban_test">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="category_ids"/>
+                                <div class="o_foo"><field name="foo"/></div>
+                                <field name="state" widget="priority"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ['category_ids'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 4, "should have 4 columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(2) .o_kanban_record .o_foo').text(), 'yop',
+            "third column should have 1 record");
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record .o_foo').text(), 'yopblipgnap',
+            "last column should have 3 records");
+        assert.hasClass(kanban.$('.o_kanban_group:eq(2) .o_kanban_record .o_field_widget.o_priority a.o_priority_star'), 'fa-star-o',
+            "priority widget of record should have fa-star-o");
+        assert.hasClass(kanban.$('.o_kanban_group:last .o_kanban_record:first .o_field_widget.o_priority a.o_priority_star'), 'fa-star-o',
+            "priority widget of record should have fa-star-o");
+
+        await testUtils.dom.click(kanban.$('.o_kanban_group:eq(2) .o_kanban_record .o_field_widget.o_priority a.o_priority_star.fa-star-o:eq(1)'));
+        assert.hasClass(kanban.$('.o_kanban_group:eq(2) .o_kanban_record .o_field_widget.o_priority a.o_priority_star'), 'fa-star',
+            "priority widget of record should have fa-star");
+        assert.hasClass(kanban.$('.o_kanban_group:last .o_kanban_record:first .o_field_widget.o_priority a.o_priority_star'), 'fa-star',
+            "priority widget of record should have fa-star");
+
+        kanban.destroy();
+    });
+
     QUnit.test('Do not open record when clicking on `a` with `href`', async function (assert) {
         assert.expect(5);
 
