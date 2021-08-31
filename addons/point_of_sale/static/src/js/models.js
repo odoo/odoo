@@ -1386,6 +1386,9 @@ exports.PosModel = Backbone.Model.extend({
     },
 
     electronic_payment_interfaces: {},
+    htmlToImgLetterRendering() {
+        return false;
+    }
 });
 
 /**
