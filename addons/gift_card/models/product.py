@@ -8,7 +8,14 @@ from odoo.exceptions import UserError
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    is_gift_card = fields.Boolean(default=False, help="This product is converted into a gift card when purchased.")
+    detailed_type = fields.Selection(selection_add=[
+        ('gift', 'Gift Card'),
+    ], ondelete={'gift': 'set default'})
+
+    def _detailed_type_mapping(self):
+        type_mapping = super()._detailed_type_mapping()
+        type_mapping['gift'] = 'service'
+        return type_mapping
 
     @api.ondelete(at_uninstall=False)
     def _unlink_gift_card_product(self):

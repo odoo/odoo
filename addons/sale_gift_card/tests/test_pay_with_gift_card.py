@@ -4,7 +4,9 @@
 from odoo import Command
 from odoo.addons.sale_gift_card.tests.common import TestSaleGiftCardCommon
 from odoo.exceptions import UserError
+from odoo.tests.common import tagged
 
+@tagged('-at_install', 'post_install')
 class TestPayWithGiftCard(TestSaleGiftCardCommon):
 
     def test_paying_with_single_gift_card(self):

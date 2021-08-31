@@ -3,7 +3,9 @@
 
 from odoo import Command
 from odoo.addons.sale_gift_card.tests.common import TestSaleGiftCardCommon
+from odoo.tests.common import tagged
 
+@tagged('-at_install', 'post_install')
 class TestBuyGiftCard(TestSaleGiftCardCommon):
 
     def test_buying_simple_gift_card(self):
