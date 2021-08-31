@@ -31,8 +31,3 @@ class CouponRule(models.Model):
     def _check_rule_minimum_amount(self):
         if self.filtered(lambda applicability: applicability.rule_minimum_amount < 0):
             raise ValidationError(_('Minimum purchased amount should be greater than 0'))
-
-    @api.constrains('rule_min_quantity')
-    def _check_rule_min_quantity(self):
-        if not self.rule_min_quantity > 0:
-            raise ValidationError(_('Minimum quantity should be greater than 0'))
