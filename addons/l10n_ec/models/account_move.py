@@ -221,6 +221,7 @@ class AccountMove(models.Model):
 
     def _get_last_sequence_domain(self, relaxed=False):
         l10n_latam_document_type_model = self.env['l10n_latam.document.type']
+        where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
         if self.country_code == "EC" and self.journal_id.l10n_latam_use_documents and self.move_type in (
             "out_invoice",
             "out_refund",
@@ -240,5 +241,4 @@ class AccountMove(models.Model):
                 AND l10n_latam_document_type_id in %(l10n_latam_document_type_id)s
                 """
                 param["l10n_latam_document_type_id"] = tuple(document_types.ids)
-            return where_string, param
-        return super(AccountMove, self)._get_last_sequence_domain(relaxed)
+        return where_string, param
