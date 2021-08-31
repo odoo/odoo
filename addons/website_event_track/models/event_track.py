@@ -41,7 +41,6 @@ class Track(models.Model):
         index=True, copy=False, default=_get_default_stage_id,
         group_expand='_read_group_stage_ids',
         required=True, tracking=True)
-    is_accepted = fields.Boolean('Is Accepted', related='stage_id.is_accepted', readonly=True)
     legend_blocked = fields.Char(related='stage_id.legend_blocked',
         string='Kanban Blocked Explanation', readonly=True)
     legend_done = fields.Char(related='stage_id.legend_done',
@@ -442,7 +441,7 @@ class Track(models.Model):
         return stages.search([], order=order)
 
     def _synchronize_with_stage(self, stage):
-        if stage.is_done:
+        if stage.is_fully_accessible:
             self.is_published = True
         elif stage.is_cancel:
             self.is_published = False
