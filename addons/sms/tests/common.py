@@ -65,7 +65,7 @@ class MockSMS(common.BaseCase):
                 return sms_unlink_origin(records, *args, **kwargs)
             # hack: instead of unlink, update state to sent for tests
             else:
-                records.filtered(lambda sms: sms.id in self._new_sms.ids).state = 'sent'
+                records.filtered(lambda sms: sms.id in self._new_sms.ids and sms.state != 'error').state = 'sent'
             return True
 
         try:
