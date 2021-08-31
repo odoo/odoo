@@ -34,6 +34,7 @@ function fieldNameRegex(...terms) {
     return new RegExp(`\\b((\\w+)?_)?(${terms.join("|")})(_(\\w+)?)?\\b`);
 }
 
+const MEASURE_SPEC_REGEX = /(?<measure>\w+):(?<aggregateFunction>\w+)\((?<fieldName>\w+)\)/;
 const DESCRIPTION_REGEX = fieldNameRegex("description", "label", "title", "subject", "message");
 const EMAIL_REGEX = fieldNameRegex("email");
 const PHONE_REGEX = fieldNameRegex("phone");
@@ -418,14 +419,19 @@ export class SampleServer {
         });
         const measures = [];
         for (const measureSpec of params.fields || Object.keys(fields)) {
-            const [fieldName, aggregateFunction] = measureSpec.split(":");
-            const { type } = fields[fieldName];
+            const matches = measureSpec.match(MEASURE_SPEC_REGEX);
+            const { fieldName, aggregateFunction, measure } = (matches && matches.groups) || {};
+            if (!fieldName && !measure) {
+                continue; // this is for _count measure
+            }
+            const fName = fieldName || measure;
+            const { type } = fields[fName];
             if (
-                !params.groupBy.includes(fieldName) &&
+                !params.groupBy.includes(fName) &&
                 type &&
                 (type !== "many2one" || aggregateFunction !== "count_distinct")
             ) {
-                measures.push({ fieldName, type });
+                measures.push({ fieldName: fName, type });
             }
         }
 
