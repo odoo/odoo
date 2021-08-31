@@ -173,14 +173,6 @@ class RecordCapturer:
 # Main classes
 # ------------------------------------------------------------
 class OdooSuite(unittest.suite.TestSuite):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        from odoo.http import root
-        if not root._loaded:
-            root.load_addons()
-            root._loaded = True
-
     if sys.version_info < (3, 8):
         # Partial backport of bpo-24412, merged in CPython 3.8
 

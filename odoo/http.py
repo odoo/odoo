@@ -57,7 +57,8 @@ from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
 from .tools.mimetypes import guess_mimetype
 from .tools.misc import str2bool
 from .tools._vendor import sessions
-from .modules.module import read_manifest
+from .modules import module
+from .modules.module import addons_manifest # for backward compatibility
 
 _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
@@ -862,7 +863,6 @@ more details.
 #----------------------------------------------------------
 # Controller and route registration
 #----------------------------------------------------------
-addons_manifest = {}
 controllers_per_module = collections.defaultdict(list)
 
 class ControllerType(type):
@@ -1311,35 +1311,12 @@ class Root(object):
         """
         if not self._loaded:
             self._loaded = True
-            self.load_addons()
+            if module.addons_statics:
+                _logger.info("HTTP Configuring static files")
+            app = SharedDataMiddleware(self.dispatch, module.addons_statics, cache_timeout=STATIC_CACHE)
+            self.dispatch = DisableCacheMiddleware(app)
+
         return self.dispatch(environ, start_response)
-
-    def load_addons(self):
-        """ Load all addons from addons path containing static files and
-        controllers and configure them.  """
-        # TODO should we move this to ir.http so that only configured modules are served ?
-        statics = {}
-        manifests = addons_manifest
-        for addons_path in odoo.addons.__path__:
-            for module in sorted(os.listdir(str(addons_path))):
-                if module not in manifests:
-                    # Deal with the manifest first
-                    mod_path = opj(addons_path, module)
-                    manifest = read_manifest(addons_path, module)
-                    if not manifest or (not manifest.get('installable', True) and 'assets' not in manifest):
-                        continue
-                    manifest['addons_path'] = addons_path
-                    manifests[module] = manifest
-                    # Then deal with the statics
-                    path_static = opj(addons_path, module, 'static')
-                    if os.path.isdir(path_static):
-                        _logger.debug("Loading %s", module)
-                        statics['/%s/static' % module] = path_static
-
-        if statics:
-            _logger.info("HTTP Configuring static files")
-        app = SharedDataMiddleware(self.dispatch, statics, cache_timeout=STATIC_CACHE)
-        self.dispatch = DisableCacheMiddleware(app)
 
     def setup_session(self, httprequest):
         # recover or create session

@@ -32,7 +32,7 @@ from werkzeug.urls import url_encode, url_decode, iri_to_uri
 import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
-from odoo.modules import get_module_path, get_resource_path, module
+from odoo.modules import get_resource_path, module
 from odoo.tools import image_process, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
@@ -966,9 +966,9 @@ class WebClient(http.Controller):
 
         translations_per_module = {}
         for addon_name in mods:
-            manifest = http.addons_manifest.get(addon_name)
+            manifest = module.addons_manifest.get(addon_name)
             if manifest and manifest.get('bootstrap'):
-                addons_path = http.addons_manifest[addon_name]['addons_path']
+                addons_path = module.addons_manifest[addon_name]['addons_path']
                 f_name = os.path.join(addons_path, addon_name, "i18n", lang + ".po")
                 if not os.path.exists(f_name):
                     continue

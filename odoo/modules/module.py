@@ -157,6 +157,8 @@ def initialize_sys_path():
         sys.meta_path.insert(0, AddonsHook())
         initialize_sys_path.called = True
 
+    load_addons_manifest()
+
 
 def get_module_path(module, downloaded=False, display_warning=True):
     """Return the path of the given module.
@@ -275,6 +277,29 @@ def module_manifest(path):
     for manifest_name in MANIFEST_NAMES:
         if os.path.isfile(opj(path, manifest_name)):
             return opj(path, manifest_name)
+
+addons_manifest = {}
+addons_statics = {}
+def load_addons_manifest():
+    """ Load all addons from addons path containing static files and
+    controllers and configure them.  """
+    if addons_manifest:
+        return (addons_manifest, addons_statics)
+
+    for addons_path in odoo.addons.__path__:
+        for module in sorted(os.listdir(str(addons_path))):
+            if module not in addons_manifest:
+                # Deal with the manifest first
+                manifest = read_manifest(addons_path, module)
+                if not manifest or (not manifest.get('installable', True) and 'assets' not in manifest):
+                    continue
+                manifest['addons_path'] = addons_path
+                addons_manifest[module] = manifest
+                # Then deal with the statics
+                path_static = opj(addons_path, module, 'static')
+                if os.path.isdir(path_static):
+                    _logger.debug("Loading %s", module)
+                    addons_statics['/%s/static' % module] = path_static
 
 def read_manifest(addons_path, module):
     mod_path = opj(addons_path, module)

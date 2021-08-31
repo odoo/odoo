@@ -17,7 +17,7 @@ from odoo.addons import __path__ as ADDONS_PATH
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.base.models.ir_asset import AssetPaths
 from odoo.addons.base.models.ir_attachment import IrAttachment
-from odoo.modules.module import get_resource_path, read_manifest
+from odoo.modules import module
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import TransactionCase
 from odoo.addons.base.models.qweb import QWebException
@@ -83,7 +83,7 @@ class AddonManifestPatched(TransactionCase):
 
     test_assetsbundle_manifest = None
     for path in ADDONS_PATH:
-        manifest = read_manifest(path, 'test_assetsbundle')
+        manifest = module.read_manifest(path, 'test_assetsbundle')
         if manifest:
             manifest['addons_path'] = path
             test_assetsbundle_manifest = manifest
@@ -92,15 +92,15 @@ class AddonManifestPatched(TransactionCase):
     def tearDown(self):
         super().tearDown()
         self.env.registry._init_modules = self.__genuine_registry_modules
-        http.addons_manifest = self.__genuine_addons_manifest
+        module.addons_manifest = self.__genuine_addons_manifest
 
     def setUp(self):
         super().setUp()
         self.__genuine_registry_modules = self.env.registry._init_modules
         self.env.registry._init_modules = func.lazy(lambda: set(self.installed_modules))
 
-        self.__genuine_addons_manifest = http.addons_manifest
-        http.addons_manifest = func.lazy(lambda: self.manifests)
+        self.__genuine_addons_manifest = module.addons_manifest
+        module.addons_manifest = func.lazy(lambda: self.manifests)
 
         self.installed_modules = ['base', 'test_assetsbundle']
         self.manifests = {
@@ -220,7 +220,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         last_modified0 = bundle0.last_modified
         version0 = bundle0.version
 
-        path = get_resource_path('test_assetsbundle', 'static', 'src', 'js', 'test_jsfile1.js')
+        path = module.get_resource_path('test_assetsbundle', 'static', 'src', 'js', 'test_jsfile1.js')
         bundle1 = self._get_asset(self.jsbundle_name)
 
         with self._touch(path):
@@ -510,7 +510,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         # Touch test_cssfile1.css
         # Note: No lang specific context given while calling _get_asset so it will load assets for en_US
-        path = get_resource_path('test_assetsbundle', 'static', 'src', 'css', 'test_cssfile1.css')
+        path = module.get_resource_path('test_assetsbundle', 'static', 'src', 'css', 'test_cssfile1.css')
         ltr_bundle1 = self._get_asset(self.cssbundle_name)
 
         with self._touch(path):
@@ -784,7 +784,7 @@ class TestAssetsBundleWithIRAMock(FileTouchable):
         self._bundle(self._get_asset(), False, False)
 
         # Touch the file and compile a third time
-        path = get_resource_path('test_assetsbundle', 'static', 'src', 'scss', 'test_file1.scss')
+        path = module.get_resource_path('test_assetsbundle', 'static', 'src', 'scss', 'test_file1.scss')
         t = time.time() + 5
         asset = self._get_asset()
         with self._touch(path, t):
