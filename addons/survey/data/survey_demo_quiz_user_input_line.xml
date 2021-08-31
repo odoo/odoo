@@ -1,66 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo><data noupdate="0">
-    <record id="survey_demo_quiz_answer_1" model="survey.user_input">
-        <field name="survey_id" ref="survey.survey_demo_quiz"/>
-        <field name="partner_id" ref="base.partner_demo"/>
-        <field name="email">mark.brown23@example.com</field>
-        <field name="state">done</field>
-    </record>
-    <record id="survey_demo_quiz_answer_2" model="survey.user_input">
-        <field name="survey_id" ref="survey.survey_demo_quiz"/>
-        <field name="partner_id" ref="base.partner_admin"/>
-        <field name="email">admin@yourcompany.example.com</field>
-        <field name="state">done</field>
-    </record>
-    <record id="survey_demo_quiz_answer_3" model="survey.user_input">
-        <field name="survey_id" ref="survey.survey_demo_quiz"/>
-        <field name="partner_id" ref="base.partner_demo_portal"/>
-        <field name="email">joel.willis63@example.com</field>
-        <field name="state">done</field>
-    </record>
-    <record id="survey_demo_quiz_answer_4" model="survey.user_input">
-        <field name="survey_id" ref="survey.survey_demo_quiz"/>
-        <field name="partner_id" ref="base.res_partner_address_15"/>
-        <field name="email">brandon.freeman55@example.com</field>
-        <field name="state">done</field>
-    </record>
-    <record id="survey_demo_quiz_answer_5" model="survey.user_input">
-        <field name="survey_id" ref="survey.survey_demo_quiz"/>
-        <field name="partner_id" ref="base.res_partner_address_28"/>
-        <field name="email">colleen.diaz83@example.com</field>
-        <field name="state">in_progress</field>
-    </record>
-    <record id="survey_demo_quiz_answer_6" model="survey.user_input">
-        <field name="survey_id" ref="survey.survey_demo_quiz"/>
-        <field name="partner_id" ref="base.res_partner_address_34"/>
-        <field name="email">travis.mendoza24@example.com</field>
-        <field name="state">new</field>
-    </record>
-
     <!-- Page 1: general informations -->
     <record id="survey_demo_quiz_answer_1_p1_q1_l1" model="survey.user_input.line">
-    	<field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
-    	<field name="question_id" ref="survey_demo_quiz_p1_q1"/>
+        <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
+        <field name="question_id" ref="survey_demo_quiz_p1_q1"/>
         <field name="answer_type">char_box</field>
-    	<field name="value_char_box">mark.brown23@example.com</field>
+        <field name="value_char_box">mark.brown23@example.com</field>
     </record>
     <record id="survey_demo_quiz_answer_1_p1_q2_l1" model="survey.user_input.line">
-    	<field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
-    	<field name="question_id" ref="survey_demo_quiz_p1_q2"/>
+        <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
+        <field name="question_id" ref="survey_demo_quiz_p1_q2"/>
         <field name="answer_type">char_box</field>
-    	<field name="value_char_box">Mark Brown</field>
+        <field name="value_char_box">Mark Brown</field>
     </record>
     <record id="survey_demo_quiz_answer_1_p1_q3_l1" model="survey.user_input.line">
-    	<field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
-    	<field name="question_id" ref="survey_demo_quiz_p1_q3"/>
+        <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
+        <field name="question_id" ref="survey_demo_quiz_p1_q3"/>
         <field name="answer_type">char_box</field>
-    	<field name="value_char_box">Brussels</field>
+        <field name="value_char_box">Brussels</field>
     </record>
     <record id="survey_demo_quiz_answer_1_p1_q4_l1" model="survey.user_input.line">
-    	<field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
-    	<field name="question_id" ref="survey_demo_quiz_p1_q4"/>
+        <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
+        <field name="question_id" ref="survey_demo_quiz_p1_q4"/>
         <field name="answer_type">numerical_box</field>
-    	<field name="value_numerical_box">36</field>
+        <field name="value_numerical_box">36</field>
     </record>
     <!-- Page 2: quiz about company -->
     <record id="survey_demo_quiz_answer_1_p2_q1_l1" model="survey.user_input.line">
@@ -85,18 +48,18 @@
     <record id="survey_demo_quiz_answer_1_p3_q1_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
         <field name="question_id" ref="survey_demo_quiz_p3_q1"/>
+        <field name="answer_is_correct" eval="True"/>
+        <field name="answer_score">20</field>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q1_sug1"/>
-        <field name="answer_is_correct">True</field>
-        <field name="answer_score">2</field>
     </record>
     <record id="survey_demo_quiz_answer_1_p3_q2_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
         <field name="question_id" ref="survey_demo_quiz_p3_q2"/>
+        <field name="answer_is_correct" eval="True"/>
+        <field name="answer_score">20</field>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q2_sug1"/>
-        <field name="answer_is_correct">True</field>
-        <field name="answer_score">2</field>
     </record>
     <record id="survey_demo_quiz_answer_1_p3_q2_l2" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
@@ -107,28 +70,30 @@
     <record id="survey_demo_quiz_answer_1_p3_q3_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
         <field name="question_id" ref="survey_demo_quiz_p3_q3"/>
+        <field name="answer_is_correct" eval="True"/>
+        <field name="answer_score">10</field>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q3_sug2"/>
-        <field name="answer_is_correct">True</field>
-        <field name="answer_score">1</field>
     </record>
     <record id="survey_demo_quiz_answer_1_p3_q3_l2" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
         <field name="question_id" ref="survey_demo_quiz_p3_q3"/>
+        <field name="answer_score">-10</field>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q3_sug3"/>
     </record>
     <record id="survey_demo_quiz_answer_1_p3_q4_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
         <field name="question_id" ref="survey_demo_quiz_p3_q4"/>
+        <field name="answer_is_correct" eval="True"/>
+        <field name="answer_score">20</field>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q4_sug1"/>
-        <field name="answer_is_correct">True</field>
-        <field name="answer_score">2</field>
     </record>
     <record id="survey_demo_quiz_answer_1_p3_q4_l2" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
         <field name="question_id" ref="survey_demo_quiz_p3_q4"/>
+        <field name="answer_score">-10</field>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q4_sug3"/>
     </record>
@@ -171,6 +136,8 @@
     <record id="survey_demo_quiz_answer_1_p4_q1_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
         <field name="question_id" ref="survey_demo_quiz_p4_q1"/>
+        <field name="answer_is_correct" eval="True"/>
+        <field name="answer_score">20</field>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q1_sug1"/>
     </record>
@@ -189,14 +156,22 @@
     <record id="survey_demo_quiz_answer_1_p4_q4_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
         <field name="question_id" ref="survey_demo_quiz_p4_q4"/>
+        <field name="answer_is_correct" eval="True"/>
+        <field name="answer_score">20</field>
         <field name="answer_type">suggestion</field>
-        <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q4_sug1"/>
+        <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q4_sug2"/>
     </record>
     <record id="survey_demo_quiz_answer_1_p4_q5_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
         <field name="question_id" ref="survey_demo_quiz_p4_q5"/>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q5_sug1"/>
+    </record>
+    <record id="survey_demo_quiz_answer_1_p4_q5_l2" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
+        <field name="question_id" ref="survey_demo_quiz_p4_q5"/>
+        <field name="answer_type">suggestion</field>
+        <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q5_sug2"/>
     </record>
     <record id="survey_demo_quiz_answer_1_p4_q6_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
@@ -208,16 +183,16 @@
 
     <!-- Page 1: general informations -->
     <record id="survey_demo_quiz_answer_2_p1_q1_l1" model="survey.user_input.line">
-    	<field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
-    	<field name="question_id" ref="survey_demo_quiz_p1_q1"/>
+        <field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
+        <field name="question_id" ref="survey_demo_quiz_p1_q1"/>
         <field name="answer_type">char_box</field>
-    	<field name="value_char_box">admin@yourcompany.example.com</field>
+        <field name="value_char_box">admin@yourcompany.example.com</field>
     </record>
     <record id="survey_demo_quiz_answer_2_p1_q2_l1" model="survey.user_input.line">
-    	<field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
-    	<field name="question_id" ref="survey_demo_quiz_p1_q2"/>
+        <field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
+        <field name="question_id" ref="survey_demo_quiz_p1_q2"/>
         <field name="answer_type">char_box</field>
-    	<field name="value_char_box">Mitchell Admin</field>
+        <field name="value_char_box">Mitchell Admin</field>
     </record>
     <record id="survey_demo_quiz_answer_2_p1_q3_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
@@ -253,10 +228,10 @@
     <record id="survey_demo_quiz_answer_2_p3_q1_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
         <field name="question_id" ref="survey_demo_quiz_p3_q1"/>
+        <field name="answer_is_correct" eval="True"/>
+        <field name="answer_score">10</field>
         <field name="answer_type">suggestion</field>
-        <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q1_sug1"/>
-        <field name="answer_is_correct">True</field>
-        <field name="answer_score">1</field>
+        <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q1_sug2"/>
     </record>
     <record id="survey_demo_quiz_answer_2_p3_q2_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
@@ -273,10 +248,10 @@
     <record id="survey_demo_quiz_answer_2_p3_q3_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
         <field name="question_id" ref="survey_demo_quiz_p3_q3"/>
+        <field name="answer_is_correct" eval="True"/>
+        <field name="answer_score">20</field>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q3_sug1"/>
-        <field name="answer_is_correct">True</field>
-        <field name="answer_score">2</field>
     </record>
     <record id="survey_demo_quiz_answer_2_p3_q3_l2" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
@@ -287,10 +262,10 @@
     <record id="survey_demo_quiz_answer_2_p3_q4_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
         <field name="question_id" ref="survey_demo_quiz_p3_q4"/>
+        <field name="answer_is_correct" eval="True"/>
+        <field name="answer_score">20</field>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q4_sug1"/>
-        <field name="answer_is_correct">True</field>
-        <field name="answer_score">2</field>
     </record>
     <record id="survey_demo_quiz_answer_2_p3_q5_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
@@ -331,6 +306,8 @@
     <record id="survey_demo_quiz_answer_2_p4_q1_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
         <field name="question_id" ref="survey_demo_quiz_p4_q1"/>
+        <field name="answer_is_correct" eval="True"/>
+        <field name="answer_score">20</field>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q1_sug1"/>
     </record>
@@ -343,8 +320,10 @@
     <record id="survey_demo_quiz_answer_2_p4_q3_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
         <field name="question_id" ref="survey_demo_quiz_p4_q3"/>
+        <field name="answer_is_correct" eval="True"/>
+        <field name="answer_score">10</field>
         <field name="answer_type">suggestion</field>
-        <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q3_sug1"/>
+        <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q3_sug2"/>
     </record>
     <record id="survey_demo_quiz_answer_2_p4_q4_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
@@ -358,6 +337,12 @@
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q5_sug1"/>
     </record>
+    <record id="survey_demo_quiz_answer_2_p4_q5_l2" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
+        <field name="question_id" ref="survey_demo_quiz_p4_q5"/>
+        <field name="answer_type">suggestion</field>
+        <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q5_sug3"/>
+    </record>
     <record id="survey_demo_quiz_answer_2_p4_q6_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
         <field name="question_id" ref="survey_demo_quiz_p4_q6"/>
@@ -368,16 +353,16 @@
 
     <!-- Page 1: general informations -->
     <record id="survey_demo_quiz_answer_3_p1_q1_l1" model="survey.user_input.line">
-    	<field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
-    	<field name="question_id" ref="survey_demo_quiz_p1_q1"/>
+        <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
+        <field name="question_id" ref="survey_demo_quiz_p1_q1"/>
         <field name="answer_type">char_box</field>
-    	<field name="value_char_box">joel.willis63@example.com</field>
+        <field name="value_char_box">joel.willis63@example.com</field>
     </record>
     <record id="survey_demo_quiz_answer_3_p1_q2_l1" model="survey.user_input.line">
-    	<field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
-    	<field name="question_id" ref="survey_demo_quiz_p1_q2"/>
+        <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
+        <field name="question_id" ref="survey_demo_quiz_p1_q2"/>
         <field name="answer_type">char_box</field>
-    	<field name="value_char_box">Joël Willis</field>
+        <field name="value_char_box">Joël Willis</field>
     </record>
     <record id="survey_demo_quiz_answer_3_p1_q3_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
@@ -420,26 +405,26 @@
     <record id="survey_demo_quiz_answer_3_p3_q2_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
         <field name="question_id" ref="survey_demo_quiz_p3_q2"/>
+        <field name="answer_is_correct" eval="True"/>
+        <field name="answer_score">20</field>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q2_sug1"/>
-        <field name="answer_is_correct">True</field>
-        <field name="answer_score">2</field>
     </record>
     <record id="survey_demo_quiz_answer_3_p3_q3_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
         <field name="question_id" ref="survey_demo_quiz_p3_q3"/>
+        <field name="answer_is_correct" eval="True"/>
+        <field name="answer_score">20</field>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q3_sug1"/>
-        <field name="answer_is_correct">True</field>
-        <field name="answer_score">2</field>
     </record>
     <record id="survey_demo_quiz_answer_3_p3_q3_l2" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
         <field name="question_id" ref="survey_demo_quiz_p3_q3"/>
+        <field name="answer_is_correct" eval="True"/>
+        <field name="answer_score">10</field>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q3_sug2"/>
-        <field name="answer_is_correct">True</field>
-        <field name="answer_score">1</field>
     </record>
     <record id="survey_demo_quiz_answer_3_p3_q3_l3" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
@@ -450,22 +435,23 @@
     <record id="survey_demo_quiz_answer_3_p3_q4_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
         <field name="question_id" ref="survey_demo_quiz_p3_q4"/>
+        <field name="answer_is_correct" eval="True"/>
+        <field name="answer_score">20</field>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q4_sug1"/>
-        <field name="answer_is_correct">True</field>
-        <field name="answer_score">2</field>
     </record>
     <record id="survey_demo_quiz_answer_3_p3_q4_l2" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
         <field name="question_id" ref="survey_demo_quiz_p3_q4"/>
+        <field name="answer_is_correct" eval="True"/>
+        <field name="answer_score">20</field>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q4_sug2"/>
-        <field name="answer_is_correct">True</field>
-        <field name="answer_score">2</field>
     </record>
     <record id="survey_demo_quiz_answer_3_p3_q4_l3" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
         <field name="question_id" ref="survey_demo_quiz_p3_q4"/>
+        <field name="answer_score">-10</field>
         <field name="answer_type">suggestion</field>
         <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q4_sug3"/>
     </record>
@@ -535,13 +521,14 @@
         <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
         <field name="question_id" ref="survey_demo_quiz_p4_q1"/>
         <field name="answer_type">suggestion</field>
-        <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q1_sug1"/>
+        <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q1_sug3"/>
     </record>
     <record id="survey_demo_quiz_answer_3_p4_q2_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
         <field name="question_id" ref="survey_demo_quiz_p4_q2"/>
+        <field name="answer_score">20</field>
         <field name="answer_type">suggestion</field>
-        <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q2_sug1"/>
+        <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q2_sug2"/>
     </record>
     <record id="survey_demo_quiz_answer_3_p4_q3_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
@@ -553,13 +540,19 @@
         <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
         <field name="question_id" ref="survey_demo_quiz_p4_q4"/>
         <field name="answer_type">suggestion</field>
-        <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q4_sug1"/>
+        <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q4_sug3"/>
     </record>
     <record id="survey_demo_quiz_answer_3_p4_q5_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
         <field name="question_id" ref="survey_demo_quiz_p4_q5"/>
         <field name="answer_type">suggestion</field>
-        <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q5_sug1"/>
+        <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q5_sug2"/>
+    </record>
+    <record id="survey_demo_quiz_answer_3_p4_q5_l2" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>
+        <field name="question_id" ref="survey_demo_quiz_p4_q5"/>
+        <field name="answer_type">suggestion</field>
+        <field name="suggested_answer_id" ref="survey_demo_quiz_p4_q5_sug3"/>
     </record>
     <record id="survey_demo_quiz_answer_3_p4_q6_l1" model="survey.user_input.line">
         <field name="user_input_id" ref="survey_demo_quiz_answer_3"/>

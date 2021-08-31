@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <data>
-    <record model="ir.ui.view" id="survey_form">
-        <field name="name">Form view for survey</field>
+    <record id="survey_form" model="ir.ui.view">
+        <field name="name">survey.survey.view.form</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
             <form string="Survey" class="o_survey_form">
@@ -160,8 +160,8 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id= "survey_tree">
-        <field name="name">Tree view for survey</field>
+    <record id="survey_tree" model="ir.ui.view">
+        <field name="name">survey.survey.view.tree</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
             <tree string="Survey" sample="1">
@@ -170,6 +170,7 @@
                 <field name="title"/>
                 <field name="answer_count"/>
                 <field name="answer_done_count"/>
+                <field name="answer_duration_avg"/>
                 <field name="success_count"/>
                 <field name="success_ratio"/>
                 <field name="answer_score_avg"/>
@@ -180,8 +181,8 @@
             </tree>
         </field>
     </record>
-    <record model="ir.ui.view" id="survey_kanban">
-        <field name="name">Kanban view for survey</field>
+    <record id="survey_kanban" model="ir.ui.view">
+        <field name="name">survey.survey.view.kanban</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
             <kanban sample="1">
