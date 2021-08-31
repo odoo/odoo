@@ -228,9 +228,6 @@ class AccountMove(models.Model):
             "in_invoice",
             "in_refund",
         ):
-            where_string, param = super(AccountMove, self)._get_last_sequence_domain(
-                relaxed=relaxed
-            )
             internal_type = self._get_l10n_ec_internal_type()
             document_types = l10n_latam_document_type_model.search([
                 ('internal_type', '=', internal_type),
