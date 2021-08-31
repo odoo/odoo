@@ -14,10 +14,10 @@
 import ActionMixin from 'web.ActionMixin';
 import ajax from 'web.ajax';
 import concurrency from 'web.concurrency';
+import config from 'web.config';
 import { ComponentWrapper } from 'web.OwlCompatibility';
 import mvc from 'web.mvc';
 import session from 'web.session';
-
 
 var AbstractController = mvc.Controller.extend(ActionMixin, {
     custom_events: _.extend({}, ActionMixin.custom_events, {
@@ -118,7 +118,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     on_attach_callback: function () {
         ActionMixin.on_attach_callback.call(this);
         this.searchModel.on('search', this, this._onSearch);
-        this.searchModel.trigger('focus-control-panel');
+        if (!config.device.isMobileDevice) {
+            this.searchModel.trigger('focus-control-panel');
+        }
         if (this.withControlPanel) {
             this.searchModel.on('get-controller-query-params', this, this._onGetOwnedQueryParams);
         }
