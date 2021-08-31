@@ -1414,6 +1414,10 @@ exports.PosModel = Backbone.Model.extend({
     getCurrencySymbol() {
         return this.currency ? this.currency.symbol : '$';
     },
+
+    htmlToImgLetterRendering() {
+        return false;
+    },
 });
 
 /**
