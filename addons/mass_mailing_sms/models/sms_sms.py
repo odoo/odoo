@@ -28,7 +28,7 @@ class SmsSms(models.Model):
             res[sms.id] = body
         return res
 
-    def _postprocess_iap_sent_sms(self, iap_results, failure_reason=None, delete_all=False):
+    def _postprocess_iap_sent_sms(self, iap_results, failure_reason=None, unlink_failed=False, unlink_sent=True):
         all_sms_ids = [item['res_id'] for item in iap_results]
         if any(sms.mailing_id for sms in self.env['sms.sms'].sudo().browse(all_sms_ids)):
             for state in self.IAP_TO_SMS_STATE.keys():
@@ -40,4 +40,7 @@ class SmsSms(models.Model):
                     traces.set_sent()
                 elif traces:
                     traces.set_failed(failure_type=self.IAP_TO_SMS_STATE[state])
-        return super(SmsSms, self)._postprocess_iap_sent_sms(iap_results, failure_reason=failure_reason, delete_all=delete_all)
+        return super(SmsSms, self)._postprocess_iap_sent_sms(
+            iap_results, failure_reason=failure_reason,
+            unlink_failed=unlink_failed, unlink_sent=unlink_sent
+        )
