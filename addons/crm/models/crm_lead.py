@@ -10,7 +10,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.osv import expression
 from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.addons.phone_validation.tools import phone_validation
 from collections import OrderedDict, defaultdict
 
@@ -694,6 +694,8 @@ class Lead(models.Model):
         leads_leave_lost = Lead
         won_stage_ids = self.env['crm.stage'].search([('is_won', '=', True)]).ids
         for lead in self:
+            if not lead.active and 'stage_id' in vals:
+                    raise ValidationError(_(f'Not allowed to change stage of archived leads.'))
             if 'stage_id' in vals:
                 if vals['stage_id'] in won_stage_ids:
                     if lead.probability == 0:
