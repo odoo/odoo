@@ -11,7 +11,6 @@
     'data': [
         'views/template.xml',
         'views/gift_card_views.xml',
-        'views/product_views.xml',
         'views/gift_card_menus.xml',
         ],
     'demo': [

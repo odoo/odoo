@@ -22,7 +22,7 @@ class SaleOrder(models.Model):
 
         # create and send gift card when order become confirmed
         for record in self.filtered(lambda so: so.state == 'sale'):
-            for gift_card_order_line in record.order_line.filtered(lambda ol: ol.product_id.is_gift_card):
+            for gift_card_order_line in record.order_line.filtered(lambda ol: ol.product_id.detailed_type == 'gift'):
                 gift_card_order_line._create_gift_cards()
             record.sudo()._send_gift_card_mail()
 
