@@ -1218,6 +1218,9 @@ class Task(models.Model):
             return [fn(n) for day, fn in DAYS.items() if self[day]]
         return [DAYS.get(self.repeat_weekday)(n)]
 
+    def _get_recurrence_start_date(self):
+        return fields.Date.today()
+
     @api.depends(
         'recurring_task', 'repeat_interval', 'repeat_unit', 'repeat_type', 'repeat_until',
         'repeat_number', 'repeat_on_month', 'repeat_on_year', 'mon', 'tue', 'wed', 'thu', 'fri',
@@ -1225,7 +1228,7 @@ class Task(models.Model):
     def _compute_recurrence_message(self):
         self.recurrence_message = False
         for task in self.filtered(lambda t: t.recurring_task and t._is_recurrence_valid()):
-            date = fields.Date.today()
+            date = self._get_recurrence_start_date()
             recurrence_left = task.recurrence_id.recurrence_left if task.recurrence_id  else task.repeat_number
             number_occurrences = min(5, recurrence_left if task.repeat_type == 'after' else 5)
             delta = task.repeat_interval if task.repeat_unit == 'day' else 1
