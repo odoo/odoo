@@ -141,4 +141,44 @@
         <field name="binding_model_id" ref="model_project_task"/>
         <field name="binding_type">report</field>
     </record>
+
+    <!-- Project Timesheet Report -->
+    <template id="report_timesheet_project">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-set="company" t-value="docs.company_id[0] if len(docs) == 1 else docs.env.company"/>
+                <t t-set="show_task" t-value="bool(docs.task_ids)"/>
+                <t t-set="show_project" t-value="len(docs) > 1"/>
+
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-lg-12">
+                            <h2>
+                                <span>Timesheet Entries
+                                    <t t-if="not show_project">
+                                        for the <t t-esc="docs.name"/> Project
+                                    </t>
+                                </span>
+                            </h2>
+                        </div>
+                    </div>
+                    <t t-set="is_uom_day" t-value="docs.timesheet_ids and docs.timesheet_ids[0]._is_timesheet_encode_uom_day()"/>
+                    <t t-set="lines" t-value="docs.timesheet_ids"/>
+                    <t t-call="hr_timesheet.timesheet_table"/>
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="timesheet_report_project" model="ir.actions.report">
+        <field name="name">Timesheet Entries</field>
+        <field name="model">project.project</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hr_timesheet.report_timesheet_project</field>
+        <field name="report_file">report_timesheet_project</field>
+        <field name="binding_model_id" ref="model_project_project"/>
+        <field name="binding_type">report</field>
+    </record>
 </odoo>
