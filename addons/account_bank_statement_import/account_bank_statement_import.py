@@ -192,7 +192,8 @@ class AccountBankStatementImport(models.TransientModel):
                     # reconciliation process will be linked to the bank when the statement is closed.
                     identifying_string = line_vals.get('account_number')
                     if identifying_string:
-                        partner_bank = self.env['res.partner.bank'].search([('acc_number', '=', identifying_string)], limit=1)
+                        partner_bank = self.env['res.partner.bank']\
+                            .search([('acc_number', '=', identifying_string), ('company_id', 'in', (False, journal.company_id.id))], limit=1)
                         if partner_bank:
                             line_vals['bank_account_id'] = partner_bank.id
                             line_vals['partner_id'] = partner_bank.partner_id.id
