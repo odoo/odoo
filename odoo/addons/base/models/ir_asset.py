@@ -191,7 +191,7 @@ class IrAsset(models.Model):
             elif directive == BEFORE_DIRECTIVE:
                 asset_paths.insert(paths, addon, bundle, target_index)
             elif directive == REMOVE_DIRECTIVE:
-                asset_paths.remove(paths, addon, bundle, path_def)
+                asset_paths.remove(paths, addon, bundle)
             elif directive == REPLACE_DIRECTIVE:
                 asset_paths.insert(paths, addon, bundle, target_index)
                 asset_paths.remove(target_paths, addon, bundle)
@@ -414,16 +414,16 @@ class AssetPaths:
                 self.memo.add(path)
         self.list[index:index] = to_insert
 
-    def remove(self, paths, addon, bundle, path=None):
+    def remove(self, paths_to_remove, addon, bundle):
         """Removes the given paths from the current list."""
-        paths = {path for path in paths if path in self.memo}
+        paths = {path for path in paths_to_remove if path in self.memo}
         if paths:
             self.list[:] = [asset for asset in self.list if asset[0] not in paths]
             self.memo.difference_update(paths)
             return
 
-        if path:
-            self._raise_not_found(path, bundle)
+        if paths_to_remove:
+            self._raise_not_found(paths_to_remove, bundle)
 
     def _raise_not_found(self, path, bundle):
-        raise ValueError("File %s not found in bundle %s" % (path, bundle))
+        raise ValueError("File(s) %s not found in bundle %s" % (path, bundle))
