@@ -24,6 +24,7 @@ class SurveyUserInput(models.Model):
     survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='cascade')
     scoring_type = fields.Selection(string="Scoring", related="survey_id.scoring_type")
     start_datetime = fields.Datetime('Start date and time', readonly=True)
+    end_datetime = fields.Datetime('End date and time', readonly=True)
     deadline = fields.Datetime('Deadline', help="Datetime until customer can open the survey and submit answers")
     state = fields.Selection([
         ('new', 'Not started yet'),
@@ -203,7 +204,11 @@ class SurveyUserInput(models.Model):
         - It has a certification_mail_template_id set
         - The user succeeded the test
         Will also run challenge Cron to give the certification badge if any."""
-        self.write({'state': 'done'})
+        self.write({
+            'end_datetime': fields.Datetime.now(),
+            'state': 'done',
+        })
+
         Challenge = self.env['gamification.challenge'].sudo()
         badge_ids = []
         for user_input in self:
