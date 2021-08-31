@@ -21,17 +21,31 @@ from odoo.tools.misc import babel_locale_parse
 
 class EventTrackController(http.Controller):
 
-    def _get_event_tracks_base_domain(self, event):
-        """ Base domain for displaying tracks. Restrict to accepted or published
-        tracks for people not managing events. Unpublished tracks may be displayed
-        but not reachable for teasing purpose. """
-        search_domain_base = [
+    def _get_event_tracks_agenda_domain(self, event):
+        """ Base domain for displaying track names (preview). The returned search
+        domain will select the tracks that belongs to a track stage that should
+        be visible in the agenda (see: 'is_visible_in_agenda'). Published tracks
+        are also displayed whatever their stage. """
+        agenda_domain = [
+            '&',
             ('event_id', '=', event.id),
+            '|',
+            ('is_published', '=', True),
+            ('stage_id.is_visible_in_agenda', '=', True),
         ]
+        return agenda_domain
+
+    def _get_event_tracks_domain(self, event):
+        """ Base domain for displaying tracks. The returned search domain will
+        select the tracks that belongs to a track stage that should be visible
+        in the agenda (see: 'is_visible_in_agenda'). When the user is a visitor,
+        the domain will contain an additional condition that will remove the
+        unpublished tracks from the search results."""
+        search_domain_base = self._get_event_tracks_agenda_domain(event)
         if not request.env.user.has_group('event.group_event_registration_desk'):
             search_domain_base = expression.AND([
                 search_domain_base,
-                ['|', ('is_published', '=', True), ('is_accepted', '=', True)]
+                [('is_published', '=', True)]
             ])
         return search_domain_base
 
@@ -63,7 +77,7 @@ class EventTrackController(http.Controller):
         searches.setdefault('search', '')
         searches.setdefault('search_wishlist', '')
         searches.setdefault('tags', '')
-        search_domain = self._get_event_tracks_base_domain(event)
+        search_domain = self._get_event_tracks_agenda_domain(event)
 
         # search on content
         if searches.get('search'):
@@ -112,8 +126,8 @@ class EventTrackController(http.Controller):
             for dt in self._get_dt_in_event_tz(tracks_wdate.mapped('date'), event)
         ))
         date_begin_tz_all.sort()
-        tracks_sudo_live = tracks_wdate.filtered(lambda track: track.is_published and track.is_track_live)
-        tracks_sudo_soon = tracks_wdate.filtered(lambda track: track.is_published and not track.is_track_live and track.is_track_soon)
+        tracks_sudo_live = tracks_wdate.filtered(lambda track: track.is_track_live)
+        tracks_sudo_soon = tracks_wdate.filtered(lambda track: not track.is_track_live and track.is_track_soon)
         tracks_by_day = []
         for display_date in date_begin_tz_all:
             matching_tracks = tracks_wdate.filtered(lambda track: self._get_dt_in_event_tz([track.date], event)[0].date() == display_date)
@@ -171,25 +185,27 @@ class EventTrackController(http.Controller):
         return request.render("website_event_track.agenda_online", vals)
 
     def _prepare_calendar_values(self, event):
-        """
-         Override that should completely replace original method in v14.
-
-        This methods slit the day (max end time - min start time) into 15 minutes time slots.
-        For each time slot, we assign the tracks that start at this specific time slot, and we add the number
-        of time slot that the track covers (track duration / 15 min)
-        The calendar will be divided into rows of 15 min, and the talks will cover the corresponding number of rows
-        (15 min slots).
-        """
+        """ This methods slit the day (max end time - min start time) into
+        15 minutes time slots. For each time slot, we assign the tracks that
+        start at this specific time slot, and we add the number of time slot
+        that the track covers (track duration / 15 min). The calendar will be
+        divided into rows of 15 min, and the talks will cover the corresponding
+        number of rows (15 min slots). """
         event = event.with_context(tz=event.date_tz or 'UTC')
         local_tz = pytz.timezone(event.date_tz or 'UTC')
         lang_code = request.env.context.get('lang')
-        event_track_ids = self._event_agenda_get_tracks(event)
 
-        locations = list(set(track.location_id for track in event_track_ids))
+        base_track_domain = expression.AND([
+            self._get_event_tracks_agenda_domain(event),
+            [('date', '!=', False)]
+        ])
+        tracks_sudo = request.env['event.track'].sudo().search(base_track_domain)
+
+        locations = list(set(track.location_id for track in tracks_sudo))
         locations.sort(key=lambda x: x.id)
 
         # First split day by day (based on start time)
-        time_slots_by_tracks = {track: self._split_track_by_days(track, local_tz) for track in event_track_ids}
+        time_slots_by_tracks = {track: self._split_track_by_days(track, local_tz) for track in tracks_sudo}
 
         # extract all the tracks time slots
         track_time_slots = set().union(*(time_slot.keys() for time_slot in [time_slots for time_slots in time_slots_by_tracks.values()]))
@@ -235,7 +251,7 @@ class EventTrackController(http.Controller):
 
         # count the number of tracks by days
         tracks_by_days = dict.fromkeys(days, 0)
-        for track in event_track_ids:
+        for track in tracks_sudo:
             track_day = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz).date()
             tracks_by_days[track_day] += 1
 
@@ -245,12 +261,6 @@ class EventTrackController(http.Controller):
             'time_slots': global_time_slots_by_day,
             'locations': locations
         }
-
-    def _event_agenda_get_tracks(self, event):
-        tracks_sudo = event.sudo().track_ids.filtered(lambda track: track.date)
-        if not request.env.user.has_group('event.group_event_manager'):
-            tracks_sudo = tracks_sudo.filtered(lambda track: track.is_published or track.stage_id.is_accepted)
-        return tracks_sudo
 
     def _get_locale_time(self, dt_time, lang_code):
         """ Get locale time from datetime object
@@ -325,7 +335,7 @@ class EventTrackController(http.Controller):
     @http.route('''/event/<model("event.event", "[('website_track', '=', True)]"):event>/track/<model("event.track", "[('event_id', '=', event.id)]"):track>''',
                 type='http', auth="public", website=True, sitemap=True)
     def event_track_page(self, event, track, **options):
-        track = self._fetch_track(track.id, allow_is_accepted=False)
+        track = self._fetch_track(track.id, allow_sudo=False)
 
         return request.render(
             "website_event_track.event_track_main",
@@ -339,7 +349,7 @@ class EventTrackController(http.Controller):
         option_widescreen = bool(option_widescreen) if option_widescreen != '0' else False
         # search for tracks list
         tracks_other = track._get_track_suggestions(
-            restrict_domain=self._get_event_tracks_base_domain(track.event_id),
+            restrict_domain=self._get_event_tracks_domain(track.event_id),
             limit=10
         )
 
@@ -370,7 +380,7 @@ class EventTrackController(http.Controller):
             if set_reminder_on = False, blacklist the track_partner
             otherwise, un-blacklist the track_partner
         """
-        track = self._fetch_track(track_id, allow_is_accepted=True)
+        track = self._fetch_track(track_id, allow_sudo=True)
         force_create = set_reminder_on or track.wishlisted_by_default
         event_track_partner = track._get_event_track_visitors(force_create=force_create)
         visitor_sudo = event_track_partner.visitor_id
@@ -467,7 +477,7 @@ class EventTrackController(http.Controller):
     # TOOLS
     # ------------------------------------------------------------
 
-    def _fetch_track(self, track_id, allow_is_accepted=False):
+    def _fetch_track(self, track_id, allow_sudo=False):
         track = request.env['event.track'].browse(track_id).exists()
         if not track:
             raise NotFound()
@@ -475,11 +485,9 @@ class EventTrackController(http.Controller):
             track.check_access_rights('read')
             track.check_access_rule('read')
         except exceptions.AccessError:
-            track_sudo = track.sudo()
-            if allow_is_accepted and track_sudo.is_accepted:
-                track = track_sudo
-            else:
+            if not allow_sudo:
                 raise Forbidden()
+            track = track.sudo()
 
         event = track.event_id
         # JSON RPC have no website in requests
