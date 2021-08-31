@@ -1069,7 +1069,7 @@ class TestAssetsManifest(AddonManifestPatched):
         with self.assertRaises(Exception) as cm:
             view._render()
         self.assertTrue(
-            "test_assetsbundle/static/src/js/test_doesntexist.js not found" in cm.exception.message
+            "['test_assetsbundle/static/src/js/test_doesntexist.js'] not found" in cm.exception.message
         )
 
     def test_09_remove_wholeglob(self):
