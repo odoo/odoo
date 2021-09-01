@@ -210,13 +210,13 @@
                                     <field name="ref" optional="hidden"/>
                                     <field name="narration" optional="hidden"/>
                                     <field name="transaction_type" optional="hidden"/>
-                                    <field name="amount"
-                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
-                                    <field name="account_number" optional="hidden"/>
                                     <field name="amount_currency" optional="hidden" groups="base.group_multi_currency"
                                            attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
                                     <field name="foreign_currency_id" optional="hidden" groups="base.group_multi_currency"
                                            attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
+                                    <field name="amount"
+                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
+                                    <field name="account_number" optional="hidden"/>
 
                                     <!-- Buttons -->
                                     <button name="button_undo_reconciliation" type="object"
@@ -290,7 +290,7 @@
                     <field name="transaction_type"/>
                     <field name="move_id"/>
                     <field name="amount"/>
-                    <filter name="statement_id" string="Statement" context="{'group_by':'statement_id'}"/>
+                    <filter name="Statement" string="Statement" context="{'group_by':'statement_id'}"/>
                 </search>
             </field>
         </record>
@@ -347,10 +347,10 @@
                     <field name="ref" groups="base.group_no_one" optional="hidden"/>
                     <field name="narration" optional="hidden"/>
                     <field name="transaction_type" optional="hidden"/>
-                    <field name="amount"/>
-                    <field name="account_number" optional="hidden"/>
                     <field name="amount_currency" optional="hidden" groups="base.group_multi_currency"/>
                     <field name="foreign_currency_id" optional="hidden" groups="base.group_multi_currency"/>
+                    <field name="amount"/>
+                    <field name="account_number" optional="hidden"/>
 
                     <!-- Buttons -->
                     <button name="button_undo_reconciliation" type="object"
