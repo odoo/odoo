@@ -1988,11 +1988,15 @@ class BaseModel(metaclass=MetaModel):
         if not field.group_expand:
             return read_group_result
 
-        # field.group_expand is the name of a method that returns the groups
-        # that we want to display for this field, in the form of a recordset or
-        # a list of values (depending on the type of the field). This is useful
-        # to implement kanban views for instance, where some columns should be
-        # displayed even if they don't contain any record.
+        # field.group_expand is a callable or the name of a method, that returns
+        # the groups that we want to display for this field, in the form of a
+        # recordset or a list of values (depending on the type of the field).
+        # This is useful to implement kanban views for instance, where some
+        # columns should be displayed even if they don't contain any record.
+        group_expand = field.group_expand
+        if isinstance(group_expand, str):
+            group_expand = getattr(type(self), group_expand)
+        assert callable(group_expand)
 
         # determine all groups that should be returned
         values = [line[groupby] for line in read_group_result if line[groupby]]
@@ -2003,14 +2007,14 @@ class BaseModel(metaclass=MetaModel):
             order = groups._order
             if read_group_order == groupby + ' desc':
                 order = tools.reverse_order(order)
-            groups = getattr(self, field.group_expand)(groups, domain, order)
+            groups = group_expand(self, groups, domain, order)
             groups = groups.sudo()
             values = lazy_name_get(groups)
             value2key = lambda value: value and value[0]
 
         else:
             # groups is a list of values
-            values = getattr(self, field.group_expand)(values, domain, None)
+            values = group_expand(self, values, domain, None)
             if read_group_order == groupby + ' desc':
                 values.reverse()
             value2key = lambda value: value
