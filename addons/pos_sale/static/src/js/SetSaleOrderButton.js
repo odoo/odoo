@@ -5,7 +5,7 @@ odoo.define('pos_sale.SetSaleOrderButton', function(require) {
     const ProductScreen = require('point_of_sale.ProductScreen');
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
-    const { isRpcError } = require('point_of_sale.utils');
+    const { isConnectionError } = require('point_of_sale.utils');
 
     class SetSaleOrderButton extends PosComponent {
         constructor() {
@@ -34,7 +34,7 @@ odoo.define('pos_sale.SetSaleOrderButton', function(require) {
               });
               this.showScreen('SaleOrderManagementScreen');
           } catch (error) {
-              if (isRpcError(error) && error.message.code < 0) {
+              if (isConnectionError(error)) {
                   this.showPopup('ErrorPopup', {
                       title: this.env._t('Network Error'),
                       body: this.env._t('Cannot access order management screen if offline.'),
