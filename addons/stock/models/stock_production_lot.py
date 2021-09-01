@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from re import findall as regex_findall
+from re import split as regex_split
+
 from odoo.tools.misc import attrgetter
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -30,6 +33,43 @@ class ProductionLot(models.Model):
     delivery_ids = fields.Many2many('stock.picking', compute='_compute_delivery_ids', string='Transfers')
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
     last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_delivery_ids')
+
+    @api.model
+    def generate_lot_names(self, first_lot, count):
+        """Generate `lot_names` from a string."""
+        # We look if the first lot contains at least one digit.
+        caught_initial_number = regex_findall(r"\d+", first_lot)
+        if not caught_initial_number:
+            raise UserError(_('The lot name must contain at least one digit.'))
+        # We base the serie on the last number found in the base lot.
+        initial_number = caught_initial_number[-1]
+        padding = len(initial_number)
+        # We split the lot name to get the prefix and suffix.
+        splitted = regex_split(initial_number, first_lot)
+        # initial_number could appear several times, e.g. BAV023B00001S00001
+        prefix = initial_number.join(splitted[:-1])
+        suffix = splitted[-1]
+        initial_number = int(initial_number)
+
+        lot_names = []
+        for i in range(0, count):
+            lot_names.append('%s%s%s' % (
+                prefix,
+                str(initial_number + i).zfill(padding),
+                suffix
+            ))
+        return lot_names
+
+    @api.model
+    def get_next_serial(self, company, product):
+        """Return the next serial number to be attributed to the product."""
+        if product.tracking == "serial":
+            last_serial = self.env['stock.production.lot'].search(
+                [('company_id', '=', company.id), ('product_id', '=', product.id)],
+                limit=1, order='id DESC')
+            if last_serial:
+                return self.env['stock.production.lot'].generate_lot_names(last_serial.name, 2)[1]
+        return False
 
     @api.constrains('name', 'product_id', 'company_id')
     def _check_unique_lot(self):

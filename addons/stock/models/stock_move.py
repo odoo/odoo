@@ -6,8 +6,6 @@ from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
 from operator import itemgetter
-from re import findall as regex_findall
-from re import split as regex_split
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -636,6 +634,9 @@ class StockMove(models.Model):
         else:
             view = self.env.ref('stock.view_stock_move_nosuggest_operations')
 
+        if self.product_id.tracking == "serial" and self.state == "assigned":
+            self.next_serial = self.env['stock.production.lot'].get_next_serial(self.company_id, self.product_id)
+
         return {
             'name': _('Detailed Operations'),
             'type': 'ir.actions.act_window',
@@ -743,30 +744,7 @@ class StockMove(models.Model):
         `next_serial`) and create a move line for each generated `lot_name`.
         """
         self.ensure_one()
-
-        if not next_serial_count:
-            next_serial_count = self.next_serial_count
-        # We look if the serial number contains at least one digit.
-        caught_initial_number = regex_findall("\d+", self.next_serial)
-        if not caught_initial_number:
-            raise UserError(_('The serial number must contain at least one digit.'))
-        # We base the serie on the last number find in the base serial number.
-        initial_number = caught_initial_number[-1]
-        padding = len(initial_number)
-        # We split the serial number to get the prefix and suffix.
-        splitted = regex_split(initial_number, self.next_serial)
-        # initial_number could appear several times in the SN, e.g. BAV023B00001S00001
-        prefix = initial_number.join(splitted[:-1])
-        suffix = splitted[-1]
-        initial_number = int(initial_number)
-
-        lot_names = []
-        for i in range(0, next_serial_count):
-            lot_names.append('%s%s%s' % (
-                prefix,
-                str(initial_number + i).zfill(padding),
-                suffix
-            ))
+        lot_names = self.env['stock.production.lot'].generate_lot_names(self.next_serial, next_serial_count or self.next_serial_count)
         move_lines_commands = self._generate_serial_move_line_commands(lot_names)
         self.write({'move_line_ids': move_lines_commands})
         return True
