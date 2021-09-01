@@ -21,7 +21,7 @@ class ResPartnerBank(models.Model):
                 self.bank_bic or '',                                    # BIC of the Beneficiary Bank
                 (self.acc_holder_name or self.partner_id.name)[:71],    # Name of the Beneficiary
                 self.sanitized_acc_number,                              # Account Number of the Beneficiary
-                str(amount),                                            # Amount of the Transfer in EUR
+                currency.name + str(amount),                            # Currency + Amount of the Transfer in EUR
                 '',                                                     # Purpose of the Transfer
                 (structured_communication or '')[:36],                  # Remittance Information (Structured)
                 comment[:141],                                          # Remittance Information (Unstructured) (can't be set if there is a structured one)
