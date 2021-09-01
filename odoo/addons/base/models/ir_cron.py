@@ -2,6 +2,7 @@
 import logging
 import threading
 import time
+import os
 import psycopg2
 import pytz
 from datetime import datetime, timedelta
@@ -67,6 +68,8 @@ class ir_cron(models.Model):
     @api.model
     def create(self, values):
         values['usage'] = 'ir_cron'
+        if os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
+            self._cr.postcommit.add(self._notifydb)
         return super(ir_cron, self).create(values)
 
     @api.model
@@ -371,6 +374,8 @@ class ir_cron(models.Model):
 
     def write(self, vals):
         self._try_lock()
+        if ('nextcall' in vals or vals.get('active')) and os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
+            self._cr.postcommit.add(self._notifydb)
         return super(ir_cron, self).write(vals)
 
     def unlink(self):
@@ -447,13 +452,16 @@ class ir_cron(models.Model):
             ats = ', '.join(map(str, at_list))
             _logger.debug("will execute '%s' at %s", self.sudo().name, ats)
 
-        if min(at_list) <= now:
+        if min(at_list) <= now or os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
             self._cr.postcommit.add(self._notifydb)
 
     def _notifydb(self):
-        """ Wake up the cron workers """
+        """ Wake up the cron workers
+        The ODOO_NOTIFY_CRON_CHANGES environment variable allows to force the notifydb on both
+        ir_cron modification and on trigger creation (regardless of call_at)
+        """
         with odoo.sql_db.db_connect('postgres').cursor() as cr:
-            cr.execute('NOTIFY cron_trigger')
+            cr.execute('NOTIFY cron_trigger, %s', [self.env.cr.dbname])
         _logger.debug("cron workers notified")
 
 
