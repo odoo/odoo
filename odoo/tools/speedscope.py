@@ -131,7 +131,7 @@ class Speedscope:
             level.
         """
         stack_ids = []
-        context_iterator = iter(context)
+        context_iterator = iter(context or ())
         context_level, context_value = next(context_iterator, (None, None))
         # consume iterator until we are over stack_offset
         while context_level is not None and context_level < stack_offset:
@@ -178,7 +178,7 @@ class Speedscope:
             entry_end = None if entry_time is None else entry_start + entry_time
             entry_stack_ids = self.stack_to_ids(
                 entry['stack'] or [],
-                use_context and entry.get('exec_context', {}),
+                use_context and entry.get('exec_context'),
                 self.init_stack_trace_level
             )
             level = 0
