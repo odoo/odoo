@@ -54,43 +54,25 @@ MockServer.include({
      * @override
      */
     async _performFetch(resource, init) {
-        if (resource === '/web/binary/upload_attachment') {
-            const formData = init.body;
-            const model = formData.get('model');
-            const id = parseInt(formData.get('id'));
-            const ufiles = formData.getAll('ufile');
-            const callback = formData.get('callback');
-
-            const attachmentIds = [];
-            for (const ufile of ufiles) {
-                const attachmentId = this._mockCreate('ir.attachment', {
-                    // datas,
-                    mimetype: ufile.type,
-                    name: ufile.name,
-                    res_id: id,
-                    res_model: model,
-                });
-                attachmentIds.push(attachmentId);
-            }
-            const attachments = this._getRecords('ir.attachment', [['id', 'in', attachmentIds]]);
-            const formattedAttachments = attachments.map(attachment => {
-                return {
-                    'filename': attachment.name,
-                    'id': attachment.id,
-                    'mimetype': attachment.mimetype,
-                    'size': attachment.file_size
-                };
+        if (resource === '/mail/attachment/upload') {
+            const ufile = init.body.get('ufile');
+            const is_pending = init.body.get('is_pending');
+            const model = is_pending ? 'mail.compose.message' : init.body.get('thread_model');
+            const id = is_pending ? 0 : parseInt(init.body.get('thread_id'));
+            const attachmentId = this._mockCreate('ir.attachment', {
+                // datas,
+                mimetype: ufile.type,
+                name: ufile.name,
+                res_id: id,
+                res_model: model,
             });
-            return {
-                text() {
-                    return `
-                        <script language="javascript" type="text/javascript">
-                            var win = window.top.window;
-                            win.jQuery(win).trigger('${callback}', ${JSON.stringify(formattedAttachments)});
-                        </script>
-                    `;
-                },
-            };
+            const attachment = this._getRecords('ir.attachment', [['id', '=', attachmentId]])[0];
+            return new window.Response(JSON.stringify({
+                'filename': attachment.name,
+                'id': attachment.id,
+                'mimetype': attachment.mimetype,
+                'size': attachment.file_size
+            }));
         }
         return this._super(...arguments);
     },
@@ -99,6 +81,16 @@ MockServer.include({
      */
     async _performRpc(route, args) {
         // routes
+        if (route === '/mail/message/post') {
+            if (args.thread_model === 'mail.channel') {
+                return this._mockMailChannelMessagePost(args.thread_id, args.post_data, args.context);
+            }
+            return this._mockMailThreadMessagePost(args.thread_model, [args.thread_id], args.post_data, args.context);
+        }
+        if (route === '/mail/attachment/delete') {
+            const { attachment_id } = args;
+            return this._mockRouteMailAttachmentRemove(attachment_id);
+        }
         if (route === '/mail/chat_post') {
             const uuid = args.uuid;
             const message_content = args.message_content;
@@ -113,12 +105,35 @@ MockServer.include({
         if (route === '/mail/init_messaging') {
             return this._mockRouteMailInitMessaging();
         }
+        if (route === '/mail/history/messages') {
+            const { min_id, max_id, limit } = args;
+            return this._mockRouteMailMessageHistory(min_id, max_id, limit);
+        }
+        if (route === '/mail/inbox/messages') {
+            const { min_id, max_id, limit } = args;
+            return this._mockRouteMailMessageInbox(min_id, max_id, limit);
+        }
+        if (route === '/mail/starred/messages') {
+            const { min_id, max_id, limit } = args;
+            return this._mockRouteMailMessageStarredMessages(min_id, max_id, limit);
+        }
         if (route === '/mail/read_followers') {
             return this._mockRouteMailReadFollowers(args);
         }
         if (route === '/mail/read_subscription_data') {
             const follower_id = args.follower_id;
             return this._mockRouteMailReadSubscriptionData(follower_id);
+        }
+        if (route === '/mail/thread/messages') {
+            const { min_id, max_id, limit, thread_model, thread_id } = args;
+            return this._mockRouteMailThreadFetchMessages(thread_model, thread_id, max_id, min_id, limit);
+        }
+        if (route === '/mail/channel/messages') {
+            const { channel_id, min_id, max_id, limit } = args;
+            return this._mockRouteMailChannelMessages(channel_id, max_id, min_id, limit);
+        }
+        if (new RegExp('/mail/channel/\\d+/partner/\\d+/avatar_128').test(route)) {
+            return;
         }
         // mail.activity methods
         if (args.model === 'mail.activity' && args.method === 'activity_format') {
@@ -190,10 +205,10 @@ MockServer.include({
             const name = args.args[1] || args.kwargs.name;
             return this._mockMailChannelChannelRename(ids, name);
         }
-        if (args.model === 'mail.channel' && args.method === 'channel_seen') {
-            const channel_ids = args.args[0];
-            const last_message_id = args.args[1] || args.kwargs.last_message_id;
-            return this._mockMailChannelChannelSeen(channel_ids, last_message_id);
+        if (route === '/mail/channel/set_last_seen_message') {
+            const id = args.channel_id;
+            const last_message_id = args.last_message_id;
+            return this._mockMailChannel_ChannelSeen([id], last_message_id);
         }
         if (args.model === 'mail.channel' && args.method === 'channel_set_custom_name') {
             const ids = args.args[0];
@@ -210,13 +225,6 @@ MockServer.include({
         if (args.model === 'mail.channel' && args.method === 'execute_command_who') {
             return this._mockMailChannelExecuteCommandWho(args);
         }
-        if (args.model === 'mail.channel' && args.method === 'message_post') {
-            const id = args.args[0];
-            const kwargs = args.kwargs;
-            const context = kwargs.context;
-            delete kwargs.context;
-            return this._mockMailChannelMessagePost(id, kwargs, context);
-        }
         if (args.model === 'mail.channel' && args.method === 'notify_typing') {
             const ids = args.args[0];
             const is_typing = args.args[1] || args.kwargs.is_typing;
@@ -231,14 +239,6 @@ MockServer.include({
         if (args.model === 'mail.message' && args.method === 'mark_all_as_read') {
             const domain = args.args[0] || args.kwargs.domain;
             return this._mockMailMessageMarkAllAsRead(domain);
-        }
-        if (args.model === 'mail.message' && args.method === 'message_fetch') {
-            // TODO FIXME delay RPC until next potential render as a workaround
-            // to issue https://github.com/odoo/owl/pull/724
-            await nextAnimationFrame();
-            const domain = args.args[0] || args.kwargs.domain;
-            const limit = args.args[1] || args.kwargs.limit;
-            return this._mockMailMessageMessageFetch(domain, limit);
         }
         if (args.model === 'mail.message' && args.method === 'message_format') {
             const ids = args.args[0];
@@ -309,6 +309,35 @@ MockServer.include({
     //--------------------------------------------------------------------------
     // Private Mocked Routes
     //--------------------------------------------------------------------------
+
+    /**
+     * Simulates the `/mail/attachment/delete` route.
+     *
+     * @private
+     * @param {integer} attachment_id
+     */
+    async _mockRouteMailAttachmentRemove(attachment_id) {
+        return this._mockUnlink('ir.attachment', [[attachment_id]]);
+    },
+
+    /**
+     * Simulates the `/mail/channel/messages` route.
+     *
+     * @private
+     * @param {integer} channel_id
+     * @param {integer} limit
+     * @param {integer} max_id
+     * @param {integer} min_id
+     * @returns {Object} list of messages
+     */
+    async _mockRouteMailChannelMessages(channel_id, max_id = false, min_id = false, limit = 30) {
+        const domain = [
+            ['res_id', '=', channel_id],
+            ['model', '=', 'mail.channel'],
+            ['message_type', '!=', 'user_notification'],
+        ];
+        return this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
+    },
 
     /**
      * Simulates the `/mail/chat_post` route.
@@ -383,6 +412,36 @@ MockServer.include({
         return this._mockResUsers_InitMessaging([this.currentUserId]);
     },
     /**
+     * Simulates the `/mail/history/messages` route.
+     *
+     * @private
+     * @returns {Object}
+     */
+    _mockRouteMailMessageHistory(min_id = false, max_id = false, limit = 30) {
+        const domain = [['needaction', '=', false]];
+        return this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
+    },
+    /**
+     * Simulates the `/mail/inbox/messages` route.
+     *
+     * @private
+     * @returns {Object}
+     */
+    _mockRouteMailMessageInbox(min_id = false, max_id = false, limit = 30) {
+        const domain = [['needaction', '=', true]];
+        return this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
+    },
+    /**
+     * Simulates the `/mail/starred/messages` route.
+     *
+     * @private
+     * @returns {Object}
+     */
+    _mockRouteMailMessageStarredMessages(min_id = false, max_id = false, limit = 30) {
+        const domain = [['starred_partner_ids', 'in', [this.currentPartnerId]]];
+        return this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
+    },
+    /**
      * Simulates the `/mail/read_followers` route.
      *
      * @private
@@ -432,6 +491,26 @@ MockServer.include({
         });
         // NOTE: server is also doing a sort here, not reproduced for simplicity
         return subtypes_list;
+    },
+
+    /**
+     * Simulates the `/mail/thread/messages` route.
+     *
+     * @private
+     * @param {string} res_model
+     * @param {integer} res_id
+     * @param {integer} max_id
+     * @param {integer} min_id
+     * @param {integer} limit
+     * @returns {Object[]} list of messages
+     */
+    async _mockRouteMailThreadFetchMessages(res_model, res_id, max_id = false, min_id = false, limit = 30) {
+        const domain = [
+            ['res_id', '=', res_id],
+            ['model', '=', res_model],
+            ['message_type', '!=', 'user_notification'],
+        ];
+        return this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
     },
 
     //--------------------------------------------------------------------------
@@ -817,13 +896,13 @@ MockServer.include({
         this._widget.call('bus_service', 'trigger', 'notification', [notification]);
     },
     /**
-     * Simulates the `channel_seen` method of `mail.channel`.
+     * Simulates the `_channel_seen` method of `mail.channel`.
      *
      * @private
      * @param integer[] ids
      * @param {integer} last_message_id
      */
-    async _mockMailChannelChannelSeen(ids, last_message_id) {
+    async _mockMailChannel_ChannelSeen(ids, last_message_id) {
         // Update record
         const channel_id = ids[0];
         if (!channel_id) {
@@ -1045,7 +1124,7 @@ MockServer.include({
                 },
             ]);
         }
-        const messageId = this._mockMailThreadMessagePost(
+        const messageData = this._mockMailThreadMessagePost(
             'mail.channel',
             [id],
             Object.assign(kwargs, {
@@ -1054,14 +1133,14 @@ MockServer.include({
             context,
         );
         if (kwargs.author_id === this.currentPartnerId) {
-            this._mockMailChannel_SetLastSeenMessage([channel.id], messageId);
+            this._mockMailChannel_SetLastSeenMessage([channel.id], messageData.id);
         } else {
             this._mockWrite('mail.channel', [
                 [channel.id],
                 { message_unread_counter: (channel.message_unread_counter || 0) + 1 },
             ]);
         }
-        return messageId;
+        return messageData;
     },
     /**
      * Simulates `notify_typing` on `mail.channel`.
@@ -1182,14 +1261,23 @@ MockServer.include({
         return messageIds;
     },
     /**
-     * Simulates `message_fetch` on `mail.message`.
+     * Simulates `_message_fetch` on `mail.message`.
      *
      * @private
      * @param {Array[]} domain
      * @param {string} [limit=20]
      * @returns {Object[]}
      */
-    _mockMailMessageMessageFetch(domain, limit = 20) {
+    async _mockMailMessage_MessageFetch(domain, max_id, min_id, limit = 30) {
+        // TODO FIXME delay RPC until next potential render as a workaround
+        // to OWL issue (possibly https://github.com/odoo/owl/issues/904)
+        await nextAnimationFrame();
+        if (max_id) {
+            domain.push(['id', '<', max_id]);
+        }
+        if (min_id) {
+            domain.push(['id', '>', min_id]);
+        }
         let messages = this._getRecords('mail.message', domain);
         // sorted from highest ID to lowest ID (i.e. from youngest to oldest)
         messages.sort(function (m1, m2) {
@@ -1563,7 +1651,7 @@ MockServer.include({
      * @param {integer[]} ids
      * @param {Object} kwargs
      * @param {Object} [context]
-     * @returns {integer}
+     * @returns {Object}
      */
     _mockMailThreadMessagePost(model, ids, kwargs, context) {
         const id = ids[0]; // ensure_one
@@ -1601,7 +1689,7 @@ MockServer.include({
         delete values.subtype_xmlid;
         const messageId = this._mockCreate('mail.message', values);
         this._mockMailThread_NotifyThread(model, ids, messageId);
-        return messageId;
+        return this._mockMailMessageMessageFormat([messageId])[0];
     },
     /**
      * Simulates `message_subscribe` on `mail.thread`.

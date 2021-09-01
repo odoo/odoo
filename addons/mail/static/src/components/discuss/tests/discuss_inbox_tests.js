@@ -378,15 +378,15 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
     });
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'message_post') {
-                assert.step('message_post');
+            if (route === '/mail/message/post') {
+                assert.step('/mail/message/post');
                 assert.strictEqual(
-                    args.kwargs.message_type,
+                    args.post_data.message_type,
                     "comment",
                     "should set message type as 'comment'"
                 );
                 assert.strictEqual(
-                    args.kwargs.subtype_xmlid,
+                    args.post_data.subtype_xmlid,
                     "mail.mt_note",
                     "should set subtype_xmlid as 'note'"
                 );
@@ -426,7 +426,7 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
     await afterNextRender(() =>
         document.querySelector('.o_Composer_buttonSend').click()
     );
-    assert.verifySteps(['message_post']);
+    assert.verifySteps(['/mail/message/post']);
 });
 
 QUnit.test('"reply to" composer should send message if message replied to is not a note', async function (assert) {
@@ -449,15 +449,15 @@ QUnit.test('"reply to" composer should send message if message replied to is not
     });
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'message_post') {
-                assert.step('message_post');
+            if (route === '/mail/message/post') {
+                assert.step('/mail/message/post');
                 assert.strictEqual(
-                    args.kwargs.message_type,
+                    args.post_data.message_type,
                     "comment",
                     "should set message type as 'comment'"
                 );
                 assert.strictEqual(
-                    args.kwargs.subtype_xmlid,
+                    args.post_data.subtype_xmlid,
                     "mail.mt_comment",
                     "should set subtype_xmlid as 'comment'"
                 );
@@ -497,7 +497,7 @@ QUnit.test('"reply to" composer should send message if message replied to is not
     await afterNextRender(() =>
         document.querySelector('.o_Composer_buttonSend').click()
     );
-    assert.verifySteps(['message_post']);
+    assert.verifySteps(['/mail/message/post']);
 });
 
 QUnit.test('error notifications should not be shown in Inbox', async function (assert) {
@@ -542,7 +542,7 @@ QUnit.test('show subject of message in Inbox', async function (assert) {
         body: "not empty",
         id: 100,
         model: 'mail.channel', // random existing model
-        needaction: true, // message_fetch domain
+        needaction: true,
         needaction_partner_ids: [this.data.currentPartnerId], // not needed, for consistency
         subject: "Salutations, voyageur", // will be asserted in the test
     });

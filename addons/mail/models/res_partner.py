@@ -116,6 +116,8 @@ class Partner(models.Model):
                 "user_id": main_user.id,
                 "is_internal_user": not partner.partner_share,
             }
+            if 'guest' in self.env.context:
+                partners_format[partner].pop('email')
         return partners_format
 
     def _message_fetch_failed(self):

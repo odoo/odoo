@@ -29,7 +29,11 @@ function factory(dependencies) {
              */
             this._currentPartnerInactiveTypingTimer = new Timer(
                 this.env,
-                () => this.async(() => this._onCurrentPartnerInactiveTypingTimeout()),
+                () => this.async(() => {
+                    if (this.messaging.currentPartner) {
+                        return this._onCurrentPartnerInactiveTypingTimeout();
+                    }
+                }),
                 5 * 1000
             );
             /**
@@ -445,19 +449,18 @@ function factory(dependencies) {
         }
 
         /**
-         * Performs the `channel_seen` RPC on `mail.channel`.
+         * Performs the `/mail/channel/set_last_seen_message` RPC.
          *
          * @static
          * @param {Object} param0
-         * @param {integer[]} param0.ids list of id of channels
+         * @param {integer} param0.id id of channel
          * @param {integer[]} param0.lastMessageId
          */
-        static async performRpcChannelSeen({ ids, lastMessageId }) {
+        static async performRpcChannelSeen({ id, lastMessageId }) {
             return this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_seen',
-                args: [ids],
-                kwargs: {
+                route: `/mail/channel/set_last_seen_message`,
+                params: {
+                    channel_id: id,
                     last_message_id: lastMessageId,
                 },
             }, { shadow: true });
@@ -544,25 +547,6 @@ function factory(dependencies) {
             return this.messaging.models['mail.thread'].insert(
                 this.messaging.models['mail.thread'].convertData(data)
             );
-        }
-
-        /**
-         * Performs the `message_post` RPC on given threadModel.
-         *
-         * @static
-         * @param {Object} param0
-         * @param {Object} param0.postData
-         * @param {integer} param0.threadId
-         * @param {string} param0.threadModel
-         * @return {integer} the posted message id
-         */
-        static async performRpcMessagePost({ postData, threadId, threadModel }) {
-            return this.env.services.rpc({
-                model: threadModel,
-                method: 'message_post',
-                args: [threadId],
-                kwargs: postData,
-            });
         }
 
         /**
@@ -771,6 +755,9 @@ function factory(dependencies) {
          * @param {mail.message} message the message to be considered as last seen.
          */
         async markAsSeen(message) {
+            if (this.messaging.currentGuest) {
+                return;
+            }
             if (this.model !== 'mail.channel') {
                 return;
             }
@@ -785,7 +772,7 @@ function factory(dependencies) {
             }
             this.update({ pendingSeenMessageId: message.id });
             return this.messaging.models['mail.thread'].performRpcChannelSeen({
-                ids: [this.id],
+                id: this.id,
                 lastMessageId: message.id,
             });
         }
@@ -905,6 +892,9 @@ function factory(dependencies) {
          */
         async pin() {
             this.update({ isPendingPinned: true });
+            if (this.messaging.currentGuest) {
+                return;
+            }
             await this.notifyPinStateToServer();
         }
 
@@ -1087,6 +1077,9 @@ function factory(dependencies) {
          */
         async unpin() {
             this.update({ isPendingPinned: false });
+            if (this.messaging.currentGuest) {
+                return;
+            }
             await this.notifyPinStateToServer();
         }
 
@@ -1221,6 +1214,42 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {Object}
+         */
+        _computeFetchMessagesParams() {
+            if (this.model === 'mail.box') {
+                return {};
+            }
+            if (this.model === 'mail.channel') {
+                return { 'channel_id': this.id };
+            }
+            return {
+                'thread_id': this.id,
+                'thread_model': this.model,
+            };
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeFetchMessagesUrl() {
+            switch (this) {
+                case this.messaging.inbox:
+                    return '/mail/inbox/messages';
+                case this.messaging.history:
+                    return '/mail/history/messages';
+                case this.messaging.starred:
+                    return '/mail/starred/messages';
+            }
+            if (this.model === 'mail.channel') {
+                return `/mail/channel/messages`;
+            }
+            return `/mail/thread/messages`;
+        }
+
+        /**
+         * @private
          * @returns {mail.activity[]}
          */
         _computeFutureActivities() {
@@ -1271,6 +1300,16 @@ function factory(dependencies) {
          */
         _computeHasMemberListFeature() {
             return this.model === 'mail.channel' && ['channel', 'group'].includes(this.channel_type);
+        }
+
+        /**
+         * @returns {string}
+         */
+        _computeInvitationLink() {
+            if (!this.uuid || !this.channel_type || this.channel_type === 'chat') {
+                return clear();
+            }
+            return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
         }
 
         /**
@@ -1389,7 +1428,8 @@ function factory(dependencies) {
                     continue;
                 }
                 if (
-                    message.author === this.messaging.currentPartner ||
+                    (message.author && this.messaging.currentPartner && message.author === this.messaging.currentPartner) ||
+                    (message.guestAuthor && this.messaging.currentGuest && message.guestAuthor === this.messaging.currentGuest) ||
                     message.isTransient
                 ) {
                     lastSeenByCurrentPartnerMessageId = message.id;
@@ -1853,6 +1893,12 @@ function factory(dependencies) {
         displayName: attr({
             compute: '_computeDisplayName',
         }),
+        fetchMessagesParams: attr({
+            compute: '_computeFetchMessagesParams',
+        }),
+        fetchMessagesUrl: attr({
+            compute: '_computeFetchMessagesUrl',
+        }),
         followersPartner: many2many('mail.partner', {
             related: 'followers.partner',
         }),
@@ -1866,6 +1912,7 @@ function factory(dependencies) {
         futureActivities: one2many('mail.activity', {
             compute: '_computeFutureActivities',
         }),
+        guestMembers: many2many('mail.guest'),
         group_based_subscription: attr({
             default: false,
         }),
@@ -1898,6 +1945,9 @@ function factory(dependencies) {
         }),
         id: attr({
             required: true,
+        }),
+        invitationLink: attr({
+            compute: '_computeInvitationLink',
         }),
         /**
          * Determines whether this description can be changed.
@@ -2011,6 +2061,7 @@ function factory(dependencies) {
         }),
         /**
          * States the number of members in this thread according to the server.
+         * Guests are excluded from the count.
          * Only makes sense if this thread is a channel.
          */
         memberCount: attr(),

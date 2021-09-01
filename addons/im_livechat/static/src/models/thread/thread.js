@@ -98,6 +98,15 @@ registerInstancePatchModel('mail.thread', 'im_livechat/static/src/models/thread/
     /**
      * @override
      */
+    _computeHasMemberListFeature() {
+        if (this.channel_type === 'livechat') {
+            return true;
+        }
+        return this._super();
+    },
+    /**
+     * @override
+     */
     _computeIsChatChannel() {
         return this.channel_type === 'livechat' || this._super();
     },

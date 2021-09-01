@@ -67,6 +67,11 @@
                                     <t t-esc="message.author.nameOrDisplayName"/>
                                 </div>
                             </t>
+                            <t t-elif="message.guestAuthor">
+                                <div class="o_Message_authorName text-truncate">
+                                    <t t-esc="message.guestAuthor.name"/>
+                                </div>
+                            </t>
                             <t t-elif="message.email_from">
                                 <a class="o_Message_authorName text-truncate" t-attf-href="mailto:{{ message.email_from }}?subject=Re: {{ message.subject ? message.subject : '' }}">
                                     <t t-esc="message.email_from"/>

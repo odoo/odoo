@@ -1031,27 +1031,22 @@ QUnit.test('default thread rendering', async function (assert) {
 });
 
 QUnit.test('initially load messages from inbox', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                assert.step('message_fetch');
+            if (route === '/mail/inbox/messages') {
+                assert.step('/mail/channel/messages');
                 assert.strictEqual(
-                    args.kwargs.limit,
+                    args.limit,
                     30,
                     "should fetch up to 30 messages"
-                );
-                assert.deepEqual(
-                    args.kwargs.domain,
-                    [["needaction", "=", true]],
-                    "should fetch needaction messages"
                 );
             }
             return this._super(...arguments);
         },
     });
-    assert.verifySteps(['message_fetch']);
+    assert.verifySteps(['/mail/channel/messages']);
 });
 
 QUnit.test('default select thread in discuss params', async function (assert) {
@@ -1095,7 +1090,7 @@ QUnit.test('auto-select thread in discuss context', async function (assert) {
 });
 
 QUnit.test('load single message from channel initially', async function (assert) {
-    assert.expect(7);
+    assert.expect(6);
 
     // channel expected to be rendered, with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
@@ -1113,20 +1108,11 @@ QUnit.test('load single message from channel initially', async function (assert)
             },
         },
         async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
+            if (route === '/mail/channel/messages') {
                 assert.strictEqual(
-                    args.kwargs.limit,
+                    args.limit,
                     30,
                     "should fetch up to 30 messages"
-                );
-                assert.deepEqual(
-                    args.kwargs.domain,
-                    [
-                        ["message_type", "!=", "user_notification"],
-                        ["model", "=", "mail.channel"],
-                        ["res_id", "=", 20]
-                    ],
-                    "should fetch messages from channel"
                 );
             }
             return this._super(...arguments);
@@ -1229,7 +1215,7 @@ QUnit.test('basic rendering of message', async function (assert) {
     );
     assert.strictEqual(
         message.querySelector(`:scope .o_Message_authorAvatar`).dataset.src,
-        "/web/image/res.partner/11/avatar_128",
+        "/mail/channel/20/partner/11/avatar_128",
         "should have url of message in author avatar sidebar"
     );
     assert.strictEqual(
@@ -1409,7 +1395,7 @@ QUnit.test('inbox messages are never squashed', async function (assert) {
             id: 100, // random unique id, will be referenced in the test
             message_type: 'comment', // must be a squash-able type-
             model: 'mail.channel', // to link message to channel
-            needaction: true, // necessary for message_fetch domain
+            needaction: true,
             needaction_partner_ids: [this.data.currentPartnerId], // for consistency
             res_id: 20, // id of related channel
         },
@@ -1420,7 +1406,7 @@ QUnit.test('inbox messages are never squashed', async function (assert) {
             id: 101, // random unique id, will be referenced in the test
             message_type: 'comment', // must be a squash-able type
             model: 'mail.channel', // to link message to channel
-            needaction: true, // necessary for message_fetch domain
+            needaction: true,
             needaction_partner_ids: [this.data.currentPartnerId], // for consistency
             res_id: 20, // id of related channel
         }
@@ -1506,8 +1492,8 @@ QUnit.test('load all messages from channel initially, less than fetch limit (29 
             },
         },
         async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                assert.strictEqual(args.kwargs.limit, 30, "should fetch up to 30 messages");
+            if (route === '/mail/channel/messages') {
+                assert.strictEqual(args.limit, 30, "should fetch up to 30 messages");
             }
             return this._super(...arguments);
         },
@@ -2299,8 +2285,6 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
             body: "not empty",
             id: 100, // random unique id, useful to link notification
             model: 'mail.channel',
-            // needaction needs to be set here for message_fetch domain, because
-            // mocked models don't have computed fields
             needaction: true,
             res_id: 20,
         },
@@ -2309,8 +2293,6 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
             body: "not empty",
             id: 101, // random unique id, useful to link notification
             model: 'mail.channel',
-            // needaction needs to be set here for message_fetch domain, because
-            // mocked models don't have computed fields
             needaction: true,
             res_id: 20,
         }
@@ -2709,7 +2691,7 @@ QUnit.test('composer state: attachments save and restore', async function (asser
 });
 
 QUnit.test('post a simple message', async function (assert) {
-    assert.expect(15);
+    assert.expect(16);
 
     // channel expected to be found in the sidebar
     // with a random unique id that will be referenced in the test
@@ -2723,29 +2705,34 @@ QUnit.test('post a simple message', async function (assert) {
         },
         async mockRPC(route, args) {
             const res = await this._super(...arguments);
-            if (args.method === 'message_post') {
+            if (route === '/mail/message/post') {
                 assert.step('message_post');
                 assert.strictEqual(
-                    args.args[0],
+                    args.thread_model,
+                    'mail.channel',
+                    "should post message to channel"
+                );
+                assert.strictEqual(
+                    args.thread_id,
                     20,
                     "should post message to channel Id 20"
                 );
                 assert.strictEqual(
-                    args.kwargs.body,
+                    args.post_data.body,
                     "Test",
                     "should post with provided content in composer input"
                 );
                 assert.strictEqual(
-                    args.kwargs.message_type,
+                    args.post_data.message_type,
                     "comment",
                     "should set message type as 'comment'"
                 );
                 assert.strictEqual(
-                    args.kwargs.subtype_xmlid,
+                    args.post_data.subtype_xmlid,
                     "mail.mt_comment",
                     "should set subtype_xmlid as 'comment'"
                 );
-                postedMessageId = res;
+                postedMessageId = res.id;
             }
             return res;
         },
@@ -2888,7 +2875,7 @@ QUnit.test('rendering of inbox message', async function (assert) {
         body: "not empty",
         id: 100,
         model: 'res.partner', // random existing model
-        needaction: true, // for message_fetch domain
+        needaction: true,
         needaction_partner_ids: [this.data.currentPartnerId], // for consistency
         record_name: 'Refactoring', // random name, will be asserted in the test
         res_id: 20, // random related id
@@ -3154,8 +3141,6 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
         date: "2019-04-20 11:00:00",
         id: 100, // random unique id, will be used to link notification to message
         message_type: 'comment',
-        // needaction needs to be set here for message_fetch domain, because
-        // mocked models don't have computed fields
         needaction: true,
         model: 'res.partner',
         record_name: 'Refactoring',
@@ -3168,25 +3153,25 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
     });
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'message_post') {
+            if (route === '/mail/message/post') {
                 assert.step('message_post');
                 assert.strictEqual(
-                    args.model,
+                    args.thread_model,
                     'res.partner',
                     "should post message to record with model 'res.partner'"
                 );
                 assert.strictEqual(
-                    args.args[0],
+                    args.thread_id,
                     20,
                     "should post message to record with Id 20"
                 );
                 assert.strictEqual(
-                    args.kwargs.body,
+                    args.post_data.body,
                     "Test",
                     "should post with provided content in composer input"
                 );
                 assert.strictEqual(
-                    args.kwargs.message_type,
+                    args.post_data.message_type,
                     "comment",
                     "should set message type as 'comment'"
                 );
@@ -3286,8 +3271,6 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
             body: "not empty",
             id: 100, // random unique id, useful to link notification
             model: 'mail.channel', // value to link message to channel
-            // needaction needs to be set here for message_fetch domain, because
-            // mocked models don't have computed fields
             needaction: true,
             res_id: 20, // id of related channel
         },
@@ -3295,8 +3278,6 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
             body: "not empty",
             id: 101, // random unique id, useful to link notification
             model: 'mail.channel', // value to link message to channel
-            // needaction needs to be set here for message_fetch domain, because
-            // mocked models don't have computed fields
             needaction: true,
             res_id: 20, // id of related channel
         }
@@ -3535,8 +3516,6 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
         this.data['mail.message'].records.push({
             body: "not empty",
             id, // will be used to link notification to message
-            // needaction needs to be set here for message_fetch domain, because
-            // mocked models don't have computed fields
             needaction: true,
         });
         // notification to have message in Inbox

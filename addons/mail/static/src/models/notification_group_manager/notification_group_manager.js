@@ -13,6 +13,9 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         computeGroups() {
+            if (!this.messaging.currentPartner) {
+                return;
+            }
             for (const group of this.groups) {
                 group.delete();
             }

@@ -302,7 +302,7 @@ function factory(dependencies) {
                         message,
                     });
                 }
-                if (channel.model === 'mail.channel' && channel.channel_type !== 'channel') {
+                if (channel.model === 'mail.channel' && channel.channel_type !== 'channel' && !this.messaging.currentGuest) {
                     // disabled on non-channel threads and
                     // on `channel` channels for performance reasons
                     channel.markAsFetched();
@@ -333,6 +333,7 @@ function factory(dependencies) {
         async _handleNotificationChannelSeen(channelId, {
             last_message_id,
             partner_id,
+            guest_id,
         }) {
             const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({
                 id: channelId,
@@ -358,7 +359,7 @@ function factory(dependencies) {
                     messageId: lastMessage.id,
                 });
             }
-            if (this.messaging.currentPartner.id === partner_id) {
+            if (this.messaging.currentPartner && this.messaging.currentPartner.id === partner_id) {
                 channel.update({
                     lastSeenByCurrentPartnerMessageId: last_message_id,
                     pendingSeenMessageId: undefined,
