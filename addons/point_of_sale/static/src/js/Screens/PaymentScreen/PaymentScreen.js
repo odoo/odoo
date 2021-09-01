@@ -8,8 +8,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
     const { onChangeOrder } = require('point_of_sale.custom_hooks');
-    const { identifyError } = require('point_of_sale.utils');
-    const { ConnectionLostError, ConnectionAbortedError } = require('@web/core/network/rpc_service');
+    const { isConnectionError } = require('point_of_sale.utils');
 
     class PaymentScreen extends PosComponent {
         constructor() {
@@ -205,11 +204,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     await this._handlePushOrderError(error);
                 } else {
                     // We don't block for connection error. But we rethrow for any other errors.
-                    const errorIdentity = identifyError(error);
-                    if (
-                        errorIdentity instanceof ConnectionLostError ||
-                        errorIdentity instanceof ConnectionAbortedError
-                    ) {
+                    if (isConnectionError(error)) {
                         this.showPopup('OfflineErrorPopup', {
                             title: this.env._t('Connection Error'),
                             body: this.env._t('Order is not synced. Check your internet connection'),
