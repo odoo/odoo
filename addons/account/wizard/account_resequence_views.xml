@@ -26,14 +26,15 @@
             </form>
             </field>
         </record>
-
+    </data>
+    <data noupdate="1">
         <record id="action_account_resequence" model="ir.actions.act_window">
             <field name="name">Resequence</field>
             <field name="res_model">account.resequence.wizard</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="account_resequence_view"/>
             <field name="target">new</field>
-            <field name="groups_id" eval="[(6, 0, [ref('account.group_account_manager'), ref('base.group_system')])]"/>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_no_one')])]"/>
             <field name="binding_model_id" ref="account.model_account_move" />
             <field name="binding_view_types">list</field>
         </record>
