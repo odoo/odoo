@@ -52,22 +52,16 @@ class AccruedExpenseRevenue(models.TransientModel):
         check_company=True,
         domain=_get_account_domain,
     )
-    preview_data = fields.Text(compute='_compute_preview_data')
+    preview_data = fields.Binary(compute='_compute_preview_data')
     display_amount = fields.Boolean(compute='_compute_display_amount')
 
-    @api.depends('journal_id')
+    @api.depends('date', 'amount')
     def _compute_display_amount(self):
         single_order = len(self._context['active_ids']) == 1
-        orders = self.env[self._context['active_model']].browse(self._context['active_ids'])
         for record in self:
-            lines = orders and orders[0].order_line.filtered(
-                lambda l: fields.Float.compare(
-                    l.qty_to_invoice,
-                    0,
-                    precision_digits=l.product_uom.rounding,
-                ) == 1
-            )
-            record.display_amount = single_order and not lines
+            preview_data = json.loads(self.preview_data)
+            lines = preview_data.get('groups_vals', [])[0].get('items_vals', [])
+            record.display_amount = record.amount or (single_order and not lines)
 
     @api.depends('date')
     def _compute_reversal_date(self):
@@ -89,7 +83,7 @@ class AccruedExpenseRevenue(models.TransientModel):
     def _compute_preview_data(self):
         for record in self:
             preview_vals = [self.env['account.move']._move_dict_to_preview_vals(
-                self._compute_move_vals()[0],
+                record._compute_move_vals()[0],
                 record.company_id.currency_id,
             )]
             preview_columns = [
@@ -145,15 +139,26 @@ class AccruedExpenseRevenue(models.TransientModel):
                     account = order_line.product_id.property_account_income_id or order_line.product_id.categ_id.property_account_income_categ_id
                 inc_exp_accounts[account]['amount'] += self.amount
             else:
-                lines = order.order_line.filtered(
+                other_currency = self.company_id.currency_id != order.currency_id
+                rate = order.currency_id._get_rates(self.company_id, self.date).get(order.currency_id.id) if other_currency else 1.0
+                # create a virtual order that will allow to recompute the qty delivered/received (and dependancies)
+                # without actually writing anything on the real record (field is computed and stored)
+                o = order.new(origin=order)
+                if is_purchase:
+                    o.order_line.with_context(accrual_entry_date=self.date)._compute_qty_received()
+                    o.order_line.with_context(accrual_entry_date=self.date)._compute_qty_invoiced()
+                else:
+                    o.order_line.with_context(accrual_entry_date=self.date)._compute_qty_delivered()
+                    o.order_line.with_context(accrual_entry_date=self.date)._compute_qty_invoiced()
+                    o.order_line.with_context(accrual_entry_date=self.date)._compute_untaxed_amount_invoiced()
+                    o.order_line.with_context(accrual_entry_date=self.date)._get_to_invoice_qty()
+                lines = o.order_line.filtered(
                     lambda l: fields.Float.compare(
                         l.qty_to_invoice,
                         0,
                         precision_digits=l.product_uom.rounding,
                     ) == 1
                 )
-                other_currency = self.company_id.currency_id != order.currency_id
-                rate = order.currency_id._get_rates(self.company_id, self.date).get(order.currency_id.id) if other_currency else 1.0
                 for order_line in lines:
                     if is_purchase:
                         account = order_line.product_id.property_account_expense_id or order_line.product_id.categ_id.property_account_expense_categ_id
@@ -167,6 +172,8 @@ class AccruedExpenseRevenue(models.TransientModel):
                     inc_exp_accounts[account]['amount_currency'] += amount_currency
                     total_balance += amount
                     total_amount_currency += amount_currency
+                # must invalidate cache or o can mess when _create_invoices().action_post() of original order after this
+                self.invalidate_cache()
 
             if not self.company_id.currency_id.is_zero(total_balance):
                 orders_with_entries.append(order)

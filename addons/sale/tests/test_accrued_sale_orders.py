@@ -11,7 +11,6 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-        uom_unit = cls.env.ref('uom.product_uom_unit')
         uom_hour = cls.env.ref('uom.product_uom_hour')
         cls.alt_inc_account = cls.company_data['default_account_revenue'].copy()
         cls.currency_a = cls.env['res.currency'].create({
@@ -23,16 +22,16 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
             'currency_id': cls.currency_a.id,
             'rate': 1.5,
         })
-        cls.product_order = cls.env['product.product'].create({
+        cls.product1 = cls.env['product.product'].create({
             'name': "Product",
             'list_price': 30.0,
-            'type': 'consu',
-            'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
+            'type': 'service',
+            'uom_id': uom_hour.id,
+            'uom_po_id': uom_hour.id,
             'invoice_policy': 'delivery',
             'property_account_income_id': cls.alt_inc_account.id,
         })
-        cls.service_order = cls.env['product.product'].create({
+        cls.product2 = cls.env['product.product'].create({
             'name': "Service",
             'list_price': 50.0,
             'type': 'service',
@@ -44,19 +43,19 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
             'partner_id': cls.partner_a.id,
             'order_line': [
                 Command.create({
-                    'name': cls.product_order.name,
-                    'product_id': cls.product_order.id,
+                    'name': cls.product1.name,
+                    'product_id': cls.product1.id,
                     'product_uom_qty': 10.0,
-                    'product_uom': cls.product_order.uom_id.id,
-                    'price_unit': cls.product_order.list_price,
+                    'product_uom': cls.product1.uom_id.id,
+                    'price_unit': cls.product1.list_price,
                     'tax_id': False,
                 }),
                 Command.create({
-                    'name': cls.service_order.name,
-                    'product_id': cls.service_order.id,
+                    'name': cls.product2.name,
+                    'product_id': cls.product2.id,
                     'product_uom_qty': 10.0,
-                    'product_uom': cls.service_order.uom_id.id,
-                    'price_unit': cls.service_order.list_price,
+                    'product_uom': cls.product2.uom_id.id,
+                    'price_unit': cls.product2.list_price,
                     'tax_id': False,
                 })
             ]
@@ -91,8 +90,8 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
 
         # delivered products invoiced, nothing to invoice left
         self.sale_order._create_invoices().action_post()
-        with self.assertRaises(UserError):
-            self.wizard.create_entries()['res_id']
+        self.wizard.create_entries()
+        self.assertTrue(self.wizard.display_amount)
 
     def test_multi_currency_accrued_order(self):
         # 5 qty of each product billeable

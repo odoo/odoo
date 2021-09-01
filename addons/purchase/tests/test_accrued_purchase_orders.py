@@ -11,7 +11,6 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-        uom_unit = cls.env.ref('uom.product_uom_unit')
         uom_hour = cls.env.ref('uom.product_uom_hour')
         cls.alt_exp_account = cls.company_data['default_account_expense'].copy()
         cls.currency_a = cls.env['res.currency'].create({
@@ -23,17 +22,17 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             'currency_id': cls.currency_a.id,
             'rate': 1.5,
         })
-        product_order = cls.env['product.product'].create({
-            'name': "Product",
+        product1 = cls.env['product.product'].create({
+            'name': "Product1",
             'list_price': 30.0,
-            'type': 'consu',
-            'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
+            'type': 'service',
+            'uom_id': uom_hour.id,
+            'uom_po_id': uom_hour.id,
             'purchase_method': 'receive',
             'property_account_expense_id': cls.alt_exp_account.id,
         })
-        service_order = cls.env['product.product'].create({
-            'name': "Service",
+        product2 = cls.env['product.product'].create({
+            'name': "Product2",
             'list_price': 50.0,
             'type': 'service',
             'uom_id': uom_hour.id,
@@ -44,19 +43,19 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             'partner_id': cls.partner_a.id,
             'order_line': [
                 Command.create({
-                    'name': product_order.name,
-                    'product_id': product_order.id,
+                    'name': product1.name,
+                    'product_id': product1.id,
                     'product_qty': 10.0,
-                    'product_uom': product_order.uom_id.id,
-                    'price_unit': product_order.list_price,
+                    'product_uom': product1.uom_id.id,
+                    'price_unit': product1.list_price,
                     'taxes_id': False,
                 }),
                 Command.create({
-                    'name': service_order.name,
-                    'product_id': service_order.id,
+                    'name': product2.name,
+                    'product_id': product2.id,
                     'product_qty': 10.0,
-                    'product_uom': service_order.uom_id.id,
-                    'price_unit': service_order.list_price,
+                    'product_uom': product2.uom_id.id,
+                    'price_unit': product2.list_price,
                     'taxes_id': False,
                 }),
             ],
@@ -93,6 +92,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         move = self.env['account.move'].browse(self.purchase_order.action_create_invoice()['res_id'])
         move.invoice_date = fields.Date.today()
         move.action_post()
+
         with self.assertRaises(UserError):
             self.wizard.create_entries()
 

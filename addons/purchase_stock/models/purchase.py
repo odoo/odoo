@@ -286,6 +286,13 @@ class PurchaseOrderLine(models.Model):
             if line.product_id.type in ['consu', 'product']:
                 line.qty_received_method = 'stock_moves'
 
+    def _get_po_line_moves(self):
+        self.ensure_one()
+        moves = self.move_ids.filtered(lambda m: m.product_id == self.product_id)
+        if self._context.get('accrual_entry_date'):
+            moves = moves.filtered(lambda r: fields.Date.to_date(r.date) <= self._context['accrual_entry_date'])
+        return moves
+
     @api.depends('move_ids.state', 'move_ids.product_uom_qty', 'move_ids.product_uom')
     def _compute_qty_received(self):
         super(PurchaseOrderLine, self)._compute_qty_received()
@@ -294,7 +301,7 @@ class PurchaseOrderLine(models.Model):
                 total = 0.0
                 # In case of a BOM in kit, the products delivered do not correspond to the products in
                 # the PO. Therefore, we can skip them since they will be handled later on.
-                for move in line.move_ids.filtered(lambda m: m.product_id == line.product_id):
+                for move in line._get_po_line_moves():
                     if move.state == 'done':
                         if move.location_dest_id.usage == "supplier":
                             if move.to_refund:
