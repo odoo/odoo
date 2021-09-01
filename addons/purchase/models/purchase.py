@@ -952,7 +952,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             # compute qty_invoiced
             qty = 0.0
-            for inv_line in line.invoice_lines:
+            for inv_line in line._get_invoice_lines():
                 if inv_line.move_id.state not in ['cancel']:
                     if inv_line.move_id.move_type == 'in_invoice':
                         qty += inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom)
@@ -968,6 +968,15 @@ class PurchaseOrderLine(models.Model):
                     line.qty_to_invoice = line.qty_received - line.qty_invoiced
             else:
                 line.qty_to_invoice = 0
+
+    def _get_invoice_lines(self):
+        self.ensure_one()
+        if self._context.get('accrual_entry_date'):
+            return self.invoice_lines.filtered(
+                lambda l: l.move_id.invoice_date and l.move_id.invoice_date <= self._context['accrual_entry_date']
+            )
+        else:
+            return self.invoice_lines
 
     @api.depends('product_id')
     def _compute_qty_received_method(self):

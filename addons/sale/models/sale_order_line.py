@@ -102,7 +102,7 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             qty_invoiced = 0.0
-            for invoice_line in line.invoice_lines:
+            for invoice_line in line._get_invoice_lines():
                 if invoice_line.move_id.state != 'cancel':
                     if invoice_line.move_id.move_type == 'out_invoice':
                         qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
@@ -110,6 +110,15 @@ class SaleOrderLine(models.Model):
                         if not line.is_downpayment or line.untaxed_amount_to_invoice == 0:
                             qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
             line.qty_invoiced = qty_invoiced
+
+    def _get_invoice_lines(self):
+        self.ensure_one()
+        if self._context.get('accrual_entry_date'):
+            return self.invoice_lines.filtered(
+                lambda l: l.move_id.invoice_date and l.move_id.invoice_date <= self._context['accrual_entry_date']
+            )
+        else:
+            return self.invoice_lines
 
     @api.depends('price_unit', 'discount')
     def _compute_price_reduce(self):
@@ -451,7 +460,7 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             amount_invoiced = 0.0
-            for invoice_line in line.invoice_lines:
+            for invoice_line in line._get_invoice_lines():
                 if invoice_line.move_id.state == 'posted':
                     invoice_date = invoice_line.move_id.invoice_date or fields.Date.today()
                     if invoice_line.move_id.move_type == 'out_invoice':
@@ -491,12 +500,12 @@ class SaleOrderLine(models.Model):
                         quantity=uom_qty_to_consider,
                         product=line.product_id,
                         partner=line.order_id.partner_shipping_id)['total_excluded']
-
-                if any(line.invoice_lines.mapped(lambda l: l.discount != line.discount)):
+                inv_lines = line._get_invoice_lines()
+                if any(inv_lines.mapped(lambda l: l.discount != line.discount)):
                     # In case of re-invoicing with different discount we try to calculate manually the
                     # remaining amount to invoice
                     amount = 0
-                    for l in line.invoice_lines:
+                    for l in inv_lines:
                         if len(l.tax_ids.filtered(lambda tax: tax.price_include)) > 0:
                             amount += l.tax_ids.compute_all(l.currency_id._convert(l.price_unit, line.currency_id, line.company_id, l.date or fields.Date.today(), round=False) * l.quantity)['total_excluded']
                         else:
