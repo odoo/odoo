@@ -2,7 +2,7 @@ odoo.define('point_of_sale.utils', function (require) {
     'use strict';
 
     const { EventBus } = owl.core;
-    const { ConnectionAbortedError } = require('@web/core/network/rpc_service');
+    const { ConnectionAbortedError, ConnectionLostError } = require('@web/core/network/rpc_service');
 
     function getFileAsText(file) {
         return new Promise((resolve, reject) => {
@@ -38,12 +38,9 @@ odoo.define('point_of_sale.utils', function (require) {
         });
     };
 
-    function isRpcError(error) {
-        return (
-            !(error instanceof Error) &&
-            error.message &&
-            [100, 200, 404, -32098].includes(error.message.code)
-        );
+    function isConnectionError(error) {
+        const _error = identifyError(error);
+        return _error instanceof ConnectionAbortedError || _error instanceof ConnectionLostError;
     }
 
     function identifyError(error) {
@@ -65,5 +62,5 @@ odoo.define('point_of_sale.utils', function (require) {
         return errorToHandle || error;
     }
 
-    return { getFileAsText, nextFrame, isRpcError, posbus: new EventBus(), identifyError };
+    return { getFileAsText, nextFrame, posbus: new EventBus(), identifyError, isConnectionError };
 });
