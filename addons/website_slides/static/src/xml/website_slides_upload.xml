@@ -14,7 +14,7 @@
     -->
     <t t-name="website.slide.upload.modal.select">
         <div class="row p-1 mt-4 mb-2">
-            <div t-foreach="widget.slide_category_data" t-as="slide_category" class="col-6 col-md-3">
+            <div t-foreach="widget.slide_category_data" t-as="slide_category" class="col-6 col-md-4">
                 <t t-set="category_data" t-value="widget.slide_category_data[slide_category]"/>
 
                 <a href="#" t-att-data-slide-category="slide_category"
@@ -71,9 +71,9 @@
             <input id="tag_ids" name="tag_ids" type="hidden"/>
         </div>
         <div class="form-group">
-            <label for="duration" class="col-form-label">Duration</label>
+            <label for="duration" class="col-form-label">Estimated Completion Time</label>
             <div class="input-group">
-                <input type="number" id="duration" min="0" name="duration" placeholder="Estimated slide completion time" class="form-control" autocomplete="off"/>
+                <input type="number" id="duration" min="0" name="duration" placeholder='e.g. "15"' class="form-control" autocomplete="off"/>
                     <div class="input-group-prepend">
                     <span class="input-group-text">Minutes</span>
                 </div>
@@ -94,13 +94,13 @@
                             <div class="form-check ml-2">
                                 <input class="form-check-input" type="radio" name="source_type" id="source_type_local_file" data-value="local_file" checked="checked"/>
                                 <label class="form-check-label font-weight-normal" for="source_type_local_file">
-                                    Local File
+                                    Upload from Device
                                 </label>
                             </div>
                             <div class="form-check ml-2">
                                 <input class="form-check-input" type="radio" name="source_type" id="source_type_external" data-value="external"/>
                                 <label class="form-check-label font-weight-normal" for="source_type_external">
-                                    External
+                                    Retrieve from Google Drive
                                 </label>
                             </div>
                         </div>
@@ -110,7 +110,8 @@
                         </div>
                         <div class="form-group o_wslides_js_slide_upload_external d-none">
                             <label for="document_google_url" class="col-form-label">Document Link</label>
-                            <input id="document_google_url" name="document_google_url" class="form-control h-100"/>
+                            <input id="document_google_url" name="document_google_url" class="form-control h-100" autocomplete="off"
+                                placeholder='e.g "https://drive.google.com/file/..."'/>
                         </div>
                         <canvas id="data_canvas" class="d-none"></canvas>
                         <t t-call="website.slide.upload.modal.common"/>
@@ -120,7 +121,7 @@
                             <div class="o_slide_tutorial p-3">
                                 <div class="h5">How do I add new content?</div>
                                 <div>
-                                    <span>You can either choose a local file from your computer or insert a valid Google Drive link.</span><br/>
+                                    <span>You can either upload a file from your computer or insert a Google Drive link.</span><br/>
                                 </div>
                                 <div class="o_wslides_js_slide_upload_local_file">
                                     <div class="h5 mt-3">What types of documents do we support?</div>
@@ -169,13 +170,13 @@
                             <div class="form-check ml-2">
                                 <input class="form-check-input" type="radio" name="source_type" id="source_type_local_file" data-value="local_file" checked="checked"/>
                                 <label class="form-check-label font-weight-normal" for="source_type_local_file">
-                                    Local File
+                                    Upload from Device
                                 </label>
                             </div>
                             <div class="form-check ml-2">
                                 <input class="form-check-input" type="radio" name="source_type" id="source_type_external" data-value="external"/>
                                 <label class="form-check-label font-weight-normal" for="source_type_external">
-                                    External
+                                    Retrieve from Google Drive
                                 </label>
                             </div>
                         </div>
@@ -185,7 +186,8 @@
                         </div>
                         <div class="form-group o_wslides_js_slide_upload_external d-none">
                             <label for="image_google_url" class="col-form-label">Image Link</label>
-                            <input id="image_google_url" name="image_google_url" class="form-control h-100"/>
+                            <input id="image_google_url" name="image_google_url" class="form-control h-100" autocomplete="off"
+                                placeholder='e.g "https://drive.google.com/file/..."'/>
                         </div>
                         <canvas id="data_canvas" class="d-none"></canvas>
                         <t t-call="website.slide.upload.modal.common"/>
@@ -195,7 +197,7 @@
                             <div class="o_slide_tutorial p-3">
                                 <div class="h5">How do I add new content?</div>
                                 <div>
-                                    <span>You can either choose a local file from your computer or insert a valid Google Drive link.</span><br/>
+                                    <span>You can either upload a file from your computer or insert a Google Drive link.</span><br/>
                                     <span>The Google Drive link can be obtained by using the 'share' button in the Google interface.</span><br/>
                                     <span>It should look similar to
                                     <span class="font-italic">https://drive.google.com/file/d/ABC/view?usp=sharing</span></span>
@@ -239,7 +241,8 @@
                     <div id="o_wslides_js_slide_upload_left_column" class="col-md-6">
                         <div class="form-group">
                             <label for="video_url" class="col-form-label">Video Link</label>
-                            <input id="video_url" name="video_url" class="form-control" placeholder="Youtube, Vimeo or Google Drive Link" required="required"/>
+                            <input id="video_url" name="video_url" class="form-control" autocomplete="off"
+                                placeholder='e.g "https://www.youtube.com/watch?v=ebBez6bcSEc"' required="required"/>
                         </div>
                         <canvas id="data_canvas" class="d-none"></canvas>
                         <t t-call="website.slide.upload.modal.common"/>
@@ -276,6 +279,7 @@
                             </div>
                             <div class="o_slide_preview d-none h-100 flex-column justify-content-center">
                                 <img referrerPolicy="no-referrer" src="/website_slides/static/src/img/document.png" id="slide-image" title="Content Preview" alt="Content Preview" class="img-fluid"/>
+                                <div id="slide-video-title" class="d-none mt-1"/>
                             </div>
                         </div>
                     </div>
