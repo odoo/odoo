@@ -38,7 +38,7 @@
                                 <field name="product_id"/>
                                 <field name="qty"/>
                                 <field name="price_unit" widget="monetary"/>
-                                <field name="discount" widget="monetary"/>
+                                <field name="discount"/>
                                 <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
                                 <field name="tax_ids" widget="many2many_tags" invisible="1"/>
                                 <field name="price_subtotal" widget="monetary" force_save="1"/>
@@ -48,7 +48,7 @@
                                 <group col="4">
                                     <field name="product_id"/>
                                     <field name="qty"/>
-                                    <field name="discount" widget="monetary"/>
+                                    <field name="discount"/>
                                     <field name="price_unit" widget="monetary"/>
                                     <field name="price_subtotal" invisible="1" widget="monetary" force_save="1"/>
                                     <field name="price_subtotal_incl" invisible="1" widget="monetary" force_save="1"/>
@@ -216,7 +216,7 @@
             <tree string="POS Order lines">
                 <field name="product_id" readonly="1"/>
                 <field name="qty" readonly="1" sum="Total qty"/>
-                <field name="discount" readonly="1" widget="monetary"/>
+                <field name="discount" readonly="1"/>
                 <field name="price_unit" readonly="1" widget="monetary"/>
                 <field name="price_subtotal" readonly="1" sum="Sum of subtotals" widget="monetary"/>
                 <field name="price_subtotal_incl" readonly="1" sum="Sum of subtotals" widget="monetary"/>
@@ -233,7 +233,7 @@
                 <group col="4">
                     <field name="product_id" />
                     <field name="qty" />
-                    <field name="discount" widget="monetary"/>
+                    <field name="discount"/>
                     <field name="price_unit" widget="monetary"/>
                     <field name="create_date" />
                 </group>
