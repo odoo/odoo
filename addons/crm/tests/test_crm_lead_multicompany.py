@@ -31,8 +31,7 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
             'team_id': False,
             'user_id': False,
         })
-        # self.assertFalse(lead_no_team.company_id)  FIXME: should not limit company
-        self.assertEqual(lead_no_team.company_id, self.user_sales_manager_mc.company_id)
+        self.assertFalse(lead_no_team.company_id)
         self.assertFalse(lead_no_team.team_id)
         self.assertFalse(lead_no_team.user_id)
 
@@ -47,8 +46,7 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
 
         # Update team wo company: reset lead company also
         lead_team_c2.team_id = self.sales_team_1
-        # self.assertFalse(lead_team_c2.company_id) FIXME: currently kept
-        self.assertEqual(lead_team_c2.company_id, self.company_2)
+        self.assertFalse(lead_team_c2.company_id)
 
         # Lead with global team has no company
         lead_team_no_company = self.env['crm.lead'].create({
@@ -56,8 +54,7 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
             'team_id': self.sales_team_1.id,
             'user_id': False,
         })
-        # self.assertFalse(lead_no_team.company_id)  FIXME: should not limit company
-        self.assertEqual(lead_no_team.company_id, self.user_sales_manager_mc.company_id)
+        self.assertFalse(lead_no_team.company_id)
 
         # Update team w company updates company
         lead_team_no_company.team_id = self.team_company2
@@ -88,12 +85,14 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
         self.assertEqual(crm_lead_form.user_id, self.user_sales_manager_mc)
         self.assertEqual(crm_lead_form.team_id, self.env['crm.team'])
 
-        # remove both
+        # remove both: void company to ease assignment
         crm_lead_form.user_id = self.env['res.users']
-        self.assertEqual(crm_lead_form.company_id, self.company_2)
+        self.assertEqual(crm_lead_form.company_id, self.env['res.company'])
         self.assertEqual(crm_lead_form.user_id, self.env['res.users'])
         self.assertEqual(crm_lead_form.team_id, self.env['crm.team'])
 
+        # force company manually
+        crm_lead_form.company_id = self.company_2
         lead = crm_lead_form.save()
 
         # user_sales_manager cannot read it due to MC rules
@@ -125,12 +124,10 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
             'team_id': False,
         })
         crm_lead_form = Form(lead)
-        # self.assertEqual(crm_lead_form.company_id, self.env['res.company'])  FIXME
-        self.assertEqual(crm_lead_form.company_id, self.company_2)
+        self.assertEqual(crm_lead_form.company_id, self.env['res.company'])
 
         crm_lead_form.team_id = self.sales_team_1
-        # self.assertEqual(crm_lead_form.company_id, self.env['res.company'])  # FIXME
-        self.assertEqual(crm_lead_form.company_id, self.company_2)
+        self.assertEqual(crm_lead_form.company_id, self.env['res.company'])
 
         crm_lead_form.user_id = self.env.user
         # self.assertEqual(crm_lead_form.company_id, self.env['res.company'])  # FIXME
