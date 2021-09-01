@@ -139,7 +139,7 @@ class SaleOrder(models.Model):
                 if order_line:
                     pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
 
-        return {
+        res = {
             'product_id': product_id,
             'product_uom_qty': qty,
             'order_id': order_id,
@@ -147,6 +147,10 @@ class SaleOrder(models.Model):
             'price_unit': pu,
             'discount': discount,
         }
+        if hasattr(self.env['sale.order.line'], '_compute_margin'):
+            # In case sale_margin is installed:
+            res['purchase_price'] = self.env['sale.order.line']._compute_margin(order, product, product.uom_id)
+        return res
 
     @api.multi
     def _get_line_description(self, order_id, product_id, no_variant_attribute_values=None, custom_values=None):
