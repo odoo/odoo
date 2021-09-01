@@ -2043,7 +2043,7 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
      * 2 visible chat windows + hidden menu:
      *  10 + 325 + 5 + 325 + 10 + 200 + 5 = 875 < 900
      */
-    assert.expect(17);
+    assert.expect(11);
 
     // 3 channels are expected to be found in the messaging menu, each with a
     // random unique id that will be referenced in the test
@@ -2074,14 +2074,9 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
             },
         },
         mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                // domain should be like [['message_type', '=', 'user_notification'], ['model', '=', 'mail.channel'], ['res_id', '=', X]] with X the channel id
-                const channel_model = args.kwargs.domain[1][2];
-                const channel_id_field = args.kwargs.domain[2][0];
-                const channel_id = args.kwargs.domain[2][2];
-                assert.strictEqual(channel_model, "mail.channel", "messages should be on channel thread model");
-                assert.strictEqual(channel_id_field, "res_id", "messages should be fetched channel per channel using res_id field");
-                assert.step(`rpc:message_fetch:${channel_id}`);
+            if (route === '/mail/channel/messages') {
+                const { channel_id } = args;
+                assert.step(`rpc:/mail/channel/messages:${channel_id}`);
             }
             return this._super(...arguments);
         },
@@ -2109,7 +2104,7 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
         "chat window hidden menu should be displayed"
     );
     assert.verifySteps(
-        ['rpc:message_fetch:10', 'rpc:message_fetch:11'],
+        ['rpc:/mail/channel/messages:10', 'rpc:/mail/channel/messages:11'],
         "messages should be fetched for the two visible chat windows"
     );
 
@@ -2142,7 +2137,7 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
         "chat window for Channel #12 should now be visible"
     );
     assert.verifySteps(
-        ['rpc:message_fetch:12'],
+        ['rpc:/mail/channel/messages:12'],
         "messages should now be fetched for Channel #12"
     );
 });

@@ -29,6 +29,7 @@ from . import mail_template
 # discuss
 from . import mail_channel_partner
 from . import mail_channel
+from . import mail_guest
 from . import mail_shortcode
 from . import res_users_settings
 

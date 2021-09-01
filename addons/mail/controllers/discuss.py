@@ -1,18 +1,225 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-import werkzeug.utils
-import werkzeug.wrappers
+import json
 
 from odoo import http
-from odoo.exceptions import AccessError
 from odoo.http import request
+from odoo.tools import consteq
+from odoo.tools.misc import get_lang
+from odoo.tools.translate import _
+from werkzeug.exceptions import NotFound
 
 
 class DiscussController(http.Controller):
 
-    @http.route('/mail/read_followers', type='json', auth='user')
+    # --------------------------------------------------------------------------
+    # Public Pages
+    # --------------------------------------------------------------------------
+
+    @http.route('/chat/<int:channel_id>/<string:invitation_token>', methods=['GET'], type='http', auth='public')
+    def discuss_channel_invitation(self, channel_id, invitation_token, **kwargs):
+        channel_sudo = request.env['mail.channel'].browse(int(channel_id)).sudo().exists()
+        if not channel_sudo or not channel_sudo.uuid or not consteq(channel_sudo.uuid, invitation_token):
+            raise NotFound()
+        response = request.redirect(f'/discuss/channel/{channel_sudo.id}')
+        if request.env['mail.channel.partner']._get_as_sudo_from_request(request=request, channel_id=int(channel_id)):
+            return response
+        if channel_sudo.channel_type == 'chat':
+            raise NotFound()
+        if request.session.uid:
+            channel_sudo.add_members([request.env.user.partner_id.id])
+            return response
+        guest = request.env['mail.guest']._get_guest_from_request(request)
+        if not guest:
+            guest = request.env['mail.guest'].sudo().create({
+                'country_id': request.env['res.country'].sudo().search([('code', '=', request.session.get('geoip', {}).get('country_code'))], limit=1).id,
+                'lang': get_lang(request.env).code,
+                'name': _("Guest"),
+                'timezone': request.env['mail.guest']._get_timezone_from_request(request),
+            })
+            # Guest session cookies, every route in this file will make use of them to authenticate
+            # the guest through `_get_as_sudo_from_request` or `_get_as_sudo_from_request_or_raise`.
+            response.set_cookie('mail.guest_id', str(guest.id), httponly=True)
+            response.set_cookie('mail.guest_access_token', guest.access_token, httponly=True)
+        channel_sudo.add_members(guest_ids=[guest.id])
+        return response
+
+    @http.route('/discuss/channel/<int:channel_id>', methods=['GET'], type='http', auth='public')
+    def discuss_channel(self, channel_id, **kwargs):
+        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
+        return request.render('mail.discuss_public_channel_template', {
+            'channel_sudo': channel_partner_sudo.channel_id,
+            'session_info': channel_partner_sudo.env['ir.http'].session_info(),
+        })
+
+    # --------------------------------------------------------------------------
+    # Semi-Static Content (GET requests with possible cache)
+    # --------------------------------------------------------------------------
+
+    @http.route('/mail/channel/<int:channel_id>/partner/<int:partner_id>/avatar_128', methods=['GET'], type='http', auth='public')
+    def mail_channel_partner_avatar_128(self, channel_id, partner_id, **kwargs):
+        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
+        if not channel_partner_sudo.env['mail.channel.partner'].search([('channel_id', '=', int(channel_id)), ('partner_id', '=', int(partner_id))], limit=1):
+            raise NotFound()
+        return channel_partner_sudo.env['ir.http']._content_image(model='res.partner', res_id=int(partner_id), field='avatar_128')
+
+    @http.route('/mail/channel/<int:channel_id>/guest/<int:guest_id>/avatar_128', methods=['GET'], type='http', auth='public')
+    def mail_channel_guest_avatar_128(self, channel_id, guest_id, **kwargs):
+        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
+        if not channel_partner_sudo.env['mail.channel.partner'].search([('channel_id', '=', int(channel_id)), ('guest_id', '=', int(guest_id))], limit=1):
+            raise NotFound()
+        return channel_partner_sudo.env['ir.http']._content_image(model='mail.guest', res_id=int(guest_id), field='avatar_128')
+
+    @http.route('/mail/channel/<int:channel_id>/attachment/<int:attachment_id>', methods=['GET'], type='http', auth='public')
+    def mail_channel_attachment(self, channel_id, attachment_id, **kwargs):
+        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
+        if not channel_partner_sudo.env['ir.attachment'].search([('id', '=', int(attachment_id)), ('res_id', '=', int(channel_id)), ('res_model', '=', 'mail.channel')], limit=1):
+            raise NotFound()
+        return channel_partner_sudo.env['ir.http']._get_content_common(res_id=int(attachment_id), download=True)
+
+    @http.route('/mail/channel/<int:channel_id>/image/<int:attachment_id>/<int:width>x<int:height>', methods=['GET'], type='http', auth='public')
+    def fetch_image(self, channel_id, attachment_id, width, height, **kwargs):
+        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
+        if not channel_partner_sudo.env['ir.attachment'].search([('id', '=', int(attachment_id)), ('res_id', '=', int(channel_id)), ('res_model', '=', 'mail.channel')], limit=1):
+            raise NotFound()
+        return channel_partner_sudo.env['ir.http']._content_image(res_id=int(attachment_id), height=int(height), width=int(width))
+
+    # --------------------------------------------------------------------------
+    # Client Initialization
+    # --------------------------------------------------------------------------
+
+    @http.route('/mail/init_messaging', methods=['POST'], type='json', auth='public')
+    def mail_init_messaging(self, **kwargs):
+        if request.session.uid:
+            return request.env.user._init_messaging()
+        guest = request.env['mail.guest']._get_guest_from_request(request)
+        if guest:
+            return guest.sudo()._init_messaging()
+        raise NotFound()
+
+    # --------------------------------------------------------------------------
+    # Mailbox
+    # --------------------------------------------------------------------------
+
+    @http.route('/mail/inbox/messages', methods=['POST'], type='json', auth='user')
+    def discuss_inbox_messages(self, max_id=None, min_id=None, limit=30, **kwargs):
+        return request.env['mail.message']._message_fetch(domain=[('needaction', '=', True)], max_id=max_id, min_id=min_id, limit=limit)
+
+    @http.route('/mail/history/messages', methods=['POST'], type='json', auth='user')
+    def discuss_history_messages(self, max_id=None, min_id=None, limit=30, **kwargs):
+        return request.env['mail.message']._message_fetch(domain=[('needaction', '=', False)], max_id=max_id, min_id=min_id, limit=limit)
+
+    @http.route('/mail/starred/messages', methods=['POST'], type='json', auth='user')
+    def discuss_starred_messages(self, max_id=None, min_id=None, limit=30, **kwargs):
+        return request.env['mail.message']._message_fetch(domain=[('starred_partner_ids', 'in', [request.env.user.partner_id.id])], max_id=max_id, min_id=min_id, limit=limit)
+
+    # --------------------------------------------------------------------------
+    # Thread API (channel/chatter common)
+    # --------------------------------------------------------------------------
+
+    @http.route('/mail/message/post', methods=['POST'], type='json', auth='public')
+    def mail_message_post(self, thread_model, thread_id, post_data, **kwargs):
+        if thread_model == 'mail.channel':
+            channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(thread_id))
+            thread = channel_partner_sudo.channel_id
+        else:
+            thread = request.env[thread_model].browse(int(thread_id)).exists()
+        allowed_params = {'attachment_ids', 'body', 'message_type', 'partner_ids', 'subtype_xmlid'}
+        return thread.message_post(**{key: value for key, value in post_data.items() if key in allowed_params}).message_format()[0]
+
+    @http.route('/mail/attachment/upload', methods=['POST'], type='http', auth='public')
+    def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
+        channel_partner = request.env['mail.channel.partner']
+        if thread_model == 'mail.channel':
+            channel_partner = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(thread_id))
+        vals = {
+            'name': ufile.filename,
+            'raw': ufile.read(),
+            'res_id': int(thread_id),
+            'res_model': thread_model,
+        }
+        if is_pending and is_pending != 'false':
+            # Add this point, the message related to the uploaded file does
+            # not exist yet, so we use those placeholder values instead.
+            vals.update({
+                'res_id': 0,
+                'res_model': 'mail.compose.message',
+            })
+        if channel_partner.env.user.share:
+            # Only generate the access token if absolutely necessary (= not for internal user).
+            vals['access_token'] = channel_partner.env['ir.attachment']._generate_access_token()
+        attachment = channel_partner.env['ir.attachment'].create(vals)
+        attachment._post_add_create()
+        attachmentData = {
+            'filename': ufile.filename,
+            'id': attachment.id,
+            'mimetype': attachment.mimetype,
+            'name': attachment.name,
+            'size': attachment.file_size
+        }
+        if attachment.access_token:
+            attachmentData['accessToken'] = attachment.access_token
+        return request.make_response(
+            data=json.dumps(attachmentData),
+            headers=[('Content-Type', 'application/json')]
+        )
+
+    @http.route('/mail/attachment/delete', methods=['POST'], type='json', auth='public')
+    def mail_attachment_delete(self, attachment_id, access_token=None, **kwargs):
+        attachment_sudo = request.env['ir.attachment'].browse(int(attachment_id)).sudo().exists()
+        if not attachment_sudo:
+            raise NotFound()
+        if not request.env.user.share:
+            # Check through standard access rights/rules for internal users.
+            return attachment_sudo.sudo(False).unlink()
+        # For non-internal users 2 cases are supported:
+        #   - Either the attachment is linked to a message: verify the request is made by the author of the message (portal user or guest).
+        #   - Either a valid access token is given: also verify the message is pending (because unfortunately in portal a token is also provided to guest for viewing others' attachments).
+        message_sudo = request.env['mail.message'].sudo().search([('attachment_ids', 'in', attachment_sudo.ids)], limit=1)
+        if message_sudo:
+            if request.session.uid and (not message_sudo.author_id or message_sudo.author_id != request.env.user.partner_id):
+                raise NotFound()
+            if not request.session.uid and (not message_sudo.author_guest_id or message_sudo.author_guest_id != request.env['mail.guest']._get_guest_from_request(request)):
+                raise NotFound()
+        else:
+            if not access_token or not attachment_sudo.access_token or not consteq(access_token, attachment_sudo.access_token):
+                raise NotFound()
+            if attachment_sudo.res_model != 'mail.compose.message' or attachment_sudo.res_id != 0:
+                raise NotFound()
+        return attachment_sudo.unlink()
+
+    # --------------------------------------------------------------------------
+    # Channel API
+    # --------------------------------------------------------------------------
+
+    @http.route('/mail/channel/messages', methods=['POST'], type='json', auth='public')
+    def mail_channel_messages(self, channel_id, max_id=None, min_id=None, limit=30, **kwargs):
+        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
+        return channel_partner_sudo.env['mail.message']._message_fetch(domain=[
+            ('res_id', '=', channel_id),
+            ('model', '=', 'mail.channel'),
+            ('message_type', '!=', 'user_notification'),
+        ], max_id=max_id, min_id=min_id, limit=limit)
+
+    @http.route('/mail/channel/set_last_seen_message', methods=['POST'], type='json', auth='public')
+    def mail_channel_mark_as_seen(self, channel_id, last_message_id, **kwargs):
+        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
+        return channel_partner_sudo.channel_id._channel_seen(int(last_message_id))
+
+    # --------------------------------------------------------------------------
+    # Chatter API
+    # --------------------------------------------------------------------------
+
+    @http.route('/mail/thread/messages', methods=['POST'], type='json', auth='user')
+    def mail_thread_messages(self, thread_model, thread_id, max_id=None, min_id=None, limit=30, **kwargs):
+        return request.env['mail.message']._message_fetch(domain=[
+            ('res_id', '=', int(thread_id)),
+            ('model', '=', thread_model),
+            ('message_type', '!=', 'user_notification'),
+        ], max_id=max_id, min_id=min_id, limit=limit)
+
+    @http.route('/mail/read_followers', methods=['POST'], type='json', auth='user')
     def read_followers(self, res_model, res_id):
         request.env['mail.followers'].check_access_rights("read")
         request.env[res_model].check_access_rights("read")
@@ -40,7 +247,7 @@ class DiscussController(http.Controller):
             'subtypes': self.read_subscription_data(follower_id) if follower_id else None
         }
 
-    @http.route('/mail/read_subscription_data', type='json', auth='user')
+    @http.route('/mail/read_subscription_data', methods=['POST'], type='json', auth='user')
     def read_subscription_data(self, follower_id):
         """ Computes:
             - message_subtype_data: data about document subtypes: which are
@@ -69,36 +276,7 @@ class DiscussController(http.Controller):
         return sorted(subtypes_list,
                       key=lambda it: (it['parent_model'] or '', it['res_model'] or '', it['internal'], it['sequence']))
 
-    @http.route('/mail/<string:res_model>/<int:res_id>/avatar/<int:partner_id>', type='http', auth='public')
-    def avatar(self, res_model, res_id, partner_id):
-        headers = [('Content-Type', 'image/png')]
-        status = 200
-        content = 'R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='  # default image is one white pixel
-        if res_model in request.env:
-            try:
-                # if the current user has access to the document, get the partner avatar as sudo()
-                request.env[res_model].browse(res_id).check_access_rule('read')
-                if partner_id in request.env[res_model].browse(res_id).sudo().exists().message_ids.mapped('author_id').ids:
-                    status, headers, _content = request.env['ir.http'].sudo().binary_content(
-                        model='res.partner', id=partner_id, field='avatar_128', default_mimetype='image/png')
-                    # binary content return an empty string and not a placeholder if obj[field] is False
-                    if _content != '':
-                        content = _content
-                    if status == 304:
-                        return werkzeug.wrappers.Response(status=304)
-            except AccessError:
-                pass
-        image_base64 = base64.b64decode(content)
-        headers.append(('Content-Length', len(image_base64)))
-        response = request.make_response(image_base64, headers)
-        response.status = str(status)
-        return response
-
-    @http.route('/mail/init_messaging', type='json', auth='user')
-    def mail_init_messaging(self):
-        return request.env.user._init_messaging()
-
-    @http.route('/mail/get_suggested_recipients', type='json', auth='user')
+    @http.route('/mail/get_suggested_recipients', methods=['POST'], type='json', auth='user')
     def message_get_suggested_recipients(self, model, res_ids):
         records = request.env[model].browse(res_ids)
         try:

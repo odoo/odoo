@@ -58,26 +58,26 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
     'application': True,
     'auto_install': False,
     'assets': {
+        'mail.assets_discuss_public': [
+            'hr_holidays/static/src/components/*/*',
+            'hr_holidays/static/src/models/*/*.js',
+        ],
         'web.assets_backend': [
             'hr_holidays/static/src/js/time_off_calendar.js',
             'hr_holidays/static/src/js/leave_stats_widget.js',
-            'hr_holidays/static/src/models/partner/partner.js',
+            'hr_holidays/static/src/models/*/*.js',
             'hr_holidays/static/src/scss/time_off.scss',
-            'hr_holidays/static/src/components/thread_view/thread_view.scss',
+            'hr_holidays/static/src/components/*/*.scss',
         ],
         'web.tests_assets': [
             'hr_holidays/static/tests/helpers/**/*',
         ],
         'web.qunit_suite_tests': [
-            'hr_holidays/static/src/components/partner_im_status_icon/partner_im_status_icon_tests.js',
-            'hr_holidays/static/src/components/thread_icon/thread_icon_tests.js',
-            'hr_holidays/static/src/components/thread_view/thread_view_tests.js',
+            'hr_holidays/static/src/components/*/tests/*.js',
             'hr_holidays/static/tests/test_leave_stats_widget.js',
         ],
         'web.assets_qweb': [
-            'hr_holidays/static/src/components/partner_im_status_icon/partner_im_status_icon.xml',
-            'hr_holidays/static/src/components/thread_icon/thread_icon.xml',
-            'hr_holidays/static/src/components/thread_view/thread_view.xml',
+            'hr_holidays/static/src/components/*/*.xml',
             'hr_holidays/static/src/xml/*.xml',
         ],
     },

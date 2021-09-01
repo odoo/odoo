@@ -162,6 +162,9 @@ function factory(dependencies) {
                 // See task-2277543
                 return;
             }
+            if (this.messaging.currentGuest) {
+                return;
+            }
             this.thread.markAsSeen(this.thread.lastNonTransientMessage).catch(e => {
                 // prevent crash when executing compute during destroy
                 if (!(e instanceof RecordDeletedError)) {
@@ -257,6 +260,12 @@ function factory(dependencies) {
         }),
         composer: many2one('mail.composer', {
             related: 'thread.composer',
+        }),
+        /**
+         * Determines which extra class this thread view component should have.
+         */
+        extraClass: attr({
+            related: 'threadViewer.extraClass',
         }),
         hasComposerFocus: attr({
             related: 'composer.hasFocus',

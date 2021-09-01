@@ -31,14 +31,14 @@ from werkzeug.urls import url_encode, url_decode, iri_to_uri
 
 import odoo
 import odoo.modules.registry
-from odoo.api import call_kw, Environment
-from odoo.modules import get_module_path, get_resource_path, module
-from odoo.tools import image_process, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
+from odoo.api import call_kw
+from odoo.modules import get_resource_path, module
+from odoo.tools import html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlsxwriter, file_open, file_path
 from odoo.tools.safe_eval import safe_eval, time
-from odoo import http, tools
+from odoo import http
 from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception
 from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.models import check_method_name
@@ -1376,14 +1376,6 @@ class View(http.Controller):
 
 class Binary(http.Controller):
 
-    @staticmethod
-    def placeholder(image=False):
-        if not image:
-            image = 'placeholder.png'
-        image_path = image.lstrip('/').split('/') if '/' in image else ['web', 'static', 'img', image]
-        with tools.file_open(get_resource_path(*image_path), 'rb') as fd:
-            return fd.read()
-
     @http.route(['/web/content',
         '/web/content/<string:xmlid>',
         '/web/content/<string:xmlid>/<string:filename>',
@@ -1395,21 +1387,8 @@ class Binary(http.Controller):
                        filename=None, filename_field='name', unique=None, mimetype=None,
                        download=None, data=None, token=None, access_token=None, **kw):
 
-        return self._get_content_common(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
+        return request.env['ir.http']._get_content_common(xmlid=xmlid, model=model, res_id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype, access_token=access_token, token=token)
-
-    def _get_content_common(self, xmlid, model, id, field, unique, filename, filename_field, download, mimetype, access_token, token):
-        status, headers, content = request.env['ir.http'].binary_content(
-            xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
-            filename_field=filename_field, download=download, mimetype=mimetype, access_token=access_token)
-
-        if status != 200:
-            return request.env['ir.http']._response_by_status(status, headers, content)
-        else:
-            content_base64 = base64.b64decode(content)
-            headers.append(('Content-Length', len(content_base64)))
-            response = request.make_response(content_base64, headers)
-        return response
 
     @http.route(['/web/assets/debug/<string:filename>',
         '/web/assets/debug/<path:extra>/<string:filename>',
@@ -1421,7 +1400,7 @@ class Binary(http.Controller):
             [('url', '=like', f'/web/assets/%/{extra}/{filename}' if extra else f'/web/assets/%/{filename}')],
              fields=['id'], limit=1)[0]['id']
 
-        return self._get_content_common(xmlid=None, model='ir.attachment', id=id, field='datas', unique=unique, filename=filename,
+        return request.env['ir.http']._get_content_common(xmlid=None, model='ir.attachment', res_id=id, field='datas', unique=unique, filename=filename,
             filename_field='name', download=None, mimetype=None, access_token=None, token=None)
 
     @http.route(['/web/image',
@@ -1446,55 +1425,10 @@ class Binary(http.Controller):
                       download=None, width=0, height=0, crop=False, access_token=None,
                       **kwargs):
         # other kwargs are ignored on purpose
-        return self._content_image(xmlid=xmlid, model=model, id=id, field=field,
+        return request.env['ir.http']._content_image(xmlid=xmlid, model=model, res_id=id, field=field,
             filename_field=filename_field, unique=unique, filename=filename, mimetype=mimetype,
             download=download, width=width, height=height, crop=crop,
             quality=int(kwargs.get('quality', 0)), access_token=access_token)
-
-    def _content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-                       filename_field='name', unique=None, filename=None, mimetype=None,
-                       download=None, width=0, height=0, crop=False, quality=0, access_token=None,
-                       **kwargs):
-        status, headers, image_base64 = request.env['ir.http'].binary_content(
-            xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
-            filename_field=filename_field, download=download, mimetype=mimetype,
-            default_mimetype='image/png', access_token=access_token)
-
-        return Binary._content_image_get_response(
-            status, headers, image_base64, model=model, id=id, field=field, download=download,
-            width=width, height=height, crop=crop, quality=quality)
-
-    @staticmethod
-    def _content_image_get_response(
-            status, headers, image_base64, model='ir.attachment', id=None,
-            field='datas', download=None, width=0, height=0, crop=False,
-            quality=0):
-        if status in [301, 304] or (status != 200 and download):
-            return request.env['ir.http']._response_by_status(status, headers, image_base64)
-        if not image_base64:
-            placeholder_filename = False
-            if model in request.env:
-                placeholder_filename = request.env[model]._get_placeholder_filename(field)
-            placeholder_content = Binary.placeholder(image=placeholder_filename)
-            # Since we set a placeholder for any missing image, the status must be 200. In case one
-            # wants to configure a specific 404 page (e.g. though nginx), a 404 status will cause
-            # troubles.
-            status = 200
-            image_base64 = base64.b64encode(placeholder_content)
-
-            if not (width or height):
-                width, height = odoo.tools.image_guess_size_from_field_name(field)
-
-        try:
-            image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop, quality=int(quality))
-        except Exception:
-            return request.not_found()
-
-        content = base64.b64decode(image_base64)
-        headers = http.set_safe_image_headers(headers, content)
-        response = request.make_response(content, headers)
-        response.status_code = status
-        return response
 
     # backward compatibility
     @http.route(['/web/binary/image'], type='http', auth="public")
@@ -1503,8 +1437,7 @@ class Binary(http.Controller):
         height = None
         if resize:
             width, height = resize.split(",")
-        return self.content_image(model=model, id=id, field=field, width=width, height=height)
-
+        return request.env['ir.http']._content_image(model=model, res_id=id, field=field, width=width, height=height)
 
     @http.route('/web/binary/upload', type='http', auth="user")
     @serialize_exception

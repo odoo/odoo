@@ -38,8 +38,7 @@
                 <FileUploader
                     attachmentLocalIds="thread.allAttachments.map(attachment => attachment.localId)"
                     newAttachmentExtraData="newAttachmentExtraData"
-                    uploadModel="thread.model"
-                    uploadId="thread.id"
+                    threadLocalId="thread.localId"
                     t-on-o-attachment-created="_onAttachmentCreated"
                     t-ref="fileUploader"
                 />

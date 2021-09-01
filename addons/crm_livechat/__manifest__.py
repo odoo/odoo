@@ -16,6 +16,9 @@
     'auto_install': True,
     'license': 'LGPL-3',
     'assets': {
+        'mail.assets_discuss_public': [
+            'crm_livechat/static/src/models/*/*.js',
+        ],
         'web.assets_backend': [
             'crm_livechat/static/src/models/*/*.js',
         ],

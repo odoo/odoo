@@ -291,7 +291,7 @@ QUnit.test('message list asc order', async function (assert) {
 });
 
 QUnit.test('mark channel as fetched when a new message is loaded and as seen when focusing composer [REQUIRE FOCUS]', async function (assert) {
-    assert.expect(8);
+    assert.expect(7);
 
     this.data['res.partner'].records.push({
         email: "fred@example.com",
@@ -322,18 +322,13 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
                     'channel_fetched is called on the right channel model'
                 );
                 assert.step('rpc:channel_fetch');
-            } else if (args.method === 'channel_seen') {
+            } else if (route === '/mail/channel/set_last_seen_message') {
                 assert.strictEqual(
-                    args.args[0][0],
+                    args.channel_id,
                     100,
-                    'channel_seen is called on the right channel id'
+                    'set_last_seen_message is called on the right channel id'
                 );
-                assert.strictEqual(
-                    args.model,
-                    'mail.channel',
-                    'channel_seeb is called on the right channel model'
-                );
-                assert.step('rpc:channel_seen');
+                assert.step('rpc:set_last_seen_message');
             }
             return this._super(...arguments);
         }
@@ -374,13 +369,13 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         },
     }));
     assert.verifySteps(
-        ['rpc:channel_seen'],
+        ['rpc:set_last_seen_message'],
         "Channel should have been marked as seen after threadView got the focus"
     );
 });
 
 QUnit.test('mark channel as fetched and seen when a new message is loaded if composer is focused [REQUIRE FOCUS]', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     this.data['res.partner'].records.push({
         id: 10,
@@ -396,18 +391,13 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
         mockRPC(route, args) {
             if (args.method === 'channel_fetched' && args.args[0] === 100) {
                 throw new Error("'channel_fetched' RPC must not be called for created channel as message is directly seen");
-            } else if (args.method === 'channel_seen') {
+            } else if (route === '/mail/channel/set_last_seen_message') {
                 assert.strictEqual(
-                    args.args[0][0],
+                    args.channel_id,
                     100,
-                    'channel_seen is called on the right channel id'
+                    'set_last_seen_message is called on the right channel id'
                 );
-                assert.strictEqual(
-                    args.model,
-                    'mail.channel',
-                    'channel_seen is called on the right channel model'
-                );
-                assert.step('rpc:channel_seen');
+                assert.step('rpc:set_last_seen_message');
             }
             return this._super(...arguments);
         }
@@ -444,7 +434,7 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
         },
     });
     assert.verifySteps(
-        ['rpc:channel_seen'],
+        ['rpc:set_last_seen_message'],
         "Channel should have been mark as seen directly"
     );
 });
@@ -526,7 +516,7 @@ QUnit.test('do not show message subject when subject is the same as the thread n
 });
 
 QUnit.test('[technical] new messages separator on posting message', async function (assert) {
-    // technical as we need to remove focus from text input to avoid `channel_seen` call
+    // technical as we need to remove focus from text input to avoid `set_last_seen_message` call
     assert.expect(4);
 
     this.data['mail.channel'].records = [{
@@ -568,7 +558,7 @@ QUnit.test('[technical] new messages separator on posting message', async functi
     document.querySelector('.o_ComposerTextInput_textarea').focus();
     await afterNextRender(() => document.execCommand('insertText', false, "hey !"));
     await afterNextRender(() => {
-        // need to remove focus from text area to avoid channel_seen
+        // need to remove focus from text area to avoid set_last_seen_message
         document.querySelector('.o_Composer_buttonSend').focus();
         document.querySelector('.o_Composer_buttonSend').click();
 
@@ -1697,7 +1687,7 @@ QUnit.test('message with subtype should be displayed (and not considered as empt
 
 QUnit.test('[technical] message list with a full page of empty messages should show load more if there are other messages', async function (assert) {
     // Technical assumptions :
-    // - message_fetch fetching exactly 30 messages,
+    // - /mail/channel/messages fetching exactly 30 messages,
     // - empty messages not being displayed
     // - auto-load more being triggered on scroll, not automatically when the 30 first messages are empty
     assert.expect(2);
@@ -1754,7 +1744,7 @@ QUnit.test('[technical] message list with a full page of empty messages should s
 
 QUnit.test('first unseen message should be directly preceded by the new message separator if there is a transient message just before it while composer is not focused [REQUIRE FOCUS]', async function (assert) {
     // The goal of removing the focus is to ensure the thread is not marked as seen automatically.
-    // Indeed that would trigger channel_seen no matter what, which is already covered by other tests.
+    // Indeed that would trigger set_last_seen_message no matter what, which is already covered by other tests.
     // The goal of this test is to cover the conditions specific to transient messages,
     // and the conditions from focus would otherwise shadow them.
     assert.expect(3);
@@ -1863,7 +1853,7 @@ QUnit.test('failure on loading messages should display error', async function (a
     });
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
+            if (route === '/mail/channel/messages') {
                 throw new Error();
             }
             return this._super(...arguments);
@@ -1897,7 +1887,7 @@ QUnit.test('failure on loading messages should prompt retry button', async funct
     });
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
+            if (route === '/mail/channel/messages') {
                 throw new Error();
             }
             return this._super(...arguments);
@@ -1943,7 +1933,7 @@ QUnit.test('failure on loading more messages should not alter message list displ
     }));
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
+            if (route === '/mail/channel/messages') {
                 if (messageFetchShouldFail) {
                     throw new Error();
                 }
@@ -1994,7 +1984,7 @@ QUnit.test('failure on loading more messages should display error and prompt ret
     }));
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
+            if (route === '/mail/channel/messages') {
                 if (messageFetchShouldFail) {
                     throw new Error();
                 }
@@ -2054,7 +2044,7 @@ QUnit.test('Retry loading more messages on failed load more messages should load
     });
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
+            if (route === '/mail/channel/messages') {
                 if (messageFetchShouldFail) {
                     throw new Error();
                 }

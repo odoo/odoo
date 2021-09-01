@@ -39,13 +39,9 @@ function factory(dependencies) {
             });
             const device = this.messaging.device;
             device.start();
-            const context = Object.assign({
-                isMobile: device.isMobile,
-            }, this.env.session.user_context);
             const discuss = this.messaging.discuss;
             const data = await this.async(() => this.env.services.rpc({
                 route: '/mail/init_messaging',
-                params: { context: context }
             }, { shadow: true }));
             await this.async(() => this._init(data));
             if (discuss.isOpen) {
@@ -64,6 +60,7 @@ function factory(dependencies) {
          * @private
          * @param {Object} param0
          * @param {Object[]} param0.channels
+         * @param {Object} param0.currentGuest
          * @param {Object} param0.current_partner
          * @param {integer} param0.current_user_id
          * @param {Object} param0.current_user_settings
@@ -78,6 +75,7 @@ function factory(dependencies) {
             channels,
             commands = [],
             current_partner,
+            currentGuest,
             current_user_id,
             current_user_settings,
             mail_failures = {},
@@ -91,6 +89,7 @@ function factory(dependencies) {
             const discuss = this.messaging.discuss;
             // partners first because the rest of the code relies on them
             this._initPartners({
+                currentGuest,
                 current_partner,
                 current_user_id,
                 partner_root,
@@ -103,7 +102,9 @@ function factory(dependencies) {
                 starred_counter,
             });
             // init mail user settings
-            this._initResUsersSettings(current_user_settings);
+            if (current_user_settings) {
+                this._initResUsersSettings(current_user_settings);
+            }
             // various suggestions in no particular order
             this._initCannedResponses(shortcodes);
             this._initCommands();
@@ -138,7 +139,12 @@ function factory(dependencies) {
                     // (e.g. to know when to display "invited" notification)
                     // Current partner can always be assumed to be a member of
                     // channels received at init.
-                    convertedData.members = link(this.messaging.currentPartner);
+                    if (this.messaging.currentPartner) {
+                        convertedData.members = link(this.messaging.currentPartner);
+                    }
+                    if (this.messaging.currentGuest) {
+                        convertedData.guestMembers = link(this.messaging.currentGuest);
+                    }
                 }
                 const channel = this.messaging.models['mail.thread'].insert(
                     Object.assign({ model: 'mail.channel' }, convertedData)
@@ -248,29 +254,35 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @param {Object} currentGuest
          * @param {Object} current_partner
          * @param {integer} current_user_id
          * @param {Object} partner_root
          * @param {Object[]} [public_partners=[]]
          */
         _initPartners({
+            currentGuest,
             current_partner,
             current_user_id: currentUserId,
             partner_root,
             public_partners = [],
         }) {
+            if (currentGuest) {
+                this.messaging.update({ currentGuest: insert(currentGuest) });
+            }
+            if (current_partner) {
+                const partnerData = this.messaging.models['mail.partner'].convertData(current_partner);
+                partnerData.user = insert({ id: currentUserId });
+                this.messaging.update({
+                    currentPartner: insert(partnerData),
+                    currentUser: insert({ id: currentUserId }),
+                });
+            }
             this.messaging.update({
-                currentPartner: insert(Object.assign(
-                    this.messaging.models['mail.partner'].convertData(current_partner),
-                    {
-                        user: insert({ id: currentUserId }),
-                    }
-                )),
-                currentUser: insert({ id: currentUserId }),
                 partnerRoot: insert(this.messaging.models['mail.partner'].convertData(partner_root)),
                 publicPartners: insert(public_partners.map(
                     publicPartner => this.messaging.models['mail.partner'].convertData(publicPartner)
-                ))
+                )),
             });
         }
 

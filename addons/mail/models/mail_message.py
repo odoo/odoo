@@ -124,6 +124,7 @@ class Message(models.Model):
         'res.partner', 'Author', index=True, ondelete='set null',
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
     author_avatar = fields.Binary("Author's avatar", related='author_id.avatar_128', depends=['author_id'], readonly=False)
+    author_guest_id = fields.Many2one(string="Guest", comodel_name='mail.guest')
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
     partner_ids = fields.Many2many('res.partner', string='Recipients', context={'active_test': False})
@@ -790,8 +791,14 @@ class Message(models.Model):
             else:
                 record_name = False
 
+            if message_sudo.author_guest_id:
+                vals['guestAuthor'] = [('insert', {
+                    'id': message_sudo.author_guest_id.id,
+                    'name': message_sudo.author_guest_id.name,
+                })]
+            else:
+                vals['author_id'] = author
             vals.update({
-                'author_id': author,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachment_ids': attachments_formatted,
                 'tracking_value_ids': tracking_value_ids,
@@ -801,12 +808,18 @@ class Message(models.Model):
         return vals_list
 
     @api.model
-    def message_fetch(self, domain, limit=20):
+    def _message_fetch(self, domain, max_id=None, min_id=None, limit=30):
         """ Get a limited amount of formatted messages with provided domain.
             :param domain: the domain to filter messages;
+            :param min_id: messages must be more recent than this id
+            :param max_id: message must be less recent than this id
             :param limit: the maximum amount of messages to get;
             :returns list(dict).
         """
+        if max_id:
+            domain = expression.AND([domain, [('id', '<', max_id)]])
+        if min_id:
+            domain = expression.AND([domain, [('id', '>', min_id)]])
         return self.search(domain, limit=limit).message_format()
 
     def message_format(self):

@@ -72,22 +72,20 @@ export class Attachment extends Component {
             // be fetched at all.
             return '';
         }
-        let size;
+        let url;
+        // The size of background-image depends on the props.imageSize
+        // to sync with width and height of `.o_Attachment_image`.
         if (this.detailsMode === 'card') {
-            size = '38x38';
-        } else {
-            // The size of background-image depends on the props.imageSize
-            // to sync with width and height of `.o_Attachment_image`.
-            if (this.props.imageSize === "large") {
-                size = '400x400';
-            } else if (this.props.imageSize === "medium") {
-                size = '200x200';
-            } else if (this.props.imageSize === "small") {
-                size = '100x100';
-            }
+           url = this.attachment.imageTinyUrl;
+        } else if (this.props.imageSize === "large") {
+            url = this.attachment.imageLargeUrl;
+        } else if (this.props.imageSize === "medium") {
+            url = this.attachment.imageMediumUrl;
+        } else if (this.props.imageSize === "small") {
+            url = this.attachment.imageSmallUrl;
         }
         // background-size set to override value from `o_image` which makes small image stretched
-        return `background-image:url(/web/image/${this.attachment.id}/${size}); background-size: auto;`;
+        return `background-image:url(${url}); background-size: auto;`;
     }
 
     //--------------------------------------------------------------------------
@@ -102,7 +100,7 @@ export class Attachment extends Component {
      */
     _onClickDownload(ev) {
         ev.stopPropagation();
-        this.env.services.navigate(`/web/content/ir.attachment/${this.attachment.id}/datas`, { download: true });
+        this.env.services.navigate(this.attachment.downloadUrl, { download: true });
     }
 
     /**

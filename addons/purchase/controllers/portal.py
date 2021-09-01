@@ -12,7 +12,6 @@ from odoo.tools import image_process
 from odoo.tools.translate import _
 from odoo.addons.portal.controllers import portal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
-from odoo.addons.web.controllers.main import Binary
 
 
 class CustomerPortal(portal.CustomerPortal):
@@ -91,7 +90,7 @@ class CustomerPortal(portal.CustomerPortal):
         #
         def resize_to_48(b64source):
             if not b64source:
-                b64source = base64.b64encode(Binary.placeholder())
+                b64source = base64.b64encode(request.env['ir.http']._placeholder())
             return image_process(b64source, size=(48, 48))
 
         values = {

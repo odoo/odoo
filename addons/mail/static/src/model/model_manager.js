@@ -1158,10 +1158,10 @@ export class ModelManager {
             if (!field) {
                 throw new Error(`Cannot create/update record with data unrelated to a field. (record: "${record.localId}", non-field attempted update: "${fieldName}")`);
             }
-            if (field.readonly && !allowWriteReadonly) {
+            const newVal = data[fieldName];
+            if (field.readonly && !allowWriteReadonly && record[fieldName] !== newVal) {
                 throw new Error(`Can't update "${field.fieldName}" (record: "${record.localId}") because it's readonly.`);
             }
-            const newVal = data[fieldName];
             if (!field.parseAndExecuteCommands(record, newVal, options)) {
                 continue;
             }

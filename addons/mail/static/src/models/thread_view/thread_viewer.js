@@ -78,6 +78,10 @@ function factory(dependencies) {
 
     ThreadViewer.fields = {
         /**
+         * Determines which extra class this thread view component should have.
+         */
+        extraClass: attr(),
+        /**
          * Determines whether this thread viewer has a member list.
          * Only makes sense if this thread is a channel and if the channel is
          * not a chat.

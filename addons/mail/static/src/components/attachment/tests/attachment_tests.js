@@ -595,9 +595,8 @@ QUnit.test('clicking on the delete attachment button multiple times should do th
     assert.expect(2);
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === "unlink" && args.model === "ir.attachment") {
-                assert.step('attachment_unlink');
-                return;
+            if (route === '/mail/attachment/delete') {
+                assert.step('attachment_delete');
             }
             return this._super(...arguments);
         },
@@ -621,7 +620,7 @@ QUnit.test('clicking on the delete attachment button multiple times should do th
         document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
     });
     assert.verifySteps(
-        ['attachment_unlink'],
+        ['attachment_delete'],
         "The unlink method must be called once"
     );
 });

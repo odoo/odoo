@@ -340,14 +340,14 @@ class TestChannelInternals(MailCommon):
         msg_1 = self._add_messages(self.test_channel, 'Body1', author=self.user_employee.partner_id)
         msg_2 = self._add_messages(self.test_channel, 'Body2', author=self.user_employee.partner_id)
 
-        self.test_channel.channel_seen(msg_2.id)
+        self.test_channel._channel_seen(msg_2.id)
         self.assertEqual(
             channel.channel_info()[0]['seen_partners_info'][0]['seen_message_id'],
             msg_2.id,
             "Last message id should have been updated"
         )
 
-        self.test_channel.channel_seen(msg_1.id)
+        self.test_channel._channel_seen(msg_1.id)
         self.assertEqual(
             channel.channel_info()[0]['seen_partners_info'][0]['seen_message_id'],
             msg_2.id,

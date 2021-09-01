@@ -294,14 +294,15 @@ class WebsiteVisitor(models.Model):
 
     def _update_visitor_timezone(self, timezone):
         """ We need to do this part here to avoid concurrent updates error. """
-        try:
-            with self.env.cr.savepoint():
-                query_lock = "SELECT * FROM website_visitor where id = %s FOR NO KEY UPDATE NOWAIT"
-                self.env.cr.execute(query_lock, (self.id,), log_exceptions=False)
-                query = "UPDATE website_visitor SET timezone = %s WHERE id = %s"
-                self.env.cr.execute(query, (timezone, self.id), log_exceptions=False)
-        except Exception:
-            pass
+        query = """
+            UPDATE website_visitor
+            SET timezone = %s
+            WHERE id IN (
+                SELECT id FROM website_visitor WHERE id = %s
+                FOR NO KEY UPDATE SKIP LOCKED
+            )
+        """
+        self.env.cr.execute(query, (timezone, self.id))
 
     def _update_visitor_last_visit(self):
         """ We need to do this part here to avoid concurrent updates error. """

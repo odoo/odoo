@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import base64
 import hashlib
 import json
 
-from odoo import api, models
+import odoo
+from odoo import api, http, models
 from odoo.http import request
-from odoo.tools import ustr
+from odoo.tools import file_open, image_process, ustr
 
 from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
-
-import odoo
 
 
 class Http(models.AbstractModel):
@@ -31,7 +32,9 @@ class Http(models.AbstractModel):
             'web.max_file_upload_size',
             default=128 * 1024 * 1024,  # 128MiB
         ))
-
+        mods = odoo.conf.server_wide_modules or []
+        lang = user_context.get("lang")
+        translation_hash = request.env['ir.translation'].sudo().get_web_translations_hash(mods, lang)
         session_info = {
             "uid": request.session.uid,
             "is_system": user._is_system() if request.session.uid else False,
@@ -53,26 +56,26 @@ class Http(models.AbstractModel):
             'profile_params': request.session.profile_params,
             "max_file_upload_size": max_file_upload_size,
             "home_action_id": user.action_id.id,
+            "cache_hashes": {
+                "translations": translation_hash,
+            },
+            "currencies": self.sudo().get_currencies(),
         }
         if self.env.user.has_group('base.group_user'):
             # the following is only useful in the context of a webclient bootstrapping
             # but is still included in some other calls (e.g. '/web/session/authenticate')
             # to avoid access errors and unnecessary information, it is only included for users
             # with access to the backend ('internal'-type users)
-            mods = odoo.conf.server_wide_modules or []
             if request.db:
                 mods = list(request.registry._init_modules) + mods
             qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle="web.assets_qweb")
-            lang = user_context.get("lang")
-            translation_hash = request.env['ir.translation'].get_web_translations_hash(mods, lang)
             menus = request.env['ir.ui.menu'].load_menus(request.session.debug)
             ordered_menus = {str(k): v for k, v in menus.items()}
             menu_json_utf8 = json.dumps(ordered_menus, default=ustr, sort_keys=True).encode()
-            cache_hashes = {
+            session_info['cache_hashes'].update({
                 "load_menus": hashlib.sha512(menu_json_utf8).hexdigest()[:64], # sha512/256
                 "qweb": qweb_checksum,
-                "translations": translation_hash,
-            }
+            })
             session_info.update({
                 # current_company should be default_company
                 "user_companies": {
@@ -84,10 +87,8 @@ class Http(models.AbstractModel):
                         } for comp in user.company_ids
                     },
                 },
-                "currencies": self.get_currencies(),
                 "show_effect": True,
                 "display_switch_company_menu": user.has_group('base.group_multi_company') and len(user.company_ids) > 1,
-                "cache_hashes": cache_hashes,
             })
         return session_info
 
@@ -116,3 +117,66 @@ class Http(models.AbstractModel):
         Currency = request.env['res.currency']
         currencies = Currency.search([]).read(['symbol', 'position', 'decimal_places'])
         return {c['id']: {'symbol': c['symbol'], 'position': c['position'], 'digits': [69,c['decimal_places']]} for c in currencies}
+
+    @api.model
+    def _get_content_common(self, xmlid=None, model='ir.attachment', res_id=None, field='datas',
+            unique=None, filename=None, filename_field='name', download=None, mimetype=None,
+            access_token=None, token=None):
+        status, headers, content = self.binary_content(
+            xmlid=xmlid, model=model, id=res_id, field=field, unique=unique, filename=filename,
+            filename_field=filename_field, download=download, mimetype=mimetype, access_token=access_token
+        )
+        if status != 200:
+            return self._response_by_status(status, headers, content)
+        else:
+            content_base64 = base64.b64decode(content)
+            headers.append(('Content-Length', len(content_base64)))
+            response = request.make_response(content_base64, headers)
+        return response
+
+    @api.model
+    def _content_image(self, xmlid=None, model='ir.attachment', res_id=None, field='datas',
+            filename_field='name', unique=None, filename=None, mimetype=None, download=None,
+            width=0, height=0, crop=False, quality=0, access_token=None, **kwargs):
+        status, headers, image_base64 = self.binary_content(
+            xmlid=xmlid, model=model, id=res_id, field=field, unique=unique, filename=filename,
+            filename_field=filename_field, download=download, mimetype=mimetype,
+            default_mimetype='image/png', access_token=access_token
+        )
+        return self._content_image_get_response(
+            status, headers, image_base64, model=model, field=field, download=download,
+            width=width, height=height, crop=crop, quality=quality)
+
+    @api.model
+    def _content_image_get_response(self, status, headers, image_base64, model='ir.attachment',
+            field='datas', download=None, width=0, height=0, crop=False, quality=0):
+        if status in [301, 304] or (status != 200 and download):
+            return self._response_by_status(status, headers, image_base64)
+        if not image_base64:
+            placeholder_filename = False
+            if model in self.env:
+                placeholder_filename = self.env[model]._get_placeholder_filename(field)
+            placeholder_content = self._placeholder(image=placeholder_filename)
+            # Since we set a placeholder for any missing image, the status must be 200. In case one
+            # wants to configure a specific 404 page (e.g. though nginx), a 404 status will cause
+            # troubles.
+            status = 200
+            image_base64 = base64.b64encode(placeholder_content)
+            if not (width or height):
+                width, height = odoo.tools.image_guess_size_from_field_name(field)
+        try:
+            image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop, quality=int(quality))
+        except Exception:
+            return request.not_found()
+        content = base64.b64decode(image_base64)
+        headers = http.set_safe_image_headers(headers, content)
+        response = request.make_response(content, headers)
+        response.status_code = status
+        return response
+
+    @api.model
+    def _placeholder(self, image=False):
+        if not image:
+            image = 'web/static/img/placeholder.png'
+        with file_open(image, 'rb', filter_ext=('.png', '.jpg')) as fd:
+            return fd.read()

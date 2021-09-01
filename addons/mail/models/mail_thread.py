@@ -13,7 +13,6 @@ import lxml
 import logging
 import pytz
 import re
-import socket
 import time
 import threading
 
@@ -28,7 +27,6 @@ from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_
 from odoo.exceptions import MissingError
 from odoo.osv import expression
 
-from odoo.tools import ustr
 from odoo.tools.misc import clean_context, split_every
 
 _logger = logging.getLogger(__name__)
@@ -1804,7 +1802,12 @@ class MailThread(models.AbstractModel):
         record_name = record_name or self.display_name
 
         # Find the message's author
-        author_id, email_from = self._message_compute_author(author_id, email_from, raise_exception=True)
+        if 'guest' in self.env.context:
+            author_guest_id = self.env.context['guest'].id
+            author_id, email_from = False, False
+        else:
+            author_guest_id = False
+            author_id, email_from = self._message_compute_author(author_id, email_from, raise_exception=True)
 
         if subtype_xmlid:
             subtype_id = self.env['ir.model.data']._xmlid_to_res_id(subtype_xmlid)
@@ -1836,6 +1839,7 @@ class MailThread(models.AbstractModel):
         values = dict(msg_kwargs)
         values.update({
             'author_id': author_id,
+            'author_guest_id': author_guest_id,
             'email_from': email_from,
             'model': self._name,
             'res_id': self.id,

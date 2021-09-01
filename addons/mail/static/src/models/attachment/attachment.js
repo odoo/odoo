@@ -103,9 +103,11 @@ function factory(dependencies) {
                 this.update({ isUnlinkPending: true });
                 try {
                     await this.async(() => this.env.services.rpc({
-                        model: 'ir.attachment',
-                        method: 'unlink',
-                        args: [this.id],
+                        route: `/mail/attachment/delete`,
+                        params: {
+                            access_token: this.accessToken,
+                            attachment_id: this.id,
+                        },
                     }, { shadow: true }));
                 } finally {
                     this.update({ isUnlinkPending: false });
@@ -154,13 +156,14 @@ function factory(dependencies) {
          */
         _computeDefaultSource() {
             if (this.fileType === 'image') {
-                return `/web/image/${this.id}?unique=1&amp;signature=${this.checksum}&amp;model=ir.attachment`;
+                const unique = this.checksum ? `?unique=${this.checksum}` : '';
+                return `/web/image/${this.id}${unique}`;
             }
             if (this.fileType === 'application/pdf') {
-                return `/web/static/lib/pdfjs/web/viewer.html?file=/web/content/${this.id}?model%3Dir.attachment`;
+                return `/web/static/lib/pdfjs/web/viewer.html?file=/web/content/${this.id}`;
             }
             if (this.fileType && this.fileType.includes('text')) {
-                return `/web/content/${this.id}?model%3Dir.attachment`;
+                return `/web/content/${this.id}`;
             }
             if (this.fileType === 'youtu') {
                 const urlArr = this.url.split('/');
@@ -190,6 +193,18 @@ function factory(dependencies) {
                 return displayName;
             }
             return clear();
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeDownloadUrl() {
+            if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
+                return `/mail/channel/${this.originThread.id}/attachment/${this.id}`;
+            }
+            const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : '';
+            return `/web/content/ir.attachment/${this.id}/datas${accessToken}`;
         }
 
         /**
@@ -247,6 +262,54 @@ function factory(dependencies) {
                 return 'youtu';
             }
             return clear();
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeImageLargeUrl() {
+            if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
+                return `/mail/channel/${this.originThread.id}/image/${this.id}/400x400`;
+            }
+            const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : '';
+            return `/web/image/${this.id}/400x400${accessToken}`;
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeImageMediumUrl() {
+            if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
+                return `/mail/channel/${this.originThread.id}/image/${this.id}/200x200`;
+            }
+            const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : '';
+            return `/web/image/${this.id}/200x200${accessToken}`;
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeImageSmallUrl() {
+            if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
+                return `/mail/channel/${this.originThread.id}/image/${this.id}/100x100`;
+            }
+            const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : '';
+            return `/web/image/${this.id}/100x100${accessToken}`;
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeImageTinyUrl() {
+            if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
+                return `/mail/channel/${this.originThread.id}/image/${this.id}/38x38`;
+            }
+            const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : '';
+            return `/web/image/${this.id}/38x38${accessToken}`;
         }
 
         /**
@@ -328,6 +391,7 @@ function factory(dependencies) {
     }
 
     Attachment.fields = {
+        accessToken: attr(),
         activities: many2many('mail.activity', {
             inverse: 'attachments',
         }),
@@ -344,6 +408,9 @@ function factory(dependencies) {
         displayName: attr({
             compute: '_computeDisplayName',
         }),
+        downloadUrl: attr({
+           compute: '_computeDownloadUrl',
+        }),
         extension: attr({
             compute: '_computeExtension',
         }),
@@ -353,6 +420,18 @@ function factory(dependencies) {
         }),
         id: attr({
             required: true,
+        }),
+        imageLargeUrl: attr({
+            compute: '_computeImageLargeUrl',
+        }),
+        imageMediumUrl: attr({
+            compute: '_computeImageMediumUrl',
+        }),
+        imageSmallUrl: attr({
+            compute: '_computeImageSmallUrl',
+        }),
+        imageTinyUrl: attr({
+            compute: '_computeImageTinyUrl',
         }),
         isLinkedToComposer: attr({
             compute: '_computeIsLinkedToComposer',

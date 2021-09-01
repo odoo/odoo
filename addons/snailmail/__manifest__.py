@@ -23,6 +23,10 @@ Allows users to send documents by post
     ],
     'auto_install': True,
     'assets': {
+        'mail.assets_discuss_public': [
+            'snailmail/static/src/components/*/*',
+            'snailmail/static/src/models/*/*.js',
+        ],
         'snailmail.report_assets_snailmail': [
             ('include', 'web._assets_helpers'),
             'web/static/lib/bootstrap/scss/_variables.scss',
@@ -30,27 +34,18 @@ Allows users to send documents by post
             'snailmail/static/src/js/snailmail_external_layout.js',
         ],
         'web.assets_backend': [
-            'snailmail/static/src/components/message/message.js',
-            'snailmail/static/src/components/notification_group/notification_group.js',
-            'snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.js',
-            'snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.js',
-            'snailmail/static/src/models/message/message.js',
-            'snailmail/static/src/models/messaging/messaging.js',
-            'snailmail/static/src/models/notification_group/notification_group.js',
-            'snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.scss',
+            'snailmail/static/src/components/*/*.js',
+            'snailmail/static/src/components/*/*.scss',
+            'snailmail/static/src/models/*/*.js',
         ],
         'web.tests_assets': [
             'snailmail/static/tests/**/*',
         ],
         'web.qunit_suite_tests': [
-            'snailmail/static/src/components/message/message_tests.js',
-            'snailmail/static/src/components/notification_list/notification_list_notification_group_tests.js',
+            'snailmail/static/src/components/*/tests/*.js',
         ],
         'web.assets_qweb': [
-            'snailmail/static/src/components/message/message.xml',
-            'snailmail/static/src/components/notification_group/notification_group.xml',
-            'snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml',
-            'snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.xml',
+            'snailmail/static/src/components/*/*.xml',
         ],
     },
     'license': 'LGPL-3',

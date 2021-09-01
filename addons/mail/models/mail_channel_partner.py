@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug.exceptions import NotFound
+
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError
 
@@ -12,10 +14,11 @@ class ChannelPartner(models.Model):
     _rec_name = 'partner_id'
 
     # identity
-    partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade', required=True)
+    partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade', readonly=True, index=True)
+    guest_id = fields.Many2one(string="Guest", comodel_name='mail.guest', ondelete='cascade', readonly=True, index=True)
     partner_email = fields.Char('Email', related='partner_id.email', readonly=False)
     # channel
-    channel_id = fields.Many2one('mail.channel', string='Channel', ondelete='cascade', required=True)
+    channel_id = fields.Many2one('mail.channel', string='Channel', ondelete='cascade', readonly=True, required=True)
     # state
     custom_channel_name = fields.Char('Custom channel name')
     fetched_message_id = fields.Many2one('mail.message', string='Last Fetched')
@@ -24,6 +27,14 @@ class ChannelPartner(models.Model):
     is_minimized = fields.Boolean("Conversation is minimized")
     is_pinned = fields.Boolean("Is pinned on the interface", default=True)
     last_interest_dt = fields.Datetime("Last Interest", default=fields.Datetime.now, help="Contains the date and time of the last interesting event that happened in this channel for this partner. This includes: creating, joining, pinning, and new message posted.")
+
+    def init(self):
+        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS mail_channel_partner_partner_unique ON %s (channel_id, partner_id) WHERE partner_id IS NOT NULL" % self._table)
+        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS mail_channel_partner_guest_unique ON %s (channel_id, guest_id) WHERE guest_id IS NOT NULL" % self._table)
+
+    _sql_constraints = [
+        ("partner_or_guest_exists", "CHECK((partner_id IS NOT NULL AND guest_id IS NULL) OR (partner_id IS NULL AND guest_id IS NOT NULL))", "A channel member must be a partner or a guest."),
+    ]
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -42,7 +53,35 @@ class ChannelPartner(models.Model):
         return super(ChannelPartner, self).create(vals_list)
 
     def write(self, vals):
-        if not self.env.is_admin():
-            if {'channel_id', 'partner_id', 'partner_email'} & set(vals):
-                raise AccessError(_('You can not write on this field'))
+        for channel_partner in self:
+            for field_name in {'channel_id', 'partner_id', 'guest_id'}:
+                if field_name in vals and vals[field_name] != channel_partner[field_name].id:
+                    raise AccessError(_('You can not write on %(field_name)s.', field_name=field_name))
         return super(ChannelPartner, self).write(vals)
+
+    @api.model
+    def _get_as_sudo_from_request_or_raise(self, request, channel_id):
+        channel_partner = self._get_as_sudo_from_request(request=request, channel_id=channel_id)
+        if not channel_partner:
+            raise NotFound()
+        return channel_partner
+
+    @api.model
+    def _get_as_sudo_from_request(self, request, channel_id):
+        """ Seeks a channel partner matching the provided `channel_id` and the
+        current user or guest.
+
+        :param channel_id: The id of the channel of which the user/guest is
+            expected to be member.
+        :type channel_id: int
+        :return: A record set containing the channel partner if found, or an
+            empty record set otherwise. In case of guest, the record is returned
+            with the 'guest' record in the context.
+        :rtype: mail.channel.partner
+        """
+        if request.session.uid:
+            return self.env['mail.channel.partner'].sudo().search([('channel_id', '=', channel_id), ('partner_id', '=', self.env.user.partner_id.id)], limit=1)
+        guest = self.env['mail.guest']._get_guest_from_request(request)
+        if guest:
+            return guest.env['mail.channel.partner'].sudo().search([('channel_id', '=', channel_id), ('guest_id', '=', guest.id)], limit=1)
+        return self.env['mail.channel.partner']

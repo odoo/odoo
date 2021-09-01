@@ -131,8 +131,7 @@
                                 </button>
                                 <FileUploader
                                     attachmentLocalIds="activity.attachments.map(attachment => attachment.localId)"
-                                    uploadId="activity.thread.id"
-                                    uploadModel="activity.thread.model"
+                                    threadLocalId="activity.thread.localId"
                                     t-on-o-attachment-created="_onAttachmentCreated"
                                     t-ref="fileUploader"
                                 />

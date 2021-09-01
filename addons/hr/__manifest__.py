@@ -49,6 +49,9 @@
     'application': True,
     'auto_install': False,
     'assets': {
+        'mail.assets_discuss_public': [
+            'hr/static/src/models/*/*.js',
+        ],
         'web.assets_backend': [
             'hr/static/src/scss/hr.scss',
             'hr/static/src/js/chat_mixin.js',
@@ -56,10 +59,7 @@
             'hr/static/src/js/language.js',
             'hr/static/src/js/m2x_avatar_employee.js',
             'hr/static/src/js/standalone_m2o_avatar_employee.js',
-            'hr/static/src/models/employee/employee.js',
-            'hr/static/src/models/messaging/messaging.js',
-            'hr/static/src/models/partner/partner.js',
-            'hr/static/src/models/user/user.js',
+            'hr/static/src/models/*/*.js',
         ],
         'web.qunit_suite_tests': [
             'hr/static/tests/helpers/mock_models.js',

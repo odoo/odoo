@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, replace, unlinkAll } from '@mail/model/model_field_command';
 import emojis from '@mail/js/emojis';
 import { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } from '@mail/js/utils';
 
@@ -54,7 +54,10 @@ function factory(dependencies) {
             if ('email_from' in data) {
                 data2.email_from = data.email_from;
             }
-            if ('history_partner_ids' in data) {
+            if ('guestAuthor' in data) {
+                data2.guestAuthor = data.guestAuthor;
+            }
+            if ('history_partner_ids' in data && this.messaging.currentPartner) {
                 data2.isHistory = data.history_partner_ids.includes(this.messaging.currentPartner.id);
             }
             if ('id' in data) {
@@ -88,7 +91,7 @@ function factory(dependencies) {
                 }
                 data2.originThread = insert(originThreadData);
             }
-            if ('needaction_partner_ids' in data) {
+            if ('needaction_partner_ids' in data && this.messaging.currentPartner) {
                 data2.isNeedaction = data.needaction_partner_ids.includes(this.messaging.currentPartner.id);
             }
             if ('notifications' in data) {
@@ -96,10 +99,10 @@ function factory(dependencies) {
                     this.messaging.models['mail.notification'].convertData(notificationData)
                 ));
             }
-            if ('partner_ids' in data) {
+            if ('partner_ids' in data && this.messaging.currentPartner) {
                 data2.isCurrentPartnerMentioned = data.partner_ids.includes(this.messaging.currentPartner.id);
             }
-            if ('starred_partner_ids' in data) {
+            if ('starred_partner_ids' in data && this.messaging.currentPartner) {
                 data2.isStarred = data.starred_partner_ids.includes(this.messaging.currentPartner.id);
             }
             if ('subject' in data) {
@@ -153,24 +156,15 @@ function factory(dependencies) {
         }
 
         /**
-         * Performs the `message_fetch` RPC on `mail.message`.
+         * Performs the given `route` RPC to fetch messages.
          *
          * @static
-         * @param {Array[]} domain
-         * @param {integer} [limit]
-         * @param {Object} [context]
+         * @param {string} route
+         * @param {Object} params
          * @returns {mail.message[]}
          */
-        static async performRpcMessageFetch(domain, limit, context) {
-            const messagesData = await this.env.services.rpc({
-                model: 'mail.message',
-                method: 'message_fetch',
-                kwargs: {
-                    context,
-                    domain,
-                    limit,
-                },
-            }, { shadow: true });
+        static async performRpcMessageFetch(route, params) {
+            const messagesData = await this.env.services.rpc({ route, params }, { shadow: true });
             if (!this.messaging) {
                 return;
             }
@@ -476,6 +470,9 @@ function factory(dependencies) {
         email_from: attr(),
         failureNotifications: one2many('mail.notification', {
             compute: '_computeFailureNotifications',
+        }),
+        guestAuthor: many2one('mail.guest', {
+            inverse: 'authoredMessages',
         }),
         id: attr({
             required: true,

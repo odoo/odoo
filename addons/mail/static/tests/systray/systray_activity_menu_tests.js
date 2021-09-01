@@ -238,9 +238,6 @@ QUnit.test('activity menu widget: close on messaging menu click', async function
         data: this.data,
         hasMessagingMenu: true,
         async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                return [];
-            }
             if (args.method === 'systray_get_activities') {
                 return [];
             }

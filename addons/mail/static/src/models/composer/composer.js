@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
-import { clear, insert, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import emojis from '@mail/js/emojis';
 import {
@@ -203,8 +203,16 @@ function factory(dependencies) {
          * Post a message in provided composer's thread based on current composer fields values.
          */
         async postMessage() {
-            const thread = this.thread;
-            this.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
+            if (this.thread.model === 'mail.channel') {
+                const command = this._getCommandFromText(this.textInputContent);
+                if (command) {
+                    command.execute({ channel: this.thread, body: this.textInputContent });
+                    return;
+                }
+            }
+            if (this.messaging.currentPartner) {
+                this.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
+            }
             const escapedAndCompactContent = escapeAndCompactTextContent(this.textInputContent);
             let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
             // This message will be received from the mail composer as html content
@@ -216,73 +224,51 @@ function factory(dependencies) {
             body = this._generateMentionsLinks(body);
             body = parseAndTransform(body, addLink);
             body = this._generateEmojisOnHtml(body);
-            let postData = {
+            const postData = {
                 attachment_ids: this.attachments.map(attachment => attachment.id),
                 body,
                 message_type: 'comment',
                 partner_ids: this.recipients.map(partner => partner.id),
             };
+            const params = {
+                'post_data': postData,
+                'thread_id': this.thread.id,
+                'thread_model': this.thread.model,
+            };
             try {
-                let messageId;
                 this.update({ isPostingMessage: true });
-                if (thread.model === 'mail.channel') {
-                    const command = this._getCommandFromText(body);
+                if (this.thread.model === 'mail.channel') {
                     Object.assign(postData, {
                         subtype_xmlid: 'mail.mt_comment',
                     });
-                    if (command) {
-                        command.execute({ channel: thread, postData });
-                    } else {
-                        messageId = await this.async(() =>
-                            this.messaging.models['mail.thread'].performRpcMessagePost({
-                                postData,
-                                threadId: thread.id,
-                                threadModel: thread.model,
-                            })
-                        );
-                    }
                 } else {
                     Object.assign(postData, {
                         subtype_xmlid: this.isLog ? 'mail.mt_note' : 'mail.mt_comment',
                     });
                     if (!this.isLog) {
-                        postData.context = {
-                            mail_post_autofollow: true,
-                        };
+                        params.context = { mail_post_autofollow: true };
                     }
-                    messageId = await this.async(() =>
-                        this.messaging.models['mail.thread'].performRpcMessagePost({
-                            postData,
-                            threadId: thread.id,
-                            threadModel: thread.model,
-                        })
-                    );
-                    const [messageData] = await this.async(() => this.env.services.rpc({
-                        model: 'mail.message',
-                        method: 'message_format',
-                        args: [[messageId]],
-                    }, { shadow: true }));
-                    this.messaging.models['mail.message'].insert(Object.assign(
-                        {},
-                        this.messaging.models['mail.message'].convertData(messageData),
-                        {
-                            originThread: insert({
-                                id: thread.id,
-                                model: thread.model,
-                            }),
-                        })
-                    );
-                    thread.loadNewMessages();
                 }
-                for (const threadView of this.thread.threadViews) {
+                const messageData = await this.env.services.rpc({ route: `/mail/message/post`, params });
+                if (!this.messaging) {
+                    return;
+                }
+                const message = this.messaging.models['mail.message'].insert(
+                    this.messaging.models['mail.message'].convertData(messageData)
+                );
+                for (const threadView of message.originThread.threadViews) {
                     // Reset auto scroll to be able to see the newly posted message.
                     threadView.update({ hasAutoScrollOnMessageReceived: true });
                 }
-                thread.refreshFollowers();
-                thread.fetchAndUpdateSuggestedRecipients();
+                if (message.originThread.model !== 'mail.channel') {
+                    message.originThread.refreshFollowers();
+                    message.originThread.fetchAndUpdateSuggestedRecipients();
+                }
                 this._reset();
             } finally {
-                this.update({ isPostingMessage: false });
+                if (this.exists()) {
+                    this.update({ isPostingMessage: false });
+                }
             }
         }
 
@@ -293,6 +279,9 @@ function factory(dependencies) {
          */
         handleCurrentPartnerIsTyping() {
             if (!this.thread) {
+                return;
+            }
+            if (!this.messaging.currentPartner) {
                 return;
             }
             if (
