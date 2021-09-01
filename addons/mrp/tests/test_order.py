@@ -114,6 +114,15 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(mo_copy.move_finished_ids), 1, "Incorrect number of moves for products to produce [i.e. cancelled moves should not be copied")
         self.assertEqual(mo_copy.move_finished_ids.product_uom_qty, 2, "Incorrect qty of products to produce")
 
+        # check that a cancelled MO is copied correctly
+        mo_copy.action_cancel()
+        self.assertEqual(mo_copy.state, 'cancel')
+        mo_copy_2 = mo_copy.copy()
+        self.assertEqual(mo_copy_2.state, 'draft', "Copied production order should be draft.")
+        self.assertEqual(len(mo_copy_2.move_raw_ids), 2, "Incorrect number of component moves.")
+        self.assertEqual(len(mo_copy_2.move_finished_ids), 1, "Incorrect number of moves for products to produce [i.e. copying a cancelled MO should copy its cancelled moves]")
+        self.assertEqual(mo_copy_2.move_finished_ids.product_uom_qty, 2, "Incorrect qty of products to produce")
+
     def test_production_avialability(self):
         """ Checks the availability of a production order through mutliple calls to `action_assign`.
         """
@@ -2053,3 +2062,134 @@ class TestMrpOrder(TestMrpCommon):
         mo4 = mo_form.save()
         self.assertEqual(len(mo4.move_finished_ids), 1, 'Wrong number of finish product moves created')
         self.assertEqual(mo4.move_finished_ids.product_id, product1, 'Wrong product to produce in finished product move')
+
+    def test_compute_tracked_time_1(self):
+        """
+        Checks that the Duration Computation (`time_mode` of mrp.routing.workcenter) with value `auto` with Based On
+        (`time_mode_batch`) set to 1 actually compute the time based on the last 1 operation, and not more.
+        Create a first production in 15 minutes (expected should go from 60 to 15
+        Create a second one in 10 minutes (expected should NOT go from 15 to 12.5, it should go from 15 to 10)
+        """
+        # First production, the default is 60 and there is 0 productions of that operation
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = self.bom_4
+        production = production_form.save()
+        self.assertEqual(production.workorder_ids[0].duration_expected, 60.0, "Default duration is 0+0+1*60.0")
+        production.action_confirm()
+        production.button_plan()
+        # Production planned, time to start, I produce all the 1 product
+        production_form.qty_producing = 1
+        with production_form.workorder_ids.edit(0) as wo:
+            wo.duration = 15 # in 15 minutes
+        production = production_form.save()
+        production.button_mark_done()
+        # It is saved and done, registered in the db. There are now 1 productions of that operation
+
+        # Same production, let's see what the duration_expected is, last prod was 15 minutes for 1 item
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = self.bom_4
+        production = production_form.save()
+        self.assertEqual(production.workorder_ids[0].duration_expected, 15.0, "Duration is now 0+0+1*15")
+        production.action_confirm()
+        production.button_plan()
+        # Production planned, time to start, I produce all the 1 product
+        production_form.qty_producing = 1
+        with production_form.workorder_ids.edit(0) as wo:
+            wo.duration = 10  # In 10 minutes this time
+        production = production_form.save()
+        production.button_mark_done()
+        # It is saved and done, registered in the db. There are now 2 productions of that operation
+
+        # Same production, let's see what the duration_expected is, last prod was 10 minutes for 1 item
+        # Total average time would be 12.5 but we compute the duration based on the last 1 item
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = self.bom_4
+        production = production_form.save()
+        self.assertNotEqual(production.workorder_ids[0].duration_expected, 12.5, "Duration expected is based on the last 1 production, not last 2")
+        self.assertEqual(production.workorder_ids[0].duration_expected, 10.0, "Duration is now 0+0+1*10")
+
+    def test_compute_tracked_time_2_under_capacity(self):
+        """
+        Test that when tracking the 2 last production, if we make one with under capacity, and one with normal capacity,
+        the two are equivalent (1 done with capacity 2 in 10mn = 2 done with capacity 2 in 10mn)
+        """
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = self.bom_5
+        production = production_form.save()
+        production.action_confirm()
+        production.button_plan()
+
+        # Production planned, time to start, I produce all the 1 product
+        production_form.qty_producing = 1
+        with production_form.workorder_ids.edit(0) as wo:
+            wo.duration = 10  # in 10 minutes
+        production = production_form.save()
+        production.button_mark_done()
+        # It is saved and done, registered in the db. There are now 1 productions of that operation
+
+        # Same production, let's see what the duration_expected is, last prod was 10 minutes for 1 item
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = self.bom_5
+        production_form.product_qty = 2  # We want to produce 2 items (the capacity) now
+        production = production_form.save()
+        self.assertNotEqual(production.workorder_ids[0].duration_expected, 20.0, "We made 1 item with capacity 2 in 10mn -> so 2 items shouldn't be double that")
+        self.assertEqual(production.workorder_ids[0].duration_expected, 10.0, "Producing 1 or 2 items with capacity 2 is the same duration")
+        production.action_confirm()
+        production.button_plan()
+        # Production planned, time to start, I produce all the 2 product
+        production_form.qty_producing = 2
+        with production_form.workorder_ids.edit(0) as wo:
+            wo.duration = 10  # In 10 minutes this time
+        production = production_form.save()
+        production.button_mark_done()
+        # It is saved and done, registered in the db. There are now 2 productions of that operation but they have the same duration
+
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = self.bom_5
+        production = production_form.save()
+        self.assertNotEqual(production.workorder_ids[0].duration_expected, 15, "Producing 1 or 2 in 10mn with capacity 2 take the same amount of time : 10mn")
+        self.assertEqual(production.workorder_ids[0].duration_expected, 10.0, "Duration is indeed (10+10)/2")
+
+    def test_capacity_duration_expected(self):
+        """
+        Test that the duration expected is correctly computed when dealing with below or above capacity
+        1 -> 10mn
+        2 -> 10mn
+        3 -> 20mn
+        4 -> 20mn
+        5 -> 30mn
+        ...
+        """
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = self.bom_6
+        production = production_form.save()
+        production.action_confirm()
+        production.button_plan()
+
+        # Production planned, time to start, I produce all the 1 product
+        production_form.qty_producing = 1
+        with production_form.workorder_ids.edit(0) as wo:
+            wo.duration = 10  # in 10 minutes
+        production = production_form.save()
+        production.button_mark_done()
+
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = self.bom_6
+        production = production_form.save()
+        # production_form.product_qty = 1 [BY DEFAULT]
+        self.assertEqual(production.workorder_ids[0].duration_expected, 10.0, "Produce 1 with capacity 2, expected is 10mn for each run -> 10mn")
+        production_form.product_qty = 2
+        production = production_form.save()
+        self.assertEqual(production.workorder_ids[0].duration_expected, 10.0, "Produce 2 with capacity 2, expected is 10mn for each run -> 10mn")
+
+        production_form.product_qty = 3
+        production = production_form.save()
+        self.assertEqual(production.workorder_ids[0].duration_expected, 20.0, "Produce 3 with capacity 2, expected is 10mn for each run -> 20mn")
+
+        production_form.product_qty = 4
+        production = production_form.save()
+        self.assertEqual(production.workorder_ids[0].duration_expected, 20.0, "Produce 4 with capacity 2, expected is 10mn for each run -> 20mn")
+
+        production_form.product_qty = 5
+        production = production_form.save()
+        self.assertEqual(production.workorder_ids[0].duration_expected, 30.0, "Produce 5 with capacity 2, expected is 10mn for each run -> 30mn")

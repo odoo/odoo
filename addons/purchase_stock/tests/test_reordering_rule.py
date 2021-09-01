@@ -7,6 +7,7 @@ from datetime import timedelta as td
 from odoo import SUPERUSER_ID
 from odoo.tests import Form
 from odoo.tests.common import SavepointCase
+from odoo.exceptions import UserError
 
 
 class TestReorderingRule(SavepointCase):
@@ -38,7 +39,8 @@ class TestReorderingRule(SavepointCase):
         """
         warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         warehouse_1.write({'reception_steps': 'two_steps'})
-
+        warehouse_2 = self.env['stock.warehouse'].create({'name': 'WH 2', 'code': 'WH2', 'company_id': self.env.company.id, 'partner_id': self.env.company.partner_id.id, 'reception_steps': 'one_step'})
+        
         # create reordering rule
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
         orderpoint_form.warehouse_id = warehouse_1
@@ -63,6 +65,12 @@ class TestReorderingRule(SavepointCase):
         # Check purchase order created or not
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner.id)])
         self.assertTrue(purchase_order, 'No purchase order created.')
+        
+        # Check the picking type on the purchase order
+        purchase_order.picking_type_id = warehouse_2.in_type_id
+        with self.assertRaises(UserError):
+            purchase_order.button_confirm()
+        purchase_order.picking_type_id = warehouse_1.in_type_id
 
         # On the po generated, the source document should be the name of the reordering rule
         self.assertEqual(order_point.name, purchase_order.origin, 'Source document on purchase order should be the name of the reordering rule.')

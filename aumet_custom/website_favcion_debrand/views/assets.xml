@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="inherit_digest_assets_backend" name="Backend Assets" inherit_id="web.assets_backend">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/website_favcion_debrand/static/src/scss/style.scss"/>
+        </xpath>
+    </template>
+    <template id="inherit_digest_section_mobile" name="Digest Assets" inherit_id="digest.digest_section_mobile">
+        <xpath expr="//div" position="replace">
+            <div></div>
+        </xpath>
+    </template>
+
+    <template id="inherit_digest_mail_main" name="Digest Assets" inherit_id="digest.digest_mail_main">
+        <xpath expr="//div[hasclass('preference_div')]" position="replace">
+            <div></div>
+        </xpath>
+    </template>
+
+</odoo>

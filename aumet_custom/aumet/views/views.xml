@@ -8,7 +8,6 @@
 
             <xpath expr="//field[@name='price_unit']" position="after">
                 <field name="bonus"/>
-                <field name="payment_method" widget="many2one"/>
             </xpath>
         </field>
     </record>
@@ -22,10 +21,10 @@
                 <page string="Marketplace Info">
                     <group>
                         <field name="marketplace_id" readonly="1" class="marketplace_fields"/>
-                        <field name="marketplace_name" class="marketplace_fields"/>
+                        <field name="marketplace_name" class="marketplace_fields" readonly="1"/>
                         <field name="marketplace_email" class="marketplace_fields"/>
                         <field name="marketplace_password" class="marketplace_fields"/>
-                        <field name="marketplace_pharmacy_id" class="marketplace_fields"/>
+                        <field name="marketplace_pharmacy_id" class="marketplace_fields" readonly="1"/>
                         <field name="marketplace_token" readonly="1" password="True"
                                class="market_place_token marketplace_fields"/>
                     </group>
@@ -35,8 +34,54 @@
     </record>
 
 
+<!--    <record id="res_partner_form_extend" model="ir.ui.view">-->
+<!--        <field name="name">res.partner.aumet</field>-->
+<!--        <field name="model">res.partner</field>-->
+<!--        <field name="priority">20</field>-->
+<!--        <field name="inherit_id" ref="base.view_partner_form"/>-->
+<!--        <field name="arch" type="xml">-->
+
+<!--            <xpath expr="//field[@name='category_id']" position="after">-->
+<!--                <field name="marketplace_id" string="Distributor in marketplace"/>-->
+
+<!--                <field name="is_in_marketplace" string="is linked to marketplace"/>-->
+
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <record id="aumet_marketplace_search_view" model="ir.ui.view">
+        <field name="name">aumet.marketplace_product.search</field>
+        <field name="model">aumet.marketplace_product</field>
+        <field name="arch" type="xml">
+            <search string="Marketplace Products">
+                <filter string="name" name="name"/>
+                <filter string="marketplace_seller_id" name="marketplace_seller_id"/>
+                <field name="marketplace_seller_id"/>
+
+            </search>
+        </field>
+    </record>
+
+    <record id="marketplace_product_list" model="ir.ui.view">
+        <field name="name">Marketplace products</field>
+        <field name="model">aumet.marketplace_product</field>
+        <field name="arch" type="xml">
+            <tree string="Marketplace Products">
+                <field name="name"/>
+                <field name="unit_price"/>
+                <field name="marketplace_seller_id"/>
+                <field name="is_archived"/>
+                <field name="is_locked"/>
+                <field name="marketplace_id"/>
+                <field name="uom"/>
+            </tree>
+        </field>
+    </record>
+
+
     <record id="product_template_form_view" model="ir.ui.view">
-        <field name="name">product.template.form.inherit</field>
+        <field name="name">aumet.product.template.form.inherit</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
@@ -46,32 +91,30 @@
             <xpath expr="//page[@name='general_information']" position="inside">
                 <group name="Aumet">
                     <group>
-                        <field name="scientific_name" string="Scientific Name"/>
-                        <field name="marketplace_reference" string="Marketplace Id" readonly="1"/>
-                        <field name="marketplace_referenced" string="referenced in Marketplace" readonly="1"/>
+                        <field name="marketplace_product" string="Product in marketplace"/>
+                        <field name="is_marketplace_item"/>
+                        <field name="payment_method"/>
                     </group>
                 </group>
             </xpath>
         </field>
     </record>
-    <record id="menu_product_scientific_name" model="ir.actions.act_window">
-        <field name="name">Scientific Names</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">aumet.scientific_name</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="context">{"search_default_consumable": 1, 'default_type': 'product'}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No product found. Let's create one!
-            </p>
-            <p>
-                Track your stock quantities by creating storable products.
-            </p>
+
+
+    <record id="purchase_order_form_aumet" model="ir.ui.view">
+        <field name="name">purchase.order.inherited.aumet</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="button_marketplace" type="object" string="Lock" states="in marketplace"/>
+            </xpath>
+
+            <xpath expr="//field[@name='state']" position="replace">
+                <field name="state" widget="statusbar" statusbar_visible="draft,in marketplace,sent,purchase"
+                       readonly="1"/>
+            </xpath>
         </field>
     </record>
-
-
-    <menuitem id="menu_product_scientific_name" name="Scientific Names" action="menu_product_scientific_name"
-              parent="stock.menu_stock_inventory_control" sequence="5"/>
 
 </odoo>

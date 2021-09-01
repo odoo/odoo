@@ -46,26 +46,27 @@ class ProductExpiryReport(models.Model):
             return self.print_product_expiry_report('xls')
 
     def print_product_expiry_report(self, report_type):
-        if self.num_expiry_days <= 0:
-            raise UserError('Number Of Expiry Days should be greater then 0')
+        # if self.num_expiry_days <= 0:
+        #     raise UserError('Number Of Expiry Days should be greater then 0')
+        expiry_days_where = " AND spl.expiration_date <= '%s'"%(date.today())
+        if self.num_expiry_days:
+            expiry_days_where = " AND spl.expiration_date >= '%s' AND spl.expiration_date <= '%s' "%(date.today() , date.today() + timedelta(days=self.num_expiry_days))
 
         location_ids = self.location_ids.ids or self.env['stock.location'].search([('usage', '=', 'internal')]).ids
         category_ids = self.category_ids.ids or self.env['product.category'].search([]).ids
         query = '''SELECT sq.location_id,sl.usage,spl.product_id,spl.id,spl.expiration_date,spl.name,
                         pc.name as product_category,
-                                pp.default_code,pt.name as product_name,pp.barcode 
+                                pp.default_code,pt.name as product_name,pp.barcode  
                         FROM stock_production_lot spl
                                 LEFT JOIN stock_quant sq on sq.lot_id = spl.id
                                 LEFT JOIN stock_location sl on sq.location_id = sl.id
                                 LEFT JOIN product_product pp on spl.product_id = pp.id
                                 LEFT JOIN product_template pt on pp.product_tmpl_id  = pt.id
                                 LEFT JOIN product_category pc on pt.categ_id = pc.id
-                        WHERE spl.expiration_date <= '%s' AND
-                                    spl.expiration_date >= '%s' AND
-                                    pc.id IN %s order by pp.default_code''' % (
-            (date.today() + timedelta(days=self.num_expiry_days)),
-            date.today(),
+                        WHERE pc.id IN %s''' % (
             "(%s)" % ','.join(map(str, category_ids)))
+        query += expiry_days_where
+        query += 'order by pp.default_code'
         self.env.cr.execute(query)
         res1 = self.env.cr.dictfetchall()
 
@@ -107,9 +108,9 @@ class ProductExpiryReport(models.Model):
                             each.get('location_id')).display_name
                     if each['product_category'] not in vals:
                         vals[each.get('product_category')] = [
-                            {'name': each.get('name'),
+                            {'barcode': each.get('barcode'),
+                             'name': each.get('name'),
                              'product_id': each.get('product_name'),
-                             'barcode': each.get('barcode'),
                              'location_name': location_name,
                              'default_code': each.get('default_code') or '--------',
                              'expiration_date': each.get('expiration_date').strftime('%Y-%m-%d'),
@@ -118,7 +119,8 @@ class ProductExpiryReport(models.Model):
                                  each.get('id')).product_qty if each.get('id') else False, }]
                     else:
                         vals[each.get('product_category')].append(
-                            {'name': each.get('name'),
+                            {'barcode': each.get('barcode'),
+                             'name': each.get('name'),
                              'product_id': each.get('product_name'),
                              'barcode': each.get('barcode'),
                              'location_name': location_name,
@@ -137,7 +139,8 @@ class ProductExpiryReport(models.Model):
                             each.get('location_id')).display_name
                     if location_name not in vals:
                         vals[location_name] = [
-                            {'name': each.get('name'),
+                            {'barcode': each.get('barcode'),
+                             'name': each.get('name'),
                              'product_id': each.get('product_name'),
                              'barcode': each.get('barcode'),
                              'product_category': each.get('product_category'),
@@ -148,7 +151,9 @@ class ProductExpiryReport(models.Model):
                                  each.get('id')).product_qty if each.get('id') else False, }]
                     else:
                         vals[location_name].append(
-                            {'name': each.get('name'),
+                            {
+                             'barcode': each.get('barcode'),
+                             'name': each.get('name'),
                              'product_id': each.get('product_name'),
                              'barcode': each.get('barcode'),
                              'product_category': each.get('product_category'),
@@ -204,9 +209,9 @@ class ProductExpiryReport(models.Model):
                 worksheet.write(row_index, 1, key)
                 row_index += 2
                 if value not in [vals.get('num_day'), vals.get('today_date')]:
-                    worksheet.write(row_index, 0, "Lot/Serial number", bold)
-                    worksheet.write(row_index, 1, "Product", bold)
-                    worksheet.write(row_index, 2, "Barcode", bold)
+                    worksheet.write(row_index, 0, "Barcode", bold)
+                    worksheet.write(row_index, 1, "Lot/Serial number", bold)
+                    worksheet.write(row_index, 2, "Product", bold)
                     if vals.get('group_by') == 'location':
                         worksheet.write(row_index, 3, "Category", bold)
                     elif vals.get('group_by') == 'category':

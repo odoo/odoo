@@ -323,7 +323,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             const isPaymentSuccessful = await payment_terminal.send_payment_request(line.cid);
             if (isPaymentSuccessful) {
                 line.set_payment_status('done');
-                line.can_be_reversed = this.payment_interface.supports_reversals;
+                line.can_be_reversed = payment_terminal.supports_reversals;
             } else {
                 line.set_payment_status('retry');
             }

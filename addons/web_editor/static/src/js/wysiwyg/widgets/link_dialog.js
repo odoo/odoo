@@ -173,8 +173,18 @@ var LinkDialog = Dialog.extend({
         this.$styleInputs.prop('checked', false).filter('[value=""]').prop('checked', true);
         if (this.data.iniClassName) {
             _.each(this.$('input[name="link_style_color"], select[name="link_style_size"] > option, select[name="link_style_shape"] > option'), el => {
-                var $option = $(el);
-                if ($option.val() && this.data.iniClassName.match(new RegExp('(^|btn-| |btn-outline-)' + $option.val()))) {
+                const $option = $(el);
+                const value = $option.val();
+                if (!value) {
+                    return;
+                }
+                const subValues = value.split(',');
+                let active = true;
+                for (let i = 0; i < subValues.length; i++) {
+                    const classPrefix = new RegExp('(^|btn-| |btn-outline-|btn-fill-)' + subValues[i]);
+                    active = active && classPrefix.test(this.data.iniClassName);
+                }
+                if (active) {
                     if ($option.is("input")) {
                         $option.prop("checked", true);
                     } else {

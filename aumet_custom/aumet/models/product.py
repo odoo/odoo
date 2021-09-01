@@ -6,23 +6,23 @@ from odoo import fields, models, api
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
-    scientific_name = fields.Many2one('aumet.scientific_name', string='Scientific Name', required=False)
-    marketplace_reference = fields.Integer()
-    marketplace_seller_reference = fields.Integer()
-    marketplace_referenced = fields.Boolean(compute='compute_referenced')
-    marketplace_payment_method = fields.Many2many
+    marketplace_product = fields.Many2one('aumet.marketplace_product', string='Marketplace Product', required=False)
+    is_marketplace_item = fields.Boolean(string="Is from marketplace")
+    payment_method = fields.Many2one("aumet.payment_method", string="payment method")
 
-    _sql_constraints = [
-        ('marketplace_reference_unique', 'unique(marketplace_reference)', "Can't be duplicate value for this field!")
-    ]
+    price_unit = fields.Float(
+        'Unit Price', compute='_compute_standard_price', store=False)
 
-    # @api.model
-    # def create(self, vals_list):
-    #     if not vals_list["company_id"]:
-    #         vals_list["company_id"] = self.env.company.id
-    #
-    #     return super(ProductTemplate, self).create(vals_list)
+    def _compute_standard_price(self):
+        try:
+            self.price_unit = 200
+            self.standard_price = self.marketplace_product.unit_price
+        except Exception as exc1:
+            print(exc1)
+
+        self.list_price = 200
+        self.standard_price = 200
 
     @api.depends('marketplace_reference')
     def compute_referenced(self):
-        self.marketplace_referenced = True if self.marketplace_reference else False
+        self.marketplace_referenced = True if self.marketplace_product else False

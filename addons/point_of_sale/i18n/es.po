@@ -16,14 +16,15 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2021
 # Martin Trigaux, 2021
+# Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-16 12:59+0000\n"
+"POT-Creation-Date: 2021-08-16 07:08+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -508,7 +509,7 @@ msgid ""
 "application."
 msgstr ""
 "Las listas de todos los precios disponibles tienen que estar en la misma "
-"divisa de la empresa o del diario de ventas indicado en este punto de venta "
+"moneda de la empresa o del diario de ventas indicado en este punto de venta "
 "para utilizar la aplicación de contabilidad."
 
 #. module: point_of_sale
@@ -518,7 +519,7 @@ msgid ""
 "All payment methods must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
-"Todos los métodos de pago tienen que estar en la misma divisa del diario de "
+"Todos los métodos de pago tienen que estar en la misma moneda del diario de "
 "ventas o de la empresa, si esta no se ha establecido."
 
 #. module: point_of_sale
@@ -795,13 +796,7 @@ msgstr "CAMBIO"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
-#, python-format
-msgid "Change Customer"
-msgstr "Cambiar cliente"
-
-#. module: point_of_sale
-#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/NumberPopup.js:0
 #: code:addons/point_of_sale/static/src/xml/Popups/EditListPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductConfiguratorPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
@@ -981,6 +976,13 @@ msgstr "Sillas"
 #, python-format
 msgid "Change"
 msgstr "Cambio"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
+#, python-format
+msgid "Change Customer"
+msgstr "Cambiar cliente"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2173,7 +2175,7 @@ msgstr "ID"
 #: code:addons/point_of_sale/static/src/js/Popups/ErrorTracebackPopup.js:0
 #, python-format
 msgid "IMPORTANT: Bug Report From Odoo Point Of Sale"
-msgstr "IMPORTANTE: Reporte de Error del Punto de Venta de Odoo"
+msgstr "IMPORTANTE: Informe de Error del Punto de Venta de Odoo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__proxy_ip
@@ -2927,6 +2929,7 @@ msgstr "Pedidos fuera de línea"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/NumberPopup.js:0
 #: code:addons/point_of_sale/static/src/xml/Popups/EditListPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/ErrorBarcodePopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/OfflineErrorPopup.xml:0
@@ -3604,12 +3607,12 @@ msgstr "Detalles del Punto de Venta"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details_wizard
 msgid "Point of Sale Details Report"
-msgstr "Reporte deDetalles del Punto de Venta"
+msgstr "Informe de detalles del Punto de Venta"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_invoice
 msgid "Point of Sale Invoice Report"
-msgstr "Reporte de Facturas del Punto de Venta"
+msgstr "Informe de Facturas del Punto de Venta"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
@@ -3641,7 +3644,7 @@ msgstr "Pedidos del TPV"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
 msgid "Point of Sale Orders Report"
-msgstr "Reporte de Órdenes del Punto de Venta"
+msgstr "Informe de Órdenes del Punto de Venta"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment_method
@@ -4962,7 +4965,7 @@ msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
-"El registro de facturas tiene que estar en la misma divisa del diario de "
+"El registro de facturas tiene que estar en la misma moneda del diario de "
 "ventas o de la empresa, si esta no se ha establecido."
 
 #. module: point_of_sale
@@ -5069,7 +5072,7 @@ msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
 msgstr ""
-"El tipo de cambio de la divisa a la divisa del tipo de cambio aplicable en "
+"El tipo de cambio de la moneda a la moneda del tipo de cambio aplicable en "
 "la fecha del pedido"
 
 #. module: point_of_sale
@@ -5226,7 +5229,7 @@ msgstr "Debe haber al menos un producto en su pedido antes de poder validarlo"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "This adds the choice of a currency on pricelists."
-msgstr "Esto añade la posibilidad de elegir una divisa en las tarifas."
+msgstr "Esto añade la posibilidad de elegir una moneda en las tarifas."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="Chrome">
+        <t t-jquery="div[class*='pos']" t-operation="append">
+            <div id="livestream_scanner">
+                <div id="interactive" class="viewport"></div>
+                <div class="error"></div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="CameraScanBarcodeWidget">
+        <div class="oe_status">
+            <span class="oe_customer_display_text"></span>
+            <div class="js_connecting oe_icon oe_orange oe_hidden">
+                <i class='fa fa-fw fa-spin fa-spinner' role="img" aria-label="Camera Scan Barcode Warning" title="Camera Scan Barcode Warning"></i>
+            </div>
+            <div class="js_disconnected oe_icon oe_red">
+                <i class='fa fa-fw fa-camera' role="img" aria-label="Camera Scan Barcode Disconnected" title="Camera Scan Barcode Disconnected"></i>
+            </div>
+            <div class="js_connected oe_icon oe_green oe_hidden">
+                <i class='fa fa-fw fa-camera' role="img" aria-label="Camera Scan Barcode Connected" title="Camera Scan Barcode Connected"></i>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -18,8 +18,6 @@
     'depends': ['base', 'product', 'base_setup', 'point_of_sale', 'purchase'],
 
     'data': [
-        'data/aumet.scientific_name.csv',
-        # 'views/assets.xml',
         'views/views.xml'
 
     ],
