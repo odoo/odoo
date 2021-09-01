@@ -14,6 +14,10 @@ export class ProfilingItem extends Component {
     changeParam(param, ev) {
         this.profiling.setParam(param, ev.target.value);
     }
+    toggleParam(param, ev) {
+        const value = this.profiling.state.params.execution_context_qweb;
+        this.profiling.setParam(param, !value);
+    }
     openProfiles() {
         if (this.env.services.action) {
             // using doAction in the backend to preserve breadcrumbs and stuff

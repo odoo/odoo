@@ -5,7 +5,6 @@ import copy
 import logging
 import re
 import markupsafe
-from time import time
 from lxml import html, etree
 
 from odoo import api, models, tools
@@ -13,6 +12,7 @@ from odoo.tools.safe_eval import check_values, assert_valid_codeobj, _BUILTINS, 
 from odoo.tools.misc import get_lang
 from odoo.http import request
 from odoo.modules.module import get_resource_path
+from odoo.tools.profiler import QwebTracker
 
 from odoo.addons.base.models.qweb import QWeb
 from odoo.addons.base.models.assetsbundle import AssetsBundle
@@ -51,6 +51,7 @@ class IrQWeb(models.AbstractModel, QWeb):
     _available_objects = dict(_BUILTINS)
     _empty_lines = re.compile(r'\n\s*\n')
 
+    @QwebTracker.wrap_render
     @api.model
     def _render(self, template, values=None, **options):
         """ render(template, values, **options)
@@ -109,13 +110,14 @@ class IrQWeb(models.AbstractModel, QWeb):
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_get_template``. """
-        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations', 'website_id']
+        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations', 'website_id', 'profile']
 
     # apply ormcache_context decorator unless in dev mode...
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
         tools.ormcache('id_or_xml_id', 'tuple(options.get(k) for k in self._get_template_cache_keys())'),
     )
+    @QwebTracker.wrap_compile
     def _compile(self, id_or_xml_id, options):
         try:
             id_or_xml_id = int(id_or_xml_id)
@@ -167,6 +169,10 @@ class IrQWeb(models.AbstractModel, QWeb):
         return super()._compile_node(el, options, indent)
 
     # compile directives
+
+    @QwebTracker.wrap_compile_directive
+    def _compile_directive(self, el, options, directive, indent):
+        return super()._compile_directive(el, options, directive, indent)
 
     def _compile_directive_groups(self, el, options, indent):
         """Compile `t-groups` expressions into a python code as a list of
