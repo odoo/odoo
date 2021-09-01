@@ -224,7 +224,7 @@ class AccountMove(models.Model):
         where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
         if self.company_id.account_fiscal_country_id.code == "EC" and self.l10n_latam_use_documents:
             internal_type = self._get_l10n_ec_internal_type()
-            document_types = l10n_latam_document_type_model.search([
+            document_types = self.env['l10n_latam.document.type'].search([
                 ('internal_type', '=', internal_type),
                 ('country_id.code', '=', 'EC'),
             ])
