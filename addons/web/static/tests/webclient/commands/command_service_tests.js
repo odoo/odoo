@@ -112,7 +112,7 @@ QUnit.test("useCommand hook", async (assert) => {
     }
     testComponent = await mount(MyComponent, { env, target });
 
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
     assert.containsOnce(target, ".o_command");
     assert.deepEqual(target.querySelector(".o_command").textContent, "Take the throne");
@@ -121,7 +121,7 @@ QUnit.test("useCommand hook", async (assert) => {
     assert.verifySteps(["Hodor"]);
 
     testComponent.unmount();
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
     assert.containsNone(target, ".o_command");
 });
@@ -145,7 +145,7 @@ QUnit.test("useCommand hook when the activeElement change", async (assert) => {
     OtherComponent.template = xml`<div></div>`;
 
     await mount(MyComponent, { env, target });
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
     assert.containsN(target, ".o_command", 2);
     assert.deepEqual(
@@ -156,7 +156,7 @@ QUnit.test("useCommand hook when the activeElement change", async (assert) => {
 
     await mount(OtherComponent, { env, target });
 
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
     assert.containsN(target, ".o_command", 2);
     assert.deepEqual(
@@ -234,7 +234,7 @@ QUnit.test("data-hotkey added to command palette", async (assert) => {
     testComponent = await mount(MyComponent, { env, target });
 
     // Open palette
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
 
     assert.containsN(target, ".o_command", 2);
@@ -248,7 +248,7 @@ QUnit.test("data-hotkey added to command palette", async (assert) => {
     assert.containsNone(target, ".o_command_palette", "palette is closed due to command action");
 
     // Reopen palette
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
 
     // Click on second command
@@ -296,7 +296,7 @@ QUnit.test("access to hotkeys from the command palette", async (assert) => {
     testComponent = await mount(MyComponent, { env, target });
 
     // Open palette
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
 
     assert.containsN(target, ".o_command", 3);
@@ -311,7 +311,7 @@ QUnit.test("access to hotkeys from the command palette", async (assert) => {
     assert.containsNone(target, ".o_command_palette", "palette is closed due to command action");
 
     // Reopen palette
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
 
     // Trigger the command b
@@ -320,7 +320,7 @@ QUnit.test("access to hotkeys from the command palette", async (assert) => {
     assert.containsNone(target, ".o_command_palette", "palette is closed due to command action");
 
     // Reopen palette
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
 
     // Trigger the command c
@@ -345,7 +345,7 @@ QUnit.test("can be searched", async (assert) => {
     await nextTick();
 
     // Open palette
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
 
     assert.deepEqual(
@@ -402,7 +402,7 @@ QUnit.test("configure the empty message based on the namespace", async (assert) 
     testComponent = await mount(TestComponent, { env, target });
 
     // Open palette
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
 
     assert.strictEqual(
@@ -445,7 +445,7 @@ QUnit.test("defined multiple providers with the same namespace", async (assert) 
     testComponent = await mount(TestComponent, { env, target });
 
     // Open palette
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
 
     assert.deepEqual(
@@ -489,7 +489,7 @@ QUnit.test("can switch between command providers", async (assert) => {
     testComponent = await mount(TestComponent, { env, target });
 
     // Open palette
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
 
     assert.deepEqual(
@@ -554,7 +554,7 @@ QUnit.test("multi level commands", async (assert) => {
     testComponent = await mount(TestComponent, { env, target });
 
     // Open palette
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
 
     assert.deepEqual(
@@ -628,7 +628,7 @@ QUnit.test("multi level commands with hotkey", async (assert) => {
     testComponent = await mount(TestComponent, { env, target });
 
     // Open palette
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
 
     assert.deepEqual(
@@ -677,7 +677,7 @@ QUnit.test("command categories", async (assert) => {
     await nextTick();
 
     // Open palette
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
 
     assert.containsN(target, ".o_command_category", 3);
@@ -708,7 +708,7 @@ QUnit.test("data-command-category", async (assert) => {
     testComponent = await mount(MyComponent, { env, target });
 
     // Open palette
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
 
     assert.containsN(target, ".o_command", 4);
@@ -756,7 +756,7 @@ QUnit.test("display shortcuts correctly for non-MacOS ", async (assert) => {
     await nextTick();
 
     // Open palette
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
 
     assert.deepEqual(
@@ -797,7 +797,7 @@ QUnit.test("display shortcuts correctly for MacOS ", async (assert) => {
     await nextTick();
 
     // Open palette
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
 
     assert.deepEqual(
@@ -825,7 +825,7 @@ QUnit.test(
 
         testComponent = await mount(MyComponent, { env, target });
         // Open palette
-        triggerHotkey("control+k");
+        triggerHotkey("control+m");
         await nextTick();
 
         assert.deepEqual(
@@ -858,7 +858,7 @@ QUnit.test("display shortcuts correctly for MacOS with a new overlayModifier", a
 
     testComponent = await mount(MyComponent, { env, target });
     // Open palette
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
 
     assert.deepEqual(
