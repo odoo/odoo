@@ -22,13 +22,12 @@
         <field name="category_id" ref="product_attribute_category_general_features"/>
     </record>
 
-    <record id="product_attribute_1" model="product.attribute">
-        <field name="name">Brand</field>
+    <record id="website_sale.product_attribute_brand" model="product.attribute">
         <field name="category_id" ref="product_attribute_category_general_features"/>
     </record>
     <record id="product_attribute_value_1" model="product.attribute.value">
         <field name="name">Apple</field>
-        <field name="attribute_id" ref="product_attribute_1"/>
+        <field name="attribute_id" ref="website_sale.product_attribute_brand"/>
     </record>
 
     <record id="product_attribute_7" model="product.attribute">
@@ -51,7 +50,7 @@
 
     <record id="product_6_attribute_1_product_template_attribute_line" model="product.template.attribute.line">
         <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
-        <field name="attribute_id" ref="product_attribute_1"/>
+        <field name="attribute_id" ref="website_sale.product_attribute_brand"/>
         <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_1')])]"/>
     </record>
     <record id="product_6_attribute_7_product_template_attribute_line" model="product.template.attribute.line">
