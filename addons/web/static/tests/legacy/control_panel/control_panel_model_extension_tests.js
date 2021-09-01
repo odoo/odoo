@@ -328,6 +328,34 @@ odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.
 
         });
 
+        QUnit.test('ir.filter values', async function (assert) {
+            assert.expect(1);
+
+            const context = {
+                search_default_filter: true,
+                search_default_bar: 0,
+                search_default_groupby: 2,
+            };
+            const arch = `
+                <search>
+                    <filter name="filter" string="Hello" domain="[['foo', '=', 'hello']]"/>
+                    <filter name="groupby" string="Goodbye" context="{'group_by': 'foo'}"/>
+                    <field name="bar"/>
+                </search>`;
+            const fields = this.fields;
+            const model = createModel({ arch, fields, context });
+            assert.deepEqual(model.get("irFilterValues"), {
+                action_id: undefined,
+                context: {
+                    group_by: ["foo"],
+                },
+                domain: '[["foo", "=", "hello"]]',
+                model_id: undefined,
+                sort: "[]",
+                user_id: undefined
+            });
+        });
+
         QUnit.test('falsy search defaults are not activated', async function (assert) {
             assert.expect(1);
 
