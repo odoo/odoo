@@ -23,6 +23,7 @@ odoo.define('pos_coupon.pos', function (require) {
     const concurrency = require('web.concurrency');
     const { Gui } = require('point_of_sale.Gui');
     const { float_is_zero } = require('web.utils');
+    const { _t } = require('web.core');
 
     const dp = new concurrency.DropPrevious();
 
@@ -256,12 +257,42 @@ odoo.define('pos_coupon.pos', function (require) {
             let res = _order_super.initialize.apply(this, arguments);
             res.on(
                 'update-rewards',
-                () => {
+                (args) => {
                     if (!this.pos.config.use_coupon_programs) return;
                     dp.add(this._getNewRewardLines()).then(([newRewardLines, rewardsContainer]) => {
                         this.orderlines.add(newRewardLines);
                         // We need this for the rendering of ActivePrograms component.
                         this.rewardsContainer = rewardsContainer;
+
+                        // Alert the user about the ineffective coupon or promo program.
+                        if (args && args.activatedCouponCode) {
+                            for (const unawarded of rewardsContainer.getUnawarded()) {
+                                if (unawarded.program.id == args.activatedCouponCode.program_id) {
+                                    Gui.showNotification(
+                                        _.str.sprintf(
+                                            _t('%(reason)s Coupon is active but currently has no effect.'),
+                                            { reason: unawarded.status.reason }
+                                        ),
+                                        8000
+                                    );
+                                    break;
+                                }
+                            }
+                        } else if (args && args.activatedPromoProgram) {
+                            for (const unawarded of rewardsContainer.getUnawarded()) {
+                                if (unawarded.program.id == args.activatedPromoProgram.id) {
+                                    Gui.showNotification(
+                                        _.str.sprintf(
+                                            _t('%(reason)s Program is active but currently has no effect.'),
+                                            { reason: unawarded.status.reason }
+                                        ),
+                                        8000
+                                    );
+                                    break;
+                                }
+                            }
+                        }
+
                         // Send a signal that the rewardsContainer are updated.
                         this.trigger('rewards-updated');
                     }).catch(() => { /* catch the reject of dp when calling `add` to avoid unhandledrejection */ });
@@ -394,7 +425,7 @@ odoo.define('pos_coupon.pos', function (require) {
             } else if (promoProgram) {
                 // TODO these two operations should be atomic
                 this.activePromoProgramIds.push(promoProgram.id);
-                this.trigger('update-rewards');
+                this.trigger('update-rewards', { activatedPromoProgram: promoProgram });
             } else if (code in this.bookedCouponCodes) {
                 Gui.showNotification('That coupon code has already been scanned and activated.');
             } else {
@@ -417,7 +448,7 @@ odoo.define('pos_coupon.pos', function (require) {
                 if (successful) {
                     // TODO these two operations should be atomic
                     this.bookedCouponCodes[code] = new CouponCode(code, payload.coupon_id, payload.program_id);
-                    this.trigger('update-rewards');
+                    this.trigger('update-rewards', { activatedCouponCode: this.bookedCouponCodes[code] });
                 } else {
                     Gui.showNotification(payload.error_message);
                 }
