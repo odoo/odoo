@@ -53,6 +53,10 @@ const PALETTE_NAMES = [
     'enark-4',
 ];
 
+// Attributes for which background color should be retrieved
+// from CSS and added in each palette.
+const CUSTOM_BG_COLOR_ATTRS = ['menu', 'footer'];
+
 const SESSION_STORAGE_ITEM_NAME = 'websiteConfigurator' + session.website_id;
 
 //---------------------------------------------------------
@@ -498,13 +502,17 @@ const actions = {
             if (color1 === color2) {
                 color2 = ColorpickerWidget.mixCssColors('#FFFFFF', color1, 0.2);
             }
-            state.recommendedPalette = {
+            const recommendedPalette = {
                 color1: color1,
                 color2: color2,
                 color3: ColorpickerWidget.mixCssColors('#FFFFFF', color2, 0.9),
                 color4: '#FFFFFF',
                 color5: ColorpickerWidget.mixCssColors(color1, '#000000', 0.75),
             };
+            CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
+                recommendedPalette[attr] = recommendedPalette[state.defaultColors[attr]];
+            });
+            state.recommendedPalette = recommendedPalette;
         } else {
             state.recommendedPalette = undefined;
         }
@@ -535,9 +543,11 @@ async function getInitialState() {
             name: paletteName
         };
         for (let j = 1; j <= 5; j += 1) {
-            const color = weUtils.getCSSVariableValue(`o-palette-${paletteName}-o-color-${j}`, style);
-            palette[`color${j}`] = color;
+            palette[`color${j}`] = weUtils.getCSSVariableValue(`o-palette-${paletteName}-o-color-${j}`, style);
         }
+        CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
+            palette[attr] = weUtils.getCSSVariableValue(`o-palette-${paletteName}-${attr}-bg`, style);
+        });
         palettes[paletteName] = palette;
     });
 
@@ -565,12 +575,23 @@ async function getInitialState() {
         features[feature.id].website_config_preselection = wtp ? wtp.split(',') : [];
     });
 
+    // Palette color used by default as background color for menu and footer.
+    // Needed to build the recommended palette.
+    const defaultColors = {};
+    CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
+        const color = weUtils.getCSSVariableValue(`o-default-${attr}-bg`, style);
+        const match = color.match(/o-color-(?<idx>[1-5])/);
+        const colorIdx = parseInt(match.groups['idx']);
+        defaultColors[attr] = `color${colorIdx}`;
+    });
+
     return Object.assign(r, {
         selectedType: undefined,
         selectedPurpose: undefined,
         selectedIndustry: undefined,
         selectedPalette: undefined,
         recommendedPalette: undefined,
+        defaultColors: defaultColors,
         palettes: palettes,
         features: features,
         themes: [],
@@ -641,6 +662,7 @@ async function makeEnvironment() {
             selectedIndustry: store.state.selectedIndustry,
             selectedPalette: store.state.selectedPalette,
             recommendedPalette: store.state.recommendedPalette,
+            defaultColors: store.state.defaultColors,
             features: store.state.features,
             logo: store.state.logo,
             logoAttachmentId: store.state.logoAttachmentId,
