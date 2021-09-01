@@ -70,7 +70,7 @@ QUnit.test("displays only apps if the search value is '/'", async (assert) => {
     const webClient = await createWebClient({ serverData });
     assert.containsNone(webClient, ".o_menu_brand");
 
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
     await editSearchBar("/");
     assert.containsOnce(webClient, ".o_command_palette");
@@ -85,7 +85,7 @@ QUnit.test("displays only apps if the search value is '/'", async (assert) => {
 QUnit.test("displays apps and menu items if the search value is not only '/'", async (assert) => {
     const webClient = await createWebClient({ serverData });
 
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
     await editSearchBar("/sal");
     assert.containsOnce(webClient, ".o_command_palette");
@@ -100,7 +100,7 @@ QUnit.test("opens an app", async (assert) => {
     const webClient = await createWebClient({ serverData });
     assert.containsNone(webClient, ".o_menu_brand");
 
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
     await editSearchBar("/");
     assert.containsOnce(webClient, ".o_command_palette");
@@ -119,7 +119,7 @@ QUnit.test("opens a menu items", async (assert) => {
     const webClient = await createWebClient({ serverData });
     assert.containsNone(webClient, ".o_menu_brand");
 
-    triggerHotkey("control+k");
+    triggerHotkey("control+m");
     await nextTick();
     await editSearchBar("/sal");
     assert.containsOnce(webClient, ".o_command_palette");
