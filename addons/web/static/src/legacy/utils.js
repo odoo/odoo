@@ -135,7 +135,6 @@ export function makeLegacyCommandService(legacyEnv) {
             const commandRemoveMap = new Map();
 
             function setLegacyCommand(uniqueId, getCommandDefinition) {
-                console.log("setLegacyCommand ", uniqueId);
                 const { name, action, options } = getCommandDefinition(env);
                 removeLegacyCommand(uniqueId);
                 commandRemoveMap.set(uniqueId, command.add(name, action, options));
