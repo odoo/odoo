@@ -332,6 +332,44 @@ class TestSpeedscope(BaseCase):
             ('C', 'level4'),
         ])
 
+    def test_converts_no_context(self):
+        stack = [
+            ['file.py', 10, 'level4', 'level4'],
+            ['file.py', 11, 'level5', 'level5'],
+        ]
+        profile = {
+            'init_stack_trace': [
+                ['file.py', 1, 'level0', 'level0'],
+                ['file.py', 1, 'level1', 'level1'],
+                ['file.py', 1, 'level2', 'level2'],
+                ['file.py', 1, 'level3', 'level3'],
+            ],
+            'result': [{  # init frame
+                'start': 2.0,
+                'exec_context': ((2, {'a': '1'}), (6, {'b': '1'})),
+                'stack': list(stack),
+            }, {  # final frame
+                'start': 10.35,
+                'exec_context': (),
+                'stack': None,
+            }],
+        }
+        sp = Speedscope(init_stack_trace=profile['init_stack_trace'])
+        sp.add('profile', profile['result'])
+        sp.add_output(['profile'], complete=False, use_context=False)
+        res = sp.make()
+        events = [
+            (e['type'], res['shared']['frames'][e['frame']]['name'])
+            for e in res['profiles'][0]['events']
+        ]
+        self.assertEqual(events, [
+            # pylint: disable=bad-continuation
+            ('O', 'level4'),
+                ('O', 'level5'),
+                ('C', 'level5'),
+            ('C', 'level4'),
+        ])
+
 
 @tagged('post_install', '-at_install', 'profiling')
 class TestProfiling(TransactionCase):
