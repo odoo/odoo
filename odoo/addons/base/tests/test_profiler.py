@@ -457,6 +457,89 @@ class TestProfiling(TransactionCase):
         self.assertEqual(stacks_lines[1][0] + 1, stacks_lines[3][0],
                          "Call of b() in a() should be one line before call of c()")
 
+    def test_qweb_recorder(self):
+        template = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="root">
+                <t t-foreach="{'a': 3, 'b': 2, 'c': 1}" t-as="item">
+                    [<t t-esc="item_index"/>: <t t-call="base.dummy"/> <t t-esc="item_value"/>]
+                    <b t-esc="add_one_query()"/>
+                </t>
+            </t>'''
+        })
+        child_template = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '<t t-name="dummy"><span><t t-esc="item"/> <t t-esc="add_one_query()"/></span></t>'
+        })
+        self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"
+                            "VALUES ('dummy', 'ir.ui.view', %s, 'base')", [child_template.id])
+
+        values = {'add_one_query': lambda: self.env.cr.execute('SELECT id FROM ir_ui_view LIMIT 1') or 'query'}
+        result = u"""
+                    [0: <span>a query</span> 3]
+                    <b>query</b>
+                    [1: <span>b query</span> 2]
+                    <b>query</b>
+                    [2: <span>c query</span> 1]
+                    <b>query</b>
+        """
+
+        # test rendering without profiling
+        rendered = self.env['ir.qweb']._render(template.id, values)
+        self.assertEqual(rendered.strip(), result.strip(), 'Without profiling')
+
+        # This rendering is used to cache the compiled template method so as
+        # not to have a number of requests that vary according to the modules
+        # installed.
+        with Profiler(description='test', collectors=['qweb'], db=None):
+            self.env['ir.qweb']._render(template.id, values)
+
+        with Profiler(description='test', collectors=['qweb'], db=None) as p:
+            rendered = self.env['ir.qweb']._render(template.id, values)
+            # check if qweb is ok
+            self.assertEqual(rendered.strip(), result.strip())
+
+        # check if the arch of all used templates is includes in the result
+        self.assertEqual(p.collectors[0].entries[0]['results']['archs'], {
+            template.id: template.arch_db,
+            child_template.id: child_template.arch_db,
+        })
+
+        # check all directives without duration information
+        for data in p.collectors[0].entries[0]['results']['data']:
+            data.pop('delay')
+
+        expected = [
+            # pylint: disable=bad-whitespace
+            # first template and first directive
+            {'view_id': template.id,       'xpath': '/t/t',         'directive': """t-foreach="{'a': 3, 'b': 2, 'c': 1}" t-as='item'""", 'query': 0},
+            # first pass in the loop
+            {'view_id': template.id,       'xpath': '/t/t/t[1]',    'directive': "t-esc='item_index'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/t[2]',    'directive': "t-call='base.dummy'", 'query': 0}, # the compiled template method is in cache
+            # first pass in the loop: content of the child template
+            {'view_id': child_template.id, 'xpath': '/t/span/t[1]', 'directive': "t-esc='item'", 'query': 0},
+            {'view_id': child_template.id, 'xpath': '/t/span/t[2]', 'directive': "t-esc='add_one_query()'", 'query': 1},
+            {'view_id': template.id,       'xpath': '/t/t/t[3]',    'directive': "t-esc='item_value'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/b',       'directive': "t-esc='add_one_query()'", 'query':1},
+            # second pass in the loop
+            {'view_id': template.id,       'xpath': '/t/t/t[1]',    'directive': "t-esc='item_index'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/t[2]',    'directive': "t-call='base.dummy'", 'query': 0}, # 0 because the template is in cache
+            {'view_id': child_template.id, 'xpath': '/t/span/t[1]', 'directive': "t-esc='item'", 'query': 0},
+            {'view_id': child_template.id, 'xpath': '/t/span/t[2]', 'directive': "t-esc='add_one_query()'", 'query': 1},
+            {'view_id': template.id,       'xpath': '/t/t/t[3]',    'directive': "t-esc='item_value'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/b',       'directive': "t-esc='add_one_query()'", 'query':1},
+            # third pass in the loop
+            {'view_id': template.id,       'xpath': '/t/t/t[1]',    'directive': "t-esc='item_index'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/t[2]',    'directive': "t-call='base.dummy'", 'query': 0},
+            {'view_id': child_template.id, 'xpath': '/t/span/t[1]', 'directive': "t-esc='item'", 'query': 0},
+            {'view_id': child_template.id, 'xpath': '/t/span/t[2]', 'directive': "t-esc='add_one_query()'", 'query': 1},
+            {'view_id': template.id,       'xpath': '/t/t/t[3]',    'directive': "t-esc='item_value'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/b',       'directive': "t-esc='add_one_query()'", 'query':1},
+        ]
+        self.assertEqual(p.collectors[0].entries[0]['results']['data'], expected)
+
     def test_default_recorders(self):
         with Profiler(db=None) as p:
             queries_start = self.env.cr.sql_log_count
