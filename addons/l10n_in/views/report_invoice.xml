@@ -18,7 +18,7 @@
                 </t>
             </t>
         </xpath>
-        <xpath expr="//p[@t-if='not is_html_empty(o.narration)']" position="before">
+        <xpath expr="//div[@t-if='not is_html_empty(o.narration)']" position="before">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'IN'">
                 <p id="total_in_words" class="mb16">
                     <strong>Total (In Words): </strong>
