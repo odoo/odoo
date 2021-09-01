@@ -124,7 +124,7 @@ class Slide(models.Model):
     quiz_fourth_attempt_reward = fields.Integer("Reward: every attempt after the third try", default=2)
     # content
     slide_category = fields.Selection([
-        ('infographic', 'Infographic'),
+        ('infographic', 'Image'),
         ('webpage', 'Web Page'),
         ('document', 'Document'),
         ('video', 'Video'),
@@ -132,14 +132,14 @@ class Slide(models.Model):
         string='Category', required=True,
         default='document')
     source_type = fields.Selection([
-        ('local_file', 'Local File'),
-        ('external', 'External (Google Drive)')],
+        ('local_file', 'Upload from Device'),
+        ('external', 'Retrieve from Google Drive')],
         default='local_file', required=True)
     # generic
     url = fields.Char('External URL', help="URL of the Google Drive file or URL of the YouTube video")
     binary_content = fields.Binary('File', attachment=True)
     slide_resource_ids = fields.One2many('slide.slide.resource', 'slide_id', string="Additional Resource for this slide")
-    slide_resource_downloadable = fields.Boolean('Allow Download', default=True, help="Allow the user to download the content of the slide.")
+    slide_resource_downloadable = fields.Boolean('Allow Download', default=False, help="Allow the user to download the content of the slide.")
     # google
     google_drive_id = fields.Char('Google Drive ID of the external URL', compute='_compute_google_drive_id')
     # content - webpage
@@ -168,7 +168,7 @@ class Slide(models.Model):
     document_binary_content = fields.Binary('PDF Content', related='binary_content', readonly=False,
         help="Used to filter file input to PDF only")
     # content - videos
-    video_url = fields.Char('Video URL', related='url', readonly=False,
+    video_url = fields.Char('Video Link', related='url', readonly=False,
         help="Link of the video (we support YouTube, Google Drive and Vimeo as sources)")
     video_source_type = fields.Selection([
         ('youtube', 'YouTube'),
@@ -200,7 +200,7 @@ class Slide(models.Model):
     # Statistics in case the slide is a category
     nbr_document = fields.Integer("Number of Documents", compute='_compute_slides_statistics', store=True)
     nbr_video = fields.Integer("Number of Videos", compute='_compute_slides_statistics', store=True)
-    nbr_infographic = fields.Integer("Number of Infographics", compute='_compute_slides_statistics', store=True)
+    nbr_infographic = fields.Integer("Number of Images", compute='_compute_slides_statistics', store=True)
     nbr_webpage = fields.Integer("Number of Webpages", compute='_compute_slides_statistics', store=True)
     nbr_quiz = fields.Integer("Number of Quizs", compute="_compute_slides_statistics", store=True)
     total_slides = fields.Integer(compute='_compute_slides_statistics', store=True)
@@ -497,13 +497,18 @@ class Slide(models.Model):
     def _on_change_url(self):
         """ Keeping a 'onchange' because we want this behavior for the frontend.
         Changing the document / video external URL will populate some metadata on the form view.
+        We only populate the field that are empty to avoid overriding user assigned values.
         The slide metadata are also fetched in create / write overrides to ensure consistency. """
 
         self.ensure_one()
         if self.url or self.document_google_url or self.image_google_url or self.video_url:
             slide_metadata, _error = self._fetch_external_metadata()
             if slide_metadata:
-                self.update(slide_metadata)
+                self.update({
+                    key: value
+                    for key, value in slide_metadata.items()
+                    if not self[key]
+                })
 
     @api.onchange('document_binary_content')
     def _on_change_document_binary_content(self):

@@ -38,11 +38,19 @@ class Slide(models.Model):
     ], ondelete={'certification': 'set null'})
     survey_id = fields.Many2one('survey.survey', 'Certification')
     nbr_certification = fields.Integer("Number of Certifications", compute='_compute_slides_statistics', store=True)
+    # small override of 'is_preview' to uncheck it automatically for slides of type 'certification'
+    is_preview = fields.Boolean(compute='_compute_is_preview', readonly=False, store=True)
 
     _sql_constraints = [
         ('check_survey_id', "CHECK(slide_category != 'certification' OR survey_id IS NOT NULL)", "A slide of type 'certification' requires a certification."),
         ('check_certification_preview', "CHECK(slide_category != 'certification' OR is_preview = False)", "A slide of type certification cannot be previewed."),
     ]
+
+    @api.depends('slide_category')
+    def _compute_is_preview(self):
+        for slide in self:
+            if slide.slide_category == 'certification' or not slide.is_preview:
+                slide.is_preview = False
 
     @api.onchange('survey_id')
     def _on_change_survey_id(self):

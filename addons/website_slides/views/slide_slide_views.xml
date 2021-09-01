@@ -118,12 +118,19 @@
                                         <field name="channel_id"/>
                                         <field name="slide_category" string="Content Type"/>
                                         <field name="slide_type" invisible="1"/>
-                                        <field name="source_type" widget="radio" attrs="{
+                                        <div class="text-muted" colspan="2" attrs="{
+                                            'invisible': [('slide_category', '!=', 'quiz')]}">
+                                            You can add questions to this quiz in the 'Quiz' tab.
+                                        </div>
+                                        <label for="source_type" string="" attrs="{
+                                            'invisible': [('slide_category', 'not in', ['infographic', 'document'])]}"/>
+                                        <field name="source_type" widget="radio" nolabel="1" attrs="{
                                             'invisible': [('slide_category', 'not in', ['infographic', 'document'])]}" />
                                         <field name="video_url" attrs="{
                                             'required': [('slide_category', '=', 'video')],
                                             'invisible': [('slide_category', '!=', 'video')],
                                             'readonly': [('slide_category', '!=', 'video')]}"
+                                            placeholder='e.g "www.youtube.com/watch?v=ebBez6bcSEc"'
                                             widget="url"/>
                                         <field name="document_google_url" attrs="{
                                             'invisible': ['|', ('source_type', '!=', 'external'), ('slide_category', '!=', 'document')],

@@ -261,8 +261,13 @@
         <div t-if="slide.slide_category == 'video'" class="embed-responsive embed-responsive-16by9 embed-responsive-item mb8">
             <t t-out="slide.embed_code"/>
         </div>
-        <div t-if="slide.slide_category == 'webpage'" class="bg-white p-3">
-            <div t-field="slide.html_content"/>
+        <div t-if="slide.slide_category == 'webpage'">
+            <div t-if="is_html_empty(slide.html_content)" class="alert alert-info">
+                Click on the "Edit" button on the top-right of the screen to edit your slide content.
+            </div>
+            <div class="bg-white p-3">
+                <div t-field="slide.html_content"/>
+            </div>
         </div>
     </div>
 

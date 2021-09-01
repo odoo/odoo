@@ -27,7 +27,7 @@ var SlideUploadDialog = Dialog.extend({
      */
     init: function (parent, options) {
         options = _.defaults(options || {}, {
-            title: _t("Upload new content"),
+            title: _t("Add Content"),
             size: 'medium',
         });
         this._super(parent, options);
@@ -63,10 +63,10 @@ var SlideUploadDialog = Dialog.extend({
      * @private
      * @param {string} message
      */
-    _alertDisplay: function (message) {
+    _alertDisplay: function (message, alertClass='alert-warning') {
         this._alertRemove();
         $('<div/>', {
-            "class": 'alert alert-warning',
+            "class": 'alert ' + alertClass,
             id: 'upload-alert',
             role: 'alert'
         }).text(message).insertBefore(this.$('form'));
@@ -113,7 +113,10 @@ var SlideUploadDialog = Dialog.extend({
         });
     },
     _formSetFieldValue: function (fieldId, value) {
-        this.$('form').find('#'+fieldId).val(value);
+        var $formField = this.$('form').find('#'+fieldId);
+        if (!$formField.val()) {  // update only if the user did not assign a value manually
+            $formField.val(value);
+        }
     },
     _formGetFieldValue: function (fieldId) {
         return this.$('#'+fieldId).val();
@@ -192,7 +195,7 @@ var SlideUploadDialog = Dialog.extend({
             if (! this.modulesToInstallStatus.installing) {
                 btnList.push({text: this.modulesToInstallStatus.failed ? _t("Retry") : _t("Install"), classes: 'btn-primary', click: this._onClickInstallModuleConfirm.bind(this)});
             }
-            btnList.push({text: _t("Discard"), classes: 'o_w_slide_go_back', click: this._onClickGoBack.bind(this)});
+            btnList.push({text: _t("Back"), classes: 'o_w_slide_go_back', click: this._onClickGoBack.bind(this)});
         } else if (state !== '_upload') { // no button when uploading
             if (this.canUpload) {
                 if (this.canPublish) {
@@ -202,7 +205,7 @@ var SlideUploadDialog = Dialog.extend({
                     btnList.push({text: _t("Save"), classes: 'btn-primary o_w_slide_upload', click: this._onClickFormSubmit.bind(this)});
                 }
             }
-            btnList.push({text: _t("Discard"), classes: 'o_w_slide_go_back', click: this._onClickGoBack.bind(this)});
+            btnList.push({text: _t("Back"), classes: 'o_w_slide_go_back', click: this._onClickGoBack.bind(this)});
         }
         return btnList;
     },
@@ -339,7 +342,7 @@ var SlideUploadDialog = Dialog.extend({
             },
             infographic: {
                 icon: 'fa-file-image-o',
-                label: _t('Infographic'),
+                label: _t('Image'),
                 template: 'website.slide.upload.modal.infographic',
             },
             webpage: {
@@ -348,7 +351,7 @@ var SlideUploadDialog = Dialog.extend({
                 template: 'website.slide.upload.modal.webpage',
             },
             video: {
-                icon: 'fa-video-camera',
+                icon: 'fa-file-video-o',
                 label: _t('Video'),
                 template: 'website.slide.upload.modal.video',
             },
@@ -407,11 +410,23 @@ var SlideUploadDialog = Dialog.extend({
                 self._alertDisplay(data.error);
                 self._hidePreviewColumn();
             } else {
+                if (data.info) {
+                    self._alertDisplay(data.info, 'alert-info');
+                } else {
+                    self._alertRemove();
+                }
+
                 self.isValidUrl = true;
 
                 if (data.name) {
                     self._formSetFieldValue('name', data.name);
+                    self.$('#slide-video-title')
+                        .text(data.name)
+                        .removeClass('d-none');
+                } else {
+                    self.$('#slide-video-title').addClass('d-none');
                 }
+
                 if (data.description) {
                     self._formSetFieldValue('description', data.description);
                 }
@@ -476,7 +491,7 @@ var SlideUploadDialog = Dialog.extend({
         if (currentType === '_import') {
             this.set_title(_t("New Certification"));
         } else {
-            this.set_title(_t("Upload new content"));
+            this.set_title(_t("Add Content"));
         }
     },
     _onChangeCanSubmitForm: function (ev) {
