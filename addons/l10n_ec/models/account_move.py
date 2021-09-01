@@ -191,13 +191,14 @@ class AccountMove(models.Model):
         return internal_type
 
     def _get_l10n_latam_documents_domain(self):
-        if self.country_code != "EC":
-            return super(AccountMove, self)._get_l10n_latam_documents_domain()
+        original_domain = super(AccountMove, self)._get_l10n_latam_documents_domain()
         domain = []
         internal_type = self._get_l10n_ec_internal_type()
         allowed_documents = self._get_l10n_ec_documents_allowed(self._get_l10n_ec_identification_type())
         if internal_type and allowed_documents:
             domain.append(("id", "in", allowed_documents.filtered(lambda x: x.internal_type == internal_type).ids))
+        else:
+            domain = original_domain
         return domain
 
     def _get_ec_formatted_sequence(self, number=0):
@@ -228,6 +229,7 @@ class AccountMove(models.Model):
             "in_invoice",
             "in_refund",
         ):
+            where_string, param = super(AccountMove, self)._get_last_sequence_domain(False)
             internal_type = self._get_l10n_ec_internal_type()
             document_types = l10n_latam_document_type_model.search([
                 ('internal_type', '=', internal_type),
