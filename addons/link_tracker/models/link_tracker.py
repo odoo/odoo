@@ -178,6 +178,8 @@ class LinkTracker(models.Model):
         return html
 
     def _convert_links_text(self, body, vals, blacklist=None):
+        if not body:
+            return body
         shortened_schema = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
         unsubscribe_schema = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/sms/'
         for original_url in re.findall(TEXT_URL_REGEX, body):
