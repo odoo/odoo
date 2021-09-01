@@ -3,7 +3,7 @@ odoo.define('pos_sale.SaleOrderFetcher', function (require) {
 
     const { EventBus } = owl.core;
     const { Gui } = require('point_of_sale.Gui');
-    const { isRpcError } = require('point_of_sale.utils');
+    const { isConnectionError } = require('point_of_sale.utils');
     const models = require('point_of_sale.models');
 
     class SaleOrderFetcher extends EventBus {
@@ -53,7 +53,7 @@ odoo.define('pos_sale.SaleOrderFetcher', function (require) {
 
                 this.trigger('update');
             } catch (error) {
-                if (isRpcError(error) && error.message.code < 0) {
+                if (isConnectionError(error)) {
                     Gui.showPopup('ErrorPopup', {
                         title: this.comp.env._t('Network Error'),
                         body: this.comp.env._t('Unable to fetch orders if offline.'),
