@@ -25,7 +25,7 @@ var TagCourseDialog = Dialog.extend({
                 classes: 'btn-primary',
                 click: this._onClickFormSubmit.bind(this)
             }, {
-                text: _t("Discard"),
+                text: _t("Back"),
                 click: this._onClickClose.bind(this)
             }]
         });

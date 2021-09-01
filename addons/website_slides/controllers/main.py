@@ -1067,6 +1067,7 @@ class WebsiteSlides(WebsiteProfile):
 
         Slide = request.env['slide.slide']
 
+        additional_values = {}
         if slide_category == 'video':
             identical_video = request.env['slide.slide']
             existing_videos = Slide.search([
@@ -1083,7 +1084,7 @@ class WebsiteSlides(WebsiteProfile):
 
             if not slide.video_source_type:
                 slide.unlink()
-                return {'error': _('Please enter valid YouTube, Vimeo or Google Drive Link')}
+                return {'error': _("Could not find your video. Please check if your link is correct and if the video can be accessed.")}
 
             if slide.video_source_type == 'youtube':
                 identical_video = existing_videos.filtered(
@@ -1096,7 +1097,7 @@ class WebsiteSlides(WebsiteProfile):
                     lambda existing_video: slide.vimeo_id == existing_video.vimeo_id)
             if identical_video:
                 identical_video_name = identical_video[0].name
-                return {'error': _('This video already exists in this channel on the following content: %s', identical_video_name)}
+                additional_values['info'] = _('This video already exists in this channel on the following content: %s', identical_video_name)
         elif slide_category in ['document', 'infographic']:
             slide = Slide.new({
                 'channel_id': int(channel_id),
@@ -1112,6 +1113,9 @@ class WebsiteSlides(WebsiteProfile):
         slide_values, error = slide._fetch_external_metadata(image_url_only=True)
         if error:
             return {'error': error}
+
+        if additional_values:
+            slide_values.update(additional_values)
 
         return slide_values
 
@@ -1171,7 +1175,7 @@ class WebsiteSlides(WebsiteProfile):
         channel._resequence_slides(slide, force_category=category)
 
         redirect_url = "/slides/slide/%s" % (slide.id)
-        if channel.channel_type == "training" and not slide.slide_category == "webpage":
+        if channel.channel_type == "training" and slide.slide_category not in ["webpage", "quiz"]:
             redirect_url = "/slides/%s" % (slug(channel))
         if slide.slide_category == 'webpage':
             redirect_url += "?enable_editor=1"
