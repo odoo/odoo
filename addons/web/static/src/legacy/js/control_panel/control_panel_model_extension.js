@@ -199,6 +199,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                 case "groupBy": return this.getGroupBy();
                 case "orderedBy": return this.getOrderedBy();
                 case "timeRanges": return this.getTimeRanges();
+                case "irFilterValues": return this.getIrFilterValues({ type: "favorite" });
             }
         }
 
@@ -258,6 +259,52 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
          */
         clearQuery() {
             this.state.query = [];
+        }
+
+        getIrFilterValues(preFilter) {
+            const groups = this._getGroups();
+
+            const userContext = this.env.session.user_context;
+            let controllerQueryParams;
+            this.config.trigger("get-controller-query-params", params => {
+                controllerQueryParams = params;
+            });
+            controllerQueryParams = controllerQueryParams || {};
+            controllerQueryParams.context = controllerQueryParams.context || {};
+
+            const queryContext = this._getContext(groups);
+            const context = pyUtils.eval(
+                'contexts',
+                [userContext, controllerQueryParams.context, queryContext]
+            );
+            for (const key in userContext) {
+                delete context[key];
+            }
+
+            const requireEvaluation = false;
+            const domain = this._getDomain(groups);
+            const groupBys = this._getGroupBy(groups);
+            const timeRanges = this._getTimeRanges(requireEvaluation);
+            const orderedBy = controllerQueryParams.orderedBy ?
+                controllerQueryParams.orderedBy :
+                (this._getOrderedBy(groups) || []);
+
+            const userId = preFilter.isShared ? false : this.env.session.uid;
+            delete preFilter.isShared;
+
+            Object.assign(preFilter, {
+                context,
+                domain,
+                groupBys,
+                groupNumber: userId ? FAVORITE_PRIVATE_GROUP : FAVORITE_SHARED_GROUP,
+                orderedBy,
+                removable: true,
+                userId,
+            });
+            if (timeRanges) {
+                preFilter.comparison = timeRanges;
+            }
+            return this._favoriteToIrFilter(preFilter);
         }
 
         /**
@@ -1580,49 +1627,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
          * @returns {Promise<Object>}
          */
         async _saveQuery(preFilter) {
-            const groups = this._getGroups();
-
-            const userContext = this.env.session.user_context;
-            let controllerQueryParams;
-            this.config.trigger("get-controller-query-params", params => {
-                controllerQueryParams = params;
-            });
-            controllerQueryParams = controllerQueryParams || {};
-            controllerQueryParams.context = controllerQueryParams.context || {};
-
-            const queryContext = this._getContext(groups);
-            const context = pyUtils.eval(
-                'contexts',
-                [userContext, controllerQueryParams.context, queryContext]
-            );
-            for (const key in userContext) {
-                delete context[key];
-            }
-
-            const requireEvaluation = false;
-            const domain = this._getDomain(groups);
-            const groupBys = this._getGroupBy(groups);
-            const timeRanges = this._getTimeRanges(requireEvaluation);
-            const orderedBy = controllerQueryParams.orderedBy ?
-                controllerQueryParams.orderedBy :
-                (this._getOrderedBy(groups) || []);
-
-            const userId = preFilter.isShared ? false : this.env.session.uid;
-            delete preFilter.isShared;
-
-            Object.assign(preFilter, {
-                context,
-                domain,
-                groupBys,
-                groupNumber: userId ? FAVORITE_PRIVATE_GROUP : FAVORITE_SHARED_GROUP,
-                orderedBy,
-                removable: true,
-                userId,
-            });
-            if (timeRanges) {
-                preFilter.comparison = timeRanges;
-            }
-            const irFilter = this._favoriteToIrFilter(preFilter);
+            const irFilter = this.getIrFilterValues(preFilter);
             const serverSideId = await this.env.dataManager.create_filter(irFilter);
 
             preFilter.serverSideId = serverSideId;
