@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -139,11 +140,9 @@ class AccountMove(models.Model):
         # Add to global results.
         results['tax_amount'] += tax_values['tax_amount']
         results['tax_amount_currency'] += tax_values['tax_amount_currency']
-
         # Add to tax details.
         if serialized_grouping_key not in results['tax_details']:
             tax_details = results['tax_details'][serialized_grouping_key]
-
             tax_details.update(grouping_key)
             tax_details.update({
                 'base_amount': tax_values['base_amount'],
@@ -154,12 +153,11 @@ class AccountMove(models.Model):
             if key_by_tax[tax_values['tax_id']] != key_by_tax.get(tax_values['src_line_id'].tax_line_id):
                 tax_details['base_amount'] += tax_values['base_amount']
                 tax_details['base_amount_currency'] += tax_values['base_amount_currency']
-
         tax_details['tax_amount'] += tax_values['tax_amount']
         tax_details['tax_amount_currency'] += tax_values['tax_amount_currency']
         tax_details['group_tax_details'].append(tax_values)
 
-    def _prepare_edi_tax_details(self, filter_to_apply=None, grouping_key_generator=None):
+    def _prepare_edi_tax_details(self, filter_to_apply=None, filter_invl_to_apply=None, grouping_key_generator=None):
         ''' Compute amounts related to taxes for the current invoice.
 
         :param filter_to_apply:         Optional filter to exclude some tax values from the final results.
@@ -177,6 +175,8 @@ class AccountMove(models.Model):
 
                                         If the filter is returning False, it means the current tax values will be
                                         ignored when computing the final results.
+
+        :param filter_invl_to_apply:    Optional filter to exclude some invoice lines.
 
         :param grouping_key_generator:  Optional method used to group tax values together. By default, the tax values
                                         are grouped by tax. This parameter is a method getting a dictionary as parameter
@@ -228,6 +228,9 @@ class AccountMove(models.Model):
 
         # Compute the taxes values for each invoice line.
         invoice_lines = self.invoice_line_ids.filtered(lambda line: not line.display_type)
+        if filter_invl_to_apply:
+            invoice_lines = invoice_lines.filtered(filter_invl_to_apply)
+
         invoice_lines_tax_values_dict = defaultdict(list)
 
         domain = [('move_id', '=', self.id)]
@@ -256,11 +259,50 @@ class AccountMove(models.Model):
 
         # Apply 'filter_to_apply'.
 
-        if filter_to_apply:
-            invoice_lines_tax_values_dict = {
-                invoice_line: [x for x in tax_values_list if filter_to_apply(x)]
-                for invoice_line, tax_values_list in invoice_lines_tax_values_dict.items()
-            }
+        if self.move_type in ('out_refund', 'in_refund'):
+            tax_rep_lines_field = 'refund_repartition_line_ids'
+        else:
+            tax_rep_lines_field = 'invoice_repartition_line_ids'
+
+        filtered_invoice_lines_tax_values_dict = {}
+        for invoice_line in invoice_lines:
+            tax_values_list = invoice_lines_tax_values_dict.get(invoice_line, [])
+            filtered_invoice_lines_tax_values_dict[invoice_line] = []
+
+            # Search for unhandled taxes.
+            taxes_set = set(invoice_line.tax_ids.flatten_taxes_hierarchy())
+            for tax_values in tax_values_list:
+                taxes_set.discard(tax_values['tax_id'])
+
+                if not filter_to_apply or filter_to_apply(tax_values):
+                    filtered_invoice_lines_tax_values_dict[invoice_line].append(tax_values)
+
+            # Restore zero-tax tax details.
+            for zero_tax in taxes_set:
+
+                affect_base_amount = 0.0
+                affect_base_amount_currency = 0.0
+                for tax_values in tax_values_list:
+                    if zero_tax in tax_values['tax_line_id'].tax_ids:
+                        affect_base_amount += tax_values['tax_amount']
+                        affect_base_amount_currency += tax_values['tax_amount_currency']
+
+                for tax_rep in zero_tax[tax_rep_lines_field].filtered(lambda x: x.repartition_type == 'tax'):
+                    tax_values = {
+                        'base_line_id': invoice_line,
+                        'tax_line_id': self.env['account.move.line'],
+                        'src_line_id': invoice_line,
+                        'tax_id': zero_tax,
+                        'src_tax_id': zero_tax,
+                        'tax_repartition_line_id': tax_rep,
+                        'base_amount': invoice_line.balance + affect_base_amount,
+                        'tax_amount': 0.0,
+                        'base_amount_currency': invoice_line.amount_currency + affect_base_amount_currency,
+                        'tax_amount_currency': 0.0,
+                    }
+
+                    if not filter_to_apply or filter_to_apply(tax_values):
+                        filtered_invoice_lines_tax_values_dict[invoice_line].append(tax_values)
 
         # Initialize the results dict.
 
@@ -294,7 +336,7 @@ class AccountMove(models.Model):
         # Apply 'grouping_key_generator' to 'invoice_lines_tax_values_list' and add all values to the final results.
 
         for invoice_line in invoice_lines:
-            tax_values_list = invoice_lines_tax_values_dict.get(invoice_line, [])
+            tax_values_list = filtered_invoice_lines_tax_values_dict[invoice_line]
 
             key_by_tax = {}
 
