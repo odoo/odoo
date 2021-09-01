@@ -442,7 +442,7 @@ QUnit.module('mail', {}, function () {
         });
         assert.strictEqual(webClient.el.querySelector(".o_m2o_avatar > span").textContent, "Mario")
 
-        triggerHotkey("control+k")
+        triggerHotkey("control+m")
         await nextTick();
         const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Assign to ...ALT + I")
         assert.ok(idx >= 0);
@@ -489,7 +489,7 @@ QUnit.module('mail', {}, function () {
             'views': [[false, 'form']],
         });
         assert.strictEqual(webClient.el.querySelector(".o_m2o_avatar > span").textContent, "Mario")
-        triggerHotkey("control+k")
+        triggerHotkey("control+m")
         await nextTick();
         const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Assign/unassign to meALT + SHIFT + I")
         assert.ok(idx >= 0);
@@ -500,7 +500,7 @@ QUnit.module('mail', {}, function () {
         assert.strictEqual(webClient.el.querySelector(".o_m2o_avatar > span").textContent, "Luigi")
 
         // Unassign me
-        triggerHotkey("control+k");
+        triggerHotkey("control+m");
         await nextTick();
         await click([...webClient.el.querySelectorAll(".o_command")][idx])
         await legacyExtraNextTick();
@@ -536,7 +536,7 @@ QUnit.module('mail', {}, function () {
         let userNames = [...webClient.el.querySelectorAll(".o_tag_badge_text")].map((el => el.textContent));
         assert.deepEqual(userNames, ["Mario", "Yoshi"]);
 
-        triggerHotkey("control+k")
+        triggerHotkey("control+m")
         await nextTick();
         const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Assign to ...ALT + I")
         assert.ok(idx >= 0);
@@ -585,7 +585,7 @@ QUnit.module('mail', {}, function () {
         let userNames = [...webClient.el.querySelectorAll(".o_tag_badge_text")].map((el => el.textContent));
         assert.deepEqual(userNames, ["Mario", "Yoshi"]);
 
-        triggerHotkey("control+k");
+        triggerHotkey("control+m");
         await nextTick();
         const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Assign/unassign to meALT + SHIFT + I");
         assert.ok(idx >= 0);
@@ -597,7 +597,7 @@ QUnit.module('mail', {}, function () {
         assert.deepEqual(userNames, ["Mario", "Yoshi", "Luigi"]);
 
         // Unassign me
-        triggerHotkey("control+k");
+        triggerHotkey("control+m");
         await nextTick();
         await click([...webClient.el.querySelectorAll(".o_command")][idx]);
         await legacyExtraNextTick();

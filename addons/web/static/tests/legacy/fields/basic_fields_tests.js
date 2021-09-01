@@ -6594,7 +6594,7 @@ QUnit.module('basic_fields', {
         });
         assert.containsOnce(webClient, ".fa-star")
 
-        triggerHotkey("control+k")
+        triggerHotkey("control+m")
         await nextTick();
         const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Set priority...ALT + R")
         assert.ok(idx >= 0);
@@ -6893,7 +6893,7 @@ QUnit.module('basic_fields', {
         });
         assert.containsOnce(webClient, ".o_status_red")
 
-        triggerHotkey("control+k")
+        triggerHotkey("control+m")
         await nextTick();
         const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Set kanban state...ALT + SHIFT + R")
         assert.ok(idx >= 0);
