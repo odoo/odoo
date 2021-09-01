@@ -7,6 +7,7 @@ from odoo.exceptions import MissingError, UserError, ValidationError, AccessErro
 from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools.float_utils import float_compare
+from odoo.http import request
 
 import base64
 from collections import defaultdict
@@ -82,28 +83,34 @@ class IrActions(models.Model):
         }
 
     @api.model
-    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'model_name')
     def get_bindings(self, model_name):
+        return self._get_bindings(model_name, bool(request) and request.session.debug)
+
+    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'model_name', 'debug')
+    def _get_bindings(self, model_name, debug=False):
         """ Retrieve the list of actions bound to the given model.
 
            :return: a dict mapping binding types to a list of dict describing
                     actions, where the latter is given by calling the method
                     ``read`` on the action record.
         """
-        # DLE P19: Need to flush before doing the SELECT, which act as a search.
-        # Test `test_bindings`
-        self.flush()
         cr = self.env.cr
-        query = """ SELECT a.id, a.type, a.binding_type
-                    FROM ir_actions a, ir_model m
-                    WHERE a.binding_model_id=m.id AND m.model=%s
-                    ORDER BY a.id """
-        cr.execute(query, [model_name])
         IrModelAccess = self.env['ir.model.access']
 
         # discard unauthorized actions, and read action definitions
         result = defaultdict(list)
         user_groups = self.env.user.groups_id
+        if not debug:
+            user_groups -= self.env.ref('base.group_no_one')
+
+        self.flush()
+        cr.execute("""
+            SELECT a.id, a.type, a.binding_type
+              FROM ir_actions a
+              JOIN ir_model m ON a.binding_model_id = m.id
+             WHERE m.model = %s
+          ORDER BY a.id
+        """, [model_name])
         for action_id, action_model, binding_type in cr.fetchall():
             try:
                 action = self.env[action_model].sudo().browse(action_id)
