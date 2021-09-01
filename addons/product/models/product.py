@@ -108,6 +108,8 @@ class ProductProduct(models.Model):
         'Barcode', copy=False,
         help="International Article Number used for product identification.")
     product_template_attribute_value_ids = fields.Many2many('product.template.attribute.value', relation='product_variant_combination', string="Attribute Values", ondelete='restrict')
+    product_template_variant_value_ids = fields.Many2many('product.template.attribute.value', relation='product_variant_combination',
+                                                          domain=[('attribute_line_id.value_count', '>', 1)], string="Variant Values", ondelete='restrict')
     combination_indices = fields.Char(compute='_compute_combination_indices', store=True, index=True)
     is_product_variant = fields.Boolean(compute='_compute_is_product_variant')
 

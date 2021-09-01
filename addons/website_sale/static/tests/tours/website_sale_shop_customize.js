@@ -14,8 +14,8 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
                 trigger: '#customize-menu > a',
             },
             {
-                content: "click on 'Product Attribute's Filters'",
-                trigger: "#customize-menu a:contains(Product Attribute's Filters)",
+                content: "click on 'Attributes & Variants filters'",
+                trigger: "#customize-menu a:contains(Attributes & Variants filters)",
             },
             {
                 content: "select product attribute Steel",
@@ -132,8 +132,8 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
                 trigger: '#customize-menu > a',
             },
             {
-                content: "remove 'Product Attribute's Filters'",
-                trigger: "#customize-menu a:contains(Product Attribute's Filters):has(input:checked)",
+                content: "remove 'Attributes & Variants filters'",
+                trigger: "#customize-menu a:contains(Attributes & Variants filters):has(input:checked)",
             },
             {
                 content: "finish",
