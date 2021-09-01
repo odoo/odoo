@@ -282,7 +282,7 @@
                                 <tree editable="bottom" decoration-muted="(state == 'done' and is_locked == True)" decoration-danger="qty_done&gt;product_uom_qty and state!='done'" decoration-success="qty_done==product_uom_qty and state!='done' and not result_package_id">
                                     <field name="product_id" required="1" attrs="{'readonly': ['|', ('state', '=', 'done'), ('move_id', '!=', False)]}"/>
                                     <field name="move_id" invisible="1"/>
-                                    <field name="product_uom_id" force_save="1" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="uom.group_uom"/>
+                                    <field name="product_uom_id" force_save="1" attrs="{'readonly': [('state', '!=', 'draft'), ('id', '!=', False)]}" groups="uom.group_uom"/>
                                     <field name="location_id" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_id)]"/>
                                     <field name="location_dest_id" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_dest_id)]"/>
                                     <field name="package_id" groups="stock.group_tracking_lot" domain="[('location_id', '=', location_id)]"/>
@@ -327,7 +327,7 @@
                                     <field name="product_uom_qty" string="Initial Demand" attrs="{'column_invisible': ['&amp;',('parent.immediate_transfer', '=', True), ('parent.is_locked', '=', True)], 'readonly': [('is_initial_demand_editable', '=', False)]}"/>
                                     <field name="reserved_availability" string="Reserved" attrs="{'column_invisible': (['|','|', ('parent.state','=', 'done'), ('parent.picking_type_code', '=', 'incoming'),'&amp;',('parent.immediate_transfer', '=', True), ('parent.is_locked', '=', True)])}"/>
                                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
-                                    <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                                    <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('id', '!=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                                     <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list" attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
                                 </tree>
                             </field>
