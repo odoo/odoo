@@ -2,7 +2,7 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
     'use strict';
 
     const { useListener } = require('web.custom_hooks');
-    const { isRpcError } = require('point_of_sale.utils');
+    const { isConnectionError } = require('point_of_sale.utils');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
@@ -119,7 +119,7 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
             try {
                 await this._invoiceOrder();
             } catch (error) {
-                if (isRpcError(error) && error.message.code < 0) {
+                if (isConnectionError(error)) {
                     this.showPopup('ErrorPopup', {
                         title: this.env._t('Network Error'),
                         body: this.env._t('Unable to invoice order.'),

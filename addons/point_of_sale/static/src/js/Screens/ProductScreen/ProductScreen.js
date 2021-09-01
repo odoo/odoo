@@ -8,7 +8,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const Registries = require('point_of_sale.Registries');
     const { onChangeOrder, useBarcodeReader } = require('point_of_sale.custom_hooks');
     const { Gui } = require('point_of_sale.Gui');
-    const { isRpcError } = require('point_of_sale.utils');
+    const { isConnectionError } = require('point_of_sale.utils');
     const { useState, onMounted } = owl.hooks;
     const { parse } = require('web.field_utils');
 
@@ -225,7 +225,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                         context: this.env.session.user_context,
                     });
                 } catch (error) {
-                    if (isRpcError(error) && error.message.code < 0) {
+                    if (isConnectionError(error)) {
                         return this.showPopup('OfflineErrorPopup', {
                             title: this.env._t('Network Error'),
                             body: this.env._t("Product is not loaded. Tried loading the product from the server but there is a network error."),
