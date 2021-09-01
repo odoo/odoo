@@ -32,24 +32,5 @@
                 </p>
             </t>
         </xpath>
-        <xpath expr="//div[@id='total']/div/table" position="inside">
-            <t t-if="o.pos_order_ids">
-                <tr>
-                    <td>
-                        <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="o.invoice_date" t-options='{"widget": "date"}'/></i>
-                    </td>
-                </tr>
-                <t t-foreach="o.pos_order_ids.mapped('payment_ids')" t-as="payment">
-                    <tr>
-                        <td>
-                            Paid with <t t-esc="payment.payment_method_id.name"/>
-                        </td>
-                        <td class="text-right">
-                            <t t-esc="payment.amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                        </td>
-                    </tr>
-                </t>
-            </t>
-        </xpath>
     </template>
 </odoo>
