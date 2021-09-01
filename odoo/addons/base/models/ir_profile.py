@@ -34,6 +34,7 @@ class IrProfile(models.Model):
     sql = fields.Text('Sql', prefetch=False)
     traces_async = fields.Text('Traces Async', prefetch=False)
     traces_sync = fields.Text('Traces Sync', prefetch=False)
+    qweb = fields.Text('Qweb', prefetch=False)
     entry_count = fields.Integer('Entry count')
 
     speedscope = fields.Binary('Speedscope', compute='_compute_speedscope')
