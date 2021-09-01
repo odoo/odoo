@@ -60,8 +60,6 @@ export const Many2OneAvatarUser = Many2OneAvatar.extend(M2XAvatarMixin, {
     }),
 
     on_attach_callback() {
-        console.log("on_attach_callback ", this.mode)
-
         this._registerCommandAssignTo()
     },
     on_detach_callback(){
