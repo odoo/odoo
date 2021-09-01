@@ -194,7 +194,7 @@ const LinkPopoverWidget = Widget.extend({
 });
 
 LinkPopoverWidget.createFor = async function (parent, targetEl) {
-    const noLinkPopoverClass = ".o_no_link_popover, .carousel-control-prev, .carousel-control-next";
+    const noLinkPopoverClass = ".o_no_link_popover, .carousel-control-prev, .carousel-control-next, .dropdown-toggle";
     // Target might already have a popover, eg cart icon in navbar
     const alreadyPopover = $(targetEl).data('bs.popover');
     if (alreadyPopover || $(targetEl).is(noLinkPopoverClass) || !!$(targetEl).parents(noLinkPopoverClass).length) {
