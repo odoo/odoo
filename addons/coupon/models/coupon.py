@@ -22,7 +22,7 @@ class Coupon(models.Model):
         Generate 8 bytes (64 bits) barcodes as 16 bytes barcodes are not
         compatible with all scanners.
          """
-        return str(random.getrandbits(64))
+        return '043' + str(random.getrandbits(64))[3:]
 
     code = fields.Char(default=_generate_code, required=True, readonly=True)
     expiration_date = fields.Date('Expiration Date', compute='_compute_expiration_date')

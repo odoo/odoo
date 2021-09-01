@@ -31,12 +31,3 @@ class Coupon(models.Model):
         if self.source_pos_order_id:
             return self.env.ref('pos_coupon.mail_coupon_template', False)
         return super()._get_default_template()
-
-    @api.model
-    def _generate_code(self):
-        """
-        Modify the generated barcode to be compatible with the default
-        barcode rule in this module. See `data/default_barcode_patterns.xml`.
-        """
-        code = super()._generate_code()
-        return '043' + code[3:]
