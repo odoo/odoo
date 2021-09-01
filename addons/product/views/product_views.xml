@@ -46,9 +46,9 @@
                         <page string="General Information" name="general_information">
                             <group>
                                 <group name="group_general">
+                                    <field name="categ_id" string="Product Category"/>
                                     <field name="active" invisible="1"/>
                                     <field name="type"/>
-                                    <field name="categ_id" string="Product Category"/>
                                 </group>
                                 <group name="group_standard_price">
                                     <label for="list_price" class="mt-1"/>
@@ -316,7 +316,7 @@
                     <field name="default_code" optional="show" readonly="1"/>
                     <field name="barcode" optional="hide" readonly="1"/>
                     <field name="name" readonly="1"/>
-                    <field name="product_template_attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant" readonly="1"/>
+                    <field name="product_template_variant_value_ids" widget="many2many_tags" groups="product.group_product_variant" readonly="1"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide" readonly="1"/>
                     <field name="lst_price" optional="show" string="Sales Price"/>
                     <field name="standard_price" optional="show"/>
@@ -361,9 +361,8 @@
                 <field name="name" position="after">
                     <field name="product_tmpl_id" class="oe_inline" readonly="1" invisible="1" attrs="{'required': [('id', '!=', False)]}"/>
                 </field>
-                <xpath expr="//div[hasclass('oe_title')]" position="inside">
-                    <field name="product_template_attribute_value_ids" widget="many2many_tags" readonly="1"
-                        groups="product.group_product_variant"/>
+                <xpath expr="//div[hasclass('oe_title')]//div[@name='options']" position="before">
+                    <field name="product_template_variant_value_ids" widget="many2many_tags" readonly="1" groups="product.group_product_variant"/>
                 </xpath>
             </field>
         </record>
@@ -391,7 +390,7 @@
                                         <small t-if="record.default_code.value">[<field name="default_code"/>]</small>
                                     </strong>
                                     <div class="o_kanban_tags_section">
-                                        <field name="product_template_attribute_value_ids" groups="product.group_product_variant" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                        <field name="product_template_variant_value_ids" groups="product.group_product_variant" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     </div>
                                     <ul>
                                         <li><strong>Price: <field name="lst_price"></field></strong></li>
