@@ -16,11 +16,9 @@ from odoo.http import request
 from odoo import http, tools, _, SUPERUSER_ID
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.exceptions import UserError
-from odoo.modules.module import get_module_path, get_resource_path
-from odoo.tools.misc import file_open
+from odoo.modules.module import get_resource_path
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.image import image_data_uri, base64_to_image
-from odoo.addons.web.controllers.main import Binary
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_EXTENSIONS, SUPPORTED_IMAGE_MIMETYPES
@@ -616,7 +614,7 @@ class Web_Editor(http.Controller):
         _, _, image_base64 = request.env['ir.http'].binary_content(
             xmlid=img_key, model='ir.attachment', field='datas', default_mimetype='image/png')
         if not image_base64:
-            image_base64 = b64encode(Binary.placeholder())
+            image_base64 = b64encode(request.env['ir.http']._placeholder())
         image = base64_to_image(image_base64)
         width, height = tuple(str(size) for size in image.size)
         root = etree.fromstring(svg)

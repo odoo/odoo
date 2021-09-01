@@ -839,6 +839,9 @@ export class ModelField {
      * @throws {Error} if record does not satisfy related model
      */
     _verifyRelationalValue(record) {
+        if (!record.modelManager) {
+            throw Error(`${record} is not a record. Did you try to use link() instead of insert() with data?`);
+        }
         const OtherModel = record.modelManager.models[this.to];
         if (!OtherModel.get(record.localId, { isCheckingInheritance: true })) {
             throw Error(`Record ${record.localId} is not valid for relational field ${this.fieldName}.`);

@@ -76,11 +76,17 @@ export class Message extends Component {
      * @returns {string}
      */
     get avatar() {
-        if (this.message.author) {
+        if (this.message.author && (!this.message.originThread || this.message.originThread.model !== 'mail.channel')) {
             // TODO FIXME for public user this might not be accessible. task-2223236
             // we should probably use the correspondig attachment id + access token
             // or create a dedicated route to get message image, checking the access right of the message
             return this.message.author.avatarUrl;
+        } else if (this.message.author && this.message.originThread && this.message.originThread.model === 'mail.channel') {
+            return `/mail/channel/${this.message.originThread.id}/partner/${this.message.author.id}/avatar_128`;
+        } else if (this.message.guestAuthor && (!this.message.originThread || this.message.originThread.model !== 'mail.channel')) {
+            return this.message.guestAuthor.avatarUrl;
+        } else if (this.message.guestAuthor && this.message.originThread && this.message.originThread.model === 'mail.channel') {
+            return `/mail/channel/${this.message.originThread.id}/guest/${this.message.guestAuthor.id}/avatar_128`;
         } else if (this.message.message_type === 'email') {
             return '/mail/static/src/img/email_icon.png';
         }
@@ -102,6 +108,9 @@ export class Message extends Component {
      * @returns {boolean}
      */
     get hasAuthorOpenChat() {
+        if (this.messaging.currentGuest) {
+            return false;
+        }
         if (!this.message.author) {
             return false;
         }

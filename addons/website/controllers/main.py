@@ -21,7 +21,6 @@ from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import OrderedSet, escape_psql
 from odoo.addons.http_routing.models.ir_http import slug, slugify, _guess_mimetype
-from odoo.addons.web.controllers.main import Binary
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 
@@ -619,7 +618,8 @@ class WebsiteBinary(http.Controller):
             kw['id'] = int(id)
             if unique:
                 kw['unique'] = unique
-        return Binary().content_image(**kw)
+        kw['res_id'] = kw.pop('id', None)
+        return request.env['ir.http']._content_image(**kw)
 
     # if not icon provided in DOM, browser tries to access /favicon.ico, eg when opening an order pdf
     @http.route(['/favicon.ico'], type='http', auth='public', website=True, multilang=False, sitemap=False)

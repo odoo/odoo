@@ -16,15 +16,6 @@ export class FileUploader extends Component {
         super(...args);
         this._fileInputRef = useRef('fileInput');
         this._fileUploadId = _.uniqueId('o_FileUploader_fileupload');
-        this._onAttachmentUploaded = this._onAttachmentUploaded.bind(this);
-    }
-
-    mounted() {
-        $(window).on(this._fileUploadId, this._onAttachmentUploaded);
-    }
-
-    willUnmount() {
-        $(window).off(this._fileUploadId);
     }
 
     //--------------------------------------------------------------------------
@@ -36,7 +27,7 @@ export class FileUploader extends Component {
      * @returns {Promise}
      */
     async uploadFiles(files) {
-        await this._unlinkExistingAttachments(files);
+        this._unlinkExistingAttachments(files);
         this._createUploadingAttachments(files);
         await this._performUpload(files);
         this._fileInputRef.el.value = '';
@@ -44,6 +35,10 @@ export class FileUploader extends Component {
 
     openBrowserFileUploader() {
         this._fileInputRef.el.click();
+    }
+
+    get thread() {
+        return this.messaging.models['mail.thread'].get(this.props.threadLocalId);
     }
 
     //--------------------------------------------------------------------------
@@ -70,11 +65,11 @@ export class FileUploader extends Component {
      * @returns {FormData}
      */
     _createFormData(file) {
-        let formData = new window.FormData();
-        formData.append('callback', this._fileUploadId);
+        const formData = new window.FormData();
         formData.append('csrf_token', core.csrf_token);
-        formData.append('id', this.props.uploadId);
-        formData.append('model', this.props.uploadModel);
+        formData.append('is_pending', this.props.isPending);
+        formData.append('thread_id', this.thread && this.thread.id);
+        formData.append('thread_model', this.thread && this.thread.model);
         formData.append('ufile', file, file.name);
         return formData;
     }
@@ -114,15 +109,13 @@ export class FileUploader extends Component {
                 continue;
             }
             try {
-                const response = await this.env.browser.fetch('/web/binary/upload_attachment', {
+                const response = await this.env.browser.fetch('/mail/attachment/upload', {
                     method: 'POST',
                     body: this._createFormData(file),
                     signal: uploadingAttachment.uploadingAbortController.signal,
                 });
-                let html = await response.text();
-                const template = document.createElement('template');
-                template.innerHTML = html.trim();
-                window.eval(template.content.firstChild.textContent);
+                const attachmentData = await response.json();
+                this._onAttachmentUploaded(attachmentData);
             } catch (e) {
                 if (e.name !== 'AbortError') {
                     throw e;
@@ -136,7 +129,7 @@ export class FileUploader extends Component {
      * @param {FileList|Array} files
      * @returns {Promise}
      */
-    async _unlinkExistingAttachments(files) {
+    _unlinkExistingAttachments(files) {
         for (const file of files) {
             const attachment = this.props.attachmentLocalIds
                 .map(attachmentLocalId => this.messaging.models['mail.attachment'].get(attachmentLocalId))
@@ -154,41 +147,38 @@ export class FileUploader extends Component {
 
     /**
      * @private
-     * @param {jQuery.Event} ev
-     * @param {...Object} filesData
+     * @param {Object} filesData
      */
-    _onAttachmentUploaded(ev, ...filesData) {
-        for (const fileData of filesData) {
-            const { error, filename, id, mimetype, name, size } = fileData;
-            if (error || !id) {
-                this.env.services['notification'].notify({
-                    type: 'danger',
-                    message: error,
-                });
-                const relatedUploadingAttachments = this.messaging.models['mail.attachment']
-                    .find(attachment =>
-                        attachment.filename === filename &&
-                        attachment.isUploading
-                    );
-                for (const attachment of relatedUploadingAttachments) {
-                    attachment.delete();
-                }
-                return;
+    _onAttachmentUploaded({ accessToken, error, filename, id, mimetype, name, size }) {
+        if (error || !id) {
+            this.env.services['notification'].notify({
+                type: 'danger',
+                message: error,
+            });
+            const relatedUploadingAttachments = this.messaging.models['mail.attachment']
+                .find(attachment =>
+                    attachment.filename === filename &&
+                    attachment.isUploading
+                );
+            for (const attachment of relatedUploadingAttachments) {
+                attachment.delete();
             }
-            const attachment = this.messaging.models['mail.attachment'].insert(
-                Object.assign(
-                    {
-                        filename,
-                        id,
-                        mimetype,
-                        name,
-                        size,
-                    },
-                    this.props.newAttachmentExtraData
-                ),
-            );
-            this.trigger('o-attachment-created', { attachment });
+            return;
         }
+        const attachment = this.messaging.models['mail.attachment'].insert(
+            Object.assign(
+                {
+                    accessToken,
+                    filename,
+                    id,
+                    mimetype,
+                    name,
+                    size,
+                },
+                this.props.newAttachmentExtraData
+            ),
+        );
+        this.trigger('o-attachment-created', { attachment });
     }
 
     /**
@@ -207,20 +197,22 @@ export class FileUploader extends Component {
 
 Object.assign(FileUploader, {
     defaultProps: {
-        uploadId: 0,
-        uploadModel: 'mail.compose.message'
+        isPending: false,
     },
     props: {
         attachmentLocalIds: {
             type: Array,
             element: String,
         },
+        isPending: Boolean,
         newAttachmentExtraData: {
             type: Object,
             optional: true,
         },
-        uploadId: Number,
-        uploadModel: String,
+        threadLocalId: {
+            type: String,
+            optional: true,
+        },
     },
     template: 'mail.FileUploader',
 });

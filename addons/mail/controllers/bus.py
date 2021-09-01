@@ -19,17 +19,21 @@ class MailChatController(BusController):
     # Extends BUS Controller Poll
     # --------------------------
     def _poll(self, dbname, channels, last, options):
+        channels = list(channels)  # do not alter original list
+        guest_sudo = request.env['mail.guest']._get_guest_from_request(request).sudo()
+        mail_channels = request.env['mail.channel']
         if request.session.uid:
-            partner_id = request.env.user.partner_id.id
-
-            if partner_id:
-                channels = list(channels)       # do not alter original list
-                for mail_channel in request.env['mail.channel'].search([('channel_partner_ids', 'in', [partner_id])]):
-                    channels.append((request.db, 'mail.channel', mail_channel.id))
-                # personal and needaction channel
-                channels.append((request.db, 'res.partner', partner_id))
-                channels.append((request.db, 'ir.needaction', partner_id))
-        return super(MailChatController, self)._poll(dbname, channels, last, options)
+            partner = request.env.user.partner_id
+            mail_channels = partner.channel_ids
+            # personal and needaction channel
+            channels.append((request.db, 'res.partner', partner.id))
+            channels.append((request.db, 'ir.needaction', partner.id))
+        elif guest_sudo:
+            mail_channels = guest_sudo.channel_ids
+            channels.append((request.db, 'mail.guest', guest_sudo.id))
+        for mail_channel in mail_channels:
+            channels.append((request.db, 'mail.channel', mail_channel.id))
+        return super()._poll(dbname, channels, last, options)
 
     # --------------------------
     # Anonymous routes (Common Methods)
@@ -65,4 +69,4 @@ class MailChatController(BusController):
         if not channel:
             return []
         else:
-            return channel.channel_fetch_message(last_id, limit)
+            return channel._channel_fetch_message(last_id, limit)

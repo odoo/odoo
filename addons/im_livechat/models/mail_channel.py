@@ -49,10 +49,10 @@ class MailChannel(models.Model):
                 notifications = self._channel_channel_notifications(unpinned_channel_partner.mapped('partner_id').ids) + notifications
         return notifications
 
-    def channel_fetch_message(self, last_id=False, limit=20):
+    def _channel_fetch_message(self, last_id=False, limit=20):
         """ Override to add the context of the livechat username."""
         channel = self.with_context(im_livechat_use_username=True) if self.channel_type == 'livechat' else self
-        return super(MailChannel, channel).channel_fetch_message(last_id=last_id, limit=limit)
+        return super(MailChannel, channel)._channel_fetch_message(last_id=last_id, limit=limit)
 
     def channel_info(self, extra_info=False):
         """ Extends the channel header by adding the livechat operator and the 'anonymous' profile

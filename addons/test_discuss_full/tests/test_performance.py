@@ -717,6 +717,7 @@ class TestDiscussFullPerformance(TransactionCase):
                 'out_of_office_date_end': False,
                 'user_id': self.env.ref('base.public_user').id,
             }],
+            'currentGuest': False,
             'current_partner': {
                 'active': True,
                 'display_name': 'Ernest Employee',

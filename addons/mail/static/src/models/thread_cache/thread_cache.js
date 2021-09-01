@@ -27,10 +27,7 @@ function factory(dependencies) {
             let fetchedMessages;
             let success;
             try {
-                fetchedMessages = await this._loadMessages({
-                    extraDomain: [['id', '<', Math.min(...messageIds)]],
-                    limit,
-                });
+                fetchedMessages = await this._loadMessages({ limit, maxId: Math.min(...messageIds) });
                 success = true;
             } catch (e) {
                 success = false;
@@ -61,10 +58,7 @@ function factory(dependencies) {
                 return;
             }
             const messageIds = this.fetchedMessages.map(message => message.id);
-            const fetchedMessages = this._loadMessages({
-                extraDomain: [['id', '>', Math.max(...messageIds)]],
-                limit: false,
-            });
+            const fetchedMessages = this._loadMessages({ minId: Math.max(...messageIds) });
             if (!fetchedMessages) {
                 return;
             }
@@ -215,53 +209,23 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @param {Array} domain
-         * @returns {Array}
-         */
-        _extendMessageDomain(domain) {
-            const thread = this.thread;
-            if (thread === this.messaging.inbox) {
-                return domain.concat([['needaction', '=', true]]);
-            } else if (thread === this.messaging.starred) {
-                return domain.concat([
-                    ['starred_partner_ids', 'in', [this.messaging.currentPartner.id]],
-                ]);
-            } else if (thread === this.messaging.history) {
-                return domain.concat([['needaction', '=', false]]);
-            } else {
-                // Avoid to load user_notification as these messages are not
-                // meant to be shown on chatters.
-                return domain.concat([
-                    ['message_type', '!=', 'user_notification'],
-                    ['model', '=', thread.model],
-                    ['res_id', '=', thread.id],
-                ]);
-            }
-        }
-
-        /**
-         * @private
          * @param {Object} [param0={}]
-         * @param {Array[]} [param0.extraDomain]
          * @param {integer} [param0.limit=30]
+         * @param {integer} [param0.maxId]
+         * @param {integer} [param0.minId]
          * @returns {mail.message[]}
          * @throws {Error} when failed to load messages
          */
-        async _loadMessages({ extraDomain, limit = 30 } = {}) {
+        async _loadMessages({ limit = 30, maxId, minId } = {}) {
             this.update({ isLoading: true });
-            let domain = [];
-            domain = this._extendMessageDomain(domain);
-            if (extraDomain) {
-                domain = extraDomain.concat(domain);
-            }
-            const context = this.env.session.user_context;
             let messages;
             try {
-                messages = await this.messaging.models['mail.message'].performRpcMessageFetch(
-                    domain,
+                messages = await this.messaging.models['mail.message'].performRpcMessageFetch(this.thread.fetchMessagesUrl, {
+                    ...this.thread.fetchMessagesParams,
                     limit,
-                    context,
-                );
+                    'max_id': maxId,
+                    'min_id': minId,
+                });
             } catch (e) {
                 if (this.exists()) {
                     this.update({
@@ -280,7 +244,7 @@ function factory(dependencies) {
                 isLoaded: true,
                 isLoading: false,
             });
-            if (!extraDomain && messages.length < limit) {
+            if (!minId && messages.length < limit) {
                 this.update({ isAllHistoryLoaded: true });
             }
             this.messaging.messagingBus.trigger('o-thread-cache-loaded-messages', {
@@ -312,6 +276,9 @@ function factory(dependencies) {
          * @private
          */
         _onChangeMarkAllAsRead() {
+            if (this.messaging.currentGuest) {
+                return;
+            }
             if (
                 !this.isMarkAllAsReadRequested ||
                 !this.isLoaded ||

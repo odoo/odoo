@@ -50,8 +50,8 @@ QUnit.test('mark as read', async function (assert) {
     await this.start({
         hasChatWindow: true,
         async mockRPC(route, args) {
-            if (route.includes('channel_seen')) {
-                assert.step('channel_seen');
+            if (route.includes('set_last_seen_message')) {
+                assert.step('set_last_seen_message');
             }
             return this._super(...arguments);
         },
@@ -76,7 +76,7 @@ QUnit.test('mark as read', async function (assert) {
         document.querySelector('.o_ThreadPreview_markAsRead').click()
     );
     assert.verifySteps(
-        ['channel_seen'],
+        ['set_last_seen_message'],
         "should have marked the thread as seen"
     );
     assert.hasClass(

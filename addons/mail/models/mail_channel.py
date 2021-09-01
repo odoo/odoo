@@ -4,7 +4,7 @@
 import base64
 import logging
 from hashlib import sha512
-from uuid import uuid4
+from secrets import choice
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
@@ -42,6 +42,12 @@ class Channel(models.Model):
             res['alias_contact'] = 'everyone' if res.get('public', 'private') == 'public' else 'followers'
         return res
 
+    @api.model
+    def _generate_random_token(self):
+        # Built to be shared on invitation link. It uses non-ambiguous characters and it is of a
+        # reasonable length: enough to avoid brute force, but short enough to be shareable easily.
+        return ''.join(choice('abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ23456789') for _i in range(10))
+
     # description
     name = fields.Char('Name', required=True, translate=True)
     active = fields.Boolean(default=True, help="Set active to false to hide the channel without removing it.")
@@ -63,13 +69,14 @@ class Channel(models.Model):
         'mail.channel.partner', 'channel_id', string='Last Seen',
         groups='base.group_user')
     is_member = fields.Boolean('Is Member', compute='_compute_is_member', compute_sudo=True)
+    member_count = fields.Integer(string="Member Count", compute='_compute_member_count', help="Excluding guests from count.")
     group_ids = fields.Many2many(
         'res.groups', string='Auto Subscription',
         help="Members of those groups will automatically added as followers. "
              "Note that they will be able to manage their subscription manually "
              "if necessary.")
     # access
-    uuid = fields.Char('UUID', size=50, index=True, default=lambda self: str(uuid4()), copy=False)
+    uuid = fields.Char('UUID', size=50, index=True, default=_generate_random_token, copy=False)
     public = fields.Selection([
         ('public', 'Everyone'),
         ('private', 'Invited people only'),
@@ -135,6 +142,11 @@ class Channel(models.Model):
     def _compute_is_member(self):
         for channel in self:
             channel.is_member = self.env.user.partner_id in channel.channel_partner_ids
+
+    @api.depends('channel_partner_ids')
+    def _compute_member_count(self):
+        for channel in self:
+            channel.member_count = len(channel.with_context(active_test=False).channel_partner_ids)
 
     # ONCHANGE
 
@@ -269,17 +281,18 @@ class Channel(models.Model):
             'type': 'mail.channel_update',
             'payload': {
                 'id': self.id,
-                'memberCount': len(self.channel_partner_ids),
+                'memberCount': self.member_count,
                 'members': [('insert-and-unlink', {'id': partner.id})],
             },
         })
         return result
 
-    def add_members(self, partner_ids):
-        """ Adds the given partner_ids as member of self channels. """
+    def add_members(self, partner_ids=None, guest_ids=None):
+        """ Adds the given partner_ids and guest_ids as member of self channels. """
         self.check_access_rights('write')
         self.check_access_rule('write')
-        partners = self.env['res.partner'].browse(partner_ids)
+        partners = self.env['res.partner'].browse(partner_ids or [])
+        guests = self.env['mail.guest'].browse(guest_ids or [])
         members_to_create = []
         for channel in self:
             if channel.public == 'groups':
@@ -291,13 +304,18 @@ class Channel(models.Model):
                         group_name=channel.group_public_id.name,
                         partner_names=', '.join(partner.name for partner in invalid_partners)
                     ))
-            existing_partners = self.env['res.partner'].search([('id', 'in', partner_ids), ('channel_ids', 'in', channel.id)])
+            existing_partners = self.env['res.partner'].search([('id', 'in', partners.ids), ('channel_ids', 'in', channel.id)])
             members_to_create += [{
                 'partner_id': partner.id,
                 'channel_id': channel.id,
             } for partner in partners - existing_partners]
+            existing_guests = self.env['mail.guest'].search([('id', 'in', guests.ids), ('channel_ids', 'in', channel.id)])
+            members_to_create += [{
+                'guest_id': partner.id,
+                'channel_id': channel.id,
+            } for partner in guests - existing_guests]
         new_members = self.env['mail.channel.partner'].sudo().create(members_to_create)
-        for channel_partner in new_members:
+        for channel_partner in new_members.filtered(lambda channel_partner: channel_partner.partner_id):
             user = channel_partner.partner_id.user_ids[0] if channel_partner.partner_id.user_ids else self.env['res.users']
             # notify invited members through the bus
             if user:
@@ -322,7 +340,7 @@ class Channel(models.Model):
                 'type': 'mail.channel_update',
                 'payload': {
                     'id': channel_partner.channel_id.id,
-                    'memberCount': len(channel_partner.channel_id.channel_partner_ids),
+                    'memberCount': channel_partner.channel_id.member_count,
                     'members': [('insert', {
                         'id': channel_partner.partner_id.id,
                         'im_status': channel_partner.partner_id.im_status,
@@ -421,7 +439,7 @@ class Channel(models.Model):
                        AND partner.id = ANY(%s) AND partner.id != ANY(%s)"""
             self.env.cr.execute(
                 sql_query,
-                (email_from, list(pids), [author_id] if author_id else [], )
+                (email_from or '', list(pids), [author_id] if author_id else [], )
             )
             for partner_id, partner_share, notif in self._cr.fetchall():
                 # ocn_client: will add partners to recipient recipient_data. more ocn notifications. We neeed to filter them maybe
@@ -597,12 +615,11 @@ class Channel(models.Model):
             }
             if extra_info:
                 info['info'] = extra_info
-
             # add last message preview (only used in mobile)
             info['last_message_id'] = channel_last_message_ids.get(channel.id, False)
             # listeners of the channel
             channel_partners = channel.channel_last_seen_partner_ids
-            info['memberCount'] = len(channel_partners)
+            info['memberCount'] = channel.member_count
             # find the channel partner state, if logged user
             if self.env.user and self.env.user.partner_id:
                 info['message_needaction_counter'] = channel.message_needaction_counter
@@ -632,7 +649,7 @@ class Channel(models.Model):
             channel_infos.append(info)
         return channel_infos
 
-    def channel_fetch_message(self, last_id=False, limit=20):
+    def _channel_fetch_message(self, last_id=False, limit=20):
         """ Return message values of the current channel.
             :param last_id : last message id to start the research
             :param limit : maximum number of messages to fetch
@@ -643,7 +660,7 @@ class Channel(models.Model):
         domain = ["&", ("model", "=", "mail.channel"), ("res_id", "in", self.ids)]
         if last_id:
             domain.append(("id", "<", last_id))
-        return self.env['mail.message'].message_fetch(domain=domain, limit=limit)
+        return self.env['mail.message']._message_fetch(domain=domain, limit=limit)
 
     # User methods
     @api.model
@@ -759,7 +776,7 @@ class Channel(models.Model):
         if channel_partners:
             channel_partners.write({'is_pinned': pinned})
 
-    def channel_seen(self, last_message_id=None):
+    def _channel_seen(self, last_message_id=None):
         """
         Mark channel as seen by updating seen message id of the current logged partner
         :param last_message_id: the id of the message to be marked as seen, last message of the
@@ -773,9 +790,7 @@ class Channel(models.Model):
         last_message = self.env['mail.message'].search(domain, order="id DESC", limit=1)
         if not last_message:
             return
-
         self._set_last_seen_message(last_message)
-
         data = {
             'info': 'channel_seen',
             'last_message_id': last_message.id,
@@ -801,6 +816,7 @@ class Channel(models.Model):
                 [('seen_message_id', '<', last_message.id)]
             ])
         ])
+        channel_partner_domain = expression.AND([channel_partner_domain, [('partner_id', '=', self.env.user.partner_id.id)]])
         channel_partner = self.env['mail.channel.partner'].search(channel_partner_domain)
         channel_partner.write({
             'fetched_message_id': last_message.id,

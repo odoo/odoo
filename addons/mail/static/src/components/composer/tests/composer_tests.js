@@ -1361,7 +1361,7 @@ QUnit.test('send message when enter is pressed while holding ctrl key (this shor
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'message_post') {
+            if (route === '/mail/message/post') {
                 assert.step('message_post');
             }
             return this._super(...arguments);
@@ -1416,7 +1416,7 @@ QUnit.test('send message when enter is pressed while holding meta key (this shor
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'message_post') {
+            if (route === '/mail/message/post') {
                 assert.step('message_post');
             }
             return this._super(...arguments);
@@ -1470,7 +1470,7 @@ QUnit.test('composer text input cleared on message post', async function (assert
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'message_post') {
+            if (route === '/mail/message/post') {
                 assert.step('message_post');
             }
             return this._super(...arguments);
@@ -1694,7 +1694,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     await this.start({
         async mockFetch(resource, init) {
             const res = this._super(...arguments);
-            if (resource === '/web/binary/upload_attachment') {
+            if (resource === '/mail/attachment/upload') {
                 await attachmentUploadedPromise;
             }
             return res;
@@ -1765,7 +1765,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
     await this.start({
         async mockFetch(resource, init) {
             const res = this._super(...arguments);
-            if (resource === '/web/binary/upload_attachment') {
+            if (resource === '/mail/attachment/upload') {
                 // simulates attachment is never finished uploading
                 await new Promise(() => {});
             }
@@ -1887,7 +1887,7 @@ QUnit.test('remove an uploading attachment', async function (assert) {
     await this.start({
         async mockFetch(resource, init) {
             const res = this._super(...arguments);
-            if (resource === '/web/binary/upload_attachment') {
+            if (resource === '/mail/attachment/upload') {
                 // simulates uploading indefinitely
                 await new Promise(() => {});
             }
@@ -1944,7 +1944,7 @@ QUnit.test('remove an uploading attachment aborts upload', async function (asser
     await this.start({
         async mockFetch(resource, init) {
             const res = this._super(...arguments);
-            if (resource === '/web/binary/upload_attachment') {
+            if (resource === '/mail/attachment/upload') {
                 // simulates uploading indefinitely
                 await new Promise(() => {});
             }
@@ -2027,7 +2027,7 @@ QUnit.test('send message only once when button send is clicked twice quickly', a
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'message_post') {
+            if (route === '/mail/message/post') {
                 assert.step('message_post');
             }
             return this._super(...arguments);
@@ -2060,7 +2060,7 @@ QUnit.test('send message only once when enter is pressed twice quickly', async f
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'message_post') {
+            if (route === '/mail/message/post') {
                 assert.step('message_post');
             }
             return this._super(...arguments);
@@ -2105,7 +2105,7 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
     await this.start({
         async mockFetch(resource) {
             const _super = this._super.bind(this, ...arguments);
-            if (resource === '/web/binary/upload_attachment') {
+            if (resource === '/mail/attachment/upload') {
                 await uploadPromise;
             }
             return _super();

@@ -89,8 +89,9 @@ class TestMailChannelMembers(MailCommon):
         with self.assertRaises(AccessError):
             channel_partner.write({'channel_id': self.private_channel.id})
 
-        # But with SUDO, User 2 can
-        channel_partner.sudo().channel_id = self.private_channel.id
+        # Even with SUDO, channel_id of channel.partner should not be changed.
+        with self.assertRaises(AccessError):
+            channel_partner.sudo().channel_id = self.private_channel.id
 
         # User 2 can not write on the `partner_id` of `mail.channel.partner`
         # of an other partner to join a private channel
@@ -99,9 +100,9 @@ class TestMailChannelMembers(MailCommon):
             channel_partner_1.with_user(self.user_2).partner_id = self.user_2.partner_id
         self.assertEqual(channel_partner_1.partner_id, self.user_1.partner_id)
 
-        # but with SUDO he can...
-        channel_partner_1.with_user(self.user_2).sudo().partner_id = self.user_2.partner_id
-        self.assertEqual(channel_partner_1.partner_id, self.user_2.partner_id)
+        # Even with SUDO, partner_id of channel.partner should not be changed.
+        with self.assertRaises(AccessError):
+            channel_partner_1.with_user(self.user_2).sudo().partner_id = self.user_2.partner_id
 
     def test_channel_private_members(self):
         """Test invitation in private channel part 1 (invite using crud methods)."""

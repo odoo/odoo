@@ -94,6 +94,7 @@ class Users(models.Model):
         partner_root = self.env.ref('base.partner_root')
         values = {
             'channels': self.partner_id._get_channels_as_member().channel_info(),
+            'currentGuest': False,
             'current_partner': self.partner_id.mail_partner_format().get(self.partner_id),
             'current_user_id': self.id,
             'current_user_settings': self.env['res.users.settings']._find_or_create_for_user(self)._res_users_settings_format(),

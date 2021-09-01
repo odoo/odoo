@@ -15,8 +15,6 @@ from odoo.http import request, content_disposition
 from odoo.osv import expression
 from odoo.tools import format_datetime, format_date, is_html_empty
 
-from odoo.addons.web.controllers.main import Binary
-
 _logger = logging.getLogger(__name__)
 
 
@@ -377,7 +375,7 @@ class Survey(http.Controller):
             model='survey.survey', id=survey_sudo.id, field='background_image',
             default_mimetype='image/png')
 
-        return Binary._content_image_get_response(status, headers, image_base64)
+        return request.env['ir.http']._content_image_get_response(status, headers, image_base64)
 
     @http.route('/survey/get_question_image/<string:survey_token>/<string:answer_token>/<int:question_id>/<int:suggested_answer_id>', type='http', auth="public", website=True, sitemap=False)
     def survey_get_question_image(self, survey_token, answer_token, question_id, suggested_answer_id):
@@ -395,7 +393,7 @@ class Survey(http.Controller):
             model='survey.question.answer', id=suggested_answer_id, field='value_image',
             default_mimetype='image/png')
 
-        return Binary._content_image_get_response(status, headers, image_base64)
+        return request.env['ir.http']._content_image_get_response(status, headers, image_base64)
 
     # ----------------------------------------------------------------
     # JSON ROUTES to begin / continue survey (ajax navigation) + Tools

@@ -22,7 +22,9 @@
                 </t>
                 <FileUploader
                     attachmentLocalIds="composer.attachments.map(attachment => attachment.localId)"
+                    isPending="true"
                     newAttachmentExtraData="newAttachmentExtraData"
+                    threadLocalId="composer.thread.localId"
                     t-ref="fileUploader"
                 />
                 <t t-if="hasHeader">
@@ -54,7 +56,12 @@
                 </t>
                 <t t-if="props.hasCurrentPartnerAvatar">
                     <div class="o_Composer_sidebarMain">
-                        <img class="o_Composer_currentPartnerAvatar rounded-circle" t-att-src="currentPartnerAvatar" alt=""/>
+                        <t t-if="!messaging.currentGuest or composer.thread.model !== 'mail.channel'">
+                            <img class="o_Composer_currentPartnerAvatar rounded-circle" t-att-src="currentPartnerAvatar" alt="Avatar of user"/>
+                        </t>
+                        <t t-if="messaging.currentGuest and composer.thread.model === 'mail.channel'">
+                            <img class="o_Composer_currentPartnerAvatar rounded-circle" t-attf-src="/mail/channel/{{ composer.thread.id }}/guest/{{ messaging.currentGuest.id }}/avatar_128" alt="Avatar of guest"/>
+                        </t>
                     </div>
                 </t>
                 <div

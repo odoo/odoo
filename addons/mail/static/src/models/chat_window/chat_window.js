@@ -43,7 +43,7 @@ function factory(dependencies) {
             // Flux specific: 'closed' fold state should only be saved on the
             // server when manually closing the chat window. Delete at destroy
             // or sync from server value for example should not save the value.
-            if (this.thread && notifyServer) {
+            if (this.thread && notifyServer && !this.messaging.currentGuest) {
                 this.thread.notifyFoldStateToServer('closed');
             }
             if (this.exists()) {
@@ -90,7 +90,7 @@ function factory(dependencies) {
             this.update({ isFolded: true });
             // Flux specific: manually folding the chat window should save the
             // new state on the server.
-            if (this.thread && notifyServer) {
+            if (this.thread && notifyServer && !this.messaging.currentGuest) {
                 this.thread.notifyFoldStateToServer('folded');
             }
         }
@@ -163,7 +163,7 @@ function factory(dependencies) {
             this.update({ isFolded: false });
             // Flux specific: manually opening the chat window should save the
             // new state on the server.
-            if (this.thread && notifyServer) {
+            if (this.thread && notifyServer && !this.messaging.currentGuest) {
                 this.thread.notifyFoldStateToServer('open');
             }
         }

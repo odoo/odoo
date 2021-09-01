@@ -34,7 +34,8 @@
         <t t-foreach="members" t-as="member" t-key="member.localId">
             <div class="o_ChannelMemberList_member d-flex align-items-center mx-3 my-1">
                 <div class="o_ChannelMemberList_avatarContainer position-relative flex-shrink-0" t-on-click="channel.onClickMemberAvatar(member)">
-                    <img class="o_ChannelMemberList_avatar rounded-circle w-100 h-100" t-att-src="member.avatarUrl" alt="Avatar"/>
+                    <img class="o_ChannelMemberList_avatar rounded-circle w-100 h-100" t-attf-src="/mail/channel/{{ channel.id }}/partner/{{ member.id }}/avatar_128" alt="Avatar"/>
+
                     <t t-if="member.im_status and member.im_status !== 'im_partner'">
                         <PartnerImStatusIcon
                             class="o_ChannelMemberList_partnerImStatusIcon d-flex align-items-center justify-content-center"
