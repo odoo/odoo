@@ -619,101 +619,103 @@ var dom = {
     /**
      * Creates an automatic 'more' dropdown-menu for a set of navbar items.
      *
-     * @param {jQuery} $el
+     * @param {HTMLElement} el
      * @param {Object} [options]
-     * @param {string} [options.unfoldable='none']
-     * @param {function} [options.maxWidth]
-     * @param {string} [options.sizeClass='SM']
+     * @param {string} [options.unfoldable='none'] selector for items that do not
+     * need to be added to dropdown-menu.
+     * @param {float} [options.maxWidth] The max width value that menu content
+     * can take => the overflowing (foldable) items are added in the dropdown-menu.
+     * @param {string} [options.minSize] the menu auto-hide option will be disabled
+     * if viewport is smaller than minSize.
      */
-    initAutoMoreMenu: function ($el, options) {
-        options = _.extend({
+    initAutoMoreMenu: function (el, options) {
+        if (!el) {
+            return;
+        }
+        options = Object.assign({
             unfoldable: 'none',
-            maxWidth: false,
-            sizeClass: 'SM',
+            maxWidth: 0,
+            minSize: '767',
         }, options || {});
 
         var autoMarginLeftRegex = /\bm[lx]?(?:-(?:sm|md|lg|xl))?-auto\b/;
         var autoMarginRightRegex = /\bm[rx]?(?:-(?:sm|md|lg|xl))?-auto\b/;
+        var extraItemsToggle = null;
+        let debounce;
 
-        var $extraItemsToggle = null;
-
-        var debouncedAdapt = _.debounce(_adapt, 250);
-        core.bus.on('resize', null, debouncedAdapt);
+        const debouncedAdapt = () => {
+            clearTimeout(debounce);
+            debounce = setTimeout(_adapt, 250);
+        };
+        window.addEventListener('resize', debouncedAdapt);
         _adapt();
 
-        $el.data('dom:autoMoreMenu:adapt', _adapt);
-        $el.data('dom:autoMoreMenu:destroy', function () {
-            _restore();
-            core.bus.off('resize', null, debouncedAdapt);
-            $el.removeData(['dom:autoMoreMenu:destroy', 'dom:autoMoreMenu:adapt']);
-        });
+        el.addEventListener('dom:autoMoreMenu:adapt', _adapt);
+        el.addEventListener('dom:autoMoreMenu:destroy', destroy, {once: true});
 
         function _restore() {
-            if ($extraItemsToggle === null) {
+            if (!extraItemsToggle) {
                 return;
             }
-            var $items = $extraItemsToggle.children('.dropdown-menu').children();
-            $items.addClass('nav-item');
-            $items.children('.dropdown-item, a').removeClass('dropdown-item').addClass('nav-link');
-            $items.insertBefore($extraItemsToggle);
-            $extraItemsToggle.remove();
-            $extraItemsToggle = null;
+            // Move extra menu items from dropdown-menu to menu element in the same order.
+            [...extraItemsToggle.querySelector('.dropdown-menu').children].forEach((item) => {
+                item.classList.add('nav-item');
+                const itemLink = item.querySelector('.dropdown-item');
+                itemLink.classList.remove('dropdown-item');
+                itemLink.classList.add('nav-link');
+                el.insertBefore(item, extraItemsToggle);
+            });
+            extraItemsToggle.remove();
+            extraItemsToggle = null;
         }
 
         function _adapt() {
             _restore();
 
-            if (!$el.is(':visible') || $el.closest('.show').length) {
-                // Never transform the menu when it is not visible yet or if
-                // it is a toggleable one.
-                return;
-            }
-            if (config.device.size_class <= config.device.SIZES[options.sizeClass]) {
+            // Ignore invisible/toggleable top menu element & small viewports.
+            if (!el.getClientRects().length || el.closest('.show')
+                || window.matchMedia(`(max-width: ${options.minSize}px)`).matches) {
                 return;
             }
 
-            var $allItems = $el.children();
-            var $unfoldableItems = $allItems.filter(options.unfoldable);
-            var $items = $allItems.not($unfoldableItems);
+            let unfoldableItems = [];
+            const items = [...el.children].filter((node) => {
+                if (node.matches && !node.matches(options.unfoldable)) {
+                    return true;
+                }
+                unfoldableItems.push(node);
+                return false;
+            });
+            var nbItems = items.length;
+            var menuItemsWidth = items.reduce((sum, el) => sum + computeFloatOuterWidthWithMargins(el, true, true, false), 0);
 
-            var maxWidth = 0;
-            if (options.maxWidth) {
-                maxWidth = options.maxWidth();
-            } else {
-                maxWidth = computeFloatOuterWidthWithMargins($el[0], true, true, true);
-                var style = window.getComputedStyle($el[0]);
+            var maxWidth = options.maxWidth;
+            if (!maxWidth) {
+                maxWidth = computeFloatOuterWidthWithMargins(el, true, true, true);
+                var style = window.getComputedStyle(el);
                 maxWidth -= (parseFloat(style.paddingLeft) + parseFloat(style.paddingRight) + parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth));
-                maxWidth -= _.reduce($unfoldableItems, function (sum, el) {
-                    return sum + computeFloatOuterWidthWithMargins(el, true, true, false);
-                }, 0);
+                maxWidth -= unfoldableItems.reduce((sum, el) => sum + computeFloatOuterWidthWithMargins(el, true, true, false), 0);
             }
-
-            var nbItems = $items.length;
-            var menuItemsWidth = _.reduce($items, function (sum, el) {
-                return sum + computeFloatOuterWidthWithMargins(el, true, true, false);
-            }, 0);
-
+            // Ignore if there is no overflow.
             if (maxWidth - menuItemsWidth >= -0.001) {
                 return;
             }
 
-            var $dropdownMenu = $('<ul/>', {class: 'dropdown-menu'});
-            $extraItemsToggle = $('<li/>', {class: 'nav-item dropdown o_extra_menu_items'})
-                .append($('<a/>', {role: 'button', href: '#', class: 'nav-link dropdown-toggle o-no-caret', 'data-toggle': 'dropdown', 'aria-expanded': false})
-                    .append($('<i/>', {class: 'fa fa-plus'})))
-                .append($dropdownMenu);
-            $extraItemsToggle.insertAfter($items.last());
-
-            menuItemsWidth += computeFloatOuterWidthWithMargins($extraItemsToggle[0], true, true, false);
+            const dropdownMenu = _addExtraItemsButton(items[nbItems - 1].nextElementSibling);
+            menuItemsWidth += computeFloatOuterWidthWithMargins(extraItemsToggle, true, true, false);
             do {
-                menuItemsWidth -= computeFloatOuterWidthWithMargins($items.eq(--nbItems)[0], true, true, false);
+                menuItemsWidth -= computeFloatOuterWidthWithMargins(items[--nbItems], true, true, false);
             } while (!(maxWidth - menuItemsWidth >= -0.001) && (nbItems > 0));
 
-            var $extraItems = $items.slice(nbItems).detach();
-            $extraItems.removeClass('nav-item');
-            $extraItems.children('.nav-link, a').removeClass('nav-link').addClass('dropdown-item');
-            $dropdownMenu.append($extraItems);
-            $extraItemsToggle.find('.nav-link').toggleClass('active', $extraItems.children().hasClass('active'));
+            const extraItems = items.slice(nbItems);
+            extraItems.forEach((el) => {
+                el.classList.remove('nav-item');
+                const navLink = el.querySelector('.nav-link, a');
+                navLink.classList.remove('nav-link');
+                navLink.classList.add('dropdown-item');
+                navLink.classList.toggle('active', el.classList.contains('active'));
+                dropdownMenu.appendChild(el);
+            });
         }
 
         function computeFloatOuterWidthWithMargins(el, mLeft, mRight, considerAutoMargins) {
@@ -729,17 +731,46 @@ var dom = {
             // Would be NaN for invisible elements for example
             return isNaN(outerWidth) ? 0 : outerWidth;
         }
+
+        function _addExtraItemsButton(target) {
+            let dropdownMenu = document.createElement('ul');
+            extraItemsToggle = document.createElement('li');
+            const extraItemsToggleIcon = document.createElement('i');
+            const extraItemsToggleLink = document.createElement('a');
+
+            dropdownMenu.className = 'dropdown-menu';
+            extraItemsToggle.className = 'nav-item dropdown o_extra_menu_items';
+            extraItemsToggleIcon.className = 'fa fa-plus';
+            Object.entries({
+                role: 'button',
+                href: '#',
+                class: 'nav-link dropdown-toggle o-no-caret',
+                'data-toggle': 'dropdown',
+                'aria-expanded': false,
+            }).forEach(([key, value]) => {
+                extraItemsToggleLink.setAttribute(key, value);
+            });
+
+            extraItemsToggleLink.appendChild(extraItemsToggleIcon);
+            extraItemsToggle.appendChild(extraItemsToggleLink);
+            extraItemsToggle.appendChild(dropdownMenu);
+            el.insertBefore(extraItemsToggle, target);
+            return dropdownMenu;
+        }
+
+        function destroy() {
+            _restore();
+            window.removeEventListener('resize', debouncedAdapt);
+            el.removeEventListener('dom:autoMoreMenu:adapt', _adapt);
+        }
     },
     /**
      * Cleans what has been done by ``initAutoMoreMenu``.
      *
-     * @param {jQuery} $el
+     * @param {HTMLElement} el
      */
-    destroyAutoMoreMenu: function ($el) {
-        var destroyFunc = $el.data('dom:autoMoreMenu:destroy');
-        if (destroyFunc) {
-            destroyFunc.call(null);
-        }
+    destroyAutoMoreMenu: function (el) {
+        el.dispatchEvent(new Event('dom:autoMoreMenu:destroy'));
     },
 };
 return dom;
