@@ -23,6 +23,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
         product_attribute = self.env['product.attribute'].create({
             'name': 'Legs',
+            'visibility': 'visible',
             'sequence': 10,
         })
         product_attribute_value_1 = self.env['product.attribute.value'].create({
