@@ -23,7 +23,6 @@ class HrPlanActivityType(models.Model):
         ('manager', 'Manager'),
         ('employee', 'Employee'),
         ('other', 'Other')], default='employee', string='Responsible', required=True)
-    # sgv todo change back to 'Responsible Person'
     responsible_id = fields.Many2one('res.users', 'Name', help='Specific responsible of activity if not linked to the employee.')
     note = fields.Html('Note')
 
