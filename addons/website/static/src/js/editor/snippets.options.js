@@ -2736,7 +2736,6 @@ options.registry.ConditionalVisibility = options.Class.extend({
             if (widgetValue === 'conditional') {
                 const collapseEl = this.$el.children('we-collapse')[0];
                 this._toggleCollapseEl(collapseEl);
-                this.trigger_up('snippet_option_visibility_update', { show: true });
             } else {
                 // TODO create a param to allow doing this automatically for genericSelectDataAttribute?
                 delete targetEl.dataset.visibility;
@@ -2745,8 +2744,8 @@ options.registry.ConditionalVisibility = options.Class.extend({
                     delete targetEl.dataset[attribute.saveAttribute];
                     delete targetEl.dataset[`${attribute.saveAttribute}Rule`];
                 }
-                this.trigger_up('snippet_option_visibility_update');
             }
+            this.trigger_up('snippet_option_visibility_update', {show: true});
         } else if (!params.isVisibilityCondition) {
             return;
         }
