@@ -17,12 +17,12 @@ class SaleOrder(models.Model):
             domain.append(('event_ticket_id', '=', self.env.context.get("event_ticket_id")))
         return self.env['sale.order.line'].sudo().search(domain)
 
-    def _website_product_id_change(self, order_id, product_id, qty=0):
+    def _website_product_id_change(self, order_id, product_id, qty=0, **kwargs):
         order = self.env['sale.order'].sudo().browse(order_id)
         if self._context.get('pricelist') != order.pricelist_id.id:
             self = self.with_context(pricelist=order.pricelist_id.id)
 
-        values = super(SaleOrder, self)._website_product_id_change(order_id, product_id, qty=qty)
+        values = super(SaleOrder, self)._website_product_id_change(order_id, product_id, qty=qty, **kwargs)
         event_ticket_id = None
         if self.env.context.get("event_ticket_id"):
             event_ticket_id = self.env.context.get("event_ticket_id")
