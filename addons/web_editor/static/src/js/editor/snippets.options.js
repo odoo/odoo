@@ -1918,7 +1918,13 @@ const ListUserValueWidget = UserValueWidget.extend({
         if (this.createWidget) {
             const selectedIds = currentValues.map(({ id }) => id)
                 .filter(id => typeof id === 'number');
-            this.createWidget.options.domain = [...this.createWidget.options.domain, ['id', 'not in', selectedIds]];
+            const selectedIdsDomain = ['id', 'not in', selectedIds];
+            const selectedIdsDomainIndex = this.createWidget.options.domain.findIndex(domain => domain[0] === 'id' && domain[1] === 'not in');
+            if (selectedIdsDomainIndex > -1) {
+                this.createWidget.options.domain[selectedIdsDomainIndex] = selectedIdsDomain;
+            } else {
+                this.createWidget.options.domain = [...this.createWidget.options.domain, selectedIdsDomain];
+            }
             this.createWidget.setValue('');
             this.createWidget.inputEl.value = '';
             $(this.createWidget.inputEl).trigger('input');
@@ -2384,6 +2390,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     init(parent, title, options, $target) {
         this.afterSearch = [];
         this.displayNameCache = {};
+        this._rpcCache = {};
         const {dataAttributes} = options;
         Object.assign(options, {
             limit: '5',
@@ -2502,6 +2509,18 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Caches the rpc.
+     *
+     * @override
+     */
+    async _rpc() {
+        const cacheId = JSON.stringify(...arguments);
+        if (!this._rpcCache[cacheId]) {
+            this._rpcCache[cacheId] = this._super(...arguments);
+        }
+        return this._rpcCache[cacheId];
+    },
     /**
      * Searches the database for corresponding records and updates the dropdown
      *
