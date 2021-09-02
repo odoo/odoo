@@ -146,6 +146,7 @@ export class OdooEditor extends EventTarget {
                 },
                 toSanitize: true,
                 isRootEditable: true,
+                placeholder: false,
                 defaultLinkAttributes: {},
                 getContentEditableAreas: () => [],
                 getPowerboxElement: () => {
@@ -287,6 +288,10 @@ export class OdooEditor extends EventTarget {
             if (this.isMobile) {
                 this.editable.before(this.toolbar);
             }
+        }
+        // placeholder hint
+        if (editable.textContent === '' && this.options.placeholder) {
+            this._makeHint(editable.firstChild, this.options.placeholder, true);
         }
     }
     /**
@@ -1918,6 +1923,11 @@ export class OdooEditor extends EventTarget {
         if (block) {
             this._makeHint(block, 'Type "/" for commands', true);
         }
+
+        // placeholder hint
+        if (this.editable.textContent === '' && this.options.placeholder) {
+            this._makeHint(this.editable.firstChild, this.options.placeholder, true);
+        }
     }
     _makeHint(block, text, temporary = false) {
         const content = block && block.innerHTML.trim();
@@ -2183,16 +2193,16 @@ export class OdooEditor extends EventTarget {
      * @param {int} length
      */
     _createLinkWithUrlInTextNode(textNode, url, index, length) {
-        const link = this.document.createElement('a')
-        link.setAttribute('href', url)
+        const link = this.document.createElement('a');
+        link.setAttribute('href', url);
         for (const [param, value] of Object.entries(this.options.defaultLinkAttributes)) {
             link.setAttribute(param, `${value}`);
         }
-        const range = this.document.createRange()
-        range.setStart(textNode, index)
-        range.setEnd(textNode, index+length)
-        link.appendChild(range.extractContents())
-        range.insertNode(link)
+        const range = this.document.createRange();
+        range.setStart(textNode, index);
+        range.setEnd(textNode, index + length);
+        link.appendChild(range.extractContents());
+        range.insertNode(link);
     }
 
     /**
