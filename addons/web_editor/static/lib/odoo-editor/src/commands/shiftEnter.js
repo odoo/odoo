@@ -5,7 +5,7 @@ import {
     isFakeLineBreak,
     prepareUpdate,
     rightPos,
-    setCursor,
+    setSelection,
     getState,
     leftPos,
     splitTextNode,
@@ -35,7 +35,7 @@ HTMLElement.prototype.oShiftEnter = function (offset) {
 
     for (const el of brEls) {
         if (el.parentNode) {
-            setCursor(...rightPos(el));
+            setSelection(...rightPos(el));
             break;
         }
     }

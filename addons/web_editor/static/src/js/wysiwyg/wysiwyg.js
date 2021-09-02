@@ -15,6 +15,8 @@ const Toolbar = require('web_editor.toolbar');
 const weWidgets = require('wysiwyg.widgets');
 const wysiwygUtils = require('@web_editor/js/wysiwyg/wysiwyg_utils');
 const weUtils = require('web_editor.utils');
+const { PeerToPeer } = require('@web_editor/js/wysiwyg/PeerToPeer');
+const { Mutex } = require('web.concurrency');
 
 var _t = core._t;
 
@@ -72,7 +74,14 @@ const Wysiwyg = Widget.extend({
         this.toolbar = new Toolbar(this, this.options.toolbarTemplate);
         await this.toolbar.appendTo(document.createElement('void'));
         const commands = this._getCommands();
-        this.odooEditor = new OdooEditor(this.$editable[0], {
+
+        let editorCollaborationOptions;
+
+        if (options.collaborationChannel) {
+            editorCollaborationOptions = this.setupCollaboration(options.collaborationChannel);
+        }
+
+        this.odooEditor = new OdooEditor(this.$editable[0], Object.assign({
             _t: _t,
             toolbar: this.toolbar.$el[0],
             document: this.options.document,
@@ -96,7 +105,18 @@ const Wysiwyg = Widget.extend({
             },
             noScrollSelector: 'body, .note-editable, .o_content, #wrapwrap',
             commands: commands,
-        });
+        }, editorCollaborationOptions));
+
+        const $wrapwrap = $('#wrapwrap');
+        if ($wrapwrap.length) {
+            $wrapwrap[0].addEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
+        }
+
+        if (this._peerToPeerLoading) {
+            // Now that the editor is loaded, wait for the peerToPeer to be
+            // ready to join.
+            this._peerToPeerLoading.then(() => this.ptp.notifyAllClients('ptp_join'));
+        }
 
         this._observeOdooFieldChanges();
         this.$editable.on(
@@ -193,6 +213,219 @@ const Wysiwyg = Widget.extend({
             }
         });
     },
+
+    setupCollaboration(collaborationChannel) {
+        const modelName = collaborationChannel.collaborationModelName;
+        const fieldName = collaborationChannel.collaborationFieldName;
+        const resId = collaborationChannel.collaborationResId;
+
+        if (!(modelName && fieldName && resId)) {
+            return;
+        }
+
+        const startCollaborationTime = new Date().getTime();
+
+        // No need for secure random number.
+        const currentClientId = Math.floor(Math.random() * Math.pow(2, 52)).toString();
+
+        this._collaborationChannelName = `editor_collaboration:${modelName}:${fieldName}:${resId}`;
+
+        this.call('bus_service', 'onNotification', this, (notifications) => {
+            for (const [channel, busData] of notifications) {
+                if (
+                    channel[1] == 'editor_collaboration' &&
+                    channel[2] === modelName &&
+                    channel[3] === fieldName &&
+                    channel[4] === resId
+                ) {
+                    this._peerToPeerLoading.then(() => this.ptp.handleNotification(busData));
+                }
+            }
+        });
+        this.call('bus_service', 'addChannel', this._collaborationChannelName);
+        this.call('bus_service', 'startPolling');
+
+        // Wether or not the history has been sent or received at least once.
+        let historySyncAtLeastOnce = false;
+        let historySyncFinished = false;
+        // const syncHistory = async (fromClientId) => {
+        // }
+        // Check wether clientA is before clientB.
+        const isClientFirst = (clientA, clientB) => {
+            if (clientA.startTime === clientB.startTime) {
+                return clientA.id.localCompare(clientB.id) === -1;
+            } else {
+                return clientA.startTime < clientB.startTime;
+            }
+        }
+        const rpcMutex = new Mutex();
+
+        this._peerToPeerLoading = new Promise(async (resolve) => {
+            let iceServers = await this._rpc({route: '/web_editor/get_ice_servers'});
+            if (!iceServers.length) {
+                iceServers = [
+                    {
+                        urls: [
+                            'stun:stun1.l.google.com:19302',
+                            'stun:stun2.l.google.com:19302',
+                        ],
+                    }
+                ];
+            }
+
+            this.ptp = new PeerToPeer({
+                peerConnectionConfig: { iceServers },
+                currentClientId: currentClientId,
+                broadcastAll: (rpcData) => {
+                    return rpcMutex.exec(async () => {
+                        return this._rpc({
+                            route: '/web_editor/bus_broadcast',
+                            params: {
+                                model_name: modelName,
+                                field_name: fieldName,
+                                res_id: resId,
+                                bus_data: rpcData,
+                            },
+                        });
+                    })
+                },
+                onRequest: {
+                    get_start_time: () => startCollaborationTime,
+                    get_client_name: async () => {
+                        if (!this._userName) {
+                            this._userName = (await this._rpc({
+                                model: "res.users",
+                                method: "search_read",
+                                args: [
+                                    [['id', '=', this.getSession().user_id]],
+                                    ['name']
+                                ],
+                            }))[0].name;
+                        }
+                        return this._userName;
+                    },
+                    get_missing_steps: (params) => this.odooEditor.historyGetMissingSteps(params.requestPayload),
+                    get_history_from_snapshot: () => this.odooEditor.historyGetSnapshotSteps(),
+                    get_collaborative_selection: () => this.odooEditor.getCurrentCollaborativeSelection(),
+                },
+                onNotification: async ({ fromClientId, notificationName, notificationPayload }) => {
+                    switch (notificationName) {
+                        case 'ptp_remove':
+                            this.odooEditor.multiselectionRemove(notificationPayload);
+                            break;
+                        case 'ptp_disconnect':
+                            this.ptp.removeClient(fromClientId);
+                            this.odooEditor.multiselectionRemove(fromClientId);
+                            break;
+                        case 'rtc_data_channel_open':
+                            fromClientId = notificationPayload.connectionClientId;
+                            const remoteStartTime = await this.ptp.requestClient(fromClientId, 'get_start_time', undefined, { transport: 'rtc' });
+                            this.ptp.clientsInfos[fromClientId].startTime = remoteStartTime;
+                            this.ptp.requestClient(fromClientId, 'get_client_name', undefined, { transport: 'rtc' }).then((clientName) => {
+                                this.ptp.clientsInfos[fromClientId].clientName = clientName;
+                            });
+
+                            if (!historySyncAtLeastOnce) {
+                                historySyncAtLeastOnce = true;
+                                await editorCollaborationOptions.onHistoryNeedSync();
+                                historySyncFinished = true;
+                            } else {
+                                const remoteSelection = await this.ptp.requestClient(fromClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
+                                if (remoteSelection) {
+                                    this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
+                                }
+                            }
+                            break;
+                        case 'oe_history_step':
+                            // Avoid race condition where the step is received
+                            // before the history has synced at least once.
+                            if (historySyncFinished) {
+                                this.odooEditor.onExternalHistorySteps([notificationPayload]);
+                            }
+                            break;
+                        case 'oe_history_set_selection':
+                            const client = this.ptp.clientsInfos[fromClientId];
+                            if (!client) {
+                                return;
+                            }
+                            const selection = notificationPayload;
+                            selection.clientName = client.clientName;
+                            this.odooEditor.onExternalMultiselectionUpdate(selection);
+                            break;
+                    }
+                }
+            });
+            resolve();
+        });
+
+        const editorCollaborationOptions = {
+            collaborationClientId: currentClientId,
+            onHistoryStep: (historyStep) => {
+                if (!this.ptp) return;
+                this.ptp.notifyAllClients('oe_history_step', historyStep, { transport: 'rtc' });
+            },
+            onCollaborativeSelectionChange: _.throttle((collaborativeSelection) => {
+                if (!this.ptp) return;
+                this.ptp.notifyAllClients('oe_history_set_selection', collaborativeSelection, { transport: 'rtc' });
+            }, 50),
+            onHistoryMissingParentSteps: async ({ step, fromStepId }) => {
+                if (!this.ptp) return;
+                const missingSteps = await this.ptp.requestClient(
+                    step.clientId,
+                    'get_missing_steps', {
+                        fromStepId: fromStepId,
+                        toStepId: step.id
+                    },
+                    { transport: 'rtc' }
+                );
+                if (missingSteps === -1 || !missingSteps.length) {
+                    // This case should never happen.
+                    console.warn('Editor get_missing_steps result is erroneous.');
+                    return;
+                }
+                this.ptp && this.odooEditor.onExternalHistorySteps(missingSteps.concat([step]));
+            },
+            onHistoryNeedSync: async () => {
+                if (!this.ptp) return;
+                let firstClientId = currentClientId;
+                let firstClientStartTime = startCollaborationTime;
+                const connectedClientIds = this.ptp.getConnectedClientIds();
+                for (const clientId of connectedClientIds) {
+                    const clientInfo = this.ptp.clientsInfos[clientId];
+                    // Ensure we already retreived remote client starting time.
+                    if (!clientInfo.startTime) {
+                        continue;
+                    }
+
+                    const isCurrentClientFirst = isClientFirst(
+                        {
+                            startTime: clientInfo.startTime,
+                            id: clientId,
+                        },
+                        {
+                            startTime: firstClientStartTime,
+                            id: firstClientId,
+                        }
+                    );
+
+                    if (isCurrentClientFirst) {
+                        firstClientStartTime = clientInfo.startTime;
+                        firstClientId = clientId;
+                    }
+                }
+
+                if (firstClientId !== currentClientId) {
+                    const historySteps = await this.ptp.requestClient(firstClientId, 'get_history_from_snapshot', undefined, { transport: 'rtc' });
+                    this.odooEditor.historyResetFromSteps(historySteps);
+                    const remoteSelection = await this.ptp.requestClient(firstClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
+                    if (remoteSelection) {
+                        this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
+                    }
+                }
+            },
+        }
+        return editorCollaborationOptions;
+    },
     /**
      * @override
      */
@@ -200,11 +433,22 @@ const Wysiwyg = Widget.extend({
         if (this.odooEditor) {
             this.odooEditor.destroy();
         }
+        // If peer to peer is initializing, wait for properly closing it.
+        if (this._peerToPeerLoading) {
+            this._peerToPeerLoading.then(()=> {
+                this.call('bus_service', 'deleteChannel', this._collaborationChannelName);
+                this.ptp.closeAllConnections();
+            });
+        }
         this.$editable && this.$editable.off('blur', this._onBlur);
         document.removeEventListener('mousedown', this._onDocumentMousedown, true);
         const $body = $(document.body);
         $body.off('mousemove', this.resizerMousemove);
         $body.off('mouseup', this.resizerMouseup);
+        const $wrapwrap = $('#wrapwrap');
+        if ($wrapwrap.length) {
+            $('#wrapwrap')[0].removeEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
+        }
         this._super();
     },
     /**
@@ -442,7 +686,7 @@ const Wysiwyg = Widget.extend({
      * Set cursor to the editor latest position before blur or to the last editable node, ready to type.
      */
     focus: function () {
-        if(!this.odooEditor.resetCursorOnLastHistoryCursor()) {
+        if(!this.odooEditor.historyResetLatestComputedSelection()) {
             // If the editor don't have an history step to focus to,
             // We place the cursor after the end of the editor exiting content.
             const range = document.createRange();
@@ -805,11 +1049,11 @@ const Wysiwyg = Widget.extend({
         setTimeout(() => {
             const scrollableContainer = this.$el.scrollParent();
             if (!options.snippets && scrollableContainer.length) {
-                this.odooEditor.addDomListener(
-                  scrollableContainer[0],
-                  'scroll',
-                  this.odooEditor.updateToolbarPosition.bind(this.odooEditor),
-                );
+                // this.odooEditor.addDomListener(
+                //   scrollableContainer[0],
+                //   'scroll',
+                //   this.odooEditor.updateToolbarPosition.bind(this.odooEditor),
+                // );
             }
         }, 0);
     },
