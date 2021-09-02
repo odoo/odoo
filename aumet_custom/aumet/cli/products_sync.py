@@ -1,6 +1,4 @@
 from datetime import datetime
-from math import ceil
-from pprint import pprint
 
 import psycopg2
 from odoo.cli import Command
@@ -20,12 +18,10 @@ headers = {
 
 def get_all_product_details(items_count, offset):
     url = f"{config.get('marketplace_host')}/v1/pharmacy/products?limit={items_count}&offset={offset}"
-    print(headers)
     return requests.get(url, headers=headers).json()
 
 
 def get_items_count():
-    print(get_all_product_details(1, 0))
     return get_all_product_details(1, 0)["data"]["dataFilter"]["dataCount"]
 
 
@@ -126,7 +122,5 @@ class ProductSync(Command):
 
 
 if __name__ == "__main__":
-    print(config.get("marketplace_token", ""))
-    print(headers)
     ProductSync.handle_products()
     # print(ProductSync.handle_payment_methods())
