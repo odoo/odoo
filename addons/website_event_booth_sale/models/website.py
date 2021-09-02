@@ -8,4 +8,4 @@ class Website(models.Model):
     _inherit = 'website'
 
     def sale_product_domain(self):
-        return ['&'] + super(Website, self).sale_product_domain() + [('is_event_booth', '=', False)]
+        return ['&'] + super(Website, self).sale_product_domain() + [('type', '!=', 'event_booth')]

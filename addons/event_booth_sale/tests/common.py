@@ -15,9 +15,8 @@ class TestEventBoothSaleCommon(TestEventBoothCommon, TestEventSaleCommon):
             'name': 'Test Booth Product',
             'description_sale': 'Mighty Booth Description',
             'list_price': 20,
-            'is_event_booth': True,
             'standard_price': 60.0,
-            'type': 'service',
+            'detailed_type': 'event_booth',
         })
         (cls.event_booth_category_1 + cls.event_booth_category_2).write({
             'product_id': cls.event_booth_product.id,

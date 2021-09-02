@@ -24,7 +24,7 @@ ProductConfiguratorWidget.include({
      * @private
      */
     _isConfigurableLine: function () {
-        return this.recordData.is_event_booth || this._super.apply(this, arguments);
+        return this.recordData.detailed_type === 'event_booth' || this._super.apply(this, arguments);
     },
 
     /**
@@ -34,7 +34,7 @@ ProductConfiguratorWidget.include({
      * @private
      */
     _onEditLineConfiguration: function () {
-        if (this.recordData.is_event_booth) {
+        if (this.recordData.detailed_type === 'event_booth') {
             const defaultValues = {
                 default_product_id: this.recordData.product_id.data.id,
                 default_sale_order_line_id: this.recordData.id || null
@@ -90,9 +90,9 @@ ProductConfiguratorWidget.include({
         return this._rpc({
             model: 'product.product',
             method: 'read',
-            args: [productId, ['is_event_booth']],
+            args: [productId, ['detailed_type']],
         }).then(function (result) {
-            if (result && result[0].is_event_booth) {
+            if (result && result[0].detailed_type === 'event_booth') {
                 self._openEventBoothConfigurator({
                     default_product_id: productId
                 }, dataPointId);
