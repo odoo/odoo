@@ -24,7 +24,7 @@
     </div>
 
     <t t-name="project.ControlPanelContentBadge" owl="1">
-        <t t-tag="is_project_manager ? 'button' : 'span'" class="badge border d-flex p-2 ml-2 bg-white">
+        <t t-tag="is_project_user ? 'button' : 'span'" class="badge border d-flex p-2 ml-2 bg-white">
             <span t-attf-class="o_status_bubble o_color_bubble_{{data.color}}"/>
             <span class="font-weight-normal ml-1" t-esc="data.status"/>
         </t>
@@ -32,7 +32,7 @@
 
     <t t-name="project.ControlPanelContent" owl="1">
         <t t-if="show_project_update">
-            <li t-if="is_project_manager" class="o_project_updates_breadcrumb pl-3" t-on-click="onStatusClick">
+            <li t-if="is_project_user" class="o_project_updates_breadcrumb pl-3" t-on-click="onStatusClick">
                 <t t-call="project.ControlPanelContentBadge"></t>
             </li>
             <li t-else="" class="o_project_updates_breadcrumb pl-3">
@@ -59,7 +59,7 @@
 
             <div class="o_rightpanel_data">
                 <div t-foreach="tasksAnalysis.data" t-as="analysis" t-key="analysis.name" class="o_rightpanel_data_row">
-                    <a t-if="state.data.user.is_project_manager" class="btn btn-link o_rightpanel_left_col o_rightpanel_left_button" t-on-click="onProjectActionClick"
+                    <a t-if="state.data.user.is_project_user" class="btn btn-link o_rightpanel_left_col o_rightpanel_left_button" t-on-click="onProjectActionClick"
                         t-att-data-action="analysis.action.action"
                         t-att-data-additional_context="analysis.action.additional_context"
                         data-type="action">
