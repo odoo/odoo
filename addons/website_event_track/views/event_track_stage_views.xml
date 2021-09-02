@@ -22,15 +22,35 @@
                         <group>
                             <field name="name"/>
                             <field name="mail_template_id"/>
-                            <field name="sequence" groups="base.group_no_one"/>
+                            <field name="is_visible_in_agenda" attrs="{'readonly': [('is_cancel', '=', True)]}"/>
+                            <field name="is_fully_accessible" attrs="{'readonly': [('is_cancel', '=', True)]}"/>
+                            <field name="is_cancel"/>
                         </group>
                         <group>
                             <field name="fold"/>
-                            <field name="is_accepted"/>
-                            <field name="is_done"/>
-                            <field name="is_cancel"/>
                             <field name="color" widget="color_picker"/>
                         </group>
+                    </group>
+                    <group string="Stage Description and Tooltips">
+                        <p class="text-muted" colspan="2">
+                            Define labels explaining kanban state management.
+                        </p>
+                        <label for="legend_normal" string=" " class="o_status"
+                            title="Task in progress. Click to block or set as done."
+                            aria-label="Task in progress. Click to block or set as done." role="img"/>
+                        <field name="legend_normal" nolabel="1"/>
+                        <label for="legend_blocked" string=" " class="o_status o_status_red"
+                            title="Task is blocked. Click to unblock or set as done."
+                            aria-label="Task is blocked. Click to unblock or set as done." role="img"/>
+                        <field name="legend_blocked" nolabel="1"/>
+                        <label for="legend_done" string=" " class="o_status o_status_green"
+                            title="This step is done. Click to block or set in progress."
+                            aria-label="This step is done. Click to block or set in progress." role="img"/>
+                        <field name="legend_done" nolabel="1"/>
+                        <p class="text-muted" colspan="2">
+                            Add a description to help your coworkers understand the meaning and purpose of the stage.
+                        </p>
+                        <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
                     </group>
                 </sheet>
             </form>
@@ -44,8 +64,8 @@
             <tree string="Track Stage">
                 <field name="sequence" widget="handle" groups="event.group_event_manager"/>
                 <field name="name"/>
-                <field name="is_accepted"/>
-                <field name="is_done"/>
+                <field name="is_visible_in_agenda"/>
+                <field name="is_fully_accessible"/>
                 <field name="is_cancel"/>
                 <field name="fold"/>
             </tree>

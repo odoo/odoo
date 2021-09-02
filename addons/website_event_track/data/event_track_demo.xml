@@ -48,7 +48,7 @@
     </record>
     <record id="event_track5" model="event.track">
         <field name="name">The new way to promote your creations</field>
-        <field name="is_published" eval="True"/>
+        <field name="is_published" eval="False"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=4, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
         <field name="location_id" ref="website_event_track.event_track_location6"/>
@@ -59,7 +59,7 @@
     </record>
     <record id="event_track6" model="event.track">
         <field name="name">Detailed roadmap of our new products</field>
-        <field name="is_published" eval="True"/>
+        <field name="is_published" eval="False"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=7, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
         <field name="location_id" ref="website_event_track.event_track_location6"/>

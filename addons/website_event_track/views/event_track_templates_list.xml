@@ -143,18 +143,18 @@
             <h5 class="m-0 text-danger">Live Now</h5>
             <hr class="mt-2 pb-1 mb-1"/>
         </div>
-        <div t-foreach="tracks_live" t-as="track" class="col-md-6 col-lg-3 mb-4">
-            <t t-call="website_event_track.tracks_cards_track"/>
-        </div>
+        <t t-call="website_event_track.track_cards_section">
+            <t t-set="tracks" t-value="tracks_live"/>
+        </t>
     </div>
     <div class="row mb-3" t-if="tracks_soon">
         <div class="col-12">
             <h5 class="m-0 text-danger">Coming soon ...</h5>
             <hr class="mt-2 pb-1 mb-1"/>
         </div>
-        <div t-foreach="tracks_soon" t-as="track" class="col-md-6 col-lg-3 mb-4">
-            <t t-call="website_event_track.tracks_cards_track"/>
-        </div>
+        <t t-call="website_event_track.track_cards_section">
+            <t t-set="tracks" t-value="tracks_soon"/>
+        </t>
     </div>
 </template>
 
@@ -221,7 +221,7 @@
                                     </t>
                                 </div>
                                 <span class="h5 mb0">
-                                    <a t-if="track.is_published or is_event_user"
+                                    <a t-if="track.website_published or is_event_user"
                                         class="mr-2"
                                         t-att-href="track.website_url">
                                         <span t-field="track.name"/>
@@ -229,7 +229,7 @@
                                     <t t-else="">
                                         <span class="mr-2" t-field="track.name"/>
                                     </t>
-                                    <span t-if="not track.is_published and is_event_user"
+                                    <span t-if="not track.website_published and is_event_user"
                                         class="badge badge-danger o_wevent_online_badge_unpublished">
                                         Unpublished
                                     </span>
@@ -302,71 +302,82 @@
 <!-- TOOL TEMPLATES -->
 <!-- ============================================================ -->
 
-<template id="tracks_cards_track" name="Track Card">
-    <a t-att-href="'/event/%s/track/%s' % (slug(track.event_id), slug(track))" class="text-decoration-none">
-        <article t-att-class="'h-100 card rounded-0 border-0 shadow-sm o_wesession_track_card %s' % ('o_wesession_track_card_unpublished' if not track.is_published else '')"
-            itemscope="itemscope" itemtype="http://schema.org/Event">
-            <div class="h-100 row no-gutters">
-                <header class="overflow-hidden bg-secondary col-12">
-                    <small t-if="not track.is_published" class="o_wesession_track_card_header_badge bg-danger">
-                        <i class="fa fa-ban mr-2"/>Unpublished
-                    </small>
+<template id="track_cards_section" name="Track Cards">
+    <div t-foreach="tracks" t-as="track" class="col-md-6 col-lg-3 mb-4">
+        <t t-if="track.website_published or is_event_user">
+            <a t-att-href="'/event/%s/track/%s' % (slug(track.event_id), slug(track))" class="text-decoration-none">
+                <t t-call="website_event_track.track_card"/>
+            </a>
+        </t>
+        <t t-else="">
+            <t t-call="website_event_track.track_card"/>
+        </t>
+    </div>
+</template>
 
-                    <div t-if="track.website_image_url" class="card-img-top"
-                        t-attf-style="padding-top: 50%; background-image: url(#{track.website_image_url}); background-size: cover; background-position:center">
-                        <span t-if="option_track_wishlist and not track.is_track_live" class="position-absolute h3 mt-2 mr-2" style="right: 0; top: 0;">
-                            <t t-call="website_event_track.track_widget_reminder">
-                                <t t-set="reminder_light" t-value="True"/>
-                                <t t-set="light_theme" t-value="True"/>
-                            </t>
-                        </span>
-                    </div>
-                    <div t-else="" class="o_wesession_gradient card-img-top position-relative"
-                        style="padding-top: 50%;">
-                        <span t-if="option_track_wishlist" class="position-absolute h3 mt-2 mr-2" style="right: 0; top: 0;">
-                            <t t-call="website_event_track.track_widget_reminder">
-                                <t t-set="reminder_light" t-value="True"/>
-                            </t>
-                        </span>
-                        <i class="fa fa-glass fa-2x mx-2 mb-3 position-absolute text-white-75" style="right:0; bottom: 0;"/>
-                    </div>
-                </header>
-                <div class="col-12">
-                    <main class="card-body">
-                        <!-- Title -->
-                        <h5 class="card-title mt-0 mb-0 text-truncate">
-                            <span t-field="track.name" itemprop="name"/>
-                        </h5>
-                        <!-- Tags> -->
-                        <div>
-                            <t t-foreach="track.tag_ids" t-as="tag">
-                                <t t-if="tag.color" t-call="website_event_track.track_tag_badge_info"/>
-                            </t>
-                        </div>
-                    </main>
+<template id="track_card" name="Track Card">
+    <article t-att-class="'h-100 card rounded-0 border-0 shadow-sm o_wesession_track_card %s' % ('o_wesession_track_card_unpublished' if (not track.website_published and is_event_user) else '')"
+        itemscope="itemscope" itemtype="http://schema.org/Event">
+        <div class="h-100 row no-gutters">
+            <header class="overflow-hidden bg-secondary col-12">
+                <small t-if="not track.website_published and is_event_user" class="o_wesession_track_card_header_badge bg-danger">
+                    <i class="fa fa-ban mr-2"/>Unpublished
+                </small>
+
+                <div t-if="track.website_image_url" class="card-img-top"
+                    t-attf-style="padding-top: 50%; background-image: url(#{track.website_image_url}); background-size: cover; background-position:center">
+                    <span t-if="option_track_wishlist and not track.is_track_live" class="position-absolute h3 mt-2 mr-2" style="right: 0; top: 0;">
+                        <t t-call="website_event_track.track_widget_reminder">
+                            <t t-set="reminder_light" t-value="True"/>
+                            <t t-set="light_theme" t-value="True"/>
+                        </t>
+                    </span>
                 </div>
-                <!-- Footer -->
-                <footer class="small align-self-end w-100 card-footer">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <!-- Speaker -->
-                        <span class="text-muted text-truncate" t-field="track.partner_name" itemprop="performer"/>
-                        <!-- Starts -->
-                        <span class="text-muted ml-auto">
-                            <t t-if="track.is_track_upcoming &gt; 0">In
-                                <span class="text-muted ml-auto" t-field="track.track_start_remaining" itemprop="duration"
-                                    t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'second', 'round': 'minute'}"/>
-                            </t>
-                            <t t-else="">
-                                <span class="text-muted ml-auto" t-field="track.track_start_relative" itemprop="duration"
-                                    t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'second', 'round': 'minute'}"/>
-                                ago
-                            </t>
-                        </span>
+                <div t-else="" class="o_wesession_gradient card-img-top position-relative"
+                    style="padding-top: 50%;">
+                    <span t-if="option_track_wishlist" class="position-absolute h3 mt-2 mr-2" style="right: 0; top: 0;">
+                        <t t-call="website_event_track.track_widget_reminder">
+                            <t t-set="reminder_light" t-value="True"/>
+                        </t>
+                    </span>
+                    <i class="fa fa-glass fa-2x mx-2 mb-3 position-absolute text-white-75" style="right:0; bottom: 0;"/>
+                </div>
+            </header>
+            <div class="col-12">
+                <main class="card-body">
+                    <!-- Title -->
+                    <h5 class="card-title mt-0 mb-0 text-truncate">
+                        <span t-field="track.name" itemprop="name"/>
+                    </h5>
+                    <!-- Tags> -->
+                    <div>
+                        <t t-foreach="track.tag_ids" t-as="tag">
+                            <t t-if="tag.color" t-call="website_event_track.track_tag_badge_info"/>
+                        </t>
                     </div>
-                </footer>
+                </main>
             </div>
-        </article>
-    </a>
+            <!-- Footer -->
+            <footer class="small align-self-end w-100 card-footer">
+                <div class="d-flex justify-content-between align-items-center">
+                    <!-- Speaker -->
+                    <span class="text-muted text-truncate" t-field="track.partner_name" itemprop="performer"/>
+                    <!-- Starts -->
+                    <span class="text-muted ml-auto">
+                        <t t-if="track.is_track_upcoming &gt; 0">In
+                            <span class="text-muted ml-auto" t-field="track.track_start_remaining" itemprop="duration"
+                                t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'second', 'round': 'minute'}"/>
+                        </t>
+                        <t t-else="">
+                            <span class="text-muted ml-auto" t-field="track.track_start_relative" itemprop="duration"
+                                t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'second', 'round': 'minute'}"/>
+                            ago
+                        </t>
+                    </span>
+                </div>
+            </footer>
+        </div>
+    </article>
 </template>
 
 <!-- Searched tags -->
