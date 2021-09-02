@@ -415,12 +415,13 @@ class IrActionsServer(models.Model):
         default='object_write', required=True, copy=True,
         help="Type of server action. The following values are available:\n"
              "- 'Execute Python Code': a block of python code that will be executed\n"
-             "- 'Create': create a new record with new values\n"
+             "- 'Create a new Record': create a new record with new values\n"
              "- 'Update a Record': update the values of a record\n"
              "- 'Execute several actions': define an action that triggers several other server actions\n"
-             "- 'Send Email': automatically send an email (Discuss)\n"
+             "- 'Send Email': post a message, a note or send an email (Discuss)\n"
              "- 'Add Followers': add followers to a record (Discuss)\n"
-             "- 'Create Next Activity': create an activity (Discuss)")
+             "- 'Create Next Activity': create an activity (Discuss)\n"
+             "- 'Send SMS Text Message': send SMS, log them on documents (SMS)")
     # Generic
     sequence = fields.Integer(default=5,
                               help="When dealing with multiple actions, the execution order is "
