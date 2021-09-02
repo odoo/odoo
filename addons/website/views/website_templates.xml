@@ -2543,17 +2543,6 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     </a>
 </template>
 
-<template id="website_configurator" name="Website Configurator" inherit_id="web.frontend_layout" primary="True">
-    <xpath expr="//head/t[@t-call-assets][last()]" position="after">
-        <t t-call-assets="website.website_configurator_assets_js" lazy_load="True"/>
-    </xpath>
-    <xpath expr="//t[@t-call-assets='web.assets_frontend']" position="replace">
-        <t t-call-assets="website.website_configurator_assets_scss" t-js="false"/>
-    </xpath>
-    <xpath expr="//nav" position="replace"/>
-    <xpath expr="//div[@id='wrapwrap']" position="replace"/>
-</template>
-
 <!-- Search Bar input-group template -->
 <template id="website_search_box_input" inherit_id="website.website_search_box" primary="True">
     <xpath expr="//input[@name='search']" position="attributes">
