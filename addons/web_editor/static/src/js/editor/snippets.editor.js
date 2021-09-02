@@ -658,7 +658,7 @@ var SnippetEditor = Widget.extend({
         this.$target.after($clone);
 
         if (recordUndo) {
-            this.options.wysiwyg.odooEditor.historyStep();
+            this.options.wysiwyg.odooEditor.historyStep(true);
         }
         await new Promise(resolve => {
             this.trigger_up('call_for_each_child_snippet', {
