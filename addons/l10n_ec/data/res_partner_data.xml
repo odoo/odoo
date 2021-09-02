@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="ec_final_consumer" model="res.partner">
+            <field name="name">Consumidor final</field>
+            <field name="country_id" ref="base.ec"/>
+            <field name="l10n_latam_identification_type_id" ref="l10n_ec.ec_ruc"/>
+            <field name="vat">9999999999999</field>
+        </record>
+        <record id="ec_social_security" model="res.partner">
+            <field name="image_1920" type="base64" file="l10n_ec/static/img/logo_iess.png"/>
+            <field name="name">Instituto Ecuatorian de Seguridad Social</field>
+            <field name="state_id" ref="base.state_ec_17"/>
+            <field name="country_id" ref="base.ec"/>
+            <field name="website">https://www.iess.gob.ec</field>
+            <field name="is_company">1</field>
+            <field name="l10n_latam_identification_type_id" ref="l10n_ec.ec_ruc"/>
+            <field name="vat">1760004650001</field>
+        </record>
+        <record id="ec_tax_authority" model="res.partner">
+            <field name="image_1920" type="base64" file="l10n_ec/static/img/logo_sri.png"/>
+            <field name="name">Servicio de Rentas Internas</field>
+            <field name="state_id" ref="base.state_ec_17"/>
+            <field name="country_id" ref="base.ec"/>
+            <field name="website">http://www.sri.gob.ec</field>
+            <field name="is_company">1</field>
+            <field name="l10n_latam_identification_type_id" ref="l10n_ec.ec_ruc"/>
+            <field name="vat">1760013210001</field>
+        </record>
+    </data>
+</odoo>
