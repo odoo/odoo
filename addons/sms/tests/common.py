@@ -43,6 +43,8 @@ class MockSMS(common.BaseCase):
                         res.update(state='wrong_number_format')
                     elif error and error == 'unregistered':
                         res.update(state='unregistered')
+                    elif error and error == 'server_error':
+                        res.update(state='server_error')
                     elif error and error == 'jsonrpc_exception':
                         raise exceptions.AccessError(
                             'The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was ' + local_endpoint

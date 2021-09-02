@@ -109,20 +109,22 @@ class TestSMSPost(TestMailFullCommon, LinkTrackerMock):
 
         sms_0 = self.env['sms.sms'].create({
             'body': 'Welcome to https://test.odoo.com',
-            'number': '12',
+            'number': '10',
             'mailing_id': mailing.id,
         })
         sms_1 = self.env['sms.sms'].create({
             'body': 'Welcome to https://test.odoo.com/r/RAOUL',
-            'number': '12',
+            'number': '11',
         })
         sms_2 = self.env['sms.sms'].create({
             'body': 'Welcome to https://test.odoo.com/r/RAOUL',
-            'number': '12', 'mailing_id': mailing.id,
+            'number': '12',
+            'mailing_id': mailing.id,
         })
         sms_3 = self.env['sms.sms'].create({
             'body': 'Welcome to https://test.odoo.com/leodagan/r/RAOUL',
-            'number': '12', 'mailing_id': mailing.id,
+            'number': '13',
+            'mailing_id': mailing.id,
         })
 
         res = (sms_0 | sms_1 | sms_2 | sms_3)._update_body_short_links()
@@ -152,6 +154,51 @@ class TestSMSPost(TestMailFullCommon, LinkTrackerMock):
         with self.mockSMSGateway(sms_allow_unlink=True, sim_error='jsonrpc_exception'):
             self.env['sms.sms'].browse(self.sms_all.ids).send(delete_all=True, raise_exception=False)
         self.assertFalse(len(self.sms_all.exists()))
+
+    def test_sms_send_delete_default(self):
+        """ Test default send behavior: keep failed SMS, remove sent. """
+        with self.mockSMSGateway(sms_allow_unlink=True, nbr_t_error={
+                '+32456000011': 'wrong_number_format',
+                '+32456000022': 'credit',
+                '+32456000033': 'server_error',
+                '+32456000044': 'unregistered',
+            }):
+            self.env['sms.sms'].browse(self.sms_all.ids).send(raise_exception=False)
+        remaining = self.sms_all.exists()
+        self.assertEqual(len(remaining), 4)
+        self.assertTrue(all(sms.state == 'error') for sms in remaining)
+
+    def test_sms_send_delete_failed(self):
+        with self.mockSMSGateway(sms_allow_unlink=True, nbr_t_error={
+                '+32456000011': 'wrong_number_format',
+                '+32456000022': 'wrong_number_format',
+            }):
+            self.env['sms.sms'].browse(self.sms_all.ids).send(unlink_failed=True, unlink_sent=False, raise_exception=False)
+        remaining = self.sms_all.exists()
+        self.assertEqual(len(remaining), 8)
+        self.assertTrue(all(sms.state == 'sent') for sms in remaining)
+
+    def test_sms_send_delete_none(self):
+        with self.mockSMSGateway(sms_allow_unlink=True, nbr_t_error={
+                '+32456000011': 'wrong_number_format',
+                '+32456000022': 'wrong_number_format',
+            }):
+            self.env['sms.sms'].browse(self.sms_all.ids).send(unlink_failed=False, unlink_sent=False, raise_exception=False)
+        self.assertEqual(len(self.sms_all.exists()), 10)
+        success_sms = self.sms_all[:1] + self.sms_all[3:]
+        error_sms = self.sms_all[1:3]
+        self.assertTrue(all(sms.state == 'sent') for sms in success_sms)
+        self.assertTrue(all(sms.state == 'error') for sms in error_sms)
+
+    def test_sms_send_delete_sent(self):
+        with self.mockSMSGateway(sms_allow_unlink=True, nbr_t_error={
+                '+32456000011': 'wrong_number_format',
+                '+32456000022': 'wrong_number_format',
+            }):
+            self.env['sms.sms'].browse(self.sms_all.ids).send(unlink_failed=False, unlink_sent=True, raise_exception=False)
+        remaining = self.sms_all.exists()
+        self.assertEqual(len(remaining), 2)
+        self.assertTrue(all(sms.state == 'error') for sms in remaining)
 
     def test_sms_send_raise(self):
         with self.assertRaises(exceptions.AccessError):
