@@ -131,7 +131,7 @@ class TestSMSPost(TestMailFullCommon, LinkTrackerMock):
     def test_sms_send_batch_size(self):
         self.count = 0
 
-        def _send(sms_self, delete_all=False, raise_exception=False):
+        def _send(sms_self, unlink_failed=False, unlink_sent=True, raise_exception=False):
             self.count += 1
             return DEFAULT
 
@@ -147,7 +147,7 @@ class TestSMSPost(TestMailFullCommon, LinkTrackerMock):
 
     def test_sms_send_delete_all(self):
         with self.mockSMSGateway(sms_allow_unlink=True, sim_error='jsonrpc_exception'):
-            self.env['sms.sms'].browse(self.sms_all.ids).send(delete_all=True, raise_exception=False)
+            self.env['sms.sms'].browse(self.sms_all.ids).send(unlink_failed=True, unlink_sent=True, raise_exception=False)
         self.assertFalse(len(self.sms_all.exists()))
 
     def test_sms_send_raise(self):
