@@ -8,6 +8,7 @@ import './spec/insertHTML.test.js';
 import './spec/fontAwesome.test.js';
 import './spec/autostep.test.js';
 import './spec/urlRegex.test.js';
+import './spec/collab.test.js';
 
 mocha.run(failures => {
     if (failures) {

@@ -36,8 +36,8 @@ class MailIceServer(models.Model):
         """ To be overridable if we need to obtain credentials from another source.
         :return: tuple
         """
-        account_sid = self.env['ir.config_parameter'].get_param('mail.twilio_account_sid')
-        auth_token = self.env['ir.config_parameter'].get_param('mail.twilio_account_token')
+        account_sid = self.env['ir.config_parameter'].sudo().get_param('mail.twilio_account_sid')
+        auth_token = self.env['ir.config_parameter'].sudo().get_param('mail.twilio_account_token')
         return account_sid, auth_token
 
     def _get_ice_servers(self):
@@ -45,7 +45,7 @@ class MailIceServer(models.Model):
         :return: List of dict, each of which representing a stun or turn server,
                 formatted as expected by the specifications of RTCConfiguration.iceServers
         """
-        if self.env['ir.config_parameter'].get_param('mail.use_twilio_rtc_servers'):
+        if self.env['ir.config_parameter'].sudo().get_param('mail.use_twilio_rtc_servers'):
             (account_sid, auth_token) = self._get_twilio_credentials()
             if account_sid and auth_token:
                 url = f'https://api.twilio.com/2010-04-01/Accounts/{account_sid}/Tokens.json'

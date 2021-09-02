@@ -358,13 +358,27 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @private
      */
     _wysiwygInstance: function () {
+        // todo: retrieve other config if there is no #wrap element on the page (eg. product, blog, ect.)
+        let collaborationConfig = {};
+        // todo: To uncomment when enabling the collaboration on website.
+        // const $wrap = $('#wrapwrap #wrap[data-oe-model][data-oe-field][data-oe-id]');
+        // if ($wrap.length) {
+        //     collaborationConfig = {
+        //         collaborationChannel: {
+        //             collaborationModelName: $wrap.attr('data-oe-model'),
+        //             collaborationFieldName: $wrap.attr('data-oe-field'),
+        //             collaborationResId: parseInt($wrap.attr('data-oe-id')),
+        //         }
+        //     };
+        // }
+
         var context;
         this.trigger_up('context_get', {
             callback: function (ctx) {
                 context = ctx;
             },
         });
-        const params = {
+        const params = Object.assign({
             snippets: 'website.snippets',
             recordInfo: {
                 context: context,
@@ -379,7 +393,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             isRootEditable: false,
             controlHistoryFromDocument: true,
             getContentEditableAreas: this._getContentEditableAreas.bind(this),
-        };
+        }, collaborationConfig);
         return wysiwygLoader.createWysiwyg(this,
             Object.assign(params, this.wysiwygOptions),
             ['website.compiled_assets_wysiwyg']
