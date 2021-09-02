@@ -3,7 +3,9 @@
 import { _t } from 'web.core';
 import Dialog from 'web.Dialog';
 import WebsiteNewMenu from 'website.newMenu';
-import { TagCourseDialog }from '@website_slides/js/slides_course_tag_add';
+import SlidesCourseTagAdd from '@website_slides/js/slides_course_tag_add';
+
+const TagCourseDialog = SlidesCourseTagAdd.TagCourseDialog;
 
 var ChannelCreateDialog = Dialog.extend({
     template: 'website.slide.channel.create',
