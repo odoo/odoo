@@ -67,7 +67,11 @@ class TestSaleTransaction(AccountTestInvoicingCommon):
         # modify order total
         self.order.order_line[0].price_unit = 200.0
         # invoicing policy is based on delivered quantity
+<<<<<<< HEAD
         self.product_a.invoice_policy = 'delivery'
+=======
+        self.product.invoice_policy = 'delivery'
+>>>>>>> a85f21b2346... temp
         self.transaction._set_transaction_done()
         with mute_logger('odoo.addons.sale.models.payment'):
             self.transaction.sudo()._post_process_after_done()
