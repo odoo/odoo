@@ -205,6 +205,11 @@ function factory(dependencies) {
          * @param {mail.message} message
          */
         replyToMessage(message) {
+            // When already replying to this message, just stop replying to it.
+            if (this.replyingToMessage === message) {
+                this.clearReplyingToMessage();
+                return;
+            }
             this.update({ replyingToMessage: link(message) });
             // avoid to reply to a note by a message and vice-versa.
             // subject to change later by allowing subtype choice.

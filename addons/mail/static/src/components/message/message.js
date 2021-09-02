@@ -23,16 +23,17 @@ export class Message extends Component {
         super(...args);
         this.state = useState({
             /**
+             * Determine whether the message is hovered. When message is hovered
+             * it displays message actions.
+             */
+             isHovered: false,
+            /**
              * Determine whether the message is clicked. When message is in
-             * clicked state, it keeps displaying the commands.
+             * clicked state, it keeps displaying actions even if not hovered.
              */
             isClicked: false,
         });
         useUpdate({ func: () => this._update() });
-        /**
-         * The intent of the reply button depends on the last rendered state.
-         */
-        this._wasSelected;
         /**
          * Value of the last rendered prettyBody. Useful to compare to new value
          * to decide if it has to be updated.
@@ -122,6 +123,16 @@ export class Message extends Component {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Whether the message is "active", ie: hovered or clicked, and should
+     * display additional things (date in sidebar, message actions, etc.)
+     *
+     * @returns {boolean}
+     */
+    get isActive() {
+        return this.state.isHovered || this.state.isClicked;
     }
 
     /**
@@ -419,7 +430,6 @@ export class Message extends Component {
                 message: this.message,
             });
         }
-        this._wasSelected = this.isSelected;
         this.message.refreshDateFromNow();
         clearInterval(this._intervalId);
         this._intervalId = setInterval(() => {
@@ -459,7 +469,8 @@ export class Message extends Component {
         if (
             !isEventHandled(ev, 'Message.ClickAuthorAvatar') &&
             !isEventHandled(ev, 'Message.ClickAuthorName') &&
-            !isEventHandled(ev, 'Message.ClickFailure')
+            !isEventHandled(ev, 'Message.ClickFailure') &&
+            !isEventHandled(ev, 'MessageActionList.Click')
         ) {
             this.state.isClicked = !this.state.isClicked;
         }
@@ -507,40 +518,6 @@ export class Message extends Component {
         ev.preventDefault();
         this.message.originThread.open();
     }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickStar(ev) {
-        ev.stopPropagation();
-        this.message.toggleStar();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickMarkAsRead(ev) {
-        ev.stopPropagation();
-        this.message.markAsRead();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickReply(ev) {
-        // Use this._wasSelected because this.props.isSelected might be changed
-        // by a global capture click handler (for example the one from Composer)
-        // before the current handler is executed. Indeed because it does a
-        // toggle it needs to take into account the value before the click.
-        if (this._wasSelected) {
-            this.messaging.discuss.clearReplyingToMessage();
-        } else {
-            this.message.replyTo();
-        }
-    }
 }
 
 Object.assign(Message, {
@@ -548,6 +525,7 @@ Object.assign(Message, {
         hasMarkAsReadIcon: false,
         hasReplyIcon: false,
         isSquashed: false,
+        showActions: true,
     },
     props: {
         attachmentsDetailsMode: {
@@ -563,6 +541,7 @@ Object.assign(Message, {
             type: String,
             optional: true,
         },
+        showActions: Boolean,
     },
     template: 'mail.Message',
 });

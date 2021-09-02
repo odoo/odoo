@@ -128,6 +128,18 @@ class DiscussController(http.Controller):
         allowed_params = {'attachment_ids', 'body', 'message_type', 'partner_ids', 'subtype_xmlid'}
         return thread.message_post(**{key: value for key, value in post_data.items() if key in allowed_params}).message_format()[0]
 
+    @http.route('/mail/message/update_content', methods=['POST'], type='json', auth='public')
+    def mail_message_update_content(self, message_id, body):
+        guest = request.env['mail.guest']._get_guest_from_request(request)
+        message_sudo = guest.env['mail.message'].browse(message_id).sudo().exists()
+        if not message_sudo.is_current_user_or_guest_author and not guest.env.user.has_group('base.group_system'):
+            raise NotFound()
+        message_sudo._update_content(body=body)
+        return {
+            'id': message_sudo.id,
+            'body': message_sudo.body,
+        }
+
     @http.route('/mail/attachment/upload', methods=['POST'], type='http', auth='public')
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
         channel_partner = request.env['mail.channel.partner']
@@ -176,11 +188,10 @@ class DiscussController(http.Controller):
         # For non-internal users 2 cases are supported:
         #   - Either the attachment is linked to a message: verify the request is made by the author of the message (portal user or guest).
         #   - Either a valid access token is given: also verify the message is pending (because unfortunately in portal a token is also provided to guest for viewing others' attachments).
-        message_sudo = request.env['mail.message'].sudo().search([('attachment_ids', 'in', attachment_sudo.ids)], limit=1)
+        guest = request.env['mail.guest']._get_guest_from_request(request)
+        message_sudo = guest.env['mail.message'].sudo().search([('attachment_ids', 'in', attachment_sudo.ids)], limit=1)
         if message_sudo:
-            if request.session.uid and (not message_sudo.author_id or message_sudo.author_id != request.env.user.partner_id):
-                raise NotFound()
-            if not request.session.uid and (not message_sudo.author_guest_id or message_sudo.author_guest_id != request.env['mail.guest']._get_guest_from_request(request)):
+            if not message_sudo.is_current_user_or_guest_author:
                 raise NotFound()
         else:
             if not access_token or not attachment_sudo.access_token or not consteq(access_token, attachment_sudo.access_token):

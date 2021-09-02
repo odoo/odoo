@@ -74,8 +74,9 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
         '.o_Message',
         "should display a single message"
     );
+    await afterNextRender(() => document.querySelector('.o_Message').click());
     await afterNextRender(() =>
-        document.querySelector('.o_Message_commandReply').click()
+        document.querySelector('.o_MessageActionList_actionReply').click()
     );
     assert.containsOnce(
         document.body,
@@ -192,9 +193,10 @@ QUnit.test('reply: discard on discard button click', async function (assert) {
         '.o_Message',
         "should display a single message"
     );
+    await afterNextRender(() => document.querySelector('.o_Message').click());
 
     await afterNextRender(() =>
-        document.querySelector('.o_Message_commandReply').click()
+        document.querySelector('.o_MessageActionList_actionReply').click()
     );
     assert.containsOnce(
         document.body,
@@ -252,18 +254,18 @@ QUnit.test('reply: discard on reply button toggle', async function (assert) {
         '.o_Message',
         "should display a single message"
     );
+    await afterNextRender(() => document.querySelector('.o_Message').click());
 
     await afterNextRender(() =>
-        document.querySelector('.o_Message_commandReply').click()
+        document.querySelector('.o_MessageActionList_actionReply').click()
     );
     assert.containsOnce(
         document.body,
         '.o_Composer',
         "should have composer after clicking on reply to message"
     );
-
     await afterNextRender(() =>
-        document.querySelector(`.o_Message_commandReply`).click()
+        document.querySelector(`.o_MessageActionList_actionReply`).click()
     );
     assert.containsNone(
         document.body,
@@ -307,9 +309,10 @@ QUnit.test('reply: discard on click away', async function (assert) {
         '.o_Message',
         "should display a single message"
     );
+    await afterNextRender(() => document.querySelector('.o_Message').click());
 
     await afterNextRender(() =>
-        document.querySelector('.o_Message_commandReply').click()
+        document.querySelector('.o_MessageActionList_actionReply').click()
     );
     assert.containsOnce(
         document.body,
@@ -410,9 +413,10 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
         '.o_Message',
         "should display a single message"
     );
+    await afterNextRender(() => document.querySelector('.o_Message').click());
 
     await afterNextRender(() =>
-        document.querySelector('.o_Message_commandReply').click()
+        document.querySelector('.o_MessageActionList_actionReply').click()
     );
     assert.strictEqual(
         document.querySelector('.o_Composer_buttonSend').textContent.trim(),
@@ -481,9 +485,10 @@ QUnit.test('"reply to" composer should send message if message replied to is not
         '.o_Message',
         "should display a single message"
     );
+    await afterNextRender(() => document.querySelector('.o_Message').click());
 
     await afterNextRender(() =>
-        document.querySelector('.o_Message_commandReply').click()
+        document.querySelector('.o_MessageActionList_actionReply').click()
     );
     assert.strictEqual(
         document.querySelector('.o_Composer_buttonSend').textContent.trim(),

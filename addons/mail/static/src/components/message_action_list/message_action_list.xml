@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="mail.MessageActionList" owl="1">
+        <div class="o_MessageActionList" t-on-click="actionList.onClick">
+            <span t-if="actionList.message.canStarBeToggled" class="o_MessageActionList_action o_MessageActionList_actionStar p-2" t-att-class="{
+                    'o_MessageActionList_actionStar_active': actionList.message.isStarred,
+                    'fa fa-lg fa-star': actionList.message.isStarred,
+                    'fa fa-lg fa-star-o': !actionList.message.isStarred,
+                }" title="Mark as Todo" t-on-click="actionList.onClickToggleStar"/>
+            <span t-if="props.hasReplyIcon" class="o_MessageActionList_action o_MessageActionList_actionReply p-2 fa fa-lg fa-reply" title="Reply" t-on-click="actionList.onClickReplyTo"/>
+            <span t-if="props.hasMarkAsReadIcon" class="o_MessageActionList_action o_MessageActionList_actionMarkRead p-2 fa fa-lg fa-check" title="Mark as Read" t-on-click="actionList.onClickMarkAsRead"/>
+            <span t-if="actionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionDelete p-2 fa fa-lg fa-trash" title="Delete" t-on-click="actionList.onClickDelete"/>
+            <DeleteMessageConfirmDialog t-if="actionList.showDeleteConfirm" actionListLocalId="actionList.localId"/>
+        </div>
+    </t>
+</templates>

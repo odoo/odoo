@@ -41,7 +41,11 @@ tour.register('mail_tour', {
     content: _t("Post your message on the thread"),
     position: "top",
 }, {
-    trigger: '.o_Discuss_thread .o_Message_commandStar',
+    trigger: '.o_Discuss_thread .o_Message',
+    content: _t("Click on your message"),
+    position: "top",
+}, {
+    trigger: '.o_Discuss_thread .o_MessageActionList_actionStar',
     content: Markup(_t("Messages can be <b>starred</b> to remind you to check back later.")),
     position: "bottom",
 }, {

@@ -27,17 +27,8 @@
     margin-inline-end: map-get($spacers, 2);
 }
 
-.o_Message_commandStar {
-    font-size: 1.3em;
-}
-
 .o_Message_Composer {
     flex: 1 1 auto;
-}
-
-.o_Message_commands {
-    display: flex;
-    align-items: center;
 }
 
 .o_Message_content {
@@ -77,29 +68,6 @@
     display: flex;
     flex-flow: row wrap;
     align-items: baseline;
-}
-
-.o_Message_headerCommands {
-    margin-inline-end: map-get($spacers, 2);
-    align-self: center;
-
-    .o_Message_headerCommand {
-        padding-left: map-get($spacers, 2);
-        padding-right: map-get($spacers, 2);
-
-        &.o-mobile {
-            padding-left: map-get($spacers, 3);
-            padding-right: map-get($spacers, 3);
-
-            &:first-child {
-                padding-left: map-get($spacers, 2);
-            }
-
-            &:last-child {
-                padding-right: map-get($spacers, 2);
-            }
-        }
-    }
 }
 
 .o_Message_headerDate {
@@ -143,21 +111,12 @@
     max-width: $o-mail-message-sidebar-width;
     display: flex;
     margin-top: map-get($spacers, 2);
-    margin-inline-end: map-get($spacers, 2);
     justify-content: center;
-
-    &.o-message-squashed {
-        align-items: flex-start;
-    }
 }
 
 .o_Message_sidebarItem {
     margin-left: map-get($spacers, 1);
     margin-right: map-get($spacers, 1);
-
-    &.o-message-squashed {
-        display: flex;
-    }
 }
 
 .o_Message_trackingValues {
@@ -180,21 +139,6 @@
 
 .o_Message {
     background-color: $white;
-
-    &:hover, &.o-clicked {
-
-        .o_Message_commands {
-            opacity: 1;
-        }
-
-        .o_Message_sidebarItem.o-message-squashed {
-            display: flex;
-        }
-
-        .o_Message_seenIndicator.o-message-squashed {
-            display: none;
-        }
-    }
 
     .o_Message_partnerImStatusIcon {
         color: $white;
@@ -220,17 +164,6 @@
         }
     }
 
-    &.o-starred {
-
-        .o_Message_commandStar {
-            display: flex;
-        }
-
-        .o_Message_commands {
-            display: flex;
-        }
-    }
-
     &.o-has-message-selection:not(.o-selected) {
         opacity: 0.5;
     }
@@ -246,40 +179,6 @@
 
 .o_Message_authorRedirect {
     cursor: pointer;
-}
-
-.o_Message_command {
-    cursor: pointer;
-    color: gray('400');
-
-    &:not(.o-mobile) {
-        &:hover {
-            filter: brightness(0.8);
-        }
-    }
-
-    &.o-mobile {
-        filter: brightness(0.8);
-
-        &:hover {
-            filter: brightness(0.75);
-        }
-    }
-
-    &.o-message-selected {
-        color: gray('500');
-    }
-}
-
-.o_Message_commandStar {
-
-    &.o-message-starred {
-        color: gold;
-
-        &:hover {
-            filter: brightness(0.9);
-        }
-    }
 }
 
 .o_Message_content .o_mention {
@@ -299,8 +198,14 @@
     }
 }
 
-.o_Message_headerCommands:not(.o-mobile) {
-    opacity: 0;
+.o_Message_contentWrapper {
+    // transparent border to avoid layout moving around when it becomes active
+    border: $border-width solid transparent;
+    border-radius: $o-mail-rounded-rectangle-border-radius-sm;
+
+    &.o_Message_contentWrapper_active {
+        border: $border-width solid $border-color;
+    }
 }
 
 .o_Message_highlightIndicator.o-active {
@@ -331,14 +236,6 @@
     &.o-error {
         color: o-text-color('danger');
     }
-}
-
-.o_Message_sidebarCommands {
-    display: none;
-}
-
-.o_Message_sidebarItem.o-message-squashed {
-    display: none;
 }
 
 .o_Message_subject {
