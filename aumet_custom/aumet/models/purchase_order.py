@@ -97,26 +97,4 @@ class PurchaseOrder(models.Model):
 
         return super(PurchaseOrder, self).write(vals)
 
-    def get_payment_methods(self, marketplace_id):
-        mpapi_response = CartAPI.get_product_details(marketplace_id,
-                                                     self.env.user.marketplace_token
-                                                     )
-        allowed_methods = []
-        if (mpapi_response["data"]["data"]["payment_methods"]):
 
-            return (mpapi_response["data"]["data"]["payment_methods"])
-
-        else:
-            seller_id = mpapi_response["data"]["data"]["entityId"]
-            try:
-                dist_data = CartAPI.get_disr_details(self.env.user.marketplace_token, seller_id)
-                if dist_data["data"]["payment_methods"]:
-                    allowed_methods = [method["name"] for method in dist_data["data"]["payment_methods"]]
-                    return allowed_methods
-
-            except Exception:
-                pass
-            if allowed_methods:
-                return allowed_methods
-
-            return (["CASH", "Cheque"])
