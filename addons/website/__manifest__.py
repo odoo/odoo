@@ -34,6 +34,7 @@
         'views/assets.xml',
         'views/website_templates.xml',
         'views/website_navbar_templates.xml',
+        'views/website_configurator_templates.xml',
         'views/snippets/snippets.xml',
         'views/snippets/s_title.xml',
         'views/snippets/s_cover.xml',
