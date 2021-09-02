@@ -99,6 +99,7 @@ class Message(models.Model):
         'mail.message', 'Parent Message', index=True, ondelete='set null',
         help="Initial thread message.")
     child_ids = fields.One2many('mail.message', 'parent_id', 'Child Messages')
+    replied_message_id = fields.Many2one('mail.message', string="Replied Message", ondelete='set null', help="Other message this message replies to")
     # related document
     model = fields.Char('Related Document Model', index=True)
     res_id = fields.Many2oneReference('Related Document ID', index=True, model_field='model')
