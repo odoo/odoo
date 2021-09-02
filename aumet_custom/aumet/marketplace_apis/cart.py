@@ -5,7 +5,25 @@ import requests
 class CartAPI:
 
     @classmethod
-    def get_product_details(cls,product_id, token):
+    def get_all_product_details(self):
+        url = "https://dev-mpapi.aumet.tech/v1/pharmacy/products?limit=1000"
+
+        payload = {}
+        headers = {
+            'Cookie': 'PHPSESSID=vbqvsfdhpl5l3acdk54hu3ecoi'
+        }
+        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjI2MSwidXNlckVtYWlsIjoiYS50YXllaCtwaGFybWEyQGF1bWV0LmNvbSIsImZ1bGxOYW1lIjoiQWJlZCBQaGFybWFjeSIsImV4cCI6MjI2MTE4OTI4OX0.RMkjAEgkVEDBrDlMl2aFvZwzPk79QlCy7bNy8zW_dDw"
+
+        response = requests.post(url, headers={
+            'Content-Type': 'application/json',
+            'x-user-lang': 'en',
+            'x-api-key': 'zTvkXwJSSRa5DVvTgQhaUW52DkpkeSz',
+            'x-session-id': '123',
+            'Cookie': 'PHPSESSID=adl0oj5l20ufa78t4ij2s7nl91',
+            "x-access-token": token
+        }, data=payload)
+    @classmethod
+    def get_product_details(cls, product_id, token):
         url = f"https://dev-mpapi.aumet.tech/v1/pharmacy/products/{product_id}"
 
         payload = {}

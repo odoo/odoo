@@ -1,20 +1,35 @@
 from datetime import datetime
+from math import ceil
+from pprint import pprint
 
 import psycopg2
-
 from odoo.cli import Command
-import mysql.connector
+
 from odoo.tools import config
+import requests
+
+headers = {
+    'Content-Type': 'application/json',
+    'x-user-lang': 'en',
+    'x-api-key': 'zTvkXwJSSRa5DVvTgQhaUW52DkpkeSz',
+    'x-session-id': '123',
+    'Cookie': 'PHPSESSID=adl0oj5l20ufa78t4ij2s7nl91',
+    "x-access-token": config.get("marketplace_token")
+}
+
+
+def get_all_product_details(items_count, offset):
+    url = f"{config.get('marketplace_host')}/v1/pharmacy/products?limit={items_count}&offset={offset}"
+    print(headers)
+    return requests.get(url, headers=headers).json()
+
+
+def get_items_count():
+    print(get_all_product_details(1, 0))
+    return get_all_product_details(1, 0)["data"]["dataFilter"]["dataCount"]
 
 
 class DatabaseOps:
-    mydb = mysql.connector.connect(
-        host="aumet-mysql-dev.cdl2a0vfb1as.me-south-1.rds.amazonaws.com",
-        user="root",
-        database="marketplace",
-        password="eG>W&K`mD7r;r>wR"
-    )
-
     @classmethod
     def retrieve_payment_methods(cls):
         cursor = cls.mydb.cursor()
@@ -40,58 +55,8 @@ class DatabaseOps:
             vendors.append(dict(zip(columns, i)))
         return vendors
 
-    @classmethod
-    def retrieve_products(cls):
-        cursor = cls.mydb.cursor()
-        cursor.execute(
-            """
-            select
-            p.id,
-            p.scientificNameId,
-            p.madeInCountryId,
-            p.details,
-            p.insertDateTime,
-            p.name_en,
-            p.name_ar,
-            p.name_fr,
-            p.subtitle_en,
-            p.subtitle_ar,
-            p.subtitle_fr,
-            p.description_en,
-            p.description_ar,
-            p.description_fr,
-            p.strength,
-            p.manufacturerName,
-            p.batchNumber,
-            p.itemCode,
-            p.expiryDate,
-            p.categoryId,
-            p.subcategoryId,
-            p.image,
-            p.imageAlt,
-            p.barcode,
-            eps.unitPrice,
-            eps.isArchived,
-            eps.is_locked,
-            eps.id as marketplace_sell_id,
-            eps.entityId as marketplace_seller_reference
-             from product as p inner join entityProductSell eps on p.id=eps.productId
-            """
-        )
-        columns = [
-            "id", "scientificNameId", "madeInCountryId", "details", "insertDateTime", "name_en", "name_ar",
-            "name_fr", "subtitle_en", "subtitle_ar", "subtitle_fr", "description_en", "description_ar",
-            "description_fr", "strength", "manufacturerName", "batchNumber", "itemCode", "expiryDate",
-            "categoryId", "subcategoryId", "image", "imageAlt", "barcode", "unitPrice", "isArchived",
-            "is_locked", "marketplace_sell_id", "marketplace_seller_reference"
-        ]
-        products = []
-        for i in cursor.fetchall():
-            products.append(dict(zip(columns, i)))
-        return products
 
-
-class product_sync(Command):
+class ProductSync(Command):
     conn = psycopg2.connect(
         host=config.get("db_host"),
         database="postgres",
@@ -124,39 +89,44 @@ class product_sync(Command):
                                         i["name"], i["name"], datetime.now(), i["marketplace_id"]))
             self.conn.commit()
 
-    def handle_payment_methods(self):
+    @classmethod
+    def handle_payment_methods(cls):
         payment_methods = DatabaseOps.retrieve_payment_methods()
         insert_payment_query = """INSERT INTO public.aumet_payment_method (marketplace_payment_method_id, 
                                 name, create_uid, create_date, write_uid, write_date) VALUES """
 
-        cur = self.conn.cursor()
+        cur = cls.conn.cursor()
         for i in range(len(payment_methods)):
             val = f"""({payment_methods[i]["id"]}, '{payment_methods[i]["name_en"]}', 1, '{datetime.now()}', 1, '{datetime.now()}')"""
-            print(i, len(payment_methods))
-            insert_payment_query += (val + ",") if i != len(payment_methods)-1 else val
+            insert_payment_query += (val + ",") if i != len(payment_methods) - 1 else val
 
         cur.execute(insert_payment_query)
-        self.conn.commit()
+        cls.conn.commit()
 
-    def handle_products(self):
+    @classmethod
+    def handle_products(cls):
+        count = get_items_count()
+        for i in range(0, count, 1000):
+            products = get_all_product_details(1000, i)["data"]["data"]
+            cur = cls.conn.cursor()
 
-        products = DatabaseOps.retrieve_products()
-        cur = self.conn.cursor()
+            insert_into_marketplace_products = """INSERT INTO public.aumet_marketplace_product
+                    (name, unit_price, marketplace_seller_id, is_archived, is_locked,
+                     marketplace_id, create_uid, create_date, write_uid, write_date) 
+                    VALUES(%s,%s,%s, %s, %s, %s, %s, %s, %s, %s);
+                    """
 
-        insert_into_marketplace_products = """INSERT INTO public.aumet_marketplace_product
-                (name, unit_price, marketplace_seller_id, is_archived, is_locked,
-                 marketplace_id, create_uid, create_date, write_uid, write_date) 
-                VALUES(%s,%s,%s, %s, %s, %s, %s, %s, %s, %s);
-                """
-        for i in products:
-            cur.execute(insert_into_marketplace_products, (i["name_en"], i["unitPrice"],
-                                                                i['marketplace_seller_reference'],
-                                                                bool(i["isArchived"]), bool(i["is_locked"]),
-                                                                i["marketplace_sell_id"],
-                                                                1, datetime.now(), 1, datetime.now()))
-            self.conn.commit()
+            for i in products:
+                cur.execute(insert_into_marketplace_products, (i["entityName_en"], i["unitPrice"],
+                                                               i['id'],
+                                                               bool(i["isArchived"]), bool(i["is_product_locked"]),
+                                                               i["entityId"],
+                                                               1, datetime.now(), 1, datetime.now()))
+                cls.conn.commit()
 
-    def run(self, args):
-        self.handle_vendors()
-        self.handle_payment_methods()
-        self.handle_products()
+
+if __name__ == "__main__":
+    print(config.get("marketplace_token", ""))
+    print(headers)
+    ProductSync.handle_products()
+    # print(ProductSync.handle_payment_methods())

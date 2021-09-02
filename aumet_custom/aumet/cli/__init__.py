@@ -1,1 +1,1 @@
-from . import products_sync
+# import products_sync
