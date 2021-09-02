@@ -1,4 +1,4 @@
-odoo.define('flexipharmacy.ProductScreen', function (require) {
+odoo.define('flexipharmacy.ProductScreen', function(require) {
     'use strict';
 
     const PosComponent = require('point_of_sale.PosComponent');
@@ -32,7 +32,6 @@ odoo.define('flexipharmacy.ProductScreen', function (require) {
                 this.state.isPackaging = false
                 this.state.title = '';
             }
-
             async _onClickDoctor() {
                 const currentClient = this.env.pos.get_order().get_client();
                 const currentDoctor = this.env.pos.get_order().get_doctor();
@@ -202,7 +201,6 @@ odoo.define('flexipharmacy.ProductScreen', function (require) {
             get client() {
                 return this.env.pos.get_client();
             }
-
             async _onClickPay() {
                 let currentOrder = this.env.pos.get_order();
                 var has_valid_product_lot = _.every(currentOrder.orderlines.models, function (line) {
@@ -300,7 +298,7 @@ odoo.define('flexipharmacy.ProductScreen', function (require) {
                                                     let serial_life = moment(serials[i]['expiration_date']).format('YYYY-MM-DD');
                                                     if (product_exp_date >= serial_life) {
                                                         serials[i]['NearToExpire'] = 'NearToExpire';
-                                                    }
+                                                     }
                                                 }
                                                 self.state.serials.push(serials[i])
                                             }
