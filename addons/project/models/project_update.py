@@ -13,6 +13,7 @@ STATUS_COLOR = {
     'at_risk': 2,  # orange
     'off_track': 23,  # red / danger
     'on_hold': 4,  # light blue
+    False: 0,  # default grey -- for studio
 }
 
 class ProjectUpdate(models.Model):
