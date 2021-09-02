@@ -77,7 +77,7 @@ class Location(models.Model):
     last_inventory_date = fields.Date("Last Effective Inventory", readonly=True, help="Date of the last inventory at this location.")
     next_inventory_date = fields.Date("Next Expected Inventory", compute="_compute_next_inventory_date", store=True, help="Date for next planned inventory based on cyclic schedule.")
     warehouse_view_ids = fields.One2many('stock.warehouse', 'view_location_id', readonly=True)
-    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id', recursive=True)
+    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id')
     storage_category_id = fields.Many2one('stock.storage.category', string='Storage Category')
     outgoing_move_line_ids = fields.One2many('stock.move.line', 'location_id', help='Technical: used to compute weight.')
     incoming_move_line_ids = fields.One2many('stock.move.line', 'location_dest_id', help='Technical: used to compute weight.')
@@ -131,7 +131,7 @@ class Location(models.Model):
             else:
                 location.next_inventory_date = False
 
-    @api.depends('location_id.warehouse_id', 'warehouse_view_ids')
+    @api.depends('warehouse_view_ids')
     def _compute_warehouse_id(self):
         warehouses = self.env['stock.warehouse'].search([('view_location_id', 'parent_of', self.ids)])
         view_by_wh = OrderedDict((wh.view_location_id.id, wh.id) for wh in warehouses)
@@ -196,7 +196,15 @@ class Location(models.Model):
                         'active': values['active'],
                     })
 
-        return super(Location, self).write(values)
+        res = super(Location, self).write(values)
+        self.invalidate_cache(['warehouse_id'])
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        self.invalidate_cache(['warehouse_id'])
+        return res
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
