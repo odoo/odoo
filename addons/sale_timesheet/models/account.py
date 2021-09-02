@@ -18,7 +18,11 @@ class AccountAnalyticLine(models.Model):
         ('billable_time', 'Billed on Timesheets'),
         ('billable_fixed', 'Billed at a Fixed price'),
         ('non_billable', 'Non Billable Tasks'),
-        ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
+        ('timesheet_revenues', 'Timesheet Revenues'),
+        ('service_revenues', 'Service Revenues'),
+        ('other_revenues', 'Other Revenues'),
+        ('other_costs', 'Other Costs')], string="Billable Type",
+            compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', compute="_compute_commercial_partner")
     timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
     so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False, domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_partner_id', 'child_of', commercial_partner_id)]")
@@ -37,23 +41,25 @@ class AccountAnalyticLine(models.Model):
         if not self.is_so_line_edited:
             self.is_so_line_edited = True
 
-    # TODO: [XBO] Since the task_id is not required in this model,  then it should more efficient to depends to pricing_type of project (See in master)
-    @api.depends('so_line.product_id', 'project_id', 'task_id', 'task_id.pricing_type')
+    @api.depends('so_line.product_id', 'project_id', 'amount')
     def _compute_timesheet_invoice_type(self):
         for timesheet in self:
             if timesheet.project_id:  # AAL will be set to False
-                invoice_type = 'non_billable_project' if not timesheet.task_id else 'non_billable'
-                if timesheet.task_id and timesheet.so_line.product_id.type == 'service':
+                invoice_type = 'non_billable' if not timesheet.so_line else False
+                if timesheet.so_line and timesheet.so_line.product_id.type == 'service':
                     if timesheet.so_line.product_id.invoice_policy == 'delivery':
                         if timesheet.so_line.product_id.service_type == 'timesheet':
-                            invoice_type = 'billable_time'
+                            invoice_type = 'timesheet_revenues' if timesheet.amount > 0 else 'billable_time'
                         else:
                             invoice_type = 'billable_fixed'
                     elif timesheet.so_line.product_id.invoice_policy == 'order':
                         invoice_type = 'billable_fixed'
                 timesheet.timesheet_invoice_type = invoice_type
             else:
-                timesheet.timesheet_invoice_type = False
+                if timesheet.so_line and timesheet.so_line.product_id.type == 'service':
+                    timesheet.timesheet_invoice_type = 'service_revenues'
+                else:
+                    timesheet.timesheet_invoice_type = 'other_revenues' if timesheet.amount >= 0 else 'other_costs'
 
     @api.depends('task_id.sale_line_id', 'project_id.sale_line_id', 'employee_id', 'project_id.allow_billable')
     def _compute_so_line(self):

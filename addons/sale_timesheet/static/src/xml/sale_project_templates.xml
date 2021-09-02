@@ -6,31 +6,73 @@
     </button>
 
     <t t-inherit="project.ProjectRightPanel" t-inherit-mode="extension" owl="1">
-        <xpath expr="//t[@t-call='project.StatButtonsSection']" position="before">
+        <xpath expr="//t[@t-call='project.StatButtonsSection']" position="after">
+            <t t-call="sale_timesheet.SoldSection"/>
+            <t t-call="sale_timesheet.TotalSoldSection"/>
             <t t-call="sale_timesheet.ProfitabilitySection"/>
         </xpath>
     </t>
 
-    <t t-name="sale_timesheet.ProfitabilitySection" owl="1">
-        <t t-if="state.data.user.is_project_user &amp;&amp; state.data.profitability_items.data.length > 0">
-            <t t-set="profitability_items" t-value="state.data.profitability_items"/>
-            <div class="o_rightpanel_section" name="profitability">
+    <t t-name="sale_timesheet.SoldSection" owl="1">
+        <t t-set="sold_items" t-value="state.data.sold_items"/>
+        <t t-if="sold_items.number_sols and sold_items.allow_billable"> 
+            <div name="sold" class="o_rightpanel_section">
                 <div class="o_rightpanel_header">
                     <div class="o_rightpanel_title">
-                        <t t-if="profitability_items.allow_billable">
-                            Profitability
-                        </t>
-                        <t t-else="">
-                            Recorded Hours
-                        </t>
+                        Sold
                     </div>
-                    <span class="o_rightpanel_button" t-if="profitability_items.action">
-                        <a t-on-click="onProjectActionClick"
-                        t-att-data-action="profitability_items.action"
-                        data-type="object">
-                        See Overview
-                        </a>
-                    </span>
+                </div>
+
+                <div class="o_rightpanel_data">
+                    <div t-foreach="sold_items.data" t-as="sold_item" t-key="sold_item.name" class="o_rightpanel_data_row d-flex justify-content-between">
+                        <span class="o_rightpanel_left_col o_rightpanel_left_text" t-attf-class="o_color_{{sold_item.color}}"><t t-esc="sold_item.name"/></span>
+                        <span t-attf-class="o_rightpanel_right_col o_color_{{sold_item.color}}"><b><t t-esc="sold_item.value"/></b></span>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="sale_timesheet.TotalSoldSection" owl="1">
+        <t t-set="sold_items" t-value="state.data.sold_items"/>
+        <t t-if="sold_items.allow_billable"> 
+            <div name="total_sold" class="o_rightpanel_section">
+                <div class="o_rightpanel_header">
+                    <div class="o_rightpanel_title">
+                        <span class="o_rightpanel_left_col o_rightpanel_left_text"> Total Sold </span>
+                    </div>
+                    <span class="o_rightpanel_right_col font-weight-bold float-right"><t t-esc="sold_items.total_sold"/> <t t-esc="sold_items.company_unit_name"/></span>
+                </div>
+                <div class="o_rightpanel_data">
+                    <div class="o_rightpanel_data_row">
+                        <span class="o_rightpanel_left_col o_rightpanel_left_text">Effective</span>
+                        <span class="o_rightpanel_right_col"><t t-esc="sold_items.effective_sold"/> <t t-esc="sold_items.company_unit_name"/></span>
+                    </div>
+                    <div class="o_rightpanel_data_row" t-if="sold_items.planned_sold > 0 and sold_items.allow_forecast">
+                        <span class="o_rightpanel_left_col o_rightpanel_left_text">Planned</span>
+                        <span class="o_rightpanel_right_col"><t t-esc="sold_items.planned_sold"/> <t t-esc="sold_items.company_unit_name"/></span>
+                    </div>
+                    <div class="o_rightpanel_data_row">
+                        <span class="o_rightpanel_left_col o_rightpanel_left_text">Remaining</span>
+                        <span class="o_rightpanel_right_col" t-attf-class="o_color_{{sold_items.remaining.color}}"><t t-esc="sold_items.remaining.value"/> <t t-esc="sold_items.company_unit_name"/></span>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+    
+    <t t-name="sale_timesheet.ProfitabilitySection" owl="1">
+<<<<<<< HEAD
+        <t t-if="state.data.user.is_project_user &amp;&amp; state.data.profitability_items.data.length > 0">
+=======
+        <t t-if="state.data.user.is_project_manager &amp;&amp; state.data.analytic_account_id &amp;&amp; state.data.profitability_items.data.length > 0">
+>>>>>>> [IMP] sale_timesheet: remove overview and improve updates
+            <t t-set="profitability_items" t-value="state.data.profitability_items"/>
+            <div name="profitability" class="o_rightpanel_section">
+                <div class="o_rightpanel_header">
+                    <div class="o_rightpanel_title">
+                        Profitability
+                    </div>
                 </div>
 
                 <div class="o_rightpanel_data">

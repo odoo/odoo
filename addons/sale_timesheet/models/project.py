@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import format_amount, float_round, float_is_zero
-from odoo.tools.misc import formatLang
-
+from odoo.tools import format_amount, float_is_zero
 
 # YTI PLEASE SPLIT ME
 class Project(models.Model):
@@ -39,6 +38,9 @@ class Project(models.Model):
         help="Employee/Sale Order Item Mapping:\n Defines to which sales order item an employee's timesheet entry will be linked."
         "By extension, it defines the rate at which an employee's time on the project is billed.")
     allow_billable = fields.Boolean("Billable", help="Invoice your time and material from tasks.")
+    billable_percentage = fields.Integer(
+        compute='_compute_billable_percentage',
+        help="% of timesheets that are billable compared to the total number of timesheets linked to the AA of the project, rounded to the unit.")
     display_create_order = fields.Boolean(compute='_compute_display_create_order')
     timesheet_product_id = fields.Many2one(
         'product.product', string='Timesheet Product',
@@ -108,6 +110,21 @@ class Project(models.Model):
         domain = expression.AND([domain, [('allow_billable', '=', True)]])
         return domain
 
+    @api.depends('analytic_account_id', 'timesheet_ids')
+    def _compute_billable_percentage(self):
+        timesheets_read_group = self.env['account.analytic.line'].read_group([('project_id', 'in', self.ids)], ['project_id', 'so_line', 'unit_amount'], ['project_id', 'so_line'], lazy=False)
+        timesheets_by_project = defaultdict(list)
+        for res in timesheets_read_group:
+            timesheets_by_project[res['project_id'][0]].append((res['unit_amount'], bool(res['so_line'])))
+        for project in self:
+            timesheet_total = timesheet_billable = 0.0
+            for unit_amount, is_billable_timesheet in timesheets_by_project[project.id]:
+                timesheet_total += unit_amount
+                if is_billable_timesheet:
+                    timesheet_billable += unit_amount
+            billable_percentage = timesheet_billable / timesheet_total * 100 if timesheet_total > 0 else 0
+            project.billable_percentage = round(billable_percentage)
+
     @api.depends('partner_id', 'pricing_type')
     def _compute_display_create_order(self):
         for project in self:
@@ -133,12 +150,6 @@ class Project(models.Model):
             project.warning_employee_rate = any(x not in project.sale_line_employee_ids.employee_id.ids for x in dict_project_employee[project.id])
 
         (self - projects).warning_employee_rate = False
-
-    @api.depends('analytic_account_id', 'allow_billable', 'allow_timesheets')
-    def _compute_project_overview(self):
-        super()._compute_project_overview()
-        for project in self.filtered(lambda p: not p.project_overview):
-            project.project_overview = project.allow_billable or project.allow_timesheets
 
     @api.depends('sale_line_employee_ids.sale_line_id', 'sale_line_id')
     def _compute_partner_id(self):
@@ -188,10 +199,29 @@ class Project(models.Model):
                 sale_line_id = project.sale_line_employee_ids.filtered(lambda l: l.project_id == project and l.employee_id == employee_id).sale_line_id
                 timesheet_ids.filtered(lambda t: t.employee_id == employee_id).sudo().so_line = sale_line_id
 
+    def action_open_project_invoices(self):
+        invoices = self.env['account.move'].search([
+            ('line_ids.analytic_account_id', '!=', False),
+            ('line_ids.analytic_account_id', 'in', self.analytic_account_id.ids),
+            ('move_type', '=', 'out_invoice')
+        ])
+        action = {
+            'name': _('Invoices'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
+            'domain': [('id', 'in', invoices.ids)],
+            'context': {
+                'create': False,
+            }
+        }
+        if len(invoices) == 1:
+            action['views'] = [[False, 'form']]
+            action['res_id'] = invoices.id
+        return action
+
     def action_view_timesheet(self):
         self.ensure_one()
-        if self.allow_timesheets:
-            return self.action_view_timesheet_plan()
         return {
             'type': 'ir.actions.act_window',
             'name': _('Timesheets of %s', self.name),
@@ -215,18 +245,6 @@ class Project(models.Model):
             }
         }
 
-    def action_view_timesheet_plan(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("sale_timesheet.project_timesheet_action_client_timesheet_plan")
-        action['params'] = {
-            'project_ids': self.ids,
-        }
-        action['context'] = {
-            'active_id': self.id,
-            'active_ids': self.ids,
-            'search_default_name': self.name,
-        }
-        return action
-
     def action_make_billable(self):
         return {
             "name": _("Create Sales Order"),
@@ -241,6 +259,27 @@ class Project(models.Model):
             },
         }
 
+    def action_billable_time_button(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("hr_timesheet.timesheet_action_all")
+        action.update({
+            'context': {
+                'search_default_groupby_timesheet_invoice_type': True,
+                'default_project_id': self.id,
+            },
+            'domain': [('project_id', '=', self.id)],
+            'view_mode': 'tree,grid,kanban,pivot,graph,form',
+            'views': [
+                [self.env.ref('hr_timesheet.timesheet_view_tree_user').id, 'tree'],
+                [self.env.ref('timesheet_grid.timesheet_view_grid_by_employee').id, 'grid'],
+                [self.env.ref('hr_timesheet.view_kanban_account_analytic_line').id, 'kanban'],
+                [self.env.ref('hr_timesheet.view_hr_timesheet_line_pivot').id, 'pivot'],
+                [self.env.ref('hr_timesheet.view_hr_timesheet_line_graph_all').id, 'graph'],
+                [self.env.ref('timesheet_grid.timesheet_view_form').id, 'form'],
+            ],
+        })
+        return action
+
     # ----------------------------
     #  Project Updates
     # ----------------------------
@@ -249,26 +288,52 @@ class Project(models.Model):
         panel_data = super(Project, self).get_panel_data()
         return {
             **panel_data,
+            'analytic_account_id': self.analytic_account_id.id,
+            'sold_items': self._get_sold_items(),
             'profitability_items': self._get_profitability_items()
         }
+
+    def _get_sale_order_lines(self):
+        sale_orders = self.sale_order_id | self.tasks.sale_order_id
+        return self.env['sale.order.line'].search([('order_id', 'in', sale_orders.ids), ('is_service', '=', True)], order='id asc')
+
+    def _get_sold_items(self):
+        sols = self._get_sale_order_lines()
+        number_sale_orders = len(sols.order_id)
+        sold_items = {
+            'allow_billable': self.allow_billable,
+            'data': [],
+            'number_sols': len(sols),
+            'total_sold': 0,
+            'effective_sold': 0,
+            'company_unit_name': self.env.company.timesheet_encode_uom_id.name
+        }
+        for sol in sols:
+            name = [x[1] for x in sol.name_get()] if number_sale_orders > 1 else sol.name
+            qty_delivered = int(sol.qty_delivered) if sol.qty_delivered.is_integer() else sol.qty_delivered
+            product_uom_qty = int(sol.product_uom_qty) if sol.product_uom_qty.is_integer() else sol.product_uom_qty
+            sold_items['data'].append({
+                'name': name,
+                'value': '%s / %s %s' % (qty_delivered, product_uom_qty, sol.product_uom.name),
+                'color': 'red' if qty_delivered > product_uom_qty else 'black'
+            })
+            #We only want to consider hours and days for this calculation
+            if sol.product_uom.category_id == self.env.company.timesheet_encode_uom_id.category_id:
+                sold_items['total_sold'] += sol.product_uom._compute_quantity(sol.product_uom_qty, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
+            sold_items['effective_sold'] = round(sol.product_uom._compute_quantity(self.total_timesheet_time, self.env.company.timesheet_encode_uom_id, raise_if_failure=False), 2)
+        remaining = sold_items['total_sold'] - sold_items['effective_sold']
+        sold_items['remaining'] = {
+            'value': remaining,
+            'color': 'red' if remaining < 0 else 'black',
+        }
+        return sold_items
 
     def _get_profitability_items(self):
         if not self.user_has_groups('project.group_project_manager'):
             return {'data': []}
-        timesheets = self.allow_timesheets and self.user_has_groups('hr_timesheet.group_hr_timesheet_user')
-        profitability = self._get_profitability_common(costs_revenues=self.allow_billable, timesheets=timesheets)
         data = []
-        if timesheets:
-            data += [{
-                'name': _("Timesheets"),
-                'value': self.env.ref('sale_timesheet.project_profitability_timesheet_panel')._render({
-                    'timesheet_unit_amount': float_round(profitability['timesheet_unit_amount'], precision_digits=2),
-                    'timesheet_uom': self.env.company._timesheet_uom_text(),
-                    'is_timesheet_uom_hour': self.env.company._is_timesheet_hour_uom(),
-                    'percentage_billable': formatLang(self.env, profitability['timesheet_percentage_billable'], digits=0),
-                }, engine='ir.qweb'),
-            }]
         if self.allow_billable:
+            profitability = self._get_profitability_common()
             margin_color = False
             if not float_is_zero(profitability['margin'], precision_digits=0):
                 margin_color = profitability['margin'] > 0 and 'green' or 'red'
@@ -289,50 +354,53 @@ class Project(models.Model):
             'data': data,
         }
 
-    def _get_profitability_common(self, costs_revenues=True, timesheets=True):
+    def _get_profitability_common(self):
         self.ensure_one()
         result = {
             'costs': 0.0,
             'margin': 0.0,
-            'revenues': 0.0,
-            'timesheet_unit_amount': 0.0,
-            'timesheet_percentage_billable': 0.0,
+            'revenues': 0.0
         }
-        if costs_revenues:
-            profitability = self.env['project.profitability.report'].read_group(
-                [('project_id', '=', self.id)],
-                ['project_id',
-                 'amount_untaxed_to_invoice',
-                 'amount_untaxed_invoiced',
-                 'expense_amount_untaxed_to_invoice',
-                 'expense_amount_untaxed_invoiced',
-                 'other_revenues',
-                 'expense_cost',
-                 'timesheet_cost',
-                 'margin'],
-                ['project_id'], limit=1)
-            if profitability:
-                profitability = profitability[0]
-                result.update({
-                    'costs': profitability['timesheet_cost'] + profitability['expense_cost'],
-                    'margin': profitability['margin'],
-                    'revenues': (profitability['amount_untaxed_invoiced'] + profitability['amount_untaxed_to_invoice'] +
-                                 profitability['expense_amount_untaxed_invoiced'] + profitability['expense_amount_untaxed_to_invoice'] +
-                                 profitability['other_revenues']),
-                })
-        if timesheets:
-            timesheets = self.env['account.analytic.line'].read_group([('project_id', '=', self.id)], ['so_line', 'unit_amount'], ['so_line'])
-            timesheet_billable = timesheet_non_billable = 0.0
-            for timesheet in timesheets:
-                if timesheet['so_line']:
-                    timesheet_billable += timesheet['unit_amount']
-                else:
-                    timesheet_non_billable += timesheet['unit_amount']
+
+        profitability = self.env['project.profitability.report'].read_group(
+            [('project_id', '=', self.id)],
+            ['project_id',
+                'amount_untaxed_to_invoice',
+                'amount_untaxed_invoiced',
+                'expense_amount_untaxed_to_invoice',
+                'expense_amount_untaxed_invoiced',
+                'other_revenues',
+                'expense_cost',
+                'timesheet_cost',
+                'margin'],
+            ['project_id'], limit=1)
+        if profitability:
+            profitability = profitability[0]
             result.update({
-                'timesheet_unit_amount': self._convert_project_uom_to_timesheet_encode_uom(timesheet_billable + timesheet_non_billable),
-                'timesheet_percentage_billable': timesheet_billable and timesheet_billable / (timesheet_billable + timesheet_non_billable) * 100 or 0.0,
+                'costs': profitability['timesheet_cost'] + profitability['expense_cost'],
+                'margin': profitability['margin'],
+                'revenues': (profitability['amount_untaxed_invoiced'] + profitability['amount_untaxed_to_invoice'] +
+                                profitability['expense_amount_untaxed_invoiced'] + profitability['expense_amount_untaxed_to_invoice'] +
+                                profitability['other_revenues']),
             })
         return result
+
+    def _get_stat_buttons(self):
+        buttons = super(Project, self)._get_stat_buttons()
+        buttons.append({
+            'icon': 'clock-o',
+            'text': _('Billable Time'),
+            'number': '%s %%' % (self.billable_percentage),
+            'action_type': 'object',
+            'action': 'action_billable_time_button',
+            'additional_context': json.dumps({
+                'active_id': self.id,
+                'default_project_id': self.id
+            }),
+            'show': self.user_has_groups('hr_timesheet.group_hr_timesheet_approver') and self.allow_timesheets and bool(self.analytic_account_id),
+            'sequence': 9,
+        })
+        return buttons
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
