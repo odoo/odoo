@@ -8,15 +8,15 @@
         <t t-call="web.basic_layout">
             <div class="page">
                 <t t-foreach="range(len(docs))" t-as="index">
-                    <t t-set="picking" t-value="docs[index]"/>
+                    <t t-set="move" t-value="docs[index]"/>
                     <t t-set="qty" t-value="qtys[index]"/>
                     <t t-foreach="range(qty)" t-as="j">
                         <div class="o_label_page o_label_dymo">
-                            <span t-if="picking._name == 'stock.picking' and picking.origin" t-esc="picking.origin"/>
-                            <span t-else="" t-esc="picking.name"/>
+                            <div t-out="move.product_id.display_name"/>
+                            <div t-out="move._get_source_document().name"/>
                             <div class="address"
-                                t-if="picking._name == 'stock.picking' and picking.partner_id"
-                                t-field="picking.partner_id"
+                                t-if="move.picking_id and move.picking_id.partner_id"
+                                t-field="move.picking_id.partner_id"
                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                         </div>
                     </t>
@@ -132,8 +132,7 @@
                                 </td>
                                 <td t-if="report_type == 'html'">
                                     <button t-if="line['is_qty_assignable'] and line['source']"
-                                        t-att-source-id="line['source'].id"
-                                        t-att-source-model="line['source']._name"
+                                        t-att-move-id="line['move_out'].id"
                                         t-att-qty="line['quantity']"
                                         t-attf-class="btn btn-sm btn-primary o_print_label"
                                         t-att-disabled="not line['is_assigned']"
