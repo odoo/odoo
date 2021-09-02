@@ -4,6 +4,36 @@
 from odoo import _, api, fields, models
 
 
+class StockPickingType(models.Model):
+    _inherit = "stock.picking.type"
+
+    count_picking_batch = fields.Integer(compute='_compute_picking_count')
+    count_picking_wave = fields.Integer(compute='_compute_picking_count')
+
+    def _compute_picking_count(self):
+        super()._compute_picking_count()
+        domains = {
+            'count_picking_batch': [('is_wave', '=', False)],
+            'count_picking_wave': [('is_wave', '=', True)],
+        }
+        for field in domains:
+            data = self.env['stock.picking.batch'].read_group(domains[field] +
+                [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', self.ids)],
+                ['picking_type_id'], ['picking_type_id'])
+            count = {
+                x['picking_type_id'][0]: x['picking_type_id_count']
+                for x in data if x['picking_type_id']
+            }
+            for record in self:
+                record[field] = count.get(record.id, 0)
+
+    def get_action_picking_tree_batch(self):
+        return self._get_action('stock_picking_batch.stock_picking_batch_action')
+
+    def get_action_picking_tree_wave(self):
+        return self._get_action('stock_picking_batch.action_picking_tree_wave')
+
+
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
