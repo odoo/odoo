@@ -14,6 +14,8 @@ class MailGuest(models.Model):
     _description = "Guest"
     _inherit = ['avatar.mixin']
     _avatar_name_field = "name"
+    _cookie_name = 'dgid'
+    _cookie_separator = '|'
 
     @api.model
     def _lang_get(self):
@@ -27,8 +29,10 @@ class MailGuest(models.Model):
     channel_ids = fields.Many2many(string="Channels", comodel_name='mail.channel', relation='mail_channel_partner', column1='guest_id', column2='channel_id', copy=False)
 
     def _get_guest_from_request(self, request):
-        guest_id = request.httprequest.cookies.get('mail.guest_id')
-        guest_access_token = request.httprequest.cookies.get('mail.guest_access_token')
+        parts = request.httprequest.cookies.get(self._cookie_name, '').split(self._cookie_separator)
+        if len(parts) != 2:
+            return self.env['mail.guest']
+        guest_id, guest_access_token = parts
         if not guest_id or not guest_access_token:
             return self.env['mail.guest']
         guest = self.env['mail.guest'].browse(int(guest_id)).sudo().exists()

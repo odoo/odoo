@@ -46,6 +46,7 @@ class Channel(models.Model):
     def _generate_random_token(self):
         # Built to be shared on invitation link. It uses non-ambiguous characters and it is of a
         # reasonable length: enough to avoid brute force, but short enough to be shareable easily.
+        # This token should not contain "mail.guest"._cookie_separator value.
         return ''.join(choice('abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ23456789') for _i in range(10))
 
     # description
