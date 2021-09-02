@@ -18,7 +18,6 @@ class SaleOrder(models.Model):
         'project.project', 'Project', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help='Select a non billable project on which tasks can be created.')
     project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user", help="Projects used in this sales order.")
-    project_overview = fields.Boolean('Show Project Overview', compute='_compute_project_overview')
     project_count = fields.Integer(string='Number of Projects', compute='_compute_project_ids', groups='project.group_project_user')
 
     @api.depends('order_line.product_id.project_id')
@@ -35,12 +34,6 @@ class SaleOrder(models.Model):
             order.visible_project = any(
                 service_tracking == 'task_in_project' for service_tracking in order.order_line.mapped('product_id.service_tracking')
             )
-
-    @api.depends('project_ids')
-    def _compute_project_overview(self):
-        for order in self:
-            billable_projects = order.project_ids.filtered('sale_line_id')
-            order.project_overview = len(order.project_ids) == 1 and len(billable_projects) == 1 and billable_projects.project_overview
 
     @api.depends('order_line.product_id', 'order_line.project_id')
     def _compute_project_ids(self):
