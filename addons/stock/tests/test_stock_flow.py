@@ -1876,3 +1876,30 @@ class TestStockFlow(TestStockCommon):
         picking = f.save()
 
         self.assertEqual(f.state, 'confirmed')
+
+    def test_picking_form_immediate_transfer(self):
+        picking_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=True))
+
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        with picking_form.move_ids_without_package.new() as move:
+            self.assertFalse(move._get_modifier('quantity_done', 'column_invisible'))
+            self.assertTrue(move._get_modifier('forecast_availability', 'column_invisible'))
+            self.assertTrue(move._get_modifier('reserved_availability', 'column_invisible'))
+            move.product_id = self.productA
+            move.quantity_done = 1
+        picking = picking_form.save()
+
+        self.assertEqual(picking.state, 'assigned')
+
+        picking_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=False))
+
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        with picking_form.move_ids_without_package.new() as move:
+            self.assertTrue(move._get_modifier('quantity_done', 'column_invisible'))
+            self.assertTrue(move._get_modifier('forecast_availability', 'column_invisible'))
+            self.assertTrue(move._get_modifier('reserved_availability', 'column_invisible'))
+            move.product_id = self.productA
+            move.product_uom_qty = 1
+        picking = picking_form.save()
+
+        self.assertEqual(picking.state, 'draft')
