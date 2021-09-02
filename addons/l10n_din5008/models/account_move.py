@@ -5,12 +5,12 @@ from odoo.tools import format_date
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    l10n_de_template_data = fields.Binary(compute='_compute_l10n_de_template_data')
-    l10n_de_document_title = fields.Char(compute='_compute_l10n_de_document_title')
+    l10n_din5008_template_data = fields.Binary(compute='_compute_l10n_din5008_template_data')
+    l10n_din5008_document_title = fields.Char(compute='_compute_l10n_din5008_document_title')
 
-    def _compute_l10n_de_template_data(self):
+    def _compute_l10n_din5008_template_data(self):
         for record in self:
-            record.l10n_de_template_data = data = []
+            record.l10n_din5008_template_data = data = []
             if record.name:
                 data.append((_("Invoice No."), record.name))
             if record.invoice_date:
@@ -22,19 +22,19 @@ class AccountMove(models.Model):
             if record.ref:
                 data.append((_("Reference"), record.ref))
 
-    def _compute_l10n_de_document_title(self):
+    def _compute_l10n_din5008_document_title(self):
         for record in self:
-            record.l10n_de_document_title = ''
+            record.l10n_din5008_document_title = ''
             if record.move_type == 'out_invoice':
                 if record.state == 'posted':
-                    record.l10n_de_document_title = _('Invoice')
+                    record.l10n_din5008_document_title = _('Invoice')
                 elif record.state == 'draft':
-                    record.l10n_de_document_title = _('Draft Invoice')
+                    record.l10n_din5008_document_title = _('Draft Invoice')
                 elif record.state == 'cancel':
-                    record.l10n_de_document_title = _('Cancelled Invoice')
+                    record.l10n_din5008_document_title = _('Cancelled Invoice')
             elif record.move_type == 'out_refund':
-                record.l10n_de_document_title = _('Credit Note')
+                record.l10n_din5008_document_title = _('Credit Note')
             elif record.move_type == 'in_refund':
-                record.l10n_de_document_title = _('Vendor Credit Note')
+                record.l10n_din5008_document_title = _('Vendor Credit Note')
             elif record.move_type == 'in_invoice':
-                record.l10n_de_document_title = _('Vendor Bill')
+                record.l10n_din5008_document_title = _('Vendor Bill')

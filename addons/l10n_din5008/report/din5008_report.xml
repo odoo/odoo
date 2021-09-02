@@ -31,9 +31,9 @@
             <field name="header_spacing">45</field>
         </record>
 
-        <template id="assets_common" name="l10n_de_din5008_report" inherit_id="web.report_assets_common">
+        <template id="assets_common" name="l10n_din5008_din5008_report" inherit_id="web.report_assets_common">
             <xpath expr="." position="inside">
-                <link rel="stylesheet" type="text/scss" href="/l10n_de/static/src/scss/report_din5008.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/l10n_din5008/static/src/scss/report_din5008.scss"/>
             </xpath>
         </template>
 
@@ -84,8 +84,8 @@
                             </td>
                             <td>
                                 <div class="information_block">
-                                    <t t-if="'l10n_de_template_data' in company" t-set="template_data" t-value="company.l10n_de_template_data"/>
-                                    <t t-if="o and 'l10n_de_template_data' in o" t-set="template_data" t-value="o.l10n_de_template_data"/>
+                                    <t t-if="'l10n_din5008_template_data' in company" t-set="template_data" t-value="company.l10n_din5008_template_data"/>
+                                    <t t-if="o and 'l10n_din5008_template_data' in o" t-set="template_data" t-value="o.l10n_din5008_template_data"/>
                                     <table>
                                         <t t-foreach="template_data" t-as="row">
                                             <tr><td><t t-esc="row[0]"/></td><td><t t-esc="row[1]"/></td></tr>
@@ -94,8 +94,8 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr t-if="o and 'l10n_de_addresses' in o">
-                            <t t-foreach="o.l10n_de_addresses" t-as="doc_address">
+                        <tr t-if="o and 'l10n_din5008_addresses' in o">
+                            <t t-foreach="o.l10n_din5008_addresses" t-as="doc_address">
                                 <td>
                                     <div class="shipping_address">
                                         <strong><t t-esc="doc_address[0]"/></strong>
@@ -106,8 +106,8 @@
                         </tr>
                     </table>
                     <h2>
-                        <span t-if="not o"><t t-esc="company.l10n_de_document_title"/></span>
-                        <span t-elif="'l10n_de_document_title' in o"><t t-esc="o.l10n_de_document_title"/></span>
+                        <span t-if="not o"><t t-esc="company.l10n_din5008_document_title"/></span>
+                        <span t-elif="'l10n_din5008_document_title' in o"><t t-esc="o.l10n_din5008_document_title"/></span>
                         <span t-else="" t-field="o.name"/>
                     </h2>
                     <t t-raw="0"/>
@@ -163,7 +163,7 @@
 
         <template id="din5008_css" inherit_id="web.styles_company_report">
             <xpath expr="//t[@t-elif]" position="before">
-                <t t-elif="layout == 'l10n_de.external_layout_din5008'">
+                <t t-elif="layout == 'l10n_din5008.external_layout_din5008'">
                     &amp;.din_page {
                         &amp;.header {
                             .company_header {
