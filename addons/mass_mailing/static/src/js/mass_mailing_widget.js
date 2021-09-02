@@ -140,8 +140,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
      * @override
      */
     _renderEdit: function () {
-        this._isFromInline = !!this.value;
-        this._wysiwygSnippetsActive = !(this._isFromInline && $(this.value).is('.o_layout.o_basic_theme'));
+        this._wysiwygSnippetsActive = !$(this.value).is('.o_layout.o_basic_theme');
         if (!this.value) {
             this.value = this.recordData[this.nodeOptions['inline-field']];
         }
@@ -337,9 +336,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
      * @override
      */
     _onLoadWysiwyg: function () {
-        if (this._isFromInline) {
-            this._fromInline();
-        }
         if (this.snippetsLoaded) {
             this._onSnippetsLoaded(this.snippetsLoaded);
         }

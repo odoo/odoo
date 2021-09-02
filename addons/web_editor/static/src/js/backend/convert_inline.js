@@ -210,23 +210,6 @@ function fontToImg($editable) {
     });
 }
 
-/**
- * Converts images which were the result of a font icon convertion to a font
- * icon again.
- *
- * @param {jQuery} $editable - the element in which the images will be converted
- *                           back to font icons
- */
-function imgToFont($editable) {
-    $editable.find('img[src*="/web_editor/font_to_img/"]').each(function () {
-        var $img = $(this);
-        $img.replaceWith($('<span/>', {
-            class: $img.data('class'),
-            style: $img.data('style')
-        }));
-    });
-}
-
 /*
  * Utility function to apply function over descendants elements
  *
@@ -310,44 +293,6 @@ function classToStyle($editable) {
 }
 
 /**
- * Removes the inline style which is not necessary (because, for example, a
- * class on an element will induce the same style).
- *
- * @param {jQuery} $editable
- */
-function styleToClass($editable) {
-    // Outlook revert
-    $editable.find('.o_outlook_hack').each(function () {
-        $(this).after($('a,img', this));
-    }).remove();
-
-    var $c = $('<span/>').appendTo($editable[0].ownerDocument.body);
-
-    applyOverDescendants($editable[0], function (node) {
-        var $target = $(node);
-        var css = getMatchedCSSRules(node);
-        var style = '';
-        _.each(css, function (v,k) {
-            if (!(new RegExp('(^|;)\s*' + k).test(style))) {
-                style = k+':'+v+';'+style;
-            }
-        });
-        css = ($c.attr('style', style).attr('style') || '').split(/\s*;\s*/);
-        style = ($target.attr('style') || '').replace(/\s*:\s*/, ':').replace(/\s*;\s*/, ';');
-        _.each(css, function (v) {
-            style = style.replace(v, '');
-        });
-        style = style.replace(/;+(\s;)*/g, ';').replace(/^;/g, '');
-        if (style !== '') {
-            $target.attr('style', style);
-        } else {
-            $target.removeAttr('style');
-        }
-    });
-    $c.remove();
-}
-
-/**
  * Converts css display for attachment link to real image.
  * Without this post process, the display depends on the css and the picture
  * does not appear when we use the html without css (to send by email for e.g.)
@@ -363,16 +308,6 @@ function attachmentThumbnailToLinkImg($editable) {
             .css('width', Math.max(1, $link.width()) + 'px');
         $link.prepend($img);
     });
-}
-
-/**
- * Revert attachmentThumbnailToLinkImg changes
- *
- * @see attachmentThumbnailToLinkImg
- * @param {jQuery} $editable
- */
-function linkImgToAttachmentThumbnail($editable) {
-    $editable.find('a[href*="/web/content/"][data-mimetype] > img').remove();
 }
 
 
@@ -429,49 +364,11 @@ FieldHtml.include({
             notifyChange: false,
         });
     },
-    /**
-     * Revert _toInline changes.
-     *
-     * @private
-     */
-    _fromInline: function () {
-        var $editable = this.wysiwyg.getEditable();
-        var html = this.wysiwyg.getValue();
-        $editable.html(html);
-
-        styleToClass($editable);
-        imgToFont($editable);
-        linkImgToAttachmentThumbnail($editable);
-
-        // fix outlook image rendering bug
-        $editable.find('img[style*="width"], img[style*="height"]').removeAttr('height width');
-
-        this.wysiwyg.setValue($editable.html(), {
-            notifyChange: false,
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Handler
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _onLoadWysiwyg: function () {
-        if (this.nodeOptions['style-inline'] && this.mode === "edit") {
-            this._fromInline();
-        }
-        this._super();
-    },
 });
 
 return {
     fontToImg: fontToImg,
-    imgToFont: imgToFont,
     classToStyle: classToStyle,
-    styleToClass: styleToClass,
     attachmentThumbnailToLinkImg: attachmentThumbnailToLinkImg,
-    linkImgToAttachmentThumbnail: linkImgToAttachmentThumbnail,
 };
 });
