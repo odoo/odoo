@@ -175,7 +175,7 @@ class StockMove(models.Model):
         help="This is a technical field for calculating when a move should be reserved")
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
     from_immediate_transfer = fields.Boolean(related="picking_id.immediate_transfer")
-    product_packaging_qty = fields.Float('Pkg Qty')
+    product_packaging_qty = fields.Float('Pkg Qty', compute='_compute_product_packaging_qty')
 
     @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'state')
     def _compute_display_assign_serial(self):
@@ -515,6 +515,27 @@ class StockMove(models.Model):
                 if move.priority == '1':
                     days = move.picking_type_id.reservation_days_before_priority
                 move.reservation_date = fields.Date.to_date(move.date) - timedelta(days=days)
+
+    @api.depends('product_id', 'product_uom_qty', 'product_uom', 'product_packaging_id')
+    def _compute_product_packaging_qty(self):
+        """Calculate and set product_packaging_qty, if the result is not a integer,
+        remove the product_packaging_id.
+        """
+        for move in self:
+            if not move.product_packaging_id or not move.product_id or not move.product_uom_qty or not move.product_uom:
+                move.product_packaging_qty = 0
+                return
+            packaging_uom = move.product_packaging_id.product_uom_id
+            packaging_uom_qty = move.product_uom._compute_quantity(move.product_uom_qty, packaging_uom)
+            product_packaging_qty = packaging_uom_qty / move.product_packaging_id.qty
+            product_packaging_qty_integer = float_round(product_packaging_qty, precision_rounding=1.0)
+            if float_compare(product_packaging_qty,
+                             product_packaging_qty_integer,
+                             precision_rounding=move.product_uom.rounding) == 0:
+                move.product_packaging_qty = product_packaging_qty_integer
+            else:
+                move.product_packaging_qty = 0
+                move.product_packaging_id = False
 
     @api.constrains('product_uom')
     def _check_uom(self):
@@ -915,7 +936,6 @@ class StockMove(models.Model):
             self.product_packaging_qty = 0
         else:
             self.product_uom_qty = self.product_packaging_id._check_qty(self.product_uom_qty, self.product_uom, 'UP')
-            self._set_product_packaging_qty()
 
     @api.onchange('product_id', 'product_uom_qty', 'product_uom')
     def _onchange_suggest_packaging(self):
@@ -925,27 +945,9 @@ class StockMove(models.Model):
             # remove packaging if not match the product
             if self.product_packaging_id.product_id != self.product_id:
                 self.product_packaging_id = False
-            self._set_product_packaging_qty()
             # if no packaging, try find a suitable one
             if not self.product_packaging_id:
                 self.product_packaging_id = self.product_id.packaging_ids._find_suitable_product_packaging(self.product_uom_qty, self.product_uom)
-
-    def _set_product_packaging_qty(self):
-        """Calculate and set product_packaging_qty, if the result is not a integer,
-        remove the product_packaging_id.
-        """
-        if not self.product_packaging_id or not self.product_id or not self.product_uom_qty or not self.product_uom:
-            return
-        packaging_uom = self.product_packaging_id.product_uom_id
-        packaging_uom_qty = self.product_uom._compute_quantity(self.product_uom_qty, packaging_uom)
-        product_packaging_qty = packaging_uom_qty / self.product_packaging_id.qty
-        product_packaging_qty_integer = float_round(product_packaging_qty, precision_rounding=1.0)
-        if float_compare(product_packaging_qty,
-                        product_packaging_qty_integer,
-                        precision_rounding=self.product_uom.rounding) == 0:
-            self.product_packaging_qty = product_packaging_qty_integer
-        else:
-            self.product_packaging_id = False
 
     @api.onchange('lot_ids')
     def _onchange_lot_ids(self):
