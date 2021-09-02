@@ -11,9 +11,6 @@ export default class ProjectRightPanel extends owl.Component {
         this.project_id = this.context.active_id;
         this.state = useState({
             data: {
-                tasks_analysis: {
-                    data: []
-                },
                 milestones: {
                     data: []
                 },
@@ -48,9 +45,18 @@ export default class ProjectRightPanel extends owl.Component {
         const additionalContext = JSON.parse(event.currentTarget.dataset.additional_context || "{}");
         if (event.currentTarget.dataset.type === "object") {
             action = await this.rpc({
-                model: 'project.project',
-                method: event.currentTarget.dataset.action,
-                args: [this.project_id]
+                // Use the call_button method in order to have an action
+                // with the correct view naming, i.e. list view is named
+                // 'list' rather than 'tree'.
+                route: '/web/dataset/call_button',
+                params: {
+                    model: 'project.project',
+                    method: event.currentTarget.dataset.action,
+                    args: [this.project_id],
+                    kwargs: {
+                        context: this.context
+                    }
+                }
             });
         }
         this._doAction(action, {

@@ -10,23 +10,19 @@
 
     <template id="project_update_default_description" name="Project Update Description">
 <!--As this template is rendered in an html field, the spaces may be interpreted as nbsp while editing. -->
-<div name="tasks">
-<h1>Tasks</h1>
-
-<a t-if="user.has_group('project.group_project_manager')" type="object" t-att-href="tasks['action']['url_default']" t-att-name="tasks['action']['name']"><t t-esc="tasks['open_tasks']"/> tasks are open</a><t t-else=""><t t-esc="tasks['open_tasks']"/> tasks are open</t>, out of <t t-esc="tasks['total_tasks']"/>. In the last 30 days,
-<ul>
-<li t-if="tasks['created_tasks'] > 1"><t t-esc="tasks['created_tasks']"/> were created</li>
-<li t-else=""><t t-esc="tasks['created_tasks']"/> was created</li>
-<li t-if="tasks['closed_tasks'] > 1"><t t-esc="tasks['closed_tasks']"/> were closed (folded stage)</li>
-<li t-else=""><t t-esc="tasks['closed_tasks']"/> was closed (folded stage)</li>
-</ul>
+<div name="summary">
+<h1>Sprint Summary</h1>
+<p>How’s this project going?</p><br/>
 </div>
 
-<hr t-if="milestones['show_section']"/>
+<div name="activities" t-if="milestones['show_section']">
+<h1>Activities</h1>
+</div>
 
 <div name="milestone">
 <t t-if="milestones['show_section']">
-<h1>Milestones</h1>
+<br/>
+<h3><b><u>Milestones</u></b></h3>
 
 <ul class="o_checklist" t-if="milestones['list']">
 <t t-foreach="milestones['list']" t-as="milestone" t-key="milestone['id']">
@@ -39,8 +35,8 @@
 </ul>
 
 <t t-if="milestones['updated']">
-<t t-if="len(milestones['updated']) > 1">Over the last 30 days, the deadline of the following milestones has been updated :</t>
-<t t-else="">Over the last 30 days, the deadline of the following milestone has been updated :</t>
+<t t-if="len(milestones['updated']) > 1">The deadline of the following milestones has been updated <t t-if="milestones['last_update_date']">since the last project update (<t t-esc="milestones['last_update_date']" t-options='{"widget": "date"}'/>) </t> :</t>
+<t t-else="">The deadline of the following milestone has been updated <t t-if="milestones['last_update_date']">since the last project update (<t t-esc="milestones['last_update_date']" t-options='{"widget": "date"}'/>) </t> :</t>
 <ul>
 <t t-foreach="milestones['updated']" t-as="milestone" t-key="milestone['id']">
 <li>
@@ -51,8 +47,8 @@
 </t>
 
 <t t-if="milestones['created']">
-<t t-if="len(milestones['created']) > 1">The following milestones have been added :</t>
-<t t-else="">The following milestone has been added :</t>
+<t t-if="len(milestones['created']) > 1">The following milestones have been added <t t-if="milestones['last_update_date']">since the last project update (<t t-esc="milestones['last_update_date']" t-options='{"widget": "date"}'/>) </t>:</t>
+<t t-else="">The following milestone has been added <t t-if="milestones['last_update_date']">since the last project update (<t t-esc="milestones['last_update_date']" t-options='{"widget": "date"}'/>) </t>:</t>
 <ul>
 <t t-foreach="milestones['created']" t-as="milestone" t-key="milestone['id']">
 <li>

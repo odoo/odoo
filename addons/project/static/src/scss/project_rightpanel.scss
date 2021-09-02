@@ -23,7 +23,7 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
 }
 
 .o_rightpanel {
-    flex: 0 0 30%;
+    flex: 0 0 25%;
     overflow: auto;
     height: 100%;
     padding: $o-rightpanel-p-small $o-rightpanel-p $o-rightpanel-p*2 $o-rightpanel-p;
@@ -35,8 +35,16 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
         padding-bottom: $o-rightpanel-p;
         padding-top: $o-rightpanel-p;
 
-        &:not(:first-child){
+        &:nth-child(n+3){
             border-top: 1px solid $gray-300;
+        }
+
+        &:first-child{
+            padding-bottom: 0px;
+        }
+
+        &:nth-child(2){
+            padding-top: 0px;
         }
 
         .o_rightpanel_header {
@@ -84,6 +92,11 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
                 float: right;
             }
 
+            .o_rightpanel_center_col {
+                flex-grow: 1;
+                text-align: center;
+            }
+
             .o_open_milestone {
                 margin-bottom: $o-rightpanel-p-tiny;
                 display: flex;
@@ -116,6 +129,47 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
         }
         .o_color_green {
             color: $green;
+        }
+
+        .o_form_view {
+            .oe_button_box {
+                display: flex;
+                flex-wrap: wrap;
+                margin-left: -16px;
+                margin-right: -16px;
+
+                @media screen and (max-device-width: 768px) {
+                    margin-top: -4px;
+                    margin-bottom: 0px;
+                }
+                
+                .oe_stat_button {
+                    flex-basis: 33.333333%;
+                    border-width: 1px;
+                    margin-top: -1px;
+                    margin-left: -1px;
+                    height: 56px;
+
+                    &:nth-child(3n){
+                        border-right-width: 0px;
+                    }
+
+                    .o_stat_text {
+                        white-space: normal;
+                    }
+                }
+
+                @media screen and (max-width: 1600px) {
+                    .oe_stat_button {
+                        flex-basis: 50%;
+                    
+                        &:nth-child(2n){
+                            border-right-width: 0px;
+                        }
+                    }
+                }
+
+            }
         }
     }
 

@@ -35,7 +35,11 @@
                         </group>
                     </group>
                     <separator/>
-                    <field name="description" widget="html_with_action" nolabel="1" class="o_project_update_description"/>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" widget="html_with_action" nolabel="1" class="o_project_update_description"/>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" options="{'post_refresh':True}" groups="base.group_user"/>
@@ -124,7 +128,7 @@
                     <group>
                         <group>
                             <field name="project_id" invisible="1"/>
-                            <field name="name"/>
+                            <field name="name" placeholder="E.g: Product Launch"/>
                             <field name="deadline"/>
                             <field name="is_reached"/>
                         </group>

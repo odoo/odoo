@@ -6,7 +6,7 @@
     </button>
 
     <t t-inherit="project.ProjectRightPanel" t-inherit-mode="extension" owl="1">
-        <xpath expr="//t[@t-call='project.TaskSection']" position="before">
+        <xpath expr="//t[@t-call='project.StatButtonsSection']" position="before">
             <t t-call="sale_timesheet.ProfitabilitySection"/>
         </xpath>
     </t>

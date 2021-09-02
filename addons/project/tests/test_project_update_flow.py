@@ -26,8 +26,7 @@ class TestProjectUpdate(TestProjectCommon):
 
         self.assertEqual(update.user_id, self.env.user, "The author is the user who created the update.")
         self.assertNotEqual(len(update.description), 0, "The description should not be empty.")
-        self.assertTrue("Tasks" in update.description, "The description should contain 'Tasks'.")
-        self.assertTrue("Milestone" in update.description, "The description should contain 'Milestone'.")
+        self.assertTrue("Activities" in update.description, "The description should contain 'Activities'.")
         self.assertEqual(update.status, 'on_track', "The status should be the default one.")
 
         with Form(self.env['project.update'].with_context({'default_project_id': self.project_pigs.id})) as update_form:
@@ -48,11 +47,6 @@ class TestProjectUpdate(TestProjectCommon):
 
         template_values = self.env['project.update']._get_template_values(self.project_pigs)
 
-        self.assertEqual(template_values['tasks']['open_tasks'], 2, "Open tasks should be equal to 2")
-        self.assertEqual(template_values['tasks']['total_tasks'], 2, "Total tasks should be equal to 2")
-        self.assertEqual(template_values['tasks']['created_tasks'], 2, "Created tasks should be equal to 2")
-        self.assertEqual(template_values['tasks']['closed_tasks'], 0, "Closed tasks should be equal to 0")
-
         self.assertEqual(len(template_values['milestones']['list']), 2, "Milestone list length should be equal to 2")
         self.assertEqual(len(template_values['milestones']['created']), 3, "Milestone created length tasks should be equal to 3")
 
@@ -70,7 +64,6 @@ class TestProjectUpdate(TestProjectCommon):
 
         panel_data = self.project_pigs.get_panel_data()
 
-        self.assertEqual(len(panel_data['tasks_analysis']['data']), 2, "Panel data should contain 'tasks' entry")
         self.assertEqual(len(panel_data['milestones']['data']), 3, "Panel data should contain 'milestone' entry")
         self.assertFalse(panel_data['milestones']['data'][0]['is_deadline_exceeded'], "Milestone is achieved")
         self.assertTrue(panel_data['milestones']['data'][1]['is_deadline_exceeded'], "Milestone is exceeded")

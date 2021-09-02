@@ -9,6 +9,7 @@ from random import randint
 
 from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError, AccessError
+from odoo.tools import format_amount
 from odoo.osv.expression import OR
 
 from .project_task_recurrence import DAYS, WEEKS
@@ -136,7 +137,6 @@ class ProjectTaskType(models.Model):
                 stage.disabled_rating_warning = '\n'.join('- %s' % p.name for p in disabled_projects)
             else:
                 stage.disabled_rating_warning = False
-
 
 class Project(models.Model):
     _name = "project.project"
@@ -659,6 +659,7 @@ class Project(models.Model):
             'user': self._get_user_values(),
             'tasks_analysis': self._get_tasks_analysis(),
             'milestones': self._get_milestones(),
+            'buttons': sorted(self._get_stat_buttons(), key=lambda k: k['sequence'])
         }
 
     def _get_user_values(self):
@@ -704,6 +705,63 @@ class Project(models.Model):
         return {
             'data': self.milestone_ids._get_data_list(),
         }
+
+    def _get_stat_buttons(self):
+        self.ensure_one()
+        buttons = [{
+            'icon': 'tasks',
+            'text': _('Tasks'),
+            'number': self.task_count,
+            'action_type': 'action',
+            'action': 'project.act_project_project_2_project_task_all',
+            'additional_context': json.dumps({
+                'active_id': self.id,
+            }),
+            'show': True,
+            'sequence': 2,
+        },
+        {
+            'icon': 'smile-o',
+            'text': _('Customer Satisfaction'),
+            'number': '%s %%' % (self.rating_percentage_satisfaction),
+            'action_type': 'object',
+            'action': 'action_view_all_rating',
+            'show': self.user_has_groups('project.group_project_rating') and self.rating_active and self.rating_percentage_satisfaction > -1,
+            'sequence': 5,
+        },
+        {
+            'icon': 'area-chart',
+            'text': _('Burndown Chart'),
+            'action_type': 'action',
+            'action': 'project.action_project_task_burndown_chart_report',
+            'additional_context': json.dumps({
+                'active_id': self.id,
+            }),
+            'show': self.user_has_groups('project.group_project_manager'),
+            'sequence': 7,
+        },
+        {
+            'icon': 'usd',
+            'text': _('Gross Margin'),
+            'number': format_amount(self.env, self.analytic_account_balance, self.company_id.currency_id),
+            'action_type': 'object',
+            'action': 'action_view_analytic_account_entries',
+            'show': self.user_has_groups('analytic.group_analytic_accounting'),
+            'sequence': 18,
+        },
+        {
+            'icon': 'users',
+            'text': _('Collaborators'),
+            'number': self.collaborator_count,
+            'action_type': 'action',
+            'action': 'project.project_collaborator_action',
+            'additional_context': json.dumps({
+                'active_id': self.id,
+            }),
+            'show': self.user_has_groups('project.group_project_manager'),
+            'sequence': 19,
+        }]
+        return buttons
 
     def _get_tasks_analysis_counts(self, created=False, updated=False):
         tasks = self.env['project.task'].search([('display_project_id', '=', self.id)])
