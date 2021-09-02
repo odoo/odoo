@@ -157,3 +157,35 @@ class TestSalePayment(PaymentCommon, PaymentHttpCommon):
         self.assertEqual(tx2_sudo.reference, reference)
         self.assertEqual(self.order.state, 'draft')
         self.assertEqual(self.order.transaction_ids, tx_sudo + tx2_sudo)
+
+    def test_13_sale_automatic_partial_payment_link_delivery(self):
+        """Test that with automatic invoice and invoicing policy based on delivered quantity, a transaction for the partial
+        amount does not validate the SO."""
+        # set automatic invoice
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+        # invoicing policy is based on delivered quantity
+        self.sale_product.invoice_policy = 'delivery'
+
+        self.amount = self.order.amount_total / 2.0
+        route_values = self._prepare_pay_values()
+        route_values['sale_order_id'] = self.order.id
+
+        tx_context = self.get_tx_checkout_context(**route_values)
+
+        route_values.update({
+            'flow': 'direct',
+            'payment_option_id': self.acquirer.id,
+            'tokenization_requested': False,
+            'validation_route': False,
+            'reference_prefix': tx_context['reference_prefix'],
+            'landing_route': tx_context['landing_route'],
+        })
+        with mute_logger('odoo.addons.payment.models.payment_transaction'):
+            processing_values = self.get_processing_values(**route_values)
+        tx_sudo = self._get_tx(processing_values['reference'])
+
+        tx_sudo._set_done()
+        with mute_logger('odoo.addons.sale.models.payment_transaction'):
+            tx_sudo._finalize_post_processing()
+
+        self.assertEqual(self.order.state, 'draft', 'a partial transaction with automatic invoice and invoice_policy = delivery should not validate a quote')
