@@ -144,6 +144,9 @@ class AccountEdiFormat(models.Model):
         :returns:       the invoice where the factur-x data was imported.
         """
 
+        def _find_value(xpath, element=tree):
+            return self._find_value(xpath, element, tree.nsmap)
+
         amount_total_import = None
 
         default_move_type = False
@@ -261,20 +264,14 @@ class AccountEdiFormat(models.Model):
                             invoice_line_form.sequence = int(line_elements[0].text)
 
                         # Product.
-                        line_elements = element.xpath('.//ram:SpecifiedTradeProduct/ram:Name', namespaces=tree.nsmap)
-                        if line_elements:
-                            invoice_line_form.name = line_elements[0].text
-                        line_elements = element.xpath('.//ram:SpecifiedTradeProduct/ram:SellerAssignedID', namespaces=tree.nsmap)
-                        if line_elements and line_elements[0].text:
-                            product = self.env['product.product'].search([('default_code', '=', line_elements[0].text)])
-                            if product:
-                                invoice_line_form.product_id = product
-                        if not invoice_line_form.product_id:
-                            line_elements = element.xpath('.//ram:SpecifiedTradeProduct/ram:GlobalID', namespaces=tree.nsmap)
-                            if line_elements and line_elements[0].text:
-                                product = self.env['product.product'].search([('barcode', '=', line_elements[0].text)])
-                                if product:
-                                    invoice_line_form.product_id = product
+                        name = _find_value('.//ram:SpecifiedTradeProduct/ram:Name', element)
+                        if name:
+                            invoice_line_form.name = name
+                        invoice_line_form.product_id = self._retrieve_product(
+                            default_code=_find_value('.//ram:SpecifiedTradeProduct/ram:SellerAssignedID', element),
+                            name=_find_value('.//ram:SpecifiedTradeProduct/ram:Name', element),
+                            barcode=_find_value('.//ram:SpecifiedTradeProduct/ram:GlobalID', element)
+                        )
 
                         # Quantity.
                         line_elements = element.xpath('.//ram:SpecifiedLineTradeDelivery/ram:BilledQuantity', namespaces=tree.nsmap)
@@ -303,18 +300,13 @@ class AccountEdiFormat(models.Model):
                             invoice_line_form.discount = float(line_elements[0].text)
 
                         # Taxes
-                        line_elements = element.xpath('.//ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax/ram:RateApplicablePercent', namespaces=tree.nsmap)
+                        tax_element = element.xpath('.//ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax/ram:RateApplicablePercent', namespaces=tree.nsmap)
                         invoice_line_form.tax_ids.clear()
-                        for tax_element in line_elements:
-                            percentage = float(tax_element.text)
-
-                            tax = self.env['account.tax'].search([
-                                ('company_id', '=', invoice_form.company_id.id),
-                                ('amount_type', '=', 'percent'),
-                                ('type_tax_use', '=', invoice_form.journal_id.type),
-                                ('amount', '=', percentage),
-                            ], limit=1)
-
+                        for eline in tax_element:
+                            tax = self._retrieve_tax(
+                                amount=eline.text,
+                                type_tax_use=invoice_form.journal_id.type
+                            )
                             if tax:
                                 invoice_line_form.tax_ids.add(tax)
             elif amount_total_import:
