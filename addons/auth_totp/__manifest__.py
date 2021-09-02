@@ -19,7 +19,7 @@ can setup API keys to replace their main password.
     'auto_install': True,
     'data': [
         'data/ir_action_data.xml',
-        'data/mail_templates_data.xml',
+        'data/mail_template_data.xml',
         'security/security.xml',
         'views/res_users_views.xml',
         'views/templates.xml',
