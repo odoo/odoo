@@ -43,30 +43,32 @@
 
     <t t-name="project.ProjectRightPanel" owl="1">
         <div class="o_rightpanel">
-            <t t-call="project.TaskSection"/>
+            <t t-call="project.StatButtonsSection"/>
             <t t-call="project.MilestoneSection"/>
         </div>
     </t>
 
-    <t t-name="project.TaskSection" owl="1">
-        <t t-set="tasksAnalysis" t-value="state.data.tasks_analysis"/>
-        <div class="o_rightpanel_section" name="task_analysis">
-            <div class="o_rightpanel_header">
-                <div class="o_rightpanel_title">
-                    Tasks Analysis
-                </div>
-            </div>
-
-            <div class="o_rightpanel_data">
-                <div t-foreach="tasksAnalysis.data" t-as="analysis" t-key="analysis.name" class="o_rightpanel_data_row">
-                    <a t-if="state.data.user.is_project_user" class="btn btn-link o_rightpanel_left_col o_rightpanel_left_button" t-on-click="onProjectActionClick"
-                        t-att-data-action="analysis.action.action"
-                        t-att-data-additional_context="analysis.action.additional_context"
-                        data-type="action">
-                        <t t-esc="analysis.name"/>
-                    </a>
-                    <span t-else="" class="o_rightpanel_left_col o_rightpanel_left_text"><t t-esc="analysis.name"/></span>
-                    <span class="o_rightpanel_right_col"><t t-esc="analysis.value"/></span>
+    <t t-name="project.StatButtonsSection" owl="1">
+        <div class="o_rightpanel_section">
+            <div class="o_form_view">
+                <div class="oe_button_box o_full">
+                    <t t-foreach="state.data.buttons" t-as="button" t-key="button.order">
+                        <button class="btn oe_stat_button" t-if="button.show"
+                            t-on-click="onProjectActionClick" 
+                            t-att-data-action="button.action"
+                            t-att-data-additional_context="button.additional_context"
+                            t-att-data-type="button.action_type">
+                            <i t-att-class="'fa fa-fw o_button_icon fa-' + button.icon"/>
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <t t-esc="button.number"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    <t t-esc="button.text"/>
+                                </span>
+                            </div>
+                        </button>
+                    </t>
                 </div>
             </div>
         </div>
@@ -102,11 +104,12 @@
                     Component="FormViewDialog"
                     params="{
                         context: context,
+                        _createContext: _createContext,
                         on_saved: _onDialogSaved,
                         res_id: false,
                         res_model: 'project.milestone',
                         title: NEW_PROJECT_MILESTONE,
-                        disable_multiple_selection: true,
+                        multi_select: true,
                     }"
                     t-ref="dialog"
                 />
@@ -120,8 +123,10 @@
                 <i class="fa" t-att-class="state.checkboxIcon"></i>
             </span>
             <div class="o_milestone_detail" t-on-click="onOpenMilestone">
-                <t t-esc="milestone.name"/>
-                <span class="o_rightpanel_right_col">
+                <span style="flex: 10%">
+                    <t t-esc="milestone.name"/>
+                </span>
+                <span class="o_rightpanel_center_col">
                     <t t-esc="deadline"/>
                 </span>
             </div>

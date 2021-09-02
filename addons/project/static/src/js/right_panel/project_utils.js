@@ -18,6 +18,7 @@ class MilestoneComponent extends owl.Component {
         });
         this._dialogRef = useRef('dialog');
         this._isDialogOpen = false;
+        this._createContext = this._createContext.bind(this);
         this._onDialogSaved = this._onDialogSaved.bind(this);
     }
 
@@ -44,6 +45,12 @@ class MilestoneComponent extends owl.Component {
             });
             this._dialogRef.comp.widget.open();
         }
+    }
+
+    _createContext() {
+        return Object.assign({}, {
+            'default_project_id': this.contextValue.active_id,
+        }, this.contextValue);
     }
 
     async _onDialogSaved() {
@@ -124,7 +131,7 @@ export class OpenMilestone extends MilestoneComponent {
                 args: [[this.milestone.id], !this.milestone.is_reached],
             });
             this.state.colorClass = this.milestone.is_deadline_exceeded ? "o_milestone_danger" : "";
-            this.state.checkboxIcon = this.milestone.is_reached ? "fa-check-square" : "fa-square-o";
+            this.state.checkboxIcon = this.milestone.is_reached ? "fa-check-square-o" : "fa-square-o";
             this.write_mutex = false;
         }
     }
