@@ -36,9 +36,9 @@
 
                                     <table class="table table-sm o_main_table" style='font-size: 12px;'>
                                         <tr>
-                                            <th>Barcode</th>
                                             <th>Lot/Serial number</th>
                                             <th>Product</th>
+                                            <th>Barcode</th>
                                             <th>Location</th>
                                             <th>Internal Ref</th>
                                             <th>Expiry Date</th>
@@ -48,13 +48,13 @@
                                         <t t-foreach="data.get(o)" t-as="line">
                                             <tr>
                                                 <td>
-                                                    <span t-esc="line.get('barcode')"/>
-                                                </td>
-                                                <td>
                                                     <span t-esc="line.get('name')"/>
                                                 </td>
                                                 <td>
                                                     <span t-esc="line.get('product_id')"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="line.get('barcode')"/>
                                                 </td>
                                                 <td>
                                                     <span t-esc="line.get('location_name')"/>
@@ -103,9 +103,9 @@
                                     <br/>
                                     <table class="table table-sm o_main_table">
                                         <tr>
-                                            <th>Barcode</th>
                                             <th>Lot/Serial number</th>
                                             <th>Product</th>
+                                            <th>Barcode</th>
                                             <th>Category</th>
                                             <th>Internal Ref</th>
                                             <th>Expiry Date</th>
@@ -115,13 +115,13 @@
                                         <t t-foreach="data.get(o)" t-as="line">
                                             <tr>
                                                 <td>
-                                                    <span t-esc="line.get('barcode')"/>
-                                                </td>
-                                                <td>
                                                     <span t-esc="line.get('name')"/>
                                                 </td>
                                                 <td>
                                                     <span t-esc="line.get('product_id')"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="line.get('barcode')"/>
                                                 </td>
                                                 <td>
                                                     <span t-esc="line.get('product_category')"/>
