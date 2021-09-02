@@ -7,20 +7,25 @@ from odoo import api, fields, models
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    is_event_booth = fields.Boolean(string='Is an Event Booth')
+    detailed_type = fields.Selection(selection_add=[
+        ('event_booth', 'Event Booth'),
+    ], ondelete={'event_booth': 'set default'})
 
-    @api.onchange('is_event_booth')
-    def _onchange_is_event_booth(self):
-        if self.is_event_booth:
-            self.type = 'service'
+    @api.onchange('detailed_type')
+    def _onchange_type_event_booth(self):
+        if self.detailed_type == 'event_booth':
             self.invoice_policy = 'order'
+
+    def _detailed_type_mapping(self):
+        type_mapping = super()._detailed_type_mapping()
+        type_mapping['event_booth'] = 'service'
+        return type_mapping
 
 
 class Product(models.Model):
     _inherit = 'product.product'
 
-    @api.onchange('is_event_booth')
-    def _onchange_is_event_booth(self):
-        if self.is_event_booth:
-            self.type = 'service'
+    @api.onchange('detailed_type')
+    def _onchange_type_event_booth(self):
+        if self.detailed_type == 'event_booth':
             self.invoice_policy = 'order'
