@@ -36,10 +36,12 @@ class ProductTemplate(models.Model):
             mpapi_response = CartAPI.get_product_details(self.marketplace_product.marketplace_id,
                                                          self.env.user.marketplace_token
                                                          )
+            try:
+                possible_ids = [i["paymentMethodId"] for i in mpapi_response["data"]["data"]["payment_methods"]]
 
-            possible_ids = [i["paymentMethodId"] for i in mpapi_response["data"]["data"]["payment_methods"]]
-
-            return {'domain': {'payment_method': [('id', 'in', possible_ids)]}}
+                return {'domain': {'payment_method': [('id', 'in', possible_ids)]}}
+            except:
+                pass
 
     @api.model
     def load(self, fields, data):
