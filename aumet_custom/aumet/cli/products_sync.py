@@ -93,7 +93,7 @@ class ProductSync(Command):
                     """
 
             for i in products:
-                cur.execute(insert_into_marketplace_products, (i["entityName_en"], i["unitPrice"],
+                cur.execute(insert_into_marketplace_products, (i["productName_en"], i["unitPrice"],
                                                                i['id'],
                                                                bool(i["isArchived"]), bool(i["is_product_locked"]),
                                                                i["entityId"],
