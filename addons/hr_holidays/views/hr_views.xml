@@ -196,12 +196,17 @@
                         context="{'search_default_employee_id': active_id}"
                         groups="base.group_user"
                         help="Remaining leaves">
-                    <div class="o_field_widget o_stat_info">
+                    <div class="o_field_widget o_stat_info" attrs="{'invisible': [('allocation_display', '=', '0')]}">
                         <span class="o_stat_value">
-                            <field name="allocation_used_display"/>/<field name="allocation_display"/> Days
+                            <field name="allocation_remaining_display"/>/<field name="allocation_display"/> Days
                         </span>
                         <span class="o_stat_text">
                             Time Off
+                        </span>
+                    </div>
+                    <div class="o_field_widget o_stat_info" attrs="{'invisible': [('allocation_display', '!=', '0')]}">
+                        <span class="o_stat_text">
+                           Time Off
                         </span>
                     </div>
                 </button>
@@ -324,7 +329,7 @@
                         help="Remaining leaves">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
-                            <field name="allocation_used_display"/>/<field name="allocation_display"/> Days
+                            <field name="allocation_remaining_display"/>/<field name="allocation_display"/> Days
                         </span>
                         <span class="o_stat_text">
                             Time Off

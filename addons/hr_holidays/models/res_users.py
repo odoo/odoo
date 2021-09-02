@@ -9,11 +9,10 @@ class User(models.Model):
 
     leave_manager_id = fields.Many2one(related='employee_id.leave_manager_id')
     show_leaves = fields.Boolean(related='employee_id.show_leaves')
-    allocation_used_count = fields.Float(related='employee_id.allocation_used_count')
     allocation_count = fields.Float(related='employee_id.allocation_count')
     leave_date_to = fields.Date(related='employee_id.leave_date_to')
     is_absent = fields.Boolean(related='employee_id.is_absent')
-    allocation_used_display = fields.Char(related='employee_id.allocation_used_display')
+    allocation_remaining_display = fields.Char(related='employee_id.allocation_remaining_display')
     allocation_display = fields.Char(related='employee_id.allocation_display')
     hr_icon_display = fields.Selection(related='employee_id.hr_icon_display')
 
@@ -22,11 +21,10 @@ class User(models.Model):
         return super().SELF_READABLE_FIELDS + [
             'leave_manager_id',
             'show_leaves',
-            'allocation_used_count',
             'allocation_count',
             'leave_date_to',
             'is_absent',
-            'allocation_used_display',
+            'allocation_remaining_display',
             'allocation_display',
             'hr_icon_display',
         ]

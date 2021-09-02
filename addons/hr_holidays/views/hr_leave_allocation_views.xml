@@ -24,7 +24,13 @@
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <separator/>
                 <filter name="year" string="Current Year"
-                    domain="[('holiday_status_id.active', '=', True)]" help="Active Allocations"/>
+                    domain="[
+                        ('date_from', '&lt;=', context_today().strftime('%Y-12-31')),
+                    '|',
+                        ('date_to', '=', False),
+                        ('date_to', '&gt;=', context_today().strftime('%Y-1-1'))
+                    ]"
+                     help="Active Allocations"/>
                 <separator/>
                 <filter string="My Allocations" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
