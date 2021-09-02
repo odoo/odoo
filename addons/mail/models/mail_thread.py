@@ -1882,7 +1882,15 @@ class MailThread(models.AbstractModel):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
-        pass
+
+    def _message_update_content_after_hook(self, message):
+        """ Hook to add custom behavior after having updated the message content. """
+
+    def _check_can_update_message_content(self, message):
+        """" Checks that the current user can update the content of the message. """
+        note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+        if not message.subtype_id.id == note_id:
+            raise exceptions.UserError(_("Only logged notes can have their content updated on model '%s'", self._name))
 
     # ------------------------------------------------------
     # MESSAGE POST TOOLS

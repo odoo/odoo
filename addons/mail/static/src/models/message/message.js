@@ -1,10 +1,12 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, replace, unlinkAll } from '@mail/model/model_field_command';
+import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
+import { clear, create, insert, insertAndReplace, replace, unlinkAll } from '@mail/model/model_field_command';
 import emojis from '@mail/js/emojis';
 import { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } from '@mail/js/utils';
+
+import { session } from '@web/session';
 
 import { str_to_datetime } from 'web.time';
 
@@ -250,6 +252,26 @@ function factory(dependencies) {
             }));
         }
 
+        /**
+         * Updates the message's content.
+         * 
+         * @param {Object} param0
+         * @param {string} param0.body the new body of the message
+         */
+        async updateContent({ body }) {
+            const messageData = await this.env.services.rpc({
+                route: '/mail/message/update_content',
+                params: {
+                    body,
+                    message_id: this.id,
+                },
+            });
+            if (!this.messaging) {
+                return;
+            }
+            this.messaging.models['mail.message'].insert(messageData);
+        }
+
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
@@ -259,6 +281,29 @@ function factory(dependencies) {
          */
         static _createRecordLocalId(data) {
             return `${this.modelName}_${data.id}`;
+        }
+
+        /**
+         * @returns {boolean}
+         */
+        _computeCanBeDeleted() {
+            if (!session.is_admin && !this.isCurrentUserOrGuestAuthor) {
+                return false;
+            }
+            if (!this.originThread) {
+                return false;
+            }
+            if (this.originThread.model === 'mail.channel') {
+                return this.message_type === 'comment';
+            }
+            return this.is_note;
+        }
+
+        /**
+         * @returns {boolean}
+         */
+        _computeCanStarBeToggled() {
+            return !this.isTemporary && !this.isTransient;
         }
 
         /**
@@ -284,11 +329,15 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
-        _computeIsCurrentPartnerAuthor() {
+        _computeIsCurrentUserOrGuestAuthor() {
             return !!(
                 this.author &&
                 this.messaging.currentPartner &&
                 this.messaging.currentPartner === this.author
+            ) || !!(
+                this.guestAuthor &&
+                this.messaging.currentGuest &&
+                this.messaging.currentGuest === this.guestAuthor
             );
         }
 
@@ -442,6 +491,12 @@ function factory(dependencies) {
     }
 
     Message.fields = {
+        actionList: one2one('mail.message_action_list', {
+            default: create(),
+            inverse: 'message',
+            isCausal: true,
+            readonly: true,
+        }),
         attachments: many2many('mail.attachment', {
             inverse: 'messages',
         }),
@@ -456,6 +511,18 @@ function factory(dependencies) {
          */
         body: attr({
             default: "",
+        }),
+        /**
+         * Whether this message can be deleted.
+         */
+        canBeDeleted: attr({
+            compute: '_computeCanBeDeleted',
+        }),
+        /**
+         * Whether this message can be starred/unstarred.
+         */
+        canStarBeToggled: attr({
+            compute: '_computeCanStarBeToggled',
         }),
         /**
          * Determines the date of the message as a moment object.
@@ -477,8 +544,8 @@ function factory(dependencies) {
         id: attr({
             required: true,
         }),
-        isCurrentPartnerAuthor: attr({
-            compute: '_computeIsCurrentPartnerAuthor',
+        isCurrentUserOrGuestAuthor: attr({
+            compute: '_computeIsCurrentUserOrGuestAuthor',
             default: false,
         }),
         /**

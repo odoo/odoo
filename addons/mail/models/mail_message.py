@@ -125,6 +125,7 @@ class Message(models.Model):
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
     author_avatar = fields.Binary("Author's avatar", related='author_id.avatar_128', depends=['author_id'], readonly=False)
     author_guest_id = fields.Many2one(string="Guest", comodel_name='mail.guest')
+    is_current_user_or_guest_author = fields.Boolean(compute='_compute_is_current_user_or_guest_author')
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
     partner_ids = fields.Many2many('res.partner', string='Recipients', context={'active_test': False})
@@ -183,6 +184,18 @@ class Message(models.Model):
             else:
                 plaintext_ct = '' if not message.body else tools.html2plaintext(message.body)
                 message.description = plaintext_ct[:30] + '%s' % (' [...]' if len(plaintext_ct) >= 30 else '')
+
+    @api.depends('author_id', 'author_guest_id')
+    @api.depends_context('guest', 'uid')
+    def _compute_is_current_user_or_guest_author(self):
+        user = self.env.user
+        for message in self:
+            if not user._is_public() and (message.author_id and message.author_id == user.partner_id):
+                message.is_current_user_or_guest_author = True
+            elif user._is_public() and (message.author_guest_id and message.author_guest_id == self.env.context.get('guest')):
+                message.is_current_user_or_guest_author = True
+            else:
+                message.is_current_user_or_guest_author = False
 
     def _compute_needaction(self):
         """ Need action on a mail.message = notified on my channel """
@@ -659,6 +672,13 @@ class Message(models.Model):
             raise AccessError(_("Only administrators are allowed to export mail message"))
 
         return super(Message, self).export_data(fields_to_export)
+
+    def _update_content(self, body):
+        self.ensure_one()
+        thread = self.env[self.model].browse(self.res_id)
+        thread._check_can_update_message_content(self)
+        self.body = body
+        thread._message_update_content_after_hook(self)
 
     # ------------------------------------------------------
     # DISCUSS API

@@ -1243,20 +1243,23 @@ QUnit.test('basic rendering of message', async function (assert) {
         1,
         "should have date in header of message"
     );
-    assert.strictEqual(
-        message.querySelectorAll(`:scope .o_Message_header .o_Message_commands`).length,
-        1,
-        "should have commands in header of message"
+    await afterNextRender(() => 
+        document.querySelector('.o_Message').click()
     );
     assert.strictEqual(
-        message.querySelectorAll(`:scope .o_Message_header .o_Message_command`).length,
+        message.querySelectorAll(`:scope .o_MessageActionList`).length,
         1,
-        "should have a single command in header of message"
+        "should action list in message"
     );
     assert.strictEqual(
-        message.querySelectorAll(`:scope .o_Message_commandStar`).length,
+        message.querySelectorAll(`:scope .o_MessageActionList_action`).length,
         1,
-        "should have command to star message"
+        "should have a single action in action list of message"
+    );
+    assert.strictEqual(
+        message.querySelectorAll(`:scope .o_MessageActionList_actionStar`).length,
+        1,
+        "should have action to star message"
     );
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_Message_content`).length,
@@ -1345,20 +1348,23 @@ QUnit.test('basic rendering of squashed message', async function (assert) {
         message2.querySelector(`:scope .o_Message_sidebar`).classList.contains('o-message-squashed'),
         "message 2 should have squashed sidebar"
     );
+    await afterNextRender(() => 
+        document.querySelector('.o_Message.o-squashed').click()
+    );
     assert.strictEqual(
         message2.querySelectorAll(`:scope .o_Message_sidebar .o_Message_date`).length,
         1,
         "message 2 should have date in sidebar"
     );
     assert.strictEqual(
-        message2.querySelectorAll(`:scope .o_Message_sidebar .o_Message_commands`).length,
+        message2.querySelectorAll(`:scope .o_MessageActionList`).length,
         1,
-        "message 2 should have some commands in sidebar"
+        "message 2 should have some actions"
     );
     assert.strictEqual(
-        message2.querySelectorAll(`:scope .o_Message_sidebar .o_Message_commandStar`).length,
+        message2.querySelectorAll(`:scope .o_MessageActionList_actionStar`).length,
         1,
-        "message 2 should have star command in sidebar"
+        "message 2 should have star action in action list"
     );
     assert.strictEqual(
         message2.querySelectorAll(`:scope .o_Message_core`).length,
@@ -2489,13 +2495,14 @@ QUnit.test('toggle_star message', async function (assert) {
         message.classList.contains('o-starred'),
         "message should not be starred"
     );
+    await afterNextRender(() => message.click());
     assert.strictEqual(
-        message.querySelectorAll(`:scope .o_Message_commandStar`).length,
+        message.querySelectorAll(`:scope .o_MessageActionList_actionStar`).length,
         1,
-        "message should have star command"
+        "message should have star action"
     );
 
-    await afterNextRender(() => message.querySelector(`:scope .o_Message_commandStar`).click());
+    await afterNextRender(() => message.querySelector(`:scope .o_MessageActionList_actionStar`).click());
     assert.verifySteps(['rpc:toggle_message_starred']);
     assert.strictEqual(
         document.querySelector(`
@@ -2518,7 +2525,7 @@ QUnit.test('toggle_star message', async function (assert) {
         "message should be starred"
     );
 
-    await afterNextRender(() => message.querySelector(`:scope .o_Message_commandStar`).click());
+    await afterNextRender(() => message.querySelector(`:scope .o_MessageActionList_actionStar`).click());
     assert.verifySteps(['rpc:toggle_message_starred']);
     assert.strictEqual(
         document.querySelectorAll(`
@@ -2915,25 +2922,26 @@ QUnit.test('rendering of inbox message', async function (assert) {
         " on Refactoring",
         "should display origin thread name"
     );
+    await afterNextRender(() => message.click());
     assert.strictEqual(
-        message.querySelectorAll(`:scope .o_Message_command`).length,
+        message.querySelectorAll(`:scope .o_MessageActionList_action`).length,
         3,
-        "should display 3 commands"
+        "should display 3 actions"
     );
     assert.strictEqual(
-        message.querySelectorAll(`:scope .o_Message_commandStar`).length,
+        message.querySelectorAll(`:scope .o_MessageActionList_actionStar`).length,
         1,
-        "should display star command"
+        "should display star action"
     );
     assert.strictEqual(
-        message.querySelectorAll(`:scope .o_Message_commandReply`).length,
+        message.querySelectorAll(`:scope .o_MessageActionList_actionReply`).length,
         1,
-        "should display reply command"
+        "should display reply action"
     );
     assert.strictEqual(
-        message.querySelectorAll(`:scope .o_Message_commandMarkAsRead`).length,
+        message.querySelectorAll(`:scope .o_MessageActionList_actionMarkRead`).length,
         1,
-        "should display mark as read command"
+        "should display mark as read action"
     );
 });
 
@@ -3209,9 +3217,10 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
         " on Refactoring",
         "should display message originates from record 'Refactoring'"
     );
+    await afterNextRender(() => document.querySelector('.o_Message').click());
 
     await afterNextRender(() =>
-        document.querySelector('.o_Message_commandReply').click()
+        document.querySelector('.o_MessageActionList_actionReply').click()
     );
     assert.ok(
         document.querySelector('.o_Message').classList.contains('o-selected'),
@@ -3456,12 +3465,19 @@ QUnit.test('mark a single message as read should only move this message to "Hist
         2,
         "inbox mailbox should have 2 messages"
     );
+    await afterNextRender(() =>
+        document.querySelector(`
+            .o_Message[data-message-local-id="${
+                this.messaging.models['mail.message'].findFromIdentifyingData({ id: 1 }).localId
+            }"]
+        `).click()
+    );
 
     await afterNextRender(() =>
         document.querySelector(`
             .o_Message[data-message-local-id="${
                 this.messaging.models['mail.message'].findFromIdentifyingData({ id: 1 }).localId
-            }"] .o_Message_commandMarkAsRead
+            }"] .o_MessageActionList_actionMarkRead
         `).click()
     );
     assert.containsOnce(
