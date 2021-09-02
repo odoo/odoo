@@ -82,9 +82,11 @@ class TestSaleExpectedDate(common.TransactionCase):
         picking = sale_order.picking_ids[0]
         for ml in picking.move_line_ids:
             ml.qty_done = ml.product_uom_qty
+        effective_date = expected_date + timedelta(days=1)
         picking.action_done()
+        picking.write({'date_done': effective_date})
         self.assertEquals(picking.state, 'done', "Picking not processed correctly!")
-        self.assertEquals(fields.Date.context_today(sale_order), sale_order.effective_date, "Wrong effective date on sale order!")
+        self.assertEqual(effective_date.date(), sale_order.effective_date, "Wrong effective date on sale order!")
 
     def test_sale_order_commitment_date(self):
 
