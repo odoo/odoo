@@ -3152,8 +3152,12 @@ QUnit.module('Views', {
             arch: '<tree><field name="foo"/><field name="text"/></tree>',
         });
 
-        const fooWidth = list.$('th[data-name="foo"]')[0].offsetWidth;
-        const textWidth = list.$('th[data-name="text"]')[0].offsetWidth;
+        const foo = list.el.querySelector('th[data-name="foo"]');
+        const fooWidth = Math.ceil(foo.getBoundingClientRect().width);
+
+        const text = list.el.querySelector('th[data-name="text"]');
+        const textWidth = Math.ceil(text.getBoundingClientRect().width);
+
         assert.strictEqual(fooWidth, textWidth, "both columns should have been given the same width");
 
         const firstRowHeight = list.$('.o_data_row:nth(0)')[0].offsetHeight;
