@@ -103,10 +103,11 @@ QUnit.test('basic rendering', async function (assert) {
         1,
         "message should display date"
     );
+    await afterNextRender(() => messageEl.click());
     assert.strictEqual(
-        messageEl.querySelectorAll(`:scope .o_Message_commands`).length,
+        messageEl.querySelectorAll(`:scope .o_MessageActionList`).length,
         1,
-        "message should display list of commands"
+        "message should display list of actions"
     );
     assert.strictEqual(
         messageEl.querySelectorAll(`:scope .o_Message_content`).length,

@@ -208,8 +208,13 @@ export class Composer extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickCaptureGlobal(ev) {
+    async _onClickCaptureGlobal(ev) {
         if (this.contains(ev.target)) {
+            return;
+        }
+        // Let event be handled by bubbling handlers first
+        await new Promise(this.env.browser.setTimeout);
+        if (isEventHandled(ev, 'MessageActionList.replyTo')) {
             return;
         }
         if (!this.composer) {
