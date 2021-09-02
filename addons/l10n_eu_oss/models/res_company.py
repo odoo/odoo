@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, models, Command
 from .eu_tax_map import EU_TAX_MAP
+
+import itertools
 
 
 class Company(models.Model):
@@ -21,7 +23,7 @@ class Company(models.Model):
         '''
         eu_countries = self.env.ref('base.europe').country_ids
         oss_tax_groups = self.env['ir.model.data'].search([
-            ('module', '=', 'l10n_eu_service'),
+            ('module', '=', 'l10n_eu_oss'),
             ('model', '=', 'account.tax.group')])
         for company in self:
             invoice_repartition_lines, refund_repartition_lines = company._get_repartition_lines_oss()
@@ -53,10 +55,10 @@ class Company(models.Model):
                     if tax_amount and domestic_tax not in fpos.tax_ids.tax_src_id:
                         if not foreign_taxes.get(tax_amount, False):
                             tax_group_fid = 'oss_tax_group_%s' % str(tax_amount).replace('.', '_')
-                            if not self.env.ref('l10n_eu_service.%s' % tax_group_fid, raise_if_not_found=False):
+                            if not self.env.ref('l10n_eu_oss.%s' % tax_group_fid, raise_if_not_found=False):
                                 self.env['ir.model.data'].create({
                                     'name': tax_group_fid,
-                                    'module': 'l10n_eu_service',
+                                    'module': 'l10n_eu_oss',
                                     'model': 'account.tax.group',
                                     'res_id': self.env['account.tax.group'].create({'name': 'OSS %s%%' % tax_amount}).id,
                                     'noupdate': True,
@@ -68,7 +70,7 @@ class Company(models.Model):
                                 'refund_repartition_line_ids': refund_repartition_lines,
                                 'type_tax_use': 'sale',
                                 'description': "%s%%" % tax_amount,
-                                'tax_group_id': self.env.ref('l10n_eu_service.%s' % tax_group_fid).id,
+                                'tax_group_id': self.env.ref('l10n_eu_oss.%s' % tax_group_fid).id,
                                 'country_id': company.account_fiscal_country_id.id,
                                 'sequence': 1000,
                                 'company_id': company.id,
@@ -86,11 +88,17 @@ class Company(models.Model):
         if oss_account:
             defaults['invoice_repartition_line_ids'][1][2]['account_id'] = oss_account.id
             defaults['refund_repartition_line_ids'][1][2]['account_id'] = oss_account.id
+
+        oss_tag = self.env.ref('l10n_eu_oss.tag_oss')
+        for orm_command in itertools.chain(defaults['invoice_repartition_line_ids'], defaults['refund_repartition_line_ids']):
+            rep_line_vals = orm_command[2]
+            rep_line_vals['tag_ids'] = rep_line_vals.get('tag_ids', []) + [Command.link(oss_tag.id)]
+
         return defaults['invoice_repartition_line_ids'], defaults['refund_repartition_line_ids']
 
     def _get_oss_account(self):
         self.ensure_one()
-        if not self.env.ref('l10n_eu_service.oss_tax_account_company_%s' % self.id, raise_if_not_found=False):
+        if not self.env.ref('l10n_eu_oss.oss_tax_account_company_%s' % self.id, raise_if_not_found=False):
             sales_tax_accounts = self.env['account.tax'].search([
                     ('type_tax_use', '=', 'sale'),
                     ('company_id', '=', self.id)
@@ -106,9 +114,9 @@ class Company(models.Model):
                 })
             self.env['ir.model.data'].create({
                 'name': 'oss_tax_account_company_%s' % self.id,
-                'module': 'l10n_eu_service',
+                'module': 'l10n_eu_oss',
                 'model': 'account.account',
                 'res_id': oss_account.id,
                 'noupdate': True,
                 })
-        return self.env.ref('l10n_eu_service.oss_tax_account_company_%s' % self.id)
+        return self.env.ref('l10n_eu_oss.oss_tax_account_company_%s' % self.id)

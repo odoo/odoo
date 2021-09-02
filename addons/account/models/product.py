@@ -34,6 +34,11 @@ class ProductTemplate(models.Model):
         string="Expense Account",
         domain=ACCOUNT_DOMAIN,
         help="Keep this field empty to use the default value from the product category. If anglo-saxon accounting with automated valuation method is configured, the expense account on the product category will be used.")
+    account_tag_ids = fields.Many2many(
+        string="Account Tags",
+        comodel_name='account.account.tag',
+        domain="[('tax_report_line_ids', '=', False), ('applicability', '=', 'taxes')]",
+        help="Tags to be set on the base and tax journal items created for this product.")
 
     def _get_product_accounts(self):
         return {
