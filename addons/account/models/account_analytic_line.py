@@ -38,7 +38,7 @@ class AccountAnalyticAccount(models.Model):
             ('analytic_account_id', 'in', self.ids)
         ]
         groups = self.env['account.move.line'].read_group(domain, ['move_id:count_distinct'], ['analytic_account_id'])
-        moves_count_mapping = dict((g['analytic_account_id'][0], g['analytic_account_id_count']) for g in groups)
+        moves_count_mapping = dict((g['analytic_account_id'][0], g['move_id']) for g in groups)
         for account in self:
             account.invoice_count = moves_count_mapping.get(account.id, 0)
 
@@ -51,7 +51,7 @@ class AccountAnalyticAccount(models.Model):
             ('analytic_account_id', 'in', self.ids)
         ]
         groups = self.env['account.move.line'].read_group(domain, ['move_id:count_distinct'], ['analytic_account_id'])
-        moves_count_mapping = dict((g['analytic_account_id'][0], g['analytic_account_id_count']) for g in groups)
+        moves_count_mapping = dict((g['analytic_account_id'][0], g['move_id']) for g in groups)
         for account in self:
             account.vendor_bill_count = moves_count_mapping.get(account.id, 0)
 
