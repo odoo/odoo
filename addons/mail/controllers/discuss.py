@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from datetime import datetime, timedelta
 
 from odoo import http
 from odoo.http import request
@@ -38,10 +39,10 @@ class DiscussController(http.Controller):
                 'name': _("Guest"),
                 'timezone': request.env['mail.guest']._get_timezone_from_request(request),
             })
-            # Guest session cookies, every route in this file will make use of them to authenticate
+            # Discuss Guest ID: every route in this file will make use of it to authenticate
             # the guest through `_get_as_sudo_from_request` or `_get_as_sudo_from_request_or_raise`.
-            response.set_cookie('mail.guest_id', str(guest.id), httponly=True)
-            response.set_cookie('mail.guest_access_token', guest.access_token, httponly=True)
+            expiration_date = datetime.now() + timedelta(days=365)
+            response.set_cookie(guest._cookie_name, f"{guest.id}{guest._cookie_separator}{guest.access_token}", httponly=True, expires=expiration_date)
         channel_sudo.add_members(guest_ids=[guest.id])
         return response
 
