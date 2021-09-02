@@ -34,6 +34,31 @@
         </field>
     </record>
 
+    <record id="stock_picking_type_kanban_batch" model="ir.ui.view">
+        <field name="name">picking.type.kanban.batch</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='picking_type_backorder_count']" position="after">
+                <div t-if="record.count_picking_batch.raw_value > 0" class="row">
+                    <div class="col-12">
+                        <a class="oe_kanban_stock_picking_type_list" name="get_action_picking_tree_batch" type="object">
+                            <field name="count_picking_batch"/>
+                            Batches
+                        </a>
+                    </div>
+                </div>
+                <div t-if="record.count_picking_wave.raw_value > 0" class="row">
+                    <div class="col-12">
+                        <a class="oe_kanban_stock_picking_type_list" name="get_action_picking_tree_wave" type="object">
+                            <field name="count_picking_wave"/>
+                            Waves
+                        </a>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
     <menuitem
         action="action_picking_tree_wave"
         id="stock_picking_wave_menu"
