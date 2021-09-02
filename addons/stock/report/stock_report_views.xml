@@ -132,13 +132,12 @@
             <field name="binding_type">report</field>
         </record>
         <record id="label_picking" model="ir.actions.report">
-            <field name="name">Picking Label</field>
-            <field name="model">stock.picking</field>
+            <field name="name">Reception Report Label</field>
+            <field name="model">stock.move</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_reception_report_label</field>
             <field name="report_file">stock.report_reception_report_label</field>
             <field name="paperformat_id" ref="product.paperformat_label_sheet_dymo"/>
-            <field name="binding_model_id" ref="model_stock_picking"/>
             <field name="binding_type">report</field>
         </record>
     </data>
