@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="project_project_form_view_inherited" model="ir.ui.view">
-        <field name="name">project.project.view.inherited</field>
+
+    <record id="project_project_view_form" model="ir.ui.view">
+        <field name="name">project.project.form.inherit</field>
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='%(project.action_project_task_burndown_chart_report)d']" position="after">
-                <button name="action_open_project_purchase_orders" type="object" class="oe_stat_button" icon="fa-credit-card" attrs="{'invisible': [('purchase_orders_count', '=', 0)]}" groups="purchase.group_purchase_user">
+                <button name="action_open_project_expenses" type="object" class="oe_stat_button" icon="fa-money" attrs="{'invisible': [('expenses_count', '=', 0)]}" groups="hr_expense.group_hr_expense_team_approver">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
-                            <field name="purchase_orders_count" nolabel="1"/>
+                            <field name="expenses_count" nolabel="1"/>
                         </span>
                         <span class="o_stat_text">
-                            Purchase Orders
+                            Expenses
                         </span>
                     </div>
                 </button>
             </xpath>
         </field>
     </record>
+
 </odoo>
