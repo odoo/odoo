@@ -7,47 +7,12 @@ from unittest.mock import patch
 from unittest.mock import DEFAULT
 
 from odoo import exceptions
+from odoo.addons.link_tracker.tests.common import MockLinkTracker
 from odoo.addons.sms.models.sms_sms import SmsSms as SmsSms
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
-from odoo.tests import common
 
 
-class LinkTrackerMock(common.BaseCase):
-
-    def setUp(self):
-        super(LinkTrackerMock, self).setUp()
-
-        def _get_title_from_url(u):
-            return "Test_TITLE"
-
-        self.env['ir.config_parameter'].sudo().set_param('web.base.url', 'https://test.odoo.com')
-
-        link_tracker_title_patch = patch('odoo.addons.link_tracker.models.link_tracker.LinkTracker._get_title_from_url', wraps=_get_title_from_url)
-        link_tracker_title_patch.start()
-        self.addCleanup(link_tracker_title_patch.stop)
-
-        self.utm_c = self.env.ref('utm.utm_campaign_fall_drive')
-        self.utm_m = self.env.ref('mass_mailing_sms.utm_medium_sms')
-        self.tracker_values = {
-            'campaign_id': self.utm_c.id,
-            'medium_id': self.utm_m.id,
-        }
-
-    def assertLinkTracker(self, url, url_params):
-        links = self.env['link.tracker'].sudo().search([('url', '=', url)])
-        self.assertEqual(len(links), 1)
-
-        # check UTMS are correctly set on redirect URL
-        original_url = werkzeug.urls.url_parse(url)
-        redirect_url = werkzeug.urls.url_parse(links.redirected_url)
-        redirect_params = redirect_url.decode_query().to_dict(flat=True)
-        self.assertEqual(redirect_url.scheme, original_url.scheme)
-        self.assertEqual(redirect_url.decode_netloc(), original_url.decode_netloc())
-        self.assertEqual(redirect_url.path, original_url.path)
-        self.assertEqual(redirect_params, url_params)
-
-
-class TestSMSPost(TestMailFullCommon, LinkTrackerMock):
+class TestSMSPost(TestMailFullCommon, MockLinkTracker):
 
     @classmethod
     def setUpClass(cls):
@@ -61,12 +26,20 @@ class TestSMSPost(TestMailFullCommon, LinkTrackerMock):
                 'body': cls._test_body,
             })
 
+        # tracking info
+        cls.utm_c = cls.env.ref('utm.utm_campaign_fall_drive')
+        cls.utm_m = cls.env.ref('mass_mailing_sms.utm_medium_sms')
+        cls.tracker_values = {
+            'campaign_id': cls.utm_c.id,
+            'medium_id': cls.utm_m.id,
+        }
+
     def test_body_link_shorten(self):
         link = 'http://www.example.com'
         self.env['link.tracker'].search([('url', '=', link)]).unlink()
         new_body = self.env['mail.render.mixin']._shorten_links_text('Welcome to %s !' % link, self.tracker_values)
         self.assertNotIn(link, new_body)
-        self.assertLinkTracker(link, {'utm_campaign': self.utm_c.name, 'utm_medium': self.utm_m.name})
+        self.assertLinkShortenedText(new_body, (link, True), {'utm_campaign': self.utm_c.name, 'utm_medium': self.utm_m.name})
         link = self.env['link.tracker'].search([('url', '=', link)])
         self.assertIn(link.short_url, new_body)
 
@@ -74,7 +47,7 @@ class TestSMSPost(TestMailFullCommon, LinkTrackerMock):
         self.env['link.tracker'].search([('url', '=', link)]).unlink()
         new_body = self.env['mail.render.mixin']._shorten_links_text('Welcome to %s !' % link, self.tracker_values)
         self.assertNotIn(link, new_body)
-        self.assertLinkTracker(link, {
+        self.assertLinkShortenedText(new_body, (link, True), {
             'utm_campaign': self.utm_c.name,
             'utm_medium': self.utm_m.name,
             'test[0]': '42',
