@@ -74,7 +74,7 @@ class ProductSync(Command):
             cur.execute(query)
             country_mapping[i] = cur.fetchone()
 
-        insert_vendor = """INSERT INTO public.res_partner
+        insert_vendor = """INSERT INTO res_partner
                                     ("name", create_date,  active, country_id, company_name, display_name, create_uid,
                                      write_uid, write_date, marketplace_id)
                                     VALUES( %s, %s, true, %s, %s, %s, 1, 1, %s, %s);
@@ -88,7 +88,7 @@ class ProductSync(Command):
     @classmethod
     def handle_payment_methods(cls):
         payment_methods = DatabaseOps.retrieve_payment_methods()
-        insert_payment_query = """INSERT INTO public.aumet_payment_method (marketplace_payment_method_id, 
+        insert_payment_query = """INSERT INTO aumet_payment_method (marketplace_payment_method_id, 
                                 name, create_uid, create_date, write_uid, write_date) VALUES """
 
         cur = cls.conn.cursor()
@@ -106,7 +106,7 @@ class ProductSync(Command):
             products = get_all_product_details(1000, i)["data"]["data"]
             cur = cls.conn.cursor()
 
-            insert_into_marketplace_products = """INSERT INTO public.aumet_marketplace_product
+            insert_into_marketplace_products = """INSERT INTO aumet_marketplace_product
                     (name, unit_price, marketplace_seller_id, is_archived, is_locked,
                      marketplace_id, create_uid, create_date, write_uid, write_date) 
                     VALUES(%s,%s,%s, %s, %s, %s, %s, %s, %s, %s);
