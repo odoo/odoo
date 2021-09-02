@@ -77,7 +77,7 @@ odoo.define('event.configurator.tests', function (require) {
         }
     }, function (){
         QUnit.test('Select a regular product and verify that the event configurator is not opened', async function (assert) {
-            assert.expect(1);
+            assert.expect(2);
 
             var form = await createView({
                 View: FormView,

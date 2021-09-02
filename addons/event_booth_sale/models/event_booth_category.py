@@ -16,7 +16,7 @@ class EventBoothCategory(models.Model):
 
     product_id = fields.Many2one(
         'product.product', string='Product', required=True,
-        domain=[('is_event_booth', '=', True)], default=_default_product_id)
+        domain=[('detailed_type', '=', 'event_booth')], default=_default_product_id)
     price = fields.Float(string='Price', compute='_compute_price', digits='Product Price', readonly=False, store=True)
     price_reduce = fields.Float(
         string='Price Reduce', compute='_compute_price_reduce',
@@ -68,8 +68,7 @@ class EventBoothCategory(models.Model):
                 'categ_id': self.env.ref('event_sale.product_category_events').id,
                 'list_price': 100,
                 'standard_price': 0,
-                'is_event_booth': True,
-                'type': 'service',
+                'detailed_type': 'event_booth',
                 'invoice_policy': 'order',
             }).id
             self.env['ir.model.data'].create({

@@ -14,7 +14,6 @@ Sell your event booths and track payments on sale orders.
         'security/ir.model.access.csv',
         'data/product_data.xml',
         'data/event_booth_category_data.xml',
-        'views/product_views.xml',
         'views/sale_order_views.xml',
         'views/event_type_booth_views.xml',
         'views/event_booth_category_views.xml',

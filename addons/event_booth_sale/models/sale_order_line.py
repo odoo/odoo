@@ -17,7 +17,12 @@ class SaleOrderLine(models.Model):
     event_booth_registration_ids = fields.One2many(
         'event.booth.registration', 'sale_order_line_id', string='Confirmed Registration')
     event_booth_ids = fields.One2many('event.booth', 'sale_order_line_id', string='Confirmed Booths')
-    is_event_booth = fields.Boolean(related='product_id.is_event_booth', readonly=True)
+    is_event_booth = fields.Boolean(compute='_compute_is_event_booth')
+
+    @api.depends('product_id.type')
+    def _compute_is_event_booth(self):
+        for record in self:
+            record.is_event_booth = record.product_id.detailed_type == 'event_booth'
 
     @api.depends('event_booth_ids')
     def _compute_name_short(self):
