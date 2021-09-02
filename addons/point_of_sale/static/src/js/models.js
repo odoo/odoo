@@ -2095,6 +2095,8 @@ exports.Orderline = Backbone.Model.extend({
             return false;
         }else if (orderline.get_customer_note() !== this.get_customer_note()) {
             return false;
+        } else if (this.refunded_orderline_id) {
+            return false;
         }else{
             return true;
         }
