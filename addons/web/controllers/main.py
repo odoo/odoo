@@ -36,8 +36,7 @@ from odoo.modules import get_module_path, get_resource_path, module
 from odoo.tools import image_process, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
-# from odoo.tools.misc import str2bool, xlsxwriter, file_open, file_path
-from odoo.tools.misc import str2bool, xlsxwriter, file_open
+from odoo.tools.misc import str2bool, xlsxwriter, file_open, file_path
 from odoo.tools.safe_eval import safe_eval, time
 from odoo import http, tools
 from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception
