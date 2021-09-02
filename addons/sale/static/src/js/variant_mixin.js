@@ -365,6 +365,7 @@ var VariantMixin = {
             .removeClass('css_not_available')
             .attr('title', function () { return $(this).data('value_name') || ''; })
             .data('excluded-by', '');
+        $parent.find('option').attr('disabled', false);
 
         // exclusion rules: array of ptav
         // for each of them, contains array with the other ptav they exclude
@@ -437,7 +438,7 @@ var VariantMixin = {
         $input.closest('label').addClass('css_not_available');
 
         if (excludedBy && attributeNames) {
-            var $target = $input.is('option') ? $input : $input.closest('label').add($input);
+            var $target = $input.is('option') ? $input.attr('disabled', true) : $input.closest('label').add($input);
             var excludedByData = [];
             if ($target.data('excluded-by')) {
                 excludedByData = JSON.parse($target.data('excluded-by'));
