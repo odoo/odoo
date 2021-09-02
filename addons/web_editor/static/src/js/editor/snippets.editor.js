@@ -3042,9 +3042,20 @@ var SnippetsMenu = Widget.extend({
     _onSnippetOptionUpdate(ev) {
         ev.stopPropagation();
         (async () => {
-            const editors = this._enabledEditorHierarchy;
+            // Only update editors whose DOM target is still inside the document
+            // as a top option may have removed currently-enabled child items.
+            const editors = this._enabledEditorHierarchy.filter(editor => !!editor.$target[0].closest('body'));
+
             await Promise.all(editors.map(editor => editor.updateOptionsUI()));
             await Promise.all(editors.map(editor => editor.updateOptionsUIVisibility()));
+
+            // Always enable the deepest editor whose DOM target is still inside
+            // the document.
+            if (editors[0] !== this._enabledEditorHierarchy[0]) {
+                // No awaiting this as the mutex is currently locked here.
+                this._activateSnippet(editors[0].$target);
+            }
+
             ev.data.onSuccess();
         })();
     },
