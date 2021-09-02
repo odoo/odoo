@@ -759,7 +759,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div t-if="record.count_picking_backorders.raw_value > 0" class="row">
+                                                <div t-if="record.count_picking_backorders.raw_value > 0" class="row" name="picking_type_backorder_count">
                                                     <div class="col-12">
                                                         <a class="oe_kanban_stock_picking_type_list" name="get_action_picking_tree_backorder" type="object">
                                                             <field name="count_picking_backorders"/>
