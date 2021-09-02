@@ -537,6 +537,10 @@ class AccountTax(models.Model):
         # taxes.
         skip_checkpoint = False
 
+        # Get product tags, account.account.tag objects that need to be injected in all
+        # the tax_tag_ids of all the move lines created by the compute all for this product.
+        product_tag_ids = product.account_tag_ids.ids if product else []
+
         taxes_vals = []
         i = 0
         cumulated_tax_included_amount = 0
@@ -618,7 +622,7 @@ class AccountTax(models.Model):
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': repartition_line.id,
                     'group': groups_map.get(tax),
-                    'tag_ids': (repartition_line_tags + subsequent_tags).ids,
+                    'tag_ids': (repartition_line_tags + subsequent_tags).ids + product_tag_ids,
                     'tax_ids': subsequent_taxes.ids,
                 })
 
@@ -641,7 +645,7 @@ class AccountTax(models.Model):
         base_rep_lines = base_taxes_for_tags.mapped(is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids').filtered(lambda x: x.repartition_type == 'base')
 
         return {
-            'base_tags': base_rep_lines.tag_ids.ids,
+            'base_tags': base_rep_lines.tag_ids.ids + product_tag_ids,
             'taxes': taxes_vals,
             'total_excluded': sign * total_excluded,
             'total_included': sign * currency.round(total_included),

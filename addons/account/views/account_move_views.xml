@@ -212,6 +212,7 @@
                     <field name="tax_tag_ids" widget="many2many_tags" width="0.5" optional="hide" string="Tax Grids"
                            options="{'no_open': True, 'no_create': True}"
                            domain="[('applicability', '=', 'taxes')]"/>
+                    <field name="product_id" optional="hide"/>
                     <groupby name="move_id">
                         <field name="state" invisible="1"/>
                         <field name="move_type" invisible="1"/>
@@ -1105,7 +1106,17 @@
                                         <field name="credit"
                                                sum="Total Credit"
                                                attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
-                                        <field name="tax_tag_ids" widget="many2many_tags" string="Tax Grids" optional="show" domain="[('country_id', '=', parent.tax_country_id), ('applicability', '=', 'taxes')]"/>
+
+                                        <field name="tax_tag_ids"
+                                               widget="many2many_tags"
+                                               string="Tax Grids"
+                                               optional="show"
+                                               domain="[
+                                                    ('applicability', '=', 'taxes'),
+                                                    '|', ('country_id', '=', parent.tax_country_id),
+                                                    ('country_id', '=', False),
+                                                ]"/>
+
                                         <field name="tax_tag_invert" readonly="1" optional="hide" groups="base.group_no_one"/>
 
                                         <!-- Buttons -->
