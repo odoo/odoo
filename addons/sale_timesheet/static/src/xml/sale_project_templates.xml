@@ -62,11 +62,7 @@
     </t>
     
     <t t-name="sale_timesheet.ProfitabilitySection" owl="1">
-<<<<<<< HEAD
-        <t t-if="state.data.user.is_project_user &amp;&amp; state.data.profitability_items.data.length > 0">
-=======
-        <t t-if="state.data.user.is_project_manager &amp;&amp; state.data.analytic_account_id &amp;&amp; state.data.profitability_items.data.length > 0">
->>>>>>> [IMP] sale_timesheet: remove overview and improve updates
+        <t t-if="state.data.user.is_project_user &amp;&amp; state.data.profitability_items.data.length > 0 &amp;&amp; state.data.analytic_account_id">
             <t t-set="profitability_items" t-value="state.data.profitability_items"/>
             <div name="profitability" class="o_rightpanel_section">
                 <div class="o_rightpanel_header">
