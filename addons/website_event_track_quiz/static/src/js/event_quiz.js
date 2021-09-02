@@ -41,7 +41,8 @@ var Quiz = publicWidget.Widget.extend({
             completed: false,
             isMember: false,
             progressBar: false,
-            isEventUser: false
+            isEventUser: false,
+            repeatable: false
         });
         this.quiz = quizData || false;
         if (this.quiz) {
@@ -99,6 +100,24 @@ var Quiz = publicWidget.Widget.extend({
     },
 
     /**
+     * @private
+     * Decorate the answers according to state
+     */
+    _disableAnswers: function () {
+        this.$('.o_quiz_js_quiz_question').addClass('completed-disabled');
+        this.$('input[type=radio]').prop('disabled', true);
+    },
+
+    /**
+     * @private
+     * Decorate the answers according to state
+     */
+    _enableAnswers: function() {
+        this.$('.o_quiz_js_quiz_question').removeClass('completed-disabled');
+        this.$('input[type=radio]').prop('disabled', false);
+    },
+
+    /**
      * Get all the questions ID from the displayed Quiz
      * @returns {Array}
      * @private
@@ -110,15 +129,14 @@ var Quiz = publicWidget.Widget.extend({
     },
 
     /**
+     * Get the quiz answers filled in by the User
+     *
      * @private
-     * Decorate the answers according to state
      */
-    _disableAnswers: function () {
-        var self = this;
-        this.$('.o_quiz_js_quiz_question').addClass('completed-disabled');
-        this.$('input[type=radio]').each(function () {
-            $(this).prop('disabled', self.track.completed);
-        });
+    _getQuizAnswers: function () {
+        return this.$('input[type=radio]:checked').map(function (index, element) {
+            return parseInt($(element).val());
+        }).get();
     },
 
     /**
@@ -132,29 +150,28 @@ var Quiz = publicWidget.Widget.extend({
         this.$('.o_quiz_js_quiz_question').each(function () {
             var $question = $(this);
             var questionId = $question.data('questionId');
-            var isCorrect = self.quiz.answers[questionId].is_correct;
+            var answer = self.quiz.answers[questionId];
             $question.find('a.o_quiz_quiz_answer').each(function () {
                 var $answer = $(this);
                 $answer.find('i.fa').addClass('d-none');
-                if ($answer.find('input[type=radio]')[0].checked) {
-                    if (isCorrect) {
-                        $answer.removeClass('list-group-item-danger').addClass('list-group-item-success');
+                if ($answer.find('input[type=radio]').is(':checked')) {
+                    if (answer.is_correct) {
                         $answer.find('i.fa-check-circle').removeClass('d-none');
                     } else {
-                        $answer.removeClass('list-group-item-success').addClass('list-group-item-danger');
-                        $answer.find('i.fa-times-circle').removeClass('d-none');
                         $answer.find('label input').prop('checked', false);
+                        $answer.find('i.fa-times-circle').removeClass('d-none');
+                    }
+                    if (answer.awarded_points > 0) {
+                        var $badge = QWeb.render('quiz.badge', {'answer': answer});
+                        $answer.append($badge);
                     }
                 } else {
-                    $answer.removeClass('list-group-item-danger list-group-item-success');
                     $answer.find('i.fa-circle').removeClass('d-none');
                 }
             });
-            var comment = self.quiz.answers[questionId].comment;
-            if (comment) {
-                $question.find('.o_quiz_quiz_answer_info').removeClass('d-none');
-                $question.find('.o_quiz_quiz_answer_comment').text(comment);
-            }
+            var $list = $question.find('.list-group');
+            var $comment = QWeb.render('quiz.comment', {'answer': answer});
+            $list.append($comment);
         });
     },
 
@@ -170,14 +187,24 @@ var Quiz = publicWidget.Widget.extend({
     },
 
     /**
-     * Get the quiz answers filled in by the User
-     *
-     * @private
+     * Remove the answer decorators
      */
-    _getQuizAnswers: function () {
-        return this.$('input[type=radio]:checked').map(function (index, element) {
-            return parseInt($(element).val());
-        }).get();
+     _resetQuiz: function () {
+        this.$('.o_quiz_js_quiz_question').each(function () {
+            var $question = $(this);
+            $question.find('a.o_quiz_quiz_answer').each(function () {
+                var $answer = $(this);
+                $answer.find('i.fa').addClass('d-none');
+                $answer.find('i.fa-circle').removeClass('d-none');
+                $answer.find('span.badge').remove();
+                $answer.find('input[type=radio]').prop('checked', false);
+            });
+            var $info = $question.find('.o_quiz_quiz_answer_info');
+            $info.remove();
+        });
+        this.track.completed = false;
+        this._enableAnswers();
+        this._renderValidationInfo();
     },
 
     /**
@@ -247,9 +274,7 @@ var Quiz = publicWidget.Widget.extend({
                 event_id: this.track.eventId,
                 track_id: this.track.id
             }
-        }).then(function () {
-            window.location.reload();
-        });
+        }).then(this._resetQuiz.bind(this));
     },
 
 });

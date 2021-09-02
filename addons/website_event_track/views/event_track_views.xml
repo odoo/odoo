@@ -17,13 +17,16 @@
         <field name="model">event.track</field>
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
+                <field name="color"/>
+                <field name="partner_id"/>
+                <field name="stage_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
+                <field name="website_url"/>
+                <field name="activity_ids"/>
+                <field name="activity_state"/>
+                <field name="legend_blocked"/>
+                <field name="legend_normal"/>
+                <field name="legend_done"/>
                 <templates>
-                    <field name="color"/>
-                    <field name="partner_id"/>
-                    <field name="stage_id"/>
-                    <field name="website_url"/>
-                    <field name="activity_ids"/>
-                    <field name="activity_state"/>
                     <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
                     <t t-name="kanban-box">
                         <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
@@ -87,6 +90,7 @@
         <field name="arch" type="xml">
             <search string="Event Tracks">
                 <field name="name"/>
+                <field name="tag_ids"/>
                 <field name="event_id"/>
                 <field name="location_id"/>
                 <field name="stage_id"/>
@@ -139,6 +143,9 @@
                         </button>
                         <field name="is_published" widget="website_redirect_button"/>
                     </div>
+                    <field name="legend_blocked" invisible="1"/>
+                    <field name="legend_normal" invisible="1"/>
+                    <field name="legend_done" invisible="1"/>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="kanban_state" widget="state_selection" class="ml-3 float-right"/>
                     <field name="website_image" widget="image" class="oe_avatar"/>
