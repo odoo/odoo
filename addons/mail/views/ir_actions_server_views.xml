@@ -40,10 +40,14 @@
                 </xpath>
                 <xpath expr="//field[@name='link_field_id']" position="after">
                     <field name="partner_ids" widget="many2many_tags"
-                        attrs="{'invisible': [('state', '!=', 'followers')]}"/>
+                           attrs="{'invisible': [('state', '!=', 'followers')]}"/>
                     <field name="template_id"
-                        attrs="{'invisible': [('state', '!=', 'email')],
-                                'required': [('state', '=', 'email')]}"/>
+                           attrs="{'invisible': [('state', '!=', 'mail_post')],
+                                   'required': [('state', '=', 'mail_post')]}"/>
+                    <field name="mail_post_method"
+                           attrs="{'invisible': [('state', '!=', 'mail_post')],
+                                   'required': [('state', '=', 'mail_post')]}"/>
+                    <field name="mail_post_autofollow" invisible="1"/>
                 </xpath>
             </field>
         </record>

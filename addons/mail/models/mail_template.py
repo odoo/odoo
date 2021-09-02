@@ -272,7 +272,7 @@ class MailTemplate(models.Model):
         Attachment = self.env['ir.attachment']  # TDE FIXME: should remove default_type from context
 
         # create a mail_mail based on values, without attachments
-        values = self.generate_email(res_id, ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'scheduled_date'])
+        values = self.generate_email(res_id, ['auto_delete', 'subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'scheduled_date'])
         values['recipient_ids'] = [Command.link(pid) for pid in values.get('partner_ids', list())]
         values['attachment_ids'] = [Command.link(aid) for aid in values.get('attachment_ids', list())]
         values.update(email_values or {})

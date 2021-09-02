@@ -104,7 +104,7 @@ class BaseAutomation(models.Model):
             raise exceptions.ValidationError(
                 _('Form Modification based actions can only be used with code action type.')
             )
-        if any(action.trigger == 'on_unlink' and action.state in ['email', 'followers', 'next_activity'] for action in self):
+        if any(action.trigger == 'on_unlink' and action.state in ['mail_post', 'followers', 'next_activity'] for action in self):
             raise exceptions.ValidationError(
                 _('Email, followers or activities action types cannot be used when deleting records.')
             )
