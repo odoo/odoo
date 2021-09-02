@@ -352,7 +352,7 @@
             </div>
             <div role="tabpanel" class="tab-pane" t-att-id="'survey_data_question_%d' % question.id">
                 <table class="table table-hover table-sm text-right">
-                    <thead>
+                    <thead t-if="table_data">
                         <tr>
                             <th></th>
                             <th class="text-right" t-foreach="table_data[0]['columns']" t-as="column_data">
