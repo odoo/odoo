@@ -25,7 +25,6 @@ have real delivered quantities in sales orders.
         'views/project_update_templates.xml',
         'views/hr_timesheet_views.xml',
         'views/res_config_settings_views.xml',
-        'views/hr_timesheet_templates.xml',
         'views/sale_timesheet_portal_templates.xml',
         'views/project_sharing_views.xml',
         'report/project_profitability_report_analysis_views.xml',
@@ -44,8 +43,6 @@ have real delivered quantities in sales orders.
             'sale_timesheet/static/src/scss/sale_timesheet_portal.scss',
         ],
         'web.assets_backend': [
-            'sale_timesheet/static/src/scss/sale_timesheet.scss',
-            'sale_timesheet/static/src/js/project_overview.js',
             'sale_timesheet/static/src/js/so_line_one2many.js',
         ],
         'web.assets_tests': [
