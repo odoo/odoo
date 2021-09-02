@@ -62,17 +62,17 @@
                     <thead t-if="report_type == 'html' or any(line['is_assigned'] for line in sources_to_lines[source])">
                         <tr class="bg-light">
                             <th>
-                                <i t-if="source.priority == '1'" class="o_priority o_priority_star fa fa-star"/>
-                                <a name="source_link" href="#" t-att-res-model="source._name" view-type="form" t-att-res-id="source.id" t-esc="source.display_name"/>
-                                <span t-if="source._name == 'stock.picking' and source.origin">
-                                    (<t t-esc="source.origin"/>)
+                                <i t-if="source[0].priority == '1'" class="o_priority o_priority_star fa fa-star"/>
+                                <a name="source_link" href="#" t-att-res-model="source[0]._name" view-type="form" t-att-res-id="source[0].id" t-out="source[0].display_name"/>
+                                <span t-if="len(source) > 1">
+                                    (<a name="origin_link" href="#" t-att-res-model="source[1]._name" view-type="form" t-att-res-id="source[1].id" t-out="source[1].display_name"/>)
                                 </span>
-                                <span t-if="source._name == 'stock.picking' and source.partner_id">:
+                                <span t-if="source[0]._name == 'stock.picking' and source[0].partner_id">:
                                     <a name="source_link" href="#"
-                                        t-att-res-model="source.partner_id._name"
-                                        t-att-res-id="source.partner_id.id"
+                                        t-att-res-model="source[0].partner_id._name"
+                                        t-att-res-id="source[0].partner_id.id"
                                         view-type="form"
-                                        t-esc="source.partner_id.name"/>
+                                        t-out="source[0].partner_id.name"/>
                                 </span>
                             </th>
                             <th>Expected Delivery: <t t-esc="sources_to_formatted_scheduled_date[source]"/></th>
