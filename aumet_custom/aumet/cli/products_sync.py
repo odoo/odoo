@@ -25,33 +25,6 @@ def get_items_count():
     return get_all_product_details(1, 0)["data"]["dataFilter"]["dataCount"]
 
 
-class DatabaseOps:
-    @classmethod
-    def retrieve_payment_methods(cls):
-        cursor = cls.mydb.cursor()
-
-        cursor.execute("select id, name_en, name_ar,name_fr from paymentMethod")
-        columns = ["id", "name_en", "name_ar", "name_fr"]
-
-        return [dict(zip(columns, i)) for i in cursor.fetchall()]
-
-    @classmethod
-    def retrieve_vendors(cls):
-        cursor = cls.mydb.cursor()
-
-        cursor.execute("""select e.id ,e.name_en as name, country.name_en as country ,
-                            currency.shortName as currency from entity e
-                            inner join  country  on e.countryId = country.id
-                    inner join  currency   on e.currencyId = currency.id""")
-
-        columns = ["marketplace_id", "name", "country", "currency"]
-
-        vendors = []
-        for i in cursor.fetchall():
-            vendors.append(dict(zip(columns, i)))
-        return vendors
-
-
 class ProductSync(Command):
     conn = psycopg2.connect(
         host=config.get("db_host"),
@@ -60,7 +33,8 @@ class ProductSync(Command):
         password=config.get("db_password"))
 
     def handle_vendors(self):
-        vendors = DatabaseOps.retrieve_vendors()
+        vendors = []
+
 
         countries = set()
         [countries.add(vendor["country"]) for vendor in vendors]
@@ -87,13 +61,19 @@ class ProductSync(Command):
 
     @classmethod
     def handle_payment_methods(cls):
-        payment_methods = DatabaseOps.retrieve_payment_methods()
+        payment_methods = [(1, "Cheque on delivery"),
+                           (2, "Cash on delivery"),
+                           (3, "Cash Collection"),
+                           (4, "Cheque Collection"),
+                           (5, "Payment by Credit Facility"),
+                           (6, "Managed by Seller")]
+
         insert_payment_query = """INSERT INTO aumet_payment_method (marketplace_payment_method_id, 
                                 name, create_uid, create_date, write_uid, write_date) VALUES """
 
         cur = cls.conn.cursor()
         for i in range(len(payment_methods)):
-            val = f"""({payment_methods[i]["id"]}, '{payment_methods[i]["name_en"]}', 1, '{datetime.now()}', 1, '{datetime.now()}')"""
+            val = f"""({payment_methods[i][0]}, '{payment_methods[i][1]}', 1, '{datetime.now()}', 1, '{datetime.now()}')"""
             insert_payment_query += (val + ",") if i != len(payment_methods) - 1 else val
 
         cur.execute(insert_payment_query)
@@ -123,4 +103,4 @@ class ProductSync(Command):
 
 if __name__ == "__main__":
     ProductSync.handle_products()
-    # print(ProductSync.handle_payment_methods())
+    ProductSync.handle_payment_methods()
