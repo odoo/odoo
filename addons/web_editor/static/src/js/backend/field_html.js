@@ -184,6 +184,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                 res_model: this.model,
                 res_id: this.res_id,
             },
+            placeholder: this.attrs && this.attrs.placeholder,
             noAttachment: this.nodeOptions['no-attachment'],
             inIframe: !!this.nodeOptions.cssEdit,
             iframeCssAssets: this.nodeOptions.cssEdit,
