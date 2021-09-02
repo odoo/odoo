@@ -257,26 +257,24 @@ class WebsiteSlides(WebsiteProfile):
             return request.env['slide.channel.tag']
         # handle creation of new channel tag
         if tag_id[0] == 0:
-            group_id = self._create_or_get_channel_tag_group(group_id)
+            group_id = self._create_or_get_channel_tag_group_id(group_id)
             if not group_id:
                 return {'error': _('Missing "Tag Group" for creating a new "Tag".')}
 
-            new_tag = request.env['slide.channel.tag'].create({
+            return request.env['slide.channel.tag'].create({
                 'name': tag_id[1]['name'],
                 'group_id': group_id,
             })
-            return new_tag
         return request.env['slide.channel.tag'].browse(tag_id[0])
 
-    def _create_or_get_channel_tag_group(self, group_id):
+    def _create_or_get_channel_tag_group_id(self, group_id):
         if not group_id:
             return False
         # handle creation of new channel tag group
         if group_id[0] == 0:
-            tag_group = request.env['slide.channel.tag.group'].create({
+            return request.env['slide.channel.tag.group'].create({
                 'name': group_id[1]['name'],
-            })
-            group_id = tag_group.id
+            }).id
         # use existing channel tag group
         return group_id[0]
 
