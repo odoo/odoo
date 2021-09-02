@@ -1022,10 +1022,15 @@ var FieldMonetary = NumericField.extend({
      * @private
      */
     _renderEdit: function () {
+        const input = this.$input ? this.$input[0] : false;
+        const hasFocus = document.activeElement === input;
         this.$el.empty();
 
         // Prepare and add the input
         var def = this._prepareInput(this.$input).appendTo(this.$el);
+        if (hasFocus && this.$input) {
+            this.$input[0].focus();
+        }
 
         if (this.currency) {
             // Prepare and add the currency symbol
