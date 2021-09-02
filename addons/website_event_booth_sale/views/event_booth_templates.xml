@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <template id="event_booth_registration" inherit_id="website_event_booth.event_booth_registration">
+        <xpath expr="//h5[@name='booth_category_name']" position="after">
+            <span t-if="booth_category.price" class="font-weight-normal text-muted" t-field="booth_category.price_reduce"
+                  t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"
+                  groups="account.group_show_line_subtotals_tax_excluded"/>
+            <span t-else="" class="font-weight-normal text-muted">Free</span>
+        </xpath>
+        <xpath expr="//input[@name='booth_category_id']" position="attributes">
+            <attribute name="t-att-data-price-reduce">booth_category.price_reduce or '0'</attribute>
+        </xpath>
+        <xpath expr="//div[@name='booth_registration_submit']" position="before">
+            <div class="row o_wbooth_booth_total_price d-none">
+                <div class="col-sm-2 offset-sm-1">
+                    <span class="font-weight-bold">Total</span>
+                </div>
+                <div class="col-sm-6">
+                    <span class="font-weight-bold" t-esc="float(0)"
+                          t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</data></odoo>
