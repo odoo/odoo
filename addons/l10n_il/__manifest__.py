@@ -3,7 +3,7 @@
 
 {
     'name': 'Israel - Accounting',
-    'version': '1.0',
+    'version': '15.0.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the latest basic Israelian localisation necessary to run Odoo in Israel:
@@ -12,7 +12,7 @@ This is the latest basic Israelian localisation necessary to run Odoo in Israel:
 This module consists of:
  - Generic Israel Chart of Accounts
  - Taxes and tax report
- - Multipule Fiscal positions
+ - Multiple Fiscal positions
  """,
     'website': 'http://www.odoo.com/accounting',
     'depends': ['l10n_multilang'],
