@@ -29,21 +29,29 @@ registerInstancePatchModel('mail.partner', 'hr_holidays/static/src/models/partne
      * @private
      */
     _computeOutOfOfficeText() {
-        if (!this.outOfOfficeDateEnd) {
-            return clear();
+        let formattedDate = "";
+        if (this.outOfOfficeDateEnd && this.messaging.locale && this.messaging.locale.language) {
+            const currentDate = new Date();
+            const date = str_to_date(this.outOfOfficeDateEnd);
+            const options = { day: 'numeric', month: 'short' };
+            if (currentDate.getFullYear() !== date.getFullYear()) {
+                options.year = 'numeric';
+            }
+            const localeCode = this.messaging.locale.language.replace(/_/g, '-');
+            formattedDate = date.toLocaleDateString(localeCode, options);
         }
-        if (!this.messaging.locale || !this.messaging.locale.language) {
-            return clear();
+
+        let statusInfo = "";
+        if (this.im_status === 'leave_online') {
+            statusInfo = " - " + this.env._t("Online");
+        } else if (this.im_status === 'leave_away') {
+            statusInfo = " - " + this.env._t("Away");
         }
-        const currentDate = new Date();
-        const date = str_to_date(this.outOfOfficeDateEnd);
-        const options = { day: 'numeric', month: 'short' };
-        if (currentDate.getFullYear() !== date.getFullYear()) {
-            options.year = 'numeric';
+
+        if (formattedDate) {
+            return _.str.sprintf(this.env._t("Out of office until %s"), formattedDate + statusInfo);
         }
-        const localeCode = this.messaging.locale.language.replace(/_/g, '-');
-        const formattedDate = date.toLocaleDateString(localeCode, options);
-        return _.str.sprintf(this.env._t("Out of office until %s"), formattedDate);
+        return this.env._t("Out of office") + statusInfo;
     },
     /**
      * @override

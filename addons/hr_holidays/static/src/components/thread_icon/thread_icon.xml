@@ -3,13 +3,13 @@
     <t t-inherit="mail.ThreadIcon" t-inherit-mode="extension">
         <xpath expr="//*[@name='noImStatusCondition']" position="before">
             <t t-elif="thread.correspondent.im_status === 'leave_online'">
-                <div class="o_ThreadIcon_online fa fa-plane" title="Online"/>
+                <div class="o_ThreadIcon_online fa fa-plane" t-att-title="thread.correspondent.outOfOfficeText"/>
             </t>
             <t t-elif="thread.correspondent.im_status === 'leave_away'">
-                <div class="o_ThreadIcon_away fa fa-plane" title="Away"/>
+                <div class="o_ThreadIcon_away fa fa-plane" t-att-title="thread.correspondent.outOfOfficeText"/>
             </t>
             <t t-elif="thread.correspondent.im_status === 'leave_offline'">
-                <div class="o_ThreadIcon_offline fa fa-plane" title="Out of office"/>
+                <div class="o_ThreadIcon_offline fa fa-plane" t-att-title="thread.correspondent.outOfOfficeText"/>
             </t>
         </xpath>
     </t>
