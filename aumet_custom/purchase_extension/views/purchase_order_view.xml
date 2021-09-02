@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="bonus_qty_purchase_view_form" model="ir.ui.view">
+            <field name="name">bonus.qty.purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_confirm']" position="after">
+                    <button name="fast_track" type="object" states="draft" string="Fast Track PO"
+                            id="fast_track" class="oe_highlight"
+                            confirm="Are you sure to create fast track vendor bill ?"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                    <field name="lot_name"/>
+                    <field name="expiration_date"/>
+                </xpath>
+
+
+            </field>
+        </record>
+    </data>
+</odoo>
