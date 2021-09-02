@@ -21,7 +21,7 @@ class MockSMS(common.BaseCase):
     def mockSMSGateway(self, sms_allow_unlink=False, sim_error=None, nbr_t_error=None):
         self._clear_sms_sent()
         sms_create_origin = SmsSms.create
-        sms_unlink_origin = SmsSms.unlink
+        sms_send_origin = SmsSms._send
 
         def _contact_iap(local_endpoint, params):
             # mock single sms sending
@@ -60,18 +60,17 @@ class MockSMS(common.BaseCase):
             self._new_sms += res.sudo()
             return res
 
-        def _sms_sms_unlink(records, *args, **kwargs):
+        def _sms_sms_send(records, unlink_failed=False, unlink_sent=True, raise_exception=False):
             if sms_allow_unlink:
-                return sms_unlink_origin(records, *args, **kwargs)
-            # hack: instead of unlink, update state to sent for tests
+                return sms_send_origin(records, unlink_failed=unlink_failed, unlink_sent=unlink_sent, raise_exception=raise_exception)
             else:
-                records.filtered(lambda sms: sms.id in self._new_sms.ids).state = 'sent'
+                return sms_send_origin(records, unlink_failed=False, unlink_sent=False, raise_exception=raise_exception)
             return True
 
         try:
             with patch.object(SmsApi, '_contact_iap', side_effect=_contact_iap), \
                     patch.object(SmsSms, 'create', autospec=True, wraps=SmsSms, side_effect=_sms_sms_create), \
-                    patch.object(SmsSms, 'unlink', autospec=True, wraps=SmsSms, side_effect=_sms_sms_unlink):
+                    patch.object(SmsSms, '_send', autospec=True, wraps=SmsSms, side_effect=_sms_sms_send):
                 yield
         finally:
             pass
