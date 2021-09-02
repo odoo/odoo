@@ -687,3 +687,21 @@ class Web_Editor(http.Controller):
             attachments.append(attachment._get_media_info())
 
         return attachments
+
+    @http.route("/web_editor/get_ice_servers", type='json', auth="user")
+    def get_ice_servers(self):
+        return request.env['mail.ice.server']._get_ice_servers()
+
+    @http.route("/web_editor/bus_broadcast", type="json", auth="user")
+    def bus_broadcast(self, model_name, field_name, res_id, bus_data):
+        document = request.env[model_name].browse([res_id])
+
+        document.check_access_rights('read')
+        document.check_field_access_rights('read', [field_name])
+        document.check_access_rule('read')
+        document.check_access_rights('write')
+        document.check_field_access_rights('write', [field_name])
+        document.check_access_rule('write')
+
+        channel = (request.db, 'editor_collaboration', model_name, field_name, int(res_id))
+        request.env['bus.bus'].sendone(channel, bus_data)

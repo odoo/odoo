@@ -18,7 +18,7 @@ import {
     moveNodes,
     nodeSize,
     prepareUpdate,
-    setCursor,
+    setSelection,
     splitTextNode,
     isUnbreakable,
     isMediaElement,
@@ -56,7 +56,7 @@ Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
     }
 
     fillEmpty(parentNode);
-    setCursor(parentNode, firstSplitOffset);
+    setSelection(parentNode, firstSplitOffset);
 };
 
 HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
@@ -127,7 +127,7 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
                     // TODO this handle BR/IMG/etc removals../ to see if we
                     // prefer to have a dedicated handler for every possible
                     // HTML element or if we let this generic code handle it.
-                    setCursor(parentEl, parentOffset);
+                    setSelection(parentEl, parentOffset);
                     return;
                 }
             }
@@ -158,7 +158,7 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
         firstBlockIndex++;
     }
     let [cursorNode, cursorOffset] = moveNodes(...moveDest, this, offset, firstBlockIndex);
-    setCursor(cursorNode, cursorOffset);
+    setSelection(cursorNode, cursorOffset);
 
     // Propagate if this is still a block on the left of where the nodes were
     // moved.

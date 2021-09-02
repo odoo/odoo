@@ -32,7 +32,7 @@ function _toDomLocation(node, index) {
     return [container, offset];
 }
 
-function _parseTextualSelection(testContainer) {
+export function parseTextualSelection(testContainer) {
     let anchorNode;
     let anchorOffset;
     let focusNode;
@@ -93,13 +93,83 @@ function _parseTextualSelection(testContainer) {
     }
 }
 
+export function parseMultipleTextualSelection(testContainer) {
+    let currentNode = testContainer;
+
+    const clients = {};
+    while (currentNode) {
+        if (currentNode.nodeType === Node.TEXT_NODE) {
+            // Look for special characters in the text content and remove them.
+            let match;
+            const regex = new RegExp(/(?:\[(\w+)\})|(?:\{(\w+)])/, 'gd');
+            while ((match = regex.exec(currentNode.textContent))) {
+                regex.lastIndex = 0;
+                const indexes = match.indices[0];
+
+                if (match[0].includes('}')) {
+                    const clientId = match[1];
+                    clients[clientId] = clients[clientId] || {};
+                    clients[clientId].anchorNode = currentNode;
+                    clients[clientId].anchorOffset = indexes[0];
+                    if (clients[clientId].focusNode) {
+                        clients[clientId].direction = Direction.FORWARD;
+                    }
+                } else {
+                    const clientId = match[2];
+                    clients[clientId] = clients[clientId] || {};
+                    clients[clientId].focusNode = currentNode;
+                    clients[clientId].focusOffset = indexes[0];
+                    if (clients[clientId].anchorNode) {
+                        clients[clientId].direction = Direction.BACKWARD;
+                    }
+                }
+                currentNode.textContent =
+                    currentNode.textContent.slice(0, indexes[0]) +
+                    currentNode.textContent.slice(indexes[1]);
+            }
+        }
+        currentNode = _nextNode(currentNode);
+    }
+
+    return clients;
+}
+
+/**
+ * Insert in the DOM:
+ * - `SELECTION_ANCHOR_CHAR` in place for the selection start
+ * - `SELECTION_FOCUS_CHAR` in place for the selection end
+ *
+ * This is used in the function `testEditor`.
+ */
+export function renderMultipleTextualSelection() {
+    const selection = document.getSelection();
+    if (selection.rangeCount === 0) {
+        return;
+    }
+
+    const anchor = targetDeepest(selection.anchorNode, selection.anchorOffset);
+    const focus = targetDeepest(selection.focusNode, selection.focusOffset);
+
+    // If the range characters have to be inserted within the same parent and
+    // the anchor range character has to be before the focus range character,
+    // the focus offset needs to be adapted to account for the first insertion.
+    const [anchorNode, anchorOffset] = anchor;
+    const [focusNode, baseFocusOffset] = focus;
+    let focusOffset = baseFocusOffset;
+    if (anchorNode === focusNode && anchorOffset <= focusOffset) {
+        focusOffset++;
+    }
+    insertCharsAt('[', ...anchor);
+    insertCharsAt(']', focusNode, focusOffset);
+}
+
 /**
  * Set a range in the DOM.
  *
  * @param selection
  */
-export function setSelection(selection) {
-    const domRange = document.createRange();
+export function setTestSelection(selection, doc = document) {
+    const domRange = doc.createRange();
     if (selection.direction === Direction.FORWARD) {
         domRange.setStart(selection.anchorNode, selection.anchorOffset);
         domRange.collapse(true);
@@ -118,24 +188,24 @@ export function setSelection(selection) {
 }
 
 /**
- * Inserts the given character at the given offset of the given node.
+ * Inserts the given characters at the given offset of the given node.
  *
- * @param {string} char
+ * @param {string} chars
  * @param {Node} node
  * @param {number} offset
  */
-function _insertCharAt(char, node, offset) {
+export function insertCharsAt(chars, node, offset) {
     if (node.nodeType === Node.TEXT_NODE) {
         const startValue = node.nodeValue;
         if (offset < 0 || offset > startValue.length) {
-            throw new Error(`Invalid ${char} insertion in text node`);
+            throw new Error(`Invalid ${chars} insertion in text node`);
         }
-        node.nodeValue = startValue.slice(0, offset) + char + startValue.slice(offset);
+        node.nodeValue = startValue.slice(0, offset) + chars + startValue.slice(offset);
     } else {
         if (offset < 0 || offset > node.childNodes.length) {
-            throw new Error(`Invalid ${char} insertion in non-text node`);
+            throw new Error(`Invalid ${chars} insertion in non-text node`);
         }
-        const textNode = document.createTextNode(char);
+        const textNode = document.createTextNode(chars);
         if (offset < node.childNodes.length) {
             node.insertBefore(textNode, node.childNodes[offset]);
         } else {
@@ -211,24 +281,24 @@ export function renderTextualSelection() {
     if (anchorNode === focusNode && anchorOffset <= focusOffset) {
         focusOffset++;
     }
-    _insertCharAt('[', ...anchor);
-    _insertCharAt(']', focusNode, focusOffset);
+    insertCharsAt('[', ...anchor);
+    insertCharsAt(']', focusNode, focusOffset);
 }
 
 export async function testEditor(Editor = OdooEditor, spec) {
     const testNode = document.createElement('div');
-    document.body.appendChild(testNode);
+    document.querySelector('#editor-test-container').appendChild(testNode);
 
     // Add the content to edit and remove the "[]" markers *before* initializing
     // the editor as otherwise those would genererate mutations the editor would
     // consider and the tests would make no sense.
     testNode.innerHTML = spec.contentBefore;
-    const selection = _parseTextualSelection(testNode);
+    const selection = parseTextualSelection(testNode);
 
     const editor = new Editor(testNode, { toSanitize: false });
     editor.keyboardType = 'PHYSICAL_KEYBOARD';
     if (selection) {
-        setSelection(selection);
+        setTestSelection(selection);
     } else {
         document.getSelection().removeAllRanges();
     }

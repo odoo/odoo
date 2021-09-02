@@ -5,7 +5,7 @@ const Link = require('wysiwyg.widgets.Link');
 const OdooEditorLib = require('@web_editor/../lib/odoo-editor/src/OdooEditor');
 const dom = require('web.dom');
 
-const setCursor = OdooEditorLib.setCursor;
+const setSelection = OdooEditorLib.setSelection;
 
 /**
  * Allows to customize link content and style.
@@ -48,7 +48,7 @@ const LinkTools = Link.extend({
         this.$button.removeClass('active');
         this.options.wysiwyg.odooEditor.observerActive();
         this.applyLinkToDom(this._getData());
-        setCursor(this.$link[0], 0, this.$link[0], 1);
+        setSelection(this.$link[0], 0, this.$link[0], 1);
         this.options.wysiwyg.odooEditor.historyStep();
         this._super(...arguments);
     },

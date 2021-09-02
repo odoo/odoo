@@ -1,12 +1,12 @@
 /** @odoo-module **/
 // TODO: avoid empty keys when not necessary to reduce request size
-export function nodeToObject(node) {
+export function serializeNode(node, nodesToStripFromChildren = new Set()) {
     let result = {
         nodeType: node.nodeType,
         oid: node.oid,
     };
     if (!node.oid) {
-        console.warn('OID can not be falsy!');
+        throw new Error('node.oid can not be falsy.');
     }
     if (node.nodeType === Node.TEXT_NODE) {
         result.textValue = node.nodeValue;
@@ -19,14 +19,16 @@ export function nodeToObject(node) {
         }
         let child = node.firstChild;
         while (child) {
-            result.children.push(nodeToObject(child));
+            if (!nodesToStripFromChildren.has(child.oid)) {
+                result.children.push(serializeNode(child, nodesToStripFromChildren));
+            }
             child = child.nextSibling;
         }
     }
     return result;
 }
 
-export function objectToNode(obj) {
+export function unserializeNode(obj) {
     let result = undefined;
     if (obj.nodeType === Node.TEXT_NODE) {
         result = document.createTextNode(obj.textValue);
@@ -35,10 +37,36 @@ export function objectToNode(obj) {
         for (const key in obj.attributes) {
             result.setAttribute(key, obj.attributes[key]);
         }
-        obj.children.forEach(child => result.append(objectToNode(child)));
+        obj.children.forEach(child => result.append(unserializeNode(child)));
     } else {
         console.warn('unknown node type');
     }
     result.oid = obj.oid;
     return result;
+}
+
+export function serializeSelection(selection) {
+    if (
+        selection &&
+        selection.anchorNode &&
+        selection.anchorNode.oid &&
+        typeof selection.anchorOffset !==  'undefined' &&
+        selection.focusNode &&
+        selection.anchorNode.oid &&
+        typeof selection.focusOffset !==  'undefined'
+    ) {
+        return {
+            anchorNodeOid: selection.anchorNode.oid,
+            anchorOffset: selection.anchorOffset,
+            focusNodeOid: selection.focusNode.oid,
+            focusOffset: selection.focusOffset,
+        };
+    } else {
+        return {
+            anchorNodeOid: undefined,
+            anchorOffset: undefined,
+            focusNodeOid: undefined,
+            focusOffset: undefined,
+        };
+    }
 }

@@ -9,7 +9,7 @@ Odoo Web Editor widget.
 ==========================
 
 """,
-    'depends': ['web'],
+    'depends': ['web', 'mail'],
     'data': [
         'security/ir.model.access.csv',
         'data/editor_assets.xml',
@@ -42,6 +42,7 @@ Odoo Web Editor widget.
             'web_editor/static/lib/odoo-editor/src/utils/sanitize.js',
             'web_editor/static/lib/odoo-editor/src/utils/serialize.js',
             'web_editor/static/lib/odoo-editor/src/utils/utils.js',
+            'web_editor/static/lib/odoo-editor/src/utils/DOMPurify.js',
             'web_editor/static/lib/odoo-editor/src/tablepicker/TablePicker.js',
             'web_editor/static/lib/odoo-editor/src/powerbox/patienceDiff.js',
             'web_editor/static/lib/odoo-editor/src/powerbox/Powerbox.js',
@@ -57,6 +58,7 @@ Odoo Web Editor widget.
 
             # utils
             'web_editor/static/src/js/wysiwyg/wysiwyg_utils.js',
+            'web_editor/static/src/js/wysiwyg/PeerToPeer.js',
 
             # odoo utils
             ('include', 'web._assets_helpers'),
