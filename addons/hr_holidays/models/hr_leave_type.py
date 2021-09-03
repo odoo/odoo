@@ -410,7 +410,7 @@ class HolidaysType(models.Model):
 
     def action_see_accrual_plans(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("hr.holidays.open_view_accrual_plans")
+        action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.open_view_accrual_plans")
         action['context'] = {
             'default_time_off_type_id': self.id,
         }
