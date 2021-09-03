@@ -4,7 +4,7 @@
 from lxml import etree
 import re
 
-from odoo import api, fields, models, _
+from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 
@@ -178,6 +178,18 @@ class AccountAnalyticLine(models.Model):
             Overrride this to compute on the fly some field that can not be computed fields.
             :param values: dict values for `create`or `write`.
         """
+        # task implies analytic account and tags
+        if vals.get('task_id') and not vals.get('account_id'):
+            task = self.env['project.task'].browse(vals.get('task_id'))
+            task_analytic_account_id = task._get_task_analytic_account_id()
+            vals['account_id'] = task_analytic_account_id.id
+            vals['company_id'] = task_analytic_account_id.company_id.id or task.company_id.id
+            if vals.get('tag_ids'):
+                vals['tag_ids'] += [Command.link(tag_id.id) for tag_id in task.analytic_tag_ids]
+            else:
+                vals['tag_ids'] = [Command.set(task.analytic_tag_ids.ids)]
+            if not task_analytic_account_id.active:
+                raise UserError(_('You cannot add timesheets to a project or a task linked to an inactive analytic account.'))
         # project implies analytic account
         if vals.get('project_id') and not vals.get('account_id'):
             project = self.env['project.project'].browse(vals.get('project_id'))
@@ -225,7 +237,7 @@ class AccountAnalyticLine(models.Model):
         # (re)compute the amount (depending on unit_amount, employee_id for the cost, and account_id for currency)
         if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'account_id']):
             for timesheet in sudo_self:
-                cost = timesheet.employee_id.timesheet_cost or 0.0
+                cost = timesheet._employee_timesheet_cost()
                 amount = -timesheet.unit_amount * cost
                 amount_converted = timesheet.employee_id.currency_id._convert(
                     amount, timesheet.account_id.currency_id, self.env.company, timesheet.date)
@@ -246,3 +258,7 @@ class AccountAnalyticLine(models.Model):
 
     def _get_timesheet_time_day(self):
         return self._convert_hours_to_days(self.unit_amount)
+
+    def _employee_timesheet_cost(self):
+        self.ensure_one()
+        return self.employee_id.timesheet_cost or 0.0

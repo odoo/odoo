@@ -204,11 +204,11 @@ class Task(models.Model):
     def _compute_encode_uom_in_days(self):
         self.encode_uom_in_days = self._uom_in_days()
 
-    @api.depends('project_id.analytic_account_id.active')
+    @api.depends('analytic_account_id.active', 'project_id.analytic_account_id.active')
     def _compute_analytic_account_active(self):
         """ Overridden in sale_timesheet """
         for task in self:
-            task.analytic_account_active = task.project_id.analytic_account_id.active
+            task.analytic_account_active = task._get_task_analytic_account_id().active
 
     @api.depends('timesheet_ids.unit_amount')
     def _compute_effective_hours(self):
