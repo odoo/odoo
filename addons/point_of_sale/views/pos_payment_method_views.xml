@@ -13,9 +13,6 @@
                         <label for="name"/>
                         <h1><field name="name" placeholder="e.g. Cash" class="oe_inline"/></h1>
                     </div>
-                    <div class="o_notification_alert alert alert-warning" attrs="{'invisible':['|', ('type', '!=', 'pay_later'), '&amp;', ('type', '=', 'pay_later'), ('split_transactions', '=', True)]}" role="alert">
-                        Only cash and bank journals are allowed in the <strong>Journal</strong> field.
-                    </div>
                     <group name="Payment methods">
                         <field name="hide_use_payment_terminal" invisible="1"/>
                         <group>
