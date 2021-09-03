@@ -30,7 +30,8 @@ class PosPaymentMethod(models.Model):
         help='Leave empty to use the receivable account of customer.\n'
              'Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n'
              'For cash journal, we directly write to the default account in the journal via statement lines.\n'
-             'For bank journal, we write to the outstanding account specified in this payment method.')
+             'For bank journal, we write to the outstanding account specified in this payment method.\n'
+             'Only cash and bank journals are allowed.')
     split_transactions = fields.Boolean(
         string='Identify Customer',
         default=False,
