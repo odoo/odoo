@@ -7,8 +7,8 @@ var ListController = require('web.ListController');
 var testUtils = require('web.test_utils');
 var ListRenderer = require('web.ListRenderer');
 var pyUtils = require('web.py_utils');
-const { registry } = require("@web/core/registry");
-const { PivotView } = require("@web/views/pivot/pivot_view");
+const registry = require("@web/core/registry");
+const { makeFakeUserService } = require("@web/../tests/helpers/mock_services");
 const {
     toggleFilterMenu,
     toggleMenuItem,
@@ -1100,7 +1100,8 @@ QUnit.skip(
             }
         };
 
-        registry.category("views").add("pivot", PivotView, { force: true });
+        registry.category("services").add("user", makeFakeUserService());
+
         const webClient = await createWebClient({ serverData, mockRPC });
 
         await doAction(webClient, {

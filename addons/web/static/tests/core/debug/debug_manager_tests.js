@@ -15,12 +15,12 @@ import {
     fakeCommandService,
     makeFakeDialogService,
     makeFakeLocalizationService,
+    makeFakeUserService,
 } from "../../helpers/mock_services";
 import { click, getFixture, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "../../webclient/helpers";
 import { openViewItem } from "@web/webclient/debug_items";
 import { editSearchView, editView } from "@web/views/debug_items";
-import { PivotView } from "@web/views/pivot/pivot_view";
 
 const { Component, mount, tags } = owl;
 const { xml } = tags;
@@ -54,7 +54,6 @@ QUnit.module("DebugMenu", (hooks) => {
             }
         };
         testConfig = { mockRPC };
-        registry.category("views").add("pivot", PivotView, { force: true });
     });
     QUnit.test("can be rendered", async (assert) => {
         debugRegistry
@@ -359,6 +358,7 @@ QUnit.module("DebugMenu", (hooks) => {
             debug: true,
         });
 
+        registry.category("services").add("user", makeFakeUserService());
         registry.category("debug").category("view").add("editViewItem", editView);
 
         const serverData = getActionManagerServerData();

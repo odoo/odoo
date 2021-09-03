@@ -10,6 +10,7 @@ const SearchPanel = require("web.searchPanel");
 const cpHelpers = testUtils.controlPanel;
 const createView = testUtils.createView;
 
+const { makeFakeUserService } = require("@web/../tests/helpers/mock_services");
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
 const { registry } = require("@web/core/registry");
@@ -2338,7 +2339,7 @@ QUnit.module('Views', {
     QUnit.test('search panel is available on list and kanban by default', async function (assert) {
         assert.expect(8);
 
-        registry.category("views").add("pivot", PivotView, { force: true });
+        registry.category("services").add("user", makeFakeUserService());
         const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, 1);

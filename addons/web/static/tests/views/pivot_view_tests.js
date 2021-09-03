@@ -3,7 +3,7 @@
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
-import { makeFakeLocalizationService } from "../helpers/mock_services";
+import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
 import {
     click,
     nextTick,
@@ -34,7 +34,6 @@ import {
     toggleMenu,
 } from "../search/helpers";
 import { createWebClient, doAction } from "../webclient/helpers";
-import { PivotView } from "@web/views/pivot/pivot_view";
 
 const serviceRegistry = registry.category("services");
 
@@ -187,7 +186,7 @@ QUnit.module("Views", (hooks) => {
         setupControlPanelServiceRegistry();
         serviceRegistry.add("dialog", dialogService);
         serviceRegistry.add("localization", makeFakeLocalizationService());
-        registry.category("views").add("pivot", PivotView, { force: true });
+        serviceRegistry.add("user", makeFakeUserService());
     });
 
     QUnit.module("PivotView");
