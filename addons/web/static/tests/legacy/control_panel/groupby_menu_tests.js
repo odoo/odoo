@@ -16,6 +16,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
                 date_field: { string: "Date", type: "date", store: true, sortable: true },
                 float_field: { string: "Float", type: "float", group_operator: 'sum' },
                 foo: { string: "Foo", type: "char", store: true, sortable: true },
+                m2m: { string: "Many2Many", type: "many2many", store: true},
             };
         },
     }, function () {
@@ -37,7 +38,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
         });
 
         QUnit.test('simple rendering with no groupby', async function (assert) {
-            assert.expect(5);
+            assert.expect(6);
 
             const params = {
                 cpModelConfig: { searchMenuTypes },
@@ -55,6 +56,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
             assert.strictEqual(optionEls[0].innerText.trim(), 'Birthday');
             assert.strictEqual(optionEls[1].innerText.trim(), 'Date');
             assert.strictEqual(optionEls[2].innerText.trim(), 'Foo');
+            assert.strictEqual(optionEls[3].innerText.trim(), 'Many2Many');
 
             controlPanel.destroy();
         });
