@@ -332,10 +332,12 @@ class MrpProduction(models.Model):
             production.delay_alert_date = delay_alert_date_data.get(production.id, False)
 
     def _compute_json_popover(self):
-        for production in self:
+        production_no_alert = self.filtered(lambda m: m.state in ('done', 'cancel') or not m.delay_alert_date)
+        production_no_alert.json_popover = False
+        for production in (self - production_no_alert):
             production.json_popover = json.dumps({
                 'popoverTemplate': 'stock.PopoverStockRescheduling',
-                'delay_alert_date': format_datetime(self.env, production.delay_alert_date, dt_format=False) if production.delay_alert_date else False,
+                'delay_alert_date': format_datetime(self.env, production.delay_alert_date, dt_format=False),
                 'late_elements': [{
                         'id': late_document.id,
                         'name': late_document.display_name,
