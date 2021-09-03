@@ -17,6 +17,33 @@
         <field name="responsible_id" ref="base.user_admin"/>
     </record>
 
+    <!-- Accrual Plan -->
+    <record id="hr_accrual_plan_1" model="hr.leave.accrual.plan">
+        <field name="name">Seniority Plan</field>
+    </record>
+
+    <record id="hr_accrual_level_1" model="hr.leave.accrual.level">
+        <field name="accrual_plan_id" ref="hr_accrual_plan_1" />
+        <field name="start_count">1</field>
+        <field name="start_type">day</field>
+        <field name="added_value">1</field>
+        <field name="frequency">yearly</field>
+    </record>
+    <record id="hr_accrual_level_2" model="hr.leave.accrual.level">
+        <field name="accrual_plan_id" ref="hr_accrual_plan_1" />
+        <field name="start_count">4</field>
+        <field name="start_type">year</field>
+        <field name="added_value">2</field>
+        <field name="frequency">yearly</field>
+    </record>
+    <record id="hr_accrual_level_3" model="hr.leave.accrual.level">
+        <field name="accrual_plan_id" ref="hr_accrual_plan_1" />
+        <field name="start_count">8</field>
+        <field name="start_type">year</field>
+        <field name="added_value">3</field>
+        <field name="frequency">yearly</field>
+    </record>
+
     <!-- ++++++++++++++++++++++  Mitchell Admin  ++++++++++++++++++++++ -->
 
     <record id="hr_holidays_allocation_cl" model="hr.leave.allocation">

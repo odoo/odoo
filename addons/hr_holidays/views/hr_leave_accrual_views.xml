@@ -28,8 +28,8 @@
                             <field name="frequency"/>
                             <div class="o_row">
                                 <label for="week_day" string="on" attrs="{'invisible': [('frequency', '!=', 'weekly')]}"/><field name="week_day" attrs="{'invisible': [('frequency', '!=', 'weekly')]}"/>
-                                <label for="first_day" string="on the" attrs="{'invisible': [('frequency', '!=', 'monthly')]}"/><field name="first_day" attrs="{'invisible': [('frequency', '!=', 'monthly')]}"/>
-                                <label for="first_day" string="on the" attrs="{'invisible': [('frequency', '!=', 'bimonthly')]}"/><field name="first_day" attrs="{'invisible': [('frequency', '!=', 'bimonthly')]}"/><span attrs="{'invisible': [('frequency', '!=', 'bimonthly')]}">and on the</span><field name="second_day" attrs="{'invisible': [('frequency', '!=', 'bimonthly')]}"/>
+                                <label for="first_day" string="on the" attrs="{'invisible': [('frequency', '!=', 'monthly')]}"/><field name="first_day" attrs="{'invisible': [('frequency', '!=', 'monthly')]}"/><span attrs="{'invisible': [('frequency', '!=', 'monthly')]}">day of the month</span>
+                                <label for="first_day" string="on the" attrs="{'invisible': [('frequency', '!=', 'bimonthly')]}"/><field name="first_day" attrs="{'invisible': [('frequency', '!=', 'bimonthly')]}"/><span attrs="{'invisible': [('frequency', '!=', 'bimonthly')]}">and on the</span><field name="second_day" attrs="{'invisible': [('frequency', '!=', 'bimonthly')]}"/><span attrs="{'invisible': [('frequency', '!=', 'bimonthly')]}">days of the month</span>
                                 <label for="first_month_day" string="on the" attrs="{'invisible': [('frequency', '!=', 'biyearly')]}"/><field name="first_month_day" attrs="{'invisible': [('frequency', '!=', 'biyearly')]}"/><field name="first_month" attrs="{'invisible': [('frequency', '!=', 'biyearly')]}"/><span attrs="{'invisible': [('frequency', '!=', 'biyearly')]}">and on the</span><field name="second_month_day" attrs="{'invisible': [('frequency', '!=', 'biyearly')]}"/><field name="second_month" attrs="{'invisible': [('frequency', '!=', 'biyearly')]}"/>
                                 <label for="yearly_day" string="on" attrs="{'invisible': [('frequency', '!=', 'yearly')]}"/><field name="yearly_day" attrs="{'invisible': [('frequency', '!=', 'yearly')]}"/><field name="yearly_month" attrs="{'invisible': [('frequency', '!=', 'yearly')]}"/>
                             </div>
@@ -63,6 +63,7 @@
         <field name="model">hr.leave.accrual.plan</field>
         <field name="arch" type="xml">
             <form string="Accrual Plan">
+                <field name="show_transition_mode" invisible="1" />
                 <sheet>
                     <div class="oe_button_box" name="button_box" attrs="{'invisible': [('id', '=', False)]}">
                         <button name="action_open_accrual_plan_employees" type="object" class="oe_stat_button" icon="fa-users">
@@ -77,7 +78,7 @@
                             <field name="time_off_type_id"/>
                         </group>
                         <group>
-                            <field name="transition_mode" widget="radio"/>
+                            <field name="transition_mode" widget="radio" attrs="{'invisible': [('show_transition_mode', '=', False)]}"/>
                         </group>
                     </group>
                     <span class="oe_grey" invisible="1">
@@ -114,6 +115,7 @@
                                 <field name="yearly_month"/>
                                 <field name="maximum_leave"/>
                                 <field name="action_with_unused_accruals"/>
+                                <field name="is_based_on_worked_time"/>
                                 <templates>
                                     <div t-name="kanban-box">
                                         <div class="o_hr_holidays_body oe_kanban_global_click">
@@ -143,17 +145,23 @@
                                                 </div>
                                                 <div>
                                                     Adds <field name="added_value"/> <field name="added_value_type"/>
+                                                    <t t-if="record.is_based_on_worked_time.raw_value">(based on worked time)</t>
+                                                </div>
+                                                <div>
                                                     <field name="frequency"/>
-                                                    <t t-if="record.frequency.value == 'weekly'">
+                                                    <t t-if="record.frequency.raw_value == 'weekly'">
                                                         on <field name="week_day"/>
                                                     </t>
-                                                    <t t-elif="record.frequency.value === 'bimonthly'">
-                                                        on the <field name="first_day"/> and on the <field name="second_day"/>
+                                                    <t t-elif="record.frequency.raw_value === 'monthly'">
+                                                        on the <field name="first_day"/> day of the month
                                                     </t>
-                                                    <t t-elif="record.frequency.value === 'biyearly'">
+                                                    <t t-elif="record.frequency.raw_value === 'bimonthly'">
+                                                        on the <field name="first_day"/> and on the <field name="second_day"/> days of the months
+                                                    </t>
+                                                    <t t-elif="record.frequency.raw_value === 'biyearly'">
                                                         on the <field name="first_month_day"/> <field name="first_month"/> and on the <field name="second_month_day"/> <field name="second_month"/>
                                                     </t>
-                                                    <t t-elif="record.frequency.value === 'yearly'">
+                                                    <t t-elif="record.frequency.raw_value === 'yearly'">
                                                         on <field name="yearly_day"/> <field name="yearly_month"/>
                                                     </t>
                                                 </div>
