@@ -189,7 +189,7 @@
             <field name="name">stock.picking.tree</field>
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
-                <tree string="Picking list" multi_edit="1" sample="1">
+                <tree string="Picking list" js_class="lazy_column_list" multi_edit="1" sample="1">
                     <header>
                         <button name="do_unreserve" type="object" string="Unreserve"/>
                         <button name="action_assign" type="object" string="Check Availability"/>
@@ -203,8 +203,8 @@
                     <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
                     <field name="scheduled_date" optional="show" widget="remaining_days" attrs="{'invisible':[('state', 'in', ('done', 'cancel'))]}"/>
                     <field name="picking_type_code" invisible="1"/>
-                    <field name="products_availability_state" invisible="1"/>
-                    <field name="products_availability"
+                    <field name="products_availability_state" invisible="1" options='{"lazy": true}'/>
+                    <field name="products_availability" options='{"lazy": true}'
                         optional="hide"
                         attrs="{'invisible': ['|', ('picking_type_code', '!=', 'outgoing'), ('state', 'not in', ['confirmed', 'waiting', 'assigned'])]}"
                         decoration-warning="products_availability_state == 'expected'"

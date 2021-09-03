@@ -6,7 +6,7 @@
             <field name="name">mrp.production.tree</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <tree string="Manufacturing Orders" default_order="priority desc, date_planned_start desc" multi_edit="1" sample="1">
+                <tree string="Manufacturing Orders" js_class="lazy_column_list" default_order="priority desc, date_planned_start desc" multi_edit="1" sample="1">
                     <header>
                         <button name="button_plan" type="object" string="Plan"/>
                         <button name="do_unreserve" type="object" string="Unreserve"/>
@@ -22,8 +22,8 @@
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="origin" optional="show"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
-                    <field name="components_availability_state" invisible="1"/>
-                    <field name="components_availability"
+                    <field name="components_availability_state" invisible="1" options='{"lazy": true}'/>
+                    <field name="components_availability" options='{"lazy": true}'
                         attrs="{'invisible': [('state', 'not in', ['confirmed', 'progress'])]}"
                         optional="show"
                         decoration-success="components_availability_state == 'available'" 
