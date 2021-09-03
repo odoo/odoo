@@ -175,6 +175,9 @@ function factory(dependencies) {
             if ('avatarCacheKey' in data) {
                 data2.avatarCacheKey = data.avatarCacheKey;
             }
+            if ('defaultDisplayMode' in data) {
+                data2.defaultDisplayMode = data.defaultDisplayMode;
+            }
             if ('description' in data) {
                 data2.description = data.description;
             }
@@ -2021,6 +2024,12 @@ function factory(dependencies) {
         }),
         creator: many2one('mail.user'),
         custom_channel_name: attr(),
+        /**
+         * Determines the default display mode of this channel. Should contain
+         * either no value (to display the chat), or 'video_full_screen' to
+         * start a call in full screen.
+         */
+        defaultDisplayMode: attr(),
         /**
          * States the description of this thread. Only applies to channels.
          */

@@ -94,11 +94,12 @@ class TestDiscussFullPerformance(TransactionCase):
         message = channel_channel_public_1.message_post(body='test', message_type='comment', author_id=self.users[2].partner_id.id, partner_ids=self.users[0].partner_id.ids)
         # add star
         message.toggle_message_starred()
+        self.env.company.sudo().name = 'YourCompany'
 
         self.maxDiff = None
         self.users[0].flush()
         self.users[0].invalidate_cache()
-        with self.assertQueryCount(emp=50):
+        with self.assertQueryCount(emp=90):
             init_messaging = self.users[0].with_user(self.users[0])._init_messaging()
 
         self.assertEqual(init_messaging, {
@@ -110,6 +111,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'channel_type': 'channel',
                     'create_uid': user_root.id,
                     'custom_channel_name': False,
+                    'defaultDisplayMode': False,
                     'description': 'General announcements for all employees.',
                     'group_based_subscription': True,
                     'id': channel_general.id,
@@ -131,6 +133,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
+                    'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
                     'id': channel_channel_public_1.id,
@@ -152,6 +155,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
+                    'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
                     'id': channel_channel_public_2.id,
@@ -173,6 +177,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
+                    'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
                     'id': channel_channel_group_1.id,
@@ -194,6 +199,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
+                    'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
                     'id': channel_channel_group_2.id,
@@ -215,6 +221,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
+                    'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
                     'id': channel_channel_private_1.id,
@@ -236,6 +243,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
+                    'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
                     'id': channel_channel_private_2.id,
@@ -257,6 +265,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'channel_type': 'group',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
+                    'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
                     'id': channel_group_1.id,
@@ -316,6 +325,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'channel_type': 'chat',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
+                    'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
                     'id': channel_chat_1.id,
@@ -375,6 +385,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'channel_type': 'chat',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
+                    'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
                     'id': channel_chat_2.id,
@@ -434,6 +445,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'channel_type': 'chat',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
+                    'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
                     'id': channel_chat_3.id,
@@ -493,6 +505,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'channel_type': 'chat',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
+                    'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
                     'id': channel_chat_4.id,
@@ -552,6 +565,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'channel_type': 'livechat',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
+                    'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
                     'id': channel_livechat_1.id,
@@ -617,6 +631,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'channel_type': 'livechat',
                     'create_uid': self.env.ref('base.public_user').id,
                     'custom_channel_name': False,
+                    'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
                     'id': channel_livechat_2.id,
@@ -678,6 +693,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': channel_livechat_2.uuid,
                 },
             ],
+            'companyName': 'YourCompany',
             'mail_failures': [],
             'shortcodes': [
                 {

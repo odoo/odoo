@@ -33,7 +33,7 @@
         </html>
     </template>
 
-    <template id="mail.discuss_public_channel_template" name="Discuss Channel Template">
+    <template id="mail.discuss_public_channel_template" name="Discuss Public Channel Template">
         <t t-call="mail.discuss_public_layout">
             <t t-set="head">
                 <script>
@@ -42,6 +42,21 @@
                         const { createThreadViewFromChannelData } = await boot();
                         const channelData = <t t-out="json.dumps(channel_sudo.channel_info()[0])"/>;
                         createThreadViewFromChannelData(channelData);
+                    });
+                </script>
+            </t>
+        </t>
+    </template>
+
+    <template id="mail.discuss_public_welcome_template" name="Discuss Public Welcome Template">
+        <t t-call="mail.discuss_public_layout">
+            <t t-set="head">
+                <script>
+                    odoo.define('mail.discuss_public_boot_welcome_view', async function(require) {
+                        const { boot } = require('@mail/public/discuss_public_boot');
+                        const { createWelcomeView } = await boot();
+                        const channelId = <t t-out="channel_sudo.id"/>;
+                        createWelcomeView(channelId);
                     });
                 </script>
             </t>

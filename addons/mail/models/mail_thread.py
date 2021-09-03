@@ -1802,7 +1802,7 @@ class MailThread(models.AbstractModel):
         record_name = record_name or self.display_name
 
         # Find the message's author
-        if 'guest' in self.env.context:
+        if self.env.user._is_public() and 'guest' in self.env.context:
             author_guest_id = self.env.context['guest'].id
             author_id, email_from = False, False
         else:

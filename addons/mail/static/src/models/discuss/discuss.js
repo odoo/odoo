@@ -1,15 +1,25 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
+import { attr, many2one, one2one } from '@mail/model/model_field';
 import { clear, create, link, unlink, unlinkAll, update } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
     class Discuss extends dependencies['mail.model'] {
 
+        /**
+         * @override
+         */
+        _created() {
+            super._created();
+            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
+            this.onClickStartAMeetingButton = this.onClickStartAMeetingButton.bind(this);
+        }
+
         //----------------------------------------------------------------------
         // Public
+        //----------------------------------------------------------------------
 
         clearIsAddingItem() {
             this.update({
@@ -28,6 +38,23 @@ function factory(dependencies) {
          */
         close() {
             this.update({ isOpen: false });
+        }
+
+        async createMeetingChannel() {
+            const channelData = await this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'create_group',
+                kwargs: {
+                    default_display_mode: 'video_full_screen',
+                    partners_to: [this.messaging.currentPartner.id],
+                },
+            });
+            const channel = this.messaging.models['mail.thread'].insert(
+                this.messaging.models['mail.thread'].convertData(channelData)
+            );
+            this.update({ mostRecentMeetingChannel: link(channel) });
+            this.channelInvitationForm.update({ doFocusOnSearchInput: true });
+            this.channelInvitationForm.searchPartnersToInvite();
         }
 
         focus() {
@@ -154,6 +181,15 @@ function factory(dependencies) {
         }
 
         /**
+         * Handles click on the "Start a meeting" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickStartAMeetingButton(ev) {
+            this.createMeetingChannel();
+        }
+
+        /**
          * Open thread from init active id. `initActiveId` is used to refer to
          * a thread that we may not have full data yet, such as when messaging
          * is not yet initialized.
@@ -267,6 +303,25 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {mail.channel_invitation_form}
+         */
+        _computeChannelInvitationForm() {
+            if (!this.mostRecentMeetingChannel) {
+                return clear();
+            }
+            if (!this.channelInvitationForm) {
+                return create();
+            }
+            return update({
+                searchResultCount: clear(),
+                searchTerm: clear(),
+                selectablePartners: clear(),
+                selectedPartners: clear(),
+            });
+        }
+
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeHasThreadView() {
@@ -327,7 +382,6 @@ function factory(dependencies) {
             }
             return;
         }
-
 
         /**
          * Only pinned threads are allowed in discuss.
@@ -390,6 +444,16 @@ function factory(dependencies) {
             isCausal: true,
         }),
         /**
+         * Determines the channel invitation form to use for the invitation
+         * to the most recent meeting channel.
+         */
+        channelInvitationForm: one2one('mail.channel_invitation_form', {
+            compute: '_computeChannelInvitationForm',
+            inverse: 'discuss',
+            isCausal: true,
+            readonly: true,
+        }),
+        /**
          * Determines whether `this.thread` should be displayed.
          */
         hasThreadView: attr({
@@ -446,6 +510,11 @@ function factory(dependencies) {
         menu_id: attr({
             default: null,
         }),
+        /**
+         * The channel created last time the user clicked on the "Start a
+         * meeting" button.
+         */
+        mostRecentMeetingChannel: one2one('mail.thread'),
         /**
          * The message that is currently selected as being replied to in Inbox.
          * There is only one reply composer shown at a time, which depends on

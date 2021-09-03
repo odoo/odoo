@@ -89,6 +89,8 @@ function factory(dependencies) {
                             return this._handleNotificationChannelRenamed(message.payload);
                         case 'mail.channel_update':
                             return this._handleNotificationChannelUpdate(message.payload);
+                        case 'mail.guest_update':
+                            return this.messaging.models['mail.guest'].insert(message.payload);
                         case 'mail.message_update':
                             return this.messaging.models['mail.message'].insert(message.payload);
                         case 'res.users_settings_changed':
