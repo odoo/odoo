@@ -88,7 +88,8 @@
                                         class="btn btn-sm btn-primary o_print_label o_print_label_all"
                                         t-att-disabled="not any(s['is_assigned'] for s in sources_to_lines[source])"
                                         name="print_labels">
-                                        Print Labels
+                                        <span class="d-none d-sm-block o_print_label_text">Print Labels</span>
+                                        <span class="d-block d-sm-none fa fa-print"/>
                                 </button>
                             </th>
                         </tr>
@@ -137,7 +138,8 @@
                                         t-attf-class="btn btn-sm btn-primary o_print_label"
                                         t-att-disabled="not line['is_assigned']"
                                         name="print_label">
-                                        Print Label
+                                        <span class="d-none d-sm-block o_print_label_text">Print Label</span>
+                                        <span class="d-block d-sm-none fa fa-print"/>
                                     </button>
                                 </td>
                             </tr>
