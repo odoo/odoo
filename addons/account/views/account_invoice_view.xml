@@ -314,7 +314,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Bill">
+                        <page string="Bill" name="bill">
                             <field context="{'type': type, 'journal_id': journal_id}" name="invoice_line_ids">
                                 <tree string="Bill lines" editable="bottom">
                                     <field name="sequence" widget="handle" />
@@ -359,7 +359,7 @@
                                         </field>
                                     </div>
                                 </group>
-                                <group class="oe_subtotal_footer oe_right">
+                                <group class="oe_subtotal_footer oe_right" name="total_amounts">
                                     <field name="amount_untaxed"/>
                                     <field name="amount_tax"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
