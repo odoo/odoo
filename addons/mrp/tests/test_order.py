@@ -4,9 +4,10 @@
 from odoo.tests import Form
 from datetime import datetime, timedelta
 
-from odoo.fields import Datetime as Dt
+from odoo import fields
 from odoo.exceptions import UserError
 from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo.tools.misc import format_date
 
 class TestMrpOrder(TestMrpCommon):
 
@@ -54,7 +55,7 @@ class TestMrpOrder(TestMrpCommon):
             'inventory_quantity': 500
         }).action_apply_inventory()
 
-        test_date_planned = Dt.now() - timedelta(days=1)
+        test_date_planned = fields.Datetime.now() - timedelta(days=1)
         test_quantity = 3.0
         man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
         man_order_form.product_id = self.product_4
@@ -1509,6 +1510,57 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mos.move_finished_ids.mapped('state'), ['done'] * 3)
         self.assertEqual(mos.move_finished_ids.mapped('quantity_done'), [1] * 3)
 
+    def test_components_availability(self):
+        self.bom_2.unlink()  # remove the kit bom of product_5 
+        now = fields.Datetime.now()
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_3  # product_5 (2), product_4 (8), product_2 (12)
+        mo_form.date_planned_start = now
+        mo = mo_form.save()
+        self.assertEqual(mo.components_availability, False)  # no compute for draft
+        mo.action_confirm()
+        self.assertEqual(mo.components_availability, 'Not Available')
+
+        tommorrow = fields.Datetime.now() + timedelta(days=1)
+        after_tommorrow = fields.Datetime.now() + timedelta(days=2)
+        warehouse = self.env.ref('stock.warehouse0')
+        move1 = self._create_move(
+            self.product_5, self.env.ref('stock.stock_location_suppliers'), warehouse.lot_stock_id,
+            product_uom_qty=2, date=tommorrow
+        )
+        move2 = self._create_move(
+            self.product_4, self.env.ref('stock.stock_location_suppliers'), warehouse.lot_stock_id,
+            product_uom_qty=8, date=tommorrow
+        )
+        move3 = self._create_move(
+            self.product_2, self.env.ref('stock.stock_location_suppliers'), warehouse.lot_stock_id,
+            product_uom_qty=12, date=tommorrow
+        )
+        (move1 | move2 | move3)._action_confirm()
+
+        mo.invalidate_cache(['components_availability', 'components_availability_state'], mo.ids)
+        self.assertEqual(mo.components_availability, 'Exp %s' % format_date(self.env, tommorrow))
+        self.assertEqual(mo.components_availability_state, 'late')
+
+        mo.date_planned_start = after_tommorrow
+
+        self.assertEqual(mo.components_availability, 'Exp %s' % format_date(self.env, tommorrow))
+        self.assertEqual(mo.components_availability_state, 'expected')
+
+        (move1 | move2 | move3)._set_quantities_to_reservation()
+        (move1 | move2 | move3)._action_done()
+
+        mo.invalidate_cache(['components_availability', 'components_availability_state'], mo.ids)
+        self.assertEqual(mo.components_availability, 'Available')
+        self.assertEqual(mo.components_availability_state, 'available')
+
+        mo.action_assign()
+
+        self.assertEqual(mo.reservation_state, 'assigned')
+        self.assertEqual(mo.components_availability, 'Ready')
+        self.assertEqual(mo.components_availability_state, 'available')
+
+
     def test_immediate_validate_6(self):
         """In a production for a tracked product, clicking on mark as done without filling any quantities should
         pop up the immediate transfer wizard. Processing should choose a new lot for the finished product. """
@@ -1847,7 +1899,7 @@ class TestMrpOrder(TestMrpCommon):
         })
 
         # Next Monday at 6:00 am UTC
-        date_planned = (Dt.now() + timedelta(days=7 - Dt.now().weekday())).replace(hour=6, minute=0, second=0)
+        date_planned = (fields.Datetime.now() + timedelta(days=7 - fields.Datetime.now().weekday())).replace(hour=6, minute=0, second=0)
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = bom
         mo_form.date_planned_start = date_planned
