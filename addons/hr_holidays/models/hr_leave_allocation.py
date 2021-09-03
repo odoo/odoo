@@ -145,9 +145,12 @@ class HolidaysAllocation(models.Model):
         ('duration_check', "CHECK( ( number_of_days > 0 AND allocation_type='regular') or (allocation_type != 'regular'))", "The duration must be greater than 0."),
     ]
 
+    # The compute does not get triggered without a depends on record creation
+    # aka keep the 'useless' depends
     @api.depends_context('uid')
+    @api.depends('allocation_type')
     def _compute_is_officer(self):
-        self.is_officer = self.user_has_groups("hr_holidays.group_hr_holidays_user")
+        self.is_officer = self.env.user.has_group("hr_holidays.group_hr_holidays_user")
 
     @api.depends_context('uid')
     def _compute_description(self):
