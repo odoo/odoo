@@ -624,6 +624,7 @@
                                 groups="account.group_account_invoice"/>
                         <!-- Preview (only customer invoices) -->
                         <button name="preview_invoice" type="object" string="Preview" data-hotkey="o"
+                                title="Preview invoice"
                                 attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}"/>
                         <!-- Reverse -->
                         <button name="%(action_view_account_move_reversal)d" string="Reverse Entry"
