@@ -59,7 +59,7 @@ class ReceptionReport(models.AbstractModel):
 
         # only match for non-mto moves in same warehouse
         warehouse = pickings[0].picking_type_id.warehouse_id
-        wh_location_ids = self.env['stock.location'].search([('id', 'child_of', warehouse.view_location_id.id), ('location_id.usage', '!=', 'supplier')]).ids
+        wh_location_ids = self.env['stock.location']._search([('id', 'child_of', warehouse.view_location_id.id), ('usage', '!=', 'supplier')])
 
         allowed_states = ['confirmed', 'partially_available', 'waiting']
         if 'done' in picking_states:
