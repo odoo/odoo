@@ -146,7 +146,7 @@ class ProjectTaskRecurrence(models.Model):
         return ['message_partner_ids', 'company_id', 'description', 'displayed_image_id', 'email_cc',
                 'parent_id', 'partner_email', 'partner_id', 'partner_phone', 'planned_hours',
                 'project_id', 'project_privacy_visibility', 'sequence', 'tag_ids', 'recurrence_id',
-                'name', 'recurring_task']
+                'name', 'recurring_task', 'analytic_account_id']
 
     def _get_weekdays(self, n=1):
         self.ensure_one()
