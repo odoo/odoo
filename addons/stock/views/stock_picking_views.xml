@@ -229,6 +229,7 @@
                 <field name="picking_type_code" invisible="1"/>
                 <field name="hide_picking_type" invisible="1"/>
                 <field name="show_operations" invisible="1" readonly="1"/>
+                <field name="show_allocation" invisible="1"/>
                 <field name="show_reserved" invisible="1" readonly="1"/>
                 <field name="move_line_exist" invisible="1"/>
                 <field name="has_packages" invisible="1"/>
@@ -272,7 +273,7 @@
                         <button name="action_view_reception_report" string="Allocation" type="object"
                             context="{'default_picking_ids': [id]}"
                             class="oe_stat_button" icon="fa-list"
-                            attrs="{'invisible': ['|', ('picking_type_code', '=', 'outgoing'), ('picking_type_code', '=', False)]}"
+                            attrs="{'invisible': [('show_allocation', '=', False)]}"
                             groups="stock.group_reception_report"/>
                         <!-- Use the following button to avoid onchange on one2many -->
                         <button name="action_picking_move_tree"
