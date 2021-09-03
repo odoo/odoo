@@ -22,7 +22,14 @@
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="origin" optional="show"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
-                    <field name="reservation_state" optional="show" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
+                    <field name="components_availability_state" invisible="1"/>
+                    <field name="components_availability"
+                        attrs="{'invisible': [('state', 'not in', ['confirmed', 'progress'])]}"
+                        optional="show"
+                        decoration-success="components_availability_state == 'available'" 
+                        decoration-danger="components_availability_state == 'late'"
+                        decoration-warning="components_availability_state == 'expected'"/>
+                    <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
                     <field name="product_uom_id" string="UoM" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
                     <field name="production_duration_expected" attrs="{'invisible': [('production_duration_expected', '=', 0)]}" groups="mrp.group_mrp_routings" widget="float_time" sum="Total expected duration" optional="show"/>
@@ -204,6 +211,11 @@
                                 <field name="delay_alert_date" invisible="1"/>
                                 <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('json_popover', '=', False)]}"/>
                             </div>
+                            <field name="components_availability_state" invisible="1"/>
+                            <field name="components_availability" attrs="{'invisible': [('state', 'not in', ['confirmed', 'progress'])]}"
+                                decoration-warning="components_availability_state == 'expected'"
+                                decoration-danger="components_availability_state == 'late'"
+                                decoration-success="components_availability_state == 'available'"/>
                             <field name="user_id" domain="[('share', '=', False)]"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
                             <field name="show_final_lots" invisible="1"/>
@@ -506,7 +518,7 @@
                     <filter string="Cancelled" name="filter_cancel" domain="[('state', '=', 'cancel')]"/>
                     <separator/>
                     <filter string="Waiting for Component" name="waiting" domain="[('reservation_state', 'in', ('waiting', 'confirmed'))]"/>
-                    <filter string="Component Available" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
+                    <filter string="Ready" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
                     <separator/>
                     <filter string="Planning Issues" name="planning_issues" help="Late MO or Late delivery of components"
                         domain="['|', ('delay_alert_date', '!=', False), '&amp;', ('date_deadline', '&lt;', current_date), ('state', '=', 'confirmed')]"/>
