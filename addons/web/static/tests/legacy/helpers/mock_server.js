@@ -473,9 +473,9 @@ var MockServer = Class.extend({
         }
 
         if (domain.length) {
-            // 'child_of' operator isn't supported by domain.js, so we replace
-            // in by the 'in' operator (with the ids of children)
-            domain = domain.map(function (criterion) {
+            domain = domain.map((criterion) => {
+                // 'child_of' operator isn't supported by domain.js, so we replace
+                // in by the 'in' operator (with the ids of children)
                 if (criterion[1] === 'child_of') {
                     var oldLength = 0;
                     var childIDs = [criterion[2]];
@@ -488,6 +488,16 @@ var MockServer = Class.extend({
                         });
                     }
                     criterion = [criterion[0], 'in', childIDs];
+                }
+                // In case of many2many field, if domain operator is '=' generally change it to 'in' operator
+                const field = this.data[model].fields[criterion[0]] || {};
+                if (field.type === "many2many" && criterion[1] === "=") {
+                    if (criterion[2] === false) {
+                        // if undefined value asked, domain.js require equality with empty array
+                        criterion = [criterion[0], "=", []];
+                    } else {
+                        criterion = [criterion[0], "in", [criterion[2]]];
+                    }
                 }
                 return criterion;
             });
@@ -1468,15 +1478,16 @@ var MockServer = Class.extend({
             }
         }
         function formatValue(groupByField, val) {
-            var fieldName = groupByField.split(':')[0];
-            var aggregateFunction = groupByField.split(':')[1] || 'month';
-            if (fields[fieldName].type === 'date') {
-                if (!val) {
-                    return false;
-                } else if (aggregateFunction === 'day') {
+            if (val === false || val === undefined) {
+                return false;
+            }
+            const [fieldName, aggregateFunction = "month"] = groupByField.split(':');
+            const { type } = fields[fieldName];
+            if (type === "date") {
+                if (aggregateFunction === 'day') {
                     return moment(val).format('YYYY-MM-DD');
                 } else if (aggregateFunction === 'week') {
-                    return moment(val).format('[W]ww YYYY');
+                    return moment(val).format('[W]WW GGGG');
                 } else if (aggregateFunction === 'quarter') {
                     return moment(val).format('[Q]Q YYYY');
                 } else if (aggregateFunction === 'year') {
@@ -1484,15 +1495,13 @@ var MockServer = Class.extend({
                 } else {
                     return moment(val).format('MMMM YYYY');
                 }
-            } else if (fields[fieldName].type === 'datetime') {
-                if (!val) {
-                    return false;
-                } else if (aggregateFunction === 'hour') {
+            } else if (type === "datetime") {
+                if (aggregateFunction === 'hour') {
                     return moment(val).format('HH[:00] DD MMM');
                 } else if (aggregateFunction === 'day') {
                     return moment(val).format('YYYY-MM-DD');
                 } else if (aggregateFunction === 'week') {
-                    return moment(val).format('[W]ww YYYY');
+                    return moment(val).format('[W]WW GGGG');
                 } else if (aggregateFunction === 'quarter') {
                     return moment(val).format('[Q]Q YYYY');
                 } else if (aggregateFunction === 'year') {
@@ -1500,22 +1509,14 @@ var MockServer = Class.extend({
                 } else {
                     return moment(val).format('MMMM YYYY');
                 }
-            } else {
-                return val instanceof Array ? val[0] : (val || false);
-            }
-        }
-        function groupByFunction(record) {
-            var value = '';
-            _.each(groupBy, function (groupByField) {
-                value = (value ? value + ',' : value) + groupByField + '#';
-                var fieldName = groupByField.split(':')[0];
-                if (['date', 'datetime'].includes(fields[fieldName].type)) {
-                    value += formatValue(groupByField, record[fieldName]);
-                } else {
-                    value += JSON.stringify(record[groupByField]);
+            } else if (Array.isArray(val)) {
+                if (val.length === 0) {
+                    return false;
                 }
-            });
-            return value;
+                return type === "many2many" ? val : val[0];
+            } else {
+                return val;
+            }
         }
 
         if (!groupBy.length) {
@@ -1524,119 +1525,146 @@ var MockServer = Class.extend({
             return [group];
         }
 
-        var groups = _.groupBy(records, groupByFunction);
-        var result = _.map(groups, function (group) {
-            var res = {
+        const groups = {};
+        for (const r of records) {
+            let recordGroupValues = [];
+            for (const gbField of groupBy) {
+                const [fieldName] = gbField.split(":");
+                let value =formatValue(gbField, r[fieldName]);
+                if (!Array.isArray(value)) {
+                    value = [value];
+                }
+                recordGroupValues = value.reduce((acc, val) => {
+                    const newGroup = {};
+                    newGroup[gbField] = val;
+                    if (recordGroupValues.length === 0) {
+                        acc.push(newGroup);
+                    } else {
+                        for (const groupValue of recordGroupValues) {
+                            acc.push({ ...groupValue, ...newGroup });
+                        }
+                    }
+                    return acc;
+                }, []);
+            }
+            for (const groupValue of recordGroupValues) {
+                const valueKey = JSON.stringify(groupValue);
+                groups[valueKey] = groups[valueKey] || [];
+                groups[valueKey].push(r);
+            }
+        }
+
+        let readGroupResult = [];
+        for (const [groupId, groupRecords] of Object.entries(groups)) {
+            const group = {
+                ...JSON.parse(groupId),
                 __domain: kwargs.domain || [],
                 __range: {},
             };
-            _.each(groupBy, function (groupByField) {
-                var fieldName = groupByField.split(':')[0];
-                var val = formatValue(groupByField, group[0][fieldName]);
-                var field = self.data[model].fields[fieldName];
-                if (field.type === 'many2one' && !_.isArray(val)) {
-                    var related_record = _.findWhere(self.data[field.relation].records, {
-                        id: val
+            for (const gbField of groupBy) {
+                if (!(gbField in group)) {
+                    group[gbField] = false;
+                    continue;
+                }
+
+                const [fieldName, dateRange] = gbField.split(":");
+                const value = Number.isInteger(group[gbField])
+                    ? group[gbField]
+                    : group[gbField] || false;
+                const { relation, type } = fields[fieldName];
+
+                if (["many2one", "many2many"].includes(type) && !Array.isArray(value)) {
+                    const relatedRecord = _.findWhere(this.data[relation].records, {
+                        id: value
                     });
-                    if (related_record) {
-                        res[groupByField] = [val, related_record.display_name];
+                    if (relatedRecord) {
+                        group[gbField] = [value, relatedRecord.display_name];
                     } else {
-                        res[groupByField] = false;
+                        group[gbField] = false;
+                    }
+                }
+
+                if (["date", "datetime"].includes(type)) {
+                    if (value) {
+                        let startDate, endDate;
+                        switch (dateRange) {
+                            case "hour": {
+                                startDate = moment(value, "HH[:00] DD MMM");
+                                endDate = startDate.clone().add(1, "hours");
+                                break;
+                            }
+                            case "day": {
+                                startDate = moment(value, "YYYY-MM-DD");
+                                endDate = startDate.clone().add(1, "days");
+                                break;
+                            }
+                            case "week": {
+                                startDate = moment(value, "[W]WW GGGG");
+                                endDate = startDate.clone().add(1, "weeks");
+                                break;
+                            }
+                            case "quarter": {
+                                startDate = moment(value, "[Q]Q YYYY");
+                                endDate = startDate.clone().add(1, "quarters");
+                                break;
+                            }
+                            case "year": {
+                                startDate = moment(value, "Y");
+                                endDate = startDate.clone().add(1, "years");
+                                break;
+                            }
+                            case "month":
+                            default: {
+                                startDate = moment(value, "MMMM YYYY");
+                                endDate = startDate.clone().add(1, "months");
+                                break;
+                            }
+                        }
+                        const from = type === "date"
+                            ? startDate.format("YYYY-MM-DD")
+                            : startDate.format("YYYY-MM-DD HH:mm:ss");
+                        const to = type === "date"
+                            ? endDate.format("YYYY-MM-DD")
+                            : endDate.format("YYYY-MM-DD HH:mm:ss");
+                        group.__range[fieldName] = { from, to };
+                        group.__domain = [
+                            [fieldName, ">=", from],
+                            [fieldName, "<", to],
+                        ].concat(group.__domain);
+                    } else {
+                        group.__range[fieldName] = false;
+                        group.__domain = [[fieldName, "=", value]].concat(group.__domain);
                     }
                 } else {
-                    res[groupByField] = val;
+                    group.__domain = [[fieldName, "=", value]].concat(group.__domain);
                 }
-                
-                if (['date', 'datetime'].includes(field.type)) {
-                    if (!val) {
-                        res.__range[fieldName] = false;
-                    }
-                }
-                if (field.type === 'date' && val) {
-                    let aggregateFunction = groupByField.split(':')[1];
-                    let startDate, endDate;
-                    if (aggregateFunction === 'day') {
-                        startDate = moment(val, 'YYYY-MM-DD');
-                        endDate = startDate.clone().add(1, 'days');
-                    } else if (aggregateFunction === 'week') {
-                        startDate = moment(val, '[W]ww YYYY');
-                        endDate = startDate.clone().add(1, 'weeks');
-                    } else if (aggregateFunction === 'quarter') {
-                        startDate = moment(val, '[Q]Q YYYY');
-                        endDate = startDate.clone().add(1, 'quarters');
-                    } else if (aggregateFunction === 'year') {
-                        startDate = moment(val, 'Y');
-                        endDate = startDate.clone().add(1, 'years');
-                    } else {
-                        startDate = moment(val, 'MMMM YYYY');
-                        endDate = startDate.clone().add(1, 'months');
-                    }
-                    res.__domain = [[fieldName, '>=', startDate.format('YYYY-MM-DD')], [fieldName, '<', endDate.format('YYYY-MM-DD')]].concat(res.__domain);
-                    res.__range[fieldName] = {
-                        from: startDate.format('YYYY-MM-DD'),
-                        to: endDate.format('YYYY-MM-DD'),
-                    };
-                } else if (field.type === 'datetime' && val) {
-                    let aggregateFunction = groupByField.split(':')[1];
-                    let startDate, endDate;
-                    if (aggregateFunction === 'hour') {
-                        startDate = moment(val, 'HH[:00] DD MMM');
-                        endDate = startDate.clone().add(1, 'hours');
-                    } else if (aggregateFunction === 'day') {
-                        startDate = moment(val, 'YYYY-MM-DD');
-                        endDate = startDate.clone().add(1, 'days');
-                    } else if (aggregateFunction === 'week') {
-                        startDate = moment(val, '[W]ww YYYY');
-                        endDate = startDate.clone().add(1, 'weeks');
-                    } else if (aggregateFunction === 'quarter') {
-                        startDate = moment(val, '[Q]Q YYYY');
-                        endDate = startDate.clone().add(1, 'quarters');
-                    } else if (aggregateFunction === 'year') {
-                        startDate = moment(val, 'Y');
-                        endDate = startDate.clone().add(1, 'years');
-                    } else {
-                        startDate = moment(val, 'MMMM YYYY');
-                        endDate = startDate.clone().add(1, 'months');
-                    }
-                    res.__domain = [[fieldName, '>=', startDate.format('YYYY-MM-DD HH:mm:ss')], [fieldName, '<', endDate.format('YYYY-MM-DD HH:mm:ss')]].concat(res.__domain);
-                    res.__range[fieldName] = {
-                        from: startDate.format('YYYY-MM-DD HH:mm:ss'),
-                        to: endDate.format('YYYY-MM-DD HH:mm:ss'),
-                    };
-                } else {
-                    res.__domain = [[fieldName, '=', val]].concat(res.__domain);
-                }
-            });
-            if (_.isEmpty(res.__range)) {
-                delete res.__range;
+            }
+            if (_.isEmpty(group.__range)) {
+                delete group.__range;
             }
             // compute count key to match dumb server logic...
-            var countKey;
-            if (kwargs.lazy) {
-                countKey = groupBy[0].split(':')[0] + "_count";
-            } else {
-                countKey = "__count";
-            }
-            res[countKey] = group.length;
-            aggregateFields(res, group);
-
-            return res;
-        });
+            const countKey = kwargs.lazy
+                ? groupBy[0].split(":")[0] + "_count"
+                : "__count";
+            group[countKey] = groupRecords.length;
+            aggregateFields(group, groupRecords);
+            readGroupResult.push(group);
+        }
 
         if (kwargs.orderby) {
             // only consider first sorting level
             kwargs.orderby = kwargs.orderby.split(',')[0];
-            var fieldName = kwargs.orderby.split(' ')[0];
-            var order = kwargs.orderby.split(' ')[1];
-            result = this._sortByField(result, model, fieldName, order);
+            const fieldName = kwargs.orderby.split(' ')[0];
+            const order = kwargs.orderby.split(' ')[1];
+            readGroupResult = this._sortByField(readGroupResult, model, fieldName, order);
         }
 
         if (kwargs.limit) {
-            var offset = kwargs.offset || 0;
-            result = result.slice(offset, kwargs.limit + offset);
+            const offset = kwargs.offset || 0;
+            readGroupResult = readGroupResult.slice(offset, kwargs.limit + offset);
         }
 
-        return result;
+        return readGroupResult;
     },
     /**
      * Simulates a 'read_progress_bar' operation
@@ -2069,12 +2097,15 @@ var MockServer = Class.extend({
             if (_.contains(['one2many', 'many2many'], field.type)) {
                 var ids = _.clone(record[field_changed]) || [];
 
-                // fallback to command 6 when given a simple list of ids
                 if (
                     Array.isArray(value) &&
                     value.reduce((hasOnlyInt, val) => hasOnlyInt && Number.isInteger(val), true)
                 ) {
+                    // fallback to command 6 when given a simple list of ids
                     value = [[6, 0, value]];
+                } else if (value === false) {
+                    // delete all command
+                    value = [[5]];
                 }
                 // convert commands
                 for (const command of value || []) {

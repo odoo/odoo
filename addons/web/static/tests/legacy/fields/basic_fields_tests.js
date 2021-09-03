@@ -144,7 +144,7 @@ QUnit.module('basic_fields', {
             },
             "ir.translation": {
                 fields: {
-                    lang_code: {type: "char"},
+                    lang: {type: "char"},
                     value: {type: "char"},
                     res_id: {type: "integer"}
                 },
@@ -152,7 +152,7 @@ QUnit.module('basic_fields', {
                     id: 99,
                     res_id: 37,
                     value: '',
-                    lang_code: 'en_US'
+                    lang: 'en_US'
                 }]
             },
         };
