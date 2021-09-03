@@ -5,8 +5,9 @@ import pytz
 import uuid
 
 from odoo.tools import consteq
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
+from odoo.exceptions import UserError
 
 
 class MailGuest(models.Model):
@@ -48,6 +49,23 @@ class MailGuest(models.Model):
         timezone = request.httprequest.cookies.get('tz')
         return timezone if timezone in pytz.all_timezones else False
 
+    def _update_name(self, name):
+        self.ensure_one()
+        name = name.strip()
+        if name == "":
+            raise UserError(_("Guest's name cannot be empty."))
+        self.name = name
+        self.env['bus.bus'].sendmany([(
+            (self._cr.dbname, 'mail.channel', channel.id),
+            {
+                'type': 'mail.guest_update',
+                'payload': {
+                    'id': self.id,
+                    'name': self.name,
+                },
+            }
+        ) for channel in self.channel_ids])
+
     def _update_timezone(self, timezone):
         query = """
             UPDATE mail_guest
@@ -64,6 +82,7 @@ class MailGuest(models.Model):
         partner_root = self.env.ref('base.partner_root')
         return {
             'channels': self.channel_ids.channel_info(),
+            'companyName': self.env.company.name,
             'currentGuest': {
                 'id': self.id,
                 'name': self.name,

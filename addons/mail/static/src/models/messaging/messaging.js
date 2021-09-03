@@ -261,6 +261,7 @@ function factory(dependencies) {
             readonly: true,
         }),
         commands: one2many('mail.channel_command'),
+        companyName: attr(),
         currentGuest: one2one('mail.guest'),
         currentPartner: one2one('mail.partner'),
         currentUser: one2one('mail.user'),

@@ -58,6 +58,7 @@ class Channel(models.Model):
         ('group', 'Group')],
         string='Channel Type', default='channel', help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration).")
     is_chat = fields.Boolean(string='Is a chat', compute='_compute_is_chat')
+    default_display_mode = fields.Selection(string="Default Display Mode", selection=[('video_full_screen', "Full screen video")], help="Determines how the channel will be displayed by default when opening it from its invitation link. No value means display text (no voice/video).")
     description = fields.Text('Description')
     image_128 = fields.Image("Image", max_width=128, max_height=128)
     avatar_128 = fields.Image("Avatar", max_width=128, max_height=128, compute='_compute_avatar_128')
@@ -326,7 +327,7 @@ class Channel(models.Model):
                 self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', channel_partner.partner_id.id), {
                     'type': 'mail.channel_joined',
                     'payload': {
-                        'channel': channel_partner.channel_id.with_user(user).with_context(allowed_company_ids=user.company_ids.ids).channel_info()[0],
+                        'channel': channel_partner.channel_id.with_user(user).with_context(allowed_company_ids=user.company_ids.ids).sudo().channel_info()[0],
                         'invited_by_user_id': self.env.user.id,
                     },
                 })
@@ -427,15 +428,19 @@ class Channel(models.Model):
         """
         self.ensure_one()
 
-        guest = self.env.context.get('guest')
-        partner = None if guest else self.env.user.partner_id
+        if self.env.user._is_public():
+            guest = self.env.context.get('guest')
+            partner = self.env['res.partner']
+        else:
+            guest = self.env['mail.guest']
+            partner = self.env.user.partner_id
 
         def is_current_user(r):
             return (guest and r.guest_id == guest) or r.partner_id == partner
 
         current_rtc_session = self.rtc_session_ids.filtered(is_current_user)
         if not current_rtc_session:
-            return
+            return [], []
 
         current_sessions_channel_partners = self.rtc_session_ids.channel_partner_id
         notifications = []
@@ -504,15 +509,14 @@ class Channel(models.Model):
             the channel if necessary.
             :param bool joining : true if joining the call, false if leaving.
         """
-        guest = self.env.context.get('guest')
-        partner = None if guest else self.env.user.partner_id
-        new_session_id = None
-        if partner:
-            domain = [('partner_id', '=', partner.id)]
+        if self.env.user._is_public():
+            guest = self.env.context.get('guest')
+            partner = self.env['res.partner']
         else:
-            domain = [('guest_id', '=', guest.id)]
-        current_channel_partner = self.env['mail.channel.partner'].search(domain, limit=1)
-
+            guest = self.env['mail.guest']
+            partner = self.env.user.partner_id
+        new_session_id = None
+        current_channel_partner = self.env['mail.channel.partner'].search([('channel_id', '=', self.id), ('partner_id', '=', partner.id), ('guest_id', '=', guest.id)], limit=1)
         if not current_channel_partner:
             return
         current_channel_partner._remove_rtc_invitation()
@@ -788,6 +792,7 @@ class Channel(models.Model):
                 'avatarCacheKey': channel._get_avatar_cache_key(),
                 'id': channel.id,
                 'name': channel.name,
+                'defaultDisplayMode': channel.default_display_mode,
                 'description': channel.description,
                 'uuid': channel.uuid,
                 'state': 'open',
@@ -1126,7 +1131,7 @@ class Channel(models.Model):
         return channel_info
 
     @api.model
-    def create_group(self, partners_to):
+    def create_group(self, partners_to, default_display_mode=False):
         """ Create a group channel.
             :param partners_to : list of res.partner ids to add to the conversation
             :returns: channel_info of the created channel
@@ -1135,6 +1140,7 @@ class Channel(models.Model):
         channel = self.create({
             'channel_last_seen_partner_ids': [Command.create({'partner_id': partner_id}) for partner_id in partners_to],
             'channel_type': 'group',
+            'default_display_mode': default_display_mode,
             'name': '',  # default name is computed client side from the list of members
             'public': 'private',
         })

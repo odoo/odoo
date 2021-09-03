@@ -23,21 +23,21 @@ class DiscussController(http.Controller):
         channel_sudo = request.env['mail.channel'].browse(int(channel_id)).sudo().exists()
         if not channel_sudo or not channel_sudo.uuid or not consteq(channel_sudo.uuid, invitation_token):
             raise NotFound()
-        response = request.redirect(f'/discuss/channel/{channel_sudo.id}')
-        if request.env['mail.channel.partner']._get_as_sudo_from_request(request=request, channel_id=int(channel_id)):
-            return response
+        if channel_sudo.env['mail.channel.partner']._get_as_sudo_from_request(request=request, channel_id=int(channel_id)):
+            return request.redirect(f'/discuss/channel/{channel_sudo.id}')
         if channel_sudo.channel_type == 'chat':
             raise NotFound()
-        if request.session.uid:
-            channel_sudo.add_members([request.env.user.partner_id.id])
+        response = request.redirect(f'/discuss/channel/{channel_sudo.id}/welcome')
+        if not channel_sudo.env.user._is_public():
+            channel_sudo.add_members([channel_sudo.env.user.partner_id.id])
             return response
-        guest = request.env['mail.guest']._get_guest_from_request(request)
+        guest = channel_sudo.env['mail.guest']._get_guest_from_request(request)
         if not guest:
-            guest = request.env['mail.guest'].sudo().create({
-                'country_id': request.env['res.country'].sudo().search([('code', '=', request.session.get('geoip', {}).get('country_code'))], limit=1).id,
-                'lang': get_lang(request.env).code,
+            guest = channel_sudo.env['mail.guest'].create({
+                'country_id': channel_sudo.env['res.country'].search([('code', '=', request.session.get('geoip', {}).get('country_code'))], limit=1).id,
+                'lang': get_lang(channel_sudo.env).code,
                 'name': _("Guest"),
-                'timezone': request.env['mail.guest']._get_timezone_from_request(request),
+                'timezone': channel_sudo.env['mail.guest']._get_timezone_from_request(request),
             })
             # Discuss Guest ID: every route in this file will make use of it to authenticate
             # the guest through `_get_as_sudo_from_request` or `_get_as_sudo_from_request_or_raise`.
@@ -50,6 +50,14 @@ class DiscussController(http.Controller):
     def discuss_channel(self, channel_id, **kwargs):
         channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
         return request.render('mail.discuss_public_channel_template', {
+            'channel_sudo': channel_partner_sudo.channel_id,
+            'session_info': channel_partner_sudo.env['ir.http'].session_info(),
+        })
+
+    @http.route('/discuss/channel/<int:channel_id>/welcome', methods=['GET'], type='http', auth='public')
+    def discuss_channel_welcome(self, channel_id):
+        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
+        return request.render('mail.discuss_public_welcome_template', {
             'channel_sudo': channel_partner_sudo.channel_id,
             'session_info': channel_partner_sudo.env['ir.http'].session_info(),
         })
@@ -92,7 +100,7 @@ class DiscussController(http.Controller):
 
     @http.route('/mail/init_messaging', methods=['POST'], type='json', auth='public')
     def mail_init_messaging(self, **kwargs):
-        if request.session.uid:
+        if not request.env.user.sudo()._is_public():
             return request.env.user._init_messaging()
         guest = request.env['mail.guest']._get_guest_from_request(request)
         if guest:
@@ -304,7 +312,7 @@ class DiscussController(http.Controller):
 
     @http.route('/mail/rtc/session/notify_call_members', methods=['POST'], type="json", auth="public")
     def session_call_notify(self, sender_session_id, target_session_ids=None, content=None):
-        """ Sends content to other session of the same channel, only works of the user is the user of that session.
+        """ Sends content to other session of the same channel, only works if the user is the user of that session.
             This is used to send peer to peer information between sessions.
 
             :param int sender_session_id: id of the session from which the content is sent
@@ -382,3 +390,14 @@ class DiscussController(http.Controller):
                 ('Cache-Control', 'max-age=%s' % http.STATIC_CACHE),
             ]
         )
+
+    # --------------------------------------------------------------------------
+    # Guest API
+    # --------------------------------------------------------------------------
+
+    @http.route('/mail/guest/update_name', methods=['POST'], type='json', auth='public')
+    def mail_guest_update_name(self, name):
+        guest = request.env['mail.guest']._get_guest_from_request(request)
+        if not guest:
+            raise NotFound()
+        guest.sudo()._update_name(name)

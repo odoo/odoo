@@ -207,8 +207,8 @@ QUnit.test('basic rendering: sidebar', async function (assert) {
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_Discuss_sidebar .o_DiscussSidebar_separator`).length,
-        1,
-        "should have separator (between mailboxes and channels, but that's not tested)"
+        2,
+        "should have 2 separators (separating 'Start a meeting' button, mailboxes and channels, but that's not tested)"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChannel`).length,
