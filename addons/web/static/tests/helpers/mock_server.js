@@ -4,10 +4,9 @@ import { browser } from "@web/core/browser/browser";
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import * as utils from "@web/core/utils/arrays";
 import { makeFakeRPCService, makeMockFetch } from "./mock_services";
 import { patchWithCleanup } from "./utils";
-import { parseDate } from "@web/core/l10n/dates";
+import { parseDateTime } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 const serviceRegistry = registry.category("services");
@@ -771,14 +770,13 @@ export class MockServer {
             }
         }
         function formatValue(groupByField, val) {
-            let [fieldName, aggregateFunction] = groupByField.split(":");
-            aggregateFunction = aggregateFunction || "month";
-            if (fields[fieldName].type === "date") {
-                // what about datetime?
-                if (!val) {
-                    return false;
-                }
-                const date = DateTime.fromISO(val);
+            if (val === false || val === undefined) {
+                return false;
+            }
+            const [fieldName, aggregateFunction = "month"] = groupByField.split(":");
+            const { type } = fields[fieldName];
+            if (type === "date") {
+                const date = DateTime.fromSQL(val);
                 if (aggregateFunction === "day") {
                     return date.toFormat("yyyy-MM-dd");
                 } else if (aggregateFunction === "week") {
@@ -790,101 +788,179 @@ export class MockServer {
                 } else {
                     return date.toFormat("MMMM yyyy");
                 }
+            } else if (type === "datetime") {
+                const date = DateTime.fromSQL(val);
+                if (aggregateFunction === "hour") {
+                    return date.toFormat("HH:00 dd MMM");
+                } else if (aggregateFunction === "day") {
+                    return date.toFormat("yyyy-MM-dd");
+                } else if (aggregateFunction === "week") {
+                    return `W${date.toFormat("WW kkkk")}`;
+                } else if (aggregateFunction === "quarter") {
+                    return `Q${date.toFormat("q yyyy")}`;
+                } else if (aggregateFunction === "year") {
+                    return date.toFormat("yyyy");
+                } else {
+                    return date.toFormat("MMMM yyyy");
+                }
+            } else if (Array.isArray(val)) {
+                if (val.length === 0) {
+                    return false;
+                }
+                return type === "many2many" ? val : val[0];
             } else {
-                return val instanceof Array ? val[0] : val || false;
+                return val;
             }
         }
-        function groupByFunction(record) {
-            let value = "";
-            groupBy.forEach((groupByField) => {
-                value = (value ? value + "," : value) + groupByField + "#";
-                const fieldName = groupByField.split(":")[0];
-                if (fields[fieldName].type === "date") {
-                    value += formatValue(groupByField, record[fieldName]);
-                } else {
-                    value += JSON.stringify(record[groupByField]);
-                }
-            });
-            return value;
-        }
+
         if (!groupBy.length) {
             const group = { __count: records.length };
             aggregateFields(group, records);
             return [group];
         }
-        const groups = utils.groupBy(records, groupByFunction);
-        let result = Object.values(groups).map((records) => {
-            const res = {
-                __domain: kwargs.domain || [],
-            };
-            groupBy.forEach((groupByField) => {
-                const fieldName = groupByField.split(":")[0];
-                const val = formatValue(groupByField, records[0][fieldName]);
-                const field = fields[fieldName];
-                if (field.type === "many2one" && !Array.isArray(val)) {
-                    const relRecord = this.models[field.relation].records.find((r) => r.id === val);
-                    if (relRecord) {
-                        res[groupByField] = [val, relRecord.display_name];
-                    } else {
-                        res[groupByField] = false;
-                    }
-                } else {
-                    res[groupByField] = val;
+
+        const groups = {};
+        for (const r of records) {
+            let recordGroupValues = [];
+            for (const gbField of groupBy) {
+                const [fieldName] = gbField.split(":");
+                let value = formatValue(gbField, r[fieldName]);
+                if (!Array.isArray(value)) {
+                    value = [value];
                 }
-                if (field.type === "date" && val) {
-                    const aggregateFunction = groupByField.split(":")[1];
-                    let startDate;
-                    let endDate;
-                    if (aggregateFunction === "day") {
-                        startDate = parseDate(val, { format: "yyyy-MM-dd" });
-                        endDate = startDate.plus({ days: 1 });
-                    } else if (aggregateFunction === "week") {
-                        startDate = parseDate(val, { format: "WW kkkk" });
-                        endDate = startDate.plus({ weeks: 1 });
-                    } else if (aggregateFunction === "year") {
-                        startDate = parseDate(val, { format: "y" });
-                        endDate = startDate.plus({ years: 1 });
-                    } else if (aggregateFunction === "quarter") {
-                        startDate = parseDate(val, { format: "q yyyy" });
-                        endDate = startDate.plus({ quarters: 1 });
+                recordGroupValues = value.reduce((acc, val) => {
+                    const newGroup = {};
+                    newGroup[gbField] = val;
+                    if (recordGroupValues.length === 0) {
+                        acc.push(newGroup);
                     } else {
-                        startDate = parseDate(val, { format: "MMMM yyyy" });
-                        endDate = startDate.plus({ months: 1 });
+                        for (const groupValue of recordGroupValues) {
+                            acc.push({ ...groupValue, ...newGroup });
+                        }
                     }
-                    res.__domain = [
-                        [fieldName, ">=", startDate.toFormat("yyyy-MM-dd")],
-                        [fieldName, "<", endDate.toFormat("yyyy-MM-dd")],
-                    ].concat(res.__domain);
-                } else {
-                    res.__domain = Domain.combine(
-                        [[[fieldName, "=", val]], res.__domain],
-                        "AND"
-                    ).toList();
-                }
-            });
-            // compute count key to match dumb server logic...
-            let countKey;
-            if (kwargs.lazy) {
-                countKey = groupBy[0].split(":")[0] + "_count";
-            } else {
-                countKey = "__count";
+                    return acc;
+                }, []);
             }
-            res[countKey] = records.length;
-            aggregateFields(res, records);
-            return res;
-        });
+            for (const groupValue of recordGroupValues) {
+                const valueKey = JSON.stringify(groupValue);
+                groups[valueKey] = groups[valueKey] || [];
+                groups[valueKey].push(r);
+            }
+        }
+
+        let readGroupResult = [];
+        for (const [groupId, groupRecords] of Object.entries(groups)) {
+            const group = {
+                ...JSON.parse(groupId),
+                __domain: kwargs.domain || [],
+                __range: {},
+            };
+            for (const gbField of groupBy) {
+                if (!(gbField in group)) {
+                    group[gbField] = false;
+                    continue;
+                }
+
+                const [fieldName, dateRange] = gbField.split(":");
+                const value = Number.isInteger(group[gbField])
+                    ? group[gbField]
+                    : group[gbField] || false;
+                const { relation, type } = fields[fieldName];
+
+                if (["many2one", "many2many"].includes(type) && !Array.isArray(value)) {
+                    const relatedRecord = this.models[relation].records.find(
+                        ({ id }) => id === value
+                    );
+                    if (relatedRecord) {
+                        group[gbField] = [value, relatedRecord.display_name];
+                    } else {
+                        group[gbField] = false;
+                    }
+                }
+
+                if (["date", "datetime"].includes(type)) {
+                    if (value) {
+                        let startDate, endDate;
+                        switch (dateRange) {
+                            case "hour": {
+                                try {
+                                    startDate = parseDateTime(value, { format: "HH dd MMM" });
+                                } catch {
+                                    startDate = parseDateTime(value, { format: "HH:00 dd MMM" });
+                                }
+                                endDate = startDate.plus({ hours: 1 });
+                                break;
+                            }
+                            case "day": {
+                                startDate = parseDateTime(value, { format: "yyyy-MM-dd" });
+                                endDate = startDate.plus({ days: 1 });
+                                break;
+                            }
+                            case "week": {
+                                startDate = parseDateTime(value, { format: "WW kkkk" });
+                                endDate = startDate.plus({ weeks: 1 });
+                                break;
+                            }
+                            case "quarter": {
+                                startDate = parseDateTime(value, { format: "q yyyy" });
+                                endDate = startDate.plus({ quarters: 1 });
+                                break;
+                            }
+                            case "year": {
+                                startDate = parseDateTime(value, { format: "y" });
+                                endDate = startDate.plus({ years: 1 });
+                                break;
+                            }
+                            case "month":
+                            default: {
+                                startDate = parseDateTime(value, { format: "MMMM yyyy" });
+                                endDate = startDate.plus({ months: 1 });
+                                break;
+                            }
+                        }
+                        const from =
+                            type === "date"
+                                ? startDate.toFormat("yyyy-MM-dd")
+                                : startDate.toFormat("yyyy-MM-dd HH:mm:ss");
+                        const to =
+                            type === "date"
+                                ? endDate.toFormat("yyyy-MM-dd")
+                                : endDate.toFormat("yyyy-MM-dd HH:mm:ss");
+                        group.__range[fieldName] = { from, to };
+                        group.__domain = [
+                            [fieldName, ">=", from],
+                            [fieldName, "<", to],
+                        ].concat(group.__domain);
+                    } else {
+                        group.__range[fieldName] = false;
+                        group.__domain = [[fieldName, "=", value]].concat(group.__domain);
+                    }
+                } else {
+                    group.__domain = [[fieldName, "=", value]].concat(group.__domain);
+                }
+            }
+            if (_.isEmpty(group.__range)) {
+                delete group.__range;
+            }
+            // compute count key to match dumb server logic...
+            const countKey = kwargs.lazy ? groupBy[0].split(":")[0] + "_count" : "__count";
+            group[countKey] = groupRecords.length;
+            aggregateFields(group, groupRecords);
+            readGroupResult.push(group);
+        }
+
         if (kwargs.orderby) {
             // only consider first sorting level
             kwargs.orderby = kwargs.orderby.split(",")[0];
             const fieldName = kwargs.orderby.split(" ")[0];
             const order = kwargs.orderby.split(" ")[1];
-            result = this.sortByField(result, modelName, fieldName, order);
+            readGroupResult = this.sortByField(readGroupResult, modelName, fieldName, order);
         }
         if (kwargs.limit) {
             const offset = kwargs.offset || 0;
-            result = result.slice(offset, kwargs.limit + offset);
+            readGroupResult = readGroupResult.slice(offset, kwargs.limit + offset);
         }
-        return result;
+        return readGroupResult;
     }
 
     mockWebReadGroup(modelName, kwargs) {
@@ -1562,9 +1638,9 @@ export class MockServer {
         }
         let records = model.records;
         if (domain.length) {
-            // 'child_of' operator isn't supported by domain.js, so we replace
-            // in by the 'in' operator (with the ids of children)
             domain = domain.map((criterion) => {
+                // 'child_of' operator isn't supported by domain.js, so we replace
+                // in by the 'in' operator (with the ids of children)
                 if (criterion[1] === "child_of") {
                     let oldLength = 0;
                     const childIDs = [criterion[2]];
@@ -1577,6 +1653,16 @@ export class MockServer {
                         });
                     }
                     criterion = [criterion[0], "in", childIDs];
+                }
+                // In case of many2many field, if domain operator is '=' generally change it to 'in' operator
+                const field = model.fields[criterion[0]] || {};
+                if (field.type === "many2many" && criterion[1] === "=") {
+                    if (criterion[2] === false) {
+                        // if undefined value asked, domain.js require equality with empty array
+                        criterion = [criterion[0], "=", []];
+                    } else {
+                        criterion = [criterion[0], "in", [criterion[2]]];
+                    }
                 }
                 return criterion;
             });
@@ -1628,13 +1714,16 @@ export class MockServer {
             }
             if (["one2many", "many2many"].includes(field.type)) {
                 let ids = record[fieldName] ? record[fieldName].slice() : [];
-                // fallback to command 6 when given a simple list of ids
                 if (Array.isArray(value)) {
                     if (
                         value.reduce((hasOnlyInt, val) => hasOnlyInt && Number.isInteger(val), true)
                     ) {
+                        // fallback to command 6 when given a simple list of ids
                         value = [[6, 0, value]];
                     }
+                } else if (value === false) {
+                    // delete all command
+                    value = [[5]];
                 }
                 // interpret commands
                 for (const command of value || []) {
