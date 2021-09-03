@@ -87,7 +87,7 @@ export class GraphRenderer extends Component {
             const tr = document.createElement("tr");
             const td = document.createElement("td");
             tr.classList.add("o_show_more");
-            td.innerHTML = this.env._t("...");
+            td.innerText = this.env._t("...");
             tr.appendChild(td);
             tooltip.querySelector("tbody").appendChild(tr);
         }
