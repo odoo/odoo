@@ -20,7 +20,7 @@ def _get_date_check_month(year, month, day):
     """
     month_range = calendar.monthrange(year, month)
     if day > month_range[1]:
-        return datetime.date(year, month, min(day, month_range[1])) + relativedelta(days=(day - month_range[1]))
+        return datetime.date(year, month, month_range[1]) + relativedelta(days=(day - month_range[1]))
     return datetime.date(year, month, day)
 
 class AccrualPlanLevel(models.Model):
