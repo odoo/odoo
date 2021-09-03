@@ -300,6 +300,50 @@ class TestCowViewSaving(common.TransactionCase):
             'key': 'website.extension_view',
         })
 
+    def test_module_new_inherit_view_with_grandparent_specific(self):
+        # g4 =key= s2
+        # |
+        # g3
+        # |
+        # g2 =key= s1
+        # |
+        # g1
+        View = self.env['ir.ui.view']
+        g4 = self.base_view
+
+        g4.with_context(website_id=1).write({'name': 'Extension Specific'})  # s2
+
+        g3 = View.create({
+            'name': 'Extension 2',
+            'mode': 'extension',
+            'inherit_id': g4.id,
+            'arch': '<div position="inside">, extended content 1</div>',
+            'key': 'website.extension_view1',
+        })
+        g2 = View.create({
+            'name': 'Extension 2',
+            'mode': 'extension',
+            'inherit_id': g3.id,
+            'arch': '<div position="inside">, extended content 2</div>',
+            'key': 'website.extension_view2',
+        })
+
+        g2.with_context(website_id=1).write({'name': 'Extension Specific 2'})  # s1
+
+        # g1
+        View._load_records([dict(xml_id='_website_comparison.new_view', values={
+            'name': 'New Generic',
+            'mode': 'extension',
+            'inherit_id': g2.id,
+            'arch': '<div position="replace"><p>NEW VIEW</p></div>',
+            'key': '_website_comparison.new_view',
+        })])
+
+        # Simulate end of installation/update
+        # this should not crash with errors like
+        # psycopg2.errors.ForeignKeyViolation: insert or update on table "ir_ui_view" violates foreign key constraint "ir_ui_view_inherit_id_fkey"
+        View._create_all_specific_views(['_website_comparison', 'website'])
+
     def test_cow_on_base_after_extension(self):
         View = self.env['ir.ui.view']
         self.inherit_view.with_context(website_id=1).write({'name': 'Extension Specific'})

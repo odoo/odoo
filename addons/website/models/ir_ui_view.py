@@ -43,6 +43,7 @@ class View(models.Model):
         # We need to consider inactive views when handling multi-website cow
         # feature (to copy inactive children views, to search for specific
         # views, ...)
+        replace_ids = self.env.context.get("website_view_replace_ids", {})
         for view in self.with_context(active_test=False):
             # Make sure views which are written in a website context receive
             # a value for their 'key' field
@@ -84,6 +85,7 @@ class View(models.Model):
                     # must remain the same so that the inheritance is applied
                     # in the same order in the copied tree.
                     child = inherit_child.copy({'inherit_id': website_specific_view.id, 'key': inherit_child.key})
+                    replace_ids[inherit_child.id] = child.id  # save the new id before unlink
                     inherit_child.inherit_children_ids.write({'inherit_id': child.id})
                     inherit_child.unlink()
                 else:
@@ -129,11 +131,13 @@ class View(models.Model):
         self.env.cr.execute(query, (regex, ))
         result = dict(self.env.cr.fetchall())
 
+        # some specific parents may be COWed below, we need to keep track of their new ids
+        replace_ids = {}
         for record in self.browse(result.keys()):
             specific_parent_view_ids, website_ids = result[record.id]
             for specific_parent_view_id, website_id in pycompat.izip(specific_parent_view_ids, website_ids):
-                record.with_context(website_id=website_id).write({
-                    'inherit_id': specific_parent_view_id,
+                record.with_context(website_id=website_id, website_view_replace_ids=replace_ids).write({
+                    'inherit_id': replace_ids.get(specific_parent_view_id, specific_parent_view_id),
                 })
         super(View, self)._create_all_specific_views(processed_modules)
 
