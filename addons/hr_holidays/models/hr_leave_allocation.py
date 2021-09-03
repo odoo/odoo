@@ -130,7 +130,7 @@ class HolidaysAllocation(models.Model):
         ], string="Allocation Type", default="regular", required=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     is_officer = fields.Boolean(compute='_compute_is_officer')
-    accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', compute="_compute_from_holiday_status_id", store=True, readonly=False, domain="[('time_off_type_id', '=?', holiday_status_id)]", tracking=True)
+    accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', compute="_compute_from_holiday_status_id", store=True, readonly=False, domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]", tracking=True)
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves')
     taken_leave_ids = fields.One2many('hr.leave', 'holiday_allocation_id', domain="[('state', 'in', ['confirm', 'validate1', 'validate'])]")
@@ -283,17 +283,13 @@ class HolidaysAllocation(models.Model):
     @api.depends('employee_id', 'accrual_plan_id')
     def _compute_holiday_status_id(self):
         default_holiday_status_id = None
-        holiday_status_by_accrual = {accrual.id: accrual.time_off_type_id for accrual in self.accrual_plan_id}
         for holiday in self:
             if holiday.employee_id.user_id != self.env.user and holiday._origin.employee_id != holiday.employee_id:
                 holiday.holiday_status_id = False
             elif not holiday.holiday_status_id:
-                holiday_status = None
                 if holiday.accrual_plan_id:
-                    holiday_status = holiday_status_by_accrual.get(holiday.accrual_plan_id.id)
-                if holiday_status:
-                    holiday.holiday_status_id = holiday_status
-                elif not holiday._origin.holiday_status_id:
+                    holiday.holiday_status_id = holiday.accrual_plan_id.time_off_type_id
+                else:
                     if not default_holiday_status_id:  # fetch when we need it
                         default_holiday_status_id = self._default_holiday_status_id()
                     holiday.holiday_status_id = default_holiday_status_id
@@ -302,7 +298,6 @@ class HolidaysAllocation(models.Model):
     def _compute_from_holiday_status_id(self):
         accrual_allocations = self.filtered(lambda alloc: alloc.allocation_type == 'accrual' and not alloc.accrual_plan_id and alloc.holiday_status_id)
         accruals_dict = {}
-        default_accrual_plan = None
         if accrual_allocations:
             accruals_read_group = self.env['hr.leave.accrual.plan'].read_group(
                 [('time_off_type_id', 'in', accrual_allocations.holiday_status_id.ids)],
@@ -314,17 +309,11 @@ class HolidaysAllocation(models.Model):
             allocation.number_of_days = allocation.number_of_days_display
             if allocation.type_request_unit == 'hour':
                 allocation.number_of_days = allocation.number_of_hours_display / (allocation.employee_id.sudo().resource_calendar_id.hours_per_day or HOURS_PER_DAY)
-            if allocation.accrual_plan_id.time_off_type_id != allocation.holiday_status_id:
+            if allocation.accrual_plan_id.time_off_type_id.id not in (False, allocation.holiday_status_id.id):
                 allocation.accrual_plan_id = False
             if allocation.allocation_type == 'accrual' and not allocation.accrual_plan_id:
-                accrual_plan = None
                 if allocation.holiday_status_id:
-                    accrual_plan = accruals_dict.get(allocation.holiday_status_id.id, [False])[0]
-                else:
-                    if not default_accrual_plan:  # fetch the first accrual plan only when we need
-                        default_accrual_plan = self.env['hr.leave.accrual.plan'].search([], limit=1)
-                    accrual_plan = default_accrual_plan
-                allocation.accrual_plan_id = accrual_plan
+                    allocation.accrual_plan_id = accruals_dict.get(allocation.holiday_status_id.id, [False])[0]
 
     def _end_of_year_accrual(self):
         # to override in payroll
