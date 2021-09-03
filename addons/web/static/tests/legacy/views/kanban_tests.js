@@ -321,6 +321,52 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test("m2m grouped rendering with active field and archive enabled (archivable true)", async function (assert) {
+        assert.expect(7);
+
+        // add active field on partner model and make all records active
+        this.data.partner.fields.active = { string: 'Active', type: 'char', default: true };
+
+        // more many2many data
+        this.data.partner.records[0].category_ids = [6, 7];
+        this.data.partner.records[3].foo = "blork";
+        this.data.partner.records[3].category_ids = [];
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <kanban class="o_kanban_test" archivable="true">
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["category_ids"],
+        });
+
+        assert.containsN(kanban, ".o_kanban_group", 3);
+        assert.containsOnce(kanban, ".o_kanban_group:nth-child(1) .o_kanban_record");
+        assert.containsN(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+        assert.containsN(kanban, ".o_kanban_group:nth-child(3) .o_kanban_record", 2);
+
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group")].map(el => el.innerText.replace(/\s/g, " ")),
+            ["Undefined blork", "gold yopblip", "silver yopgnap"],
+        );
+
+        // check archive/restore all actions in kanban header's config dropdown
+        // despite the fact that the kanban view is configured to be archivable,
+        // the actions should not be there as it is grouped by an m2m field.
+        assert.containsNone(kanban, ".o_kanban_header .o_kanban_config .o_column_archive_records", "should not be able to archive all the records");
+        assert.containsNone(kanban, ".o_kanban_header .o_kanban_config .o_column_unarchive_records", "should not be able to unarchive all the records");
+
+        kanban.destroy();
+    });
+
     QUnit.test('context can be used in kanban template', async function (assert) {
         assert.expect(2);
 
@@ -539,6 +585,38 @@ QUnit.module('Views', {
             "'yop' column should be the first column");
         assert.doesNotHaveClass(kanban.$('.o_kanban_view > div:last'), 'o_column_quick_create',
             "column quick create should be disabled when not grouped by a many2one field)");
+        kanban.destroy();
+    });
+
+    QUnit.test('prevent deletion when grouped by many2many field', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].category_ids = [6, 7];
+        this.data.partner.records[3].category_ids = [7];
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="foo"/>
+                                <t t-if="widget.deletable"><span class="thisisdeletable">delete</span></t>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ['category_ids'],
+        });
+
+        assert.containsNone(kanban, '.thisisdeletable', "records should not be deletable");
+
+        await kanban.reload({ groupBy: ['foo'] });
+        assert.containsN(kanban, '.thisisdeletable', 4, "records should be deletable");
+
         kanban.destroy();
     });
 
@@ -3120,6 +3198,70 @@ QUnit.module('Views', {
                         "Should remain same records in first column(2 records)");
         assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 2,
                         "Should remain same records in 2nd column(2 record)");
+        kanban.destroy();
+    });
+
+    QUnit.test('prevent drag and drop if grouped by many2many field', async function (assert) {
+        assert.expect(13);
+
+        this.data.partner.records[0].category_ids = [6, 7];
+        this.data.partner.records[3].category_ids = [7];
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ['category_ids'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have 2 columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_column_title').text(), 'gold',
+            'first column should have correct title');
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_column_title').text(), 'silver',
+            'second column should have correct title');
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').text(), 'yopblip',
+            "first column should have 2 records");
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').text(), 'yopgnapblip',
+            "second column should have 3 records");
+
+        // drag&drop a record in another column
+        let $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        let $group = kanban.$('.o_kanban_group:nth-child(2)');
+        await testUtils.dom.dragAndDrop($record, $group);
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 2,
+            "1st column should contain 2 records");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 3,
+            "2nd column should contain 3 records");
+
+        // Sanity check: groupby a non m2m field and check dragdrop is working
+        await kanban.reload({ groupBy: ["state"] });
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 3, "should have 3 columns");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group .o_column_title")].map((el) => el.innerText),
+            ["ABC", "DEF", "GHI"],
+            "columns should have correct title"
+        );
+        assert.containsOnce(kanban, ".o_kanban_group:first-child .o_kanban_record",
+            "first column should have 1 record");
+        assert.containsN(kanban, ".o_kanban_group:last-child .o_kanban_record", 2,
+            "last column should have 2 records");
+        $record = kanban.$('.o_kanban_group:first-child .o_kanban_record:first');
+        $group = kanban.$('.o_kanban_group:last-child');
+        await testUtils.dom.dragAndDrop($record, $group);
+        assert.containsNone(kanban, ".o_kanban_group:first-child .o_kanban_record",
+            "first column should not contain records");
+        assert.containsN(kanban, ".o_kanban_group:last-child .o_kanban_record", 3,
+            "last column should contain 3 records");
+
         kanban.destroy();
     });
 
