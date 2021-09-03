@@ -4156,6 +4156,43 @@ QUnit.module('Views', {
         calendar.destroy();
         delete fieldRegistry.map.deferred_widget;
     });
+ 
+    QUnit.test('select events and discard create', async function (assert) {
+        assert.expect(4);
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'string="Events" ' +
+                'event_open_popup="true" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="year"/>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        assert.equal(calendar.$('.fc-dayGridMonth-view').length, 12, "should display in year mode");
+
+        await testUtils.dom.dragAndDrop(
+            calendar.$('.fc-day-top[data-date="2016-11-13"]'),
+            calendar.$('.fc-day-top[data-date="2016-11-19"]'),
+        );
+
+        assert.ok($('.modal-body').length, "should open the form view in dialog when select multiple days");
+        assert.hasAttrValue($('.fc-highlight'), 'colspan', "7", "should highlight 7 days");
+        await testUtils.dom.click($('.modal-footer button.btn:contains(Cancel)'));
+
+        assert.containsNone(calendar, '.fc-highlight', "should not highlight days");
+
+        calendar.destroy();
+    });
 });
 
 });
