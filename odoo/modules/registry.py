@@ -151,6 +151,7 @@ class Registry(Mapping):
 
         with closing(self.cursor()) as cr:
             self.has_unaccent = odoo.modules.db.has_unaccent(cr)
+            self.has_trigram = odoo.modules.db.has_trigram(cr)
 
     @classmethod
     def delete(cls, db_name):

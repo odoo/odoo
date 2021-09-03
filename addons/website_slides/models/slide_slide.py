@@ -116,7 +116,10 @@ class Slide(models.Model):
     _inherit = [
         'mail.thread',
         'image.mixin',
-        'website.seo.metadata', 'website.published.mixin']
+        'website.seo.metadata',
+        'website.published.mixin',
+        'website.searchable.mixin',
+    ]
     _description = 'Slides'
     _mail_post_access = 'read'
     _order_by_strategy = {
@@ -887,3 +890,46 @@ class Slide(models.Model):
 
     def get_backend_menu_id(self):
         return self.env.ref('website_slides.website_slides_menu_root').id
+
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        with_description = options['displayDescription']
+        search_fields = ['name']
+        fetch_fields = ['id', 'name']
+        mapping = {
+            'name': {'name': 'name', 'type': 'text', 'match': True},
+            'website_url': {'name': 'url', 'type': 'text'},
+            'extra_link': {'name': 'course', 'type': 'text'},
+            'extra_link_url': {'name': 'course_url', 'type': 'text'},
+        }
+        if with_description:
+            search_fields.append('description')
+            fetch_fields.append('description')
+            mapping['description'] = {'name': 'description', 'type': 'text', 'html': True, 'match': True}
+        return {
+            'model': 'slide.slide',
+            'base_domain': [website.website_domain()],
+            'search_fields': search_fields,
+            'fetch_fields': fetch_fields,
+            'mapping': mapping,
+            'icon': 'fa-shopping-cart',
+            'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
+        }
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        icon_per_type = {
+            'infographic': 'fa-file-picture-o',
+            'webpage': 'fa-file-text',
+            'presentation': 'fa-file-pdf-o',
+            'document': 'fa-file-pdf-o',
+            'video': 'fa-play-circle',
+            'quiz': 'fa-question-circle',
+            'link': 'fa-file-code-o', # appears in template "slide_icon"
+        }
+        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        for slide, data in zip(self, results_data):
+            data['_fa'] = icon_per_type.get(slide.slide_type, 'fa-file-pdf-o')
+            data['url'] = slide.website_url
+            data['course'] = _('Course: %s', slide.channel_id.name)
+            data['course_url'] = slide.channel_id.website_url
+        return results_data

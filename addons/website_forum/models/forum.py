@@ -11,7 +11,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import misc, sql
 from odoo.tools.translate import html_translate
-from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.http_routing.models.ir_http import slug, unslug
 
 _logger = logging.getLogger(__name__)
 
@@ -19,7 +19,13 @@ _logger = logging.getLogger(__name__)
 class Forum(models.Model):
     _name = 'forum.forum'
     _description = 'Forum'
-    _inherit = ['mail.thread', 'image.mixin', 'website.seo.metadata', 'website.multi.mixin']
+    _inherit = [
+        'mail.thread',
+        'image.mixin',
+        'website.seo.metadata',
+        'website.multi.mixin',
+        'website.searchable.mixin',
+    ]
     _order = "sequence"
 
     # description and use
@@ -261,12 +267,45 @@ class Forum(models.Model):
         for website in self.env['website'].sudo().search([]):
             website.forums_count = self.env['forum.forum'].sudo().search_count(website.website_domain())
 
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        with_description = options['displayDescription']
+        search_fields = ['name']
+        fetch_fields = ['id', 'name']
+        mapping = {
+            'name': {'name': 'name', 'type': 'text', 'match': True},
+            'website_url': {'name': 'website_url', 'type': 'text'},
+        }
+        if with_description:
+            search_fields.append('description')
+            fetch_fields.append('description')
+            mapping['description'] = {'name': 'description', 'type': 'text', 'match': True}
+        return {
+            'model': 'forum.forum',
+            'base_domain': [website.website_domain()],
+            'search_fields': search_fields,
+            'fetch_fields': fetch_fields,
+            'mapping': mapping,
+            'icon': 'fa-comments-o',
+            'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
+        }
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        for forum, data in zip(self, results_data):
+            data['website_url'] = forum._compute_website_url()
+        return results_data
+
 
 class Post(models.Model):
 
     _name = 'forum.post'
     _description = 'Forum Post'
-    _inherit = ['mail.thread', 'website.seo.metadata']
+    _inherit = [
+        'mail.thread',
+        'website.seo.metadata',
+        'website.searchable.mixin',
+    ]
     _order = "is_correct DESC, vote_count DESC, write_date DESC"
 
     name = fields.Char('Title')
@@ -933,6 +972,75 @@ class Post(models.Model):
             'target': 'self',
             'url': self._compute_website_url(),
         }
+
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        with_description = options['displayDescription']
+        with_date = options['displayDetail']
+        search_fields = ['name']
+        fetch_fields = ['id', 'name']
+        mapping = {
+            'name': {'name': 'name', 'type': 'text', 'match': True},
+            'website_url': {'name': 'website_url', 'type': 'text'},
+        }
+
+        domain = website.website_domain()
+        domain += [('parent_id', '=', False), ('state', '=', 'active'), ('can_view', '=', True)]
+        forum = options.get('forum')
+        if forum:
+            domain += [('forum_id', '=', unslug(forum)[1])]
+        tags = options.get('tag')
+        if tags:
+            domain += [('tag_ids', 'in', [unslug(tag)[1] for tag in tags.split(',')])]
+        filters = options.get('filters')
+        if filters == 'unanswered':
+            domain += [('child_ids', '=', False)]
+        elif filters == 'solved':
+            domain += [('has_validated_answer', '=', True)]
+        elif filters == 'unsolved':
+            domain += [('has_validated_answer', '=', False)]
+        user = self.env.user
+        my = options.get('my')
+        if my == 'mine':
+            domain += [('create_uid', '=', user.id)]
+        elif my == 'followed':
+            domain += [('message_partner_ids', '=', user.partner_id.id)]
+        elif my == 'tagged':
+            domain += [('tag_ids.message_partner_ids', '=', user.partner_id.id)]
+        elif my == 'favourites':
+            domain += [('favourite_ids', '=', user.id)]
+
+        # 'sorting' from the form's "Order by" overrides order during auto-completion
+        order = options.get('sorting', order)
+        if 'is_published' in order:
+            parts = [part for part in order.split(',') if 'is_published' not in part]
+            order = ','.join(parts)
+
+        if with_description:
+            search_fields.append('content')
+            fetch_fields.append('content')
+            mapping['description'] = {'name': 'content', 'type': 'text', 'html': True, 'match': True}
+        if with_date:
+            fetch_fields.append('write_date')
+            mapping['detail'] = {'name': 'date', 'type': 'html'}
+        return {
+            'model': 'forum.post',
+            'base_domain': [domain],
+            'search_fields': search_fields,
+            'fetch_fields': fetch_fields,
+            'mapping': mapping,
+            'icon': 'fa-comment-o',
+            'order': order,
+        }
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        with_date = 'detail' in mapping
+        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        for post, data in zip(self, results_data):
+            data['website_url'] = post._compute_website_url()
+            if with_date:
+                data['date'] = self.env['ir.qweb.field.date'].record_to_html(post, 'write_date', {})
+        return results_data
 
 
 class PostReason(models.Model):

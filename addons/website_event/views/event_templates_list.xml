@@ -9,7 +9,9 @@
             <t t-set="opt_events_list_cards" t-value="is_view_active('website_event.opt_events_list_cards')"/>
             <t t-set="opt_events_list_columns" t-value="is_view_active('website_event.opt_events_list_columns')"/>
             <!-- Topbar -->
-            <t t-call="website_event.index_topbar"/>
+            <t t-call="website_event.index_topbar">
+                <t t-set="search" t-value="original_search or search or searches['search']"/>
+            </t>
             <!-- Drag/Drop Area -->
             <div id="oe_structure_we_index_1" class="oe_structure oe_empty"/>
             <!-- Content -->
@@ -67,10 +69,7 @@
                     </t>
                 </ul>
                 <div class="d-flex align-items-center flex-wrap pl-sm-3 pr-0">
-                    <t t-call="website_event.events_search_box">
-                        <t t-set="_searches" t-value="searches"/>
-                        <t t-set="_placeholder">Search an event...</t>
-                    </t>
+                    <t t-call="website_event.events_search_box_input"/>
                 </div>
             </div>
         </div>
@@ -156,6 +155,10 @@
             </div>
         </div>
     </t>
+    <!-- Fuzzy search -->
+    <div t-if="event_ids and original_search" class="col-12 alert alert-warning mt8">
+        No results found for '<span t-esc="original_search"/>'. Showing results for '<span t-esc="searches['search']"/>'.
+    </div>
     <!-- List -->
     <div t-foreach="event_ids" t-as="event" t-attf-class=" #{opt_event_size} mb-4">
         <a t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" class="text-decoration-none" t-att-data-publish="event.website_published and 'on' or 'off'">

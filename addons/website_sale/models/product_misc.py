@@ -139,7 +139,12 @@ class ProductPricelist(models.Model):
 
 class ProductPublicCategory(models.Model):
     _name = "product.public.category"
-    _inherit = ["website.seo.metadata", "website.multi.mixin", 'image.mixin']
+    _inherit = [
+        'website.seo.metadata',
+        'website.multi.mixin',
+        'website.searchable.mixin',
+        'image.mixin',
+    ]
     _description = "Website Product Category"
     _parent_store = True
     _order = "sequence, name, id"
@@ -176,3 +181,32 @@ class ProductPublicCategory(models.Model):
                 category.parents_and_self = self.env['product.public.category'].browse([int(p) for p in category.parent_path.split('/')[:-1]])
             else:
                 category.parents_and_self = category
+
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        with_description = options['displayDescription']
+        search_fields = ['name']
+        fetch_fields = ['id', 'name']
+        mapping = {
+            'name': {'name': 'name', 'type': 'text', 'match': True},
+            'website_url': {'name': 'url', 'type': 'text'},
+        }
+        if with_description:
+            search_fields.append('website_description')
+            fetch_fields.append('website_description')
+            mapping['description'] = {'name': 'website_description', 'type': 'text', 'match': True}
+        return {
+            'model': 'product.public.category',
+            'base_domain': [], # categories are not website-specific
+            'search_fields': search_fields,
+            'fetch_fields': fetch_fields,
+            'mapping': mapping,
+            'icon': 'fa-folder-o',
+            'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
+        }
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        for data in results_data:
+            data['url'] = '/shop/category/%s' % data['id']
+        return results_data

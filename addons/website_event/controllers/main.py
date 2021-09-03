@@ -18,7 +18,7 @@ from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools.misc import get_lang, format_date
+from odoo.tools.misc import get_lang
 
 
 class WebsiteEventController(http.Controller):
@@ -43,97 +43,60 @@ class WebsiteEventController(http.Controller):
         searches.setdefault('country', 'all')
 
         website = request.website
-        today = fields.Datetime.today()
 
-        def sdn(date):
-            return fields.Datetime.to_string(date.replace(hour=23, minute=59, second=59))
+        step = 12  # Number of events per page
 
-        def sd(date):
-            return fields.Datetime.to_string(date)
-
-        def get_month_filter_domain(filter_name, months_delta):
-            first_day_of_the_month = today.replace(day=1)
-            filter_string = _('This month') if months_delta == 0 \
-                else format_date(request.env, value=today + relativedelta(months=months_delta),
-                                 date_format='LLLL', lang_code=get_lang(request.env).code).capitalize()
-            return [filter_name, filter_string, [
-                ("date_end", ">=", sd(first_day_of_the_month + relativedelta(months=months_delta))),
-                ("date_begin", "<", sd(first_day_of_the_month + relativedelta(months=months_delta+1)))],
-                0]
-
-        dates = [
-            ['all', _('Upcoming Events'), [("date_end", ">", sd(today))], 0],
-            ['today', _('Today'), [
-                ("date_end", ">", sd(today)),
-                ("date_begin", "<", sdn(today))],
-                0],
-            get_month_filter_domain('month', 0),
-            ['old', _('Past Events'), [
-                ("date_end", "<", sd(today))],
-                0],
-        ]
-
-        # search domains
-        domain_search = {'website_specific': website.website_domain()}
-
-        if searches['search']:
-            domain_search['search'] = [('name', 'ilike', searches['search'])]
-
-        search_tags = self._extract_searched_event_tags(searches)
-        if search_tags:
-            # Example: You filter on age: 10-12 and activity: football.
-            # Doing it this way allows to only get events who are tagged "age: 10-12" AND "activity: football".
-            # Add another tag "age: 12-15" to the search and it would fetch the ones who are tagged:
-            # ("age: 10-12" OR "age: 12-15") AND "activity: football
-            grouped_tags = defaultdict(list)
-            for tag in search_tags:
-                grouped_tags[tag.category_id].append(tag)
-            domain_search['tags'] = []
-            for group in grouped_tags:
-                domain_search['tags'] = expression.AND([domain_search['tags'], [('tag_ids', 'in', [tag.id for tag in grouped_tags[group]])]])
-
-        current_date = None
-        current_type = None
-        current_country = None
-        for date in dates:
-            if searches["date"] == date[0]:
-                domain_search["date"] = date[2]
-                if date[0] != 'all':
-                    current_date = date[1]
-
-        if searches["type"] != 'all':
-            current_type = SudoEventType.browse(int(searches['type']))
-            domain_search["type"] = [("event_type_id", "=", int(searches["type"]))]
-
-        if searches["country"] != 'all' and searches["country"] != 'online':
-            current_country = request.env['res.country'].browse(int(searches['country']))
-            domain_search["country"] = ['|', ("country_id", "=", int(searches["country"])), ("country_id", "=", False)]
-        elif searches["country"] == 'online':
-            domain_search["country"] = [("country_id", "=", False)]
-
-        def dom_without(without):
-            domain = []
-            for key, search in domain_search.items():
-                if key != without:
-                    domain += search
-            return domain
+        options = {
+            'displayDescription': False,
+            'displayDetail': False,
+            'displayExtraDetail': False,
+            'displayExtraLink': False,
+            'displayImage': False,
+            'allowFuzzy': not searches.get('noFuzzy'),
+            'date': searches.get('date'),
+            'tags': searches.get('tags'),
+            'type': searches.get('type'),
+            'country': searches.get('country'),
+        }
+        order = 'date_begin'
+        if searches.get('date', 'all') == 'old':
+            order = 'date_begin desc'
+        order = 'is_published desc, ' + order
+        search = searches.get('search')
+        event_count, details, fuzzy_search_term = website._search_with_fuzzy("events", search,
+            limit=page * step, order=order, options=options)
+        event_details = details[0]
+        events = event_details.get('results', Event)
+        events = events[(page - 1) * step:page * step]
 
         # count by domains without self search
+        domain_search = [('name', 'ilike', fuzzy_search_term or searches['search'])] if searches['search'] else []
+
+        no_date_domain = event_details['no_date_domain']
+        dates = event_details['dates']
         for date in dates:
             if date[0] != 'old':
-                date[3] = Event.search_count(dom_without('date') + date[2])
+                date[3] = Event.search_count(expression.AND(no_date_domain) + domain_search + date[2])
 
-        domain = dom_without('type')
-
-        domain = dom_without('country')
-        countries = Event.read_group(domain, ["id", "country_id"], groupby="country_id", orderby="country_id")
+        no_country_domain = event_details['no_country_domain']
+        countries = Event.read_group(expression.AND(no_country_domain) + domain_search, ["id", "country_id"],
+            groupby="country_id", orderby="country_id")
         countries.insert(0, {
             'country_id_count': sum([int(country['country_id_count']) for country in countries]),
             'country_id': ("all", _("All Countries"))
         })
 
-        step = 12  # Number of events per page
-        event_count = Event.search_count(dom_without("none"))
+        search_tags = event_details['search_tags']
+        current_date = event_details['current_date']
+        current_type = None
+        current_country = None
+
+        if searches["type"] != 'all':
+            current_type = SudoEventType.browse(int(searches['type']))
+
+        if searches["country"] != 'all' and searches["country"] != 'online':
+            current_country = request.env['res.country'].browse(int(searches['country']))
+
         pager = website.pager(
             url="/event",
             url_args=searches,
@@ -142,13 +105,9 @@ class WebsiteEventController(http.Controller):
             step=step,
             scope=5)
 
-        order = 'date_begin'
-        if searches.get('date', 'all') == 'old':
-            order = 'date_begin desc'
-        order = 'is_published desc, ' + order
-        events = Event.search(dom_without("none"), limit=step, offset=pager['offset'], order=order)
-
         keep = QueryURL('/event', **{key: value for key, value in searches.items() if (key == 'search' or value != 'all')})
+
+        searches['search'] = fuzzy_search_term or search
 
         values = {
             'current_date': current_date,
@@ -163,6 +122,7 @@ class WebsiteEventController(http.Controller):
             'search_tags': search_tags,
             'keep': keep,
             'search_count': event_count,
+            'original_search': fuzzy_search_term and search,
         }
 
         if searches['date'] == 'old':

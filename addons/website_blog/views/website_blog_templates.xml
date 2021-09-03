@@ -62,10 +62,15 @@ list of filtered posts (by date or tag).
             </t>
         </div>
 
-        <t t-call="website_blog.blogs_nav"/>
+        <t t-call="website_blog.blogs_nav">
+            <t t-set="search" t-value="original_search or search"/>
+        </t>
 
         <section id="o_wblog_index_content" t-att-class="opt_blog_cards_design and 'o_wblog_page_cards_bg'">
             <div class="container py-4">
+                <div t-if="original_search and posts" class="alert alert-warning mt8">
+                    No results found for '<span t-esc="original_search"/>'. Showing results for '<span t-esc="search"/>'.
+                </div>
                 <div t-attf-class="row #{opt_blog_sidebar_show and 'justify-content-between' or 'justify-content-center'}">
                     <div id="o_wblog_posts_loop_container" t-attf-class="col #{'o_container_small mx-0' if opt_blog_list_view else ''}">
 
