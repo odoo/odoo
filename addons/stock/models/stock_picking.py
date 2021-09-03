@@ -431,20 +431,32 @@ class Picking(models.Model):
         for picking in self:
             picking.is_signed = picking.signature
 
-    @api.depends('move_lines', 'state', 'picking_type_code', 'move_lines.forecast_availability', 'move_lines.forecast_expected_date')
+    @api.depends('state', 'picking_type_code', 'scheduled_date', 'move_lines', 'move_lines.forecast_availability', 'move_lines.forecast_expected_date')
     def _compute_products_availability(self):
-        self.products_availability = False
-        self.products_availability_state = 'available'
-        pickings = self.filtered(lambda picking: picking.state not in ['cancel', 'draft', 'done'] and picking.picking_type_code == 'outgoing')
-        pickings.products_availability = _('Available')
+        pickings = self.filtered(lambda picking: picking.state in ('waiting', 'confirmed', 'assigned') and picking.picking_type_code == 'outgoing')
+        pickings.products_availability_state = 'available'
+        other_pickings = self - pickings
+        other_pickings.products_availability = False
+        other_pickings.products_availability_state = False
+
+        pickings_ready = pickings.filtered(lambda picking: picking.state == 'assigned')
+        pickings_ready.products_availability = _('Ready')
+        pickings_not_ready = pickings - pickings_ready
+        pickings_not_ready.products_availability = _('Available')
+
+        all_moves = pickings_not_ready.move_lines
+        # Force to prefetch more than 1000 by 1000
+        all_moves._fields['forecast_availability'].compute_value(all_moves)
         for picking in pickings:
-            forecast_date = max(picking.move_lines.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
-            if any(float_compare(move.forecast_availability, move.product_qty, precision_rounding=move.product_id.uom_id.rounding) == -1 for move in picking.move_lines):
+            # In case of draft the behavior of forecast_availability is different : if forecast_availability < 0 then there is a issue else not.
+            if any(float_compare(move.forecast_availability, 0 if move.state == 'draft' else move.product_qty, precision_rounding=move.product_id.uom_id.rounding) == -1 for move in picking.move_lines):
                 picking.products_availability = _('Not Available')
                 picking.products_availability_state = 'late'
-            elif forecast_date:
-                picking.products_availability = _('Exp %s', format_date(self.env, forecast_date))
-                picking.products_availability_state = 'late' if picking.date_deadline and picking.date_deadline < forecast_date else 'expected'
+            else:
+                forecast_date = max(picking.move_lines.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
+                if forecast_date:
+                    picking.products_availability = _('Exp %s', format_date(self.env, forecast_date))
+                    picking.products_availability_state = 'late' if picking.scheduled_date and picking.scheduled_date < forecast_date else 'expected'
 
     @api.depends('picking_type_id.show_operations')
     def _compute_show_operations(self):

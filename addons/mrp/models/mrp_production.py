@@ -282,20 +282,32 @@ class MrpProduction(models.Model):
         for production in self:
             production.mrp_production_backorder_count = len(production.procurement_group_id.mrp_production_ids)
 
-    @api.depends('move_raw_ids', 'state', 'date_planned_start', 'move_raw_ids.forecast_availability', 'move_raw_ids.forecast_expected_date')
+    @api.depends('state', 'reservation_state', 'date_planned_start', 'move_raw_ids', 'move_raw_ids.forecast_availability', 'move_raw_ids.forecast_expected_date')
     def _compute_components_availability(self):
-        self.components_availability = False
-        self.components_availability_state = 'available'
-        productions = self.filtered(lambda mo: mo.state not in ['cancel', 'draft', 'done'])
-        productions.components_availability = _('Available')
-        for production in productions:
-            forecast_date = max(production.move_raw_ids.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
-            if any(float_compare(move.forecast_availability, move.product_qty, move.product_id.uom_id.rounding) == -1 for move in production.move_raw_ids):
+        productions = self.filtered(lambda mo: mo.state not in ('cancel', 'done', 'draft'))
+        productions.components_availability_state = 'available'
+        other_productions = self - productions
+        other_productions.components_availability = False
+        other_productions.components_availability_state = False
+
+        productions_ready = productions.filtered(lambda mo: mo.reservation_state == 'assigned')
+        productions_ready.components_availability = _('Ready')
+        productions_not_ready = (productions - productions_ready)
+        productions_not_ready.components_availability = _('Available')
+
+        all_raw_moves = productions_not_ready.move_raw_ids
+        # Force to prefetch more than 1000 by 1000
+        all_raw_moves._fields['forecast_availability'].compute_value(all_raw_moves)
+        for production in productions_not_ready:
+            if any(float_compare(move.forecast_availability, 0 if move.state == 'draft' else move.product_qty, move.product_id.uom_id.rounding) == -1 for move in production.move_raw_ids):
                 production.components_availability = _('Not Available')
                 production.components_availability_state = 'late'
-            elif forecast_date:
-                production.components_availability = _('Exp %s', format_date(self.env, forecast_date))
-                production.components_availability_state = 'late' if forecast_date > production.date_planned_start else 'expected'
+            else:
+                forecast_date = max(production.move_raw_ids.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
+                if forecast_date:
+                    production.components_availability = _('Exp %s', format_date(self.env, forecast_date))
+                    if production.date_planned_start:
+                        production.components_availability_state = 'late' if forecast_date > production.date_planned_start else 'expected'
 
     @api.depends('move_finished_ids.date_deadline')
     def _compute_date_deadline(self):
