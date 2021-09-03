@@ -33,6 +33,9 @@ class StockPickingBatch(models.Model):
     show_validate = fields.Boolean(
         compute='_compute_show_validate',
         help='Technical field used to decide whether the validate button should be shown.')
+    show_allocation = fields.Boolean(
+        compute='_compute_show_allocation',
+        help='Technical Field used to decide whether the button "Allocation" should be displayed.')
     allowed_picking_ids = fields.One2many('stock.picking', compute='_compute_allowed_picking_ids')
     move_ids = fields.One2many(
         'stock.move', string="Stock moves", compute='_compute_move_ids')
@@ -90,6 +93,14 @@ class StockPickingBatch(models.Model):
     def _compute_show_validate(self):
         for batch in self:
             batch.show_validate = any(picking.show_validate for picking in batch.picking_ids)
+
+    @api.depends('state', 'move_ids', 'picking_type_id')
+    def _compute_show_allocation(self):
+        self.show_allocation = False
+        if not self.user_has_groups('stock.group_reception_report'):
+            return
+        for batch in self:
+            batch.show_allocation = batch.picking_ids._get_show_allocation(batch.picking_type_id)
 
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_state(self):
