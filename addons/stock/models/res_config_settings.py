@@ -59,6 +59,7 @@ class ResConfigSettings(models.TransientModel):
             self.group_stock_multi_locations = True
 
     def set_values(self):
+<<<<<<< HEAD
         if self.module_procurement_jit == '0':
             self.env['ir.config_parameter'].sudo().set_param('stock.picking_no_auto_reserve', True)
         else:
@@ -69,6 +70,8 @@ class ResConfigSettings(models.TransientModel):
         if not self.group_stock_multi_locations and location_grp in base_user.implied_ids and warehouse_grp in base_user.implied_ids:
             raise UserError(_("You can't desactivate the multi-location if you have more than once warehouse by company"))
 
+=======
+>>>>>>> 1b8a1d92b9c... temp
         previous_group = self.default_get(['group_stock_multi_locations', 'group_stock_production_lot', 'group_stock_tracking_lot'])
         res = super(ResConfigSettings, self).set_values()
 
