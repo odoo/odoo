@@ -4,7 +4,7 @@
 {
     'name': 'DIN 5008',
     'version': '1.0',
-    'category': 'Accounting/Localizations/Account Charts',
+    'category': 'Accounting/Localizations',
     'description': """
 This is the base module that defines the DIN 5008 standard in Odoo.
 ==============================================================================

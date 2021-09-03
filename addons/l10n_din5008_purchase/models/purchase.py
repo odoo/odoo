@@ -5,13 +5,13 @@ from odoo.tools import format_date
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    l10n_de_template_data = fields.Binary(compute='_compute_l10n_de_template_data')
-    l10n_de_document_title = fields.Char(compute='_compute_l10n_de_document_title')
-    l10n_de_addresses = fields.Binary(compute='_compute_l10n_de_addresses')
+    l10n_din5008_template_data = fields.Binary(compute='_compute_l10n_din5008_template_data')
+    l10n_din5008_document_title = fields.Char(compute='_compute_l10n_din5008_document_title')
+    l10n_din5008_addresses = fields.Binary(compute='_compute_l10n_din5008_addresses')
 
-    def _compute_l10n_de_template_data(self):
+    def _compute_l10n_din5008_template_data(self):
         for record in self:
-            record.l10n_de_template_data = data = []
+            record.l10n_din5008_template_data = data = []
             if record.state == 'draft':
                 data.append((_("Request for Quotation No."), record.name))
             elif record.state in ['sent', 'to approve', 'purchase', 'done']:
@@ -30,18 +30,18 @@ class PurchaseOrder(models.Model):
 
 
 
-    def _compute_l10n_de_document_title(self):
+    def _compute_l10n_din5008_document_title(self):
         for record in self:
             if record.state == 'draft':
-                record.l10n_de_document_title = _("Request for Quotation")
+                record.l10n_din5008_document_title = _("Request for Quotation")
             elif record.state in ['sent', 'to approve', 'purchase', 'done']:
-                record.l10n_de_document_title = _("Purchase Order")
+                record.l10n_din5008_document_title = _("Purchase Order")
             elif record.state == 'cancel':
-                record.l10n_de_document_title = _("Cancelled Purchase Order")
+                record.l10n_din5008_document_title = _("Cancelled Purchase Order")
 
-    def _compute_l10n_de_addresses(self):
+    def _compute_l10n_din5008_addresses(self):
         for record in self:
-            record.l10n_de_addresses = data = []
+            record.l10n_din5008_addresses = data = []
             if record.dest_address_id:
                 data.append((_("Shipping Address:"), record.dest_address_id))
             elif 'picking_type_id' in record._fields and record.picking_type_id.warehouse_id:

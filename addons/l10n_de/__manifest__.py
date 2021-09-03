@@ -12,7 +12,12 @@ Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03.
 
 German accounting chart and localization.
     """,
-    'depends': ['account', 'base_iban', 'base_vat', 'l10n_din5008'],
+    'depends': [
+        'account',
+        'base_iban',
+        'base_vat',
+        'l10n_din5008'
+    ],
     'data': [
         'data/account_account_tags_data.xml',
         'data/menuitem_data.xml',
