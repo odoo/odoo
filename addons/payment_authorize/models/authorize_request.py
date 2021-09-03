@@ -29,10 +29,10 @@ class AuthorizeAPI:
 
         :param recordset acquirer: payment.acquirer account that will be contacted
         """
-        if acquirer.state == 'test':
-            self.url = 'https://apitest.authorize.net/xml/v1/request.api'
-        else:
+        if acquirer.state == 'enabled':
             self.url = 'https://api.authorize.net/xml/v1/request.api'
+        else:
+            self.url = 'https://apitest.authorize.net/xml/v1/request.api'
 
         self.state = acquirer.state
         self.name = acquirer.authorize_login
