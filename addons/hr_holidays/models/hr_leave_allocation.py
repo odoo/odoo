@@ -6,7 +6,7 @@
 from collections import defaultdict
 import logging
 
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
@@ -321,18 +321,19 @@ class HolidaysAllocation(models.Model):
         # to override in payroll
         today = fields.Date.today()
         for allocation in self:
-            current_level = allocation._get_current_accrual_plan_level_id(today)
+            current_level = allocation._get_current_accrual_plan_level_id(today)[0]
             if current_level and current_level.action_with_unused_accruals == 'lost':
                 # Allocations are lost but number_of_days should not be lower than leaves_taken
                 allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': today, 'nextcall': False})
 
     def _get_current_accrual_plan_level_id(self, date, level_ids=False):
         """
-        Returns the accrual_plan_level for the given date of the record's accrual plan
+        Returns a pair (accrual_plan_level, idx) where accrual_plan_level is the level for the given date
+         and idx is the index for the plan in the ordered set of levels
         """
         self.ensure_one()
         if not self.accrual_plan_id.level_ids:
-            return False
+            return (False, False)
         # Sort by sequence which should be equivalent to the level
         if not level_ids:
             level_ids = self.accrual_plan_id.level_ids.sorted('sequence')
@@ -345,28 +346,28 @@ class HolidaysAllocation(models.Model):
         # If transition_mode is set to `immediately` or we are currently on the first level
         # the current_level is simply the first level in the list.
         if current_level_idx <= 0 or self.accrual_plan_id.transition_mode == "immediately":
-            return current_level
+            return (current_level, current_level_idx)
         # In this case we have to verify that the 'previous level' is not the current one due to `end_of_accrual`
         level_start_date = self.date_from + get_timedelta(current_level.start_count, current_level.start_type)
         previous_level = level_ids[current_level_idx - 1]
         # If the next date from the current level's start date is before the last call of the previous level
         # return the previous level
         if current_level._get_next_date(level_start_date) < previous_level._get_next_date(level_start_date):
-            return previous_level
-        return current_level
+            return (previous_level, current_level_idx - 1)
+        return (current_level, current_level_idx)
 
-    def _process_accrual_plan_level(self, level, start_date, end_date):
+    def _process_accrual_plan_level(self, level, start_period, start_date, end_period, end_date):
         """
         Returns the added days for that level
         """
         self.ensure_one()
         if level.is_based_on_worked_time:
             start_dt = datetime.combine(start_date, datetime.min.time())
-            end_dt = datetime.combine(end_date, datetime.min.time())
+            end_dt = datetime.combine(end_date, datetime.max.time())
             worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
-                [self.employee_id.id]['days']
+                [self.employee_id.id]['hours']
             left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt,
-                domain=[('time_type', '=', 'leave')])[self.employee_id.id]['days']
+                domain=[('time_type', '=', 'leave')])[self.employee_id.id]['hours']
             work_entry_prorata = worked / (left + worked) if worked else 0
             added_value = work_entry_prorata * level.added_value
         else:
@@ -374,7 +375,12 @@ class HolidaysAllocation(models.Model):
         # Convert time in hours to time in days in case the level is encoded in hours
         if level.added_value_type == 'hours':
             added_value = added_value / (self.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
-        return added_value
+        period_prorata = 1
+        if start_period != start_date or end_period != end_date:
+            period_days = (end_period - start_period)
+            call_days = (end_date - start_date)
+            period_prorata = min(1, call_days / period_days) if period_days else 1
+        return added_value * period_prorata
 
     def _process_accrual_plans(self):
         """
@@ -383,7 +389,7 @@ class HolidaysAllocation(models.Model):
         """
         today = fields.Date.today()
         for allocation in self:
-            level_ids = self.accrual_plan_id.level_ids.sorted('sequence')
+            level_ids = allocation.accrual_plan_id.level_ids.sorted('sequence')
             if not level_ids:
                 continue
             if not allocation.nextcall:
@@ -396,9 +402,21 @@ class HolidaysAllocation(models.Model):
                 allocation.nextcall = first_level._get_next_date(allocation.lastcall)
             days_added_per_level = defaultdict(lambda: 0)
             while allocation.nextcall <= today:
-                current_level = allocation._get_current_accrual_plan_level_id(allocation.nextcall)
+                (current_level, current_level_idx) = allocation._get_current_accrual_plan_level_id(allocation.nextcall)
                 nextcall = current_level._get_next_date(allocation.nextcall)
-                days_added_per_level[current_level] += allocation._process_accrual_plan_level(current_level, allocation.lastcall, allocation.nextcall)
+                # Since _get_previous_date returns the given date if it corresponds to a call date
+                # this will always return lastcall except possibly on the first call
+                # this is used to prorate the first number of days given to the employee
+                period_start = current_level._get_previous_date(allocation.lastcall)
+                period_end = current_level._get_next_date(allocation.lastcall)
+                # Also prorate this accrual in the event that we are passing from one level to another
+                if current_level_idx < (len(level_ids) - 1) and allocation.accrual_plan_id.transition_mode == 'immediately':
+                    next_level = level_ids[current_level_idx + 1]
+                    current_level_last_date = allocation.date_from + get_timedelta(next_level.start_count, next_level.start_type) - relativedelta(days=1)
+                    if allocation.nextcall != current_level_last_date:
+                        nextcall = min(nextcall, current_level_last_date)
+                days_added_per_level[current_level] += allocation._process_accrual_plan_level(
+                    current_level, period_start, allocation.lastcall, period_end, allocation.nextcall)
                 allocation.lastcall = allocation.nextcall
                 allocation.nextcall = nextcall
             if days_added_per_level:

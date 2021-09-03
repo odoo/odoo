@@ -26,12 +26,20 @@
                         <label for="frequency"/>
                         <div class="o_col">
                             <field name="frequency"/>
-                            <div class="o_row">
-                                <label for="week_day" string="on" attrs="{'invisible': [('frequency', '!=', 'weekly')]}"/><field name="week_day" attrs="{'invisible': [('frequency', '!=', 'weekly')]}"/>
-                                <label for="first_day" string="on the" attrs="{'invisible': [('frequency', '!=', 'monthly')]}"/><field name="first_day" attrs="{'invisible': [('frequency', '!=', 'monthly')]}"/>
-                                <label for="first_day" string="on the" attrs="{'invisible': [('frequency', '!=', 'bimonthly')]}"/><field name="first_day" attrs="{'invisible': [('frequency', '!=', 'bimonthly')]}"/><span attrs="{'invisible': [('frequency', '!=', 'bimonthly')]}">and on the</span><field name="second_day" attrs="{'invisible': [('frequency', '!=', 'bimonthly')]}"/>
-                                <label for="first_month_day" string="on the" attrs="{'invisible': [('frequency', '!=', 'biyearly')]}"/><field name="first_month_day" attrs="{'invisible': [('frequency', '!=', 'biyearly')]}"/><field name="first_month" attrs="{'invisible': [('frequency', '!=', 'biyearly')]}"/><span attrs="{'invisible': [('frequency', '!=', 'biyearly')]}">and on the</span><field name="second_month_day" attrs="{'invisible': [('frequency', '!=', 'biyearly')]}"/><field name="second_month" attrs="{'invisible': [('frequency', '!=', 'biyearly')]}"/>
-                                <label for="yearly_day" string="on" attrs="{'invisible': [('frequency', '!=', 'yearly')]}"/><field name="yearly_day" attrs="{'invisible': [('frequency', '!=', 'yearly')]}"/><field name="yearly_month" attrs="{'invisible': [('frequency', '!=', 'yearly')]}"/>
+                            <div class="o_row" attrs="{'invisible': [('frequency', '!=', 'weekly')]}">
+                                <label for="week_day" string="on"/><field name="week_day"/>
+                            </div>
+                            <div class="o_row" attrs="{'invisible': [('frequency', '!=', 'monthly')]}">
+                                <label for="first_day_display" string="on the"/><field name="first_day_display" required="1"/> of the month
+                            </div>
+                            <div class="o_row" attrs="{'invisible': [('frequency', '!=', 'bimonthly')]}">
+                                <label for="first_day_display" string="on the"/><field name="first_day_display" required="1"/> and on the <field name="second_day_display" required="1"/> of the month
+                            </div>
+                            <div class="o_row" attrs="{'invisible': [('frequency', '!=', 'biyearly')]}">
+                                <label for="first_month_day_display" string="on the"/><field name="first_month_day_display" required="1"/> of <field name="first_month"/> and on the <field name="second_month_day_display" required="1"/> of <field name="second_month"/>
+                            </div>
+                            <div class="o_row" attrs="{'invisible': [('frequency', '!=', 'yearly')]}">
+                                <label for="yearly_day_display" string="on the"/><field name="yearly_day_display" required="1"/> of <field name="yearly_month"/>
                             </div>
                         </div>
                         <label for="maximum_leave"/>
