@@ -5,12 +5,6 @@
     <xpath expr="//t[@id='sale_products_hook']" position="replace">
         <t t-snippet="website_sale.s_dynamic_snippet_products" t-thumbnail="/website_sale/static/src/img/snippets_thumbs/s_dynamic_products.svg"/>
     </xpath>
-    <xpath expr="//t[@id='sale_product_search_section_hook']" position="replace">
-        <t t-snippet="website_sale.s_products_searchbar" t-thumbnail="/website_sale/static/src/img/snippets_thumbs/s_products_searchbar.svg"/>
-    </xpath>
-    <xpath expr="//t[@id='sale_product_search_input_hook']" position="replace">
-        <t t-snippet="website_sale.s_products_searchbar_input" t-thumbnail="/website_sale/static/src/img/snippets_thumbs/s_products_searchbar_inline.svg"/>
-    </xpath>
 </template>
 
 <template id="snippet_options" inherit_id="website.snippet_options" name="e-commerce snippet options">
@@ -94,6 +88,27 @@
                 <we-button title="Bottom" data-customize-website-views="website_sale.carousel_product_indicators_bottom"><i class="fa fa-fw fa-long-arrow-down"/></we-button>
             </we-button-group>
         </div>
+    </xpath>
+</template>
+
+<template id="product_searchbar_input_snippet_options" inherit_id="website.searchbar_input_snippet_options" name="product search bar snippet options">
+    <xpath expr="//div[@data-js='SearchBar']/we-select[@data-name='scope_opt']" position="inside">
+        <we-button data-set-search-type="products" data-select-data-attribute="products" data-name="search_products_opt" data-form-action="/shop">Products</we-button>
+    </xpath>
+    <xpath expr="//div[@data-js='SearchBar']/we-select[@data-name='order_opt']" position="inside">
+        <we-button data-set-order-by="list_price asc" data-select-data-attribute="list_price asc" data-dependencies="search_products_opt" data-name="order_price_asc_opt">Price (low to high)</we-button>
+        <we-button data-set-order-by="list_price desc" data-select-data-attribute="list_price desc" data-dependencies="search_products_opt" data-name="order_price_desc_opt">Price (high to low)</we-button>
+        <we-button data-set-order-by="website_sequence asc" data-select-data-attribute="website_sequence asc" data-dependencies="search_products_opt" data-name="order_sequence_asc_opt">Sequence</we-button>
+    </xpath>
+    <xpath expr="//div[@data-js='SearchBar']/div[@data-dependencies='limit_opt']" position="inside">
+        <we-checkbox string="Description" data-dependencies="search_products_opt" data-select-data-attribute="true" data-attribute-name="displayDescription"
+            data-apply-to=".search-query"/>
+        <we-checkbox string="Category" data-dependencies="search_products_opt" data-select-data-attribute="true" data-attribute-name="displayExtraLink"
+            data-apply-to=".search-query"/>
+        <we-checkbox string="Price" data-dependencies="search_products_opt" data-select-data-attribute="true" data-attribute-name="displayDetail"
+            data-apply-to=".search-query"/>
+        <we-checkbox string="Image" data-dependencies="search_products_opt" data-select-data-attribute="true" data-attribute-name="displayImage"
+            data-apply-to=".search-query"/>
     </xpath>
 </template>
 

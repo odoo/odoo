@@ -109,7 +109,7 @@
                     <t t-if="debug" t-snippet="website.s_dynamic_snippet" t-thumbnail="/website/static/src/img/snippets_thumbs/s_dynamic_snippet.svg"/>
                     <t t-if="debug" t-snippet="website.s_dynamic_snippet_carousel" t-thumbnail="/website/static/src/img/snippets_thumbs/s_dynamic_carousel.svg"/>
                     <t id="sale_products_hook"/>
-                    <t id="sale_product_search_section_hook"/>
+                    <t t-snippet="website.s_searchbar" t-thumbnail="/website/static/src/img/snippets_thumbs/s_searchbar.svg"/>
                     <t id="blog_posts_hook"/>
                     <t id="event_local_events_hook"/>
                     <t id="snippet_google_map_hook"/>
@@ -139,7 +139,7 @@
                     </t>
                     <t t-snippet="website.s_card" t-thumbnail="/website/static/src/img/snippets_thumbs/s_card.svg"/>
                     <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/snippets_thumbs/s_share.svg"/>
-                    <t id="sale_product_search_input_hook"/>
+                    <t t-snippet="website.s_searchbar_input" t-thumbnail="/website/static/src/img/snippets_thumbs/s_searchbar_inline.svg"/>
                     <t id="mass_mailing_newsletter_hook"/>
                     <t t-snippet="website.s_text_highlight" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_highlight.svg"/>
                     <t t-snippet="website.s_chart" t-thumbnail="/website/static/src/img/snippets_thumbs/s_chart.svg">
@@ -1353,7 +1353,7 @@
             <we-input string="⌙ Small" data-customize-website-variable="" data-variable="input-font-size-sm" data-unit="px" data-save-unit="rem"/>
             <we-input string="⌙ Large" data-customize-website-variable="" data-variable="input-font-size-lg" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
-        <we-input string="Border Width" data-customize-website-variable="" data-variable="input-border-width" data-unit="px" data-save-unit="rem"/>>
+        <we-input string="Border Width" data-customize-website-variable="" data-variable="input-border-width" data-unit="px" data-save-unit="rem"/>
         <we-collapse>
             <we-input string="Border Radius" data-customize-website-variable="" data-variable="input-border-radius" data-unit="px" data-save-unit="rem"/>
             <we-input string="⌙ Small" data-customize-website-variable="" data-variable="input-border-radius-sm" data-unit="px" data-save-unit="rem"/>

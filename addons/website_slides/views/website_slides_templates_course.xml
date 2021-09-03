@@ -36,16 +36,17 @@
 
                 <div class="col-md-4 d-none d-md-flex flex-row align-items-center justify-content-end">
                     <!-- search -->
-                    <form t-attf-action="/slides/all" role="search" method="get">
-                        <div class="input-group o_wslides_course_nav_search ml-1 position-relative">
-                            <span class="input-group-prepend">
-                                <button class="btn btn-link text-white rounded-0 pr-1" type="submit" aria-label="Search" title="Search">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                            <input type="text" class="form-control border-0 rounded-0 bg-transparent text-white" name="search" placeholder="Search courses"/>
-                        </div>
-                    </form>
+                    <t t-call="website.website_search_box_input">
+                        <t t-set="_classes" t-valuef="o_wslides_course_nav_search ml-1 position-relative"/>
+                        <t t-set="_input_classes" t-valuef="border-0 rounded-0 bg-transparent text-white"/>
+                        <t t-set="_submit_classes" t-valuef="btn-link text-white rounded-0 pr-1"/>
+                        <t t-set="search_type" t-valuef="slides"/>
+                        <t t-set="action" t-valuef="/slides/all"/>
+                        <t t-set="display_description" t-valuef="true"/>
+                        <t t-set="display_detail" t-valuef="false"/>
+                        <t t-set="placeholder">Search courses</t>
+                        <t t-set="search" t-value="search_term"/>
+                    </t>
                 </div>
 
                 <!-- Mobile Mode -->
@@ -81,16 +82,15 @@
                         <div class="btn-group ml-1 position-static">
                             <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
                             <div class="dropdown-menu dropdown-menu-right w-100" style="right: 10px;">
-                                <form class="px-3" t-attf-action="/slides/#{slug(channel)}" role="search" method="get">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="search" placeholder="Search courses"/>
-                                        <span class="input-group-append">
-                                            <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
-                                                <i class="fa fa-search"/>
-                                            </button>
-                                        </span>
-                                    </div>
-                                </form>
+                                <t t-call="website.website_search_box_input">
+                                    <t t-set="_classes" t-valuef="px-3"/>
+                                    <t t-set="search_type" t-valuef="slides"/>
+                                    <t t-set="action" t-value="'/slides/%s' % slug(channel)"/>
+                                    <t t-set="display_description" t-valuef="true"/>
+                                    <t t-set="display_detail" t-valuef="false"/>
+                                    <t t-set="placeholder">Search courses</t>
+                                    <t t-set="search" t-value="search_term"/>
+                                </t>
                             </div>
                         </div>
                     </div>

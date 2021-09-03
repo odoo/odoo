@@ -8,7 +8,7 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, tools, _
-from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.tools import is_html_empty
@@ -137,7 +137,10 @@ class Channel(models.Model):
         'mail.thread', 'rating.mixin',
         'mail.activity.mixin',
         'image.mixin',
-        'website.seo.metadata', 'website.published.multi.mixin']
+        'website.seo.metadata',
+        'website.published.multi.mixin',
+        'website.searchable.mixin',
+    ]
     _order = 'sequence, id'
 
     def _default_access_token(self):
@@ -831,3 +834,51 @@ class Channel(models.Model):
 
     def get_backend_menu_id(self):
         return self.env.ref('website_slides.website_slides_menu_root').id
+
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        with_description = options['displayDescription']
+        with_date = options['displayDetail']
+        my = options.get('my')
+        search_tags = options.get('tag')
+        slide_type = options.get('slide_type')
+        domain = [website.website_domain()]
+        if my:
+            domain.append([('partner_ids', '=', self.env.user.partner_id.id)])
+        if search_tags:
+            ChannelTag = self.env['slide.channel.tag']
+            try:
+                tag_ids = list(filter(None, [unslug(tag)[1] for tag in search_tags.split(',')]))
+                tags = ChannelTag.search([('id', 'in', tag_ids)]) if tag_ids else ChannelTag
+            except Exception:
+                tags = ChannelTag
+            # Group by group_id
+            grouped_tags = defaultdict(list)
+            for tag in tags:
+                grouped_tags[tag.group_id].append(tag)
+            # OR inside a group, AND between groups.
+            for group in grouped_tags:
+                domain.append([('tag_ids', 'in', [tag.id for tag in grouped_tags[group]])])
+        if slide_type and 'nbr_%s' % slide_type in self:
+            domain.append([('nbr_%s' % slide_type, '>', 0)])
+        search_fields = ['name']
+        fetch_fields = ['name', 'website_url']
+        mapping = {
+            'name': {'name': 'name', 'type': 'text', 'match': True},
+            'website_url': {'name': 'website_url', 'type': 'text'},
+        }
+        if with_description:
+            search_fields.append('description_short')
+            fetch_fields.append('description_short')
+            mapping['description'] = {'name': 'description_short', 'type': 'text', 'html': True, 'match': True}
+        if with_date:
+            fetch_fields.append('slide_last_update')
+            mapping['detail'] = {'name': 'slide_last_update', 'type': 'date'}
+        return {
+            'model': 'slide.channel',
+            'base_domain': domain,
+            'search_fields': search_fields,
+            'fetch_fields': fetch_fields,
+            'mapping': mapping,
+            'icon': 'fa-graduation-cap',
+        }
