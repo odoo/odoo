@@ -1,45 +1,62 @@
-.giftCardPopupMain {
+.pos .popups .giftCardPopupMain {
     display: flex;
     flex-wrap: wrap;
-
     justify-content: space-around;
-
     text-align: center;
-    padding: 1em;
+    margin: 1em;
 }
 
-.giftCardPopupContainer {
+.pos .popups .giftCardPopupMain .giftCardPopupContainer {
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
     padding: 5px;
-
     font-weight: bold;
     text-align: center;
     width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.giftCardPopupFooter {
-    display: flex;
-    justify-content: space-evenly;
-
+.pos .popups .giftCardPopupFooter {
     text-align: center;
 }
 
-.giftCardPopupInput {
-    border-bottom: 1px solid !important;
-    background-color: #F0EEEE !important;
-    box-shadow: none !important;
-    text-align: right !important;
+.pos .popups .giftCardPopupMain .giftCardPopupInputAmount {
+    border-bottom: 1px solid;
+    background-color: #F0EEEE;
+    box-shadow: none;
+    text-align: right;
+    width: 80%;
 }
 
-.giftCardPopupButton {
-    width: 50% !important;
+.pos .popups .giftCardPopupMain .giftCardPopupInputBarcode {
+    border-bottom: 1px solid;
+    background-color: #F0EEEE;
+    box-shadow: none;
+    text-align: center;
+    width: 80%;
+}
+
+.pos .popups .giftCardPopupButton {
+    width: 100%;
     margin: 6px;
 }
 
-.giftCardPopupConfirmButton {
-    width: 40% !important;
+.pos .popups .giftCardPopupConfirmButton {
+    width: 47%;
+    margin: 0px;
 }
 
-.giftCardPopupIn
+.pos .popups .giftCardPopupMain .giftCardPopupInputContainer {
+    width: 80%;
+}
+
+.pos .popups .footer .GiftCardFooterButton {
+    margin-left: 5px;
+    width: 70px;
+}
+
+.pos .popups .giftCardError {
+    width: 100%;
+    background-color: rgba(255, 76, 76, 0.5);
+}

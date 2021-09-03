@@ -3,38 +3,66 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
 
   const { useState, useRef } = owl.hooks;
   const AbstractAwaitablePopup = require("point_of_sale.AbstractAwaitablePopup");
+  const { useBarcodeReader } = require("point_of_sale.custom_hooks");
   const Registries = require("point_of_sale.Registries");
 
   class GiftCardPopup extends AbstractAwaitablePopup {
     constructor() {
       super(...arguments);
+
+      this.confirmFunctions = {
+        'create_set': this.generateBarcode.bind(this),
+        'scan_set': this.scanAndUseGiftCard.bind(this),
+        'scan_use': this.scanAndUseGiftCard.bind(this),
+        'pay': this.payWithGiftCard.bind(this),
+        'showAmount': this.ShowRemainingAmount.bind(this)
+      };
+
       this.state = useState({
         giftCardConfig: this.env.pos.config.gift_card_settings,
-        showBarcodeGeneration: false,
-        showNewGiftCardMenu: false,
-        showUseGiftCardMenu: false,
-        showGiftCardDetails: false,
+        showMenu: true,
+        error: '',
+        context: '',
         amountToSet: 0,
         giftCardBarcode: "",
       });
+      useBarcodeReader(
+        {
+          gift_card: this._onGiftScan,
+        },
+        true
+      );
     }
 
-    switchBarcodeView() {
-      this.state.showBarcodeGeneration = !this.state.showBarcodeGeneration;
-      if (this.state.showUseGiftCardMenu)
-        this.state.showUseGiftCardMenu = false;
-      if (this.state.showGiftCardDetails)
-        this.state.showGiftCardDetails = false;
+    clickConfirm() {
+        this.confirmFunctions[this.state.context]();
     }
 
-    switchToUseGiftCardMenu() {
-      this.switchBarcodeView();
-      this.state.showUseGiftCardMenu = true;
+    _onGiftScan(code) {
+      this.state.giftCardBarcode = code.base_code;
+    }
+
+    switchToBarcode() {
+      this.state.context = this.state.giftCardConfig;
+      this.state.showMenu = false;
+    }
+
+    backToMenu() {
+        this.state.showMenu = true;
+        this.state.context = '';
+        this.state.amountToSet = 0;
+        this.state.giftCardBarcode = '';
+        this.state.error = '';
+    }
+
+    switchToPay() {
+      this.state.showMenu = false;
+      this.state.context = 'pay';
     }
 
     switchToShowGiftCardDetails() {
-      this.switchBarcodeView();
-      this.state.showGiftCardDetails = true;
+      this.state.showMenu = false;
+      this.state.context = 'showAmount';
     }
 
     addGiftCardProduct(giftCard) {
@@ -100,7 +128,7 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
 
       for (let line of order.orderlines.models) {
         if (line.product.id === giftProduct.id && line.price < 0) {
-          if (line.gift_card_id === await this.getGiftCard().id) return line;
+          if (line.gift_card_id === (await this.getGiftCard().id)) return line;
         }
       }
       return false;
@@ -115,7 +143,14 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
 
     async payWithGiftCard() {
       let giftCard = await this.getGiftCard();
-      if (!giftCard) return;
+      if (!giftCard) {
+        this.state.error = "No gift card code set";
+        return;
+      }
+      if(await this.isGiftCardAlreadyUsed()) {
+        this.state.error = "Gift card already used";
+        return;
+      }
 
       let gift =
         this.env.pos.db.product_by_id[
@@ -123,7 +158,7 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
         ];
 
       let currentOrder = this.env.pos.get_order();
-      let lineUsed = this.isGiftCardAlreadyUsed()
+      let lineUsed = await this.isGiftCardAlreadyUsed();
       if (lineUsed) currentOrder.remove_orderline(lineUsed);
 
       currentOrder.add_product(gift, {
@@ -138,7 +173,14 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
 
     async ShowRemainingAmount() {
       let giftCard = await this.getGiftCard();
-      if (!giftCard) return;
+      if (!giftCard) {
+        this.state.error = "No gift card code set";
+        return;
+      }
+      if(await this.isGiftCardAlreadyUsed()) {
+        this.state.error = "Gift card already used";
+        return;
+      }
 
       this.state.amountToSet = giftCard.balance;
     }
