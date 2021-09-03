@@ -15,7 +15,8 @@ MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 
 
 def _get_date_check_month(year, month, day):
     """
-    Returns the last day of the month for the given date if the day is outside of the month's range, i.e 30 feb
+    Returns the day it would be if day is outside of the month's range
+    Example: 2021 feb 30 -> 2021 mar 2
     """
     month_range = calendar.monthrange(year, month)
     if day > month_range[1]:
