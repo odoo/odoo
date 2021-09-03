@@ -41,6 +41,7 @@
         'views/discuss_public_templates.xml',
         'views/mail_alias_views.xml',
         'views/mail_guest_views.xml',
+        'views/mail_message_reaction_views.xml',
         'views/res_users_views.xml',
         'views/res_users_settings_views.xml',
         'views/mail_template_views.xml',
