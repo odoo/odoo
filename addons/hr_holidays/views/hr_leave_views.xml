@@ -130,18 +130,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row no-gutters" t-if="['validate', 'refuse'].includes(record.state.raw_value)">
+                            <div class="row no-gutters">
                                 <div class="col-3"/>
-                                <div class="col-9">
+                                <div class="col-6" t-if="['validate', 'refuse'].includes(record.state.raw_value)">
                                     <span t-if="record.state.raw_value === 'validate'" class="fa fa-check text-muted" aria-label="validated"/>
                                     <span t-else="" class="fa fa-ban text-muted" aria-label="refused"/>
                                     <t t-set="classname" t-value="{'validate': 'badge-success', 'refuse': 'badge-danger'}[record.state.raw_value] || 'badge-light'"/>
                                     <span t-attf-class="badge badge-pill {{ classname }}"><t t-esc="record.state.value"/></span>
                                 </div>
-                            </div>
-                            <div class="row no-gutters" t-if="record.can_approve.raw_value">
-                                <div class="col-3"/>
-                                <div class="col=6" t-if="['confirm', 'validate1'].includes(record.state.raw_value)">
+                                <div class="col-6" t-if="['confirm', 'validate1'].includes(record.state.raw_value)">
                                     <button t-if="record.state.raw_value === 'confirm'" name="action_approve" type="object" class="btn btn-link btn-sm pl-0">
                                         <i class="fa fa-thumbs-up"/> Approve
                                     </button>

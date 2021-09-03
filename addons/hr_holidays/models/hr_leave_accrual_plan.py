@@ -19,6 +19,12 @@ class AccrualPlan(models.Model):
         string="Level Transition", default="immediately", required=True,
         help="""Immediately: When the date corresponds to the new level, your accrual is automatically computed, granted and you switch to new level
                 After this accrual's period: When the accrual is complete (a week, a month), and granted, you switch to next level if allocation date corresponds""")
+    show_transition_mode = fields.Boolean(compute='_compute_show_transition_mode')
+
+    @api.depends('level_ids')
+    def _compute_show_transition_mode(self):
+        for plan in self:
+            plan.show_transition_mode = len(plan.level_ids) > 1
 
     @api.depends('allocation_ids')
     def _compute_employee_count(self):

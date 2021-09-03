@@ -5,8 +5,8 @@
         <field name="model">hr.leave.employee.type.report</field>
         <field name="arch" type="xml">
             <search string="Search Time Off">
-                <field name="date_from"/>
                 <field name="employee_id"/>
+                <field name="date_from"/>
                 <filter name="year" date="date_from" default_period="this_year" string="Period"/>
                 <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                 <filter string="Employee" name="employee" context="{'group_by':'employee_id'}"/>
