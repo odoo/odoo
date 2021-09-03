@@ -110,6 +110,7 @@
             'stock/static/src/js/inventory_singleton_list_view.js',
             'stock/static/src/js/report_stock_forecasted.js',
             'stock/static/src/js/report_stock_reception.js',
+            'stock/static/src/js/lazy_column_list.js',
             'stock/static/src/js/stock_orderpoint_list_controller.js',
             'stock/static/src/js/stock_orderpoint_list_model.js',
             'stock/static/src/js/stock_orderpoint_list_view.js',
@@ -120,14 +121,17 @@
             'stock/static/src/js/counted_quantity_widget.js',
             'stock/static/src/js/basic_model.js',
             'stock/static/src/js/stock_rescheduling_popover.js',
-            'stock/static/tests/tours/stock_report_tests.js',
             'stock/static/src/scss/forecast_widget.scss',
             'stock/static/src/scss/stock_traceability_report.scss',
             'stock/static/src/scss/stock_empty_screen.scss',
         ],
+        'web.assets_tests': [
+            'stock/static/tests/tours/stock_report_tests.js',
+        ],
         'web.qunit_suite_tests': [
             'stock/static/tests/singleton_list_tests.js',
             'stock/static/tests/popover_widget_tests.js',
+            'stock/static/tests/lazy_column_list_tests.js',
             'stock/static/tests/stock_traceability_report_backend_tests.js',
         ],
         'web.assets_qweb': [
