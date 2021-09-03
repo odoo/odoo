@@ -190,6 +190,20 @@ function factory(dependencies) {
             return this.env._t("Invite to Channel");
         }
 
+        /**
+         * @private
+         * @returns {mail.thread}
+         */
+        _computeThread() {
+            if (this.threadView && this.threadView.thread) {
+                return link(this.threadView.thread);
+            }
+            if (this.discuss && this.discuss.mostRecentMeetingChannel) {
+                return link(this.discuss.mostRecentMeetingChannel);
+            }
+            return clear();
+        }
+
     }
 
     ChannelInvitationForm.fields = {
@@ -199,6 +213,9 @@ function factory(dependencies) {
          * it is open to update the button active state.
          */
         component: attr(),
+        discuss: one2one('mail.discuss', {
+            inverse: 'channelInvitationForm',
+        }),
         /**
          * Determines whether this search input needs to be focused.
          */
@@ -251,7 +268,8 @@ function factory(dependencies) {
          * States the thread on which this list operates (if any).
          */
         thread: many2one('mail.thread', {
-            related: 'threadView.thread',
+            compute: '_computeThread',
+            required: true,
         }),
         /**
          * States the thread view on which this list operates (if any).

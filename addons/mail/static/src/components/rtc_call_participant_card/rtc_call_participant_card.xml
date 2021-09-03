@@ -5,7 +5,7 @@
         <div class="o_RtcCallParticipantCard"
              t-att-class="{
                 'o-is-talking': callParticipantCard and !callParticipantCard.isMinimized and callParticipantCard.isTalking,
-                'o-is-invitation': callParticipantCard and !!callParticipantCard.invitedPartner,
+                'o-is-invitation': callParticipantCard and callParticipantCard.isInvitation,
             }"
             t-on-contextmenu="_onContextMenu"
         >
@@ -13,7 +13,7 @@
                 <div class="o_RtcCallParticipantCard_container"
                      t-att-class="{
                         'o-minimized': callParticipantCard.isMinimized,
-                        'o-can-click': !!callParticipantCard.invitedPartner,
+                        'o-can-click': !callParticipantCard.isInvitation,
                      }"
                      t-att-title="callParticipantCard.name"
                      t-att-aria-label="callParticipantCard.name"
@@ -28,7 +28,7 @@
                             <img alt="Avatar"
                                  t-att-class="{
                                     'o-is-talking': callParticipantCard.isTalking,
-                                    'o-is-invitation': !!callParticipantCard.invitedPartner,
+                                    'o-is-invitation': callParticipantCard.isInvitation,
                                  }"
                                  class="o_RtcCallParticipantCard_avatar_image rounded-circle"
                                  t-att-src="callParticipantCard.avatarUrl"

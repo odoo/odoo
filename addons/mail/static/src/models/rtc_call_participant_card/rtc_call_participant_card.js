@@ -101,6 +101,14 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
+        _computeIsInvitation() {
+            return Boolean(this.invitedPartner || this.invitedGuest);
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeIsTalking() {
             return this.rtcSession && this.rtcSession.isTalking && !this.rtcSession.isMuted;
         }
@@ -144,6 +152,13 @@ function factory(dependencies) {
          * If set, this card represents an invitation of this partner to this call.
          */
         invitedPartner: many2one('mail.partner'),
+        /**
+         * States whether this card is representing a person with a pending
+         * invitation.
+         */
+        isInvitation: attr({
+            compute: '_computeIsInvitation'
+        }),
         /**
          * Determines if this card has to be displayed in a minimized form.
          */
