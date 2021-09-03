@@ -202,10 +202,17 @@
                     <field name="is_signed" string="Signed" optional="hide" groups="stock.group_stock_sign_delivery"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
                     <field name="scheduled_date" optional="show" widget="remaining_days" attrs="{'invisible':[('state', 'in', ('done', 'cancel'))]}"/>
+                    <field name="picking_type_code" invisible="1"/>
+                    <field name="products_availability_state" invisible="1"/>
+                    <field name="products_availability"
+                        optional="hide"
+                        attrs="{'invisible': ['|', ('picking_type_code', '!=', 'outgoing'), ('state', 'not in', ['confirmed', 'waiting', 'assigned'])]}"
+                        decoration-warning="products_availability_state == 'expected'"
+                        decoration-danger="products_availability_state == 'late'"
+                        decoration-success="products_availability_state == 'available'"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible':[('state', 'in', ('done', 'cancel'))]}"/>
                     <field name="date_done" string="Effective Date" optional="hide"/>
                     <field name="origin" optional="show"/>
-                    <field name="group_id" invisible="1"/>
                     <field name="backorder_id" optional="hide"/>
                     <field name="picking_type_id" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
@@ -326,6 +333,12 @@
                                 attrs="{'invisible': ['|', ('state', 'in', ('done', 'cancel')), ('date_deadline', '=', False)]}"
                                 decoration-danger="date_deadline and date_deadline &lt; current_date"
                                 decoration-bf="date_deadline and date_deadline &lt; current_date"/>
+                            <field name="products_availability_state" invisible="1"/>
+                            <field name="products_availability"
+                                attrs="{'invisible': ['|', ('picking_type_code', '!=', 'outgoing'), ('state', 'not in', ['confirmed', 'waiting', 'assigned'])]}"
+                                decoration-warning="products_availability_state == 'expected'"
+                                decoration-danger="products_availability_state == 'late'"
+                                decoration-success="products_availability_state == 'available'"/>
                             <field name="date_done" string="Effective Date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                             <field name="origin" placeholder="e.g. PO0032"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"
