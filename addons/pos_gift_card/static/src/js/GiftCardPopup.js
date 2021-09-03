@@ -1,93 +1,117 @@
 odoo.define("pos_gift_card.GiftCardPopup", function (require) {
   "use strict";
 
+  const { useState, useRef } = owl.hooks;
   const AbstractAwaitablePopup = require("point_of_sale.AbstractAwaitablePopup");
   const Registries = require("point_of_sale.Registries");
-
-  const { useState } = owl;
+  const { useBarcodeReader } = require('point_of_sale.custom_hooks');
 
   class GiftCardPopup extends AbstractAwaitablePopup {
     constructor() {
       super(...arguments);
+
+      this.confirmFunctions = {
+        'create_set': this.generateBarcode.bind(this),
+        'scan_set': this.scanAndUseGiftCard.bind(this),
+        'scan_use': this.scanAndUseGiftCard.bind(this),
+        'pay': this.payWithGiftCard.bind(this),
+        'showAmount': this.showRemainingAmount.bind(this)
+      };
+
       this.state = useState({
         giftCardConfig: this.env.pos.config.gift_card_settings,
-        showBarcodeGeneration: false,
-        showNewGiftCardMenu: false,
-        showUseGiftCardMenu: false,
-        showGiftCardDetails: false,
+        showMenu: true,
+        error: '',
+        command: '',
         amountToSet: 0,
         giftCardBarcode: "",
+        remainingAmount: 0,
       });
+      useBarcodeReader(
+        {
+          gift_card: this._onGiftScan,
+        },
+        true
+      );
     }
 
-    switchBarcodeView() {
-      this.state.showBarcodeGeneration = !this.state.showBarcodeGeneration;
-      if (this.state.showUseGiftCardMenu)
-        this.state.showUseGiftCardMenu = false;
-      if (this.state.showGiftCardDetails)
-        this.state.showGiftCardDetails = false;
+    clickConfirm() {
+        this.confirmFunctions[this.state.command]();
     }
 
-    switchToUseGiftCardMenu() {
-      this.switchBarcodeView();
-      this.state.showUseGiftCardMenu = true;
+    _onGiftScan(code) {
+      this.state.giftCardBarcode = code.base_code;
+    }
+
+    switchToBarcode() {
+      this.state.command = this.state.giftCardConfig;
+      this.state.showMenu = false;
+    }
+
+    backToMenu() {
+        this.state.showMenu = true;
+        this.state.command = '';
+        this.state.amountToSet = 0;
+        this.state.giftCardBarcode = '';
+        this.state.error = '';
+        this.state.remainingAmount = 0;
+    }
+
+    switchToPay() {
+      this.state.showMenu = false;
+      this.state.command = 'pay';
     }
 
     switchToShowGiftCardDetails() {
-      this.switchBarcodeView();
-      this.state.showGiftCardDetails = true;
+      this.state.showMenu = false;
+      this.state.command = 'showAmount';
     }
 
-    async addGiftCardProduct(giftCard) {
+    addGiftCardProduct(giftCard) {
       let gift =
         this.env.pos.db.product_by_id[
           this.env.pos.config.gift_card_product_id[0]
         ];
-
-      let can_be_sold = true;
-      if (giftCard) {
-        can_be_sold = !(giftCard.buy_pos_order_line_id || giftCard.buy_line_id);
-      }
-
-      if (can_be_sold) {
-        this.env.pos.get_order().add_product(gift, {
-          price: this.state.amountToSet,
-          quantity: 1,
-          merge: false,
-          generated_gift_card_ids: giftCard ? giftCard.id : false,
-          extras: { price_manually_set: true },
-        });
-      } else {
-        await this.showPopup('ErrorPopup', {
-          'title': this.env._t('This gift card has already been sold'),
-          'body': this.env._t('You cannot sell a gift card that has already been sold'),
-        });
-      }
+      this.env.pos.get_order().add_product(gift, {
+        price: this.state.amountToSet,
+        quantity: 1,
+        merge: false,
+        generated_gift_card_ids: giftCard ? giftCard[0].id : false,
+      });
     }
 
     async getGiftCard() {
-      if (this.state.giftCardBarcode == "") return;
-
+      let barcode = this.state.giftCardBarcode.trim();
+      if (barcode == "") return;
       let giftCard = await this.rpc({
-          model: "gift.card",
-          method: "search_read",
-          args: [[["code", "=", this.state.giftCardBarcode]]],
-        });
-        if (giftCard.length) {
-          giftCard = giftCard[0];
-        } else {
-          return false;
-        }
+        model: "gift.card",
+        method: "search_read",
+        args: [[["code", "=", barcode]]],
+        fields: ["code", "initial_amount", "balance"],
+      });
+      return giftCard.length? giftCard : false;
+    }
 
-      return giftCard;
+    async checkGiftCardError(giftCard) {
+        if (!giftCard) {
+            this.state.error = "Invalid gift card code";
+            return true;
+        }
+        let lineUsed = await this.isGiftCardAlreadyUsed();
+        if(lineUsed) {
+            this.state.error = "Gift card already used";
+            return true;
+        }
+        return false;
     }
 
     async scanAndUseGiftCard() {
       let giftCard = await this.getGiftCard();
-      if (!giftCard) return;
+
+      if(await this.checkGiftCardError(giftCard)) return;
 
       if (this.state.giftCardConfig === "scan_use")
-        this.state.amountToSet = giftCard.initial_amount;
+        this.state.amountToSet = giftCard[0].initial_amount;
 
       await this.addGiftCardProduct(giftCard);
       this.cancel();
@@ -105,9 +129,11 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
           this.env.pos.config.gift_card_product_id[0]
         ];
 
+      let currentGiftCard = await this.getGiftCard();
+      let currentGiftCardId = currentGiftCard && currentGiftCard[0].id;
       for (let line of order.orderlines) {
-        if (line.product.id === giftProduct.id && line.price < 0) {
-          if (line.gift_card_id === await this.getGiftCard().id) return line;
+        if (line.product.id === giftProduct.id) {
+          if (line.gift_card_id === currentGiftCardId) return line;
         }
       }
       return false;
@@ -115,14 +141,14 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
 
     getPriceToRemove(giftCard) {
       let currentOrder = this.env.pos.get_order();
-      return currentOrder.get_total_with_tax() > giftCard.balance
-        ? -giftCard.balance
+      return currentOrder.get_total_with_tax() > giftCard[0].balance
+        ? -giftCard[0].balance
         : -currentOrder.get_total_with_tax();
     }
 
     async payWithGiftCard() {
       let giftCard = await this.getGiftCard();
-      if (!giftCard) return;
+      if(await this.checkGiftCardError(giftCard)) return;
 
       let gift =
         this.env.pos.db.product_by_id[
@@ -130,24 +156,24 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
         ];
 
       let currentOrder = this.env.pos.get_order();
-      let lineUsed = this.isGiftCardAlreadyUsed()
+      let lineUsed = await this.isGiftCardAlreadyUsed();
       if (lineUsed) currentOrder.remove_orderline(lineUsed);
 
       currentOrder.add_product(gift, {
         price: this.getPriceToRemove(giftCard),
         quantity: 1,
         merge: false,
-        gift_card_id: giftCard.id,
+        gift_card_id: giftCard[0].id,
       });
 
       this.cancel();
     }
 
-    async ShowRemainingAmount() {
+    async showRemainingAmount() {
       let giftCard = await this.getGiftCard();
-      if (!giftCard) return;
+      if(await this.checkGiftCardError(giftCard)) return;
 
-      this.state.amountToSet = giftCard.balance;
+      this.state.remainingAmount = giftCard[0].balance;
     }
   }
   GiftCardPopup.template = "GiftCardPopup";
