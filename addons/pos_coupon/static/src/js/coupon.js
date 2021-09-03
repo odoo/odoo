@@ -288,7 +288,6 @@ odoo.define('pos_coupon.pos', function (require) {
             _order_super.set_orderline_options.apply(this, [orderline, options]);
             if (options && options.is_program_reward) {
                 orderline.is_program_reward = true;
-                orderline.tax_ids = options.tax_ids;
                 orderline.program_id = options.program_id;
                 orderline.coupon_id = options.coupon_id;
             }
