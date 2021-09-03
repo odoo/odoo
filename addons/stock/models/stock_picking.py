@@ -366,6 +366,9 @@ class Picking(models.Model):
     show_validate = fields.Boolean(
         compute='_compute_show_validate',
         help='Technical field used to decide whether the button "Validate" should be displayed.')
+    show_allocation = fields.Boolean(
+        compute='_compute_show_allocation',
+        help='Technical Field used to decide whether the button "Allocation" should be displayed.')
     owner_id = fields.Many2one(
         'res.partner', 'Assign Owner',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
@@ -607,6 +610,36 @@ class Picking(models.Model):
                 picking.show_validate = False
             else:
                 picking.show_validate = True
+
+    @api.depends('state', 'move_lines', 'picking_type_id')
+    def _compute_show_allocation(self):
+        self.show_allocation = False
+        if not self.user_has_groups('stock.group_reception_report'):
+            return
+        for picking in self:
+            picking.show_allocation = picking._get_show_allocation(picking.picking_type_id)
+
+    def _get_show_allocation(self, picking_type_id):
+        """ Helper method for computing "show_allocation" value.
+        Separated out from _compute function so it can be reused in other models (e.g. batch).
+        """
+        if not picking_type_id or picking_type_id.code == 'outgoing':
+            return False
+        lines = self.move_lines.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel')
+        if lines:
+            allowed_states = ['confirmed', 'partially_available', 'waiting']
+            if self[0].state == 'done':
+                allowed_states += ['assigned']
+            wh_location_ids = self.env['stock.location']._search([('id', 'child_of', picking_type_id.warehouse_id.view_location_id.id), ('usage', '!=', 'supplier')])
+            if self.env['stock.move'].search([
+                ('state', 'in', allowed_states),
+                ('product_qty', '>', 0),
+                ('location_id', 'in', wh_location_ids),
+                ('picking_id', 'not in', self.ids),
+                ('product_id', 'in', lines.product_id.ids),
+                '|', ('move_orig_ids', '=', False),
+                     ('move_orig_ids', 'in', lines.ids)], limit=1):
+                return True
 
     @api.model
     def _search_delay_alert_date(self, operator, value):
@@ -975,7 +1008,7 @@ class Picking(models.Model):
             lines = self.move_lines.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel' and m.quantity_done and not m.move_dest_ids)
             if lines:
                 # don't show reception report if all already assigned/nothing to assign
-                wh_location_ids = self.env['stock.location'].search([('id', 'child_of', self.picking_type_id.warehouse_id.view_location_id.id), ('location_id.usage', '!=', 'supplier')]).ids
+                wh_location_ids = self.env['stock.location']._search([('id', 'child_of', self.picking_type_id.warehouse_id.view_location_id.id), ('usage', '!=', 'supplier')])
                 if self.env['stock.move'].search([
                         ('state', 'in', ['confirmed', 'partially_available', 'waiting', 'assigned']),
                         ('product_qty', '>', 0),
