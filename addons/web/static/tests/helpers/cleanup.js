@@ -72,17 +72,15 @@ QUnit.on("OdooAfterTestHook", function (info) {
     if (QUnit.config.debug) {
         return;
     }
+    const failed = info.testReport.getStatus() === 'failed';
     const toRemove = [];
     // check for leftover elements in the body
     for (const bodyChild of document.body.children) {
         const tolerated = validElements.find(
             (e) => e.tagName === bodyChild.tagName && bodyChild.getAttribute(e.attr) === e.value
         );
-        if (!tolerated) {
-            console.error(
-`Test ${info.moduleName} > ${info.testName}: body still contains undesirable elements:
-    ${bodyChild.outerHTML}`);
-            QUnit.pushFailure(`Body still contains undesirable elements`);
+        if (!failed && !tolerated) {
+            QUnit.pushFailure(`Body still contains undesirable elements:\n${bodyChild.outerHTML}`);
         }
         if (!tolerated || !tolerated.keep) {
             toRemove.push(bodyChild);
