@@ -76,23 +76,31 @@
         <div data-js="WebsiteSaleProductsItem"
             data-selector="#products_grid .oe_product"
             data-no-check="true">
-            <div class="o_wsale_soptions_menu_sizes d-flex">
-                <we-title>Size</we-title>
-                <table>
-                    <tr>
-                        <td/><td/><td/><td/>
-                    </tr>
-                    <tr>
-                        <td/><td/><td/><td/>
-                    </tr>
-                    <tr>
-                        <td/><td/><td/><td/>
-                    </tr>
-                    <tr>
-                        <td/><td/><td/><td/>
-                    </tr>
-                </table>
+            <div class="o_wsale_soptions_menu_sizes">
+                <we-row string="Size">
+                    <table>
+                        <tr>
+                            <td/><td/><td/><td/>
+                        </tr>
+                        <tr>
+                            <td/><td/><td/><td/>
+                        </tr>
+                        <tr>
+                            <td/><td/><td/><td/>
+                        </tr>
+                        <tr>
+                            <td/><td/><td/><td/>
+                        </tr>
+                    </table>
+                </we-row>
             </div>
+
+            <we-row string="Re-order" data-no-preview="true">
+                <we-button title="Push to top" data-change-sequence="top" class="fa fa-fw fa-angle-double-left"/>
+                <we-button title="Push up" data-change-sequence="up" class="fa fa-fw fa-angle-left"/>
+                <we-button title="Push down" data-change-sequence="down" class="fa fa-fw fa-angle-right"/>
+                <we-button title="Push to bottom" data-change-sequence="bottom" class="fa fa-fw fa-angle-double-right"/>
+            </we-row>
 
             <we-row data-name="ribbon_options">
                 <we-select string="Ribbon" class="o_wsale_ribbon_select">
@@ -118,13 +126,6 @@
                     <we-button data-set-ribbon-position="left">Left</we-button>
                     <we-button data-set-ribbon-position="right">Right</we-button>
                 </we-select>
-            </div>
-
-            <div name="reordering" data-no-preview="true">
-                <we-button data-change-sequence="top">Push to top</we-button>
-                <we-button data-change-sequence="up">Push up</we-button>
-                <we-button data-change-sequence="down">Push down</we-button>
-                <we-button data-change-sequence="bottom">Push to bottom</we-button>
             </div>
         </div>
         <div data-selector="#wrapwrap > header"

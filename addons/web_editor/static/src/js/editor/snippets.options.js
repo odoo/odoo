@@ -3477,7 +3477,8 @@ const SnippetOptionWidget = Widget.extend({
         // TODO improve this, this is hackish to rely on DOM structure here.
         // Layouting elements should be handled as widgets or other.
         for (const el of this.$el.find('we-row')) {
-            el.classList.toggle('d-none', !$(el).find('> div > .o_we_user_value_widget').not('.d-none').length);
+            const $userValueWidget = $(el).find('> div > .o_we_user_value_widget');
+            el.classList.toggle('d-none', $userValueWidget.length && !$userValueWidget.not('.d-none').length);
         }
         for (const el of this.$el.find('we-collapse')) {
             const $el = $(el);
