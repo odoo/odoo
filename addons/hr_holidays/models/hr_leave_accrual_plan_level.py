@@ -83,7 +83,7 @@ class AccrualPlanLevel(models.Model):
     second_month_day = fields.Integer(default=1)
     second_month = fields.Selection([
         ('jul', 'July'),
-        ('aug', 'Augustus'),
+        ('aug', 'August'),
         ('sep', 'September'),
         ('oct', 'October'),
         ('nov', 'November'),
@@ -97,7 +97,7 @@ class AccrualPlanLevel(models.Model):
         ('may', 'May'),
         ('jun', 'June'),
         ('jul', 'July'),
-        ('aug', 'Augustus'),
+        ('aug', 'August'),
         ('sep', 'September'),
         ('oct', 'October'),
         ('nov', 'November'),
