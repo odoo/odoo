@@ -473,13 +473,12 @@ class Picking(models.Model):
                 picking.show_lots_text = False
 
     def _compute_json_popover(self):
-        for picking in self:
-            if picking.state in ('done', 'cancel') or not picking.delay_alert_date:
-                picking.json_popover = False
-                continue
+        picking_no_alert = self.filtered(lambda p: p.state in ('done', 'cancel') or not p.delay_alert_date)
+        picking_no_alert.json_popover = False
+        for picking in (self - picking_no_alert):
             picking.json_popover = json.dumps({
                 'popoverTemplate': 'stock.PopoverStockRescheduling',
-                'delay_alert_date': format_datetime(self.env, picking.delay_alert_date, dt_format=False) if picking.delay_alert_date else False,
+                'delay_alert_date': format_datetime(self.env, picking.delay_alert_date, dt_format=False),
                 'late_elements': [{
                         'id': late_move.id,
                         'name': late_move.display_name,
