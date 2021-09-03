@@ -323,44 +323,6 @@ class HolidaysAllocation(models.Model):
                     accrual_plan = default_accrual_plan
                 allocation.accrual_plan_id = accrual_plan
 
-    #TODO: remove after impl prorata in _process_accrual_plan_level
-    def _compute_accrual_days(self, first_day, start_date, end_date):
-        """
-        Increase the number of days depending on the period, the start date of the employee and how many days he worked according to his
-        work entry.
-        This method takes also in account if the employee started during the period to apply a prorata
-        """
-        for allocation in self.filtered(lambda i: i.employee_id and i.accrual_plan_id):
-            start_date_prorata = 1.0
-            if first_day > start_date:
-                # The employee was created during the period after the start_date
-                # This prorata depends on the number of days worked during this period
-                worked_days = end_date - first_day
-                period_days = end_date - start_date
-                start_date_prorata = worked_days.days / period_days.days
-                # We calculate from the first_day to end_date
-                start_date = first_day
-            if end_date <= first_day or end_date < datetime.combine(allocation.date_from, time(0, 0, 0)):
-                # Stop the calculation if
-                # * the user was created after the period
-                # * the period ends before the allocation is valid
-                return
-            # The prorata depends if the employee took holidays during the period.
-            # Unpaid holidays and work_entry_type.leave_right = False decrease the amount of holidays
-            if allocation.accrual_level_id.is_based_on_worked_time:
-                worked = allocation.employee_id._get_work_days_data_batch(start_date, end_date, calendar=allocation.employee_id.resource_calendar_id)\
-                    [allocation.employee_id.id]['days']
-                left = allocation.employee_id.sudo()._get_leave_days_data_batch(start_date, end_date,
-                    domain=[('time_type', '=', 'leave')])[allocation.employee_id.id]['days']
-                work_entry_prorata = worked / (left + worked) if worked else 0
-                # Calculate the number of days that could be added
-                added_value = work_entry_prorata * start_date_prorata * allocation.accrual_level_id.added_value
-            else:
-                added_value = allocation.accrual_level_id.added_value
-            number_of_days = min(allocation.number_of_days + added_value, allocation.accrual_level_id.maximum_leave)
-            allocation.write({'number_of_days': number_of_days})
-            # Do not send a message if the maximum number of days is already reached
-
     def _end_of_year_accrual(self):
         # to override in payroll
         today = fields.Date.today()
@@ -370,7 +332,7 @@ class HolidaysAllocation(models.Model):
                 # Allocations are lost but number_of_days should not be lower than leaves_taken
                 allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': today, 'nextcall': False})
 
-    def _get_current_accrual_plan_level_id(self, date):
+    def _get_current_accrual_plan_level_id(self, date, level_ids=False):
         """
         Returns the accrual_plan_level for the given date of the record's accrual plan
         """
@@ -378,7 +340,8 @@ class HolidaysAllocation(models.Model):
         if not self.accrual_plan_id.level_ids:
             return False
         # Sort by sequence which should be equivalent to the level
-        level_ids = self.accrual_plan_id.level_ids.sorted('sequence')
+        if not level_ids:
+            level_ids = self.accrual_plan_id.level_ids.sorted('sequence')
         current_level = False
         current_level_idx = -1
         for idx, level in enumerate(level_ids):
@@ -398,19 +361,11 @@ class HolidaysAllocation(models.Model):
             return previous_level
         return current_level
 
-    def _get_first_accrual_plan_level_start_date(self):
-        self.ensure_one()
-        level = self.accrual_plan_id.level_ids.sorted('sequence')[0]
-        if not level:
-            return False
-        return self.date_from + get_timedelta(level.start_count, level.start_type)
-
     def _process_accrual_plan_level(self, level, start_date, end_date):
         """
         Returns the added days for that level
         """
         self.ensure_one()
-        #TODO: ask gmf about prorata stuff see `_compute_accrual_days`
         if level.is_based_on_worked_time:
             start_dt = datetime.combine(start_date, datetime.min.time())
             end_dt = datetime.combine(end_date, datetime.min.time())
@@ -434,13 +389,17 @@ class HolidaysAllocation(models.Model):
         """
         today = fields.Date.today()
         for allocation in self:
+            level_ids = self.accrual_plan_id.level_ids.sorted('sequence')
+            if not level_ids:
+                continue
             if not allocation.nextcall:
-                current_level = allocation._get_current_accrual_plan_level_id(today)
-                if not current_level:
+                first_level = level_ids[0]
+                first_level_start_date = allocation.date_from + get_timedelta(first_level.start_count, first_level.start_type)
+                if today < first_level_start_date:
                     # Accrual plan is not configured properly or has not started
                     continue
-                allocation.lastcall = max(allocation.lastcall, allocation.date_from + get_timedelta(current_level.start_count, current_level.start_type))
-                allocation.nextcall = current_level._get_next_date(allocation.lastcall)
+                allocation.lastcall = max(allocation.lastcall, first_level_start_date)
+                allocation.nextcall = first_level._get_next_date(allocation.lastcall)
             days_added_per_level = defaultdict(lambda: 0)
             while allocation.nextcall <= today:
                 current_level = allocation._get_current_accrual_plan_level_id(allocation.nextcall)
