@@ -256,6 +256,63 @@ class StockRule(models.Model):
             res['orderpoint_id'] = orderpoint_id.id
         return res
 
+<<<<<<< HEAD
+=======
+    @api.model
+    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, values, po):
+        partner = values['supplier'].name
+        procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
+        # _select_seller is used if the supplier have different price depending
+        # the quantities ordered.
+        seller = product_id.with_context(force_company=company_id.id)._select_seller(
+            partner_id=partner,
+            quantity=procurement_uom_po_qty,
+            date=po.date_order and po.date_order.date(),
+            uom_id=product_id.uom_po_id)
+
+        taxes = product_id.supplier_taxes_id
+        fpos = po.fiscal_position_id
+        taxes_id = fpos.map_tax(taxes, product_id, seller.name) if fpos else taxes
+        if taxes_id:
+            taxes_id = taxes_id.filtered(lambda x: x.company_id.id == company_id.id)
+
+        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, product_id.supplier_taxes_id, taxes_id, company_id) if seller else 0.0
+        if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
+            price_unit = seller.currency_id._convert(
+                price_unit, po.currency_id, po.company_id, po.date_order or fields.Date.today())
+
+        product_lang = product_id.with_prefetch().with_context(
+            lang=partner.lang,
+            partner_id=partner.id,
+            supplier_info=seller,
+        )
+        name_product_description = product_lang.name_get()
+        if not name_product_description:
+            name = product_lang.display_name  # Fallback to original behavior in case of problem
+        else:
+            name = name_product_description[0][1]  # name_product_description will be of the form list[tuple(product_id, name)]
+        if product_lang.description_purchase:
+            name += '\n' + product_lang.description_purchase
+
+        date_planned = self.env['purchase.order.line']._get_date_planned(seller, po=po)
+
+        return {
+            'name': name,
+            'product_qty': procurement_uom_po_qty,
+            'product_id': product_id.id,
+            'product_uom': product_id.uom_po_id.id,
+            'price_unit': price_unit,
+            'propagate_cancel': values.get('propagate_cancel'),
+            'date_planned': date_planned,
+            'propagate_date': values['propagate_date'],
+            'propagate_date_minimum_delta': values['propagate_date_minimum_delta'],
+            'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,
+            'taxes_id': [(6, 0, taxes_id.ids)],
+            'order_id': po.id,
+            'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])],
+        }
+
+>>>>>>> 7b68677c45e... temp
     def _prepare_purchase_order(self, company_id, origins, values):
         """ Create a purchase order for procuremets that share the same domain
         returned by _make_po_get_domain.
