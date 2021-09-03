@@ -230,6 +230,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                     extras: { price_manually_set: true },
                     merge: false,
                     refunded_orderline_id: orderline.id,
+                    tax_ids: orderline.tax_ids,
                 });
                 refundDetail.destinationOrderUid = destinationOrder.uid;
             }
@@ -390,6 +391,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                         orderUid: orderline.order.uid,
                         orderBackendId: orderline.order.backendId,
                         orderPartnerId,
+                        tax_ids: orderline.get_taxes().map(tax => tax.id),
                     },
                     destinationOrderUid: false,
                 };
