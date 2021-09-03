@@ -164,6 +164,21 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
                 self.$el.parent().find('.o_calendar_mini').hide();
             });
         },
+        /**
+         * @override
+         * @private
+         */
+        _renderCalendar: function() {
+            this._super.apply(this, arguments);
+            let weekNumbers = this.$el.find('.fc-week-number');
+            weekNumbers.each( function() {
+                let weekRow = this.parentNode;
+                // By default, each month has 6 weeks displayed, hide the week number if there is no days for the week
+                if(!weekRow.children[1].classList.length && !weekRow.children[weekRow.children.length-1].classList.length) {
+                    this.innerHTML = '';
+                }
+            });
+        },
     });
 
     var TimeOffCalendarRenderer = TimeOffPopoverRenderer.extend({
