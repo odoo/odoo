@@ -391,6 +391,7 @@ function makeActionManager(env) {
             action: {
                 id: action.id || false,
                 type: action.type || false,
+                views: action.views || [],
             },
             context,
             display: { mode: target === "new" ? "inDialog" : target },

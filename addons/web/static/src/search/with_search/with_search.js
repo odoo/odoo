@@ -80,7 +80,7 @@ export class WithSearch extends Component {
 }
 
 WithSearch.defaultProps = {
-    action: { id: false },
+    action: { id: false, views: [] },
     componentProps: {},
     view: { id: false },
 };
@@ -95,6 +95,7 @@ WithSearch.props = {
         shape: {
             id: [Number, false],
             type: { type: [String, false], optional: 1 },
+            views: { type: Array, element: [Number, String, false] },
         },
         optional: 1,
     },

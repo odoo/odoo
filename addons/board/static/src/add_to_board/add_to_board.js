@@ -105,6 +105,7 @@ AddToBoard.template = "board.AddToBoard";
 
 const addToBoardItem = {
     Component: AddToBoard,
+    groupNumber: 4,
     isDisplayed: ({ searchModel }) => searchModel.action.type === "ir.actions.act_window",
 };
 

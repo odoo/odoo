@@ -96,5 +96,5 @@ CustomFavoriteItem.template = "web.CustomFavoriteItem";
 favoriteMenuRegistry.add(
     "custom-favorite-item",
     { Component: CustomFavoriteItem, groupNumber: 3 },
-    { sequence: 10 }
+    { sequence: 0 }
 );

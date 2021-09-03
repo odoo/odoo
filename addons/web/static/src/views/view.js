@@ -308,7 +308,7 @@ export class View extends Component {
 View.template = "web.View";
 View.components = { WithSearch };
 View.defaultProps = {
-    action: { id: false },
+    action: { id: false, views: [] },
     display: {},
     context: {},
     actionFlags: {},

@@ -44,7 +44,8 @@ AddToGoogleSpreadsheet.template = "google_spreadsheet.AddToGoogleSpreadsheet";
 
 const addToGoogleSpreadsheetItem = {
     Component: AddToGoogleSpreadsheet,
+    groupNumber: 4,
     isDisplayed: ({ searchModel }) => searchModel.action.type === "ir.actions.act_window",
 };
 
-favoriteMenuRegistry.add("add-to-google-spreadsheet", addToGoogleSpreadsheetItem, { sequence: 10 });
+favoriteMenuRegistry.add("add-to-google-spreadsheet", addToGoogleSpreadsheetItem, { sequence: 20 });

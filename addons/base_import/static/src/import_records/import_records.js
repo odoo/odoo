@@ -35,6 +35,7 @@ ImportRecords.template = "base_import.ImportRecords";
 
 const importRecordsItem = {
     Component: ImportRecords,
+    groupNumber: 4,
     isDisplayed: ({ isSmall, searchModel }) =>
         !isSmall &&
         searchModel.action.type === "ir.actions.act_window" &&

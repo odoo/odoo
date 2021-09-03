@@ -158,7 +158,7 @@ export class SearchModel extends EventBus {
      * @param {number|false} [config.searchViewId=false]
      * @param {Object[]} [config.irFilters=[]]
      *
-     * @param {Object} [config.action={id:false}]
+     * @param {Object} [config.action={id:false,views:[]}]
      * @param {boolean} [config.activateFavorite=true]
      * @param {Object} [config.context={}]
      * @param {String} [config.displayName=""]
@@ -182,7 +182,7 @@ export class SearchModel extends EventBus {
 
         const { action, displayName, view } = config;
 
-        this.action = action || { id: false };
+        this.action = action || { id: false, views: [] };
         this.displayName = displayName || "";
         this.view = view || { id: false };
 
@@ -560,73 +560,25 @@ export class SearchModel extends EventBus {
      * Create a new filter of type 'favorite' and activate it.
      * A new group containing only that filter is created.
      * The query is emptied before activating the new favorite.
-     * @param {Object} preFilter
+     * @param {Object} params
      * @returns {Promise}
      */
     async createNewFavorite(params) {
-        const { description, isDefault, isShared } = params;
-        const userContext = this.userService.context;
-        const fns = this.env.__saveParams__.callbacks;
-        const saveParams = Object.assign({}, ...fns.map((fn) => fn()));
-        saveParams.context = saveParams.context || {};
-        const queryContext = this._getContext();
-        const context = makeContext(userContext, queryContext, saveParams.context);
-        for (const key in userContext) {
-            delete context[key];
-        }
-        for (const key in context) {
-            // clean search defaults from context --> could be removed I think
-            const match = /^search_default_(.*)$/.exec(key);
-            if (match) {
-                delete context[key];
-            }
-        }
-        const domain = this._getDomain({ evaluation: false });
-        const groupBys = this._getGroupBy();
-        const comparison = this._getComparison();
-        const orderBy = saveParams.orderBy ? saveParams.orderBy : this._getOrderBy() || [];
-        const userId = isShared ? false : this.userService.userId;
-        const serverSideId = await this.orm.call("ir.filters", "create_or_replace", [
-            {
-                name: description,
-                action_id: this.action.id,
-                model_id: this.resModel,
-                domain: domain.toString(),
-                is_default: isDefault,
-                sort: JSON.stringify(
-                    orderBy.map((o) => `${o.name}${o.asc === false ? " desc" : ""}`)
-                ),
-                user_id: userId,
-                context: Object.assign(
-                    { group_by: groupBys },
-                    comparison ? { comparison } : {},
-                    context
-                ),
-            },
-        ]);
+        const { preFavorite, irFilter } = this._getIrFilterDescription(params);
+        const serverSideId = await this.orm.call("ir.filters", "create_or_replace", [irFilter]);
+
         // before the filter cache was cleared!
         this.blockNotification = true;
         this.clearQuery();
         const favorite = {
+            ...preFavorite,
             type: "favorite",
             id: this.nextId,
             groupId: this.nextGroupId,
-            context,
-            domain,
-            groupBys,
-            groupNumber: userId ? FAVORITE_PRIVATE_GROUP : FAVORITE_SHARED_GROUP,
-            orderBy,
+            groupNumber: preFavorite.userId ? FAVORITE_PRIVATE_GROUP : FAVORITE_SHARED_GROUP,
             removable: true,
-            userId,
-            description,
             serverSideId,
         };
-        if (comparison) {
-            favorite.comparison = comparison;
-        }
-        if (isDefault) {
-            favorite.isDefault = isDefault;
-        }
         this.searchItems[this.nextId] = favorite;
         this.query.push({ searchItemId: this.nextId });
         this.nextGroupId++;
@@ -754,6 +706,11 @@ export class SearchModel extends EventBus {
     getDomainParts() {
         const copy = deepCopy(this.domainParts);
         return sortBy(Object.values(copy), (part) => part.groupId);
+    }
+
+    getIrFilterValues(params) {
+        const { irFilter } = this._getIrFilterDescription(params);
+        return irFilter;
     }
 
     /**
@@ -1756,6 +1713,62 @@ export class SearchModel extends EventBus {
             groups.push({ id, activeItems });
         }
         return groups;
+    }
+
+    /**
+     *
+     * @private
+     * @param {Object} [params={}]
+     * @returns {{ preFavorite: Object, irFilter: Object }}
+     */
+    _getIrFilterDescription(params = {}) {
+        const { description, isDefault, isShared } = params;
+        const fns = this.env.__saveParams__.callbacks;
+        const saveParams = Object.assign({}, ...fns.map((fn) => fn()));
+        const context = makeContext(this._getContext(), saveParams.context);
+        for (const key in context) {
+            if (key in this.userService.context) {
+                delete context[key];
+                continue;
+            }
+            // clean search defaults from context --> could be removed I think
+            const match = /^search_default_(.*)$/.exec(key);
+            if (match) {
+                delete context[key];
+            }
+        }
+        const domain = this._getDomain({ evaluation: false });
+        const groupBys = this._getGroupBy();
+        const comparison = this._getComparison();
+        const orderBy = saveParams.orderBy ? saveParams.orderBy : this._getOrderBy() || [];
+        const userId = isShared ? false : this.userService.userId;
+
+        const preFavorite = {
+            description,
+            isDefault,
+            domain,
+            context,
+            groupBys,
+            orderBy,
+            userId,
+        };
+        const irFilter = {
+            name: description,
+            action_id: this.action.id,
+            model_id: this.resModel,
+            domain: domain.toString(),
+            is_default: isDefault,
+            sort: JSON.stringify(orderBy.map((o) => `${o.name}${o.asc === false ? " desc" : ""}`)),
+            user_id: userId,
+            context: { group_by: groupBys, ...context },
+        };
+
+        if (comparison) {
+            preFavorite.comparison = comparison;
+            irFilter.context.comparison = comparison;
+        }
+
+        return { preFavorite, irFilter };
     }
 
     /**
