@@ -702,7 +702,7 @@ class StockMove(models.Model):
             'active_model': 'product.product',
             'move_to_match_ids': self.ids,
         }
-        if self.picking_type_id.code == 'outgoing':
+        if self.picking_type_id.code in self._consuming_picking_types():
             warehouse = self.location_id.warehouse_id
         else:
             warehouse = self.location_dest_id.warehouse_id
