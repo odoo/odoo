@@ -46,11 +46,15 @@ const profilingService = {
                 params
             );
             const resp = await orm.call("ir.profile", "set_profiling", [], kwargs);
-            state.session = resp.session;
-            state.collectors = resp.collectors;
-            state.params = resp.params;
-            bus.trigger("UPDATE");
-            updateDebugIcon();
+            if (resp.type) {  // most likely an "ir.actions.act_window"
+                env.services.action.doAction(resp);
+            } else {
+                state.session = resp.session;
+                state.collectors = resp.collectors;
+                state.params = resp.params;
+                bus.trigger("UPDATE");
+                updateDebugIcon();
+            }
         }
 
         function profilingSeparator() {

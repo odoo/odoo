@@ -6,6 +6,8 @@ import datetime
 import json
 import logging
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
 from odoo.http import request
@@ -86,7 +88,15 @@ class IrProfile(models.Model):
             _logger.info("User %s started profiling", self.env.user.name)
             if not limit:
                 request.session.profile_session = None
-                raise UserError(_('Profiling is not enabled on this database'))
+                if self.env.user._is_system():
+                    return {
+                            'type': 'ir.actions.act_window',
+                            'view_mode': 'form',
+                            'res_model': 'base.enable.profiling.wizard',
+                            'target': 'new',
+                            'views': [[False, 'form']],
+                        }
+                raise UserError(_('Profiling is not enabled on this database. Please contact an administrator.'))
             if not request.session.profile_session:
                 request.session.profile_session = make_session(self.env.user.name)
                 request.session.profile_expiration = limit
@@ -108,3 +118,26 @@ class IrProfile(models.Model):
             'collectors': request.session.profile_collectors,
             'params': request.session.profile_params,
         }
+
+
+class EnableProfilingWizard(models.TransientModel):
+    _name = 'base.enable.profiling.wizard'
+    _description = "Enable profiling for some time"
+
+    duration = fields.Selection([
+        ('minutes_5', "5 Minutes"),
+        ('hours_1', "1 Hour"),
+        ('days_1', "1 Day"),
+        ('months_1', "1 Month"),
+    ], string="Enable profiling for")
+    expiration = fields.Datetime("Enable profiling until", compute='_compute_expiration', store=True, readonly=False)
+
+    @api.depends('duration')
+    def _compute_expiration(self):
+        for record in self:
+            unit, quantity = (record.duration or 'days_0').split('_')
+            record.expiration = fields.Datetime.now() + relativedelta(**{unit: int(quantity)})
+
+    def submit(self):
+        self.env['ir.config_parameter'].set_param('base.profiling_enabled_until', self.expiration)
+        return False

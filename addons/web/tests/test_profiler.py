@@ -46,7 +46,7 @@ class TestProfilingWeb(ProfilingHttpCase):
         # Trying to start profiling when not enabled
         self.env['ir.config_parameter'].set_param('base.profiling_enabled_until', '')
         res = self.profile_rpc({'profile': 1})
-        self.assertEqual(res['error']['data']['message'], 'Profiling is not enabled on this database')
+        self.assertEqual(res['result']['res_model'], 'base.enable.profiling.wizard')
         self.assertEqual(last_profile, self.env['ir.profile'].search([], limit=1, order='id desc'))
 
         # Enable profiling and start blank profiling
@@ -92,7 +92,7 @@ class TestProfilingPublic(ProfilingHttpCase):
 
         res = self.url_open('/web/set_profiling?profile=1')
         self.assertEqual(res.status_code, 500)
-        self.assertEqual(res.text, 'error: Profiling is not enabled on this database')
+        self.assertEqual(res.text, 'error: Profiling is not enabled on this database. Please contact an administrator.')
 
         expiration = datetime.datetime.now() + datetime.timedelta(seconds=50)
         self.env['ir.config_parameter'].set_param('base.profiling_enabled_until', expiration)
