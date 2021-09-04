@@ -29,12 +29,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_variant_count
 msgid "# Product Variants"
-msgstr "# 파생 상품"
+msgstr "# 파생 품목"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_count
 msgid "# Products"
-msgstr "# 제품"
+msgstr "# 품목"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -58,7 +58,7 @@ msgstr "%s (사본)"
 #: model:ir.actions.report,print_report_name:product.report_product_label
 #: model:ir.actions.report,print_report_name:product.report_product_template_label
 msgid "'Products Labels - %s' % (object.name)"
-msgstr "'제품 꼬리표 - %s' % (object.name)"
+msgstr "'품목 라벨 - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_product_barcode
@@ -69,7 +69,7 @@ msgstr "'품목 바코드 -  %s' % (object.name)"
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.name)"
-msgstr "'제품 포장 - %s' % (object.name)"
+msgstr "'품목 포장 - %s' % (object.name)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -79,10 +79,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: the variants creation mode cannot be changed once the attribute is used on at least one product."
 msgstr ""
-"- 즉시 : 모든 가능한 변형은 속성과 그 값이 제품에 추가되는 즉시 생성됩니다.\n"
-"- 동적 : 각 변형은 해당 속성과 값이 판매 주문서에 추가될 때만 생성됩니다.\n"
-"- 사용 안함 : 속성에 대한 변형은 생성되지 않습니다.\n"
-"참고 : 하나 이상의 상품에서 특성을 사용한 후에는 파생 상품 생성 모드를 변경할 수 없습니다."
+"- 즉시 : 모든 가능한 사양은 속성과 그 값이 품목에 추가되는 즉시 생성됩니다.\n"
+"- 동적 : 각 사양은 해당 속성과 값이 판매 주문서에 추가될 때만 생성됩니다.\n"
+"- 사용 안함 : 사양에 대한 변형은 생성되지 않습니다.\n"
+"참고 : 하나 이상의 품목에서 특성을 사용한 후에는 파생 품목 생성 모드를 변경할 수 없습니다."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -139,7 +139,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
-msgstr "<span class=\"o_stat_text\"> 제품</span>"
+msgstr "<span class=\"o_stat_text\"> 품목</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_simple_barcode
@@ -150,7 +150,7 @@ msgstr "<span class=\"text-muted\">바코드가 없습니다</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
-msgstr "<span>이 상품에 대한 모든 일반 설정은 다음에서 관리됩니다.</span>"
+msgstr "<span>이 품목에 대한 모든 일반 설정은 다음에서 관리됩니다.</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label
@@ -176,7 +176,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_product_barcode_uniq
 msgid "A barcode can only be assigned to one product !"
-msgstr "바코드는 하나의 제품에만 할당할 수 있습니다!"
+msgstr "바코드는 하나의 품목에만 할당할 수 있습니다!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -193,8 +193,8 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "                This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
-"가격은 제품, 제품 범주, 날짜 및 주문 수량을 기반으로 판매 주문 내역의 가격을 계산하기 위한 판매 가격 또는 규칙 세트입니다. 여러 "
-"가격, 계절 할인 등을 처리 할 수 있는 완벽한 도구입니다."
+"가격은 품목, 품목 카테고리, 날짜 및 주문 수량을 기반으로 판매 주문 내역의 가격을 계산하기 위한 판매 가격 또는 규칙의 모음입니다. "
+"여러 가격, 계절 할인 등을 처리 할 수 있는 완벽한 도구입니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__type
@@ -204,9 +204,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"저장 가능 제품은 재고를 관리하는 제품입니다. 창고 앱이 설치되어 있어야 합니다.\n"
-"소모품은 재고가 관리되지 않는 제품입니다.\n"
-"서비스는 귀하가 제공하는 비물질 제품입니다."
+"저장 가능 제품은 재고를 관리하는 품목입니다. 창고 앱이 설치되어 있어야 합니다.\n"
+"소모품은 재고가 관리되지 않는 품목입니다.\n"
+"서비스는 귀하가 제공하는 비물질 품목입니다."
 
 #. module: product
 #: model:product.product,name:product.product_product_25
@@ -279,7 +279,7 @@ msgstr "고급 가격 규칙 (할인, 산식)"
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__3_global
 #, python-format
 msgid "All Products"
-msgstr "모든 제품"
+msgstr "모든 품목"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
@@ -293,7 +293,7 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
-"고객 범주 별 규칙에 따라 다양한 가격을 관리 할 수 있습니다.\n"
+"고객 카테고리별 규칙에 따라 다양한 가격을 관리 할 수 있습니다.\n"
 "                 예 : 소매 업체의 경우 10 %, 이 품목의 경우 5EUR 프로모션 등."
 
 #. module: product
@@ -333,7 +333,7 @@ msgstr "아카이브됨"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr "제품 공급업체 목록에 우선 순위를 지정합니다."
+msgstr "품목 공급업체 목록에 우선 순위를 지정합니다."
 
 #. module: product
 #. openerp-web
@@ -631,14 +631,14 @@ msgstr "새로운 가격표 만들기"
 #: model_terms:ir.actions.act_window,help:product.product_template_action
 #: model_terms:ir.actions.act_window,help:product.product_template_action_all
 msgid "Create a new product"
-msgstr "새 상품 만들기"
+msgstr "신규 품목 만들기"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
 msgid "Create a new product variant"
-msgstr "새 파생 상품 만들기"
+msgstr "신규 파생 품목 만들기"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -880,7 +880,7 @@ msgstr "동적"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
-msgstr "각 값은 상품 속성별로 한 번만 정의해야 합니다."
+msgstr "각 값은 품목 사양별로 한 번만 정의해야 합니다."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
@@ -961,7 +961,7 @@ msgid ""
 "Expressed in the default unit of measure of the product."
 msgstr ""
 "규칙을 적용하려면 구매/판매 수량이 이 필드에 지정된 최소 수량 이상이어야 합니다.\n"
-"제품의 기본 단위로 표현됩니다."
+"품목의 기본 단위로 표현됩니다."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__formula
@@ -1000,13 +1000,13 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
 #: model:ir.model.fields,help:product.field_product_template__packaging_ids
 msgid "Gives the different ways to package the same product."
-msgstr "동일한 상품을 꾸러미화 하는 다양한 방법을 제공합니다."
+msgstr "동일한 품목을 여러개 단위로 묶는 다양한 방법을 제공합니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__sequence
 #: model:ir.model.fields,help:product.field_product_template__sequence
 msgid "Gives the sequence order when displaying a product list"
-msgstr "상품 목록을 표시할 때 주문 순서를 제공합니다"
+msgstr "품목 목록을 표시할 때 주문 순서를 제공합니다"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
@@ -1096,7 +1096,7 @@ msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합�
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
 msgid ""
 "If not set, the vendor price will apply to all variants of this product."
-msgstr "설정하지 않으면 공급업체 가격이 이 제품의 모든 파생 상품에 적용됩니다."
+msgstr "설정하지 않으면 공급업체 가격이 이 제품의 모든 파생 품목에 적용됩니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -1152,7 +1152,7 @@ msgstr "가격표 서식 가져오기"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "제품 서식 가져오기"
+msgstr "품목 가져오기"
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -1169,9 +1169,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
-"표준 가격 및 AVCO : 제품 가치(AVCO에서 자동 계산). \n"
+"표준 가격 및 AVCO : 품목가치(AVCO에서 자동 계산). \n"
 "           FIFO에서 : 재고를 남긴 마지막 단위의 값(자동 계산). \n"
-"          구매 비용을 알 수 없을 때 제품의 가치를 평가하는 데 사용됩니다 (예 : 재고 조정). \n"
+"          구매 비용을 알 수 없을 때 품목의 가치를 평가하는 데 사용됩니다 (예 : 재고 조정). \n"
 "           판매 주문의 마진을 계산하는 데 사용됩니다."
 
 #. module: product
@@ -1204,7 +1204,7 @@ msgstr "품목 코드"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__barcode
 msgid "International Article Number used for product identification."
-msgstr "상품 식별을 위한 국제 아티클 번호"
+msgstr "품목 식별을 위한 국제 아티클 번호"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1220,18 +1220,18 @@ msgstr "팔로워입니다"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_product_variant
 msgid "Is Product Variant"
-msgstr "파생 상품 여부"
+msgstr "파생 품목 여부"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__has_configurable_attributes
 #: model:ir.model.fields,field_description:product.field_product_template__has_configurable_attributes
 msgid "Is a configurable product"
-msgstr "상품 구성 가능 여부"
+msgstr "구성 가능 품목"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template__is_product_variant
 msgid "Is a product variant"
-msgstr "파생 상품 여부"
+msgstr "파생 품목 여부"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
@@ -1331,7 +1331,7 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
-msgstr "구매 주문 확인과 창고에 있는 제품 수령 사이의 리드타임 (일). 구매 주문 계획의 자동 계산을 위해 계획표에서 사용합니다."
+msgstr "발주서 확인과 창고로의 품목 입고 간의 여유일. 발주서 계획의 자동 계산을 위해 계획표에서 사용합니다."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
@@ -1361,17 +1361,17 @@ msgstr "주요 첨부 파일"
 msgid ""
 "Make this attribute value not compatible with other values of the product or"
 " some attribute values of optional and accessory products."
-msgstr "이 속성 값을 제품의 다른 값 또는 선택 사항 및 액세서리 제품의 일부 속성 값과 호환되지 않도록 하십시오."
+msgstr "이 속성 값을 품목의 다른 값 또는 선택 사항 및 액세서리 품목의 일부 속성 값과 호환되지 않도록 하십시오."
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
-msgstr "상품 포장 관리"
+msgstr "품목 포장 관리"
 
 #. module: product
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr "파생 상품 관리"
+msgstr "파생 품목 관리"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1413,7 +1413,7 @@ msgstr "최소 수량"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__basic
 msgid "Multiple prices per product"
-msgstr "상품당 복합 단가"
+msgstr "품목당 복합 단가"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings__product_pricelist_setting
@@ -1421,7 +1421,7 @@ msgid ""
 "Multiple prices: Pricelists with fixed price rules by product,\n"
 "Advanced rules: enables advanced price rules for pricelists."
 msgstr ""
-"복합 가격 : 가격표에 상품별로 가격 규칙이 고정됨,\n"
+"복합 가격 : 가격표에 품목별로 고정된 가격 적용,\n"
 "고급 규칙 : 가격표에 고급 가격 규칙을 사용함."
 
 #. module: product
@@ -1532,7 +1532,7 @@ msgstr "사무실용 등"
 msgid ""
 "On the product %s you cannot associate the value %s with the attribute %s "
 "because they do not match."
-msgstr "%s 제품에 %s 값이 일치하지 않기 때문에 %s 속성과 연결할 수 없습니다."
+msgstr "%s 품목에 %s 값이 일치하지 않기 때문에 %s 속성과 연결할 수 없습니다."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -1540,7 +1540,7 @@ msgstr "%s 제품에 %s 값이 일치하지 않기 때문에 %s 속성과 연결
 msgid ""
 "On the product %s you cannot transform the attribute %s into the attribute "
 "%s."
-msgstr "%s 제품에 %s 속성을 %s 속성으로 변환할 수 없습니다."
+msgstr "%s 품목에 %s 속성을 %s 속성으로 변환할 수 없습니다."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
@@ -1604,14 +1604,14 @@ msgstr "이 규칙을 적용할 범주를 지정하십시오"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "Please specify the product for which this rule should be applied"
-msgstr "이 규칙을 적용할 상품을 지정하십시오"
+msgstr "이 규칙을 적용할 품목을 지정하십시오"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid ""
 "Please specify the product variant for which this rule should be applied"
-msgstr "이 규칙을 적용할 파생 상품을 지정하십시오"
+msgstr "이 규칙을 적용할 파생 품목을 지정하십시오"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__1
@@ -1665,7 +1665,7 @@ msgstr "가격 할증"
 #: model:ir.model.fields,help:product.field_product_template__list_price
 #: model:ir.model.fields,help:product.field_product_template__lst_price
 msgid "Price at which the product is sold to customers."
-msgstr "상품이 고객에게 판매되는 가격."
+msgstr "품목이 고객에게 판매되는 가격."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_kanban_view
@@ -1774,48 +1774,48 @@ msgstr "인쇄"
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 msgid "Product"
-msgstr "상품"
+msgstr "품목"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_form
 msgid "Product Attribute"
-msgstr "상품 속성"
+msgstr "품목 속성"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr "상품 속성 사용자 정의 값"
+msgstr "품목 속성 사용자 정의 값"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
 msgid "Product Attribute Values"
-msgstr "상품 속성 값"
+msgstr "품목 속성 값"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr "상품 속성과 값"
+msgstr "품목 속성과 값"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__attribute_line_ids
 msgid "Product Attributes"
-msgstr "상품 속성"
+msgstr "품목 속성"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_product_barcode
 #: model:ir.actions.report,name:product.report_product_template_barcode
 msgid "Product Barcode (PDF)"
-msgstr "상품 바코드 (PDF)"
+msgstr "품목 바코드 (PDF)"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
 #: model_terms:ir.ui.view,arch_db:product.product_category_list_view
 #: model_terms:ir.ui.view,arch_db:product.product_category_search_view
 msgid "Product Categories"
-msgstr "상품 범주"
+msgstr "품목 카테고리"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -1827,49 +1827,49 @@ msgstr "상품 범주"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Product Category"
-msgstr "상품 범주"
+msgstr "품목 카테고리"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_configurator
 msgid "Product Configurator"
-msgstr "상품 구성기"
+msgstr "품목 구성기"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_label
 #: model:ir.actions.report,name:product.report_product_template_label
 msgid "Product Label (PDF)"
-msgstr "상품 꼬리표 (PDF)"
+msgstr "품목 라벨 (PDF)"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Name"
-msgstr "상품명"
+msgstr "품목 명"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__packaging_ids
 #: model:ir.model.fields,field_description:product.field_product_template__packaging_ids
 msgid "Product Packages"
-msgstr "기획 상품"
+msgstr "품목 포장"
 
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Product Packaging"
-msgstr "상품 포장법"
+msgstr "품목 포장법"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Product Packaging (PDF)"
-msgstr "상품 포장 (PDF)"
+msgstr "품목 포장 (PDF)"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
-msgstr "꾸러미 상품"
+msgstr "꾸러미 품목"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -1880,34 +1880,34 @@ msgstr "꾸러미 상품"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_tmpl_id
 #: model_terms:ir.ui.view,arch_db:product.product_search_form_view
 msgid "Product Template"
-msgstr "상품 양식"
+msgstr "품목 양식"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_exclusion
 msgid "Product Template Attribute Exclusion"
-msgstr "상품 서식 속성 제외"
+msgstr "품목 양식 속성 제외"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "상품 서식 속성 명세"
+msgstr "품목 양식 속성 내역"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr "상품 서식 속성 값"
+msgstr "품목 양식 속성 값"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__type
 #: model:ir.model.fields,field_description:product.field_product_template__type
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Product Type"
-msgstr "상품 유형"
+msgstr "품목 유형"
 
 #. module: product
 #: model:ir.model,name:product.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "상품 단위"
+msgstr "품목 단위"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
@@ -1915,12 +1915,12 @@ msgstr "상품 단위"
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
 #: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
 msgid "Product Variant"
-msgstr "파생 상품"
+msgstr "파생 품목"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_attribute_value_action
 msgid "Product Variant Values"
-msgstr "파생 상품 값"
+msgstr "파생 품목 값"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -1929,13 +1929,13 @@ msgstr "파생 상품 값"
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_activity
 msgid "Product Variants"
-msgstr "파생 상품"
+msgstr "파생 품목"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "Product: %s"
-msgstr "상품 : %s"
+msgstr "품목 : %s"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action
@@ -1947,34 +1947,34 @@ msgstr "상품 : %s"
 #: model_terms:ir.ui.view,arch_db:product.product_template_view_activity
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Products"
-msgstr "상품"
+msgstr "품목"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price"
-msgstr "제품 가격"
+msgstr "품목 가격"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_tree
 msgid "Products Price List"
-msgstr "제품 가격표"
+msgstr "품목 가격표"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 msgid "Products Price Rules Search"
-msgstr "제품 가격 규칙 검색"
+msgstr "품목 가격 규칙 검색"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price Search"
-msgstr "제품 가격 검색"
+msgstr "품목 가격 검색"
 
 #. module: product
 #: code:addons/product/models/product.py:0
 #, python-format
 msgid "Products: %(category)s"
-msgstr ""
+msgstr "품목: %(category)s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__lst_price
@@ -2026,7 +2026,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
 msgid "Quantity of products contained in the packaging."
-msgstr "묶음 포장에 포함된 제품의 수량."
+msgstr "묶음 포장에 포함된 품목의 수량."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
@@ -2043,13 +2043,13 @@ msgstr "참조"
 msgid ""
 "Register the prices requested by your vendors for each product, based on the"
 " quantity and the period."
-msgstr ""
+msgstr "공급업체로부터 요청받은 각각의 품목에 대한 단가를, 수량과 기간에 맞춰 등록합니다. "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Related Products"
-msgstr "연관된 제품"
+msgstr "연관된 품목"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_product_variant_ids
@@ -2115,7 +2115,7 @@ msgstr "선택하기"
 #: model:ir.model.fields,help:product.field_product_product__categ_id
 #: model:ir.model.fields,help:product.field_product_template__categ_id
 msgid "Select category for the current product"
-msgstr "현재 상품의 범주를 선택하십시오."
+msgstr "현재 품목의 카테고리를 선택하십시오."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__sequence
@@ -2165,21 +2165,22 @@ msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
 msgstr ""
-"이 규칙이 이 범주 또는 해당 하위 범주에 속하는 상품에만 적용되는 경우 제품 범주를 지정하십시오. 그렇지 않으면 비워 두십시오."
+"이 규칙이 이 카테고리 또는 해당 하위 카테고리에 속하는 품목에만 적용되는 경우 품목 카테고리를 지정하십시오. 그렇지 않으면 비워 "
+"두십시오."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
 msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
-msgstr "이 규칙이 하나의 상품에만 적용되는 경우 상품을 지정하십시오. 그렇지 않으면 비워 두십시오."
+msgstr "이 규칙이 하나의 품목에만 적용되는 경우 품목을 지정하십시오. 그렇지 않으면 비워 두십시오."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_tmpl_id
 msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
-msgstr "이 규칙이 하나의 상품 서식에만 적용되는 경우 서식을 지정하십시오. 그렇지 않으면 비워 두십시오."
+msgstr "이 규칙이 하나의 품목 양식에만 적용되는 경우 양식을 지정하십시오. 그렇지 않으면 비워 두십시오."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
@@ -2265,21 +2266,21 @@ msgstr "기술 필드. 데이터베이스에 저장되지 않은 가격표를 �
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The attribute %s must have at least one value for the product %s."
-msgstr "%s 특성은 상품 %s에 대해 하나 이상의 값을 가지고 있어야 합니다."
+msgstr "%s 사양은 품목 %s에 대해 하나 이상의 값을 가지고 있어야 합니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
 msgid ""
 "The attribute cannot be changed once the value is used on at least one "
 "product."
-msgstr "하나 이상의 상품에서 값을 사용한 후에는 속성을 변경할 수 없습니다."
+msgstr "하나 이상의 품목에서 값을 사용한 후에는 사양을 변경할 수 없습니다."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
-msgstr "계산된 가격은 상품의 기본 단위로 표시됩니다."
+msgstr "계산된 가격은 품목의 기본 단위로 표시됩니다."
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
@@ -2294,7 +2295,7 @@ msgstr "기본 단위와 구매 단위는 동일한 범주에 있어야 합니�
 #: model:ir.model.fields,help:product.field_product_attribute_value__display_type
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__display_type
 msgid "The display type used in the Product Configurator."
-msgstr "제품 구성기에서 사용되는 디스플레이 유형입니다."
+msgstr "품목 구성기에서 사용되는 디스플레이 유형입니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__sequence
@@ -2312,7 +2313,7 @@ msgstr "최소 마진은 최대 마진보다 낮아야 합니다."
 msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
-msgstr "이 범주에 속하는 제품 수 (하위 범주는 고려하지 않음)"
+msgstr "이 카테고리에 속하는 품목 수 (하위 카테고리는 고려하지 않음)"
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
@@ -2329,13 +2330,13 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
 msgid "The price to purchase a product"
-msgstr "상품 구매 가격"
+msgstr "품목 구매 가격"
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "The product template is archived so no combination is possible."
-msgstr "상품 서식이 보존되어 있으므로 조합할 수 없습니다."
+msgstr "품목 양식이 보관되어 있어서 조합할 수 없습니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
@@ -2344,20 +2345,20 @@ msgid ""
 "expressed in the vendor Product Unit of Measure if not any, in the default "
 "unit of measure of the product otherwise."
 msgstr ""
-"가격에서 혜택을 받기 위해 이 공급업체로부터 구매할 수량. 공급업체 상품 단위로 표시되고, 그렇지 않으면 상품의 기본 단위로 표시됩니다."
+"가격에서 혜택을 받기 위해 이 공급업체로부터 구매할 수량. 공급업체 상품 단위로 표시되고, 그렇지 않으면 품목의 기본 단위로 표시됩니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
 msgid ""
 "The sale price is managed from the product template. Click on the 'Configure"
 " Variants' button to set the extra attribute prices."
-msgstr "판매 가격은 상품 서식에서 관리됩니다. 추가 파생 상품 가격을 설정하려면 '파생 상품 구성' 버튼을 클릭하십시오."
+msgstr "판매 가격은 품목양식에서 관리됩니다. 추가 파생 품목 가격을 설정하려면 '파생 품목 구성' 버튼을 클릭하십시오."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The value %s is not defined for the attribute %s on the product %s."
-msgstr "%s 값이  %s 속성에 대해 정의되지 않았으며 해당 속성을 가진 제품은 %s입니다."
+msgstr "%s 값이  %s 사양에 대해 정의되지 않았으며 해당 속성을 가진 품목은 %s입니다."
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
@@ -2380,7 +2381,7 @@ msgstr "남아있는 가능한 조합이 없습니다."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_uom
 msgid "This comes from the product form."
-msgstr "이것은 상품 양식에서 비롯됩니다."
+msgstr "이것은 품목 양식에서 비롯됩니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -2422,14 +2423,14 @@ msgstr ""
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr "이 공급업체의 상품 코드는 견적 요청을 인쇄할 때 사용됩니다. 내부용으로 사용하려면 비워 두십시오."
+msgstr "이 공급업체의 품목 코드는 견적 요청을 인쇄할 때 사용됩니다. 내부용으로 사용하려면 비워 두십시오."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_name
 msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr "이 공급업체의 상품 이름은 견적 요청을 인쇄할 때 사용됩니다. 내부용으로 사용하려면 비워 두십시오."
+msgstr "이 공급업체의 품목 이름은 견적 요청을 인쇄할 때 사용됩니다. 내부용으로 사용하려면 비워 두십시오."
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_01
@@ -2552,13 +2553,13 @@ msgstr "읽지 않은 메세지 수"
 #: model:ir.model.fields,field_description:product.field_product_attribute__is_used_on_products
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
 msgid "Used on Products"
-msgstr "제품에 사용"
+msgstr "품목에 사용"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
 msgid "Valid Product Attribute Lines"
-msgstr "유효한 상품 속성 명세"
+msgstr "유효한 품목 사양 내역"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2685,17 +2686,17 @@ msgstr "공급업체 가격표"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_code
 msgid "Vendor Product Code"
-msgstr "공급업체 상품 코드"
+msgstr "공급업체 품목 코드"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_name
 msgid "Vendor Product Name"
-msgstr "공급업체 상품 이름"
+msgstr "공급업체 품목명"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__name
 msgid "Vendor of this product"
-msgstr "이 상품의 공급업체"
+msgstr "이 품목의 공급업체"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__seller_ids
@@ -2813,7 +2814,7 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
-"%s 속성의 파생 상품 만들기 모드는 다음 제품에 사용되므로 변경할 수 없습니다. :\n"
+"%s 사양의 파생 품목 만들기 모드는 다음 품목에 사용되므로 변경할 수 없습니다. :\n"
 "%s"
 
 #. module: product
@@ -2822,19 +2823,19 @@ msgstr ""
 msgid ""
 "You cannot change the attribute of the value %s because it is used on the "
 "following products:%s"
-msgstr "%s 값은 다음 제품에 사용되므로 변경할 수 없습니다. : %s"
+msgstr "%s 값은 다음 품목에 사용되므로 변경할 수 없습니다. : %s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the product of the value %s set on product %s."
-msgstr "%s 값의 상품이 %s 상품에 설정되어 있어 변경할 수 없습니다."
+msgstr "%s 값의 품목이 %s 품목에 설정되어 있어 변경할 수 없습니다."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the value of the value %s set on product %s."
-msgstr "%s 값이 %s 상품에 설정되어 있어 변경할 수 없습니다."
+msgstr "%s 값이 %s 품목에 설정되어 있어 변경할 수 없습니다."
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -2863,7 +2864,7 @@ msgid ""
 "You cannot delete the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
-"%s 속성이 다음 제품에 사용되기 때문에 삭제할 수 없습니다 :\n"
+"%s 사양이 다음 품목에 사용되기 때문에 삭제할 수 없습니다 :\n"
 "%s"
 
 #. module: product
@@ -2873,7 +2874,7 @@ msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
 "%s"
 msgstr ""
-"%s 값이 다음 제품에 사용되기 때문에 삭제할 수 없습니다 :\n"
+"%s 값이 다음 품목에 사용되기 때문에 삭제할 수 없습니다 :\n"
 "%s"
 
 #. module: product
@@ -2889,14 +2890,14 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete this product category, it is the default generic category."
-msgstr ""
+msgstr "이 품목 카테고리는 일반적인 기본 카테고리이므로 삭제할 수 없습니다."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
-msgstr "%s 속성을 %s 상품에서 %s 상품으로 이동할 수 없습니다."
+msgstr "%s 사양을 %s 품목에서 %s 품목으로 이동할 수 없습니다."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2913,7 +2914,7 @@ msgstr "값에서 관련 파생을 갱신할 수 없습니다. 파생에서 관�
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
-msgstr "판매 또는 구매하는 모든 제품을 정의해야 합니다. 저장 가능한 제품이든 소모품이든 서비스든 상관 없습니다."
+msgstr "판매 또는 구매하는 모든 품목을 정의해야 합니다. 저장 가능한 품목이든 소모품이든 서비스든 상관 없습니다."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
@@ -2923,9 +2924,9 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
-"판매 또는 구매하는 모든 제품을 정의해야합니다. \n"
-"                 저장 가능한 제품이든 소모품이든 서비스든 상관 없습니다. \n"
-"                 제품 양식에는 판매 절차를 단순화하기 위한 정보가 포함되어 있습니다 : \n"
+"판매 또는 구매하는 모든 품목을 정의해야합니다. \n"
+"                 저장 가능한 품목이든 소모품이든 서비스든 상관 없습니다. \n"
+"                 품목 양식에는 판매 절차를 단순화하기 위한 정보가 포함되어 있습니다 : \n"
 "                 가격, 견적서에 포함된 노트, 회계 데이터, 조달 방법 등."
 
 #. module: product
@@ -2936,8 +2937,8 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
-"물리적 상품이든, 소모품이든, 고객에게 제공하는 서비스이든, \n"
-"                 판매하는 모든 상품에 대해 상품을 정의해야 합니다.\n"
+"물리적 품목이든, 소모품이든, 고객에게 제공하는 서비스이든, \n"
+"                 판매하는 모든 품목에 대해 품목을 정의해야 합니다.\n"
 "                 상품 양식에는 판매 절차를 단순화하는 정보가 포함되어 있습니다 :\n"
 "                  가격, 견적서의 주석, 회계 데이터, 조달 방법 등."
 
@@ -2972,7 +2973,7 @@ msgstr "당"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "product"
-msgstr "상품"
+msgstr "품목"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.view_partner_property_form
@@ -2982,7 +2983,7 @@ msgstr "모기업"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template."
-msgstr "상품 서식."
+msgstr "품목 양식."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
