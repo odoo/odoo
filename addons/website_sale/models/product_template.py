@@ -30,7 +30,7 @@ class ProductTemplate(models.Model):
     website_size_x = fields.Integer('Size X', default=1)
     website_size_y = fields.Integer('Size Y', default=1)
     website_ribbon_id = fields.Many2one('product.ribbon', string='Ribbon')
-    website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce",
+    website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce, sorted from the higher to the lower",
                                       default=lambda self: self._default_website_sequence(), copy=False)
     public_categ_ids = fields.Many2many(
         'product.public.category', relation='product_public_category_product_template_rel',
