@@ -43,6 +43,30 @@
         </field>
     </record>
 
+    <record id="enable_profiling_wizard" model="ir.ui.view">
+        <field name="name">Enable profiling</field>
+        <field name="model">base.enable.profiling.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Enable profiling">
+                <div class="alert alert-warning" role="alert">
+                    <h3>Profiling is currently disabled.</h3>
+                    Profiling is a developer feature that should be used with caution on production database.
+                    It may add some load on the server, and potentially make it less responsive.
+                    Enabling the profiling here allows all users to activate profiling on their session.
+                    Profiling can be disabled at any moment in the settings.
+                </div>
+                <group>
+                    <field name="duration"/>
+                    <field name="expiration"/>
+                </group>
+                <footer>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    <button string="Enable profiling" type="object" name="submit" class="btn btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
     <record id="action_menu_ir_profile" model="ir.actions.act_window">
         <field name="name">Ir profile</field>
         <field name="type">ir.actions.act_window</field>
