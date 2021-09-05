@@ -1,8 +1,10 @@
-/** @odoo-module **/
+odoo.define('mrp.mrp_workorder_popover', function (require) {
+'use strict';
 
-import PopoverWidget from 'stock.popover_widget';
-import fieldRegistry from 'web.field_registry';
-import { _t } from 'web.core';
+var PopoverWidget = require('stock.popover_widget');
+var fieldRegistry = require('web.field_registry');
+var core = require('web.core');
+var _t = core._t;
 
 
 /**
@@ -45,4 +47,5 @@ var MrpWorkorderPopover = PopoverWidget.extend({
 
 fieldRegistry.add('mrp_workorder_popover', MrpWorkorderPopover);
 
-export default MrpWorkorderPopover;
+return MrpWorkorderPopover;
+});

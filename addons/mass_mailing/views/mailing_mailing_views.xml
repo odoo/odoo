@@ -174,7 +174,6 @@
                                         <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
                                         <field name="contact_list_ids" widget="many2many_tags"
                                             placeholder="Select mailing lists..." class="oe_inline"
-                                            context="{'form_view_ref': 'mass_mailing.mailing_list_view_form_simplified'}"
                                             attrs="{
                                                 'required':[('mailing_model_name','=','mailing.list')],
                                                 'readonly': [('state', 'in', ('sending', 'done'))]
@@ -549,9 +548,10 @@
             }</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a Mailing
+                Create a new mailing
               </p><p>
-                Design a striking email, define recipients and track its results.
+                You don't need to import your mailing lists, you can easily
+                send emails<br/> to any contact saved in other Odoo apps.
               </p>
             </field>
         </record>

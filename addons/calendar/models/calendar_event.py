@@ -3,18 +3,19 @@
 
 from datetime import timedelta
 import math
+from uuid import uuid4
 import logging
 import pytz
+from werkzeug.urls import url_join
 
-from odoo import api, fields, models, Command
-from odoo.osv.expression import AND
+from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.calendar.models.calendar_attendee import Attendee
 from odoo.addons.calendar.models.calendar_recurrence import weekday_to_field, RRULE_TYPE_SELECTION, END_TYPE_SELECTION, MONTH_BY_SELECTION, WEEKDAY_SELECTION, BYDAY_SELECTION
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
 from odoo.tools import pycompat, html2plaintext, is_html_empty
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, AccessError
 
 _logger = logging.getLogger(__name__)
 
@@ -79,9 +80,25 @@ class Meeting(models.Model):
         """ When active_model is res.partner, the current partners should be attendees """
         partners = self.env.user.partner_id
         active_id = self._context.get('active_id')
-        if self._context.get('active_model') == 'res.partner' and active_id and active_id not in partners.ids:
+        if self._context.get('active_model') == 'res.partner' and active_id:
+            if active_id not in partners.ids:
                 partners |= self.env['res.partner'].browse(active_id)
         return partners
+
+    @api.model
+    def _default_attendee_ids(self):
+        """ Automatically add the current partner when creating an event if there is none
+        (happens when we quickcreate an event)"""
+        return self._attendees_values([(4, self.env.user.partner_id.id)])
+
+    @api.model
+    def _default_videocall_location(self):
+        if self.env.context.get('calendar_no_videocall'):
+            return False
+        jitsi_url = self.env['ir.config_parameter'].sudo().get_param('website_jitsi.jitsi_server_domain', 'meet.jit.si')
+        if not jitsi_url.startswith('http'):
+            jitsi_url = 'https://' + jitsi_url
+        return url_join(jitsi_url, 'odoo-%s' % (uuid4().hex[:12]))
 
     # description
     name = fields.Char('Meeting Subject', required=True)
@@ -90,7 +107,7 @@ class Meeting(models.Model):
     partner_id = fields.Many2one(
         'res.partner', string='Scheduled by', related='user_id.partner_id', readonly=True)
     location = fields.Char('Location', tracking=True, help="Location of Event")
-    videocall_location = fields.Char('Meeting URL')
+    videocall_location = fields.Char('Join Video Call', default=_default_videocall_location)
     # visibility
     privacy = fields.Selection(
         [('public', 'Public'),
@@ -145,7 +162,7 @@ class Meeting(models.Model):
     activity_ids = fields.One2many('mail.activity', 'calendar_event_id', string='Activities')
     # attendees
     attendee_ids = fields.One2many(
-        'calendar.attendee', 'event_id', 'Participant')
+        'calendar.attendee', 'event_id', 'Participant', default=_default_attendee_ids)
     attendee_status = fields.Selection(
         Attendee.STATE_SELECTION, string='Attendee Status', compute='_compute_attendee')
     partner_ids = fields.Many2many(
@@ -199,8 +216,6 @@ class Meeting(models.Model):
     weekday = fields.Selection(WEEKDAY_SELECTION, compute='_compute_recurrence', readonly=False)
     byday = fields.Selection(BYDAY_SELECTION, compute='_compute_recurrence', readonly=False)
     until = fields.Date(compute='_compute_recurrence', readonly=False)
-    # UI Fields.
-    display_description = fields.Boolean(compute='_compute_display_description')
 
     def _compute_is_highlighted(self):
         if self.env.context.get('active_model') == 'res.partner':
@@ -266,16 +281,11 @@ class Meeting(models.Model):
         for event in self:
             # Round the duration (in hours) to the minute to avoid weird situations where the event
             # stops at 4:19:59, later displayed as 4:19.
-            event.stop = event.start and event.start + timedelta(minutes=round((event.duration or 1.0) * 60))
+            event.stop = event.start + timedelta(minutes=round((event.duration or 1.0) * 60))
             if event.allday:
                 event.stop -= timedelta(seconds=1)
 
     def _inverse_dates(self):
-        """ This method is used to set the start and stop values of all day events.
-            The calendar view needs date_start and date_stop values to display correctly the allday events across
-            several days. As the user edit the {start,stop}_date fields when allday is true,
-            this inverse method is needed to update the  start/stop value and have a relevant calendar view.
-        """
         for meeting in self:
             if meeting.allday:
 
@@ -340,11 +350,6 @@ class Meeting(models.Model):
             else:
                 event.update(false_values)
 
-    @api.depends('description')
-    def _compute_display_description(self):
-        for event in self:
-            event.display_description = not is_html_empty(event.description)
-
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
@@ -356,7 +361,7 @@ class Meeting(models.Model):
             for vals in vals_list
         ]
 
-        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'res_model', 'partner_ids'])
+        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'res_model'])
         meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
         # get list of models ids and filter out None values directly
         model_ids = list(filter(bool, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
@@ -383,10 +388,8 @@ class Meeting(models.Model):
                     activity_vals['user_id'] = user_id
                 values['activity_ids'] = [(0, 0, activity_vals)]
 
-        # Automatically add the current partner when creating an event if there is none (happens when we quickcreate an event)
-        default_partners_ids = defaults.get('partner_ids') or ([(4, self.env.user.partner_id.id)])
         vals_list = [
-            dict(vals, attendee_ids=self._attendees_values(vals.get('partner_ids', default_partners_ids))) if not vals.get('attendee_ids') else vals
+            dict(vals, attendee_ids=self._attendees_values(vals['partner_ids'])) if 'partner_ids' in vals else vals
             for vals in vals_list
         ]
         recurrence_fields = self._get_recurrent_fields()
@@ -434,20 +437,14 @@ class Meeting(models.Model):
             public = [event for event in events if event.get('privacy') != 'private']
             return private, public
 
-        def split_visibility(events):
+        def my_events(events):
             """
             :param events: list of event values (dict)
             :return: tuple(my events, other events)
             """
-            current_partner_id = self.env.user.partner_id.id
-            visible_events = []
-            other_events = []
-            for event in events:
-                if (event.get('user_id') and event.get('user_id')[0] == self.env.uid) or current_partner_id in event.get('partner_ids'):
-                    visible_events.append(event)
-                else:
-                    other_events.append(event)
-            return visible_events, other_events
+            my = [event for event in events if event.get('user_id') and event.get('user_id')[0] == self.env.uid]
+            others = [event for event in events if not event.get('user_id') or event.get('user_id')[0] != self.env.uid]
+            return my, others
 
         def obfuscated(events):
             """
@@ -460,9 +457,10 @@ class Meeting(models.Model):
                 for field, value in event.items()
             } for event in events]
 
-        events = super().read(fields=fields + ['privacy', 'user_id', 'partner_ids'], load=load)
+        events = super().read(fields=fields + ['privacy', 'user_id'], load=load)
         private_events, public_events = split_privacy(events)
-        my_private_events, others_private_events = split_visibility(private_events)
+        my_private_events, others_private_events = my_events(private_events)
+
         return public_events + my_private_events + obfuscated(others_private_events)
 
     def write(self, values):
@@ -472,18 +470,16 @@ class Meeting(models.Model):
         break_recurrence = values.get('recurrency') is False
 
         update_alarms = False
-        update_time = False
         if 'partner_ids' in values:
             values['attendee_ids'] = self._attendees_values(values['partner_ids'])
             update_alarms = True
 
-        time_fields = self.env['calendar.event']._get_time_fields()
-        if any([values.get(key) for key in time_fields]) or 'alarm_ids' in values:
+        # master arj todo: factorize use of _get_time_fields()
+        if any([values.get(key) for key in self.env['calendar.event']._get_time_fields()]) or 'alarm_ids' in values:
             update_alarms = True
-            update_time = True
 
         if (not recurrence_update_setting or recurrence_update_setting == 'self_only' and len(self) == 1) and 'follow_recurrence' not in values:
-            if any({field: values.get(field) for field in time_fields if field in values}):
+            if any({field: values.get(field) for field in self.env['calendar.event']._get_time_fields() if field in values}):
                 values['follow_recurrence'] = False
 
         previous_attendees = self.attendee_ids
@@ -491,40 +487,28 @@ class Meeting(models.Model):
         recurrence_values = {field: values.pop(field) for field in self._get_recurrent_fields() if field in values}
         if update_recurrence:
             if break_recurrence:
-                # Update this event
                 detached_events |= self._break_recurrence(future=recurrence_update_setting == 'future_events')
             else:
-                future_update_start = self.start if recurrence_update_setting == 'future_events' else None
-                time_values = {field: values.pop(field) for field in time_fields if field in values}
-                if recurrence_update_setting == 'all_events':
-                    # Update all events: we create a new reccurrence and dismiss the existing events
-                    self._rewrite_recurrence(values, time_values, recurrence_values)
-                else:
-                    # Update future events
-                    detached_events |= self._split_recurrence(time_values)
-                    self.recurrence_id._write_events(values, dtstart=future_update_start)
+                update_start = self.start if recurrence_update_setting == 'future_events' else None
+                time_values = {field: values.pop(field) for field in self.env['calendar.event']._get_time_fields() if field in values}
+                if not update_start and (time_values or recurrence_values):
+                    raise UserError(_("Updating All Events is not allowed when dates or time is modified. You can only update one particular event and following events."))
+                detached_events |= self._split_recurrence(time_values)
+                self.recurrence_id._write_events(values, dtstart=update_start)
         else:
             super().write(values)
             self._sync_activities(fields=values.keys())
 
-        # We reapply recurrence for future events and when we add a rrule and 'recurrency' == True on the event
-        if recurrence_update_setting not in ['self_only', 'all_events'] and not break_recurrence:
+        if recurrence_update_setting != 'self_only' and not break_recurrence:
             detached_events |= self._apply_recurrence_values(recurrence_values, future=recurrence_update_setting == 'future_events')
 
         (detached_events & self).active = False
         (detached_events - self).with_context(archive_on_error=True).unlink()
         if not self.env.context.get('dont_notify') and update_alarms:
             self._setup_alarms()
-        attendee_update_events = self.filtered(lambda ev: ev.user_id != self.env.user)
-        if update_time and attendee_update_events:
-            # Another user update the event time fields. It should not be auto accepted for the organizer.
-            # This prevent weird behavior when a user modified future events time fields and
-            # the base event of a recurrence is accepted by the organizer but not the following events
-            attendee_update_events.attendee_ids.filtered(lambda att: self.user_id.partner_id == att.partner_id).write({'state': 'needsAction'})
 
         current_attendees = self.filtered('active').attendee_ids
         if 'partner_ids' in values:
-            # we send to all partners and not only the new ones
             (current_attendees - previous_attendees)._send_mail_to_attendees(
                 self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False)
             )
@@ -546,15 +530,10 @@ class Meeting(models.Model):
         grouped_fields = set(group_field.split(':')[0] for group_field in groupby)
         private_fields = grouped_fields - self._get_public_fields()
         if not self.env.su and private_fields:
-            # display public and confidential events
-            domain = AND([domain, ['|', ('privacy', '!=', 'private'), ('user_id', '=', self.env.user.id)]])
-            self.env['bus.bus'].sendone(
-                (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
-                {'type': 'simple_notification', 'title': _('Private Event Excluded'),
-                 'message': _('Grouping by %s is not allowed on private events.',
-                              ', '.join([self._fields[field_name].string for field_name in private_fields]))}
-            )
-            return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+            raise AccessError(_(
+                "Grouping by %s is not allowed.",
+                ', '.join([self._fields[field_name].string for field_name in private_fields])
+            ))
         return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def unlink(self):
@@ -568,20 +547,6 @@ class Meeting(models.Model):
         # Notify the concerned attendees (must be done after removing the events)
         self.env['calendar.alarm_manager']._notify_next_alarm(partner_ids)
         return result
-
-    def copy(self, default=None):
-        """When an event is copied, the attendees should be recreated to avoid sharing the same attendee records
-         between copies
-         """
-        self.ensure_one()
-        if not default:
-            default = {}
-        # We need to make sure that the attendee_ids are recreated with new ids to avoid sharing attendees between events
-        # The copy should not have the same attendee status than the original event
-        default.update(partner_ids=[Command.set([])], attendee_ids=[Command.set([])])
-        copied_event = super().copy(default)
-        copied_event.write({'partner_ids': [(Command.set(self.partner_ids.ids))]})
-        return copied_event
 
     def _attendees_values(self, partner_commands):
         """
@@ -639,25 +604,17 @@ class Meeting(models.Model):
     def action_open_composer(self):
         if not self.partner_ids:
             raise UserError(_("There are no attendees on these events"))
-        template_id = self.env['ir.model.data']._xmlid_to_res_id('calendar.calendar_template_meeting_update', raise_if_not_found=False)
-        # The mail is sent with datetime corresponding to the sending user TZ
-        composition_mode = self.env.context.get('composition_mode', 'comment')
         compose_ctx = dict(
-            default_composition_mode=composition_mode,
+            default_composition_mode='mass_mail',
+            default_subject=_("Event update"),
             default_model='calendar.event',
             default_res_ids=self.ids,
-            default_use_template=bool(template_id),
-            default_template_id=template_id,
-            default_partner_ids=self.partner_ids.ids,
-            mail_tz=self.env.user.tz,
         )
         return {
-            'type': 'ir.actions.act_window',
             'name': _('Contact Attendees'),
+            'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
-            'views': [(False, 'form')],
-            'view_id': False,
             'target': 'new',
             'context': compose_ctx,
         }
@@ -669,27 +626,6 @@ class Meeting(models.Model):
         partner = self.env['res.partner'].browse(partner_id)
         if partner not in self.partner_ids:
             self.write({'partner_ids': [(4, partner.id)]})
-
-    def action_mass_deletion(self, recurrence_update_setting):
-        self.ensure_one()
-        if recurrence_update_setting == 'all_events':
-            events = self.recurrence_id.calendar_event_ids
-            self.recurrence_id.unlink()
-            events.unlink()
-        elif recurrence_update_setting == 'future_events':
-            future_events = self.recurrence_id.calendar_event_ids.filtered(lambda ev: ev.start >= self.start)
-            future_events.unlink()
-
-    def action_mass_archive(self, recurrence_update_setting):
-        """
-        The aim of this action purpose is to be called from sync calendar module when mass deletion is not possible.
-        """
-        self.ensure_one()
-        if recurrence_update_setting == 'all_events':
-            self.recurrence_id.calendar_event_ids.write({'active': False})
-        elif recurrence_update_setting == 'future_events':
-            detached_events = self.recurrence_id._stop_at(self)
-            detached_events.write({'active': False})
 
     # ------------------------------------------------------------
     # MAILING
@@ -790,16 +726,11 @@ class Meeting(models.Model):
 
         :return: detached events
         """
-        self.ensure_one()
         if not time_values:
             return self.browse()
-        if self.follow_recurrence and self.recurrency:
-            previous_week_day_field = weekday_to_field(self._get_start_date().weekday())
-        else:
-            # When we try to change recurrence values of an event not following the recurrence, we get the parameters from
-            # the base_event
-            previous_week_day_field = weekday_to_field(self.recurrence_id.base_event_id._get_start_date().weekday())
-        self.write({**time_values})
+
+        previous_week_day_field = weekday_to_field(self._get_start_date().weekday())
+        self.write(time_values)
         return self._apply_recurrence_values({
             previous_week_day_field: False,
             **self._get_recurrence_params(),
@@ -824,79 +755,12 @@ class Meeting(models.Model):
         recurrences_to_unlink.with_context(archive_on_error=True).unlink()
         return detached_events - self
 
-    def _rewrite_recurrence(self, values, time_values, recurrence_values):
-        """ Recreate the whole recurrence when all recurrent events must be moved
-        time_values corresponds to date times for one specific event. We need to update the base_event of the recurrence
-        and reapply the recurrence later. All exceptions are lost.
-        """
-        self.ensure_one()
-        base_event = self.recurrence_id.base_event_id
-        if not base_event:
-            raise UserError(_("You can't update a recurrence without base event."))
-        [base_time_values] = self.recurrence_id.base_event_id.read(['start', 'stop', 'allday'])
-        update_dict = {}
-        start_update = fields.Datetime.to_datetime(time_values.get('start'))
-        stop_update = fields.Datetime.to_datetime(time_values.get('stop'))
-        # Convert the base_event_id hours according to new values: time shift
-        if start_update or stop_update:
-            if start_update:
-                start = base_time_values['start'] + (start_update - self.start)
-                stop = base_time_values['stop'] + (start_update - self.start)
-                start_date = base_time_values['start'].date() + (start_update.date() - self.start.date())
-                stop_date = base_time_values['stop'].date() + (start_update.date() - self.start.date())
-                update_dict.update({'start': start, 'start_date': start_date, 'stop': stop, 'stop_date': stop_date})
-            if stop_update:
-                if not start_update:
-                    # Apply the same shift for start
-                    start = base_time_values['start'] + (stop_update - self.stop)
-                    start_date = base_time_values['start_date'] + (stop_update.date() - self.stop.date())
-                    update_dict.update({'start': start, 'start_date': start_date})
-                stop = base_time_values['stop'] + (stop_update - self.stop)
-                stop_date = base_time_values['stop'].date() + (stop_update.date() - self.stop.date())
-                update_dict.update({'stop': stop, 'stop_date': stop_date})
-
-        time_values.update(update_dict)
-        if time_values or recurrence_values:
-            rec_fields = list(self._get_recurrent_fields())
-            [rec_vals] = base_event.read(rec_fields)
-            old_recurrence_values = {field: rec_vals.pop(field) for field in rec_fields if
-                                     field in rec_vals}
-            base_event.write({**values, **time_values})
-            # Delete all events except the base event and the currently modified
-            expandable_events = self.recurrence_id.calendar_event_ids - (self.recurrence_id.base_event_id + self)
-            self.recurrence_id.with_context(archive_on_error=True).unlink()
-            expandable_events.with_context(archive_on_error=True).unlink()
-            # Make sure to recreate a new recurrence. Needed to prevent sync issues
-            base_event.recurrence_id = False
-            # Recreate all events and the recurrence: override updated values
-            new_values = {
-                **old_recurrence_values,
-                **base_event._get_recurrence_params(),
-                **recurrence_values,
-            }
-            new_values.pop('rrule')
-            detached_events = base_event._apply_recurrence_values(new_values)
-            detached_events.write({'active': False})
-            # archive the current event if all the events were recreated
-            if self != self.recurrence_id.base_event_id and time_values:
-                self.active = False
-        else:
-            # Write on all events. Carefull, it could trigger a lot of noise to Google/Microsoft...
-            self.recurrence_id._write_events(values)
-
     # ------------------------------------------------------------
     # MANAGEMENT
     # ------------------------------------------------------------
 
-    def change_attendee_status(self, status, recurrence_update_setting):
-        self.ensure_one()
-        if recurrence_update_setting == 'all_events':
-            events = self.recurrence_id.calendar_event_ids
-        elif recurrence_update_setting == 'future_events':
-            events = self.recurrence_id.calendar_event_ids.filtered(lambda ev: ev.start >= self.start)
-        else:
-            events = self
-        attendee = events.attendee_ids.filtered(lambda x: x.partner_id == self.env.user.partner_id)
+    def change_attendee_status(self, status):
+        attendee = self.attendee_ids.filtered(lambda x: x.partner_id == self.env.user.partner_id)
         if status == 'accepted':
             return attendee.do_accept()
         if status == 'declined':
@@ -924,18 +788,18 @@ class Meeting(models.Model):
 
         my_attendee = self.attendee_ids.filtered(lambda att: att.partner_id == self.env.user.partner_id)
         if my_attendee:
-            return my_attendee[:1]
+            return my_attendee
 
-        event_checked_attendees = self.env['calendar.filters'].search([
+        event_checked_attendees = self.env['calendar.contacts'].search([
             ('user_id', '=', self.env.user.id),
             ('partner_id', 'in', self.attendee_ids.partner_id.ids),
             ('partner_checked', '=', True)
         ]).mapped('partner_id')
         if self.partner_id in event_checked_attendees and self.partner_id in self.attendee_ids.partner_id:
-            return self.attendee_ids.filtered(lambda attendee: attendee.partner_id == self.partner_id)[:1]
+            return self.attendee_ids.filtered(lambda attendee: attendee.partner_id == self.partner_id)
 
         attendee = self.attendee_ids.filtered(lambda att: att.partner_id in event_checked_attendees and att.state != "needsAction")
-        return attendee[:1]
+        return attendee
 
     def _get_start_date(self):
         """Return the event starting date in the event's timezone.
@@ -946,9 +810,7 @@ class Meeting(models.Model):
             return fields.Date.today()
         if self.recurrence_id.event_tz:
             tz = pytz.timezone(self.recurrence_id.event_tz)
-            # Ensure that all day events date are not calculated around midnight. TZ shift would potentially return bad date
-            start = self.start if not self.allday else self.start.replace(hour=12)
-            return pytz.utc.localize(start).astimezone(tz).date()
+            return pytz.utc.localize(self.start).astimezone(tz).date()
         return self.start.date()
 
     def _range(self):
@@ -1118,5 +980,5 @@ class Meeting(models.Model):
     def _get_public_fields(self):
         return self._get_recurrent_fields() | self._get_time_fields() | self._get_custom_fields() | {
             'id', 'active', 'allday',
-            'duration', 'user_id', 'interval', 'partner_id',
+            'duration', 'user_id', 'interval',
             'count', 'rrule', 'recurrence_id', 'show_as', 'privacy'}

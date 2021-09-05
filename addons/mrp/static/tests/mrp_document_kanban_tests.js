@@ -1,8 +1,9 @@
-/** @odoo-module **/
+odoo.define('mrp.document_kanban_tests', function (require) {
+"use strict";
 
-import MrpDocumentsKanbanView from '@mrp/js/mrp_document_kanban_view';
-import MrpDocumentsKanbanController from '@mrp/js/mrp_documents_kanban_controller';
-import testUtils from 'web.test_utils';
+const MrpDocumentsKanbanView = require('mrp.MrpDocumentsKanbanView');
+const MrpDocumentsKanbanController = require('mrp.MrpDocumentsKanbanController');
+const testUtils = require('web.test_utils');
 
 const createView = testUtils.createView;
 
@@ -164,6 +165,8 @@ QUnit.module('MrpDocumentsKanbanView', {
 
         kanban.destroy();
     });
+});
+
 });
 
 });

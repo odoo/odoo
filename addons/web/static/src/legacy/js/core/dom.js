@@ -157,10 +157,10 @@ var dom = {
         }
     },
     /**
-     * @return {HTMLElement|null}
+     * @return {HTMLElement}
      */
     closestScrollable(el) {
-        return $(el).closestScrollable()[0] || null;
+        return $(el).closestScrollable()[0];
     },
     /**
      * @param {HTMLElement} el
@@ -549,9 +549,6 @@ var dom = {
      * @return {Promise}
      */
     scrollTo(el, options = {}) {
-        if (!el) {
-            throw new Error("The scrollTo function was called without any given element");
-        }
         const $el = $(el);
         const $scrollable = options.$scrollable || $el.parent().closestScrollable();
         // If $scrollable and $el are not in the same document, we can safely

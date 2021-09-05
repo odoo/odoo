@@ -1,10 +1,13 @@
-/** @odoo-module **/
+odoo.define('website_slides/static/src/components/activity/activity.js', function (require) {
+'use strict';
 
-import { Activity } from '@mail/components/activity/activity';
+const { Activity } = require('@mail/components/activity/activity');
 
-import { patch } from 'web.utils';
+const { patch } = require('web.utils');
 
-patch(Activity.prototype, 'website_slides/static/src/components/activity/activity.js', {
+const components = { Activity };
+
+patch(components.Activity.prototype, 'website_slides/static/src/components/activity/activity.js', {
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -34,4 +37,6 @@ patch(Activity.prototype, 'website_slides/static/src/components/activity/activit
         });
         this.trigger('reload');
     },
+});
+
 });

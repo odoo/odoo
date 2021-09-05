@@ -1,9 +1,13 @@
-/** @odoo-module **/
+odoo.define('website_slides.upload_modal', function (require) {
+'use strict';
 
-import { qweb as QWeb, _t } from 'web.core';
-import Dialog from 'web.Dialog';
-import publicWidget from 'web.public.widget';
-import utils from 'web.utils';
+var core = require('web.core');
+var Dialog = require('web.Dialog');
+var publicWidget = require('web.public.widget');
+var utils = require('web.utils');
+
+var QWeb = core.qweb;
+var _t = core._t;
 
 var SlideUploadDialog = Dialog.extend({
     template: 'website.slide.upload.modal',
@@ -666,7 +670,9 @@ publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
     },
 });
 
-export default {
+return {
     SlideUploadDialog: SlideUploadDialog,
     websiteSlidesUpload: publicWidget.registry.websiteSlidesUpload
 };
+
+});

@@ -69,12 +69,11 @@ class Partner(models.Model):
                 attendees_details.append({
                     'id': partner_info[0],
                     'name': partner_info[1],
+                    'color': partner.color,
                     'status': attendee.state,
                     'event_id': attendee.event_id.id,
                     'attendee_id': attendee.id,
                     'is_alone': attendee.event_id.is_organizer_alone and attendee_is_organizer,
-                    # attendees data is sorted according to this key in JS.
-                    'is_organizer': 1 if attendee.partner_id == attendee.event_id.user_id.partner_id else 0,
                 })
         return attendees_details
 
@@ -90,6 +89,7 @@ class Partner(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
         action['context'] = {
             'default_partner_ids': partner_ids,
+            'default_attendee_ids': [(0, 0, {'partner_id': pid}) for pid in partner_ids],
         }
         action['domain'] = ['|', ('id', 'in', self._compute_meeting()[self.id]), ('partner_ids', 'in', self.ids)]
         return action

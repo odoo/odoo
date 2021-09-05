@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-from datetime import datetime
-from unittest.mock import patch
-
-from odoo import Command, fields
-from odoo.addons.mail.models.mail_channel import channel_avatar, group_avatar
+from odoo import Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, Form
 from odoo.tests.common import users
-from odoo.tools import html_escape, mute_logger
-from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import mute_logger
 
 
 @tagged('mail_channel')
@@ -204,27 +198,6 @@ class TestChannelInternals(MailCommon):
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
-    def test_channel_chat_message_post_should_update_last_interest_dt(self):
-        channel_info = self.env['mail.channel'].with_user(self.user_admin).channel_get((self.partner_employee | self.user_admin.partner_id).ids)
-        chat = self.env['mail.channel'].with_user(self.user_admin).browse(channel_info['id'])
-        post_time = fields.Datetime.now()
-        # Mocks the return value of field.Datetime.now(),
-        # so we can see if the `last_interest_dt` is updated correctly
-        with patch.object(fields.Datetime, 'now', lambda: post_time):
-            chat.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
-        channel_partner_employee = self.env['mail.channel.partner'].search([
-            ('partner_id', '=', self.partner_employee.id),
-            ('channel_id', '=', chat.id),
-        ])
-        channel_partner_admin = self.env['mail.channel.partner'].search([
-            ('partner_id', '=', self.partner_admin.id),
-            ('channel_id', '=', chat.id),
-        ])
-        self.assertEqual(channel_partner_employee.last_interest_dt, post_time)
-        self.assertEqual(channel_partner_admin.last_interest_dt, post_time)
-
-    @users('employee')
-    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_channel_recipients_channel(self):
         """ Posting a message on a channel should not send emails """
         channel = self.env['mail.channel'].browse(self.test_channel.ids)
@@ -316,19 +289,6 @@ class TestChannelInternals(MailCommon):
         # `channel_get` should return the existing channel every time the current partner is given
         same_solo_channel_info = self.env['mail.channel'].channel_get(partners_to=self.partner_employee_nomail.ids)
         self.assertEqual(same_solo_channel_info['id'], solo_channel_info['id'])
-
-    # `channel_get` will pin the channel by default and thus last interest will be updated.
-    @users('employee')
-    def test_channel_info_get_should_update_last_interest_dt(self):
-        # create the channel via `channel_get`
-        self.env['mail.channel'].channel_get(partners_to=self.partner_admin.ids)
-
-        retrieve_time = datetime(2021, 1, 1, 0, 0)
-        with patch.object(fields.Datetime, 'now', lambda: retrieve_time):
-            # `last_interest_dt` should be updated again when `channel_get` is called
-            # because `channel_pin` is called.
-            channel_info = self.env['mail.channel'].channel_get(partners_to=self.partner_admin.ids)
-        self.assertEqual(channel_info['last_interest_dt'], retrieve_time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
 
     @users('employee')
     def test_channel_info_seen(self):
@@ -438,40 +398,6 @@ class TestChannelInternals(MailCommon):
         ])
         self.assertEqual(len(messages_2), 1)
         self.assertEqual(messages_1, messages_2)
-
-    def test_channel_should_generate_correct_default_avatar(self):
-        channel = self.env['mail.channel'].create({'name': '', 'uuid': 'test-uuid'})
-        bgcolor = html_escape('hsl(288, 51%, 45%)')  # depends on uuid
-        expceted_avatar_channel = (channel_avatar.replace('fill="#875a7b"', f'fill="{bgcolor}"')).encode()
-        expected_avatar_group = (group_avatar.replace('fill="#875a7b"', f'fill="{bgcolor}"')).encode()
-
-        channel.channel_type = 'group'
-        self.assertEqual(base64.b64decode(channel.avatar_128), expected_avatar_group)
-
-        channel.channel_type = 'channel'
-        self.assertEqual(base64.b64decode(channel.avatar_128), expceted_avatar_channel)
-
-        channel.image_128 = base64.b64encode(("<svg/>").encode())
-        self.assertEqual(channel.avatar_128, channel.image_128)
-
-    def test_channel_write_should_send_notification_if_image_128_changed(self):
-        channel = self.env['mail.channel'].create({'name': '', 'uuid': 'test-uuid'})
-        # do the operation once before the assert to grab the value to expect
-        channel.image_128 = base64.b64encode(("<svg/>").encode())
-        avatar_cache_key = channel._get_avatar_cache_key()
-        channel.image_128 = False
-        self.env['bus.bus'].search([]).unlink()
-        with self.assertBus(
-            [(self.cr.dbname, 'mail.channel', channel.id)],
-            [{
-                "type": "mail.channel_update",
-                "payload": {
-                    "id": channel.id,
-                    "avatarCacheKey": avatar_cache_key,
-                },
-            }]
-        ):
-            channel.image_128 = base64.b64encode(("<svg/>").encode())
 
     def test_multi_company_chat(self):
         self._activate_multi_company()

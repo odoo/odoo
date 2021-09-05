@@ -40,18 +40,16 @@ class SaleOrder(models.Model):
                 'timesheet_count': timesheet_count,
             })
 
-    @api.depends('company_id.project_time_mode_id', 'timesheet_ids', 'company_id.timesheet_encode_uom_id')
+    @api.depends('timesheet_ids', 'company_id.timesheet_encode_uom_id')
     def _compute_timesheet_total_duration(self):
-        if not self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
-            self.update({'timesheet_total_duration': 0})
-            return
-        group_data = self.env['account.analytic.line'].sudo().read_group([
-            ('order_id', 'in', self.ids)
-        ], ['order_id', 'unit_amount'], ['order_id'])
-        timesheet_unit_amount_dict = defaultdict(float)
-        timesheet_unit_amount_dict.update({data['order_id'][0]: data['unit_amount'] for data in group_data})
         for sale_order in self:
-            total_time = sale_order.company_id.project_time_mode_id._compute_quantity(timesheet_unit_amount_dict[sale_order.id], sale_order.timesheet_encode_uom_id)
+            timesheets = sale_order.timesheet_ids if self.user_has_groups('hr_timesheet.group_hr_timesheet_approver') else sale_order.timesheet_ids.filtered(lambda t: t.user_id.id == self.env.uid)
+            total_time = 0.0
+            for timesheet in timesheets:
+                # Timesheets may be stored in a different unit of measure, so first we convert all of them to the reference unit
+                total_time += timesheet.unit_amount * timesheet.product_uom_id.factor_inv
+            # Now convert to the proper unit of measure
+            total_time *= sale_order.timesheet_encode_uom_id.factor
             sale_order.timesheet_total_duration = round(total_time)
 
     def _compute_field_value(self, field):
@@ -270,15 +268,10 @@ class SaleOrderLine(models.Model):
         """
         lines_by_timesheet = self.filtered(lambda sol: sol.product_id and sol.product_id._is_delivered_timesheet())
         domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
-        refund_account_moves = self.order_id.invoice_ids.filtered(lambda am: am.state == 'posted' and am.move_type == 'out_refund').reversed_entry_id
-        timesheet_domain = [
+        domain = expression.AND([domain, [
             '|',
             ('timesheet_invoice_id', '=', False),
-            ('timesheet_invoice_id.state', '=', 'cancel')]
-        if refund_account_moves:
-            credited_timesheet_domain = [('timesheet_invoice_id.state', '=', 'posted'), ('timesheet_invoice_id', 'in', refund_account_moves.ids)]
-            timesheet_domain = expression.OR([timesheet_domain, credited_timesheet_domain])
-        domain = expression.AND([domain, timesheet_domain])
+            ('timesheet_invoice_id.state', '=', 'cancel')]])
         if start_date:
             domain = expression.AND([domain, [('date', '>=', start_date)]])
         if end_date:

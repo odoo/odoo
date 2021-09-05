@@ -6,23 +6,11 @@
     display: flex;
     position: relative;
     flex-flow: column;
-    min-height: 0;
-}
-
-.o_ThreadView_bottomPart {
-    min-height: 0;
-}
-
-.o_ThreadView_channelMemberList {
-    width: $o-mail-chat-sidebar-width;
+    overflow: auto;
 }
 
 .o_ThreadView_composer {
     flex: 0 0 auto;
-}
-
-.o_ThreadView_core {
-    min-width: 0;
 }
 
 .o_ThreadView_alertLoadingFailed {
@@ -55,6 +43,7 @@
 
 .o_ThreadView {
     background-color: gray('100');
+
 }
 
 .o_ThreadView_loadingIcon {

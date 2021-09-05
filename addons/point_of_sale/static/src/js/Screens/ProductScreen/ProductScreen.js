@@ -8,8 +8,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const Registries = require('point_of_sale.Registries');
     const { onChangeOrder, useBarcodeReader } = require('point_of_sale.custom_hooks');
     const { Gui } = require('point_of_sale.Gui');
-    const { isRpcError } = require('point_of_sale.utils');
-    const { useState, onMounted } = owl.hooks;
+    const { useState } = owl.hooks;
     const { parse } = require('web.field_utils');
 
     class ProductScreen extends ControlButtonsMixin(PosComponent) {
@@ -35,10 +34,6 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 triggerAtInput: 'update-selected-orderline',
                 useWithBarcode: true,
             });
-            // Call `reset` when the `onMounted` callback in `NumberBuffer.use` is done.
-            // We don't do this in the `mounted` lifecycle method because it is called before
-            // the callbacks in `onMounted` hook.
-            onMounted(() => NumberBuffer.reset());
             this.state = useState({ numpadMode: 'quantity' });
             this.mobile_pane = this.props.mobile_pane || 'right';
         }
@@ -189,13 +184,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         }
         async _newOrderlineSelected() {
             NumberBuffer.reset();
-            this.state.numpadMode = 'quantity';
         }
         _setValue(val) {
             if (this.currentOrder.get_selected_orderline()) {
                 if (this.state.numpadMode === 'quantity') {
-                    const result = this.currentOrder.get_selected_orderline().set_quantity(val);
-                    if (!result) NumberBuffer.reset();
+                    this.currentOrder.get_selected_orderline().set_quantity(val);
                 } else if (this.state.numpadMode === 'discount') {
                     this.currentOrder.get_selected_orderline().set_discount(val);
                 } else if (this.state.numpadMode === 'price') {
@@ -209,34 +202,9 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             }
         }
         async _barcodeProductAction(code) {
-            let product = this.env.pos.db.get_product_by_barcode(code.base_code);
+            const product = this.env.pos.db.get_product_by_barcode(code.base_code)
             if (!product) {
-                // find the barcode in the backend
-                let foundProductIds = [];
-                try {
-                    foundProductIds = await this.rpc({
-                        model: 'product.product',
-                        method: 'search',
-                        args: [[['barcode', '=', code.base_code]]],
-                        context: this.env.session.user_context,
-                    });
-                } catch (error) {
-                    if (isRpcError(error) && error.message.code < 0) {
-                        return this.showPopup('OfflineErrorPopup', {
-                            title: this.env._t('Network Error'),
-                            body: this.env._t("Product is not loaded. Tried loading the product from the server but there is a network error."),
-                        });
-                    } else {
-                        throw error;
-                    }
-                }
-                if (foundProductIds.length) {
-                    await this.env.pos._addProducts(foundProductIds);
-                    // assume that the result is unique.
-                    product = this.env.pos.db.get_product_by_id(foundProductIds[0]);
-                } else {
-                    return this._barcodeErrorAction(code);
-                }
+                return this._barcodeErrorAction(code);
             }
             const options = await this._getAddProductOptions(product);
             // Do not proceed on adding the product when no options is returned.
@@ -326,18 +294,6 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         async _onClickCustomer() {
             // IMPROVEMENT: This code snippet is very similar to selectClient of PaymentScreen.
             const currentClient = this.currentOrder.get_client();
-            if (currentClient && this.currentOrder.getHasRefundLines()) {
-                this.showPopup('ErrorPopup', {
-                    title: this.env._t("Can't change customer"),
-                    body: _.str.sprintf(
-                        this.env._t(
-                            "This order already has refund lines for %s. We can't change the customer associated to it. Create a new order for the new customer."
-                        ),
-                        currentClient.name
-                    ),
-                });
-                return;
-            }
             const { confirmed, payload: newClient } = await this.showTempScreen(
                 'ClientListScreen',
                 { client: currentClient }

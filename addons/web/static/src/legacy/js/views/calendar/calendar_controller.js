@@ -39,7 +39,6 @@ var CalendarController = AbstractController.extend({
         quickCreate: '_onQuickCreate',
         updateRecord: '_onUpdateRecord',
         viewUpdated: '_onViewUpdated',
-        AttendeeStatus: '_onAttendeeStatus',
     }),
     events: _.extend({}, AbstractController.prototype.events, {
         'click button.o_calendar_button_new': '_onButtonNew',
@@ -248,12 +247,9 @@ var CalendarController = AbstractController.extend({
      * @param {OdooEvent} event
      */
     _onChangeFilter: async function (event) {
-        if (event.data.value !== 'all' && event.target.filter_field) {
-            const domain = [['user_id', '=', this.getSession().uid]];
-            if (event.data.value !== 'check_all') {
-                domain.push([event.target.write_field, '=', parseInt(event.data.value)]);
-            }
-            const existingFilter = await this._rpc({
+        if (event.data.value !== "all" && event.target.filter_field) {
+            const domain = [['user_id', '=', this.getSession().uid], [event.target.write_field, '=', parseInt(event.data.value)]];
+            const contact = await this._rpc({
                 model: event.target.write_model,
                 method: 'search',
                 args: [domain],
@@ -264,7 +260,7 @@ var CalendarController = AbstractController.extend({
             await this._rpc({
                 model: event.target.write_model,
                 method: 'write',
-                args: [existingFilter, val],
+                args: [contact, val],
             });
         }
         if (this.model.changeFilter(event.data) && !event.data.no_reload) {
@@ -275,35 +271,15 @@ var CalendarController = AbstractController.extend({
      * @private
      * @param {OdooEvent} event
      */
-    _onDeleteRecord: async function (event) {
+    _onDeleteRecord: function (event) {
         var self = this;
-        if (event.data.event.record.recurrency) {
-            const recurrenceUpdate = await this._askRecurrenceUpdatePolicy();
-            event.data = Object.assign({}, event.data, {
-                'recurrenceUpdate': recurrenceUpdate,
-            });
-            if (recurrenceUpdate === 'self_only') {
+        Dialog.confirm(this, _t("Are you sure you want to delete this record ?"), {
+            confirm_callback: function () {
                 self.model.deleteRecords([event.data.id], self.modelName).then(function () {
-                self.reload();
-            });
-            } else {
-                return this._rpc({
-                    model: self.modelName,
-                    method: 'action_mass_deletion',
-                     args: [[event.data.id], recurrenceUpdate],
-                }).then( function () {
                     self.reload();
                 });
             }
-        } else {
-            Dialog.confirm(this, _t("Are you sure you want to delete this record ?"), {
-                confirm_callback: function () {
-                    self.model.deleteRecords([event.data.id], self.modelName).then(function () {
-                        self.reload();
-                    });
-                }
-            });
-        }
+        });
     },
     /**
      * @private
@@ -375,7 +351,7 @@ var CalendarController = AbstractController.extend({
             return;
         }
 
-        const title = _t('New Event');
+        const title = _t('New Event')
         if (this.eventOpenPopup) {
             if (this.previousOpen) { this.previousOpen.close(); }
             this.previousOpen = new dialogs.FormViewDialog(self, {
@@ -510,29 +486,6 @@ var CalendarController = AbstractController.extend({
         const title = `${this.displayName} (${event.data.title})`;
         return this.updateControlPanel({ title });
     },
-
-    /**
-     * Update Attendee status in batch for recurrent events
-     * @private
-     * @param {OdooEvent} event
-     */
-     _onAttendeeStatus: async function(event) {
-         const self = this;
-         let recurrenceUpdate = false;
-         if (event.data.record.recurrency) {
-            recurrenceUpdate = await this._askRecurrenceUpdatePolicy();
-            event.data = Object.assign({}, event.data, {
-                'recurrenceUpdate': recurrenceUpdate,
-            });
-         }
-        return this._rpc({
-            model: self.modelName,
-            method: 'change_attendee_status',
-            args: [[event.data.id], event.data.selectedStatus, recurrenceUpdate],
-        }).then( function () {
-            self.reload();
-        });
-    }
 });
 
 return CalendarController;

@@ -20,7 +20,7 @@ class TestTaskDependencies(TestProjectCommon):
         })
         cls.task_3 = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs UserTask 2',
-            'user_ids': cls.user_projectuser,
+            'user_id': cls.user_projectuser.id,
             'project_id': cls.project_pigs.id,
         })
 
@@ -97,8 +97,7 @@ class TestTaskDependencies(TestProjectCommon):
         self.env['res.config.settings'].create({
             'group_project_task_dependencies': True
         }).execute()
-        # `depend_on_ids` is tracked
-        self.task_1.with_context(mail_notrack=True).write({
+        self.task_1.write({
             'depend_on_ids': [Command.link(self.task_2.id)]
         })
         self.cr.precommit.clear()

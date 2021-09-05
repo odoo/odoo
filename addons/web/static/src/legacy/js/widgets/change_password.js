@@ -39,15 +39,32 @@ var ChangePassword = AbstractAction.extend({
                 })
                 .then(function (result) {
                     if (result.error) {
-                        self.displayNotification({
-                            message: result.error,
-                            type: 'danger'
-                        });
+                        self._display_error(result);
                     } else {
-                        self.do_action('logout');
+                    self.do_action('logout');
                     }
                 });
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Displays the error in a dialog
+     *
+     * @private
+     * @param {Object} error
+     * @param {string} error.error
+     * @param {string} error.title
+     */
+    _display_error: function (error) {
+        return new Dialog(this, {
+            size: 'medium',
+            title: error.title,
+            $content: $('<div>').html(error.error)
+        }).open();
     },
 });
 

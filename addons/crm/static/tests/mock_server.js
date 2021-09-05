@@ -1,6 +1,7 @@
-/** @odoo-module **/
+odoo.define('crm.MockServer', function (require) {
+    'use strict';
 
-    import MockServer from 'web.MockServer';
+    var MockServer = require('web.MockServer');
 
     MockServer.include({
         //--------------------------------------------------------------------------
@@ -52,3 +53,4 @@
             return this._super(...arguments);
         },
     });
+});

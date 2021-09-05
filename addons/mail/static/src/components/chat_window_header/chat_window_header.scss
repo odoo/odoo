@@ -64,10 +64,7 @@
 .o_ChatWindowHeader {
     background-color: $o-brand-odoo;
     color: $white;
-
-    &:not(.o-mobile) {
-        cursor: pointer;
-    }
+    cursor: pointer;
 
     &:not(.o-mobile) {
 
@@ -86,12 +83,8 @@
 
 }
 
-.o_ChatWindowHeader_command {
-    cursor: pointer;
-
-    &.o-mobile {
-        font-size: 1.3rem;
-    }
+.o_ChatWindowHeader_command.o-mobile {
+    font-size: 1.3rem;
 }
 
 .o_ChatWindowHeader_name {

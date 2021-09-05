@@ -1,8 +1,9 @@
-/** @odoo-module **/
+odoo.define('snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.js', function (require) {
+'use strict';
 
-import { registerMessagingComponent } from '@mail/utils/messaging_component';
+const { registerMessagingComponent } = require('@mail/utils/messaging_component');
 
-import Dialog from 'web.OwlDialog';
+const Dialog = require('web.OwlDialog');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -93,4 +94,6 @@ Object.assign(SnailmailErrorDialog, {
 
 registerMessagingComponent(SnailmailErrorDialog);
 
-export default SnailmailErrorDialog;
+return SnailmailErrorDialog;
+
+});

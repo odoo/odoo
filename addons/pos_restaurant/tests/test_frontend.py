@@ -103,7 +103,7 @@ class TestFrontend(odoo.tests.HttpCase):
         cash_journal = self.env['account.journal'].create({
             'name': 'Cash Test',
             'code': 'TCJ',
-            'type': 'cash',
+            'type': 'sale',
             'company_id': main_company.id
             })
 
@@ -114,7 +114,8 @@ class TestFrontend(odoo.tests.HttpCase):
                 'name': 'Cash restaurant',
                 'split_transactions': True,
                 'receivable_account_id': account_receivable.id,
-                'journal_id': cash_journal.id,
+                'is_cash_count': True,
+                'cash_journal_id': cash_journal.id,
             })],
         })
 
@@ -173,6 +174,11 @@ class TestFrontend(odoo.tests.HttpCase):
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour', login="admin")
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'ControlButtonsTour', login="admin")
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'FloorScreenTour', login="admin")
+
+    def test_03_order_management_integration(self):
+        self.pos_config.write({'manage_orders': True})
+        self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResOrderManagementScreenTour', login="admin")
 
     def test_04_ticket_screen(self):
         self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)

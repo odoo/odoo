@@ -1,8 +1,9 @@
-/** @odoo-module **/
+odoo.define('hr/static/src/models/employee/employee.js', function (require) {
+'use strict';
 
-import { registerNewModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
-import { insert, unlink } from '@mail/model/model_field_command';
+const { registerNewModel } = require('@mail/model/model_core');
+const { attr, one2one } = require('@mail/model/model_field');
+const { insert, unlink } = require('@mail/model/model_field_command');
 
 function factory(dependencies) {
 
@@ -202,3 +203,5 @@ function factory(dependencies) {
 }
 
 registerNewModel('hr.employee', factory);
+
+});

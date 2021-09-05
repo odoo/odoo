@@ -10,7 +10,6 @@ var options = require('web_editor.snippets.options');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 const SmoothScrollOnDrag = require('web/static/src/js/core/smooth_scroll_on_drag.js');
 const {getCSSVariableValue} = require('web_editor.utils');
-const QWeb = core.qweb;
 
 var _t = core._t;
 
@@ -134,6 +133,7 @@ var SnippetEditor = Widget.extend({
     custom_events: {
         'option_update': '_onOptionUpdate',
         'user_value_widget_request': '_onUserValueWidgetRequest',
+        'snippet_option_update': '_onSnippetOptionUpdate',
         'snippet_option_visibility_update': '_onSnippetOptionVisibilityUpdate',
     },
     layoutElementsSelector: [
@@ -226,11 +226,7 @@ var SnippetEditor = Widget.extend({
         }
 
         var _animationsCount = 0;
-        var postAnimationCover = _.throttle(() => {
-            this.trigger_up('cover_update', {
-                overlayVisible: true,
-            });
-        }, 100);
+        var postAnimationCover = _.throttle(() => this.cover(), 100);
         this.$target.on('transitionstart.snippet_editor, animationstart.snippet_editor', () => {
             // We cannot rely on the fact each transition/animation start will
             // trigger a transition/animation end as the element may be removed
@@ -430,24 +426,11 @@ var SnippetEditor = Widget.extend({
      */
     removeSnippet: async function (shouldRecordUndo = true) {
         this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
-
-        // First enable a surrounding snippet (or just disable the current
-        // snippet if there is nothing around).
-        const parent = this.$target[0].parentElement;
-        const nextSibling = this.$target[0].nextElementSibling;
-        const previousSibling = this.$target[0].previousElementSibling;
-        await new Promise(resolve => {
-            this.trigger_up('activate_snippet', {
-                $snippet: $(previousSibling || nextSibling || parent),
-                onSuccess: () => resolve(),
-            });
-        });
-
-        // If it is an invisible element, we must close it before deleting it
-        // (e.g. modal).
+        this.toggleOverlay(false);
+        this.toggleOptions(false);
+        // If it is an invisible element, we must close it before deleting it (e.g. modal)
         await this.toggleTargetVisibility(!this.$target.hasClass('o_snippet_invisible'));
 
-        // Call the onRemove of all internal options
         await new Promise(resolve => {
             this.trigger_up('call_for_each_child_snippet', {
                 $snippet: this.$target,
@@ -460,7 +443,13 @@ var SnippetEditor = Widget.extend({
             });
         });
 
-        // Actually remove the snippet and its option UI.
+        const parent = this.$target[0].parentElement;
+        const nextSibling = this.$target[0].nextElementSibling;
+        const previousSibling = this.$target[0].previousElementSibling;
+        this.trigger_up('activate_snippet', {
+            $snippet: $(previousSibling || nextSibling || parent)
+        });
+
         var $parent = this.$target.parent();
         this.$target.find('*').addBack().tooltip('dispose');
         this.$target.remove();
@@ -473,8 +462,6 @@ var SnippetEditor = Widget.extend({
             }
         }
 
-        // Potentially remove ancestors (like when removing the last column of a
-        // snippet).
         if ($parent.closest(':data("snippet-editor")').length) {
             const isEmptyAndRemovable = ($el, editor) => {
                 editor = editor || $el.data('snippet-editor');
@@ -503,19 +490,17 @@ var SnippetEditor = Widget.extend({
             }
         }
 
-        // Clean editor if they are image or table in deleted content
+        // clean editor if they are image or table in deleted content
         this.$body.find('.note-control-selection').hide();
         this.$body.find('.o_table_handler').remove();
 
         this.trigger_up('snippet_removed');
         this.destroy();
         $parent.trigger('content_changed');
-
         // TODO Page content changed, some elements may need to be adapted
         // according to it. While waiting for a better way to handle that this
         // window trigger will handle most cases.
         $(window).trigger('resize');
-
         if (shouldRecordUndo) {
             this.options.wysiwyg.odooEditor.historyStep();
         }
@@ -551,50 +536,37 @@ var SnippetEditor = Widget.extend({
         this.cover();
     },
     /**
-     * Updates the UI of the editor (+ parent) options and call onFocus/onBlur
-     * if necessary. The UI jquery elements to display are returned, it is up
-     * to the caller to actually display them or not.
+     * Displays/Hides the editor (+ parent) options and call onFocus/onBlur if
+     * necessary.
      *
      * @param {boolean} show
-     * @returns {Promise<jQuery[]>}
      */
-    async toggleOptions(show) {
+    toggleOptions: function (show) {
         if (!this.$el) {
-            return [];
+            return;
         }
 
         if (this.areOptionsShown() === show) {
-            return this._customize$Elements;
+            return;
         }
-
-        // All onFocus before all ui updates as the onFocus of an option might
-        // affect another option (like updating the $target)
-        const editorUIsToUpdate = [];
-        const focusOrBlur = show
-            ? async (editor, options) => {
-                for (const opt of options) {
-                    await opt.onFocus();
-                }
-                editorUIsToUpdate.push(editor);
-            }
-            : async (editor, options) => {
-                for (const opt of options) {
-                    await opt.onBlur();
-                }
-            };
-        for (const $el of this._customize$Elements) {
+        this.trigger_up('update_customize_elements', {
+            customize$Elements: show ? this._customize$Elements : [],
+        });
+        this._customize$Elements.forEach(($el, i) => {
             const editor = $el.data('editor');
-            const styles = _.chain(editor.styles)
-                .values()
-                .sortBy('__order')
-                .value();
-
-            await focusOrBlur(editor, styles);
-        }
-        await Promise.all(editorUIsToUpdate.map(editor => editor.updateOptionsUI()));
-        await Promise.all(editorUIsToUpdate.map(editor => editor.updateOptionsUIVisibility()));
-
-        return this._customize$Elements;
+            const styles = _.chain(editor.styles).values().sortBy('__order')
+                            .value();
+            // TODO ideally: should account the async parts of updateUI and
+            // allow async parts in onFocus/onBlur.
+            if (show) {
+                // All onFocus before all updateUI as the onFocus of an option
+                // might affect another option (like updating the $target)
+                styles.forEach(style => style.onFocus());
+                styles.forEach(style => style.updateUI());
+            } else {
+                styles.forEach(style => style.onBlur());
+            }
+        });
     },
     /**
      * @param {boolean} [show]
@@ -616,33 +588,6 @@ var SnippetEditor = Widget.extend({
         if (this.$el && !this.scrollingTimeout) {
             this.$el.toggleClass('o_overlay_hidden', !show && this.isShown());
         }
-    },
-    /**
-     * Updates the UI of all the options according to the status of their
-     * associated editable DOM. This does not take care of options *visibility*.
-     * For that @see updateOptionsUIVisibility, which should called when the UI
-     * is up-to-date thanks to the function here, as the visibility depends on
-     * the UI's status.
-     *
-     * @returns {Promise}
-     */
-    async updateOptionsUI() {
-        const proms = Object.values(this.styles).map(opt => {
-            return opt.updateUI({noVisibility: true});
-        });
-        return Promise.all(proms);
-    },
-    /**
-     * Updates the visibility of the UI of all the options according to the
-     * status of their associated dependencies and related editable DOM status.
-     *
-     * @returns {Promise}
-     */
-    async updateOptionsUIVisibility() {
-        const proms = Object.values(this.styles).map(opt => {
-            return opt.updateUIVisibility();
-        });
-        return Promise.all(proms);
     },
     /**
      * Clones the current snippet.
@@ -1052,6 +997,39 @@ var SnippetEditor = Widget.extend({
      * @private
      * @param {OdooEvent} ev
      */
+    _onSnippetOptionUpdate: async function (ev) {
+        if (ev.target === this) {
+            return;
+        }
+        ev.stopPropagation();
+        const updateOptionsUI = async () => {
+            const proms1 = Object.keys(this.styles).map(key => {
+                return this.styles[key].updateUI({
+                    noVisibility: true,
+                });
+            });
+            await Promise.all(proms1);
+
+            const proms2 = Object.keys(this.styles).map(key => {
+                return this.styles[key].updateUIVisibility();
+            });
+            await Promise.all(proms2);
+        };
+        // Wait for the current editor's option UI updates and the parent ones
+        await Promise.all([
+            updateOptionsUI(),
+            new Promise(resolve => {
+                this.trigger_up('snippet_option_update', Object.assign({}, ev.data, {
+                    onSuccess: () => resolve(),
+                }));
+            }),
+        ]);
+        ev.data.onSuccess();
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
     _onSnippetOptionVisibilityUpdate: function (ev) {
         ev.data.show = this._toggleVisibilityStatus(ev.data.show);
     },
@@ -1129,6 +1107,7 @@ var SnippetsMenu = Widget.extend({
         'snippet_thumbnail_url_request': '_onSnippetThumbnailURLRequest',
         'reload_snippet_dropzones': '_disableUndroppableSnippets',
         'request_save': '_onSaveRequest',
+        'update_customize_elements': '_onUpdateCustomizeElements',
         'hide_overlay': '_onHideOverlay',
         'block_preview_overlays': '_onBlockPreviewOverlays',
         'unblock_preview_overlays': '_onUnblockPreviewOverlays',
@@ -1765,57 +1744,47 @@ var SnippetsMenu = Widget.extend({
                     return this._createSnippetEditor($snippet).then(resolve);
                 }
                 resolve(null);
-            }).then(async editorToEnable => {
+            }).then(editorToEnable => {
                 if (ifInactiveOptions && this._enabledEditorHierarchy.includes(editorToEnable)) {
                     return editorToEnable;
                 }
 
-                if (!previewMode) {
-                    this._enabledEditorHierarchy = [];
-                    let current = editorToEnable;
-                    while (current && current.$target) {
-                        this._enabledEditorHierarchy.push(current);
-                        current = current.getParent();
-                    }
+                const editorToEnableHierarchy = [];
+                let current = editorToEnable;
+                while (current && current.$target) {
+                    editorToEnableHierarchy.push(current);
+                    current = current.getParent();
                 }
 
                 // First disable all editors...
                 for (let i = this.snippetEditors.length; i--;) {
                     const editor = this.snippetEditors[i];
                     editor.toggleOverlay(false, previewMode);
-                    if (!previewMode && !this._enabledEditorHierarchy.includes(editor)) {
-                        await editor.toggleOptions(false);
+                    if (!previewMode && !editorToEnableHierarchy.includes(editor)) {
+                        editor.toggleOptions(false);
                     }
                 }
                 // ... then enable the right editor or look if some have been
                 // enabled previously by a click
-                let customize$Elements;
                 if (editorToEnable) {
                     editorToEnable.toggleOverlay(true, previewMode);
                     if (!previewMode && !editorToEnable.displayOverlayOptions) {
-                        const parentEditor = this._enabledEditorHierarchy.find(ed => ed.displayOverlayOptions);
+                        const parentEditor = editorToEnableHierarchy.find(ed => ed.displayOverlayOptions);
                         if (parentEditor) {
                             parentEditor.toggleOverlay(true, previewMode);
                         }
                     }
-                    customize$Elements = await editorToEnable.toggleOptions(true);
+                    editorToEnable.toggleOptions(true);
                 } else {
-                    for (const editor of this.snippetEditors) {
+                    this.snippetEditors.forEach(editor => {
                         if (editor.isSticky()) {
                             editor.toggleOverlay(true, false);
-                            customize$Elements = await editor.toggleOptions(true);
-                            break;
+                            editor.toggleOptions(true);
                         }
-                    }
-                }
-
-                if (!previewMode) {
-                    this._updateRightPanelContent({
-                        content: customize$Elements || [],
-                        tab: customize$Elements ? this.tabs.OPTIONS : this.tabs.BLOCKS,
                     });
                 }
 
+                this._enabledEditorHierarchy = editorToEnableHierarchy;
                 return editorToEnable;
             });
         });
@@ -2411,42 +2380,20 @@ var SnippetsMenu = Widget.extend({
                         await self._scrollToSnippet($target, self.$scrollable);
 
                         _.defer(async function () {
-                            // Free the mutex now to allow following operations
-                            // (mutexed as well).
+                            self._disableUndroppableSnippets();
+
                             dragAndDropResolve();
 
-                            // First call the onBuilt of all options of each
-                            // item in the snippet (and so build their editor
-                            // instance first).
                             await self._callForEachChildSnippet($target, function (editor, $snippet) {
                                 return editor.buildSnippet();
                             });
-                            // The snippet is now fully built, notify the
-                            // editor for changed content.
+                            self.trigger_up('snippet_dropped', {$target: $target});
                             $target.trigger('content_changed');
-
-                            // Now notifies that a snippet was dropped (at the
-                            // moment, useful to start public widgets for
-                            // instance (no saved content)).
-                            await self._mutex.exec(() => {
-                                const proms = [];
-                                self.trigger_up('snippet_dropped', {
-                                    $target: $target,
-                                    addPostDropAsync: prom => proms.push(prom),
-                                });
-                                return Promise.all(proms);
-                            });
-
-                            // Lastly, ensure that the snippets or its related
-                            // parts are added to the invisible DOM list if
-                            // needed.
                             await self._updateInvisibleDOM();
 
-                            // Restore editor to its normal edition state, also
-                            // make sure the undroppable snippets are updated.
-                            self._disableUndroppableSnippets();
                             self.options.wysiwyg.odooEditor.unbreakableStepUnactive();
                             self.options.wysiwyg.odooEditor.historyStep();
+
                             self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
                         });
                     } else {
@@ -2627,10 +2574,7 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _onActivateSnippet: function (ev) {
-        const prom = this._activateSnippet(ev.data.$snippet, ev.data.previewMode, ev.data.ifInactiveOptions);
-        if (ev.data.onSuccess) {
-            prom.then(() => ev.data.onSuccess());
-        }
+        this._activateSnippet(ev.data.$snippet, ev.data.previewMode, ev.data.ifInactiveOptions);
     },
     /**
      * Called when a child editor asks to operate some operation on all child
@@ -2646,13 +2590,9 @@ var SnippetsMenu = Widget.extend({
      * Called when the overlay dimensions/positions should be recomputed.
      *
      * @private
-     * @param {OdooEvent} ev
      */
-    _onOverlaysCoverUpdate: function (ev) {
+    _onOverlaysCoverUpdate: function () {
         this.snippetEditors.forEach(editor => {
-            if (ev.data.overlayVisible) {
-                editor.toggleOverlayVisibility(true);
-            }
             editor.cover();
         });
     },
@@ -3021,32 +2961,12 @@ var SnippetsMenu = Widget.extend({
         this._updateInvisibleDOM();
     },
     /**
-     * When the editor panel receives a notification indicating that an option
-     * was used, the panel is in charge of asking for an UI update of the whole
-     * panel. Logically, the options are displayed so that an option above
-     * may influence the status and visibility of an option which is below;
-     * e.g.:
-     * - the user sets a badge type to 'info'
-     *      -> the badge background option (below) is shown as blue
-     * - the user adds a shadow
-     *      -> more options are shown afterwards to control it (not above)
-     *
-     * Technically we however update the whole editor panel (parent and child
-     * options) wherever the updates comes from. The only important thing is
-     * to first update the options UI then their visibility as their visibility
-     * may depend on their UI status.
-     *
      * @private
      * @param {OdooEvent} ev
      */
-    _onSnippetOptionUpdate(ev) {
+    _onSnippetOptionUpdate: function (ev) {
         ev.stopPropagation();
-        (async () => {
-            const editors = this._enabledEditorHierarchy;
-            await Promise.all(editors.map(editor => editor.updateOptionsUI()));
-            await Promise.all(editors.map(editor => editor.updateOptionsUIVisibility()));
-            ev.data.onSuccess();
-        })();
+        ev.data.onSuccess();
     },
     /**
      * @private
@@ -3065,6 +2985,19 @@ var SnippetsMenu = Widget.extend({
     _onSnippetThumbnailURLRequest(ev) {
         const $snippet = this.$snippets.has(`[data-snippet="${ev.data.key}"]`);
         ev.data.onSuccess($snippet.length ? $snippet[0].dataset.oeThumbnail : '');
+    },
+    /**
+     * @private
+     */
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onUpdateCustomizeElements: function (ev) {
+        this._updateRightPanelContent({
+            content: ev.data.customize$Elements,
+            tab: ev.data.customize$Elements.length ? this.tabs.OPTIONS : this.tabs.BLOCKS,
+        });
     },
     /**
      * Called when an user value widget is being opened -> close all the other
@@ -3111,26 +3044,12 @@ var SnippetsMenu = Widget.extend({
                 break;
         }
 
-        this.options.wysiwyg.toolbar.el.classList.remove('oe-floating');
-
-        // Create toolbar custom container.
         const $customizeBlock = $('<WE-CUSTOMIZEBLOCK-OPTIONS id="o_we_editor_toolbar_container"/>');
         const $title = $("<we-title><span>" + titleText + "</span></we-title>");
 
         $customizeBlock.append($title);
         $customizeBlock.append(this.options.wysiwyg.toolbar.$el);
         $(this.customizePanel).append($customizeBlock);
-
-        // Create table-options custom container.
-        const $customizeTableBlock = $(QWeb.render('web_editor.toolbar.table-options'));
-        this.options.wysiwyg.odooEditor.bindExecCommand($customizeTableBlock[0]);
-
-        $(this.customizePanel).append($customizeTableBlock);
-
-        this._$removeFormatButton = this._$removeFormatButton || this.options.wysiwyg.toolbar.$el.find('#removeFormat');
-        $title.append(this._$removeFormatButton);
-        this.options.wysiwyg.toolbar.$el.find('#table').remove();
-
         this._checkEditorToolbarVisibility();
     },
     /**
@@ -3138,7 +3057,6 @@ var SnippetsMenu = Widget.extend({
      */
     _checkEditorToolbarVisibility: function (e) {
         const $toolbarContainer = this.$('#o_we_editor_toolbar_container');
-        const $toolbarTableContainer = this.$('#o-we-editor-table-container');
         const docSelection = document.getSelection();
         const $currentSelectionTarget = docSelection && docSelection.rangeCount > 0 ? $(docSelection.getRangeAt(0).commonAncestorContainer) : $();
         // Do not  toggle visibility if the target is inside the toolbar ( eg. during link edition).
@@ -3161,13 +3079,6 @@ var SnippetsMenu = Widget.extend({
         } else {
             $toolbarContainer.show();
         }
-
-        const isInsideTD = !!(
-            range &&
-            $(range.startContainer).closest('.o_editable td').length &&
-            $(range.endContainer).closest('.o_editable td').length
-        );
-        $toolbarTableContainer.toggleClass('d-none', !isInsideTD);
     },
     /**
      * On click on discard button.

@@ -15,13 +15,9 @@
     align-items: center;
     justify-content: space-between;
     background-color: white;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #ccc;
     padding: 0.8rem 1em;
     font-size: 1.5rem;
-
-    .fa-search {
-      color:#C7C7C7;
-    }
 
     input {
       border: none;
@@ -31,7 +27,6 @@
   }
 
   &_listbox {
-    cursor: default;
     max-height: 50vh;
     overflow-y: auto;
     position: relative;
@@ -62,7 +57,7 @@
       height: 2.8em;
 
       &.focused {
-        background: rgba($o-brand-primary, 0.15);
+        background: rgba(0, 160, 157, 0.15);
       }
 
       &_default, &_hotkey {
@@ -88,24 +83,6 @@
           padding: 0 0.65rem;
         }
       }
-
-      .o_app_icon {
-        border-radius: 4%;
-        height: 1.8em;
-      }
-    }
-  }
-
-  &_footer {
-    color: #707070;
-    background-color: #f6f7fa;
-    font-size: 1rem;
-    padding: 0.6rem 1.3em;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-
-    .o_promote {
-      color: $o-brand-primary;
-      font-weight: 900;
     }
   }
 }

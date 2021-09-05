@@ -11,11 +11,7 @@ import { ActionDialog } from "@web/webclient/actions/action_dialog";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeTestEnv, prepareRegistriesWithCleanup } from "../../helpers/mock_env";
-import {
-    fakeCommandService,
-    makeFakeDialogService,
-    makeFakeLocalizationService,
-} from "../../helpers/mock_services";
+import { makeFakeDialogService, makeFakeLocalizationService } from "../../helpers/mock_services";
 import { click, getFixture, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "../../webclient/helpers";
 import { openViewItem } from "@web/webclient/debug_items";
@@ -44,9 +40,7 @@ QUnit.module("DebugMenu", (hooks) => {
             .add("hotkey", hotkeyService)
             .add("ui", uiService)
             .add("orm", ormService)
-            .add("dialog", makeFakeDialogService())
-            .add("localization", makeFakeLocalizationService())
-            .add("command", fakeCommandService);
+            .add("dialog", makeFakeDialogService());
         const mockRPC = async (route, args) => {
             if (args.method === "check_access_rights") {
                 return Promise.resolve(true);
@@ -280,6 +274,7 @@ QUnit.module("DebugMenu", (hooks) => {
                 reload: () => assert.step("reloadPage"),
             },
         });
+        registry.category("services").add("localization", makeFakeLocalizationService());
         debugRegistry.category("default").add("regenerateAssets", regenerateAssets);
         const env = await makeTestEnv(testConfig);
         const debugManager = await mount(DebugMenuParent, { env, target });

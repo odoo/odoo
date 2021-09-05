@@ -24,7 +24,6 @@ up a management by affair.
     'data': [
         'security/hr_timesheet_security.xml',
         'security/ir.model.access.csv',
-        'security/ir.model.access.xml',
         'data/digest_data.xml',
         'views/hr_timesheet_views.xml',
         'views/res_config_settings_views.xml',
@@ -38,7 +37,6 @@ up a management by affair.
         'views/hr_views.xml',
         'data/hr_timesheet_data.xml',
         'wizard/project_task_create_timesheet_views.xml',
-        'views/project_sharing_views.xml',
     ],
     'demo': [
         'data/hr_timesheet_demo.xml',

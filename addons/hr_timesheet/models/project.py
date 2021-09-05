@@ -7,22 +7,6 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 
 
-PROJECT_TASK_READABLE_FIELDS = {
-    'allow_subtasks',
-    'allow_timesheets',
-    'analytic_account_active',
-    'effective_hours',
-    'encode_uom_in_days',
-    'planned_hours',
-    'progress',
-    'overtime',
-    'remaining_hours',
-    'subtask_effective_hours',
-    'subtask_planned_hours',
-    'timesheet_ids',
-    'total_hours_spent',
-}
-
 class Project(models.Model):
     _inherit = "project.project"
 
@@ -44,9 +28,6 @@ class Project(models.Model):
         help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.")
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days')
     is_internal_project = fields.Boolean(compute='_compute_is_internal_project', search='_search_is_internal_project')
-    remaining_hours = fields.Float(compute='_compute_remaining_hours', string='Remaining Invoiced Time', compute_sudo=True)
-    has_planned_hours_tasks = fields.Boolean(compute='_compute_remaining_hours', compute_sudo=True,
-        help="True if any of the project's task has a set planned hours")
 
     def _compute_encode_uom_in_days(self):
         self.encode_uom_in_days = self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
@@ -78,22 +59,6 @@ class Project(models.Model):
         else:
             operator_new = 'not inselect'
         return [('id', operator_new, (query, ()))]
-
-    @api.depends('allow_timesheets', 'task_ids.planned_hours', 'task_ids.remaining_hours')
-    def _compute_remaining_hours(self):
-        group_read = self.env['project.task'].read_group(
-            domain=[('planned_hours', '!=', False), ('project_id', 'in', self.filtered('allow_timesheets').ids),
-                     '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)],
-            fields=['planned_hours:sum', 'remaining_hours:sum'], groupby='project_id')
-        group_per_project_id = {group['project_id'][0]: group for group in group_read}
-        for project in self:
-            group = group_per_project_id.get(project.id)
-            if group:
-                project.remaining_hours = group.get('remaining_hours')
-                project.has_planned_hours_tasks = bool(group.get('planned_hours'))
-            else:
-                project.remaining_hours = 0
-                project.has_planned_hours_tasks = False
 
     @api.constrains('allow_timesheets', 'analytic_account_id')
     def _check_allow_timesheet(self):
@@ -183,7 +148,7 @@ class Task(models.Model):
     _name = "project.task"
     _inherit = "project.task"
 
-    analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active', compute_sudo=True)
+    analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active')
     allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.", readonly=True)
     remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', store=True, readonly=True, help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Time spent on this task, excluding its sub-tasks.")
@@ -193,10 +158,6 @@ class Task(models.Model):
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', recursive=True, store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', default=lambda self: self._uom_in_days())
-
-    @property
-    def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS | PROJECT_TASK_READABLE_FIELDS
 
     def _uom_in_days(self):
         return self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
@@ -282,7 +243,7 @@ class Task(models.Model):
             for task in self:
                 if task.allow_timesheets and task.planned_hours > 0 and task.encode_uom_in_days:
                     days_left = _("(%s days remaining)") % task._convert_hours_to_days(task.remaining_hours)
-                    name_mapping[task.id] = name_mapping.get(task.id, '') + u"\u00A0" + days_left
+                    name_mapping[task.id] = name_mapping.get(task.id, '') + " ‒ " + days_left
                 elif task.allow_timesheets and task.planned_hours > 0:
                     hours, mins = (str(int(duration)).rjust(2, '0') for duration in divmod(abs(task.remaining_hours) * 60, 60))
                     hours_left = _(
@@ -291,7 +252,7 @@ class Task(models.Model):
                         hours=hours,
                         minutes=mins,
                     )
-                    name_mapping[task.id] = name_mapping.get(task.id, '') + u"\u00A0" + hours_left
+                    name_mapping[task.id] = name_mapping.get(task.id, '') + " ‒ " + hours_left
             return list(name_mapping.items())
         return super().name_get()
 
@@ -299,8 +260,7 @@ class Task(models.Model):
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         """ Set the correct label for `unit_amount`, depending on company UoM """
         result = super(Task, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        # Use of sudo as the portal user doesn't have access to uom
-        result['arch'] = self.env['account.analytic.line'].sudo()._apply_timesheet_label(result['arch'])
+        result['arch'] = self.env['account.analytic.line']._apply_timesheet_label(result['arch'])
 
         if view_type in ['tree', 'pivot', 'graph'] and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
             result['arch'] = self.env['account.analytic.line']._apply_time_label(result['arch'], related_model=self._name)
@@ -325,7 +285,6 @@ class Task(models.Model):
                 warning_msg, self.env.ref('hr_timesheet.timesheet_action_task').id,
                 _('See timesheet entries'), {'active_ids': tasks_with_timesheets.ids})
 
-    @api.model
     def _convert_hours_to_days(self, time):
         uom_hour = self.env.ref('uom.product_uom_hour')
         uom_day = self.env.ref('uom.product_uom_day')

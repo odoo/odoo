@@ -1,6 +1,7 @@
-/** @odoo-module **/
+odoo.define('website_slides.tour.fullscreen.edition.publisher', function (require) {
+'use strict';
 
-import tour from 'web_tour.tour';
+var tour = require('web_tour.tour');
 
 /**
  * Global use case:
@@ -34,3 +35,5 @@ tour.register('full_screen_web_editor', {
     trigger: 'body.editor_enable',
     run: function () {} // check the editor is automatically opened on the detailed view
 }]);
+
+});

@@ -2198,7 +2198,6 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                     timer: zoomDelay,
                     attach: '.o_content',
                     attachToTarget: true,
-                    disabledOnMobile: false,
                     onShow: function () {
                         var zoomHeight = Math.ceil(this.$zoom.height());
                         var zoomWidth = Math.ceil(this.$zoom.width());
@@ -2506,39 +2505,6 @@ var PriorityWidget = AbstractField.extend({
         return checked.length ? checked : this.$("[data-index='1']");
     },
 
-    on_attach_callback() {
-        const self = this;
-        if (self.viewType === "form") {
-            let provide = () => {
-                return self.field.selection.map((value) => ({
-                    name: value[1],
-                    action: () => {
-                        this._setValue(value[0]);
-                    }
-                }))
-            }
-            let getCommandDefinition = (env) => ({
-                name: env._t("Set priority..."),
-                options: {
-                    activeElement: env.services.ui.getActiveElementOf(self.el),
-                    category: "smart_action",
-                    hotkey: "alt+r",
-                },
-                action() {
-                    return env.services.command.openPalette({
-                        placeholder: env._t("Set a priority..."),
-                        providers: [{ provide }],
-                    })
-                },
-            });
-            core.bus.trigger("set_legacy_command", "web.PriorityWidget.setPriority", getCommandDefinition);
-        }
-    },
-
-    on_detach_callback() {
-        core.bus.trigger("remove_legacy_command", "web.PriorityWidget.setPriority");
-    },
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -2713,38 +2679,6 @@ var StateSelectionWidget = AbstractField.extend({
         return this.$("a[data-toggle='dropdown']");
     },
 
-    on_attach_callback() {
-        const self = this;
-        if (self.viewType === "form") {
-            let provide = () => {
-                return self.field.selection.map((value) => ({
-                    name: value[1],
-                    action: () => {
-                        this._setValue(value[0]);
-                    }
-                }))
-            }
-            let getCommandDefinition = (env) => ({
-                name: env._t("Set kanban state..."),
-                options: {
-                    activeElement: env.services.ui.getActiveElementOf(self.el),
-                    category: "smart_action",
-                    hotkey: "alt+shift+r",
-                 },
-                action() {
-                    return env.services.command.openPalette({
-                        placeholder: env._t("Set a kanban state..."),
-                        providers: [{ provide }],
-                    })
-                },
-            });
-            core.bus.trigger("set_legacy_command", "web.StateSelectionWidget.setKanbanState", getCommandDefinition);
-        }
-    },
-
-    on_detach_callback() {
-        core.bus.trigger("remove_legacy_command", "web.StateSelectionWidget.setKanbanState");
-    },
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------

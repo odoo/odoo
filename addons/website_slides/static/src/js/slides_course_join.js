@@ -1,7 +1,8 @@
-/** @odoo-module **/
+odoo.define('website_slides.course.join.widget', function (require) {
+'use strict';
 
-import core from 'web.core';
-import publicWidget from 'web.public.widget';
+var core = require('web.core');
+var publicWidget = require('web.public.widget');
 
 var _t = core._t;
 
@@ -152,7 +153,9 @@ publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
     },
 });
 
-export default {
+return {
     courseJoinWidget: CourseJoinWidget,
     websiteSlidesCourseJoin: publicWidget.registry.websiteSlidesCourseJoin
 };
+
+});

@@ -1,8 +1,9 @@
-/** @odoo-module **/
+odoo.define('hr.employee_language', function (require) {
+'use strict';
 
-import FormController from 'web.FormController';
-import FormView from 'web.FormView';
-import viewRegistry from 'web.view_registry';
+var FormController = require('web.FormController');
+var FormView = require('web.FormView');
+var viewRegistry = require('web.view_registry');
 
 var EmployeeFormController = FormController.extend({
     saveRecord: function () {
@@ -22,4 +23,5 @@ var EmployeeProfileFormView = FormView.extend({
 });
 
 viewRegistry.add('hr_employee_profile_form', EmployeeProfileFormView);
-export default EmployeeProfileFormView;
+return EmployeeProfileFormView;
+});

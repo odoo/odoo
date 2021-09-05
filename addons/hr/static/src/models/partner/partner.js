@@ -1,10 +1,11 @@
-/** @odoo-module **/
+odoo.define('hr/static/src/models/partner/partner.js', function (require) {
+'use strict';
 
-import {
+const {
     registerInstancePatchModel,
     registerFieldPatchModel,
-} from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+} = require('@mail/model/model_core');
+const { attr, one2one } = require('@mail/model/model_field');
 
 registerInstancePatchModel('mail.partner', 'hr/static/src/models/partner/partner.js', {
     //--------------------------------------------------------------------------
@@ -57,4 +58,6 @@ registerFieldPatchModel('mail.partner', 'hr/static/src/models/partner/partner.js
     hasCheckedEmployee: attr({
         default: false,
     }),
+});
+
 });

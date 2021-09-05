@@ -1,10 +1,13 @@
-/** @odoo-module **/
+odoo.define('sms/static/src/components/notification_group/notification_group.js', function (require) {
+'use strict';
 
-import { NotificationGroup } from '@mail/components/notification_group/notification_group';
+const { NotificationGroup } = require('@mail/components/notification_group/notification_group');
 
-import { patch } from 'web.utils';
+const { patch } = require('web.utils');
 
-patch(NotificationGroup.prototype, 'sms/static/src/components/notification_group/notification_group.js', {
+const components = { NotificationGroup };
+
+patch(components.NotificationGroup.prototype, 'sms/static/src/components/notification_group/notification_group.js', {
 
     //--------------------------------------------------------------------------
     // Public
@@ -19,4 +22,6 @@ patch(NotificationGroup.prototype, 'sms/static/src/components/notification_group
         }
         return this._super(...arguments);
     },
+});
+
 });

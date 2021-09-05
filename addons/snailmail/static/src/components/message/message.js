@@ -1,8 +1,9 @@
-/** @odoo-module **/
+odoo.define('snailmail/static/src/components/message/message.js', function (require) {
+'use strict';
 
-import { Message } from '@mail/components/message/message';
+const { Message } = require("@mail/components/message/message");
 
-import { patch } from 'web.utils';
+const { patch } = require('web.utils');
 
 const { useState } = owl;
 
@@ -72,4 +73,6 @@ patch(Message.prototype, 'snailmail/static/src/components/message/message.js', {
     _onDialogClosedSnailmailError() {
         this.snailmailState.hasDialog = false;
     },
+});
+
 });

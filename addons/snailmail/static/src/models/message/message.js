@@ -1,6 +1,7 @@
-/** @odoo-module **/
+odoo.define('snailmail/static/src/models/message.message.js', function (require) {
+'use strict';
 
-import { registerInstancePatchModel } from '@mail/model/model_core';
+const { registerInstancePatchModel } = require('@mail/model/model_core');
 
 registerInstancePatchModel('mail.message', 'snailmail/static/src/models/message.message.js', {
 
@@ -63,4 +64,6 @@ registerInstancePatchModel('mail.message', 'snailmail/static/src/models/message.
             args: [[this.id]],
         }));
     },
+});
+
 });

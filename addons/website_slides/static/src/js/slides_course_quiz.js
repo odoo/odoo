@@ -1,18 +1,20 @@
-/** @odoo-module **/
+odoo.define('website_slides.quiz', function (require) {
+    'use strict';
 
-    import publicWidget from 'web.public.widget';
-    import Dialog from 'web.Dialog';
-    import  { qweb as QWeb, _t } from 'web.core';
-    import session from 'web.session';
-    import { Markup } from 'web.utils';
-    import CourseJoin from '@website_slides/js/slides_course_join';
-    import QuestionFormWidget from '@website_slides/js/slides_course_quiz_question_form';
-    import SlideQuizFinishModal from '@website_slides/js/slides_course_quiz_finish';
+    var publicWidget = require('web.public.widget');
+    var Dialog = require('web.Dialog');
+    var core = require('web.core');
+    var session = require('web.session');
+    const {Markup} = require('web.utils');
 
-    import SlideEnroll from '@website_slides/js/slides_course_enroll_email';
+    var CourseJoinWidget = require('website_slides.course.join.widget').courseJoinWidget;
+    var QuestionFormWidget = require('website_slides.quiz.question.form');
+    var SlideQuizFinishModal = require('website_slides.quiz.finish');
 
-    const CourseJoinWidget = CourseJoin.courseJoinWidget;
-    const SlideEnrollDialog = SlideEnroll.slideEnrollDialog;
+    var SlideEnrollDialog = require('website_slides.course.enroll').slideEnrollDialog;
+
+    var QWeb = core.qweb;
+    var _t = core._t;
 
     /**
      * This widget is responsible of displaying quiz questions and propositions. Submitting the quiz will fetch the
@@ -341,7 +343,7 @@
          *
          * @private
          */
-         async _submitQuiz() {
+        async _submitQuiz() {
             const data = await this._rpc({
                 route: '/slides/slide/quiz/submit',
                 params: {
@@ -770,6 +772,9 @@
         },
     });
 
-    export var Quiz = Quiz;
-    export var ConfirmationDialog = ConfirmationDialog;
-    export const websiteSlidesQuizNoFullscree = publicWidget.registry.websiteSlidesQuizNoFullscreen;
+    return {
+        Quiz: Quiz,
+        ConfirmationDialog: ConfirmationDialog,
+        websiteSlidesQuizNoFullscreen: publicWidget.registry.websiteSlidesQuizNoFullscreen
+    };
+});

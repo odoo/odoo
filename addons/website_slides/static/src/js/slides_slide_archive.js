@@ -1,8 +1,10 @@
-/** @odoo-module **/
+odoo.define('website_slides.slide.archive', function (require) {
+'use strict';
 
-import publicWidget from 'web.public.widget';
-import Dialog from 'web.Dialog';
-import { _t } from 'web.core';
+var publicWidget = require('web.public.widget');
+var Dialog = require('web.Dialog');
+var core = require('web.core');
+var _t = core._t;
 
 var SlideArchiveDialog = Dialog.extend({
     template: 'slides.slide.archive',
@@ -98,7 +100,9 @@ publicWidget.registry.websiteSlidesSlideArchive = publicWidget.Widget.extend({
     },
 });
 
-export default {
+return {
     slideArchiveDialog: SlideArchiveDialog,
     websiteSlidesSlideArchive: publicWidget.registry.websiteSlidesSlideArchive
 };
+
+});

@@ -1,8 +1,11 @@
-/** @odoo-module **/
+odoo.define('sms.sms_widget', function (require) {
+"use strict";
 
-import { _t } from 'web.core';
-import fieldRegistry from 'web.field_registry';
-import FieldTextEmojis from '@mail/js/field_text_emojis';
+var core = require('web.core');
+var fieldRegistry = require('web.field_registry');
+var FieldTextEmojis = require('@mail/js/field_text_emojis')[Symbol.for("default")];
+
+var _t = core._t;
 /**
  * SmsWidget is a widget to display a textarea (the body) and a text representing
  * the number of SMS and the number of characters. This text is computed every
@@ -178,4 +181,5 @@ var SmsWidget = FieldTextEmojis.extend({
 
 fieldRegistry.add('sms_widget', SmsWidget);
 
-export default SmsWidget;
+return SmsWidget;
+});

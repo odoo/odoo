@@ -1,8 +1,9 @@
-/** @odoo-module **/
+odoo.define('mrp.mrp_bom_report', function (require) {
+'use strict';
 
-import core from 'web.core';
-import framework from 'web.framework';
-import stock_report_generic from 'stock.stock_report_generic';
+var core = require('web.core');
+var framework = require('web.framework');
+var stock_report_generic = require('stock.stock_report_generic');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -101,27 +102,6 @@ var MrpBomReport = stock_report_generic.extend({
               self.render_html(event, $parent, result);
           });
     },
-    get_byproducts: function(event) {
-        var self = this;
-        var $parent = $(event.currentTarget).closest('tr');
-        var activeID = $parent.data('bom-id');
-        var qty = $parent.data('qty');
-        var level = $parent.data('level') || 0;
-        var total = $parent.data('total') || 0;
-        return this._rpc({
-                model: 'report.mrp.report_bom_structure',
-                method: 'get_byproducts',
-                args: [
-                    activeID,
-                    parseFloat(qty),
-                    level + 1,
-                    parseFloat(total)
-                ]
-            })
-            .then(function (result) {
-                self.render_html(event, $parent, result);
-            });
-      },
     update_cp: function () {
         var status = {
             cp_content: {
@@ -245,4 +225,6 @@ var MrpBomReport = stock_report_generic.extend({
 });
 
 core.action_registry.add('mrp_bom_report', MrpBomReport);
-export default MrpBomReport;
+return MrpBomReport;
+
+});

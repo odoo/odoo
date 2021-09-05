@@ -25,11 +25,6 @@ class Users(models.Model):
         help="Policy on how to handle Chatter notifications:\n"
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
-    res_users_settings_ids = fields.One2many('res.users.settings', 'user_id')
-
-    # ------------------------------------------------------------
-    # CRUD
-    # ------------------------------------------------------------
 
     @property
     def SELF_READABLE_FIELDS(self):
@@ -85,10 +80,6 @@ class Users(models.Model):
             lambda cp: cp.channel_id.public != 'public' and cp.channel_id.channel_type == 'channel'
         ).unlink()
 
-    # ------------------------------------------------------------
-    # DISCUSS
-    # ------------------------------------------------------------
-
     def _init_messaging(self):
         self.ensure_one()
         partner_root = self.env.ref('base.partner_root')
@@ -96,7 +87,6 @@ class Users(models.Model):
             'channels': self.partner_id._get_channels_as_member().channel_info(),
             'current_partner': self.partner_id.mail_partner_format().get(self.partner_id),
             'current_user_id': self.id,
-            'current_user_settings': self.env['res.users.settings']._find_or_create_for_user(self)._res_users_settings_format(),
             'mail_failures': self.partner_id._message_fetch_failed(),
             'menu_id': self.env['ir.model.data']._xmlid_to_res_id('mail.menu_root_discuss'),
             'needaction_inbox_counter': self.partner_id._get_needaction_count(),
@@ -149,3 +139,22 @@ class Users(models.Model):
                 'name': 'Summary',
             }]
         return list(user_activities.values())
+
+
+class res_groups_mail_channel(models.Model):
+    """ Update of res.groups class
+        - if adding users from a group, check mail.channels linked to this user
+          group and subscribe them. This is done by overriding the write method.
+    """
+    _name = 'res.groups'
+    _inherit = 'res.groups'
+    _description = 'Access Groups'
+
+    def write(self, vals, context=None):
+        write_res = super(res_groups_mail_channel, self).write(vals)
+        if vals.get('users'):
+            # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
+            user_ids = [command[1] for command in vals['users'] if command[0] == 4]
+            user_ids += [id for command in vals['users'] if command[0] == 6 for id in command[2]]
+            self.env['mail.channel'].search([('group_ids', 'in', self._ids)])._subscribe_users_automatically()
+        return write_res

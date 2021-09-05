@@ -9,7 +9,6 @@
                 <div class="pos-branding" t-if= "!env.isMobile">
                     <img class="pos-logo" t-on-click="trigger('toggle-debug-widget')"
                          src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
-                    <CashMoveButton t-if="showCashMoveButton()" />
                     <TicketButton isTicketScreenShown="isTicketScreenShown" />
                 </div>
                 <div class="pos-rightheader">
@@ -24,6 +23,7 @@
                         <t t-if="!env.isMobile">
                             <CashierName />
                         </t>
+                        <OrderManagementButton t-if="env.pos.config.manage_orders" />
                         <SaleDetailsButton t-if="env.pos.proxy.printer" />
                         <ProxyStatus t-if="env.pos.config.use_proxy" />
                         <ClientScreenButton t-if="clientScreenButtonIsShown" />

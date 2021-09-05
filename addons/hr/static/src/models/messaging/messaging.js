@@ -1,8 +1,9 @@
-/** @odoo-module **/
+odoo.define('hr/static/src/models/messaging/messaging.js', function (require) {
+'use strict';
 
-import {
+const {
     registerInstancePatchModel,
-} from '@mail/model/model_core';
+} = require('@mail/model/model_core');
 
 registerInstancePatchModel('mail.messaging', 'hr/static/src/models/messaging/messaging.js', {
     //--------------------------------------------------------------------------
@@ -30,4 +31,6 @@ registerInstancePatchModel('mail.messaging', 'hr/static/src/models/messaging/mes
         }
         return this._super(...arguments);
     },
+});
+
 });

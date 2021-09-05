@@ -17,13 +17,13 @@ class TestCrmMailActivity(TestCrmCommon):
             'name': 'Initial Contact',
             'delay_count': 5,
             'summary': 'ACT 1 : Presentation, barbecue, ... ',
-            'res_model': 'crm.lead',
+            'res_model_id': cls.env['ir.model']._get('crm.lead').id,
         })
         cls.activity_type_2 = cls.env['mail.activity.type'].create({
             'name': 'Call for Demo',
             'delay_count': 6,
             'summary': 'ACT 2 : I want to show you my ERP !',
-            'res_model': 'crm.lead',
+            'res_model_id': cls.env['ir.model']._get('crm.lead').id,
         })
         for activity_type in cls.activity_type_1 + cls.activity_type_2:
             cls.env['ir.model.data'].create({

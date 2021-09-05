@@ -35,10 +35,10 @@ tour.register('sale_product_configurator_tour', {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
     run: 'click'
 }, {
-    trigger: '.main_product span:contains("Steel")',
+    trigger: '.configurator_container span:contains("Steel")',
     run: function () {},
 }, {
-    trigger: '.main_product span:contains("Aluminium")',
+    trigger: '.configurator_container span:contains("Aluminium")',
     run: 'click'
 }, {
     trigger: 'span.oe_currency_value:contains("800.40")',
@@ -46,24 +46,26 @@ tour.register('sale_product_configurator_tour', {
 }, {
     trigger: 'input[data-value_name="Black"]'
 }, {
-    trigger: '.btn-primary.disabled',
-    extra_trigger: '.show .modal-footer'
+    trigger: '.o_sale_product_configurator_add.disabled'
 }, {
     trigger: 'input[data-value_name="White"]'
 }, {
-    trigger: '.btn-primary:not(.disabled)',
-    extra_trigger: '.show .modal-footer'
+    trigger: '.o_sale_product_configurator_add:not(.disabled)'
 }, {
-    trigger: 'span:contains("Aluminium"):eq(1)',
-    extra_trigger: '.oe_advanced_configurator_modal',
+    trigger: 'span:contains("Aluminium")',
+    extra_trigger: '.oe_optional_products_modal',
+    run: 'click'
+}, {
+    trigger: '.js_product:has(strong:contains(Conference Chair)) .js_add',
+    extra_trigger: '.oe_optional_products_modal .js_product:has(strong:contains(Conference Chair))',
     run: 'click'
 }, {
     trigger: '.js_product:has(strong:contains(Chair floor protection)) .js_add',
-    extra_trigger: '.oe_advanced_configurator_modal',
+    extra_trigger: '.oe_optional_products_modal .js_product:has(strong:contains(Chair floor protection))',
     run: 'click'
 }, {
     trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_advanced_configurator_modal',
+    extra_trigger: '.oe_optional_products_modal',
     id: "quotation_product_selected",
     run: 'click'
 },

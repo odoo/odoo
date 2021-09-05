@@ -10,6 +10,14 @@ function factory(dependencies) {
 
         //----------------------------------------------------------------------
         // Public
+        //----------------------------------------------------------------------
+
+        /**
+         * @param {mail.thread} thread
+         */
+        cancelThreadRenaming(thread) {
+            this.update({ renamingThreads: unlink(thread) });
+        }
 
         clearIsAddingItem() {
             this.update({
@@ -154,6 +162,15 @@ function factory(dependencies) {
         }
 
         /**
+         * @param {mail.thread} thread
+         * @param {string} newName
+         */
+        onValidateEditableText(thread, newName) {
+            this.update({ renamingThreads: unlink(thread) });
+            thread.setCustomName(newName);
+        }
+
+        /**
          * Open thread from init active id. `initActiveId` is used to refer to
          * a thread that we may not have full data yet, such as when messaging
          * is not yet initialized.
@@ -216,22 +233,17 @@ function factory(dependencies) {
 
         /**
          * @param {mail.thread} thread
+         */
+        setThreadRenaming(thread) {
+            this.update({ renamingThreads: link(thread) });
+        }
+
+        /**
+         * @param {mail.thread} thread
          * @returns {string}
          */
         threadToActiveId(thread) {
             return `${thread.model}_${thread.id}`;
-        }
-
-        /**
-         * @param {string} value
-         */
-        onInputQuickSearch(value) {
-            // Opens all categories only when user starts to search from empty search value.
-            if (!this.sidebarQuickSearchValue) {
-                this.categoryChat.open();
-                this.categoryChannel.open();
-            }
-            this.update({ sidebarQuickSearchValue: value });
         }
 
         //----------------------------------------------------------------------
@@ -342,7 +354,6 @@ function factory(dependencies) {
          */
         _computeThreadViewer() {
             const threadViewerData = {
-                hasMemberList: true,
                 hasThreadView: this.hasThreadView,
                 hasTopbar: true,
                 selectedMessage: this.replyingToMessage ? link(this.replyingToMessage) : unlink(),
@@ -371,18 +382,6 @@ function factory(dependencies) {
         addingChannelValue: attr({
             compute: '_computeAddingChannelValue',
             default: "",
-        }),
-        /**
-         * Discuss sidebar category for `channel` type channel threads.
-         */
-        categoryChannel: one2one('mail.discuss_sidebar_category', {
-            isCausal: true,
-        }),
-        /**
-         * Discuss sidebar category for `chat` type channel threads.
-         */
-        categoryChat: one2one('mail.discuss_sidebar_category', {
-            isCausal: true,
         }),
         /**
          * Determines whether `this.thread` should be displayed.
@@ -441,6 +440,7 @@ function factory(dependencies) {
         menu_id: attr({
             default: null,
         }),
+        renamingThreads: one2many('mail.thread'),
         /**
          * The message that is currently selected as being replied to in Inbox.
          * There is only one reply composer shown at a time, which depends on

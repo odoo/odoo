@@ -1,6 +1,7 @@
-/** @odoo-module **/
+odoo.define('website_livechat/static/src/components/visitor_banner/visitor_banner.js', function (require) {
+'use strict';
 
-import { registerMessagingComponent } from '@mail/utils/messaging_component';
+const { registerMessagingComponent } = require('@mail/utils/messaging_component');
 
 const { Component } = owl;
 
@@ -28,4 +29,6 @@ Object.assign(VisitorBanner, {
 
 registerMessagingComponent(VisitorBanner);
 
-export default VisitorBanner;
+return VisitorBanner;
+
+});

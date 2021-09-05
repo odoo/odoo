@@ -1,8 +1,10 @@
-/** @odoo-module **/
+odoo.define('sms.sms_widget_tests', function (require) {
+"use strict";
 
-import FormView from 'web.FormView';
-import ListView from 'web.ListView';
-import testUtils from 'web.test_utils';
+var config = require('web.config');
+var FormView = require('web.FormView');
+var ListView = require('web.ListView');
+var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
 
@@ -223,4 +225,5 @@ QUnit.module('fields', {
 
         form.destroy();
     });
+});
 });

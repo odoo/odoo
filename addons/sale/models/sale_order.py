@@ -217,23 +217,23 @@ class SaleOrder(models.Model):
 
     order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
 
-    invoice_count = fields.Integer(string='Invoice Count', compute='_get_invoiced')
-    invoice_ids = fields.Many2many("account.move", string='Invoices', compute="_get_invoiced", copy=False, search="_search_invoice_ids")
+    invoice_count = fields.Integer(string='Invoice Count', compute='_get_invoiced', readonly=True)
+    invoice_ids = fields.Many2many("account.move", string='Invoices', compute="_get_invoiced", readonly=True, copy=False, search="_search_invoice_ids")
     invoice_status = fields.Selection([
         ('upselling', 'Upselling Opportunity'),
         ('invoiced', 'Fully Invoiced'),
         ('to invoice', 'To Invoice'),
         ('no', 'Nothing to Invoice')
-        ], string='Invoice Status', compute='_get_invoice_status', store=True)
+        ], string='Invoice Status', compute='_get_invoice_status', store=True, readonly=True)
 
     note = fields.Html('Terms and conditions', default=_default_note)
     terms_type = fields.Selection(related='company_id.terms_type')
 
-    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, compute='_amount_all', tracking=5)
+    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=5)
     amount_by_group = fields.Binary(string="Tax amount by group", compute='_amount_by_group', help="type: [(name, amount, base, formated amount, formated base)]")
-    amount_tax = fields.Monetary(string='Taxes', store=True, compute='_amount_all')
-    amount_total = fields.Monetary(string='Total', store=True, compute='_amount_all', tracking=4)
-    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', store=True, digits=(12, 6), help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
+    amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
+    amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all', tracking=4)
+    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=(12, 6), readonly=True, help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
 
     payment_term_id = fields.Many2one(
         'account.payment.term', string='Payment Terms', check_company=True,  # Unrequired company
@@ -268,7 +268,7 @@ class SaleOrder(models.Model):
     transaction_ids = fields.Many2many('payment.transaction', 'sale_order_transaction_rel', 'sale_order_id', 'transaction_id',
                                        string='Transactions', copy=False, readonly=True)
     authorized_transaction_ids = fields.Many2many('payment.transaction', compute='_compute_authorized_transaction_ids',
-                                                  string='Authorized Transactions', copy=False)
+                                                  string='Authorized Transactions', copy=False, readonly=True)
     show_update_pricelist = fields.Boolean(string='Has Pricelist Changed',
                                            help="Technical Field, True if the pricelist was changed;\n"
                                                 " this will then display a recomputation button")
@@ -329,7 +329,7 @@ class SaleOrder(models.Model):
                 order.expected_date = False
 
     @api.onchange('expected_date')
-    def _onchange_expected_date(self):
+    def _onchange_commitment_date(self):
         self.commitment_date = self.expected_date
 
     @api.depends('transaction_ids')
@@ -430,9 +430,12 @@ class SaleOrder(models.Model):
             )._get_default_team_id(user_id=self.user_id.id, domain=None)
 
     @api.onchange('partner_id')
-    def _onchange_partner_id_warning(self):
+    def onchange_partner_id_warning(self):
         if not self.partner_id:
             return
+        warning = {}
+        title = False
+        message = False
         partner = self.partner_id
 
         # If partner has no warning, check its company
@@ -443,16 +446,18 @@ class SaleOrder(models.Model):
             # Block if partner only has warning but parent company is blocked
             if partner.sale_warn != 'block' and partner.parent_id and partner.parent_id.sale_warn == 'block':
                 partner = partner.parent_id
-
+            title = ("Warning for %s") % partner.name
+            message = partner.sale_warn_msg
+            warning = {
+                    'title': title,
+                    'message': message,
+            }
             if partner.sale_warn == 'block':
                 self.update({'partner_id': False, 'partner_invoice_id': False, 'partner_shipping_id': False, 'pricelist_id': False})
+                return {'warning': warning}
 
-            return {
-                'warning': {
-                    'title': _("Warning for %s", partner.name),
-                    'message': partner.sale_warn_msg,
-                }
-            }
+        if warning:
+            return {'warning': warning}
 
     @api.onchange('commitment_date')
     def _onchange_commitment_date(self):
@@ -577,7 +582,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         journal = self.env['account.move'].with_context(default_move_type='out_invoice')._get_default_journal()
         if not journal:
-            raise UserError(_('Please define an accounting sales journal for the company %s (%s).', self.company_id.name, self.company_id.id))
+            raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
 
         invoice_vals = {
             'ref': self.client_order_ref or '',

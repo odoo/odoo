@@ -2,7 +2,6 @@
 
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { capitalize } from "@web/core/utils/strings";
 import { getVisibleElements } from "@web/core/utils/ui";
@@ -29,21 +28,11 @@ export class HotkeyCommandItem extends Component {
     }
 }
 HotkeyCommandItem.template = "web.HotkeyCommandItem";
-const commandEmptyMessageRegistry = registry.category("command_empty_list");
-commandEmptyMessageRegistry.add("default", _lt("No commands found"));
-
-const commandCategoryRegistry = registry.category("command_categories");
 
 const commandProviderRegistry = registry.category("command_provider");
 commandProviderRegistry.add("command", {
     provide: (env, options = {}) => {
-        const commands = env.services.command.getCommands(options.activeElement).map((cmd) => {
-            cmd.category = commandCategoryRegistry.contains(cmd.category)
-                ? cmd.category
-                : "default";
-            return cmd;
-        });
-
+        const commands = env.services.command.getCommands(options.activeElement);
         return commands.map((command) => ({
             Component: command.hotkey ? HotkeyCommandItem : DefaultCommandItem,
             action: command.action,
@@ -75,8 +64,7 @@ commandProviderRegistry.add("data-hotkeys", {
                 el.placeholder ||
                 (el.innerText &&
                     `${el.innerText.slice(0, 50)}${el.innerText.length > 50 ? "..." : ""}`) ||
-                env._t("no description provided");
-
+                "no description provided";
             commands.push({
                 Component: HotkeyCommandItem,
                 action: () => {

@@ -1,8 +1,10 @@
-/** @odoo-module **/
+odoo.define('website_slides.category.delete', function (require) {
+'use strict';
 
-import publicWidget from 'web.public.widget';
-import Dialog from 'web.Dialog';
-import { _t } from 'web.core';
+const publicWidget = require('web.public.widget');
+const Dialog = require('web.Dialog');
+const core = require('web.core');
+const _t = core._t;
 
 const categoryDeleteDialog = Dialog.extend({
     template: 'slides.category.delete',
@@ -69,7 +71,9 @@ publicWidget.registry.websiteSlidesCategoryDelete = publicWidget.Widget.extend({
     },
 });
 
-export default {
+return {
     categoryDeleteDialog: categoryDeleteDialog,
     websiteSlidesCategoryDelete: publicWidget.registry.websiteSlidesCategoryDelete
 };
+
+});

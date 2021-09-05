@@ -255,10 +255,9 @@ class Project(models.Model):
     def _get_profitability_items(self):
         if not self.user_has_groups('project.group_project_manager'):
             return {'data': []}
-        timesheets = self.allow_timesheets and self.user_has_groups('hr_timesheet.group_hr_timesheet_user')
-        profitability = self._get_profitability_common(costs_revenues=self.allow_billable, timesheets=timesheets)
+        profitability = self.get_profitability_common()
         data = []
-        if timesheets:
+        if self.allow_timesheets and self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
             data += [{
                 'name': _("Timesheets"),
                 'value': self.env.ref('sale_timesheet.project_profitability_timesheet_panel')._render({
@@ -289,50 +288,37 @@ class Project(models.Model):
             'data': data,
         }
 
-    def _get_profitability_common(self, costs_revenues=True, timesheets=True):
+    def get_profitability_common(self):
         self.ensure_one()
-        result = {
-            'costs': 0.0,
-            'margin': 0.0,
-            'revenues': 0.0,
-            'timesheet_unit_amount': 0.0,
-            'timesheet_percentage_billable': 0.0,
+        profitability = self.env['project.profitability.report'].read_group(
+            [('project_id', '=', self.id)],
+            ['project_id',
+             'timesheet_unit_amount',
+             'amount_untaxed_to_invoice',
+             'amount_untaxed_invoiced',
+             'expense_amount_untaxed_to_invoice',
+             'expense_amount_untaxed_invoiced',
+             'other_revenues',
+             'expense_cost',
+             'timesheet_cost',
+             'margin'],
+            ['project_id'])
+        timesheets = self.env['account.analytic.line'].read_group([('project_id', '=', self.id)], ['so_line', 'unit_amount'], ['so_line'])
+        timesheet_billable = timesheet_non_billable = 0.0
+        for timesheet in timesheets:
+            if timesheet['so_line']:
+                timesheet_billable += timesheet['unit_amount']
+            else:
+                timesheet_non_billable += timesheet['unit_amount']
+        return {
+            'costs': profitability and profitability[0]['timesheet_cost'] + profitability[0]['expense_cost'] or 0.0,
+            'margin': profitability and profitability[0]['margin'] or 0.0,
+            'revenues': profitability and (profitability[0]['amount_untaxed_invoiced'] + profitability[0]['amount_untaxed_to_invoice'] +
+                                           profitability[0]['expense_amount_untaxed_invoiced'] + profitability[0]['expense_amount_untaxed_to_invoice'] +
+                                           profitability[0]['other_revenues']) or 0.0,
+            'timesheet_unit_amount': profitability and self._convert_project_uom_to_timesheet_encode_uom(profitability[0]['timesheet_unit_amount']) or 0.0,
+            'timesheet_percentage_billable': timesheet_billable and timesheet_billable / (timesheet_billable + timesheet_non_billable) * 100 or 0.0,
         }
-        if costs_revenues:
-            profitability = self.env['project.profitability.report'].read_group(
-                [('project_id', '=', self.id)],
-                ['project_id',
-                 'amount_untaxed_to_invoice',
-                 'amount_untaxed_invoiced',
-                 'expense_amount_untaxed_to_invoice',
-                 'expense_amount_untaxed_invoiced',
-                 'other_revenues',
-                 'expense_cost',
-                 'timesheet_cost',
-                 'margin'],
-                ['project_id'], limit=1)
-            if profitability:
-                profitability = profitability[0]
-                result.update({
-                    'costs': profitability['timesheet_cost'] + profitability['expense_cost'],
-                    'margin': profitability['margin'],
-                    'revenues': (profitability['amount_untaxed_invoiced'] + profitability['amount_untaxed_to_invoice'] +
-                                 profitability['expense_amount_untaxed_invoiced'] + profitability['expense_amount_untaxed_to_invoice'] +
-                                 profitability['other_revenues']),
-                })
-        if timesheets:
-            timesheets = self.env['account.analytic.line'].read_group([('project_id', '=', self.id)], ['so_line', 'unit_amount'], ['so_line'])
-            timesheet_billable = timesheet_non_billable = 0.0
-            for timesheet in timesheets:
-                if timesheet['so_line']:
-                    timesheet_billable += timesheet['unit_amount']
-                else:
-                    timesheet_non_billable += timesheet['unit_amount']
-            result.update({
-                'timesheet_unit_amount': self._convert_project_uom_to_timesheet_encode_uom(timesheet_billable + timesheet_non_billable),
-                'timesheet_percentage_billable': timesheet_billable and timesheet_billable / (timesheet_billable + timesheet_non_billable) * 100 or 0.0,
-            })
-        return result
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
@@ -340,10 +326,8 @@ class ProjectTask(models.Model):
     def _get_default_partner_id(self, project, parent):
         res = super()._get_default_partner_id(project, parent)
         if not res and project:
-            # project in sudo if the current user is a portal user.
-            related_project = project if not self.user_has_groups('!base.group_user,base.group_portal') else project.sudo()
-            if related_project.pricing_type == 'employee_rate':
-                return related_project.sale_line_employee_ids.sale_line_id.order_partner_id[:1]
+            if project.pricing_type == 'employee_rate':
+                return project.sale_line_employee_ids.sale_line_id.order_partner_id[:1]
         return res
 
     sale_order_id = fields.Many2one(domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id', 'child_of', commercial_partner_id), ('partner_id', 'parent_of', partner_id)]")
@@ -355,14 +339,6 @@ class ProjectTask(models.Model):
     timesheet_product_id = fields.Many2one(related="project_id.timesheet_product_id")
     remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so', compute_sudo=True)
     remaining_hours_available = fields.Boolean(related="sale_line_id.remaining_hours_available")
-
-    @property
-    def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS | {
-            'allow_billable',
-            'remaining_hours_available',
-            'remaining_hours_so',
-        }
 
     @api.depends('sale_line_id', 'timesheet_ids', 'timesheet_ids.unit_amount')
     def _compute_remaining_hours_so(self):

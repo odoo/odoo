@@ -1558,31 +1558,30 @@ class AccountMove(models.Model):
 
     def _get_reconciled_info_JSON_values(self):
         self.ensure_one()
+
         reconciled_vals = []
         for partial, amount, counterpart_line in self._get_reconciled_invoices_partials():
-            reconciled_vals.append(self._get_reconciled_vals(partial, amount, counterpart_line))
-        return reconciled_vals
+            if counterpart_line.move_id.ref:
+                reconciliation_ref = '%s (%s)' % (counterpart_line.move_id.name, counterpart_line.move_id.ref)
+            else:
+                reconciliation_ref = counterpart_line.move_id.name
 
-    def _get_reconciled_vals(self, partial, amount, counterpart_line):
-        if counterpart_line.move_id.ref:
-            reconciliation_ref = '%s (%s)' % (counterpart_line.move_id.name, counterpart_line.move_id.ref)
-        else:
-            reconciliation_ref = counterpart_line.move_id.name
-        return {
-            'name': counterpart_line.name,
-            'journal_name': counterpart_line.journal_id.name,
-            'amount': amount,
-            'currency': self.currency_id.symbol,
-            'digits': [69, self.currency_id.decimal_places],
-            'position': self.currency_id.position,
-            'date': counterpart_line.date,
-            'payment_id': counterpart_line.id,
-            'partial_id': partial.id,
-            'account_payment_id': counterpart_line.payment_id.id,
-            'payment_method_name': counterpart_line.payment_id.payment_method_line_id.name,
-            'move_id': counterpart_line.move_id.id,
-            'ref': reconciliation_ref,
-        }
+            reconciled_vals.append({
+                'name': counterpart_line.name,
+                'journal_name': counterpart_line.journal_id.name,
+                'amount': amount,
+                'currency': self.currency_id.symbol,
+                'digits': [69, self.currency_id.decimal_places],
+                'position': self.currency_id.position,
+                'date': counterpart_line.date,
+                'payment_id': counterpart_line.id,
+                'partial_id': partial.id,
+                'account_payment_id': counterpart_line.payment_id.id,
+                'payment_method_name': counterpart_line.payment_id.payment_method_line_id.name,
+                'move_id': counterpart_line.move_id.id,
+                'ref': reconciliation_ref,
+            })
+        return reconciled_vals
 
     @api.depends('move_type', 'line_ids.amount_residual')
     def _compute_payments_widget_reconciled_info(self):
@@ -1838,9 +1837,7 @@ class AccountMove(models.Model):
         """
         self._compute_tax_country_id() # We need to ensure this field has been computed, as we use it in our check
         for record in self:
-            amls = record.line_ids
-            impacted_countries = amls.tax_ids.country_id | amls.tax_line_id.country_id | amls.tax_tag_ids.country_id
-            if impacted_countries and impacted_countries != record.tax_country_id:
+            if record.line_ids.tax_ids and record.line_ids.tax_ids.country_id != record.tax_country_id:
                 raise ValidationError(_("This entry contains some tax from an unallowed country. Please check its fiscal position and your tax configuration."))
 
     # -------------------------------------------------------------------------
@@ -3743,7 +3740,7 @@ class AccountMoveLine(models.Model):
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
 
-    @api.onchange('amount_currency', 'currency_id', 'debit', 'credit', 'tax_ids', 'account_id', 'price_unit', 'quantity')
+    @api.onchange('amount_currency', 'currency_id', 'debit', 'credit', 'tax_ids', 'account_id', 'price_unit')
     def _onchange_mark_recompute_taxes(self):
         ''' Recompute the dynamic onchange based on taxes.
         If the edited line is a tax line, don't recompute anything as the user must be able to
@@ -5008,11 +5005,6 @@ class AccountMoveLine(models.Model):
         for move_line in self:
             amount = (move_line.credit or 0.0) - (move_line.debit or 0.0)
             default_name = move_line.name or (move_line.ref or '/' + ' -- ' + (move_line.partner_id and move_line.partner_id.name or '/'))
-            category = 'other'
-            if move_line.move_id.is_sale_document():
-                category = 'invoice'
-            elif move_line.move_id.is_purchase_document():
-                category = 'vendor_bill'
             result.append({
                 'name': default_name,
                 'date': move_line.date,
@@ -5029,7 +5021,6 @@ class AccountMoveLine(models.Model):
                 'user_id': move_line.move_id.invoice_user_id.id or self._uid,
                 'partner_id': move_line.partner_id.id,
                 'company_id': move_line.analytic_account_id.company_id.id or move_line.move_id.company_id.id,
-                'category': category,
             })
         return result
 

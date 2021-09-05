@@ -1,8 +1,11 @@
-/** @odoo-module **/
+odoo.define('website_livechat.editor', function (require) {
+'use strict';
 
-import { _t } from 'web.core';
-import wUtils from 'website.utils';
-import WebsiteNewMenu from 'website.newMenu';
+var core = require('web.core');
+var wUtils = require('website.utils');
+var WebsiteNewMenu = require('website.newMenu');
+
+var _t = core._t;
 
 WebsiteNewMenu.include({
     actions: _.extend({}, WebsiteNewMenu.prototype.actions || {}, {
@@ -43,4 +46,6 @@ WebsiteNewMenu.include({
             });
         });
     },
+});
+
 });

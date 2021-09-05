@@ -135,7 +135,7 @@ class Lead2OpportunityPartner(models.TransientModel):
                     'user_id': self.user_id.id,
                     'team_id': self.team_id.id,
                 })
-        (to_merge - result_opportunity).unlink()
+        (to_merge - result_opportunity).sudo().unlink()
         return result_opportunity
 
     def _action_convert(self):

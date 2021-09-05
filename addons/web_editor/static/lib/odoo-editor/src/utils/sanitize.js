@@ -12,7 +12,6 @@ import {
     isFontAwesome,
     isMediaElement,
     getDeepRange,
-    isUnbreakable,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -94,7 +93,7 @@ class Sanitize {
         }
 
         // Merge identical elements together
-        while (areSimilarElements(node, node.previousSibling) && !isUnbreakable(node)) {
+        while (areSimilarElements(node, node.previousSibling)) {
             getDeepRange(this.root, { select: true });
             const restoreCursor = preserveCursor(this.root.ownerDocument);
             const nodeP = node.previousSibling;

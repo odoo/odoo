@@ -1,7 +1,8 @@
-/** @odoo-module **/
+odoo.define('website_livechat/static/tests/helpers/mock_models.js', function (require) {
+'use strict';
 
-import { MockModels } from '@mail/../tests/helpers/mock_models';
-import { patch } from 'web.utils';
+const { MockModels } = require('@mail/../tests/helpers/mock_models');
+const { patch } = require('web.utils');
 
 patch(MockModels, 'website_livechat/static/tests/helpers/mock_models.js', {
 
@@ -37,5 +38,7 @@ patch(MockModels, 'website_livechat/static/tests/helpers/mock_models.js', {
         });
         return data;
     },
+
+});
 
 });

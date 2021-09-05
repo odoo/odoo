@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 const { Component } = owl;
@@ -14,13 +13,10 @@ DialogCommand.template = xml`
     </div>
 `;
 
-const commandEmptyMessageRegistry = registry.category("command_empty_list");
-commandEmptyMessageRegistry.add("@", _lt("No user found"));
-commandEmptyMessageRegistry.add("#", _lt("No channel found"));
-
 const commandProviderRegistry = registry.category("command_provider");
+
 commandProviderRegistry.add("partner", {
-    namespace: "@",
+    nameSpace: "@",
     async provide(newEnv, options) {
         const messaging = await Component.env.services.messaging.get();
         const suggestions = [];
@@ -47,7 +43,7 @@ commandProviderRegistry.add("partner", {
 });
 
 commandProviderRegistry.add("channel", {
-    namespace: "#",
+    nameSpace: "#",
     async provide(newEnv, options) {
         const messaging = await Component.env.services.messaging.get();
         const channels = await messaging.models['mail.thread'].searchChannelsToOpen({

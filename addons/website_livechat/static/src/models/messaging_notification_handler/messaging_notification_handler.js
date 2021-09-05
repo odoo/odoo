@@ -1,6 +1,7 @@
-/** @odoo-module **/
+odoo.define('website_livechat/static/src/models/messaging_notification_handler/messaging_notification_handler.js', function (require) {
+'use strict';
 
-import { registerInstancePatchModel } from '@mail/model/model_core';
+const { registerInstancePatchModel } = require('@mail/model/model_core');
 
 registerInstancePatchModel('mail.messaging_notification_handler', 'website_livechat/static/src/models/messaging_notification_handler/messaging_notification_handler.js', {
 
@@ -26,4 +27,6 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'website_livec
         }
         return this._super(data);
     },
+});
+
 });

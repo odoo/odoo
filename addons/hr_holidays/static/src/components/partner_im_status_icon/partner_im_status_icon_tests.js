@@ -1,11 +1,12 @@
-/** @odoo-module **/
+odoo.define('hr_holidays/static/src/components/partner_im_status_icon/partner_im_status_icon_tests.js', function (require) {
+'use strict';
 
-import {
+const {
     afterEach,
     beforeEach,
     createRootMessagingComponent,
     start,
-} from '@mail/utils/test_utils';
+} = require('@mail/utils/test_utils');
 
 QUnit.module('hr_holidays', {}, function () {
 QUnit.module('components', {}, function () {
@@ -102,4 +103,6 @@ QUnit.test('on leave & offline', async function (assert) {
 
 });
 });
+});
+
 });

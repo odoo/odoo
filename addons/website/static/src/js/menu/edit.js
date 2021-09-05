@@ -33,6 +33,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         edition_was_stopped: '_onEditionWasStopped',
         request_save: '_onSnippetRequestSave',
         request_cancel: '_onSnippetRequestCancel',
+        get_clean_html: '_onGetCleanHTML',
     }),
 
     /**
@@ -486,13 +487,10 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     _onSnippetDropped: function (ev) {
         this._targetForEdition().find('.oe_structure.oe_empty, [data-oe-type="html"]')
             .attr('contenteditable', true);
-        ev.data.addPostDropAsync(new Promise(resolve => {
-            this.trigger_up('widgets_start_request', {
-                editableMode: true,
-                $target: ev.data.$target,
-                onSuccess: () => resolve(),
-            });
-        }));
+        this.trigger_up('widgets_start_request', {
+            editableMode: true,
+            $target: ev.data.$target,
+        });
     },
     /**
      * Called when a snippet is removed from the page. If the wrapper element is
@@ -507,6 +505,15 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             $editable.empty(); // remove any superfluous whitespace
             this._addEditorMessages();
         }
+    },
+    /**
+     * Get the cleaned value of the editable element.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onGetCleanHTML: function (ev) {
+        ev.data.callback(this.wysiwyg.getValue({$layout: ev.data.$layout}));
     },
     /**
      * Snippet (menu_data) can request to save the document to leave the page

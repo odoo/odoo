@@ -1,7 +1,7 @@
 odoo.define('point_of_sale.Chrome', function(require) {
     'use strict';
 
-    const { useState, useRef, useContext, useExternalListener } = owl.hooks;
+    const { useState, useRef, useContext } = owl.hooks;
     const { debounce } = owl.utils;
     const { loadCSS } = require('web.ajax');
     const { useListener } = require('web.custom_hooks');
@@ -12,9 +12,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
     const Registries = require('point_of_sale.Registries');
     const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
     const contexts = require('point_of_sale.PosContext');
-    const { identifyError } = require('point_of_sale.utils');
-    const { odooExceptionTitleMap } = require("@web/core/errors/error_dialogs");
-    const { ConnectionLostError, ConnectionAbortedError, RPCError } = require('@web/core/network/rpc_service');
+    const { registry } = require("@web/core/registry");
 
     // This is kind of a trick.
     // We get a reference to the whole exports so that
@@ -22,13 +20,21 @@ odoo.define('point_of_sale.Chrome', function(require) {
     // we instantiate the extended one.
     const models = require('point_of_sale.models');
 
+    let chromeInstance;
+    function posErrorHandler() {
+        if (chromeInstance) {
+            return chromeInstance.handleError(...arguments);
+        }
+        return false;
+    }
+    registry.category("error_handlers").add("posErrorHandler", posErrorHandler, { sequence: 0 });
+
     /**
      * Chrome is the root component of the PoS App.
      */
     class Chrome extends PopupControllerMixin(PosComponent) {
         constructor() {
             super(...arguments);
-            useExternalListener(window, 'beforeunload', this._onBeforeUnload);
             useListener('show-main-screen', this.__showScreen);
             useListener('toggle-debug-widget', debounce(this._toggleDebugWidget, 100));
             useListener('show-temp-screen', this.__showTempScreen);
@@ -137,9 +143,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 };
                 this.env.pos = new models.PosModel(posModelDefaultAttributes);
                 await this.env.pos.ready;
-                // Load the saved `env.pos.toRefundLines` from localStorage when
-                // the PosModel is ready.
-                Object.assign(this.env.pos.toRefundLines, this.env.pos.db.load('TO_REFUND_LINES') || {});
                 this._buildChrome();
                 this._closeOtherTabs();
                 this.env.pos.set(
@@ -191,6 +194,17 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     exitButtonIsShown: true,
                 });
             }
+        }
+        handleError(env, error, originalError) {
+            if (this.env.pos && originalError && originalError.message) {
+                const { type, message, data } = originalError.message;
+                this.showPopup('ErrorTracebackPopup', {
+                    title: type,
+                    body: message + '\n' + data.debug + '\n',
+                });
+                return true;
+            }
+            return false;
         }
 
         // EVENT HANDLERS //
@@ -319,13 +333,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
             this.state.notification.isShown = false;
             this.state.notification.message = '';
         }
-        /**
-         * Save `env.pos.toRefundLines` in localStorage on beforeunload - closing the
-         * browser, reloading or going to other page.
-         */
-        _onBeforeUnload() {
-            this.env.pos.db.save('TO_REFUND_LINES', this.env.pos.toRefundLines);
-        }
 
         // TO PASS AS PARAMETERS //
 
@@ -406,6 +413,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
             }
 
             this._disableBackspaceBack();
+            chromeInstance = this;
         }
         // prevent backspace from performing a 'back' navigation
         _disableBackspaceBack() {
@@ -440,73 +448,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 },
                 false
             );
-        }
-        showCashMoveButton() {
-            return this.env.pos && this.env.pos.config && this.env.pos.config.cash_control;
-        }
-
-        // UNEXPECTED ERROR HANDLING //
-
-        /**
-         * This method is used to handle unexpected errors. It is registered to
-         * the `error_handlers` service when this component is properly mounted.
-         * See `onMounted` hook of the `ChromeAdapter` component.
-         * @param {*} env
-         * @param {UncaughtClientError | UncaughtPromiseError} error
-         * @param {*} originalError
-         * @returns {boolean}
-         */
-        errorHandler(env, error, originalError) {
-            if (!env.pos) return false;
-            const errorToHandle = identifyError(originalError);
-            // Assume that the unhandled falsey rejections can be ignored.
-            if (errorToHandle) {
-                this._errorHandler(error, errorToHandle);
-            }
-            return true;
-        }
-
-        _errorHandler(error, errorToHandle) {
-            if (errorToHandle instanceof RPCError) {
-                const { message, data } = errorToHandle;
-                if (odooExceptionTitleMap.has(errorToHandle.exceptionName)) {
-                    const title = odooExceptionTitleMap.get(errorToHandle.exceptionName).toString();
-                    this.showPopup('ErrorPopup', { title, body: data.message });
-                } else {
-                    this.showPopup('ErrorTracebackPopup', {
-                        title: message,
-                        body: data.message + '\n' + data.debug + '\n',
-                    });
-                }
-            } else if (errorToHandle instanceof ConnectionLostError) {
-                this.showPopup('OfflineErrorPopup', {
-                    title: this.env._t('Connection is lost'),
-                    body: this.env._t('Check the internet connection then try again.'),
-                });
-            } else if (errorToHandle instanceof ConnectionAbortedError) {
-                this.showPopup('OfflineErrorPopup', {
-                    title: this.env._t('Connection is aborted'),
-                    body: this.env._t('Check the internet connection then try again.'),
-                });
-            } else if (errorToHandle instanceof Error) {
-                // If `errorToHandle` is a normal Error (such as TypeError),
-                // the annotated traceback can be found from `error`.
-                this.showPopup('ErrorTracebackPopup', {
-                    // Hopefully the message is translated.
-                    title: `${errorToHandle.name}: ${errorToHandle.message}`,
-                    body: error.traceback,
-                });
-            } else {
-                // Hey developer. It's your fault that the error reach here.
-                // Please, throw an Error object in order to get stack trace of the error.
-                // At least we can find the file that throws the error when you look
-                // at the console.
-                this.showPopup('ErrorPopup', {
-                    title: this.env._t('Unknown Error'),
-                    body: this.env._t('Unable to show information about this error.'),
-                });
-                console.error('Unknown error. Unable to show information about this error.', errorToHandle);
-            }
         }
     }
     Chrome.template = 'Chrome';

@@ -1,7 +1,9 @@
-/** @odoo-module **/
+odoo.define('website_slides.course.slides.list', function (require) {
+'use strict';
 
-import publicWidget from 'web.public.widget';
-import { _t } from 'web.core';
+var publicWidget = require('web.public.widget');
+var core = require('web.core');
+var _t = core._t;
 
 publicWidget.registry.websiteSlidesCourseSlidesList = publicWidget.Widget.extend({
     selector: '.o_wslides_slides_list',
@@ -107,4 +109,6 @@ publicWidget.registry.websiteSlidesCourseSlidesList = publicWidget.Widget.extend
     }
 });
 
-export default publicWidget.registry.websiteSlidesCourseSlidesList;
+return publicWidget.registry.websiteSlidesCourseSlidesList;
+
+});

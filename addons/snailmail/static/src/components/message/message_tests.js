@@ -1,15 +1,16 @@
-/** @odoo-module **/
+odoo.define('snailmail/static/src/components/message/message_tests.js', function (require) {
+'use strict';
 
-import { create, insert, link } from '@mail/model/model_field_command';
-import {
+const { create, insert, link } = require('@mail/model/model_field_command');
+const {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
     start,
-} from '@mail/utils/test_utils';
+} = require('@mail/utils/test_utils');
 
-import Bus from 'web.Bus';
+const Bus = require('web.Bus');
 
 QUnit.module('snailmail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -672,4 +673,6 @@ QUnit.test('Missing Required Fields', async function (assert) {
 
 });
 });
+});
+
 });

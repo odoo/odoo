@@ -1,9 +1,7 @@
 odoo.define('point_of_sale.BarcodeReader', function (require) {
 "use strict";
 
-var concurrency = require('web.concurrency');
 var core = require('web.core');
-var Mutex = concurrency.Mutex;
 
 // this module interfaces with the barcode reader. It assumes the barcode reader
 // is set-up to act like  a keyboard. Use connect() and disconnect() to activate
@@ -17,7 +15,6 @@ var BarcodeReader = core.Class.extend({
     ],
 
     init: function (attributes) {
-        this.mutex = new Mutex();
         this.pos = attributes.pos;
         this.action_callbacks = {};
         this.exclusive_callbacks = {};
@@ -30,10 +27,7 @@ var BarcodeReader = core.Class.extend({
         this.action_callback_stack = [];
 
         core.bus.on('barcode_scanned', this, function (barcode) {
-            // use mutex to make sure scans are done one after the other
-            this.mutex.exec(async () => {
-                await this.scan(barcode);
-            });
+            this.scan(barcode);
         });
     },
 
@@ -104,7 +98,7 @@ var BarcodeReader = core.Class.extend({
         }
     },
 
-    scan: async function (code) {
+    scan: function (code) {
         if (!code) return;
 
         const callbacks = Object.keys(this.exclusive_callbacks).length
@@ -116,9 +110,7 @@ var BarcodeReader = core.Class.extend({
         }
         for (const parsed_result of parsed_results) {
             if (callbacks[parsed_result.type]) {
-                for (const cb of callbacks[parsed_result.type]) {
-                    await cb(parsed_result);
-                }
+                [...callbacks[parsed_result.type]].map(cb => cb(parsed_result));
             } else if (callbacks.error) {
                 [...callbacks.error].map(cb => cb(parsed_result));
             } else {

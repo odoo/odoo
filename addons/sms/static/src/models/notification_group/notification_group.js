@@ -1,8 +1,9 @@
-/** @odoo-module **/
+odoo.define('sms/static/src/models/notification_group/notification_group.js', function (require) {
+'use strict';
 
-import {
+const {
     registerInstancePatchModel,
-} from '@mail/model/model_core';
+} = require('@mail/model/model_core');
 
 registerInstancePatchModel('mail.notification_group', 'sms/static/src/models/notification_group/notification_group.js', {
 
@@ -56,4 +57,6 @@ registerInstancePatchModel('mail.notification_group', 'sms/static/src/models/not
             this.messaging.messagingMenu.close();
         }
     },
+});
+
 });

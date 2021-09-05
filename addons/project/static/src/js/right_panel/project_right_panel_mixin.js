@@ -15,7 +15,6 @@ export const RightPanelRendererMixin = {
 };
 
 export const RightPanelControllerMixin = {
-    rightPanelPosition: 'last-child',
     /**
      * Init the rightSidePanel from the config parameters
      *
@@ -35,7 +34,7 @@ export const RightPanelControllerMixin = {
         this._rightPanelWrapper = new ComponentWrapper(this, this.rightSidePanel.Component, this.rightSidePanel.props);
         const content = this.el.querySelector(':scope .o_content');
         content.classList.add('o_controller_with_rightpanel');
-        promises.push(this._rightPanelWrapper.mount(content, { position: this.rightPanelPosition }));
+        promises.push(this._rightPanelWrapper.mount(content, { position: 'last-child' }));
         await Promise.all(promises);
     },
     /**

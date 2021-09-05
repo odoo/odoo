@@ -10,7 +10,6 @@ var rpc = require('web.rpc');
 var BarcodeParser = Class.extend({
     init: function(attributes) {
         this.nomenclature_id = attributes.nomenclature_id;
-        this.nomenclature = attributes.nomenclature;
         this.loaded = this.load();
     },
 
@@ -19,7 +18,7 @@ var BarcodeParser = Class.extend({
     // only when those data have been loaded
     load: function(){
         if (!this.nomenclature_id) {
-            return this.nomenclature ? Promise.resolve() : Promise.reject();
+            return;
         }
         var id = this.nomenclature_id[0];
         return rpc.query({

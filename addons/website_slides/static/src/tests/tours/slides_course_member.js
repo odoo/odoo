@@ -1,6 +1,7 @@
-/** @odoo-module **/
+odoo.define('website_slides.tour.slide.course.member', function (require) {
+'use strict';
 
-import tour from 'web_tour.tour';
+var tour = require('web_tour.tour');
 
 /**
  * Global use case:
@@ -139,3 +140,5 @@ tour.register('course_member', {
     run: function () {}, // check review is correctly added
 }
 ]);
+
+});

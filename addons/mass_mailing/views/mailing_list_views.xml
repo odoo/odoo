@@ -105,7 +105,6 @@
     <record id="mailing_list_view_form_simplified" model="ir.ui.view">
         <field name="name">mailing.list.form.simplified</field>
         <field name="model">mailing.list</field>
-        <field name="priority" eval="25"/>
         <field name="arch" type="xml">
             <form string="Contact List">
                 <group>
@@ -121,23 +120,11 @@
                 <group>
                     <field name="is_public"/>
                 </group>
-            </form>
-        </field>
-    </record>
-
-    <record id="mailing_list_view_form_simplified_footer" model="ir.ui.view">
-        <field name="name">mailing.list.form.simplified.footer</field>
-        <field name="model">mailing.list</field>
-        <field name="inherit_id" ref="mailing_list_view_form_simplified"/>
-        <field name="mode">primary</field>
-        <field name="priority" eval="30"/>
-        <field name="arch" type="xml">
-            <xpath expr="//form" position="inside">
                 <footer>
                     <button string="Create" name="close_dialog" type="object" class="btn-primary" data-hotkey="q"/>
                     <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
                 </footer>
-            </xpath>
+            </form>
         </field>
     </record>
 
@@ -145,7 +132,7 @@
         <field name="name">Create a Mailing List</field>
         <field name="res_model">mailing.list</field>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="mailing_list_view_form_simplified_footer"/>
+        <field name="view_id" ref="mailing_list_view_form_simplified"/>
         <field name="target">new</field>
     </record>
 
@@ -228,9 +215,10 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Create a Mailing List
+            Create a new mailing list
           </p><p>
-            No need to import mailing lists, you can send mailings to contacts saved in other Odoo apps.
+            You don't need to import your mailing lists, you can easily
+            send emails<br/> to any contact saved in other Odoo apps.
           </p>
         </field>
     </record>

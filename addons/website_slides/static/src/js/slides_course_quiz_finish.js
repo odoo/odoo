@@ -1,7 +1,9 @@
-/** @odoo-module **/
+odoo.define('website_slides.quiz.finish', function (require) {
+'use strict';
 
-import Dialog from 'web.Dialog';
-import { _t } from 'web.core';
+var Dialog = require('web.Dialog');
+var core = require('web.core');
+var _t = core._t;
 
 /**
  * This modal is used when the user finishes the quiz.
@@ -150,4 +152,6 @@ var SlideQuizFinishModal = Dialog.extend({
 
 });
 
-export default SlideQuizFinishModal;
+return SlideQuizFinishModal;
+
+});

@@ -50,12 +50,10 @@ export class ChatWindowHeader extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
-        if (
-            isEventHandled(ev, 'ChatWindowHeader.ClickShiftNext') ||
-            isEventHandled(ev, 'ChatWindowHeader.ClickShiftPrev') ||
-            isEventHandled(ev, 'ChatWindow.onClickHideMemberList') ||
-            isEventHandled(ev, 'ChatWindow.onClickShowMemberList')
-        ) {
+        if (isEventHandled(ev, 'ChatWindowHeader.ClickShiftNext')) {
+            return;
+        }
+        if (isEventHandled(ev, 'ChatWindowHeader.ClickShiftPrev')) {
             return;
         }
         const chatWindow = this.chatWindow;

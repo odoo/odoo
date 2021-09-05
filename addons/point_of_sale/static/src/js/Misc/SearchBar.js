@@ -2,7 +2,6 @@ odoo.define('point_of_sale.SearchBar', function (require) {
     'use strict';
 
     const { useState, useExternalListener } = owl.hooks;
-    const { useListener } = require('web.custom_hooks');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
@@ -18,12 +17,12 @@ odoo.define('point_of_sale.SearchBar', function (require) {
      *
      * @prop {{
      *  config: {
-     *      searchFields: Map<string, string>,
-     *      filter: { show: boolean, options: Map<string, { text: string, indented: boolean? }> }
+     *      searchFields: string[],
+     *      filter: { show: boolean, options: string[] }
      *  },
      *  placeholder: string,
      * }}
-     * @emits search @payload { fieldName: string, searchTerm: '' }
+     * @emits search @payload { fieldValue: string, searchTerm: '' }
      * @emits filter-selected @payload { filter: string }
      *
      * NOTE: The payload of the emitted event is accessible via the `detail`
@@ -32,46 +31,40 @@ odoo.define('point_of_sale.SearchBar', function (require) {
     class SearchBar extends PosComponent {
         constructor() {
             super(...arguments);
-            useExternalListener(window, 'click', this._hideOptions);
-            useListener('click-search-field', this._onClickSearchField);
-            useListener('select-filter', this._onSelectFilter);
-            this.filterOptionsList = [...this.props.config.filter.options.keys()];
-            this.searchFieldsList = [...this.props.config.searchFields.keys()];
-            const defaultSearchFieldId = this.searchFieldsList.indexOf(
-                this.props.config.defaultSearchDetails.fieldName
-            );
+            this.config = this.props.config;
             this.state = useState({
-                searchInput: this.props.config.defaultSearchDetails.searchTerm || '',
-                selectedSearchFieldId: defaultSearchFieldId == -1 ? 0 : defaultSearchFieldId,
+                searchInput: '',
+                selectedFieldId: this.config.searchFields.length ? 0 : null,
                 showSearchFields: false,
                 showFilterOptions: false,
-                selectedFilter: this.props.config.defaultFilter || this.filterOptionsList[0],
+                selectedFilter: this.config.filter.options[0] || this.env._t('Select'),
             });
+            useExternalListener(window, 'click', this._hideOptions);
         }
-        _onSelectFilter({ detail: key }) {
-            this.state.selectedFilter = key;
+        selectFilter(option) {
+            this.state.selectedFilter = option;
             this.trigger('filter-selected', { filter: this.state.selectedFilter });
         }
-        /**
-         * When pressing vertical arrow keys, do not move the input cursor.
-         */
-        onSearchInputKeydown(event) {
-            if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
-                event.preventDefault();
-            }
+        get placeholder() {
+            return this.props.placeholder;
         }
         /**
          * When vertical arrow keys are pressed, select fields for searching.
          * When enter key is pressed, trigger search event if there is searchInput.
          */
-        onSearchInputKeyup(event) {
+        onKeydown(event) {
             if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
-                this.state.selectedSearchFieldId = this._fieldIdToSelect(event.key);
-            } else if (event.key === 'Enter' || this.state.searchInput == '') {
-                this._onClickSearchField({ detail: this.searchFieldsList[this.state.selectedSearchFieldId] });
+                event.preventDefault();
+                this.state.selectedFieldId = this._fieldIdToSelect(event.key);
+            } else if (event.key === 'Enter') {
+                this.trigger('search', {
+                    fieldValue: this.config.searchFields[this.state.selectedFieldId],
+                    searchTerm: this.state.searchInput,
+                });
+                this.state.showSearchFields = false;
             } else {
-                if (this.state.selectedSearchFieldId === -1 && this.searchFieldsList.length) {
-                    this.state.selectedSearchFieldId = 0;
+                if (this.state.selectedFieldId === null && this.config.searchFields.length) {
+                    this.state.selectedFieldId = 0;
                 }
                 this.state.showSearchFields = true;
             }
@@ -79,21 +72,24 @@ odoo.define('point_of_sale.SearchBar', function (require) {
         /**
          * Called when a search field is clicked.
          */
-        _onClickSearchField({ detail: fieldName }) {
+        onClickSearchField(id) {
             this.state.showSearchFields = false;
-            this.trigger('search', { fieldName, searchTerm: this.state.searchInput });
+            this.trigger('search', {
+                fieldValue: this.config.searchFields[id],
+                searchTerm: this.state.searchInput,
+            });
         }
         /**
-         * Given an arrow key, return the next selectedSearchFieldId.
-         * E.g. If the selectedSearchFieldId is 1 and ArrowDown is pressed, return 2.
+         * Given an arrow key, return the next selectedFieldId.
+         * E.g. If the selectedFieldId is 1 and ArrowDown is pressed, return 2.
          *
          * @param {string} key vertical arrow key
          */
         _fieldIdToSelect(key) {
-            const length = this.searchFieldsList.length;
+            const length = this.config.searchFields.length;
             if (!length) return null;
-            if (this.state.selectedSearchFieldId === -1) return 0;
-            const current = this.state.selectedSearchFieldId || length;
+            if (this.state.selectedFieldId === null) return 0;
+            const current = this.state.selectedFieldId || length;
             return (current + (key === 'ArrowDown' ? 1 : -1)) % length;
         }
         _hideOptions() {
@@ -102,6 +98,17 @@ odoo.define('point_of_sale.SearchBar', function (require) {
         }
     }
     SearchBar.template = 'point_of_sale.SearchBar';
+    SearchBar.defaultProps = {
+        config: {
+            searchFields: [],
+            filter: {
+                show: false,
+                options: [],
+            },
+        },
+        placeholder: 'Search ...',
+    };
+
     Registries.Component.add(SearchBar);
 
     return SearchBar;

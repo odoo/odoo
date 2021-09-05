@@ -1,9 +1,10 @@
-/** @odoo-module **/
+odoo.define('hr.StandaloneM2OAvatarEmployee', function (require) {
+    'use strict';
 
-    import StandaloneFieldManagerMixin from 'web.StandaloneFieldManagerMixin';
-    import Widget from 'web.Widget';
+    const StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
+    const Widget = require('web.Widget');
 
-    import { Many2OneAvatarEmployee } from '@hr/js/m2x_avatar_employee';
+    const { Many2OneAvatarEmployee } = require('hr.Many2OneAvatarEmployee');
 
     const StandaloneM2OAvatarEmployee = Widget.extend(StandaloneFieldManagerMixin, {
         className: 'o_standalone_avatar_employee',
@@ -56,4 +57,5 @@
         },
     });
 
-    export default StandaloneM2OAvatarEmployee;
+    return StandaloneM2OAvatarEmployee;
+});

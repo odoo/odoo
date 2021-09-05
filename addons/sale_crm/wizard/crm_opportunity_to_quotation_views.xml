@@ -13,8 +13,7 @@
                 </group>
                 <group attrs="{'invisible': [('action','!=','exist')], 'required':[('action', '=','exist')]}">
                     <group>
-                        <field name="partner_id" attrs="{'invisible': [('action','!=','exist')], 'required':[('action', '=','exist')]}"
-                               context="{'res_partner_search_mode': 'customer'}" />
+                        <field name="partner_id" attrs="{'invisible': [('action','!=','exist')], 'required':[('action', '=','exist')]}"/>
                     </group>
                 </group>
                 <footer>

@@ -4,7 +4,6 @@ odoo.define("website_event.tour", function (require) {
     const {_t} = require("web.core");
     const {Markup} = require('web.utils');
     var tour = require("web_tour.tour");
-    var time = require('web.time');
 
     tour.register("website_event_tour", {
         test: true,
@@ -18,16 +17,11 @@ odoo.define("website_event.tour", function (require) {
         content: _t("Click here to create a new event."),
         position: "bottom",
     }, {
-        trigger: '.modal-dialog #editor_new_event input[name=name]',
+        trigger: '.modal-dialog #editor_new_event input[type=text]',
         content: Markup(_t("Create a name for your new event and click <em>\"Continue\"</em>. e.g: Technical Training")),
-        run: 'text Technical Training',
         position: "left",
     }, {
-        trigger: '.modal-dialog #editor_new_event input[name=event_start_end]',
-        content: _t("Pick a Start date for your event"),
-        run: 'text ' + moment().format(time.getLangDatetimeFormat()) + ' - ' + moment().add(1, "d").format(time.getLangDatetimeFormat()),
-    }, {
-        trigger: '.modal-footer button.btn-primary',
+        trigger: '.modal-footer button.btn-primary.btn-continue',
         extra_trigger: '#editor_new_event input[type=text][value!=""]',
         content: Markup(_t("Click <em>Continue</em> to create the event.")),
         position: "right",

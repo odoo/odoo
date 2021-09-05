@@ -270,22 +270,22 @@ class AdyenController(http.Controller):
                 ):
                     continue
 
-                # Check whether the event of the notification succeeded and reshape the notification
-                # data for parsing
+                # Check whether the event of the notification succeeded
                 _logger.info("notification received:\n%s", pprint.pformat(notification_data))
-                success = notification_data['success'] == 'true'
+                if notification_data['success'] != 'true':
+                    continue  # Don't handle failed events
+
+                # Reshape the notification data for parsing
                 event_code = notification_data['eventCode']
-                if event_code == 'AUTHORISATION' and success:
+                if event_code == 'AUTHORISATION':
                     notification_data['resultCode'] = 'Authorised'
-                elif event_code == 'CANCELLATION' and success:
+                elif event_code == 'CANCELLATION':
                     notification_data['resultCode'] = 'Cancelled'
-                elif event_code == 'REFUND':
-                    notification_data['resultCode'] = 'Authorised' if success else 'Error'
                 else:
-                    continue  # Don't handle unsupported event codes and failed events
+                    continue  # Don't handle unsupported event codes
 
                 # Handle the notification data as a regular feedback
-                PaymentTransaction.sudo()._handle_feedback_data('adyen', notification_data)
+                PaymentTransaction._handle_feedback_data('adyen', notification_data)
             except ValidationError:  # Acknowledge the notification to avoid getting spammed
                 _logger.exception("unable to handle the notification data; skipping to acknowledge")
 

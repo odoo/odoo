@@ -4,10 +4,10 @@ odoo.define('microsoft_calendar.CalendarView', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
-const CalendarView = require('@calendar/js/calendar_view')[Symbol.for("default")];
-const CalendarRenderer = require('@calendar/js/calendar_renderer')[Symbol.for("default")].AttendeeCalendarRenderer;
-const CalendarController = require('@calendar/js/calendar_controller')[Symbol.for("default")];
-const CalendarModel = require('@calendar/js/calendar_model')[Symbol.for("default")];
+const CalendarView = require('calendar.CalendarView');
+const CalendarRenderer = require('calendar.CalendarRenderer').AttendeeCalendarRenderer;
+const CalendarController = require('calendar.CalendarController');
+const CalendarModel = require('calendar.CalendarModel');
 const viewRegistry = require('web.view_registry');
 const session = require('web.session');
 
@@ -161,35 +161,15 @@ const MicrosoftCalendarController = CalendarController.include({
         });
     },
 
-    _onArchiveRecord: async function (event) {
-        const self = this;
-        if (event.data.event.record.recurrency) {
-            const recurrenceUpdate = await this._askRecurrenceUpdatePolicy();
-            event.data = Object.assign({}, event.data, {
-                    'recurrenceUpdate': recurrenceUpdate,
-                });
-                if (recurrenceUpdate === 'self_only') {
-                    self.model.archiveRecords([event.data.id], self.modelName).then(function () {
+    _onArchiveRecord: function (event) {
+        var self = this;
+        Dialog.confirm(this, _t("Are you sure you want to archive this record ?"), {
+            confirm_callback: function () {
+                self.model.archiveRecords([event.data.id], self.modelName).then(function () {
                     self.reload();
                 });
-                } else {
-                    return this._rpc({
-                        model: self.modelName,
-                        method: 'action_mass_archive',
-                        args: [[event.data.id], recurrenceUpdate],
-                    }).then( function () {
-                        self.reload();
-                    });
-                }
-        } else {
-            Dialog.confirm(this, _t("Are you sure you want to delete this record ?"), {
-                confirm_callback: function () {
-                    self.model.archiveRecords([event.data.id], self.modelName).then(function () {
-                        self.reload();
-                    });
-                }
-            });
-        }
+            }
+        });
     },
 });
 
@@ -199,8 +179,8 @@ const MicrosoftCalendarRenderer = CalendarRenderer.include({
     }),
 
     events: _.extend({}, CalendarRenderer.prototype.events, {
-        'click .o_microsoft_sync_pending': '_onSyncMicrosoftCalendar',
-        'click .o_microsoft_sync_button_configured': '_onStopMicrosoftSynchronization',
+        'click .o_microsoft_sync_button': '_onSyncMicrosoftCalendar',
+        'click .o_stop_microsoft_sync_button': '_onStopMicrosoftSynchronization',
     }),
 
     //--------------------------------------------------------------------------
@@ -208,28 +188,31 @@ const MicrosoftCalendarRenderer = CalendarRenderer.include({
     //--------------------------------------------------------------------------
 
     _initMicrosoftPillButton: function() {
-        // hide the pending button
-        this.$calendarSyncContainer.find('#microsoft_sync_pending').hide();
-        const switchBadgeClass = elem => elem.toggleClass(['badge-primary', 'badge-danger']);
-        this.$('#microsoft_sync_configured').hover(() => {
-            switchBadgeClass(this.$calendarSyncContainer.find('#microsoft_sync_configured'));
-            this.$calendarSyncContainer.find('#microsoft_check').hide();
-            this.$calendarSyncContainer.find('#microsoft_stop').show();
+        this.$microsoftStopButton.css({"cursor":"pointer", "font-size":"0.9em"});
+        var switchBadgeClass = (elem) => {elem.toggleClass('badge-primary'); elem.toggleClass('badge-danger');};
+        this.$('.o_stop_microsoft_sync_button').hover(() => {
+            switchBadgeClass(this.$microsoftStopButton);
+            this.$microsoftStopButton.html("<i class='fa mr-2 fa-times'/>".concat(_t("Stop the Synchronization")));
         }, () => {
-            switchBadgeClass(this.$calendarSyncContainer.find('#microsoft_sync_configured'));
-            this.$calendarSyncContainer.find('#microsoft_stop').hide();
-            this.$calendarSyncContainer.find('#microsoft_check').show();
+            switchBadgeClass(this.$microsoftStopButton);
+            this.$microsoftStopButton.html("<i class='fa mr-2 fa-check'/>".concat(_t("Synched with Outlook")));
         });
     },
 
     _getMicrosoftButton: function () {
-        this.$calendarSyncContainer.find('#microsoft_sync_configured').hide();
-        this.$calendarSyncContainer.find('#microsoft_sync_pending').show();
+        return $('<button/>', {
+            type: 'button',
+            html: _t("Sync with <b>Outlook</b>"),
+            class: 'o_microsoft_sync_button w-100 m-auto btn btn-secondary'
+        });
     },
 
     _getMicrosoftStopButton: function () {
-        this.$calendarSyncContainer.find('#microsoft_sync_configured').show();
-        this.$calendarSyncContainer.find('#microsoft_sync_pending').hide();
+        return  $('<span/>', {
+            html: _t("Synched with Outlook"),
+            class: 'w-100 badge badge-pill badge-primary border-0 o_stop_microsoft_sync_button'
+        })
+        .prepend($('<i/>', {class: "fa mr-2 fa-check"}));
     },
 
     /**
@@ -240,14 +223,14 @@ const MicrosoftCalendarRenderer = CalendarRenderer.include({
     _initSidebar: function () {
         var self = this;
         this._super.apply(this, arguments);
-        this.$microsoftButton = this.$('#microsoft_sync_pending');
-        this.$microsoftStopButton = this.$('#microsoft_sync_configured');
+        this.$microsoftButton = $();
+        this.$microsoftStopButton = $();
         if (this.model === "calendar.event") {
             if (this.state.microsoft_is_sync) {
+                this.$microsoftStopButton = this._getMicrosoftStopButton().appendTo(self.$sidebar);
                 this._initMicrosoftPillButton();
             } else {
-                // Hide the button needed when the calendar sync is configured
-                self.$microsoftStopButton.hide();
+                this.$microsoftButton = this._getMicrosoftButton().appendTo(self.$sidebar);
             }
         }
     },
@@ -270,6 +253,10 @@ const MicrosoftCalendarRenderer = CalendarRenderer.include({
                 self.$microsoftButton.prop('disabled', false);
             },
             on_refresh: function () {
+                if (_.isEmpty(self.$microsoftStopButton)) {
+                    self.$microsoftStopButton = self._getMicrosoftStopButton();
+                }
+                self.$microsoftButton.replaceWith(self.$microsoftStopButton);
                 self._initMicrosoftPillButton();
             }
         });
@@ -280,8 +267,10 @@ const MicrosoftCalendarRenderer = CalendarRenderer.include({
         this.$microsoftStopButton.prop('disabled', true);
         this.trigger_up('stopMicrosoftSynchronization' , {
             on_confirm: function () {
-                self.$microsoftStopButton.hide();
-                self.$microsoftButton.show();
+                if (_.isEmpty(self.$microsoftButton)) {
+                    self.$microsoftButton = self._getMicrosoftButton();
+                }
+                self.$microsoftStopButton.replaceWith(self.$microsoftButton);
             },
             on_always: function() {
                 self.$microsoftStopButton.prop('disabled', false);
@@ -291,7 +280,7 @@ const MicrosoftCalendarRenderer = CalendarRenderer.include({
 
     _onArchiveEvent: function (event) {
         this._unselectEvent();
-        this.trigger_up('archiveRecord', {id: parseInt(event.data.id, 10), event: event.target.event.extendedProps});
+        this.trigger_up('archiveRecord', {id: parseInt(event.data.id, 10)});
     },
 });
 

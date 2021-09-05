@@ -1,7 +1,8 @@
-/** @odoo-module **/
+odoo.define('hr/static/tests/helpers/mock_models.js', function (require) {
+'use strict';
 
-import { MockModels } from '@mail/../tests/helpers/mock_models';
-import { patch } from 'web.utils';
+const { MockModels } = require('@mail/../tests/helpers/mock_models');
+const { patch } = require('web.utils');
 
 patch(MockModels, 'hr/static/tests/helpers/mock_models.js', {
 
@@ -26,5 +27,7 @@ patch(MockModels, 'hr/static/tests/helpers/mock_models.js', {
         });
         return data;
     },
+
+});
 
 });

@@ -259,7 +259,7 @@ class SaleOrderLine(models.Model):
             'sale_line_id': self.id,
             'sale_order_id': self.order_id.id,
             'company_id': project.company_id.id,
-            'user_ids': False,  # force non assigned task, as created as sudo()
+            'user_id': False,  # force non assigned task, as created as sudo()
         }
 
     def _timesheet_create_task(self, project):
@@ -326,7 +326,7 @@ class SaleOrderLine(models.Model):
         # task_global_project: create task in global project
         for so_line in so_line_task_global_project:
             if not so_line.task_id:
-                if map_sol_project.get(so_line.id) and so_line.product_uom_qty > 0:
+                if map_sol_project.get(so_line.id):
                     so_line._timesheet_create_task(project=map_sol_project[so_line.id])
 
         # project_only, task_in_project: create a new project, based or not on a template (1 per SO). May be create a task too.

@@ -28,7 +28,6 @@ class SaleReport(models.Model):
             t.uom_id AS product_uom,
             sum(l.qty) AS product_uom_qty,
             sum(l.qty) AS qty_delivered,
-            0 as qty_to_deliver,
             CASE WHEN pos.state = 'invoiced' THEN sum(l.qty) ELSE 0 END AS qty_invoiced,
             CASE WHEN pos.state != 'invoiced' THEN sum(l.qty) ELSE 0 END AS qty_to_invoice,
             SUM(l.price_subtotal_incl) / MIN(CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END) AS price_total,
@@ -79,10 +78,6 @@ class SaleReport(models.Model):
         '''
         return from_
 
-    def _where_pos(self):
-        where_ = 'l.sale_order_line_id is NULL'
-        return where_
-
     def _group_by_pos(self):
         groupby_ = '''
             l.order_id,
@@ -112,7 +107,7 @@ class SaleReport(models.Model):
         if not fields:
             fields = {}
         res = super()._query(with_clause, fields, groupby, from_clause)
-        current = '(SELECT %s FROM %s WHERE %s GROUP BY %s)' % \
-                  (self._select_pos(fields), self._from_pos(), self._where_pos(), self._group_by_pos())
+        current = '(SELECT %s FROM %s GROUP BY %s)' % \
+                  (self._select_pos(fields), self._from_pos(), self._group_by_pos())
 
         return '%s UNION ALL %s' % (res, current)

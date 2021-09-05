@@ -337,21 +337,6 @@ class ProductProduct(models.Model):
         if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
             self.uom_po_id = self.uom_id
 
-    @api.onchange('default_code')
-    def _onchange_default_code(self):
-        if not self.default_code:
-            return
-
-        domain = [('default_code', '=', self.default_code)]
-        if self.id.origin:
-            domain.append(('id', '!=', self.id.origin))
-
-        if self.env['product.product'].search(domain, limit=1):
-            return {'warning': {
-                'title': _("Note:"),
-                'message': _("The Internal Reference '%s' already exists.", self.default_code),
-            }}
-
     @api.model_create_multi
     def create(self, vals_list):
         products = super(ProductProduct, self.with_context(create_product_product=True)).create(vals_list)
@@ -595,11 +580,6 @@ class ProductProduct(models.Model):
                 category=self.env['product.category'].browse(self.env.context['categ_id']).name,
             )
         return super().view_header_get(view_id, view_type)
-
-    def action_open_label_layout(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('product.action_open_label_layout')
-        action['context'] = {'default_product_ids': self.ids}
-        return action
 
     def open_pricelist_rules(self):
         self.ensure_one()

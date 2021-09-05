@@ -6,6 +6,19 @@ import { ComponentAdapter } from 'web.OwlCompatibility';
 import { FormViewDialog } from 'web.view_dialogs';
 const { useState, useRef } = owl.hooks;
 
+export class FormViewDialogComponentAdapter extends ComponentAdapter {
+    renderWidget() {
+        // Ensure the dialog is properly reconstructed. Without this line, it is
+        // impossible to open the dialog again after having it closed a first
+        // time, because the DOM of the dialog has disappeared.
+        return this.willStart();
+    }
+}
+
+const components = {
+    FormViewDialogComponentAdapter,
+};
+
 class MilestoneComponent extends owl.Component {
     constructor() {
         super(...arguments);
@@ -50,16 +63,15 @@ class MilestoneComponent extends owl.Component {
         await this.__owl__.parent.willUpdateProps();
     }
 }
-MilestoneComponent.components = { ComponentAdapter };
+MilestoneComponent.components = components;
 
 export class AddMilestone extends MilestoneComponent {
     get NEW_PROJECT_MILESTONE() {
         return _lt("New Milestone");
     }
 
-    onAddMilestoneClick(event) {
+    onAddMilestoneClick() {
         if (!this._isDialogOpen) {
-            event.stopPropagation();
             this.state.openDialog = true;
         }
     }
@@ -72,7 +84,7 @@ export class OpenMilestone extends MilestoneComponent {
         super(...arguments);
         this.milestone = useState(this.props.milestone);
         this.state.colorClass = this.milestone.is_deadline_exceeded ? "o_milestone_danger" : "";
-        this.state.checkboxIcon = this.milestone.is_reached ? "fa-check-square-o" : "fa-square-o";
+        this.state.checkboxIcon = this.milestone.is_reached ? "fa-check-square" : "fa-square-o";
     }
 
     get OPEN_PROJECT_MILESTONE() {
@@ -87,7 +99,7 @@ export class OpenMilestone extends MilestoneComponent {
         if (nextProps.milestone) {
             this.milestone = nextProps.milestone;
             this.state.colorClass = this.milestone.is_deadline_exceeded ? "o_milestone_danger" : "";
-            this.state.checkboxIcon = this.milestone.is_reached ? "fa-check-square-o" : "fa-square-o";
+            this.state.checkboxIcon = this.milestone.is_reached ? "fa-check-square" : "fa-square-o";
         }
         if (nextProps.context) {
             this.contextValue = nextProps.context;

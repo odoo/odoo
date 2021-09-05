@@ -25,7 +25,7 @@ class ProductTemplate(models.Model):
 
     def _compute_bom_count(self):
         for product in self:
-            product.bom_count = self.env['mrp.bom'].search_count(['|', ('product_tmpl_id', '=', product.id), ('byproduct_ids.product_id.product_tmpl_id', '=', product.id)])
+            product.bom_count = self.env['mrp.bom'].search_count([('product_tmpl_id', '=', product.id)])
 
     def _compute_used_in_bom_count(self):
         for template in self:
@@ -73,7 +73,7 @@ class ProductProduct(models.Model):
 
     def _compute_bom_count(self):
         for product in self:
-            product.bom_count = self.env['mrp.bom'].search_count(['|', '|', ('byproduct_ids.product_id', '=', product.id), ('product_id', '=', product.id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product.product_tmpl_id.id)])
+            product.bom_count = self.env['mrp.bom'].search_count(['|', ('product_id', '=', product.id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product.product_tmpl_id.id)])
 
     def _compute_used_in_bom_count(self):
         for product in self:
@@ -129,8 +129,6 @@ class ProductProduct(models.Model):
         bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom')
         kits = self.filtered(lambda p: bom_kits.get(p))
         res = super(ProductProduct, self - kits)._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
-        qties = self.env.context.get("mrp_compute_quantities", {})
-        qties.update(res)
         for product in bom_kits:
             boms, bom_sub_lines = bom_kits[product].explode(product, 1)
             ratios_virtual_available = []
@@ -139,7 +137,7 @@ class ProductProduct(models.Model):
             ratios_outgoing_qty = []
             ratios_free_qty = []
             for bom_line, bom_line_data in bom_sub_lines:
-                component = bom_line.product_id.with_context(mrp_compute_quantities=qties)
+                component = bom_line.product_id
                 if component.type != 'product' or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
                     # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
                     # to avoid a division by zero. The same logic is applied to non-storable products as those
@@ -149,7 +147,7 @@ class ProductProduct(models.Model):
                 qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
                 if not qty_per_kit:
                     continue
-                component_res = qties.get(component.id, {
+                component_res = res.get(component.id, {
                     "virtual_available": component.virtual_available,
                     "qty_available": component.qty_available,
                     "incoming_qty": component.incoming_qty,
@@ -183,12 +181,12 @@ class ProductProduct(models.Model):
     def action_view_bom(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.product_open_bom")
         template_ids = self.mapped('product_tmpl_id').ids
-        # bom specific to this variant or global to template or that contains the product as a byproduct
+        # bom specific to this variant or global to template
         action['context'] = {
             'default_product_tmpl_id': template_ids[0],
             'default_product_id': self.ids[0],
         }
-        action['domain'] = ['|', '|', ('byproduct_ids.product_id', 'in', self.ids), ('product_id', 'in', self.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', template_ids)]
+        action['domain'] = ['|', ('product_id', 'in', self.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', template_ids)]
         return action
 
     def action_view_mos(self):

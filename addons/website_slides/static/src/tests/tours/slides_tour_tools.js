@@ -1,4 +1,5 @@
-/** @odoo-module **/
+odoo.define('website_slides.tour.tools', function (require) {
+'use strict';
 
 /*
  * PUBLISHER / CONTENT CREATION
@@ -129,10 +130,12 @@ var addNewCourseTag = function (courseTagName) {
 }];
 };
 
-export default {
+return {
 	addSection: addSection,
 	addVideoToSection: addVideoToSection,
 	addWebPageToSection: addWebPageToSection,
 	addExistingCourseTag: addExistingCourseTag,
 	addNewCourseTag: addNewCourseTag,
 };
+
+});

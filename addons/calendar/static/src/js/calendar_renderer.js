@@ -1,8 +1,9 @@
-/** @odoo-module **/
+odoo.define('calendar.CalendarRenderer', function (require) {
+"use strict";
 
-import CalendarRenderer from 'web.CalendarRenderer';
-import CalendarPopover from 'web.CalendarPopover';
-import session from 'web.session';
+const CalendarRenderer = require('web.CalendarRenderer');
+const CalendarPopover = require('web.CalendarPopover');
+const session = require('web.session');
 
 const AttendeeCalendarPopover = CalendarPopover.extend({
     template: 'Calendar.attendee.status.popover',
@@ -40,7 +41,7 @@ const AttendeeCalendarPopover = CalendarPopover.extend({
      * @return {boolean}
      */
     isCurrentPartnerAttendee() {
-        return this.event.extendedProps.record.partner_ids.includes(session.partner_id);
+        return this.event.extendedProps.record.partner_ids.includes(session.partner_id) && this.event.extendedProps.attendee_id === session.partner_id;
     },
     /**
      * @override
@@ -62,16 +63,6 @@ const AttendeeCalendarPopover = CalendarPopover.extend({
      */
     isEventEditable() {
         return this._isEventPrivate() ? this.isCurrentPartnerAttendee() : this._super();
-    },
-    /**
-     * Check if we are a partner and if we are the only attendee.
-     * This avoid to display attendee answer dropdown for single user attendees
-     * @return {boolean}
-     */
-    displayAttendeeAnswerChoice() {
-        const isCurrentpartner = (currentValue) => currentValue === session.partner_id;
-        const onlyAttendee =  this.event.extendedProps.record.partner_ids.every(isCurrentpartner);
-        return this.isCurrentPartnerAttendee() && this.event.extendedProps.record.is_current_partner && !onlyAttendee;
     },
 
     //--------------------------------------------------------------------------
@@ -96,16 +87,24 @@ const AttendeeCalendarPopover = CalendarPopover.extend({
      */
     _onClickAttendeeStatus: function (ev) {
         ev.preventDefault();
-        const selectedStatus = $(ev.currentTarget).attr('data-action');
-        this.trigger_up('AttendeeStatus', {id: parseInt(this.event.id), record: this.event.extendedProps.record,
-        selectedStatus: selectedStatus});
+        var self = this;
+        var selectedStatus = $(ev.currentTarget).attr('data-action');
+        this._rpc({
+            model: 'calendar.event',
+            method: 'change_attendee_status',
+            args: [parseInt(this.event.id), selectedStatus],
+        }).then(function () {
+            self.event.extendedProps.record.attendee_status = selectedStatus;  // FIXEME: Maybe we have to reload view
+            self.$('.o-calendar-attendee-status-text').text(self.statusInfo[selectedStatus].text);
+            self.$('.o-calendar-attendee-status-icon').removeClass(_.values(self.statusColors).join(' ')).addClass(self.statusInfo[selectedStatus].color);
+            self.$el.parent().hide();
+            self.trigger_up('render_event');
+        });
     },
 });
 
 
 const AttendeeCalendarRenderer = CalendarRenderer.extend({
-    template: 'calendar.CalendarView',
-
 	config: _.extend({}, CalendarRenderer.prototype.config, {
         CalendarPopover: AttendeeCalendarPopover,
         eventTemplate: 'Calendar.calendar-box',
@@ -133,7 +132,9 @@ const AttendeeCalendarRenderer = CalendarRenderer.extend({
     },
 });
 
-export default {
+return {
     AttendeeCalendarRenderer: AttendeeCalendarRenderer,
     AttendeeCalendarPopover: AttendeeCalendarPopover,
 };
+
+});

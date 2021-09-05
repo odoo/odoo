@@ -54,13 +54,12 @@ class ResPartner(models.Model):
         return super().create(values)
 
     def write(self, values):
-        if 'vat' in values or 'l10n_latam_identification_type_id' in values:
-            for record in self:
-                vat_values = {
-                    'vat': values.get('vat', record.vat),
-                    'l10n_latam_identification_type_id': values.get(
-                        'l10n_latam_identification_type_id', record.l10n_latam_identification_type_id.id),
-                    'country_id': values.get('country_id', record.country_id.id)
-                }
-                values['vat'] = self._format_vat_cl(vat_values)
+        for record in self:
+            vat_values = {
+                'vat': values.get('vat', record.vat),
+                'l10n_latam_identification_type_id': values.get(
+                    'l10n_latam_identification_type_id', record.l10n_latam_identification_type_id.id),
+                'country_id': values.get('country_id', record.country_id.id)
+            }
+            values['vat'] = self._format_vat_cl(vat_values)
         return super().write(values)

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, exceptions, fields, models, _
+from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round, float_is_zero, OrderedSet
 
 
@@ -108,11 +109,6 @@ class StockMove(models.Model):
         help='Technical Field to order moves')
     order_finished_lot_ids = fields.Many2many('stock.production.lot', string="Finished Lot/Serial Number", compute='_compute_order_finished_lot_ids')
     should_consume_qty = fields.Float('Quantity To Consume', compute='_compute_should_consume_qty', digits='Product Unit of Measure')
-    cost_share = fields.Float(
-        "Cost Share (%)", digits=(5, 2),  # decimal = 2 is important for rounding calculations!!
-        help="The percentage of the final production cost for this by-product. The total of all by-products' cost share must be smaller or equal to 100.")
-    product_qty_available = fields.Float('Product On Hand Quantity', related='product_id.qty_available')
-    product_virtual_available = fields.Float('Product Forecasted Quantity', related='product_id.virtual_available')
 
     @api.depends('raw_material_production_id.priority')
     def _compute_priority(self):
@@ -279,12 +275,6 @@ class StockMove(models.Model):
         defaults['workorder_id'] = False
         return defaults
 
-    def _prepare_procurement_origin(self):
-        self.ensure_one()
-        if self.raw_material_production_id and self.raw_material_production_id.orderpoint_id:
-            return self.origin
-        return super()._prepare_procurement_origin()
-
     def _prepare_phantom_move_values(self, bom_line, product_qty, quantity_done):
         return {
             'picking_id': self.picking_id.id if self.picking_id else False,
@@ -350,12 +340,9 @@ class StockMove(models.Model):
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
-        return super()._prepare_merge_moves_distinct_fields() + ['created_production_id', 'cost_share']
-
-    def _merge_moves_fields(self):
-        res = super()._merge_moves_fields()
-        res['cost_share'] = sum(self.mapped('cost_share'))
-        return res
+        distinct_fields = super()._prepare_merge_moves_distinct_fields()
+        distinct_fields.append('created_production_id')
+        return distinct_fields
 
     @api.model
     def _prepare_merge_move_sort_method(self, move):

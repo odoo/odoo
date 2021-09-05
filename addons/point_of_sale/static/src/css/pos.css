@@ -589,11 +589,10 @@ td {
     color: #6ec89b;
 }
 
-.pos .pane-border {
-    border-right: solid 3px #787878;
-}
+
 
 .pos .leftpane {
+    border-right: solid 3px #787878;
     background: #e2e2e2;
     height: 100%;
     display: flex;
@@ -719,10 +718,6 @@ td {
     border-bottom: 1px solid;
     border-color: #bfbfbf;
     transition: all 150ms linear;
-}
-.pos .actionpad .button.pay .pay-circle.highlight {
-    color: white;
-    background-color: #6ec89b;
 }
 .pos .actionpad .button:hover {
     background: #efefef;
@@ -1179,7 +1174,7 @@ td {
         margin: 0px !important;
     }
     .pos .product:active {
-        border: solid 3px #6ec89b;
+        border: solid 50px #6ec89b;
         box-sizing: border-box;
     }
     .pos .product:after {
@@ -1211,25 +1206,6 @@ td {
     background: #7f82ac;
     padding: 2px 5px;
     border-radius: 2px;
-}
-
-.pos .product .product-info-button {
-    position: absolute;
-    top: 2px;
-    left: 5px;
-    font-size: 13px;
-    border-radius: 2px;
-    background-color: #7f82ac;
-    color: white;
-    padding: 1px;
-    width: 15px;
-    height: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;}
-
-.pos .product .product-info-button:hover {
-    background-color: #595b79;
 }
 
 .pos .product .product-name {
@@ -1516,10 +1492,6 @@ td {
     flex-grow: 1;
     margin-left: 10px;
     margin-right: 10px;
-    /* make the name of the payment line to be truncated with ellipsis */
-    white-space: nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
 }
 .paymentline .payment-amount {
     margin-left: 10px;
@@ -1824,12 +1796,6 @@ td {
 .pos .clientlist-screen .client-list td {
     padding: 12px 8px;
 }
-
-.pos .clientlist-screen .client-list th.client-line-last-column-placeholder,
-.pos .clientlist-screen .client-list td.client-line-last-column-placeholder {
-    padding: 0;
-}
-
 .pos .clientlist-screen .client-list tr{
     transition: all 150ms linear;
     background: rgb(230,230,230);
@@ -2202,20 +2168,6 @@ td {
     color: #777;
     font-weight: bold;
     font-style:normal;
-}
-
-.pos .order .orderline .to-refund-highlight {
-    font-weight: bold;
-    color: #6ec89b;
-}
-
-.pos .order .orderline .refund-note {
-    margin-top: 2px;
-}
-
-.pos .order .orderline .refund-note span.order-link {
-    text-decoration: underline;
-    cursor: pointer;
 }
 
 /* ------ ORDER NOTES ------- */
@@ -2934,28 +2886,117 @@ td {
     text-align: right;
 }
 
-.item .page-controls {
+.order-management-screen .flex-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.order-management-screen .orders {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-management-screen .order-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.order-management-screen .control-panel {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.5rem;
+}
+
+.order-management-screen .control-panel .item {
+    font-size: medium;
+}
+
+.order-management-screen .control-panel .item .page-controls {
     display: flex;
     flex-direction: row;
     align-items: center;
     font-size: x-large;
 }
 
-.page-controls > div {
+.order-management-screen .control-panel .page-controls > div {
     border: darkgray solid 1px;
     border-radius: 2px;
 }
 
-.page-controls > div:hover {
+.order-management-screen .control-panel .page-controls > div:hover {
     color: rgb(110,200,155);
 }
 
-.page-controls .previous {
+.order-management-screen .control-panel .page-controls .previous {
     margin-right: 0.2rem;
 }
 
-.page-controls .next {
+.order-management-screen .control-panel .page-controls .next {
     margin-left: 0.2rem;
+}
+
+
+.order-management-screen .control-panel .search-box {
+    flex: 1;
+    position: relative;
+    text-align: center;
+    margin: 0.2rem;
+}
+
+.order-management-screen .control-panel .search-box .clear {
+    position: relative;
+    right: 25px;
+    cursor: pointer;
+    color: #808080;
+    font-size: 13px;
+}
+
+.order-management-screen .control-panel .search-box .icon {
+    position: relative;
+    left: 25px;
+    color: #808080;
+    font-size: 13px;
+}
+
+.order-management-screen .control-panel .search-box input {
+    border: 1px solid #cecbcb;
+    padding: 10px 30px;
+    margin: auto;
+    background-color: white;
+    border-radius: 20px;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
+    font-size: 13px;
+}
+
+.order-management-screen .control-panel .search-box input:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
+    color: rgb(153, 153, 255);
+}
+
+.order-management-screen .control-panel .button {
+    line-height: 32px;
+    padding: 3px 13px;
+    font-size: 20px;
+    background: rgb(230, 230, 230);
+    border-radius: 3px;
+    border: solid 1px rgb(209, 209, 209);
+    cursor: pointer;
+    transition: all 150ms linear;
+}
+
+.order-management-screen .control-panel .button:hover {
+    background: #efefef;
+}
+
+.order-management-screen .back-to-list {
+    font-size: large;
+    padding: 10px;
+    background-color: #6EC89B;
+    color: white;
 }
 
 .order-receipt {
@@ -3130,16 +3171,10 @@ td {
     justify-content: space-evenly;
 }
 
-.ticket-screen .orders .order-row.highlight {
-    color: white;
-    background-color:  rgb(110,200,155);
-}
-
 .ticket-screen .orders .col {
     display: flex;
     flex: 1;
     padding: 10px;
-    text-align: start;
 }
 
 .ticket-screen .orders .col.start {
@@ -3177,20 +3212,6 @@ td {
 .ticket-screen .order-row:hover {
     background: rgb(110,200,155);
     color: white;
-}
-
-.ticket-screen .empty-order-list {
-    text-align: center;
-    margin: 48px;
-    color: #adadad;
-}
-
-.ticket-screen .empty-order-list h1 {
-    font-size: 20px;
-}
-
-.ticket-screen .empty-order-list .fa {
-    font-size: 64px;
 }
 
 .ticket-screen .pointer {
@@ -3286,7 +3307,6 @@ td {
     padding-top: 0.2em;
     padding-bottom: 0.2em;
     padding-left: 35px;
-    text-align: left;
 }
 
 .ticket-screen .pos-search-bar .search li:hover {
@@ -3351,30 +3371,12 @@ td {
     align-items: center;
 }
 
-.ticket-screen .filter ul.options li.indented {
-    text-indent: 1em;
-}
-
 .ticket-screen .pos-search-bar .filter ul.options li:hover {
     background-color: #DDD;
 }
 
 .ticket-screen .pos-search-bar .search {
     display: flex;
-}
-
-.ticket-screen .order-container .header-note {
-    text-align: start;
-    padding: 15px;
-    color: grey;
-    padding-bottom: 20px;
-    border-bottom: solid 1px lightgrey;
-    transition: all 300ms linear;
-}
-
-.ticket-screen .order-container .header-note.highlight {
-    color: red;
-    transition: all 300ms linear;
 }
 
 .ticket-button {
@@ -3648,60 +3650,4 @@ td {
 
 .pos .pos-topheader .oe_status:hover {
     background: rgb(104,69,95);
-}
-
-/** CashMovePopup **/
-
-.cash-move {
-    display: flex;
-    flex-flow: column;
-}
-
-.cash-move .input-amount {
-    display: flex;
-    flex-flow: row;
-}
-
-.cash-move .input-amount .input-type {
-    height: 40px;
-    line-height:40px;
-    text-align:center;
-    border-radius: 2px;
-    padding: 0 12px;
-    margin-right: 10px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    border: solid 1px rgba(60,60,60,0.1);
-    background: rgba(0,0,0,0.05);
-    white-space: nowrap;
-}
-
-.cash-move .input-amount .input-type.highlight {
-    background: #6EC89B !important;
-    border: solid 1px #64AF8A !important;
-    color: white !important;
-}
-
-.cash-move .input-amount input {
-    width: 200px;
-    min-height: auto;
-    text-align: right;
-    padding-right: 30px;
-}
-
-.cash-move .input-amount .input-field span.currency {
-    position: relative;
-    left: -20px;
-}
-
-.cash-move textarea {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.cash-move .error-message {
-    color: rgb(197, 52, 0);
-    text-align: left;
-    padding-left: 5px;
 }

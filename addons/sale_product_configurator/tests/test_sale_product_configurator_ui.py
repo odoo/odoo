@@ -5,7 +5,7 @@ import odoo.tests
 from .common import TestProductConfiguratorCommon
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'kzh')
+@odoo.tests.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase, TestProductConfiguratorCommon):
 
     def setUp(self):

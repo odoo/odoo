@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 {
     'name': 'Contact Form',
     'category': 'Website/Website',
@@ -15,12 +14,11 @@ This module includes contact phone and mobile numbers validation.""",
     'depends': ['website', 'crm'],
     'data': [
         'security/ir.model.access.csv',
-        'data/ir_actions_data.xml',
-        'data/ir_model_data.xml',
-        'views/crm_lead_views.xml',
+        'data/website_crm_data.xml',
+        'views/website_crm_lead_views.xml',
+        'views/website_crm_templates.xml',
         'views/res_config_settings_views.xml',
         'views/website_visitor_views.xml',
-        'views/website_templates_contactus.xml',
     ],
     'installable': True,
     'auto_install': True,

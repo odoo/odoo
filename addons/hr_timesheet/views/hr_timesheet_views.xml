@@ -12,7 +12,6 @@
         <menuitem id="menu_hr_time_tracking"
             name="Timesheets"
             parent="timesheet_menu_root"
-            groups = "group_hr_timesheet_approver"
             sequence="5"/>
 
         <!--
@@ -54,7 +53,7 @@
             <field name="name">account.analytic.line.pivot</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <pivot string="Timesheets" sample="1">
+                <pivot string="Timesheet" sample="1">
                     <field name="employee_id" type="row"/>
                     <field name="date" interval="month" type="col"/>
                     <field name="unit_amount" type="measure" widget="timesheet_uom"/>
@@ -79,7 +78,7 @@
             <field name="name">account.analytic.line.graph</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <graph string="Timesheets" sample="1" js_class="hr_timesheet_graphview">
+                <graph string="Timesheet" sample="1" js_class="hr_timesheet_graphview">
                     <field name="task_id" type="row"/>
                     <field name="project_id" type="row"/>
                     <field name="unit_amount" type="measure" widget="timesheet_uom"/>
@@ -126,14 +125,14 @@
                     <sheet string="Analytic Entry">
                         <group>
                             <group>
+                                <field name="date"/>
                                 <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
                                 <field name="task_id" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
                                 <field name="name"/>
-                                <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group>
-                                <field name="date"/>
-                                <field name="amount" invisible="1"/>
+                                <field name="amount"/>
                                 <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
                                 <field name="currency_id" invisible="1"/>
                             </group>
@@ -150,8 +149,8 @@
             <field name="mode">primary</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='date']" position="before">
-                    <field name="employee_id" required="1"/>
+                <xpath expr="//field[@name='company_id']" position="before">
+                    <field name="employee_id" required="1" options='{"no_open": True}'/>
                     <field name="user_id" invisible="1"/>
                 </xpath>
             </field>
@@ -305,14 +304,7 @@
 
         <menuitem id="timesheet_menu_activity_mine"
             name="My Timesheets"
-            groups="group_hr_timesheet_approver"
             parent="menu_hr_time_tracking"
-            action="act_hr_timesheet_line"/>
-
-        <menuitem id="timesheet_menu_activity_user"
-            name="My Timesheets"
-            groups="group_hr_timesheet_user"
-            parent="timesheet_menu_root"
             action="act_hr_timesheet_line"/>
 
         <record id="timesheet_action_task" model="ir.actions.act_window">

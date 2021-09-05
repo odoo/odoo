@@ -256,7 +256,7 @@ export class OdooEditor extends EventTarget {
 
         if (this.options.toolbar) {
             this.toolbar = this.options.toolbar;
-            this.bindExecCommand(this.toolbar);
+            this._bindToolbar();
             // Ensure anchors in the toolbar don't trigger a hash change.
             const toolbarAnchors = this.toolbar.querySelectorAll('a');
             toolbarAnchors.forEach(a => a.addEventListener('click', e => e.preventDefault()));
@@ -867,25 +867,6 @@ export class OdooEditor extends EventTarget {
     execCommand(...args) {
         this._computeHistoryCursor();
         return this._applyCommand(...args);
-    }
-
-    /**
-     * Find all descendants of `element` with a `data-call` attribute and bind
-     * them on mousedown to the execution of the command matching that
-     * attribute.
-     */
-    bindExecCommand(element) {
-        for (const buttonEl of element.querySelectorAll('[data-call]')) {
-            buttonEl.addEventListener('mousedown', ev => {
-                const sel = this.document.getSelection();
-                if (sel.anchorNode && ancestors(sel.anchorNode).includes(this.editable)) {
-                    this.execCommand(buttonEl.dataset.call, buttonEl.dataset.arg1);
-
-                    ev.preventDefault();
-                    this._updateToolbar();
-                }
-            });
-        }
     }
 
     //--------------------------------------------------------------------------
@@ -1501,9 +1482,7 @@ export class OdooEditor extends EventTarget {
             }
         }
         this.updateColorpickerLabels();
-
         const block = closestBlock(sel.anchorNode);
-        let activeLabel = undefined;
         for (const [style, tag, isList] of [
             ['paragraph', 'P', false],
             ['pre', 'PRE', false],
@@ -1526,21 +1505,8 @@ export class OdooEditor extends EventTarget {
                     ? block.tagName === 'LI' && getListMode(block.parentElement) === tag
                     : block.tagName === tag;
                 button.classList.toggle('active', isActive);
-
-                if (!isList && isActive) {
-                    activeLabel = button.textContent;
-                }
             }
         }
-        if (!activeLabel) {
-            // If no element from the text style dropdown was marked as active,
-            // mark the paragraph one as active and use its label.
-            const firstButtonEl = this.toolbar.querySelector('#paragraph');
-            firstButtonEl.classList.add('active');
-            activeLabel = firstButtonEl.textContent;
-        }
-        this.toolbar.querySelector('#style button span').textContent = activeLabel;
-
         const linkNode = getInSelection(this.document, 'a');
         const linkButton = this.toolbar.querySelector('#createLink');
         linkButton && linkButton.classList.toggle('active', linkNode);
@@ -1772,7 +1738,6 @@ export class OdooEditor extends EventTarget {
                 }
                 // Check for url after user insert a space so we won't transform an incomplete url.
                 if (
-                    ev.data &&
                     ev.data.includes(' ') &&
                     selection &&
                     selection.anchorNode
@@ -2364,6 +2329,19 @@ export class OdooEditor extends EventTarget {
         this.historyStep();
     }
 
+    _bindToolbar() {
+        for (const buttonEl of this.toolbar.querySelectorAll('[data-call]')) {
+            buttonEl.addEventListener('mousedown', ev => {
+                const sel = this.document.getSelection();
+                if (sel.anchorNode && ancestors(sel.anchorNode).includes(this.editable)) {
+                    this.execCommand(buttonEl.dataset.call, buttonEl.dataset.arg1);
+
+                    ev.preventDefault();
+                    this._updateToolbar();
+                }
+            });
+        }
+    }
     _onTabulationInTable(ev) {
         const sel = this.document.getSelection();
         const closestTable = closestElement(sel.anchorNode, 'table');

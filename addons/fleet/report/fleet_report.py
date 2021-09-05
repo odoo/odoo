@@ -12,6 +12,7 @@ class FleetReport(models.Model):
     _auto = False
     _order = 'date_start desc'
 
+    fleet_id = fields.Many2one('fleet.category', 'Fleet', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', readonly=True)
     name = fields.Char('Vehicle Name', readonly=True)
@@ -31,7 +32,8 @@ class FleetReport(models.Model):
 WITH service_costs AS (
     SELECT
         ve.id AS vehicle_id,
-        ve.company_id AS company_id,
+        fl.id as fleet_id,
+        fl.company_id AS company_id,
         ve.name AS name,
         ve.driver_id AS driver_id,
         ve.fuel_type AS fuel_type,
@@ -44,6 +46,8 @@ WITH service_costs AS (
         fleet_vehicle ve
     JOIN
         fleet_vehicle_model vem ON vem.id = ve.model_id
+    JOIN
+        fleet_category fl ON fl.id = ve.fleet_id
     CROSS JOIN generate_series((
             SELECT
                 min(date)
@@ -54,7 +58,8 @@ WITH service_costs AS (
         ve.active AND se.active AND se.state != 'cancelled'
     GROUP BY
         ve.id,
-        ve.company_id,
+        fl.id,
+        fl.company_id,
         vem.vehicle_type,
         ve.name,
         date_start,
@@ -66,7 +71,8 @@ WITH service_costs AS (
 contract_costs AS (
     SELECT
         ve.id AS vehicle_id,
-        ve.company_id AS company_id,
+        fl.id as fleet_id,
+        fl.company_id AS company_id,
         ve.name AS name,
         ve.driver_id AS driver_id,
         ve.fuel_type AS fuel_type,
@@ -79,6 +85,8 @@ contract_costs AS (
         fleet_vehicle ve
     JOIN
         fleet_vehicle_model vem ON vem.id = ve.model_id
+    JOIN
+        fleet_category fl ON fl.id = ve.fleet_id
     CROSS JOIN generate_series((
             SELECT
                 min(acquisition_date)
@@ -102,7 +110,8 @@ contract_costs AS (
         ve.active
     GROUP BY
         ve.id,
-        ve.company_id,
+        fl.id,
+        fl.company_id,
         vem.vehicle_type,
         ve.name,
         date_start,
@@ -113,6 +122,7 @@ contract_costs AS (
 )
 SELECT
     vehicle_id AS id,
+    fleet_id,
     company_id,
     vehicle_id,
     name,
@@ -127,6 +137,7 @@ FROM
 UNION ALL (
     SELECT
         vehicle_id AS id,
+        fleet_id,
         company_id,
         vehicle_id,
         name,

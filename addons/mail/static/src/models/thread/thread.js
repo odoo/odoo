@@ -9,8 +9,6 @@ import Timer from '@mail/utils/timer/timer';
 import { cleanSearchTerm } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
 
-import { str_to_datetime } from 'web.time';
-
 function factory(dependencies) {
 
     class Thread extends dependencies['mail.model'] {
@@ -104,15 +102,6 @@ function factory(dependencies) {
         /**
          * @override
          */
-        _created() {
-            super._created();
-            this.onClick = this.onClick.bind(this);
-            this.onClickLoadMoreMembers = this.onClickLoadMoreMembers.bind(this);
-        }
-
-        /**
-         * @override
-         */
         _willDelete() {
             this._currentPartnerInactiveTypingTimer.clear();
             this._currentPartnerLongTypingTimer.clear();
@@ -131,22 +120,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------
-
-        /**
-         * Changes description of the thread to the given new description.
-         * Only makes sense for channels.
-         *
-         * @param {string} description
-         */
-        async changeDescription(description) {
-            this.update({ description });
-            return this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_change_description',
-                args: [[this.id]],
-                kwargs: { description },
-            });
-        }
 
         /**
          * @static
@@ -168,9 +141,6 @@ function factory(dependencies) {
          */
         static convertData(data) {
             const data2 = {};
-            if ('avatarCacheKey' in data) {
-                data2.avatarCacheKey = data.avatarCacheKey;
-            }
             if ('description' in data) {
                 data2.description = data.description;
             }
@@ -199,9 +169,6 @@ function factory(dependencies) {
             if ('is_pinned' in data) {
                 data2.isServerPinned = data.is_pinned;
             }
-            if ('last_interest_dt' in data && data.last_interest_dt) {
-                data2.lastInterestDateTime = str_to_datetime(data.last_interest_dt);
-            }
             if ('last_message' in data && data.last_message) {
                 const messageData = this.messaging.models['mail.message'].convertData({
                     id: data.last_message.id,
@@ -217,9 +184,6 @@ function factory(dependencies) {
                     res_id: data2.id,
                 });
                 data2.serverLastMessage = insert(messageData);
-            }
-            if ('memberCount' in data) {
-                data2.memberCount = data.memberCount;
             }
             if ('message_needaction_counter' in data) {
                 data2.message_needaction_counter = data.message_needaction_counter;
@@ -834,26 +798,6 @@ function factory(dependencies) {
         }
 
         /**
-         * Handles click on the avatar of the given member in the member list of
-         * this channel.
-         *
-         * @param {mail.partner} member
-         */
-        onClickMemberAvatar(member) {
-            member.openChat();
-        }
-
-        /**
-         * Handles click on the name of the given member in the member list of
-         * this channel.
-         *
-         * @param {mail.partner} member
-         */
-        onClickMemberName(member) {
-            member.openProfile();
-        }
-
-        /**
          * Opens this thread either as form view, in discuss app, or as a chat
          * window. The thread will be opened in an "active" matter, which will
          * interrupt current user flow.
@@ -1044,15 +988,14 @@ function factory(dependencies) {
          * Renames this thread to the given new name.
          * Only makes sense for channels.
          *
-         * @param {string} name
+         * @param {string} newName
          */
-        async rename(name) {
-            this.update({ name });
+        async rename(newName) {
             return this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_rename',
-                args: [[this.id]],
-                kwargs: { name },
+                args: [this.id],
+                kwargs: { name: newName },
             });
         }
 
@@ -1213,9 +1156,6 @@ function factory(dependencies) {
             if (this.channel_type === 'chat' && this.correspondent) {
                 return this.custom_channel_name || this.correspondent.nameOrDisplayName;
             }
-            if (this.channel_type === 'group') {
-                return this.name || this.members.map(partner => partner.nameOrDisplayName).join(', ');
-            }
             return this.name;
         }
 
@@ -1232,7 +1172,10 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasInviteFeature() {
-            return this.model === 'mail.channel';
+            if (this.model !== 'mail.channel') {
+                return false;
+            }
+            return this.channel_type === 'channel';
         }
 
         /**
@@ -1247,30 +1190,14 @@ function factory(dependencies) {
         }
 
         /**
-        * @private
-        * @returns {boolean}
-        */
-        _computeIsChannelDescriptionChangeable() {
-            return this.model === 'mail.channel' && ['channel', 'group'].includes(this.channel_type);
-        }
-
-        /**
          * @private
          * @returns {boolean}
          */
         _computeIsChannelRenamable() {
             return (
                 this.model === 'mail.channel' &&
-                ['chat', 'channel', 'group'].includes(this.channel_type)
+                ['chat', 'channel'].includes(this.channel_type)
             );
-        }
-
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasMemberListFeature() {
-            return this.model === 'mail.channel' && ['channel', 'group'].includes(this.channel_type);
         }
 
         /**
@@ -1488,22 +1415,6 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {mail.partner[]}
-         */
-        _computeOrderedOfflineMembers() {
-            return replace(this._sortMembers(this.members.filter(member => !member.isOnline)));
-        }
-
-        /**
-         * @private
-         * @returns {mail.partner[]}
-         */
-        _computeOrderedOnlineMembers() {
-            return replace(this._sortMembers(this.members.filter(member => member.isOnline)));
-        }
-
-        /**
-         * @private
          * @returns {mail.message[]}
          */
         _computeOrderedMessages() {
@@ -1583,14 +1494,6 @@ function factory(dependencies) {
                 this.orderedOtherTypingMembers[0].nameOrDisplayName,
                 this.orderedOtherTypingMembers[1].nameOrDisplayName
             );
-        }
-
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computeUnknownMemberCount() {
-            return this.memberCount - this.members.length;
         }
 
         /**
@@ -1708,50 +1611,9 @@ function factory(dependencies) {
             });
         }
 
-        /**
-         * @private
-         * @param {mail.partner[]} members
-         * @returns {mail.partner[]}
-         */
-        _sortMembers(members) {
-            return [...members].sort((a, b) => {
-                const cleanedAName = cleanSearchTerm(a.nameOrDisplayName || '');
-                const cleanedBName = cleanSearchTerm(b.nameOrDisplayName || '');
-                if (cleanedAName < cleanedBName) {
-                    return -1;
-                }
-                if (cleanedAName > cleanedBName) {
-                    return 1;
-                }
-                return a.id - b.id;
-            });
-        }
-
         //----------------------------------------------------------------------
         // Handlers
         //----------------------------------------------------------------------
-
-        /**
-         * Event handler for clicking thread in discuss app.
-         */
-        async onClick() {
-            await this.open();
-        }
-
-        /**
-         * Handles click on the "load more members" button.
-         */
-        async onClickLoadMoreMembers() {
-            const members = await this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'load_more_members',
-                args: [[this.id]],
-                kwargs: {
-                    'known_member_ids': this.members.map(partner => partner.id),
-                },
-            });
-            this.update({ members });
-        }
 
         /**
          * @private
@@ -1812,11 +1674,6 @@ function factory(dependencies) {
         attachments: many2many('mail.attachment', {
             inverse: 'threads',
         }),
-        /**
-         * Cache key to force a reload of the avatar when avatar is changed.
-         * It only makes sense for channels.
-         */
-        avatarCacheKey: attr(),
         cache: one2one('mail.thread_cache', {
             default: create(),
             inverse: 'thread',
@@ -1883,12 +1740,6 @@ function factory(dependencies) {
             compute: '_computeHasInviteFeature',
         }),
         /**
-         * Determines whether it makes sense for this thread to have a member list.
-         */
-        hasMemberListFeature: attr({
-            compute: '_computeHasMemberListFeature',
-        }),
-        /**
          * Determine whether this thread has the seen indicators (V and VV)
          * enabled or not.
          */
@@ -1898,13 +1749,6 @@ function factory(dependencies) {
         }),
         id: attr({
             required: true,
-        }),
-        /**
-         * Determines whether this description can be changed.
-         * Only makes sense for channels.
-         */
-        isChannelDescriptionChangeable: attr({
-            compute: '_computeIsChannelDescriptionChangeable',
         }),
         /**
          * Determines whether this thread can be renamed.
@@ -1964,12 +1808,6 @@ function factory(dependencies) {
         isTemporary: attr({
             default: false,
         }),
-        /**
-         * States the date and time of the last interesting event that happened
-         * in this channel for this partner. This includes: creating, joining,
-         * pinning, and new message posted. It is contained as a Date object.
-         */
-        lastInterestDateTime: attr(),
         lastCurrentPartnerMessageSeenByEveryone: many2one('mail.message', {
             compute: '_computeLastCurrentPartnerMessageSeenByEveryone',
         }),
@@ -2009,11 +1847,6 @@ function factory(dependencies) {
         localMessageUnreadCounter: attr({
             compute: '_computeLocalMessageUnreadCounter',
         }),
-        /**
-         * States the number of members in this thread according to the server.
-         * Only makes sense if this thread is a channel.
-         */
-        memberCount: attr(),
         members: many2many('mail.partner', {
             inverse: 'memberThreads',
         }),
@@ -2061,18 +1894,6 @@ function factory(dependencies) {
          */
         needactionMessagesAsOriginThread: many2many('mail.message', {
             compute: '_computeNeedactionMessagesAsOriginThread',
-        }),
-        /**
-         * All offline members ordered like they are displayed.
-         */
-        orderedOfflineMembers: many2many('mail.partner', {
-            compute: '_computeOrderedOfflineMembers',
-        }),
-        /**
-         * All online members ordered like they are displayed.
-         */
-        orderedOnlineMembers: many2many('mail.partner', {
-            compute: '_computeOrderedOnlineMembers',
         }),
         /**
          * All messages ordered like they are displayed.
@@ -2192,14 +2013,6 @@ function factory(dependencies) {
         typingStatusText: attr({
             compute: '_computeTypingStatusText',
             default: '',
-        }),
-        /**
-         * States how many members are currently unknown on the client side.
-         * This is the difference between the total number of members of the
-         * channel as reported in memberCount and those actually in members.
-         */
-        unknownMemberCount: attr({
-            compute: '_computeUnknownMemberCount',
         }),
         /**
          * URL to access to the conversation.

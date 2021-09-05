@@ -1,8 +1,9 @@
-/** @odoo-module **/
+odoo.define('mrp.controllerMixin', function (require) {
+'use strict';
 
-import { _t, qweb } from 'web.core';
-import fileUploadMixin from 'web.fileUploadMixin';
-import DocumentViewer from '@mrp/js/mrp_documents_document_viewer';
+const { _t, qweb } = require('web.core');
+const fileUploadMixin = require('web.fileUploadMixin');
+const DocumentViewer = require('mrp.MrpDocumentViewer');
 
 const MrpDocumentsControllerMixin = Object.assign({}, fileUploadMixin, {
     events: {
@@ -29,10 +30,8 @@ const MrpDocumentsControllerMixin = Object.assign({}, fileUploadMixin, {
      * @param {jQueryElement} $node
      */
     renderButtons($node) {
-        if (this.is_action_enabled('edit')) {
-            this.$buttons = $(qweb.render('MrpDocumentsKanbanView.buttons'));
-            this.$buttons.appendTo($node);
-        }
+        this.$buttons = $(qweb.render('MrpDocumentsKanbanView.buttons'));
+        this.$buttons.appendTo($node);
     },
 
     //--------------------------------------------------------------------------
@@ -122,4 +121,6 @@ const MrpDocumentsControllerMixin = Object.assign({}, fileUploadMixin, {
     },
 });
 
-export default MrpDocumentsControllerMixin;
+return MrpDocumentsControllerMixin;
+
+});

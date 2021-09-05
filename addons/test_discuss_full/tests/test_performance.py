@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import Command
 from odoo.tests.common import users, tagged, TransactionCase, warmup
-from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT
 
 
 @tagged('post_install', '-at_install')
@@ -59,30 +59,27 @@ class TestDiscussFullPerformance(TransactionCase):
     def test_init_messaging(self):
         """Test performance of `_init_messaging`."""
         channel_general = self.env.ref('mail.channel_all_employees')  # Unfortunately #general cannot be deleted. Assertions below assume data from a fresh db with demo.
-        self.env['mail.channel'].search([('id', '!=', channel_general.id)]).unlink()
         user_root = self.env.ref('base.user_root')
         # create public channels
-        channel_channel_public_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='public 1', privacy='public')['id'])
-        channel_channel_public_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[4] + self.users[8]).partner_id.ids)
-        channel_channel_public_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='public 2', privacy='public')['id'])
-        channel_channel_public_2.add_members((self.users[0] + self.users[2] + self.users[4] + self.users[7] + self.users[9]).partner_id.ids)
+        channel_public_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='public 1', privacy='public')['id'])
+        channel_public_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[4] + self.users[8]).partner_id.ids)
+        channel_public_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='public 2', privacy='public')['id'])
+        channel_public_2.add_members((self.users[0] + self.users[2] + self.users[4] + self.users[7] + self.users[9]).partner_id.ids)
         # create groups channels
-        channel_channel_group_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='group 1', privacy='groups')['id'])
-        channel_channel_group_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[6] + self.users[12]).partner_id.ids)
-        channel_channel_group_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='group 2', privacy='groups')['id'])
-        channel_channel_group_2.add_members((self.users[0] + self.users[2] + self.users[6] + self.users[7] + self.users[13]).partner_id.ids)
+        channel_group_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='group 1', privacy='groups')['id'])
+        channel_group_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[6] + self.users[12]).partner_id.ids)
+        channel_group_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='group 2', privacy='groups')['id'])
+        channel_group_2.add_members((self.users[0] + self.users[2] + self.users[6] + self.users[7] + self.users[13]).partner_id.ids)
         # create private channels
-        channel_channel_private_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='private 1', privacy='private')['id'])
-        channel_channel_private_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[5] + self.users[10]).partner_id.ids)
-        channel_channel_private_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='private 2', privacy='private')['id'])
-        channel_channel_private_2.add_members((self.users[0] + self.users[2] + self.users[5] + self.users[7] + self.users[11]).partner_id.ids)
+        channel_private_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='private 1', privacy='private')['id'])
+        channel_private_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[5] + self.users[10]).partner_id.ids)
+        channel_private_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='private 2', privacy='private')['id'])
+        channel_private_2.add_members((self.users[0] + self.users[2] + self.users[5] + self.users[7] + self.users[11]).partner_id.ids)
         # create chats
-        channel_chat_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get((self.users[0] + self.users[14]).partner_id.ids)['id'])
-        channel_chat_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get((self.users[0] + self.users[15]).partner_id.ids)['id'])
-        channel_chat_3 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get((self.users[0] + self.users[2]).partner_id.ids)['id'])
-        channel_chat_4 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get((self.users[0] + self.users[3]).partner_id.ids)['id'])
-        # create groups
-        channel_group_1 = self.env['mail.channel'].browse(self.env['mail.channel'].create_group((self.users[0] + self.users[12]).partner_id.ids)['id'])
+        channel_dm_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get((self.users[0] + self.users[14]).partner_id.ids)['id'])
+        channel_dm_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get((self.users[0] + self.users[15]).partner_id.ids)['id'])
+        channel_dm_3 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get((self.users[0] + self.users[2]).partner_id.ids)['id'])
+        channel_dm_4 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get((self.users[0] + self.users[3]).partner_id.ids)['id'])
         # create livechats
         im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
         self.users[0].im_status = 'online'  # make available for livechat (ignore leave)
@@ -92,22 +89,20 @@ class TestDiscussFullPerformance(TransactionCase):
         channel_livechat_2.with_user(self.env.ref('base.public_user')).sudo().message_post(body="test")
         # add needaction
         self.users[0].notification_type = 'inbox'
-        message = channel_channel_public_1.message_post(body='test', message_type='comment', author_id=self.users[2].partner_id.id, partner_ids=self.users[0].partner_id.ids)
+        message = channel_public_1.message_post(body='test', message_type='comment', author_id=self.users[2].partner_id.id, partner_ids=self.users[0].partner_id.ids)
         # add star
         message.toggle_message_starred()
 
-        self.maxDiff = None
         self.users[0].flush()
         self.users[0].invalidate_cache()
-        with self.assertQueryCount(emp=49):
-            init_messaging = self.users[0].with_user(self.users[0])._init_messaging()
+        with self.assertQueryCount(emp=33):
+            init_messaging = self.users[0]._init_messaging()
 
         self.assertEqual(init_messaging, {
             'needaction_inbox_counter': 1,
             'starred_counter': 1,
             'channels': [
                 {
-                    'avatarCacheKey': channel_general._get_avatar_cache_key(),
                     'channel_type': 'channel',
                     'create_uid': user_root.id,
                     'custom_channel_name': False,
@@ -116,11 +111,9 @@ class TestDiscussFullPerformance(TransactionCase):
                     'id': channel_general.id,
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': channel_general.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in channel_general._channel_last_message_ids()),
-                    'memberCount': len(self.env.ref('base.group_user').users | user_root),
                     'message_needaction_counter': 0,
-                    'message_unread_counter': 5,
+                    'message_unread_counter': 3,
                     'name': 'general',
                     'public': 'groups',
                     'seen_message_id': False,
@@ -128,203 +121,103 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': channel_general.uuid,
                 },
                 {
-                    'avatarCacheKey': channel_channel_public_1._get_avatar_cache_key(),
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
-                    'custom_channel_name': False,
                     'description': False,
                     'group_based_subscription': False,
-                    'id': channel_channel_public_1.id,
+                    'id': channel_public_1.id,
                     'is_minimized': False,
-                    'is_pinned': True,
-                    'last_interest_dt': channel_channel_public_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                    'last_message_id': next(res['message_id'] for res in channel_channel_public_1._channel_last_message_ids()),
-                    'message_needaction_counter': 1,
-                    'memberCount': 5,
+                    'last_message_id': next(res['message_id'] for res in channel_public_1._channel_last_message_ids()),
+                    'message_needaction_counter': 0,
                     'message_unread_counter': 0,
                     'name': 'public 1',
                     'public': 'public',
-                    'seen_message_id': next(res['message_id'] for res in channel_channel_public_1._channel_last_message_ids()),
                     'state': 'open',
-                    'uuid': channel_channel_public_1.uuid,
+                    'uuid': channel_public_1.uuid,
                 },
                 {
-                    'avatarCacheKey': channel_channel_public_2._get_avatar_cache_key(),
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
-                    'custom_channel_name': False,
                     'description': False,
                     'group_based_subscription': False,
-                    'id': channel_channel_public_2.id,
+                    'id': channel_public_2.id,
                     'is_minimized': False,
-                    'is_pinned': True,
-                    'last_interest_dt': channel_channel_public_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                    'last_message_id': next(res['message_id'] for res in channel_channel_public_2._channel_last_message_ids()),
-                    'memberCount': 5,
+                    'last_message_id': next(res['message_id'] for res in channel_public_2._channel_last_message_ids()),
                     'message_needaction_counter': 0,
                     'message_unread_counter': 0,
                     'name': 'public 2',
                     'public': 'public',
-                    'seen_message_id': next(res['message_id'] for res in channel_channel_public_2._channel_last_message_ids()),
                     'state': 'open',
-                    'uuid': channel_channel_public_2.uuid,
+                    'uuid': channel_public_2.uuid,
                 },
                 {
-                    'avatarCacheKey': channel_channel_group_1._get_avatar_cache_key(),
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
-                    'custom_channel_name': False,
-                    'description': False,
-                    'group_based_subscription': False,
-                    'id': channel_channel_group_1.id,
-                    'is_minimized': False,
-                    'is_pinned': True,
-                    'last_interest_dt': channel_channel_group_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                    'last_message_id': next(res['message_id'] for res in channel_channel_group_1._channel_last_message_ids()),
-                    'memberCount': 5,
-                    'message_needaction_counter': 0,
-                    'message_unread_counter': 0,
-                    'name': 'group 1',
-                    'public': 'groups',
-                    'seen_message_id': next(res['message_id'] for res in channel_channel_group_1._channel_last_message_ids()),
-                    'state': 'open',
-                    'uuid': channel_channel_group_1.uuid,
-                },
-                {
-                    'avatarCacheKey': channel_channel_group_2._get_avatar_cache_key(),
-                    'channel_type': 'channel',
-                    'create_uid': self.env.user.id,
-                    'custom_channel_name': False,
-                    'description': False,
-                    'group_based_subscription': False,
-                    'id': channel_channel_group_2.id,
-                    'is_minimized': False,
-                    'is_pinned': True,
-                    'last_interest_dt': channel_channel_group_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                    'last_message_id': next(res['message_id'] for res in channel_channel_group_2._channel_last_message_ids()),
-                    'memberCount': 5,
-                    'message_needaction_counter': 0,
-                    'message_unread_counter': 0,
-                    'name': 'group 2',
-                    'public': 'groups',
-                    'seen_message_id': next(res['message_id'] for res in channel_channel_group_2._channel_last_message_ids()),
-                    'state': 'open',
-                    'uuid': channel_channel_group_2.uuid,
-                },
-                {
-                    'avatarCacheKey': channel_channel_private_1._get_avatar_cache_key(),
-                    'channel_type': 'channel',
-                    'create_uid': self.env.user.id,
-                    'custom_channel_name': False,
-                    'description': False,
-                    'group_based_subscription': False,
-                    'id': channel_channel_private_1.id,
-                    'is_minimized': False,
-                    'is_pinned': True,
-                    'last_interest_dt': channel_channel_private_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                    'last_message_id': next(res['message_id'] for res in channel_channel_private_1._channel_last_message_ids()),
-                    'memberCount': 5,
-                    'message_needaction_counter': 0,
-                    'message_unread_counter': 0,
-                    'name': 'private 1',
-                    'public': 'private',
-                    'seen_message_id': next(res['message_id'] for res in channel_channel_private_1._channel_last_message_ids()),
-                    'state': 'open',
-                    'uuid': channel_channel_private_1.uuid,
-                },
-                {
-                    'avatarCacheKey': channel_channel_private_2._get_avatar_cache_key(),
-                    'channel_type': 'channel',
-                    'create_uid': self.env.user.id,
-                    'custom_channel_name': False,
-                    'description': False,
-                    'group_based_subscription': False,
-                    'id': channel_channel_private_2.id,
-                    'is_minimized': False,
-                    'is_pinned': True,
-                    'last_interest_dt': channel_channel_private_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                    'last_message_id': next(res['message_id'] for res in channel_channel_private_2._channel_last_message_ids()),
-                    'memberCount': 5,
-                    'message_needaction_counter': 0,
-                    'message_unread_counter': 0,
-                    'name': 'private 2',
-                    'public': 'private',
-                    'seen_message_id': next(res['message_id'] for res in channel_channel_private_2._channel_last_message_ids()),
-                    'state': 'open',
-                    'uuid': channel_channel_private_2.uuid,
-                },
-                {
-                    'avatarCacheKey': channel_group_1._get_avatar_cache_key(),
-                    'channel_type': 'group',
-                    'create_uid': self.env.user.id,
-                    'custom_channel_name': False,
                     'description': False,
                     'group_based_subscription': False,
                     'id': channel_group_1.id,
                     'is_minimized': False,
-                    'is_pinned': True,
-                    'last_interest_dt': channel_group_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                    'last_message_id': False,
-                    'memberCount': 2,
-                    'members': [
-                        {
-                            'active': True,
-                            'display_name': 'Ernest Employee',
-                            'email': 'e.e@example.com',
-                            'id': self.users[0].partner_id.id,
-                            'im_status': 'leave_offline',
-                            'is_internal_user': True,
-                            'name': 'Ernest Employee',
-                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
-                            'user_id': self.users[0].id,
-                        },
-                        {
-                            'active': True,
-                            'display_name': 'test12',
-                            'email': False,
-                            'id': self.users[12].partner_id.id,
-                            'im_status': 'leave_offline',
-                            'is_internal_user': True,
-                            'name': 'test12',
-                            'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[12]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
-                            'user_id': self.users[12].id,
-                        },
-                    ],
+                    'last_message_id': next(res['message_id'] for res in channel_group_1._channel_last_message_ids()),
                     'message_needaction_counter': 0,
                     'message_unread_counter': 0,
-                    'name': '',
-                    'public': 'private',
-                    'seen_message_id': False,
-                    'seen_partners_info': [
-                        {
-                            'fetched_message_id': False,
-                            'id': channel_group_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).id,
-                            'partner_id': self.users[0].partner_id.id,
-                            'seen_message_id': False,
-                        },
-                        {
-                            'fetched_message_id': False,
-                            'id': channel_group_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[12].partner_id).id,
-                            'partner_id': self.users[12].partner_id.id,
-                            'seen_message_id': False,
-                        }
-                    ],
+                    'name': 'group 1',
+                    'public': 'groups',
                     'state': 'open',
                     'uuid': channel_group_1.uuid,
                 },
                 {
-                    'avatarCacheKey': channel_chat_1._get_avatar_cache_key(),
-                    'channel_type': 'chat',
+                    'channel_type': 'channel',
                     'create_uid': self.env.user.id,
-                    'custom_channel_name': False,
                     'description': False,
                     'group_based_subscription': False,
-                    'id': channel_chat_1.id,
+                    'id': channel_group_2.id,
                     'is_minimized': False,
-                    'is_pinned': True,
-                    'last_interest_dt': channel_chat_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_message_id': next(res['message_id'] for res in channel_group_2._channel_last_message_ids()),
+                    'message_needaction_counter': 0,
+                    'message_unread_counter': 0,
+                    'name': 'group 2',
+                    'public': 'groups',
+                    'state': 'open',
+                    'uuid': channel_group_2.uuid,
+                },
+                {
+                    'channel_type': 'channel',
+                    'create_uid': self.env.user.id,
+                    'description': False,
+                    'group_based_subscription': False,
+                    'id': channel_private_1.id,
+                    'is_minimized': False,
+                    'last_message_id': next(res['message_id'] for res in channel_private_1._channel_last_message_ids()),
+                    'message_needaction_counter': 0,
+                    'message_unread_counter': 0,
+                    'name': 'private 1',
+                    'public': 'private',
+                    'state': 'open',
+                    'uuid': channel_private_1.uuid,
+                },
+                {
+                    'channel_type': 'channel',
+                    'create_uid': self.env.user.id,
+                    'description': False,
+                    'group_based_subscription': False,
+                    'id': channel_private_2.id,
+                    'is_minimized': False,
+                    'last_message_id': next(res['message_id'] for res in channel_private_2._channel_last_message_ids()),
+                    'message_needaction_counter': 0,
+                    'message_unread_counter': 0,
+                    'name': 'private 2',
+                    'public': 'private',
+                    'state': 'open',
+                    'uuid': channel_private_2.uuid,
+                },
+                {
+                    'channel_type': 'chat',
+                    'create_uid': self.env.user.id,
+                    'description': False,
+                    'group_based_subscription': False,
+                    'id': channel_dm_1.id,
+                    'is_minimized': False,
                     'last_message_id': False,
-                    'memberCount': 2,
                     'members': [
                         {
                             'active': True,
@@ -356,34 +249,28 @@ class TestDiscussFullPerformance(TransactionCase):
                     'seen_partners_info': [
                         {
                             'fetched_message_id': False,
-                            'id': channel_chat_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).id,
+                            'id': channel_dm_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).id,
                             'partner_id': self.users[0].partner_id.id,
                             'seen_message_id': False,
                         },
                         {
                             'fetched_message_id': False,
-                            'id': channel_chat_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[14].partner_id).id,
+                            'id': channel_dm_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[14].partner_id).id,
                             'partner_id': self.users[14].partner_id.id,
                             'seen_message_id': False,
                         },
                     ],
-                    'seen_message_id': False,
                     'state': 'open',
-                    'uuid': channel_chat_1.uuid,
+                    'uuid': channel_dm_1.uuid,
                 },
                 {
-                    'avatarCacheKey': channel_chat_2._get_avatar_cache_key(),
                     'channel_type': 'chat',
                     'create_uid': self.env.user.id,
-                    'custom_channel_name': False,
                     'description': False,
                     'group_based_subscription': False,
-                    'id': channel_chat_2.id,
+                    'id': channel_dm_2.id,
                     'is_minimized': False,
-                    'is_pinned': True,
-                    'last_interest_dt': channel_chat_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': False,
-                    'memberCount': 2,
                     'members': [
                         {
                             'active': True,
@@ -415,34 +302,28 @@ class TestDiscussFullPerformance(TransactionCase):
                     'seen_partners_info': [
                         {
                             'fetched_message_id': False,
-                            'id': channel_chat_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).id,
+                            'id': channel_dm_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).id,
                             'partner_id': self.users[0].partner_id.id,
                             'seen_message_id': False,
                         },
                         {
                             'fetched_message_id': False,
-                            'id': channel_chat_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[15].partner_id).id,
+                            'id': channel_dm_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[15].partner_id).id,
                             'partner_id': self.users[15].partner_id.id,
                             'seen_message_id': False,
                         },
                     ],
-                    'seen_message_id': False,
                     'state': 'open',
-                    'uuid': channel_chat_2.uuid,
+                    'uuid': channel_dm_2.uuid,
                 },
                 {
-                    'avatarCacheKey': channel_chat_3._get_avatar_cache_key(),
                     'channel_type': 'chat',
                     'create_uid': self.env.user.id,
-                    'custom_channel_name': False,
                     'description': False,
                     'group_based_subscription': False,
-                    'id': channel_chat_3.id,
+                    'id': channel_dm_3.id,
                     'is_minimized': False,
-                    'is_pinned': True,
-                    'last_interest_dt': channel_chat_3.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': False,
-                    'memberCount': 2,
                     'members': [
                         {
                             'active': True,
@@ -474,34 +355,28 @@ class TestDiscussFullPerformance(TransactionCase):
                     'seen_partners_info': [
                         {
                             'fetched_message_id': False,
-                            'id': channel_chat_3.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).id,
+                            'id': channel_dm_3.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).id,
                             'partner_id': self.users[0].partner_id.id,
                             'seen_message_id': False,
                         },
                         {
                             'fetched_message_id': False,
-                            'id': channel_chat_3.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[2].partner_id).id,
+                            'id': channel_dm_3.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[2].partner_id).id,
                             'partner_id': self.users[2].partner_id.id,
                             'seen_message_id': False,
                         },
                     ],
-                    'seen_message_id': False,
                     'state': 'open',
-                    'uuid': channel_chat_3.uuid,
+                    'uuid': channel_dm_3.uuid,
                 },
                 {
-                    'avatarCacheKey': channel_chat_4._get_avatar_cache_key(),
                     'channel_type': 'chat',
                     'create_uid': self.env.user.id,
-                    'custom_channel_name': False,
                     'description': False,
                     'group_based_subscription': False,
-                    'id': channel_chat_4.id,
+                    'id': channel_dm_4.id,
                     'is_minimized': False,
-                    'is_pinned': True,
-                    'last_interest_dt': channel_chat_4.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': False,
-                    'memberCount': 2,
                     'members': [
                         {
                             'active': True,
@@ -533,34 +408,28 @@ class TestDiscussFullPerformance(TransactionCase):
                     'seen_partners_info': [
                         {
                             'fetched_message_id': False,
-                            'id': channel_chat_4.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).id,
+                            'id': channel_dm_4.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).id,
                             'partner_id': self.users[0].partner_id.id,
                             'seen_message_id': False,
                         },
                         {
                             'fetched_message_id': False,
-                            'id': channel_chat_4.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[3].partner_id).id,
+                            'id': channel_dm_4.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[3].partner_id).id,
                             'partner_id': self.users[3].partner_id.id,
                             'seen_message_id': False,
                         },
                     ],
-                    'seen_message_id': False,
                     'state': 'open',
-                    'uuid': channel_chat_4.uuid,
+                    'uuid': channel_dm_4.uuid,
                 },
                 {
-                    'avatarCacheKey': channel_livechat_1._get_avatar_cache_key(),
                     'channel_type': 'livechat',
                     'create_uid': self.env.user.id,
-                    'custom_channel_name': False,
                     'description': False,
                     'group_based_subscription': False,
                     'id': channel_livechat_1.id,
                     'is_minimized': False,
-                    'is_pinned': True,
-                    'last_interest_dt': channel_livechat_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in channel_livechat_1._channel_last_message_ids()),
-                    'memberCount': 2,
                     'livechat_visitor': {
                         'country': False,
                         'id': self.users[1].partner_id.id,
@@ -609,23 +478,17 @@ class TestDiscussFullPerformance(TransactionCase):
                             'seen_message_id': next(res['message_id'] for res in channel_livechat_1._channel_last_message_ids()),
                         },
                     ],
-                    'seen_message_id': False,
                     'state': 'open',
                     'uuid': channel_livechat_1.uuid,
                 },
                 {
-                    'avatarCacheKey': channel_livechat_2._get_avatar_cache_key(),
                     'channel_type': 'livechat',
                     'create_uid': self.env.ref('base.public_user').id,
-                    'custom_channel_name': False,
                     'description': False,
                     'group_based_subscription': False,
                     'id': channel_livechat_2.id,
                     'is_minimized': False,
-                    'is_pinned': True,
-                    'last_interest_dt': channel_livechat_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in channel_livechat_2._channel_last_message_ids()),
-                    'memberCount': 2,
                     'livechat_visitor': {
                         'country': (self.env.ref('base.be').id, 'Belgium'),
                         'id': False,
@@ -674,7 +537,6 @@ class TestDiscussFullPerformance(TransactionCase):
                             'seen_message_id': False,
                         },
                     ],
-                    'seen_message_id': False,
                     'state': 'open',
                     'uuid': channel_livechat_2.uuid,
                 },
@@ -729,11 +591,4 @@ class TestDiscussFullPerformance(TransactionCase):
                 'user_id': self.users[0].id,
             },
             'current_user_id': self.users[0].id,
-            'current_user_settings': {
-                'id': self.env['res.users.settings']._find_or_create_for_user(self.users[0]).id,
-                'is_discuss_sidebar_category_channel_open': True,
-                'is_discuss_sidebar_category_chat_open': True,
-                'is_discuss_sidebar_category_livechat_open': True,
-                'user_id': (self.users[0].id, 'Ernest Employee'),
-            },
         })

@@ -4,8 +4,6 @@ import { registerNewModel } from '@mail/model/model_core';
 import { decrement, increment, insert, link } from '@mail/model/model_field_command';
 import { htmlToTextContentInline } from '@mail/js/utils';
 
-import { str_to_datetime } from 'web.time';
-
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
 function factory(dependencies) {
@@ -79,18 +77,8 @@ function factory(dependencies) {
                 }
                 if (typeof message === 'object') {
                     switch (message.type) {
-                        case 'mail.channel_description_change':
-                            return this._handleNotificationChannelDescriptionChanged(message.payload);
                         case 'mail.channel_joined':
                             return this._handleNotificationChannelJoined(message.payload);
-                        case 'mail.channel_last_interest_dt_changed':
-                            return this._handleNotificationChannelLastInterestDateTimeChanged(message.payload);
-                        case 'mail.channel_rename':
-                            return this._handleNotificationChannelRenamed(message.payload);
-                        case 'mail.channel_update':
-                            return this._handleNotificationChannelUpdate(message.payload);
-                        case 'res.users_settings_changed':
-                            return this._handleNotificationResUsersSettings(message.payload);
                     }
                 }
                 const [, model, id] = channel;
@@ -151,20 +139,6 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @param {Object} payload
-         * @param {integer} payload.id
-         * @param {String} payload.description
-         */
-        _handleNotificationChannelDescriptionChanged({ id, description }) {
-            const channel = this.messaging.models['mail.thread'].insert({
-                id,
-                model: 'mail.channel',
-            });
-            channel.update({ description });
-        }
-
-        /**
-         * @private
          * @param {integer} channelId
          * @param {Object} param1
          * @param {integer} param1.last_message_id
@@ -216,38 +190,6 @@ function factory(dependencies) {
                         channel.name
                     ),
                     type: 'info',
-                });
-            }
-        }
-
-        /**
-         * @private
-         * @param {Object} payload
-         * @param {integer} payload.id
-         * @param {String} payload.name
-         */
-        _handleNotificationChannelRenamed({ id, name }) {
-            const channel = this.messaging.models['mail.thread'].insert({
-                id,
-                model: 'mail.channel',
-            });
-            channel.update({ name });
-        }
-
-        /**
-         * @private
-         * @param {object} payload
-         * @param {integer} payload.id
-         * @param {string} payload.last_interest_dt
-         */
-        _handleNotificationChannelLastInterestDateTimeChanged({ id, last_interest_dt }) {
-            const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({
-                id: id,
-                model: 'mail.channel',
-            });
-            if (channel) {
-                channel.update({
-                    lastInterestDateTime: str_to_datetime(last_interest_dt),
                 });
             }
         }
@@ -409,33 +351,6 @@ function factory(dependencies) {
                     return;
                 }
                 channel.unregisterOtherMemberTypingMember(partner);
-            }
-        }
-
-        /**
-         * @private
-         * @param {Object} channelData
-         */
-        _handleNotificationChannelUpdate(channelData) {
-            this.messaging.models['mail.thread'].insert({ model: 'mail.channel', ...channelData });
-        }
-
-        /**
-         * @private
-         * @param {object} settings
-         * @param {boolean} [settings.is_discuss_sidebar_category_channel_open]
-         * @param {boolean} [settings.is_discuss_sidebar_category_chat_open]
-         */
-        _handleNotificationResUsersSettings(settings) {
-            if ('is_discuss_sidebar_category_channel_open' in settings) {
-                this.messaging.discuss.categoryChannel.update({
-                    isServerOpen: settings.is_discuss_sidebar_category_channel_open,
-                });
-            }
-            if ('is_discuss_sidebar_category_chat_open' in settings) {
-                this.messaging.discuss.categoryChat.update({
-                    isServerOpen: settings.is_discuss_sidebar_category_chat_open,
-                });
             }
         }
 

@@ -34,7 +34,27 @@ var PortalChatter = publicWidget.Widget.extend({
         this.options = {};
         this._super.apply(this, arguments);
 
-        this._setOptions(options);
+        // underscorize the camelcased option keys
+        _.each(options, function (val, key) {
+            self.options[_.str.underscored(key)] = val;
+        });
+        // set default options
+        this.options = _.defaults(this.options, {
+            'allow_composer': true,
+            'display_composer': false,
+            'csrf_token': odoo.csrf_token,
+            'message_count': 0,
+            'pager_step': 10,
+            'pager_scope': 5,
+            'pager_start': 1,
+            'is_user_public': true,
+            'is_user_employee': false,
+            'is_user_publisher': false,
+            'hash': false,
+            'pid': false,
+            'domain': [],
+            'two_columns': false,
+        });
 
         this.set('messages', []);
         this.set('message_count', this.options['message_count']);
@@ -116,38 +136,6 @@ var PortalChatter = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Set options
-     *
-     * @param {Array<string>} options: new options to set
-     */
-    _setOptions: function (options) {
-        // underscorize the camelcased option keys
-        const defaultOptions = {
-            'allow_composer': true,
-            'display_composer': false,
-            'csrf_token': odoo.csrf_token,
-            'message_count': 0,
-            'pager_step': 10,
-            'pager_scope': 5,
-            'pager_start': 1,
-            'is_user_public': true,
-            'is_user_employee': false,
-            'is_user_publisher': false,
-            'hash': false,
-            'pid': false,
-            'domain': [],
-            'two_columns': false,
-        };
-
-        this.options = Object.entries(options).reduce(
-            (acc, [key, value]) => {
-                acc[_.str.underscored(key)] = value;
-                return acc;
-            },
-            defaultOptions);
-    },
-
-    /**
      * Reloads chatter and message count after posting message
      *
      * @private
@@ -155,9 +143,6 @@ var PortalChatter = publicWidget.Widget.extend({
     _reloadChatterContent: function (data) {
         this.messageFetch();
         this._reloadComposer();
-    },
-    _createComposerWidget: function () {
-        return new portalComposer.PortalComposer(this, this.options);
     },
     /**
      * Destroy current composer widget and initialize and insert new widget
@@ -169,7 +154,7 @@ var PortalChatter = publicWidget.Widget.extend({
             this._composer.destroy();
         }
         if (this.options.display_composer) {
-            this._composer = this._createComposerWidget();
+            this._composer = new portalComposer.PortalComposer(this, this.options);
             await this._composer.appendTo(this.$('.o_portal_chatter_composer'));
         }
     },

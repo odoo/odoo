@@ -2,7 +2,6 @@
 
 import { afterEach, afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
 import { click, nextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
-import { editSearchBar } from '@web/../tests/webclient/commands/command_service_tests';
 import { browser } from '@web/core/browser/browser';
 import { registry } from "@web/core/registry";
 import { commandService } from "@web/webclient/commands/command_service";
@@ -50,7 +49,10 @@ QUnit.module('mail', {}, function () {
         await nextTick();
 
         // Switch to partners
-        await editSearchBar("@");
+        const search = webClient.el.querySelector(".o_command_palette_search input");
+        search.value = "@";
+        search.dispatchEvent(new InputEvent("input"));
+        await nextTick();
         assert.deepEqual(
             [...webClient.el.querySelectorAll(".o_command_palette .o_command")].map((el) => el.textContent),
             [
@@ -89,7 +91,10 @@ QUnit.module('mail', {}, function () {
         await nextTick();
 
         // Switch to channels
-        await editSearchBar("#");
+        const search = webClient.el.querySelector(".o_command_palette_search input");
+        search.value = "#";
+        search.dispatchEvent(new InputEvent("input"));
+        await nextTick();
         assert.deepEqual(
             [...webClient.el.querySelectorAll(".o_command_palette .o_command")].map((el) => el.textContent),
             [

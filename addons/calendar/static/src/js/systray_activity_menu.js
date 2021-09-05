@@ -1,7 +1,8 @@
-/** @odoo-module **/
+odoo.define('calendar.systray.ActivityMenu', function (require) {
+"use strict";
 
-import ActivityMenu from '@mail/js/systray/systray_activity_menu';
-import fieldUtils from 'web.field_utils';
+var ActivityMenu = require('@mail/js/systray/systray_activity_menu')[Symbol.for("default")];
+var fieldUtils = require('web.field_utils');
 
 ActivityMenu.include({
 
@@ -50,4 +51,6 @@ ActivityMenu.include({
             this._super.apply(this, arguments);
         }
     },
+});
+
 });

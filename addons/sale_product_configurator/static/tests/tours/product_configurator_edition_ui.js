@@ -31,24 +31,22 @@ tour.register('sale_product_configurator_edition_tour', {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
     run: 'click'
 }, {
-    trigger: '.main_product span:contains("Steel")',
+    trigger: '.configurator_container span:contains("Steel")',
     run: function () {
         $('input.product_id').change(function () {
-            $('.show .modal-footer .btn-primary').attr('request_count', 1);
+            $('.o_sale_product_configurator_add').attr('request_count', 1);
         });
     }
 }, {
-    trigger: '.main_product span:contains("Aluminium")'
+    trigger: '.configurator_container span:contains("Aluminium")'
 }, {
-    trigger: '.btn-primary[request_count="1"]',
-    extra_trigger: '.show .modal-footer',
+    trigger: '.o_sale_product_configurator_add[request_count="1"]',
     run: function (){} // used to sync with "get_combination_info" completion
 }, {
-    trigger: '.btn-primary:not(.disabled)',
-    extra_trigger: '.show .modal-footer',
+    trigger: '.o_sale_product_configurator_add:not(.disabled)'
 }, {
     trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_advanced_configurator_modal',
+    extra_trigger: '.oe_optional_products_modal',
     run: 'click'
 }, {
     trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Aluminium, White)")',

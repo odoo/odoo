@@ -60,13 +60,25 @@ class DebugContext {
     }
 }
 
+let currentDebugContext;
 const debugContextSymbol = Symbol("debugContext");
 export function createDebugContext(env, { categories = [] } = {}) {
     return { [debugContextSymbol]: new DebugContext(env, categories) };
 }
 
 export function useOwnDebugContext({ categories = [] } = {}) {
-    useSubEnv(createDebugContext(useEnv(), { categories }));
+    const oldDebugContext = currentDebugContext;
+    const newDebugContext = createDebugContext(useEnv(), { categories });
+    useSubEnv(newDebugContext);
+    useEffect(
+        () => {
+            currentDebugContext = newDebugContext[debugContextSymbol];
+            return () => {
+                currentDebugContext = oldDebugContext;
+            };
+        },
+        () => []
+    );
 }
 
 export function useEnvDebugContext() {
@@ -75,6 +87,10 @@ export function useEnvDebugContext() {
         throw new Error("There is no debug context available in the current environment.");
     }
     return debugContext;
+}
+
+export function getCurrentDebugContext() {
+    return currentDebugContext;
 }
 
 export function useDebugCategory(category, context = {}) {

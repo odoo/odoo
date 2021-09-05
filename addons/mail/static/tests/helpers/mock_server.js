@@ -3,7 +3,6 @@
 import { nextAnimationFrame } from '@mail/utils/test_utils';
 
 import MockServer from 'web.MockServer';
-import { datetime_to_str } from 'web.time';
 
 MockServer.include({
     /**
@@ -200,10 +199,6 @@ MockServer.include({
             const name = args.args[1] || args.kwargs.name;
             return this._mockMailChannelChannelSetCustomName(ids, name);
         }
-        if (args.model === 'mail.channel' && args.method === 'create_group') {
-            const partners_to = args.args[0] || args.kwargs.partners_to;
-            return this._mockMailChannelCreateGroup(partners_to);
-        }
         if (args.model === 'mail.channel' && args.method === 'execute_command_leave') {
             return this._mockMailChannelExecuteCommandLeave(args);
         }
@@ -222,10 +217,6 @@ MockServer.include({
             const is_typing = args.args[1] || args.kwargs.is_typing;
             const context = args.kwargs.context;
             return this._mockMailChannelNotifyTyping(ids, is_typing, context);
-        }
-        if (args.model === 'mail.channel' && args.method === 'write' && 'image_128' in args.args[1]) {
-            const ids = args.args[0];
-            return this._mockMailChannelWriteImage128(ids[0]);
         }
         // mail.message methods
         if (args.model === 'mail.message' && args.method === 'mark_all_as_read') {
@@ -255,15 +246,6 @@ MockServer.include({
         if (args.model === 'mail.message' && args.method === 'unstar_all') {
             return this._mockMailMessageUnstarAll();
         }
-        if (args.model === 'res.users.settings' && args.method === '_find_or_create_for_user') {
-            const user_id = args.args[0][0];
-            return this._mockResUsersSettings_FindOrCreateForUser(user_id);
-        }
-        if (args.model === 'res.users.settings' && args.method === 'set_res_users_settings') {
-            const id = args.args[0][0];
-            const newSettings = args.kwargs.new_settings;
-            return this._mockResUsersSettingsSetResUsersSettings(id, newSettings);
-        }
         // res.partner methods
         if (args.method === 'get_mention_suggestions') {
             if (args.model === 'mail.channel') {
@@ -277,12 +259,6 @@ MockServer.include({
             const name = args.args[0] || args.kwargs.search;
             const limit = args.args[1] || args.kwargs.limit;
             return this._mockResPartnerImSearch(name, limit);
-        }
-        if (args.model === 'res.partner' && args.method === 'search_for_channel_invite') {
-            const search_term = args.args[0] || args.kwargs.search_term;
-            const channel_id = args.args[1] || args.kwargs.channel_id;
-            const limit = args.args[2] || args.kwargs.limit;
-            return this._mockResPartnerSearchForChannelInvite(search_term, channel_id, limit);
         }
         // mail.thread methods (can work on any model)
         if (args.method === 'message_subscribe') {
@@ -734,7 +710,6 @@ MockServer.include({
             channel_type: 'chat',
             is_minimized: true,
             is_pinned: true,
-            last_interest_dt: datetime_to_str(new Date()),
             members: [[6, 0, partners_to]],
             name: partners.map(partner => partner.name).join(", "),
             public: 'private',
@@ -890,26 +865,6 @@ MockServer.include({
         this._mockMailChannel_broadcast([channel.id], [this.currentPartnerId]);
     },
     /**
-     * Simulates the `/mail/create_group` route.
-     *
-     * @private
-     * @param {integer[]} partners_to
-     * @returns {Object}
-     */
-    async _mockMailChannelCreateGroup(partners_to) {
-        const partners = this._getRecords('res.partner', [['id', 'in', partners_to]]);
-        const id = this._mockCreate('mail.channel', {
-            channel_type: 'group',
-            is_pinned: true,
-            members: [[6, 0, partners.map(partner => partner.id)]],
-            name: '',
-            public: 'private',
-            state: 'open',
-        });
-        this._mockMailChannel_broadcast(id, partners.map(partner => partner.id));
-        return this._mockMailChannelChannelInfo([id])[0];
-    },
-    /**
      * Simulates `execute_command_leave` on `mail.channel`.
      *
      * @private
@@ -999,31 +954,6 @@ MockServer.include({
         return mentionSuggestions;
     },
     /**
-     * Simulates `write` on `mail.channel` when `image_128` changes.
-     *
-     * @param {integer} id
-     */
-    _mockMailChannelWriteImage128(id) {
-        this._mockWrite('mail.channel', [
-            [id],
-            {
-                avatarCacheKey: moment.utc().format("YYYYMMDDHHmmss"),
-            },
-        ]);
-        const avatarCacheKey = this._getRecords('mail.channel', [['id', '=', id]])[0].avatarCacheKey;
-        const notification = [
-            ['dbName', 'mail.channel', id],
-            {
-                type: 'mail.channel_update',
-                payload: {
-                    id: 20,
-                    avatarCacheKey: avatarCacheKey,
-                },
-            },
-        ];
-        this._widget.call('bus_service', 'trigger', 'notification', [notification]);
-    },
-    /**
      * Simulates `message_post` on `mail.channel`.
      *
      * @private
@@ -1035,14 +965,11 @@ MockServer.include({
     _mockMailChannelMessagePost(id, kwargs, context) {
         const message_type = kwargs.message_type || 'notification';
         const channel = this._getRecords('mail.channel', [['id', '=', id]])[0];
-        if (channel.channel_type !== 'channel') {
+        if (channel.channel_type !== 'channel' && !channel.is_pinned) {
             // channel.partner not handled here for simplicity
             this._mockWrite('mail.channel', [
                 [channel.id],
-                {
-                    last_interest_dt: datetime_to_str(new Date()),
-                    is_pinned: true,
-                },
+                { is_pinned: true },
             ]);
         }
         const messageId = this._mockMailThreadMessagePost(
@@ -1643,22 +1570,6 @@ MockServer.include({
         const channels = this._getRecords('mail.channel', [['id', '=', message.res_id]]);
         for (const channel of channels) {
             notifications.push([[false, 'mail.channel', channel.id], messageFormat]);
-
-            // notify update of last_interest_dt
-            const now = datetime_to_str(new Date());
-            this._mockWrite('mail.channel',
-                [channel.id],
-                { last_interest_dt: now },
-            );
-            for (const member of channel.members) {
-                notifications.push([[false, 'res.partner', member], {
-                    type: 'mail.channel_last_interest_dt_changed',
-                    payload: {
-                        id: channel.id,
-                        last_interest_dt: now,
-                    },
-                }]);
-            }
         }
         this._widget.call('bus_service', 'trigger', 'notification', notifications);
     },
@@ -1712,50 +1623,6 @@ MockServer.include({
             ...directMessages,
         ];
     },
-
-    /**
-     * Simulates `_find_or_create_for_user` on `res.users.settings`.
-     *
-     * @param {Object} user
-     * @returns {Object}
-     */
-    _mockResUsersSettings_FindOrCreateForUser(user_id) {
-        let settings = this._getRecords('res.users.settings', [['user_id', '=', user_id]])[0];
-        if (!settings) {
-            const settingsId = this._mockCreate('res.users.settings', { user_id: user_id });
-            settings = this._getRecords('res.users.settings', [['id', '=', settingsId]])[0];
-        }
-        return settings;
-    },
-
-    /**
-     * Simulates `set_res_users_settings` on `res.users.settings`.
-     *
-     * @param {integer} id
-     * @param {Object} newSettings
-     */
-    _mockResUsersSettingsSetResUsersSettings(id, newSettings) {
-        const oldSettings = this._getRecords('res.users.settings', [['id', '=', id]])[0];
-        const changedSettings = {};
-        for (const setting in newSettings) {
-            if (setting in oldSettings && newSettings[setting] !== oldSettings[setting]) {
-                changedSettings[setting] = newSettings[setting];
-            }
-        }
-        this._mockWrite('res.users.settings', [
-            [id],
-            changedSettings,
-        ]);
-        const notification = [
-            ['dbName', 'res.partner', this.currentPartnerId],
-            {
-                type: 'res.users_settings_changed',
-                payload: changedSettings,
-            },
-        ];
-        this._widget.call('bus_service', 'trigger', 'notification', [notification]);
-    },
-
     /**
      * Simulates `get_mention_suggestions` on `res.partner`.
      *
@@ -1901,48 +1768,6 @@ MockServer.include({
         ]));
     },
     /**
-     * Simulates `search_for_channel_invite` on `res.partner`.
-     *
-     * @private
-     * @param {string} [search_term='']
-     * @param {integer} [channel_id]
-     * @param {integer} [limit=30]
-     * @returns {Object[]}
-     */
-    _mockResPartnerSearchForChannelInvite(search_term, channel_id, limit = 30) {
-        search_term = search_term.toLowerCase(); // simulates ILIKE
-        // simulates domain with relational parts (not supported by mock server)
-        const matchingPartners = [...this._mockResPartnerMailPartnerFormat(
-            this._getRecords('res.users', [])
-            .filter(user => {
-                const partner = this._getRecords('res.partner', [['id', '=', user.partner_id]])[0];
-                // user must have a partner
-                if (!partner) {
-                    return false;
-                }
-                // not current partner
-                if (partner.id === this.currentPartnerId) {
-                    return false;
-                }
-                // no name is considered as return all
-                if (!search_term) {
-                    return true;
-                }
-                if (partner.name && partner.name.toLowerCase().includes(search_term)) {
-                    return true;
-                }
-                return false;
-            })
-            .map(user => user.partner_id)
-        ).values()];
-        const count = matchingPartners.length;
-        matchingPartners.length = Math.min(count, limit);
-        return {
-            count,
-            partners: matchingPartners
-        };
-    },
-    /**
      * Simulates `_message_fetch_failed` on `res.partner`.
      *
      * @private
@@ -1981,7 +1806,6 @@ MockServer.include({
             channels: this._mockMailChannelChannelInfo(this._mockResPartner_GetChannelsAsMember(user.partner_id).map(channel => channel.id)),
             current_partner: this._mockResPartnerMailPartnerFormat(user.partner_id).get(user.partner_id),
             current_user_id: this.currentUserId,
-            current_user_settings: this._mockResUsersSettings_FindOrCreateForUser(user.id),
             mail_failures: this._mockResPartner_MessageFetchFailed(user.partner_id),
             menu_id: false, // not useful in QUnit tests
             needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),

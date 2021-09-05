@@ -53,7 +53,7 @@ class MrpBom(models.Model):
     ready_to_produce = fields.Selection([
         ('all_available', ' When all components are available'),
         ('asap', 'When components for 1st operation are available')], string='Manufacturing Readiness',
-        default='all_available', help="Defines when a Manufacturing Order is considered as ready to be started", required=True)
+        default='asap', help="Defines when a Manufacturing Order is considered as ready to be started", required=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', domain="[('code', '=', 'mrp_operation'), ('company_id', '=', company_id)]",
         check_company=True,
@@ -120,17 +120,6 @@ class MrpBom(models.Model):
                         product=ptav.product_tmpl_id.display_name,
                         bom_product=bom_line.parent_product_tmpl_id.display_name
                     ))
-            for byproduct in bom.byproduct_ids:
-                if bom.product_id:
-                    same_product = bom.product_id == byproduct.product_id
-                else:
-                    same_product = bom.product_tmpl_id == byproduct.product_id.product_tmpl_id
-                if same_product:
-                    raise ValidationError(_("By-product %s should not be the same as BoM product.") % bom.display_name)
-                if byproduct.cost_share < 0:
-                    raise ValidationError(_("By-products cost shares must be positive."))
-            if sum(bom.byproduct_ids.mapped('cost_share')) > 100:
-                raise ValidationError(_("The total cost share for a BoM's by-products cannot exceed 100."))
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
@@ -151,15 +140,6 @@ class MrpBom(models.Model):
             self.bom_line_ids.bom_product_template_attribute_value_ids = False
             self.operation_ids.bom_product_template_attribute_value_ids = False
             self.byproduct_ids.bom_product_template_attribute_value_ids = False
-
-            domain = [('product_tmpl_id', '=', self.product_tmpl_id.id)]
-            if self.id.origin:
-                domain.append(('id', '!=', self.id.origin))
-            number_of_bom_of_this_product = self.env['mrp.bom'].search_count(domain)
-            if number_of_bom_of_this_product:  # add a reference to the bom if there is already a bom for this product
-                self.code = _("%s (new) %s", self.product_tmpl_id.name, number_of_bom_of_this_product)
-            else:
-                self.code = False
 
     def copy(self, default=None):
         res = super().copy(default)
@@ -466,7 +446,6 @@ class MrpByProduct(models.Model):
     _description = 'Byproduct'
     _rec_name = "product_id"
     _check_company_auto = True
-    _order = 'sequence, id'
 
     product_id = fields.Many2one('product.product', 'By-product', required=True, check_company=True)
     company_id = fields.Many2one(related='bom_id.company_id', store=True, index=True, readonly=True)
@@ -486,11 +465,6 @@ class MrpByProduct(models.Model):
         'product.template.attribute.value', string="Apply on Variants", ondelete='restrict',
         domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
         help="BOM Product Variants needed to apply this line.")
-    sequence = fields.Integer("Sequence")
-    cost_share = fields.Float(
-        "Cost Share (%)", digits=(5, 2),  # decimal = 2 is important for rounding calculations!!
-        help="The percentage of the final production cost for this by-product line (divided between the quantity produced)."
-             "The total of all by-products' cost share must be less than or equal to 100.")
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

@@ -1,7 +1,8 @@
-/** @odoo-module **/
+odoo.define('website_slides.slides', function (require) {
+'use strict';
 
-import publicWidget from 'web.public.widget';
-import time from 'web.time';
+var publicWidget = require('web.public.widget');
+var time = require('web.time');
 
 publicWidget.registry.websiteSlides = publicWidget.Widget.extend({
     selector: '#wrapwrap',
@@ -31,9 +32,17 @@ publicWidget.registry.websiteSlides = publicWidget.Widget.extend({
     },
 });
 
-export default publicWidget.registry.websiteSlides;
+return publicWidget.registry.websiteSlides;
+
+});
 
 //==============================================================================
+
+odoo.define('website_slides.slides_embed', function (require) {
+'use strict';
+
+var publicWidget = require('web.public.widget');
+require('website_slides.slides');
 
 var SlideSocialEmbed = publicWidget.Widget.extend({
     events: {
@@ -110,4 +119,6 @@ publicWidget.registry.websiteSlidesEmbed = publicWidget.Widget.extend({
         var maxPage = $iframe.contents().find('#page_count').val();
         new SlideSocialEmbed(this, maxPage).attachTo($('.oe_slide_js_embed_code_widget'));
     },
+});
+
 });

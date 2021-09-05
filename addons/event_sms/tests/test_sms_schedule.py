@@ -29,7 +29,6 @@ class TestSMSSchedule(TestEventCommon, SMSCase):
 
         cls.event_0.write({
             'event_mail_ids': [
-                (5, 0),
                 (0, 0, {  # right at subscription
                     'interval_unit': 'now',
                     'interval_type': 'after_sub',

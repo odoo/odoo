@@ -1,8 +1,11 @@
-/** @odoo-module **/
+odoo.define('website_slides.channel_tag.add', function (require) {
+'use strict';
 
-import { _t } from 'web.core';
-import Dialog from 'web.Dialog';
-import publicWidget from 'web.public.widget';
+var core = require('web.core');
+var Dialog = require('web.Dialog');
+var publicWidget = require('web.public.widget');
+
+var _t = core._t;
 
 var TagCourseDialog = Dialog.extend({
     template: 'website.slides.tag.add',
@@ -366,7 +369,9 @@ publicWidget.registry.websiteSlidesTag = publicWidget.Widget.extend({
     },
 });
 
-export default {
+return {
     TagCourseDialog: TagCourseDialog,
     websiteSlidesTag: publicWidget.registry.websiteSlidesTag
 };
+
+});

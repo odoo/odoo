@@ -43,7 +43,7 @@ QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async func
     );
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
+        `.o_DiscussSidebarItem[data-thread-local-id="${
             this.messaging.models['mail.thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
@@ -66,7 +66,7 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
         model: 'mail.channel',
     });
     await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
+        document.querySelector(`.o_DiscussSidebarItem[data-thread-local-id="${
             threadGeneral.localId
         }"]`).click()
     );
@@ -77,8 +77,8 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
     );
 });
 
-QUnit.test('sidebar: pinned channel 3: open channel and leave it', async function (assert) {
-    assert.expect(6);
+QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async function (assert) {
+    assert.expect(7);
 
     // channel that is expected to be found in the sidebar
     // with a random unique id that will be referenced in the test
@@ -95,6 +95,9 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
                     "The right id is sent to the server to remove"
                 );
             }
+            if (args.method === 'channel_fold') {
+                assert.step('channel_fold');
+            }
             return this._super(...arguments);
         },
     });
@@ -104,23 +107,24 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
         model: 'mail.channel',
     });
     await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
+        document.querySelector(`.o_DiscussSidebarItem[data-thread-local-id="${
             threadGeneral.localId
         }"]`).click()
     );
-    assert.verifySteps([], "action_unfollow is not called yet");
+    assert.verifySteps([], "neither channel_fold nor action_unfollow are called yet");
     await afterNextRender(() =>
-        document.querySelector('.o_DiscussSidebarCategoryItem_commandLeave').click()
+        document.querySelector('.o_DiscussSidebarItem_commandLeave').click()
     );
     assert.verifySteps(
         [
+            'channel_fold',
             'action_unfollow'
         ],
-        "action_unfollow has been called when leaving a channel"
+        "both channel_fold and action_unfollow have been called when unpinning a channel"
     );
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_DiscussSidebarItem[data-thread-local-id="${threadGeneral.localId}"]`,
         "The channel must have been removed from discuss sidebar"
     );
     assert.containsOnce(
@@ -149,12 +153,12 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_DiscussSidebarItem[data-thread-local-id="${threadGeneral.localId}"]`,
         "1 channel is present in discuss sidebar and it is 'general'"
     );
 
     await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
+        document.querySelector(`.o_DiscussSidebarItem[data-thread-local-id="${
             threadGeneral.localId
         }"]`).click()
     );
@@ -187,7 +191,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     );
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_DiscussSidebarItem[data-thread-local-id="${threadGeneral.localId}"]`,
         "The channel must have been removed from discuss sidebar"
     );
 });
@@ -213,12 +217,12 @@ QUnit.test('[technical] sidebar: channel group_based_subscription: mandatorily p
     });
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_DiscussSidebarItem[data-thread-local-id="${threadGeneral.localId}"]`,
         "The channel #General is in discuss sidebar"
     );
     assert.containsNone(
         document.body,
-        'o_DiscussSidebarCategoryItem_commandLeave',
+        'o_DiscussSidebarItem_commandLeave',
         "The group_based_subscription channel is not unpinnable"
     );
 });

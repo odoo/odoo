@@ -4,7 +4,6 @@ odoo.define('web_editor.snippets.options', function (require) {
 var core = require('web.core');
 const {ColorpickerWidget} = require('web.Colorpicker');
 const Dialog = require('web.Dialog');
-const {scrollTo} = require('web.dom');
 const rpc = require('web.rpc');
 const time = require('web.time');
 var Widget = require('web.Widget');
@@ -902,15 +901,12 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
         }
 
         this.menuTogglerEl = document.createElement('we-toggler');
-        this.iconEl = this.imgEl || null;
-        const icon = this.el.dataset.icon;
-        if (icon) {
-            this.iconEl = document.createElement('i');
-            this.iconEl.classList.add('fa', 'fa-fw', icon);
-        }
-        if (this.iconEl) {
+        this.icon = this.el.dataset.icon || false;
+        if (this.icon) {
             this.el.classList.add('o_we_icon_select');
-            this.menuTogglerEl.appendChild(this.iconEl);
+            const iconEl = document.createElement('i');
+            iconEl.classList.add('fa', 'fa-fw', this.icon);
+            this.menuTogglerEl.appendChild(iconEl);
         }
         this.containerEl.insertBefore(this.menuTogglerEl, this.menuEl);
 
@@ -951,7 +947,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
     async setValue() {
         await this._super(...arguments);
 
-        if (this.iconEl) {
+        if (this.icon) {
             return;
         }
 
@@ -2904,9 +2900,8 @@ const SnippetOptionWidget = Widget.extend({
      * (the first time, this follows the call to the @see start method).
      *
      * @abstract
-     * @returns {Promise|undefined}
      */
-    async onFocus() {},
+    onFocus: function () {},
     /**
      * Called when the parent edition overlay is covering the associated snippet
      * for the first time, when it is a new snippet dropped from the d&d snippet
@@ -2920,9 +2915,8 @@ const SnippetOptionWidget = Widget.extend({
      * snippet (another snippet enters edition for example).
      *
      * @abstract
-     * @returns {Promise|undefined}
      */
-    async onBlur() {},
+    onBlur: function () {},
     /**
      * Called when the associated snippet is the result of the cloning of
      * another snippet (so `this.$target` is a cloned element).
@@ -5434,7 +5428,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
         if ('colorName' in params) {
             const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
             return src.searchParams.has(params.colorName);
-        } else if (widgetName === 'main_color_opt') {
+        } else if (widgetName === 'dynamic_color_opt') {
             const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
             return src.origin === window.location.origin && src.pathname.startsWith('/web_editor/shape/');
         }
@@ -5938,18 +5932,6 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             left: position[0] / 100 * delta.x || 0,
             top: position[1] / 100 * delta.y || 0,
         };
-        // Make sure the element is in a visible area.
-        const rect = this.$target[0].getBoundingClientRect();
-        const viewportTop = $(window).scrollTop();
-        const viewportBottom = viewportTop + $(window).height();
-        const visibleHeight = rect.top < viewportTop
-            ? Math.max(0, Math.min(viewportBottom, rect.bottom) - viewportTop) // Starts above
-            : rect.top < viewportBottom
-                ? Math.min(viewportBottom, rect.bottom) - rect.top // Starts inside
-                : 0; // Starts after
-        if (visibleHeight < 200) {
-            await scrollTo(this.$target[0], {extraOffset: 50});
-        }
         this._toggleBgOverlay(true);
     },
     /**
@@ -6031,7 +6013,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             height: `${this.$target.innerHeight()}px`,
         });
 
-        const topPos = Math.max(0, $(window).scrollTop() - this.$target.offset().top);
+        const topPos = (parseInt(this.$overlay.css('top')) - parseInt(this.$overlayContent.css('top')));
         this.$overlayContent.find('.o_we_overlay_buttons').css('top', `${topPos}px`);
     },
     /**

@@ -243,7 +243,6 @@ export const hotkeyService = {
          * @param {string} hotkey
          * @param {()=>void} callback
          * @param {Object} options additional options
-         * @param {HTMLElement} [options.activeElement=undefined]
          * @param {boolean} [options.allowRepeat=false]
          *  allow registration to perform multiple times when hotkey is held down
          * @param {boolean} [options.global=false]
@@ -289,19 +288,17 @@ export const hotkeyService = {
             const registration = {
                 hotkey: hotkey.toLowerCase(),
                 callback,
-                activeElement: options.activeElement,
+                activeElement: null,
                 allowRepeat: options && options.allowRepeat,
                 global: options && options.global,
             };
             registrations.set(token, registration);
 
-            if (!registrations.activeElement) {
-                // Due to the way elements are mounted in the DOM by Owl (bottom-to-top),
-                // we need to wait the next micro task tick to set the context owner of the registration.
-                Promise.resolve().then(() => {
-                    registration.activeElement = ui.activeElement;
-                });
-            }
+            // Due to the way elements are mounted in the DOM by Owl (bottom-to-top),
+            // we need to wait the next micro task tick to set the context owner of the registration.
+            Promise.resolve().then(() => {
+                registration.activeElement = ui.activeElement;
+            });
 
             return token;
         }
@@ -321,7 +318,6 @@ export const hotkeyService = {
              * @param {() => void} callback
              * @param {Object} options
              * @param {boolean} [options.allowRepeat=false]
-             * @param {HTMLElement} [options.activeElement=undefined]
              * @param {boolean} [options.global=false]
              * @returns {() => void}
              */

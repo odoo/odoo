@@ -93,12 +93,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
 
         if (this.mismatch){
             $span.insertAfter(this.$el);
-            if (this.nodeOptions.mismatch_title) {
-                $span.attr('title', this.nodeOptions.mismatch_title);    
-            }
-            else {
-                $span.attr('title', _t("Timezone Mismatch : This timezone is different from that of your browser.\nPlease, set the same timezone as your browser's to avoid time discrepancies in your system."));
-            }
+            $span.attr('title', _t("Timezone Mismatch : This timezone is different from that of your browser.\nPlease, set the same timezone as your browser's to avoid time discrepancies in your system."));
             this.$el = this.$el.add($span);
 
             this.$option = this.$('option').filter(function () {

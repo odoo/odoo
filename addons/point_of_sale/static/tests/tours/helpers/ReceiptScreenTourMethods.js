@@ -27,13 +27,6 @@ odoo.define('point_of_sale.tour.ReceiptScreenTourMethods', function (require) {
                 },
             ];
         }
-        clickBack() {
-            return [
-                {
-                    trigger: '.receipt-screen .button.back',
-                },
-            ];
-        }
     }
 
     class Check {

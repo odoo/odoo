@@ -6,7 +6,8 @@ import Chrome from "point_of_sale.Chrome";
 import Registries from "point_of_sale.Registries";
 import { configureGui } from "point_of_sale.Gui";
 import { useBus } from "@web/core/utils/hooks";
-const { Component } = owl;
+import PosComponent from "point_of_sale.PosComponent";
+import PopupControllerMixin from "point_of_sale.PopupControllerMixin";
 import { registry } from "@web/core/registry";
 
 function setupResponsivePlugin(env) {
@@ -21,7 +22,7 @@ function setupResponsivePlugin(env) {
     window.addEventListener("resize", updateEnv);
 }
 
-export class ChromeAdapter extends Component {
+export class ChromeAdapter extends PopupControllerMixin(PosComponent) {
     setup() {
         this.PosChrome = Registries.Component.get(Chrome);
         this.legacyActionManager = useService("legacy_action_manager");
@@ -30,23 +31,12 @@ export class ChromeAdapter extends Component {
         useBus(this.env.qweb, "update", () => this.render());
         const chrome = owl.hooks.useRef("chrome");
         owl.hooks.onMounted(async () => {
-            // Add the pos error handler when the chrome component is available.
-            registry.category('error_handlers').add(
-                'posErrorHandler',
-                (env, ...noEnvArgs) => {
-                    if (chrome.comp) {
-                        return chrome.comp.errorHandler(this.env, ...noEnvArgs);
-                    }
-                    return false;
-                },
-                { sequence: 0 }
-            );
             // Little trick to avoid displaying the block ui during the POS models loading
             const BlockUiFromRegistry = registry.category("main_components").get("BlockUI");
             registry.category("main_components").remove("BlockUI");
-            configureGui({ component: chrome.comp });
             await chrome.comp.start();
             registry.category("main_components").add("BlockUI", BlockUiFromRegistry);
+            configureGui({ component: chrome.comp });
             setupResponsivePlugin(this.env);
         });
     }

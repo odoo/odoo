@@ -59,18 +59,6 @@ def make_session(name=''):
     return f'{datetime.datetime.now():%Y-%m-%d %H:%M:%S} {name}'
 
 
-def force_hook():
-    """
-    Force periodic profiling collectors to generate some stack trace.  This is
-    useful before long calls that do not release the GIL, so that the time
-    spent in those calls is attributed to a specific stack trace, instead of
-    some arbitrary former frame.
-    """
-    thread = threading.current_thread()
-    for func in getattr(thread, 'profile_hooks', ()):
-        func()
-
-
 class Collector:
     """
     Base class for objects that collect profiling data.
@@ -112,7 +100,8 @@ class Collector:
         # todo add entry count limit
         self._entries.append({
             'stack': self._get_stack_trace(frame),
-            'exec_context': getattr(self.profiler.init_thread, 'exec_context', ()),
+            # make a copy of the current context, because it will change
+            'exec_context': dict(getattr(self.profiler.init_thread, 'exec_context', ())),
             'start': time.time(),
             **(entry or {}),
         })
@@ -177,39 +166,20 @@ class PeriodicCollector(Collector):
 
     def run(self):
         self.active = True
-        last_time = time.time()
         while self.active:  # maybe add a check on parent_thread state?
-            duration = time.time() - last_time
-            if duration > self.frame_interval * 10 and self.last_frame:
-                # The profiler has unexpectedly slept for more than 10 frame intervals. This may
-                # happen when calling a C library without releasing the GIL. In that case, the
-                # last frame was taken before the call, and the next frame is after the call, and
-                # the call itself does not appear in any of those frames: the duration of the call
-                # is incorrectly attributed to the last frame.
-                self._entries[-1]['stack'].append(('profiling', 0, '⚠ Profiler freezed for %s s' % duration, ''))
-                self.last_frame = None  # skip duplicate detection for the next frame.
             self.add()
-            last_time = time.time()
             time.sleep(self.frame_interval)
-
         self._entries.append({'stack': [], 'start': time.time()})  # add final end frame
 
     def start(self):
         interval = self.profiler.params.get('traces_async_interval')
         if interval:
             self.frame_interval = min(max(float(interval), 0.001), 1)
-
-        init_thread = self.profiler.init_thread
-        if not hasattr(init_thread, 'profile_hooks'):
-            init_thread.profile_hooks = []
-        init_thread.profile_hooks.append(self.add)
-
         self.thread.start()
 
     def stop(self):
         self.active = False
         self.thread.join()
-        self.profiler.init_thread.profile_hooks.remove(self.add)
 
     def add(self, entry=None, frame=None):
         """ Add an entry (dict) to this collector. """
@@ -280,15 +250,17 @@ class ExecutionContext:
     """
     def __init__(self, **context):
         self.context = context
-        self.previous_context = None
+        self.stack_trace_level = None
 
     def __enter__(self):
         current_thread = threading.current_thread()
-        self.previous_context = getattr(current_thread, 'exec_context', ())
-        current_thread.exec_context = self.previous_context + ((stack_size(), self.context),)
+        self.stack_trace_level = stack_size()
+        if not hasattr(current_thread, 'exec_context'):
+            current_thread.exec_context = {}
+        current_thread.exec_context[self.stack_trace_level] = self.context
 
     def __exit__(self, *_args):
-        threading.current_thread().exec_context = self.previous_context
+        threading.current_thread().exec_context.pop(self.stack_trace_level)
 
 
 class Profiler:

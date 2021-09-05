@@ -241,6 +241,7 @@
         <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
         <div t-attf-class="o_pricelist_dropdown dropdown#{'' if website_sale_pricelists and len(website_sale_pricelists)&gt;1 else ' d-none'} #{_classes}">
             <t t-set="curr_pl" t-value="website.get_current_pricelist()" />
+            <span class="font-weight-bold text-muted">Pricelist:</span>
             <a role="button" href="#" class="dropdown-toggle btn btn-light border-0 px-0 text-muted align-baseline" data-toggle="dropdown">
                 <t t-esc="curr_pl and curr_pl.name or ' - '" />
             </a>
@@ -252,22 +253,6 @@
                 </t>
             </div>
         </div>
-    </template>
-
-    <template id="products_breadcrumb" name="Products Breadcrumb">
-        <ol t-if="category" t-attf-class="breadcrumb #{_classes}">
-            <li class="breadcrumb-item">
-                <a href="/shop">Products</a>
-            </li>
-            <t t-foreach="category.parents_and_self" t-as="cat">
-                <li t-if="cat == category" class="breadcrumb-item">
-                    <span class="d-inline-block" t-field="cat.name"/>
-                </li>
-                <li t-else="" class="breadcrumb-item">
-                    <a t-att-href="keep('/shop/category/%s' % slug(cat), category=0)" t-field="cat.name"/>
-                </li>
-            </t>
-        </ol>
     </template>
 
     <!-- /shop product listing -->
@@ -283,9 +268,6 @@
                             <div class="products_attributes_filters"/>
                         </div>
                         <div id="products_grid" t-attf-class="col #{'o_wsale_layout_list' if layout_mode == 'list' else ''}">
-                            <t t-call="website_sale.products_breadcrumb">
-                                <t t-set="_classes" t-valuef="w-100"/>
-                            </t>
                             <div class="products_header form-inline flex-md-nowrap justify-content-end mb-4">
                                 <t t-call="website_sale.search">
                                     <t t-set="_classes" t-valuef="w-100 w-md-auto mr-auto mb-2"/>
@@ -619,7 +601,7 @@
                                         <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id" />
                                         <input t-if="product.public_categ_ids.ids" type="hidden" class="product_category_id" name="product_category_id" t-att-value="product.public_categ_ids.ids[0]" />
                                         <t t-if="combination" t-call="sale.variants">
-                                            <t t-set="ul_class" t-valuef="flex-column" />
+                                            <t t-set="ul_class" t-value="'flex-column'" />
                                             <t t-set="parent_combination" t-value="None" />
                                         </t>
                                         <t t-else="">
@@ -1241,7 +1223,6 @@
                                         <t t-set='contact' t-value="order.partner_id"/>
                                         <t t-set='selected' t-value="1"/>
                                         <t t-set='readonly' t-value="1"/>
-                                        <t t-set='allow_edit' t-value="1"/>
                                     </t>
                                 </div>
                             </div>
@@ -1257,20 +1238,20 @@
                                             <div class="col-md-12 col-lg-12 one_kanban">
                                                 <form action="/shop/address" method="post" class=''>
                                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                                    <a role="button" href="#" class='a-submit btn btn-secondary mb-2 btn-block'>
+                                                    <a role="button" href="#" class='a-submit btn btn-secondary mb16 btn-block'>
                                                         <i class="fa fa-plus-square"/>
                                                         <span>Add an address</span>
                                                     </a>
                                                 </form>
                                             </div>
                                             <t t-foreach="shippings" t-as="ship">
-                                                <div class="col-md-12 col-lg-6 one_kanban mb-2">
+                                                <div class="col-md-12 col-lg-6 one_kanban">
                                                     <t t-call="website_sale.address_kanban">
+                                                        <t t-set="actual_partner" t-value="order.partner_id" />
                                                         <t t-set='contact' t-value="ship"/>
                                                         <t t-set='selected' t-value="order.partner_shipping_id==ship"/>
                                                         <t t-set='readonly' t-value="bool(len(shippings)==1)"/>
                                                         <t t-set='edit_billing' t-value="bool(ship==order.partner_id)"/>
-                                                        <t t-set="allow_edit" t-value="not order.partner_id or (ship.id in order.partner_id.child_ids.ids)" />
                                                     </t>
                                                 </div>
                                             </t>
@@ -1306,7 +1287,7 @@
             </form>
             <div t-attf-class="card #{selected and 'border border-primary' or 'js_change_shipping'}">
                 <div class='card-body' style='min-height: 130px;'>
-                    <a t-if="allow_edit" href="#" class="btn btn-link float-right p-0 js_edit_address no-decoration" role="button" title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
+                    <a t-if="not actual_partner or (ship.id in actual_partner.child_ids.ids)" href="#" class="btn btn-link float-right p-0 js_edit_address no-decoration" role="button" title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
                     <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
                 </div>
                 <div class='card-footer' t-if='not readonly'>
@@ -1495,23 +1476,6 @@
         </xpath>
     </template>
 
-    <template id="address_on_payment" name="Address on payment">
-        <div class="card">
-            <div class="card-body" id="shipping_and_billing">
-                <a class="float-right no-decoration" href="/shop/checkout"><i class="fa fa-edit"/> Edit</a>
-                <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
-                <div>
-                    <b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b>
-                    <span t-esc="order.partner_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
-                </div>
-                <div t-if="not same_shipping and not only_services" groups="sale.group_delivery_invoice_address">
-                    <b>Shipping: </b>
-                    <span t-esc="order.partner_shipping_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
-                </div>
-            </div>
-        </div>
-    </template>
-
     <template id="payment" name="Payment">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop - Select Payment Acquirer</t>
@@ -1539,8 +1503,13 @@
                             <t t-call="website_sale.cart_summary"/>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
-                            <div id='address_on_payment'>
-                                <t t-call="website_sale.address_on_payment"/>
+                            <div class="card">
+                                <div class="card-body" id="shipping_and_billing">
+                                    <a class='float-right no-decoration' href='/shop/checkout'><i class="fa fa-edit"/> Edit</a>
+                                    <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
+                                    <div><b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-esc='order.partner_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
+                                    <div t-if="not same_shipping and not only_services" groups="sale.group_delivery_invoice_address"><b>Shipping: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
+                                </div>
                             </div>
 
                             <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_payment_1"/>

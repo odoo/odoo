@@ -1,17 +1,18 @@
-/** @odoo-module **/
+odoo.define('hr.M2XAvatarEmployeeTests', function (require) {
+"use strict";
 
-import {
+const {
     afterEach,
     afterNextRender,
     beforeEach,
     start,
-} from '@mail/utils/test_utils';
+} = require('@mail/utils/test_utils');
 
-import FormView from 'web.FormView';
-import KanbanView from 'web.KanbanView';
-import ListView from 'web.ListView';
-import { Many2OneAvatarEmployee } from '@hr/js/m2x_avatar_employee';
-import { dom, mock } from 'web.test_utils';
+const FormView = require('web.FormView');
+const KanbanView = require('web.KanbanView');
+const ListView = require('web.ListView');
+const { Many2OneAvatarEmployee } = require('hr.Many2OneAvatarEmployee');
+const { dom, mock } = require('web.test_utils');
 
 QUnit.module('hr', {}, function () {
     QUnit.module('M2XAvatarEmployee', {
@@ -440,4 +441,5 @@ QUnit.module('hr', {}, function () {
 
         form.destroy();
     });
+});
 });

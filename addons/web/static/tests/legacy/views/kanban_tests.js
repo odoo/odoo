@@ -7119,7 +7119,7 @@ QUnit.module('Views', {
             "the kanban view should not be ungrouped");
 
         kanban.update({domain: []}); // 1st update on kanban view
-        kanban.update({groupBy: []}); // 2n update on kanban view
+        kanban.update({groupBy: false}); // 2n update on kanban view
         prom.resolve(); // simulate slow 1st update of kanban view
 
         await nextTick();
@@ -8249,40 +8249,6 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
-
-    QUnit.test("kanban widget supports options parameters", async function (assert) {
-        assert.expect(2);
-
-        widgetRegistry.add('widget_test_option', Widget.extend({
-            init(parent, state, options) {
-                this._super(...arguments);
-                this.title = options.attrs.title;
-            },
-            start() {
-                this.$el.append($("<div>", {text: this.title, class: 'o-test-widget-option'}));
-            },
-        }));
-
-        const kanban = await createView({
-            arch: `<kanban>
-    <templates>
-        <t t-name="kanban-box">
-            <div>
-                <widget name="widget_test_option" title="Widget with Option"/>
-            </div>
-        </t>
-    </templates>
-</kanban>`,
-            data: this.data,
-            model: "partner",
-            View: KanbanView,
-        });
-
-        assert.containsN(kanban, '.o-test-widget-option', 4);
-        assert.strictEqual(kanban.$('.o-test-widget-option')[0].textContent, 'Widget with Option');
-
-        kanban.destroy();
-        delete widgetRegistry.map.optionwidget;
-    });
 });
+
 });

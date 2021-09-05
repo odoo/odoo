@@ -444,6 +444,7 @@
           <field name="location">Grand-Rosiere</field>
           <field name="doors">5</field>
           <field name="driver_id" ref="base.partner_demo" />
+          <field name="fleet_id" ref="fleet_category_internal"/>
           <field name="acquisition_date" eval="(DateTime.now() - timedelta(days=336)).strftime('%Y-%m-%d')" />
           <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
@@ -459,6 +460,7 @@
           <field name="location">Grand-Rosiere</field>
           <field name="doors">5</field>
           <field name="driver_id" ref="base.res_partner_address_25" />
+          <field name="fleet_id" ref="fleet_category_internal"/>
           <field name="acquisition_date" eval="(DateTime.now() - timedelta(days=233)).strftime('%Y-%m-%d')" />
           <field name="state_id" ref="fleet_vehicle_state_downgraded"/>
           <field name="odometer_unit">kilometers</field>
@@ -474,6 +476,7 @@
           <field name="location">Grand-Rosiere</field>
           <field name="doors">3</field>
           <field name="driver_id" ref="base.res_partner_address_17" />
+          <field name="fleet_id" ref="fleet_category_internal"/>
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
           <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
@@ -489,6 +492,7 @@
           <field name="location">Grand-Rosiere</field>
           <field name="doors">3</field>
           <field name="driver_id" ref="base.res_partner_address_16" />
+          <field name="fleet_id" ref="fleet_category_internal"/>
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
           <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
@@ -504,6 +508,7 @@
           <field name="location">Grand-Rosiere</field>
           <field name="doors">5</field>
           <field name="driver_id" ref="base.res_partner_address_15" />
+          <field name="fleet_id" ref="fleet_category_internal"/>
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
           <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>

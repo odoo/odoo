@@ -739,7 +739,6 @@ class WebsiteSale(http.Controller):
                     order.partner_shipping_id = partner_id
 
                 # TDE FIXME: don't ever do this
-                # -> TDE: you are the guy that did what we should never do in commit e6f038a
                 order.message_partner_ids = [(4, partner_id), (3, request.website.partner_id.id)]
                 if not errors:
                     return request.redirect(kw.get('callback') or '/shop/confirm_order')
@@ -845,6 +844,16 @@ class WebsiteSale(http.Controller):
         if redirection:
             return redirection
 
+        # if form posted
+        if 'post_values' in post:
+            values = {}
+            for field_name, field_value in post.items():
+                if field_name in request.env['sale.order']._fields and field_name.startswith('x_'):
+                    values[field_name] = field_value
+            if values:
+                order.write(values)
+            return request.redirect("/shop/payment")
+
         values = {
             'website_sale_order': order,
             'post': post,
@@ -852,6 +861,7 @@ class WebsiteSale(http.Controller):
             'partner': order.partner_id.id,
             'order': order,
         }
+
         return request.render("website_sale.extra_info", values)
 
     # ------------------------------------------------------

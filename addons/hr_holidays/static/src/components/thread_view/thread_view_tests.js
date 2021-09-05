@@ -1,12 +1,13 @@
-/** @odoo-module **/
+odoo.define('hr_holidays/static/src/components/thread_view/thread_view_tests.js', function (require) {
+'use strict';
 
-import { link } from '@mail/model/model_field_command';
-import {
+const { link } = require('@mail/model/model_field_command');
+const {
     afterEach,
     beforeEach,
     createRootMessagingComponent,
     start,
-} from '@mail/utils/test_utils';
+} = require('@mail/utils/test_utils');
 
 QUnit.module('hr_holidays', {}, function () {
 QUnit.module('components', {}, function () {
@@ -82,4 +83,6 @@ QUnit.test('out of office message on direct chat with out of office partner', as
 
 });
 });
+});
+
 });
