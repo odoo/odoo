@@ -35,7 +35,6 @@ class ProductSync(Command):
     def handle_vendors(self):
         vendors = []
 
-
         countries = set()
         [countries.add(vendor["country"]) for vendor in vendors]
 
@@ -94,9 +93,9 @@ class ProductSync(Command):
 
             for i in products:
                 cur.execute(insert_into_marketplace_products, (i["productName_en"], i["unitPrice"],
-                                                               i['id'],
-                                                               bool(i["isArchived"]), bool(i["is_product_locked"]),
                                                                i["entityId"],
+                                                               bool(i["isArchived"]), bool(i["is_product_locked"]),
+                                                               i['id'],
                                                                1, datetime.now(), 1, datetime.now()))
                 cls.conn.commit()
 
