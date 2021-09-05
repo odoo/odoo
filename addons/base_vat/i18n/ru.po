@@ -8,6 +8,7 @@
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Anton Ilchenko <anton.wmt@gmail.com>, 2019
 # Martin Trigaux, 2021
+# ILMIR <karamov@it-projects.info>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: ILMIR <karamov@it-projects.info>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +37,7 @@ msgstr ""
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "<span class=\"o_vat_label\">VAT</span>"
-msgstr ""
+msgstr "<span class=\"o_vat_label\">НДС</span>"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -75,6 +76,9 @@ msgid ""
 "VAT validation check or did not respect the expected format "
 "%(expected_format)s."
 msgstr ""
+"Номер НДС [%(wrong_vat)s] для %(record_label)s либо не прошел проверку на "
+"соответствие НДС VIES, либо не соответствует ожидаемому формату "
+"%(expected_format)s."
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -83,6 +87,8 @@ msgid ""
 "The VAT number [%(wrong_vat)s] for record_label does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"Номер НДС [%(wrong_vat)s] для record_label недействителен.\n"
+"Примечание: ожидаемый формат %(expected_format)s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
@@ -91,6 +97,8 @@ msgid ""
 "The country detected for this foreign VAT number does not match the one set "
 "on this fiscal position."
 msgstr ""
+"Страна, определенная для данного иностранного номера НДС, не совпадает со "
+"страной, указанной для этой налоговой позиции."
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
@@ -113,10 +121,10 @@ msgstr "Проверка ИНН с помощью Европейского се�
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid "fiscal position [%s]"
-msgstr ""
+msgstr "налоговая позиция [%s]"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"
-msgstr ""
+msgstr "партнер [%s]"
