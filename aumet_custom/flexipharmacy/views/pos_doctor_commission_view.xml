@@ -2,8 +2,8 @@
 <odoo>
     <data>
 
-        <menuitem name="Doctor Commission" id="main_menu_pos_doctor_commission" parent="point_of_sale.menu_point_root"
-                  sequence="91"/>
+        <menuitem name="Doctor Commission" id="main_menu_pos_doctor_commission" parent="account.menu_finance"
+                  sequence="91" groups="account.group_account_manager"/>
 
         <record id="pos_doctor_commission_view_form" model="ir.ui.view">
             <field name="name">pos.doctor.commission.form</field>

@@ -53,7 +53,7 @@ class ProductExpiryReport(models.Model):
         category_ids = self.category_ids.ids or self.env['product.category'].search([]).ids
         query = '''SELECT sq.location_id,sl.usage,spl.product_id,spl.id,spl.expiration_date,spl.name,
                         pc.name as product_category,
-                                pp.default_code,pt.name as product_name,pp.barcode  
+                                pp.default_code,pt.name as product_name 
                         FROM stock_production_lot spl
                                 LEFT JOIN stock_quant sq on sq.lot_id = spl.id
                                 LEFT JOIN stock_location sl on sq.location_id = sl.id
@@ -75,7 +75,7 @@ class ProductExpiryReport(models.Model):
                 temp_res.append(each)
         query = '''SELECT sq.location_id,sl.usage,spl.product_id,spl.id,spl.expiration_date,spl.name,
                           pc.name as product_category,
-                          pp.default_code,pt.name as product_name,pp.barcode FROM stock_quant sq
+                          pp.default_code,pt.name as product_name FROM stock_quant sq
                           LEFT JOIN stock_location sl on sq.location_id = sl.id
                           LEFT JOIN stock_production_lot spl on sq.lot_id = spl.id
                           LEFT JOIN product_product pp on spl.product_id = pp.id
@@ -109,7 +109,6 @@ class ProductExpiryReport(models.Model):
                         vals[each.get('product_category')] = [
                             {'name': each.get('name'),
                              'product_id': each.get('product_name'),
-                             'barcode': each.get('barcode'),
                              'location_name': location_name,
                              'default_code': each.get('default_code') or '--------',
                              'expiration_date': each.get('expiration_date').strftime('%Y-%m-%d'),
@@ -120,7 +119,6 @@ class ProductExpiryReport(models.Model):
                         vals[each.get('product_category')].append(
                             {'name': each.get('name'),
                              'product_id': each.get('product_name'),
-                             'barcode': each.get('barcode'),
                              'location_name': location_name,
                              'default_code': each.get('default_code') or '--------',
                              'expiration_date': each.get('expiration_date').strftime('%Y-%m-%d'),
@@ -139,7 +137,6 @@ class ProductExpiryReport(models.Model):
                         vals[location_name] = [
                             {'name': each.get('name'),
                              'product_id': each.get('product_name'),
-                             'barcode': each.get('barcode'),
                              'product_category': each.get('product_category'),
                              'default_code': each.get('default_code') or '--------',
                              'expiration_date': each.get('expiration_date').strftime('%Y-%m-%d'),
@@ -150,7 +147,6 @@ class ProductExpiryReport(models.Model):
                         vals[location_name].append(
                             {'name': each.get('name'),
                              'product_id': each.get('product_name'),
-                             'barcode': each.get('barcode'),
                              'product_category': each.get('product_category'),
                              'default_code': each.get('default_code') or '--------',
                              'expiration_date': each.get('expiration_date').strftime('%Y-%m-%d'),
@@ -206,15 +202,14 @@ class ProductExpiryReport(models.Model):
                 if value not in [vals.get('num_day'), vals.get('today_date')]:
                     worksheet.write(row_index, 0, "Lot/Serial number", bold)
                     worksheet.write(row_index, 1, "Product", bold)
-                    worksheet.write(row_index, 2, "Barcode", bold)
                     if vals.get('group_by') == 'location':
-                        worksheet.write(row_index, 3, "Category", bold)
+                        worksheet.write(row_index, 2, "Category", bold)
                     elif vals.get('group_by') == 'category':
-                        worksheet.write(row_index, 3, "Location", bold)
-                    worksheet.write(row_index, 4, "Internal Ref", bold)
-                    worksheet.write(row_index, 5, "Expiry Date", bold)
-                    worksheet.write(row_index, 6, "Remaining Days", bold)
-                    worksheet.write(row_index, 7, "Available Quantity", bold)
+                        worksheet.write(row_index, 2, "Location", bold)
+                    worksheet.write(row_index, 3, "Internal Ref", bold)
+                    worksheet.write(row_index, 4, "Expiry Date", bold)
+                    worksheet.write(row_index, 5, "Remaining Days", bold)
+                    worksheet.write(row_index, 6, "Available Quantity", bold)
                     row_index += 1
                     for each in value:
                         count = 0

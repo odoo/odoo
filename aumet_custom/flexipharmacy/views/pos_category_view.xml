@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//form//sheet" position="inside">
                     <notebook>
-                        <page string="PoS Doctor Commission">
+                        <page string="PoS Doctor Commission" groups="account.group_account_manager">
                             <group>
                                 <field name="pos_category_comm_ids" nolabel="1" mode="tree">
                                     <tree editable="bottom">
