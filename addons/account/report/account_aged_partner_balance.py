@@ -128,9 +128,9 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             # which look up the cache to determine the records to read, and has
             # quadratic complexity when the number of records is large...
             move_lines = self.env['account.move.line'].browse(aml_ids)
-            move_lines.read(['partner_id', 'company_id', 'balance', 'matched_debit_ids', 'matched_credit_ids'])
-            move_lines.mapped('matched_debit_ids').read(['max_date', 'company_id', 'amount'])
-            move_lines.mapped('matched_credit_ids').read(['max_date', 'company_id', 'amount'])
+            move_lines._read_from_database(['partner_id', 'company_id', 'balance'])
+            move_lines.mapped('matched_debit_ids')._read_from_database(['max_date', 'company_id', 'amount'])
+            move_lines.mapped('matched_credit_ids')._read_from_database(['max_date', 'company_id', 'amount'])
             for line in move_lines:
                 partner_id = line.partner_id.id or False
                 if partner_id not in partners_amount:
