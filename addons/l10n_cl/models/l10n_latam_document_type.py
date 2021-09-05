@@ -35,3 +35,6 @@ class L10nLatamDocumentType(models.Model):
         if self.country_id.code == "CL" and self.code in ['39', '41', '110', '111', '112', '34']:
             return taxes.filtered(lambda x: x.l10n_cl_sii_code == 14)
         return super()._filter_taxes_included(taxes)
+
+    def _is_doc_type_vendor(self):
+        return self.code == '46'

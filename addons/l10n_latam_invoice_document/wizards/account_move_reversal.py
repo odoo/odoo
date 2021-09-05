@@ -19,7 +19,7 @@ class AccountMoveReversal(models.TransientModel):
         for rec in self.filtered('move_ids'):
             move = rec.move_ids[0]
             if move.journal_id and move.journal_id.l10n_latam_use_documents:
-                rec.l10n_latam_manual_document_number = self.env['account.move']._is_manual_document_number(move.journal_id)
+                rec.l10n_latam_manual_document_number = move._is_manual_document_number()
 
     @api.model
     def _reverse_type_map(self, move_type):
