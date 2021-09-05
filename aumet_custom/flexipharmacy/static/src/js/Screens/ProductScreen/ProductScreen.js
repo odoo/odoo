@@ -279,6 +279,7 @@ odoo.define('flexipharmacy.ProductScreen', function(require) {
                                 method: 'product_lot_and_serial',
                                 args: [product, product.id, picking_type]
                             }
+<<<<<<< HEAD
                             await rpc.query(params).then(async function(serials){
                                 if(serials){
                                     for(var i=0 ; i < serials.length ; i++){
@@ -303,7 +304,6 @@ odoo.define('flexipharmacy.ProductScreen', function(require) {
                                     self.state.serials.sort(function(a,b){
                                         return (b.expiration_date) - (a.expiration_date);
                                     });
-                                    self.showScreen('PackLotLineScreen', {isSingleItem : isAllowOnlyOneLot, serials : self.state.serials});
                                 }
                             });
                         } catch (error) {
