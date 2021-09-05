@@ -11,6 +11,20 @@ class PurchaseOrderLine(models.Model):
 
     bonus = fields.Integer("Bonus")
 
+    price_unit = fields.Float(
+        'Unit Price', compute='_compute_standard_price', store=False)
+
+    def _compute_standard_price(self):
+        self.product_id.with_prefetch()
+        summation = 0.0
+        for i in self.product_id:
+            if i.is_marketplace_item:
+                summation += i.marketplace_product.unit_price
+            else:
+                summation += i.standard_price
+
+        self.price_unit = summation
+
     @api.depends("product_id")
     def calculate_possible_payment_methods(self):
         payment_methods = self.env["aumet.payment_method"].search([])
@@ -36,9 +50,8 @@ class PurchaseOrderLine(models.Model):
         try:
             product = self.env["product.product"].search([("id", "=", values["product_id"])])
 
-            mpapi_response = CartAPI.get_product_details(product.marketplace_product.marketplace_id,
-                                                         self.env.user.marketplace_token
-                                                         )
+            mpapi_response = CartAPI.get_product_details(self.env.user.marketplace_token,
+                                                         product.marketplace_product.marketplace_id)
 
             if (mpapi_response["data"]["data"]["payment_methods"]):
                 pass
