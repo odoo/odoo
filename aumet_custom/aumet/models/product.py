@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from ..marketplace_apis.cart import CartAPI
 from odoo import fields, models, api
 
@@ -24,10 +22,17 @@ class ProductTemplate(models.Model):
                                                          self.marketplace_product[0].marketplace_id)
             if mpapi_response["data"]["data"]["payment_methods"]:
                 possible_ids = [i["paymentMethodId"] for i in mpapi_response["data"]["data"]["payment_methods"]]
+                return {
+                    'domain':
+                        {'payment_method': [
+                            ('id',
+                             'in',
+                             [i["paymentMethodId"] for i in mpapi_response["data"]["data"]["payment_methods"]])
+                        ]
+                        }
+                }
             else:
                 return
-
-            return {'domain': {'payment_method': [('id', 'in', possible_ids)]}}
 
     @api.model
     def fields_get(self, fields=None, attributes=None):
