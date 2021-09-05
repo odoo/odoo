@@ -86,7 +86,6 @@
         <field name="type_tax_use">sale</field>
         <field name="chart_template_id" ref="il_chart_template"/>
         <field name="tax_group_id" ref="tax_group_vat_exempt"/>
-        <field name="include_base_amount">1</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -113,25 +112,31 @@
         ]"/>
     </record>
 
-    <record id="il_vat_self_inv_sale" model="account.tax.template">
+    <record id="il_vat_self_inv_purchase" model="account.tax.template">
         <field name="sequence">10</field>
         <field name="description">17%</field>
-        <field name="name">Self Invoice 17%</field>
+        <field name="name">Self Invoice</field>
         <field name="amount">17</field>
         <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
+        <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="il_chart_template"/>
         <field name="tax_group_id" ref="tax_group_vat_17"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_line_out_base')]
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'plus_report_line_ids': [ref('account_tax_report_line_out_balance')],
+                'account_id': ref('il_account_101310'),
+                'plus_report_line_ids': [ref('account_tax_report_line_in_balance_17')]
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('il_account_111110'),
+                'plus_report_line_ids': [ref('account_tax_report_line_out_balance')]
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -143,6 +148,13 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('il_account_101310'),
+                'minus_report_line_ids': [ref('account_tax_report_line_in_balance_17')]
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('il_account_111110'),
                 'minus_report_line_ids': [ref('account_tax_report_line_out_balance')]
             }),
         ]"/>
@@ -158,7 +170,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="il_chart_template"/>
         <field name="tax_group_id" ref="tax_group_vat_17"/>
-        <field name="include_base_amount" eval="True"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -167,7 +178,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('il_account_101800'),
+                'account_id': ref('il_account_101310'),
                 'plus_report_line_ids': [ref('account_tax_report_line_in_balance_17')]
             }),
         ]"/>
@@ -179,7 +190,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('il_account_101800'),
+                'account_id': ref('il_account_101310'),
                 'minus_report_line_ids': [ref('account_tax_report_line_in_balance_17')]
             }),
         ]"/>
@@ -202,7 +213,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('il_account_101830'),
+                'account_id': ref('il_account_101340'),
                 'plus_report_line_ids': [ref('account_tax_report_line_in_balance_pa_16')]
             }),
         ]"/>
@@ -214,7 +225,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('il_account_101830'),
+                'account_id': ref('il_account_101340'),
                 'minus_report_line_ids': [ref('account_tax_report_line_in_balance_pa_16')]
             }),
         ]"/>
@@ -224,9 +235,8 @@
         <field name="sequence">4</field>
         <field name="description">17%</field>
         <field name="name">VAT Inputs 2/3</field>
-        <field name="price_include" eval="1"/>
-        <field name="amount">9.6866</field>
-        <field name="amount_type">division</field>
+        <field name="amount">17</field>
+        <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="il_chart_template"/>
         <field name="tax_group_id" ref="tax_group_vat_17"/>
@@ -236,10 +246,14 @@
                 'repartition_type': 'base',
             }),
             (0,0, {
-                'factor_percent': 100,
+                'factor_percent': 66.67,
                 'repartition_type': 'tax',
-                'account_id': ref('il_account_101800'),
+                'account_id': ref('il_account_101310'),
                 'plus_report_line_ids':[ ref('account_tax_report_line_in_balance_2_3')]
+            }),
+            (0,0, {
+                'factor_percent': 33.33,
+                'repartition_type': 'tax',
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -248,10 +262,14 @@
                 'repartition_type': 'base',
             }),
             (0,0, {
-                'factor_percent': 100,
+                'factor_percent': 66.67,
                 'repartition_type': 'tax',
-                'account_id': ref('il_account_101800'),
+                'account_id': ref('il_account_101310'),
                 'minus_report_line_ids':[ ref('account_tax_report_line_in_balance_2_3')]
+            }),
+            (0,0, {
+                'factor_percent': 33.33,
+                'repartition_type': 'tax',
             }),
         ]"/>
     </record>
@@ -260,9 +278,8 @@
         <field name="sequence">5</field>
         <field name="description">17%</field>
         <field name="name">VAT Inputs 1/4</field>
-        <field name="price_include" eval="1"/>
-        <field name="amount">3.6325</field>
-        <field name="amount_type">division</field>
+        <field name="amount">17</field>
+        <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="il_chart_template"/>
         <field name="tax_group_id" ref="tax_group_vat_17"/>
@@ -272,10 +289,14 @@
                 'repartition_type': 'base',
             }),
             (0,0, {
-                'factor_percent': 100,
+                'factor_percent': 75,
                 'repartition_type': 'tax',
-                'account_id': ref('il_account_101800'),
+                'account_id': ref('il_account_101310'),
                 'plus_report_line_ids':[ ref('account_tax_report_line_in_balance_1_4')]
+            }),
+            (0,0, {
+                'factor_percent': 25,
+                'repartition_type': 'tax',
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -284,10 +305,14 @@
                 'repartition_type': 'base',
             }),
             (0,0, {
-                'factor_percent': 100,
+                'factor_percent': 75,
                 'repartition_type': 'tax',
-                'account_id': ref('il_account_101800'),
+                'account_id': ref('il_account_101310'),
                 'minus_report_line_ids':[ ref('account_tax_report_line_in_balance_1_4')]
+            }),
+            (0,0, {
+                'factor_percent': 25,
+                'repartition_type': 'tax',
             }),
         ]"/>
     </record>
@@ -309,7 +334,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('il_account_101810'),
+                'account_id': ref('il_account_101320'),
                 'plus_report_line_ids':[ref('account_tax_report_line_vat_in_fa')]
             }),
         ]"/>
@@ -321,7 +346,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('il_account_101810'),
+                'account_id': ref('il_account_101320'),
                 'minus_report_line_ids':[ref('account_tax_report_line_vat_in_fa')]
             }),
         ]"/>
@@ -332,162 +357,131 @@
         <field name="description">0%</field>
         <field name="name">VAT exempt</field>
         <field name="amount">0</field>
+        <field name="price_include" eval="1"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="il_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_exempt_purchase"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('il_account_101310'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('il_account_101310'),
+            }),
+        ]"/>
+    </record>
+
+
+    <record id="il_vat_only_purchase" model="account.tax.template">
+        <field name="sequence">17</field>
+        <field name="description">0%</field>
+        <field name="name">VAT Import Line</field>
+        <field name="description">VAT Import Line</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="il_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_17"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'account_id': ref('il_account_101840'),
+                'plus_report_line_ids': [ref('account_tax_report_line_in_balance_17')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'account_id': ref('il_account_101840'),
+                'minus_report_line_ids': [ref('account_tax_report_line_in_balance_17')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="il_vat_purchase_zero" model="account.tax.template">
+        <field name="sequence">7</field>
+        <field name="description">0%</field>
+        <field name="name">VAT Zero</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="price_include" eval="1"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="il_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_exempt_purchase"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('il_account_101310'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('il_account_101310'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="il_vat_sales_zero" model="account.tax.template">
+        <field name="sequence">9</field>
+        <field name="description">0%</field>
+        <field name="name">VAT Zero</field>
+        <field name="price_include" eval="1"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
         <field name="chart_template_id" ref="il_chart_template"/>
         <field name="tax_group_id" ref="tax_group_vat_exempt"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_out_base_exempt')]
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('il_account_111110'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_out_base_exempt')]
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('il_account_111110'),
             }),
         ]"/>
     </record>
-
-    <record id="il_vat_retention_10" model="account.tax.template">
-        <field name="sequence">13</field>
-        <field name="description">Withholding 10%</field>
-        <field name="name">Withholding 10%</field>
-        <field name="amount">-10</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="chart_template_id" ref="il_chart_template"/>
-        <field name="tax_group_id" ref="tax_group_retention_purchase"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('il_account_111200'),
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('il_account_111200'),
-            }),
-        ]"/>
-    </record>
-
-    <record id="il_vat_retention_35" model="account.tax.template">
-        <field name="sequence">14</field>
-        <field name="description">Withholding 35%</field>
-        <field name="name">Withholding 35%</field>
-        <field name="amount">-35</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="chart_template_id" ref="il_chart_template"/>
-        <field name="tax_group_id" ref="tax_group_retention_purchase"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('il_account_111200'),
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('il_account_111200'),
-            }),
-        ]"/>
-    </record>
-
-    <record id="il_vat_retention_30" model="account.tax.template">
-        <field name="sequence">15</field>
-        <field name="description">Withholding 30%</field>
-        <field name="name">Withholding 30%</field>
-        <field name="amount">-30</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="chart_template_id" ref="il_chart_template"/>
-        <field name="tax_group_id" ref="tax_group_retention_purchase"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('il_account_111220'),
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('il_account_111220'),
-            }),
-        ]"/>
-    </record>
-
-    <record id="il_vat_retention_25" model="account.tax.template">
-        <field name="sequence">16</field>
-        <field name="description">Withholding 25%</field>
-        <field name="name">Withholding 25%</field>
-        <field name="amount">-25</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="chart_template_id" ref="il_chart_template"/>
-        <field name="tax_group_id" ref="tax_group_retention_purchase"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('il_account_111220'),
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('il_account_111220'),
-            }),
-        ]"/>
-    </record>
-
 </odoo>
