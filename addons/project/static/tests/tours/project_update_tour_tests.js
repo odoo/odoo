@@ -85,7 +85,7 @@ tour.register('project_update_tour', {
     trigger: '.oe_kanban_global_click :contains("New Project") .o_dropdown_kanban',
     content: 'Open the project dropdown'
 }, {
-    trigger: '.o_kanban_record:contains("New Project") .dropdown-menu a:contains("See More")',
+    trigger: '.o_kanban_record:contains("New Project") .dropdown-menu a:contains("Edit")',
     content: 'Start editing the project',
 }, {
     trigger: '.nav-item:contains("Invoicing") .nav-link',

@@ -676,7 +676,8 @@
                                             </div>
                                             <div role="menuitem" class="col-4">
                                                 <a t-if="record.privacy_visibility.raw_value == 'portal'" class="dropdown-item" role="menuitem" name="%(project.project_share_wizard_action)d" type="action">Share</a>
-                                                <a class="dropdown-item" role="menuitem" type="object" name="action_view_kanban_project">See More</a>
+                                                <!-- [XBO] TODO: remove the name attribute in this a tag in master -->
+                                                <a class="dropdown-item" role="menuitem" type="edit" name="action_view_kanban_project">Edit</a>
                                             </div>
                                         </div>
                                     </div>
