@@ -455,3 +455,75 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         local_date_to = datetime(2020, 1, 8, 19, 0, 0)
         for tz in timezones_to_test:
             self._test_leave_with_tz(tz, local_date_from, local_date_to, 6)#TODO JUD check why this fails
+
+    def test_expired_allocation(self):
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Expired Allocation',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'number_of_days': 20,
+            'state': 'confirm',
+            'date_from': '2020-01-01',
+            'date_to': '2020-12-31',
+        })
+        allocation.action_validate()
+
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Holiday Request',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.holidays_type_2.id,
+                'date_from': '2021-09-01',
+                'date_to': '2021-09-02',
+                'number_of_days': 1,
+            })
+        self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Holiday Request',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'date_from': '2020-09-01',
+            'date_to': '2020-09-02',
+            'number_of_days': 1,
+        })
+
+    def test_no_days_expired(self):
+        # First expired allocation
+        allocation1 = self.env['hr.leave.allocation'].create({
+            'name': 'Expired Allocation',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'number_of_days': 20,
+            'state': 'confirm',
+            'date_from': '2020-01-01',
+            'date_to': '2020-12-31',
+        })
+        allocation2 = self.env['hr.leave.allocation'].create({
+            'name': 'Expired Allocation',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'number_of_days': 3,
+            'state': 'confirm',
+            'date_from': '2021-01-01',
+            'date_to': '2021-12-31',
+        })
+        allocation1.action_validate()
+        allocation2.action_validate()
+        # Try creating a request that could be validated if allocation1 was still valid
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Holiday Request',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.holidays_type_2.id,
+                'date_from': '2021-09-06',
+                'date_to': '2021-09-10',
+                'number_of_days': 5,
+            })
+        # This time we have enough days
+        self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Holiday Request',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'date_from': '2021-09-06',
+            'date_to': '2021-09-08',
+            'number_of_days': 3,
+        })
