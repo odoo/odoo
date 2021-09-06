@@ -507,7 +507,7 @@ class AccountBankStatementLine(models.Model):
     # == Business fields ==
     move_id = fields.Many2one(
         comodel_name='account.move',
-        string='Journal Entry', required=True, readonly=True, ondelete='cascade',
+        string='Journal Entry', required=True, readonly=True, auto_join=True, ondelete='cascade',
         check_company=True)
     statement_id = fields.Many2one(
         comodel_name='account.bank.statement',
