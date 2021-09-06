@@ -80,6 +80,9 @@ export class ChatWindowHeader extends Component {
      */
     async _onClickCamera(ev) {
         ev.stopPropagation();
+        if (this.chatWindow.thread.hasPendingRtcRequest) {
+            return;
+        }
         await this.chatWindow.thread.toggleCall({ startWithVideo: true });
     }
 
@@ -89,6 +92,9 @@ export class ChatWindowHeader extends Component {
      */
     async _onClickPhone(ev) {
         ev.stopPropagation();
+        if (this.chatWindow.thread.hasPendingRtcRequest) {
+            return;
+        }
         await this.chatWindow.thread.toggleCall();
     }
 
