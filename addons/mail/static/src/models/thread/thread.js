@@ -575,6 +575,16 @@ function factory(dependencies) {
         }
 
         /**
+         * Performs the rpc to leave the rtc call of the channel.
+         */
+        async performRpcLeaveCall() {
+            await this.async(() => this.env.services.rpc({
+                route: '/mail/rtc/channel/leave_call',
+                params: { channel_id: this.id },
+            }, { shadow: true }));
+        }
+
+        /**
          * Performs RPC on the route `/mail/get_suggested_recipients`.
          *
          * @static
@@ -731,14 +741,17 @@ function factory(dependencies) {
          * @param {Object} options
          */
         async toggleCall(options) {
+            this.update({ hasPendingRtcRequest: true });
             const isActiveCall = !!this.mailRtc;
             if (this.messaging.mailRtc.channel) {
                 await this.messaging.mailRtc.channel.leaveCall();
             }
             if (isActiveCall) {
+                this.update({ hasPendingRtcRequest: false });
                 return;
             }
             await this._joinCall(options);
+            this.update({ hasPendingRtcRequest: false });
         }
 
         /**
@@ -757,10 +770,6 @@ function factory(dependencies) {
                 });
                 return;
             }
-            if (this.hasPendingRtcRequest) {
-                return;
-            }
-            this.update({ hasPendingRtcRequest: true });
             const { rtcSessions, iceServers, sessionId, invitedPartners, invitedGuests } = await this.async(() => this.env.services.rpc({
                 route: '/mail/rtc/channel/join_call',
                 params: {
@@ -768,7 +777,6 @@ function factory(dependencies) {
                 },
             }, { shadow: true }));
             this.update({
-                hasPendingRtcRequest: false,
                 mailRtc: link(this.messaging.mailRtc),
                 rtcInvitingSession: unlink(),
                 rtcSessions: insertAndReplace(rtcSessions.map(record => this.messaging.models['mail.rtc_session'].convertData(record))),
@@ -789,10 +797,7 @@ function factory(dependencies) {
          * Notifies the server and does the cleanup of the current call.
          */
         async leaveCall() {
-            if (this.hasPendingRtcRequest) {
-                return;
-            }
-            await this._leaveCall();
+            await this.performRpcLeaveCall();
             this.endCall();
         }
 
@@ -1819,18 +1824,6 @@ function factory(dependencies) {
             if (this.isServerPinned === this.isPendingPinned) {
                 this.update({ isPendingPinned: clear() });
             }
-        }
-
-        /**
-         * @private
-         */
-        async _leaveCall() {
-            this.update({ hasPendingRtcRequest: true });
-            await this.async(() => this.env.services.rpc({
-                route: '/mail/rtc/channel/leave_call',
-                params: { channel_id: this.id },
-            }, { shadow: true }));
-            this.update({ hasPendingRtcRequest: false });
         }
 
         /**

@@ -74,9 +74,9 @@ function factory(dependencies) {
             this._onKeyUp = this._onKeyUp.bind(this);
             browser.addEventListener('keydown', this._onKeyDown);
             browser.addEventListener('keyup', this._onKeyUp);
-            browser.addEventListener('beforeunload', async () => {
-                this.channel && await this.channel.leaveCall();
-            });
+            // Disconnects the RTC session if the page is closed or reloaded.
+            this._onBeforeUnload = this._onBeforeUnload.bind(this);
+            browser.addEventListener('beforeunload', this._onBeforeUnload);
             /**
              * Call all sessions for which no peerConnection is established at
              * a regular interval to try to recover any connection that failed
@@ -94,6 +94,7 @@ function factory(dependencies) {
          * @override
          */
         async _willDelete() {
+            browser.removeEventListener('beforeunload', this._onBeforeUnload);
             browser.removeEventListener('keydown', this._onKeyDown);
             browser.removeEventListener('keyup', this._onKeyUp);
             return super._willDelete(...arguments);
@@ -974,6 +975,16 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
         // Handlers
         //----------------------------------------------------------------------
+
+        /**
+         * @private
+         * @param {Event} ev
+         */
+        async _onBeforeUnload(ev) {
+            if (this.channel) {
+                await this.channel.performRpcLeaveCall();
+            }
+        }
 
         /**
          * @private

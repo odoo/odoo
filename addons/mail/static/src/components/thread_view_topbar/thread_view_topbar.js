@@ -38,6 +38,9 @@ export class ThreadViewTopbar extends Component {
      * @param {MouseEvent} ev
      */
     async _onClickPhone(ev) {
+        if (this.threadViewTopBar.thread.hasPendingRtcRequest) {
+            return;
+        }
         await this.threadViewTopBar.thread.toggleCall();
     }
 
@@ -46,6 +49,9 @@ export class ThreadViewTopbar extends Component {
      * @param {MouseEvent} ev
      */
     async _onClickCamera(ev) {
+        if (this.threadViewTopBar.thread.hasPendingRtcRequest) {
+            return;
+        }
         await this.threadViewTopBar.thread.toggleCall({
             startWithVideo: true,
         });
