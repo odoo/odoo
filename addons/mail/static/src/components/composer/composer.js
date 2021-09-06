@@ -281,8 +281,7 @@ export class Composer extends Component {
     }
 
     /**
-     * Called when selection an emoji from the emoji popover (from the emoji
-     * button).
+     * Handles `o-emoji-selection` event from the emoji popover.
      *
      * @private
      * @param {CustomEvent} ev
