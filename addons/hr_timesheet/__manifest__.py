@@ -30,7 +30,6 @@ up a management by affair.
         'views/res_config_settings_views.xml',
         'views/project_views.xml',
         'views/project_portal_templates.xml',
-        'views/project_update_templates.xml',
         'views/hr_timesheet_portal_templates.xml',
         'report/hr_timesheet_report_view.xml',
         'report/project_report_view.xml',

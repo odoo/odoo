@@ -79,31 +79,4 @@
         </field>
     </record>
 
-    <record id="project_profitability_report_action" model="ir.actions.act_window">
-        <field name="name">Project Costs and Revenues</field>
-        <field name="res_model">project.profitability.report</field>
-        <field name="view_mode">pivot,graph</field>
-        <field name="search_view_id" ref="project_profitability_report_view_search"/>
-        <field name="context">{
-            'pivot_row_groupby': ['line_date:month'],
-            'group_by_no_leaf':1,
-            'graph_groupbys': ['project_id'],
-            'group_by':[],
-            'sale_show_order_product_name': 1,
-        }</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-                No data yet!
-            </p><p>
-                Analyze the profitability of your projects by comparing their costs and revenues.
-            </p>
-        </field>
-    </record>
-
-    <menuitem id="menu_project_profitability_analysis"
-        parent="project.menu_project_report"
-        action="project_profitability_report_action"
-        name="Project Costs and Revenues"
-        sequence="50"/>
-
 </odoo>

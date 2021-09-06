@@ -32,22 +32,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="track_customer_satisfaction_setting">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_project_rating"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="group_project_rating"/>
-                                    <div class="text-muted">
-                                        Track customer satisfaction on tasks
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('group_project_rating', '=', False)]}">
-                                        <div class="mt8">
-                                            <button name="%(project.open_task_type_form)d" icon="fa-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="recurring_tasks_setting">
                                 <div class="o_setting_left_pane">
                                     <field name="group_project_recurring_tasks"/>
@@ -108,6 +92,36 @@
                                     <label for="module_hr_timesheet"/>
                                     <div class="text-muted">
                                         Track time spent on projects and tasks
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Analytics</h2>
+                        <div class="row mt16 o_settings_container" name="analytic">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_analytic_accounting"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_analytic_accounting" string="Profitability"/>
+                                    <div class="text-muted">
+                                        Track the costs and revenues linked to your projects
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="track_customer_satisfaction_setting">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_project_rating"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_project_rating"/>
+                                    <div class="text-muted">
+                                        Track customer satisfaction on tasks
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('group_project_rating', '=', False)]}">
+                                        <div class="mt8">
+                                            <button name="%(project.open_task_type_form)d" icon="fa-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

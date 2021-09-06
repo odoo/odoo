@@ -4,8 +4,7 @@
 from ast import literal_eval
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
-
+from odoo.exceptions import ValidationError, UserError
 
 class Project(models.Model):
     _inherit = 'project.project'
@@ -17,7 +16,7 @@ class Project(models.Model):
         help="Sales order item to which the project is linked. Link the timesheet entry to the sales order item defined on the project. "
         "Only applies on tasks without sale order item defined, and if the employee is not in the 'Employee/Sales Order Item Mapping' of the project.")
     sale_order_id = fields.Many2one(string='Sales Order', related='sale_line_id.order_id', help="Sales order to which the project is linked.")
-    project_overview = fields.Boolean('Show Project Overview', compute='_compute_project_overview')
+    has_any_so_to_invoice = fields.Boolean('Has SO to Invoice', compute='_compute_has_any_so_to_invoice')
 
     @api.model
     def _map_tasks_default_valeus(self, task, project):
@@ -34,13 +33,17 @@ class Project(models.Model):
                 )
         ).update({'sale_line_id': False})
 
-    @api.depends('analytic_account_id')
-    def _compute_project_overview(self):
-        overview = self.env['project.project']
-        if self.user_has_groups('analytic.group_analytic_accounting'):
-            overview = self.filtered(lambda p: p.analytic_account_id)
-            overview.project_overview = True
-        (self - overview).project_overview = False
+    @api.depends('sale_order_id')
+    def _compute_has_any_so_to_invoice(self):
+        """Has any Sale Order whose invoice_status is set as To Invoice"""
+        if not self.user_has_groups('sales_team.group_sale_salesman_all_leads'):
+            self.has_any_so_to_invoice = False
+        else:
+            for project in self:
+                has_any_so_to_invoice = project.sale_order_id and project.sale_order_id.invoice_status == "to invoice"
+                for task in project.task_ids:
+                    has_any_so_to_invoice = has_any_so_to_invoice or (task.sale_order_id and task.sale_order_id.invoice_status == "to invoice")
+                project.has_any_so_to_invoice = has_any_so_to_invoice
 
     def action_view_so(self):
         self.ensure_one()
@@ -54,6 +57,34 @@ class Project(models.Model):
         }
         return action_window
 
+    def action_create_invoice(self):
+        if not self.sale_order_id and self.sale_order_id.invoice_status != 'to invoice':
+            raise UserError(_("The selected Sales Order should contain something to invoice."))
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_view_sale_advance_payment_inv")
+        sols = self.sale_order_id.ids
+        for task in self.task_ids:
+            if task.sale_order_id.id not in sols:
+                sols += [task.sale_order_id.id]
+        action['context'] = {
+            'active_ids': sols
+        }
+        return action
+
+    # ----------------------------
+    #  Project Updates
+    # ----------------------------
+
+    def _get_stat_buttons(self):
+        buttons = super(Project, self)._get_stat_buttons()
+        buttons.append({
+            'icon': 'dollar',
+            'text': _('Sales Order'),
+            'action_type': 'object',
+            'action': 'action_view_so',
+            'show': self.user_has_groups('sales_team.group_sale_salesman_all_leads') and bool(self.sale_order_id),
+            'sequence': 1,
+        })
+        return buttons
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
