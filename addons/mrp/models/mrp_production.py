@@ -1465,7 +1465,7 @@ class MrpProduction(models.Model):
                     wo.qty_producing = 1
                 else:
                     wo.qty_producing = wo.qty_remaining
-                if wo.qty_producing == 0:
+                if wo.qty_produced == 0:
                     wo.action_cancel()
 
             # We need to adapt `duration_expected` on both the original workorders and their

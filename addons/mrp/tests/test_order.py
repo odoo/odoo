@@ -1938,7 +1938,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_2 = self.env['mrp.production'].browse(mo.id + 1)
         self.assertEqual(mo_2.state, 'progress')
         wo_4, wo_5, wo_6 = mo_2.workorder_ids
-        self.assertEqual(wo_4.state, 'cancel')
+        self.assertEqual(wo_4.state, 'ready')
 
         wo_5.button_start()
         self.assertEqual(mo_2.state, 'progress')
@@ -1946,7 +1946,7 @@ class TestMrpOrder(TestMrpCommon):
 
         wo_6.button_start()
         wo_6.button_finish()
-        self.assertEqual(mo_2.state, 'to_close')
+        self.assertEqual(mo_2.state, 'progress')
         mo_2.button_mark_done()
         self.assertEqual(mo_2.state, 'done')
 
