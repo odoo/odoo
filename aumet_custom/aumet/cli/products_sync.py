@@ -21,8 +21,17 @@ def get_all_product_details(items_count, offset):
     return requests.get(url, headers=headers).json()
 
 
+def get_all_dist(items_count, offset):
+    url = f"{config.get('marketplace_host')}/v1/pharmacy/sellers?limit={items_count}&offset={offset}"
+    return requests.get(url, headers=headers).json()
+
+
 def get_items_count():
     return get_all_product_details(1, 0)["data"]["dataFilter"]["dataCount"]
+
+
+def get_all_dist_count(items_count, offset):
+    return get_all_dist(1, 0)["data"]["dataFilter"]["dataCount"]
 
 
 class ProductSync(Command):
@@ -32,31 +41,30 @@ class ProductSync(Command):
         user=config.get("db_user"),
         password=config.get("db_password"))
 
-    def handle_vendors(self):
-        vendors = []
+    @classmethod
+    def handle_vendors(cls):
+        "id, country_id, name, marketplace_id"
+        count = get_all_dist_count(1, 0)
+        for i in range(0, count, 1000):
+            distributors = get_all_dist(1000, i)["data"]["data"]
+            cur = cls.conn.cursor()
 
-        countries = set()
-        [countries.add(vendor["country"]) for vendor in vendors]
+            insert_into_marketplace_dists = """INSERT INTO aumet_marketplace_distributor
+                            (name, country_id, marketplace_id,
+                             create_uid, create_date, write_uid, write_date) 
+                            VALUES(%s, %s, %s, %s, %s, %s, %s);
+                            """
 
-        cur = self.conn.cursor()
+            for i in distributors:
+                print(i)
 
-        country_mapping = {}
+                print(i["name"], i["countryId"],
+                      i["id"],1, datetime.now(), 1, datetime.now())
+                cur.execute(insert_into_marketplace_dists, (i["name"], i["countryId"],
+                                                            i["id"], 1, datetime.now(), 1, datetime.now()))
+            cls.conn.commit()
 
-        for i in countries:
-            query = f"select id from public.res_country where name ilike '{i}'"
-            cur.execute(query)
-            country_mapping[i] = cur.fetchone()
 
-        insert_vendor = """INSERT INTO res_partner
-                                    ("name", create_date,  active, country_id, company_name, display_name, create_uid,
-                                     write_uid, write_date, marketplace_id)
-                                    VALUES( %s, %s, true, %s, %s, %s, 1, 1, %s, %s);
-                                """
-
-        for i in vendors:
-            cur.execute(insert_vendor, (i["name"], datetime.now(), country_mapping[i["country"]],
-                                        i["name"], i["name"], datetime.now(), i["marketplace_id"]))
-            self.conn.commit()
 
     @classmethod
     def handle_payment_methods(cls):
@@ -68,7 +76,7 @@ class ProductSync(Command):
                            (6, "Managed by Seller")]
 
         insert_payment_query = """INSERT INTO aumet_payment_method (marketplace_payment_method_id, 
-                                name, create_uid, create_date, write_uid, write_date) VALUES """
+                                    name, create_uid, create_date, write_uid, write_date) VALUES """
 
         cur = cls.conn.cursor()
         for i in range(len(payment_methods)):
@@ -86,10 +94,10 @@ class ProductSync(Command):
             cur = cls.conn.cursor()
 
             insert_into_marketplace_products = """INSERT INTO aumet_marketplace_product
-                    (name, unit_price, marketplace_seller_id, is_archived, is_locked,
-                     marketplace_id, create_uid, create_date, write_uid, write_date) 
-                    VALUES(%s,%s,%s, %s, %s, %s, %s, %s, %s, %s);
-                    """
+                        (name, unit_price, marketplace_seller_id, is_archived, is_locked,
+                         marketplace_id, create_uid, create_date, write_uid, write_date) 
+                        VALUES(%s,%s,%s, %s, %s, %s, %s, %s, %s, %s);
+                        """
 
             for i in products:
                 cur.execute(insert_into_marketplace_products, (i["productName_en"], i["unitPrice"],
@@ -101,5 +109,6 @@ class ProductSync(Command):
 
 
 if __name__ == "__main__":
-    ProductSync.handle_products()
-    ProductSync.handle_payment_methods()
+    # ProductSync.handle_products()
+    # ProductSync.handle_payment_methods()
+    ProductSync.handle_vendors()

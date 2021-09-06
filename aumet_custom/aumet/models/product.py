@@ -5,9 +5,8 @@ from odoo import fields, models, api
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
     marketplace_product = fields.Many2one('aumet.marketplace_product', string='Marketplace Product', required=False)
+    marketplace_distributor = fields.Many2one('aumet.marketplace_distributor', string='Marketplace Vendor', store=False)
     is_marketplace_item = fields.Boolean(string="Is from marketplace", compute="compute_referenced")
-
-
 
     def get_payments(self):
         if self.marketplace_product:
@@ -27,6 +26,10 @@ class ProductTemplate(models.Model):
     @api.depends('marketplace_product')
     def compute_referenced(self):
         self.is_marketplace_item = True if self.marketplace_product else False
+
+    @api.onchange('marketplace_distributor')
+    def onchange_marketplace_distributor(self):
+        return {'domain': {'marketplace_product': [('marketplace_seller_id', '=', self.marketplace_distributor.marketplace_id)]}}
 
     @api.onchange('marketplace_product')
     def onchange_marketplace_product(self):
