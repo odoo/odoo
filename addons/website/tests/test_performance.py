@@ -3,17 +3,26 @@
 
 from odoo.tests.common import HttpCase
 
-EXTRA_REQUEST = 5
+EXTRA_REQUEST = 7
 """ During tests, the query on 'base_registry_signaling, base_cache_signaling'
-    won't be executed on hot state, but 6 new queries related to the test cursor
-    will be added:
-        SAVEPOINT "test_cursor_4"
-        SAVEPOINT "test_cursor_4"
-        ROLLBACK TO SAVEPOINT "test_cursor_4"
-        SAVEPOINT "test_cursor_5"
+    won't be executed on hot state, but 9 new queries related to the test cursor
+    will be added::
+
+        -- create cursor
+        SAVEPOINT test_cursor_0
+        -- COMMIT
+        SAVEPOINT test_cursor_0
+        -- ROLLBACK (close)
+        ROLLBACK TO SAVEPOINT test_cursor_0
+        RELEASE SAVEPOINT test_cursor_0
+        -- create cursor
+        SAVEPOINT test_cursor_1
         [.. usual SQL Queries .. ]
-        SAVEPOINT "test_cursor_5"
-        ROLLBACK TO SAVEPOINT "test_cursor_5"
+        -- COMMIT
+        SAVEPOINT test_cursor_2
+        -- ROLLBACK (close)
+        ROLLBACK TO SAVEPOINT test_cursor_2
+        RELEASE SAVEPOINT test_cursor_2
 """
 
 

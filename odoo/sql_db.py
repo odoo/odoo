@@ -583,24 +583,20 @@ class TestCursor(BaseCursor):
                                     |
 
     """
-    _savepoint_seq = itertools.count()
-
     def __init__(self, cursor, lock):
         super().__init__()
-        self._closed = False
         self._cursor = cursor
         # we use a lock to serialize concurrent requests
         self._lock = lock
         self._lock.acquire()
         # in order to simulate commit and rollback, the cursor maintains a
         # savepoint at its last commit
-        self._savepoint = "test_cursor_%s" % next(self._savepoint_seq)
-        self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
+        self._savepoint = cursor.savepoint(flush=False)
 
     def close(self):
-        if not self._closed:
+        if not self._savepoint.closed:
             self.rollback()
-            self._closed = True
+            self._savepoint.close(rollback=False)
             self._lock.release()
 
     def autocommit(self, on):
@@ -610,7 +606,7 @@ class TestCursor(BaseCursor):
     def commit(self):
         """ Perform an SQL `COMMIT` """
         self.flush()
-        self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
+        self._savepoint = self._cursor.savepoint(flush=False)
         self.clear()
         self.prerollback.clear()
         self.postrollback.clear()
@@ -622,12 +618,12 @@ class TestCursor(BaseCursor):
         self.clear()
         self.postcommit.clear()
         self.prerollback.run()
-        self._cursor.execute('ROLLBACK TO SAVEPOINT "%s"' % self._savepoint)
+        self._savepoint.rollback()
         self.postrollback.run()
 
     def __getattr__(self, name):
         value = getattr(self._cursor, name)
-        if callable(value) and self._closed:
+        if callable(value) and self._savepoint.closed:
             raise psycopg2.OperationalError('Unable to use a closed cursor.')
         return value
 
