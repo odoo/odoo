@@ -249,6 +249,9 @@ class PickingType(models.Model):
     def get_action_picking_tree_ready(self):
         return self._get_action('stock.action_picking_tree_ready')
 
+    def get_action_picking_type_operations(self):
+        return self._get_action('stock.action_get_picking_type_operations')
+
     def get_stock_picking_action_picking_type(self):
         return self._get_action('stock.stock_picking_action_picking_type')
 
