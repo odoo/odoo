@@ -76,31 +76,34 @@ class MailThread(models.AbstractModel):
     _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
 
     message_is_follower = fields.Boolean(
-        'Is Follower', compute='_compute_is_follower', search='_search_is_follower')
+        'Is Follower', compute='_compute_message_is_follower', search='_search_message_is_follower')
     message_follower_ids = fields.One2many(
         'mail.followers', 'res_id', string='Followers', groups='base.group_user')
     message_partner_ids = fields.Many2many(
         comodel_name='res.partner', string='Followers (Partners)',
-        compute='_get_followers', search='_search_follower_partners',
+        compute='_compute_message_partner_ids',
+        search='_search_message_partner_ids',
         groups='base.group_user')
     message_ids = fields.One2many(
         'mail.message', 'res_id', string='Messages',
         domain=lambda self: [('message_type', '!=', 'user_notification')], auto_join=True)
     has_message = fields.Boolean(compute="_compute_has_message", search="_search_has_message", store=False)
     message_unread = fields.Boolean(
-        'Unread Messages', compute='_get_message_unread',
+        'Unread Messages', compute='_compute_message_unread',
         help="If checked, new messages require your attention.")
     message_unread_counter = fields.Integer(
-        'Unread Messages Counter', compute='_get_message_unread',
+        'Unread Messages Counter', compute='_compute_message_unread',
         help="Number of unread messages")
     message_needaction = fields.Boolean(
-        'Action Needed', compute='_get_message_needaction', search='_search_message_needaction',
+        'Action Needed',
+        compute='_compute_message_needaction', search='_search_message_needaction',
         help="If checked, new messages require your attention.")
     message_needaction_counter = fields.Integer(
-        'Number of Actions', compute='_get_message_needaction',
+        'Number of Actions', compute='_compute_message_needaction',
         help="Number of messages which requires an action")
     message_has_error = fields.Boolean(
-        'Message Delivery error', compute='_compute_message_has_error', search='_search_message_has_error',
+        'Message Delivery error',
+        compute='_compute_message_has_error', search='_search_message_has_error',
         help="If checked, some messages have a delivery error.")
     message_has_error_counter = fields.Integer(
         'Number of errors', compute='_compute_message_has_error',
@@ -109,12 +112,12 @@ class MailThread(models.AbstractModel):
     message_main_attachment_id = fields.Many2one(string="Main Attachment", comodel_name='ir.attachment', index=True, copy=False)
 
     @api.depends('message_follower_ids')
-    def _get_followers(self):
+    def _compute_message_partner_ids(self):
         for thread in self:
             thread.message_partner_ids = thread.message_follower_ids.mapped('partner_id')
 
     @api.model
-    def _search_follower_partners(self, operator, operand):
+    def _search_message_partner_ids(self, operator, operand):
         """Search function for message_follower_ids
 
         Do not use with operator 'not in'. Use instead message_is_followers
@@ -128,7 +131,7 @@ class MailThread(models.AbstractModel):
         return [('id', 'in', [res['res_id'] for res in followers.read(['res_id'])])]
 
     @api.depends('message_follower_ids')
-    def _compute_is_follower(self):
+    def _compute_message_is_follower(self):
         followers = self.env['mail.followers'].sudo().search([
             ('res_model', '=', self._name),
             ('res_id', 'in', self.ids),
@@ -140,7 +143,7 @@ class MailThread(models.AbstractModel):
             record.message_is_follower = record.id in following_ids
 
     @api.model
-    def _search_is_follower(self, operator, operand):
+    def _search_message_is_follower(self, operator, operand):
         followers = self.env['mail.followers'].sudo().search([
             ('res_model', '=', self._name),
             ('partner_id', '=', self.env.user.partner_id.id),
@@ -172,7 +175,7 @@ class MailThread(models.AbstractModel):
             operator_new = 'not inselect'
         return [('id', operator_new, ("SELECT distinct res_id FROM mail_message WHERE model=%s", [self._name]))]
 
-    def _get_message_unread(self):
+    def _compute_message_unread(self):
         partner_id = self.env.user.partner_id.id
         res = dict.fromkeys(self.ids, 0)
         if self.ids:
@@ -193,7 +196,7 @@ class MailThread(models.AbstractModel):
             record.message_unread_counter = res.get(record._origin.id, 0)
             record.message_unread = bool(record.message_unread_counter)
 
-    def _get_message_needaction(self):
+    def _compute_message_needaction(self):
         res = dict.fromkeys(self.ids, 0)
         if self.ids:
             # search for unread messages, directly in SQL to improve performances
