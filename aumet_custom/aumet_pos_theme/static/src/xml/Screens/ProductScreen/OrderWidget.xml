@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrderWidget" t-inherit="point_of_sale.OrderWidget" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('order-empty')]" position="replace">
+            <div class='order-empty'>
+                <i class='fa-shopping-cart fa' role="img" aria-label="Shopping cart"
+                   title="Shopping cart"/>
+                <h1>There are currently no items in this order.</h1>
+                <p>Use the categories on the right to find a product or use the search bar at the top of the page.</p>
+            </div>
+        </xpath>
+    </t>
+</templates>
+
