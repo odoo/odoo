@@ -127,10 +127,6 @@
             </field>
         </record>
 
-        <record id="crm_opportunity_report_menu" model="ir.ui.menu">
-            <field name="action" ref="crm.crm_opportunity_report_action"/>
-        </record>
-
         <record id="crm_opportunity_report_action_lead" model="ir.actions.act_window">
             <field name="name">Leads Analysis</field>
             <field name="res_model">crm.lead</field>
@@ -155,10 +151,6 @@
                     This analysis shows you how many leads have been created per month.
                 </p>
             </field>
-        </record>
-
-        <record id="crm_opportunity_report_menu_lead" model="ir.ui.menu">
-            <field name="action" ref="crm.crm_opportunity_report_action_lead"/>
         </record>
 
 </odoo>

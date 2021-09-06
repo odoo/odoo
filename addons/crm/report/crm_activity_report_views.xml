@@ -79,7 +79,7 @@
         </record>
 
        <record id="crm_activity_report_action" model="ir.actions.act_window">
-           <field name="name">Pipeline Activities</field>
+           <field name="name">Activities</field>
            <field name="res_model">crm.activity.report</field>
            <field name="view_mode">graph,pivot,tree</field>
            <field name="context">{
@@ -98,13 +98,6 @@
                 </p>
             </field>
        </record>
-
-       <menuitem
-            id="crm_activity_report_menu"
-            name="Activities"
-            parent="crm_menu_report"
-            action="crm_activity_report_action"
-            sequence="4"/>
 
         <record id="crm_activity_report_action_team" model="ir.actions.act_window">
             <field name="name">Pipeline Activities</field>
