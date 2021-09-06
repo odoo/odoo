@@ -52,6 +52,8 @@ class MassMailCase(MailCase, MockLinkTracker):
             'record: linked record,
             # MAIL.MAIL
             'content': optional content that should be present in mail.mail body_html;
+            'email_to_mail': optional email used for the mail, when different from the
+              one stored on the trace itself;
             'email_to_recipients': optional, see '_assertMailMail';
             'failure_type': optional failure reason;
             }, { ... }]
@@ -100,6 +102,7 @@ class MassMailCase(MailCase, MockLinkTracker):
         for recipient_info, link_info, record in zip(recipients_info, mail_links_info, records):
             partner = recipient_info.get('partner', self.env['res.partner'])
             email = recipient_info.get('email')
+            email_to_mail = recipient_info.get('email_to_mail') or email
             email_to_recipients = recipient_info.get('email_to_recipients')
             status = recipient_info.get('trace_status', 'sent')
             record = record or recipient_info.get('record')
@@ -130,6 +133,8 @@ class MassMailCase(MailCase, MockLinkTracker):
                 fields_values = {'mailing_id': mailing}
                 if 'failure_reason' in recipient_info:
                     fields_values['failure_reason'] = recipient_info['failure_reason']
+                if 'email_to_mail' in recipient_info:
+                    fields_values['email_to'] = recipient_info['email_to_mail']
 
                 # specific for partner: email_formatted is used
                 if partner:
@@ -154,7 +159,7 @@ class MassMailCase(MailCase, MockLinkTracker):
                     )
                 else:
                     self.assertMailMailWEmails(
-                        [email], state_mapping[status],
+                        [email_to_mail], state_mapping[status],
                         author=author,
                         content=content,
                         email_to_recipients=email_to_recipients,
