@@ -297,11 +297,21 @@ odoo.define('pos_coupon.pos', function (require) {
          * rendered at the bottom of the orderlines list.
          */
         get_orderlines: function () {
-            return [...this._getRegularOrderlines(), ...this._getRewardLines()];
+            const orderlines = _order_super.get_orderlines.apply(this, arguments);
+            const rewardLines = [];
+            const nonRewardLines = [];
+            for (const line of orderlines) {
+                if (line.is_program_reward) {
+                    rewardLines.push(line);
+                } else {
+                    nonRewardLines.push(line);
+                }
+            }
+            return [...nonRewardLines, ...rewardLines];
         },
         _getRegularOrderlines: function () {
             const orderlines = _order_super.get_orderlines.apply(this, arguments);
-            return orderlines.filter((line) => !line.is_program_reward);
+            return orderlines.filter((line) => !line.is_program_reward && !line.refunded_orderline_id);
         },
         _getRewardLines: function () {
             const orderlines = _order_super.get_orderlines.apply(this, arguments);
