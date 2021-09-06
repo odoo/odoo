@@ -1810,7 +1810,8 @@ class Task(models.Model):
                     'child': self,
                     'child_subtype': child_subtype_info,
                 })
-                parent_ids.message_post(body=body, subtype_id=subtype.id, tracking_value_ids=depends_tracking_value_ids)
+                for p in parent_ids:
+                    p.message_post(body=body, subtype_id=subtype.id, tracking_value_ids=depends_tracking_value_ids)
         return result
 
     def _track_template(self, changes):
