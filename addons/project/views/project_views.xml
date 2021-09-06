@@ -274,14 +274,6 @@
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
                         <field name="currency_id" invisible="1"/>
-                        <button class="oe_stat_button" type="object" name="action_view_analytic_account_entries" icon="fa-usd" attrs="{'invisible': [('analytic_account_id', '=', False)]}" groups="analytic.group_analytic_accounting">
-                            <div class="o_form_field o_stat_info">
-                                <span class="o_stat_text">Gross Margin</span>
-                                <span class="o_stat_value">
-                                    <field name="analytic_account_balance" widget='monetary'/>
-                                </span>
-                            </div>
-                        </button>
                         <button class="oe_stat_button" type="action"
                             name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
                             <field string="Tasks In Progress" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
@@ -312,16 +304,12 @@
                                 Burndown Chart
                             </span>
                         </button>
-                        <button class="oe_stat_button" name="%(project.project_update_all_action)d" type="action" groups="project.group_project_manager">
-                            <div class="pl-4">
-                                <field name="last_update_color" invisible="1"/>
-                                <field name="last_update_status" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
-                            </div>
-                        </button>
-                        <button class="oe_stat_button o_project_not_clickable" disabled="disabled" groups="!project.group_project_manager">
-                            <div class="pl-4">
-                                <field name="last_update_color" invisible="1"/>
-                                <field name="last_update_status" widget="status_with_color" options="{'color_field': 'last_update_color', 'no_quick_edit': 1}"/>
+                        <button class="oe_stat_button" type="object" name="action_view_analytic_account_entries" icon="fa-usd" attrs="{'invisible': [('analytic_account_id', '=', False)]}" groups="analytic.group_analytic_accounting">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="analytic_account_balance"/>
+                                </span>
+                                <span class="o_stat_text">Gross Margin</span>
                             </div>
                         </button>
                         <button class="oe_stat_button" name="%(project.project_collaborator_action)d" type="action" icon="fa-users" groups="project.group_project_manager">
@@ -332,6 +320,18 @@
                                 <span class="o_stat_text">
                                     Collaborators
                                 </span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" name="%(project.project_update_all_action)d" type="action" groups="project.group_project_manager">
+                            <div class="pl-4">
+                                <field name="last_update_color" invisible="1"/>
+                                <field name="last_update_status" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button o_project_not_clickable" disabled="disabled" groups="!project.group_project_manager">
+                            <div class="pl-4">
+                                <field name="last_update_color" invisible="1"/>
+                                <field name="last_update_status" widget="status_with_color" options="{'color_field': 'last_update_color', 'no_quick_edit': 1}"/>
                             </div>
                         </button>
                     </div>

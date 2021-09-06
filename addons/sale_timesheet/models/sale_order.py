@@ -94,15 +94,6 @@ class SaleOrder(models.Model):
             ) >= 0
         )
 
-    def action_view_project_ids(self):
-        self.ensure_one()
-        # redirect to form or kanban view
-        if len(self.project_ids) == 1 and self.project_ids.project_overview and self.env.user.has_group('project.group_project_manager'):
-            action = self.project_ids.action_view_timesheet_plan()
-        else:
-            action = super().action_view_project_ids()
-        return action
-
     def action_view_timesheet(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("sale_timesheet.timesheet_action_from_sales_order")

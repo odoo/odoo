@@ -896,6 +896,44 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     content: _t('See Timesheets'),
     position: 'bottom',
 }, {
+    mobile: true,
+    trigger: '.o_enable_searchview',
+    content: _t('Open the search field'),
+    position: 'bottom',
+}, {
+    mobile: true,
+    trigger: '.o_toggle_searchview_full',
+    content: _t('Open the full search field'),
+    position: 'bottom',
+}, {
+    trigger: '.o_group_by_menu .o_dropdown_toggler',
+    content: _t('Click on the group by button'),
+    position: 'bottom',
+}, {
+    trigger: '.dropdown-item.selected:contains(Employee)',
+    extra_trigger: '.dropdown-menu.show',
+    content: _t('Remove group by employee'),
+    position: 'bottom',
+}, {
+    trigger: '.dropdown-item.selected:contains(Billable Type)',
+    extra_trigger: '.dropdown-menu.show',
+    content: _t('Remove group by billable type'),
+    position: 'bottom',
+}, {
+    mobile: true,
+    trigger: '.o_mobile_search_footer',
+    content: _t('Close the search dropdown on mobile'),
+    position: 'bottom',
+}, {
+    mobile: true,
+    trigger: '.o_cp_bottom_right .o_cp_switch_buttons .btn-link',
+    content: _t('Prepare to change the view on mobile'),
+    position: 'bottom',
+}, {
+    trigger: '.o_switch_view.o_list',
+    content: _t('Activate the list view'),
+    position: 'bottom',
+}, {
     trigger: '.o_list_button_add',
     content: _t('Add a Timesheet'),
     position: 'bottom',
