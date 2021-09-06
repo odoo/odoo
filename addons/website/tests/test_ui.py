@@ -216,3 +216,8 @@ class TestUi(odoo.tests.HttpCase):
             'mimetype': 'image/png',
         })
         self.start_tour('/', 'snippet_background_edition', login='admin')
+
+    def test_12_edit_translated_page_redirect(self):
+        lang = self.env['res.lang']._activate_lang('nl_NL')
+        self.env['website'].browse(1).write({'language_ids': [(4, lang.id, 0)]})
+        self.start_tour("/nl/contactus", 'edit_translated_page_redirect', login='admin')
