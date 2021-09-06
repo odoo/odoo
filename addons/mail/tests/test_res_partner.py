@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.addons.mail.tests.common import MailCommon
 
 # samples use effective TLDs from the Mozilla public suffix
 # list at http://publicsuffix.org
@@ -18,7 +18,7 @@ SAMPLES = [
 
 ]
 
-class TestPartner(TransactionCase):
+class TestPartner(MailCommon):
 
     def _check_find_or_create(self, test_string, expected_name, expected_email, expected_email_normalized=False, check_partner=False, should_create=False):
         expected_email_normalized = expected_email_normalized or expected_email
@@ -90,3 +90,36 @@ class TestPartner(TransactionCase):
             SAMPLES[8][0], SAMPLES[8][1], SAMPLES[8][2],
             check_partner=new6, should_create=True
         )
+
+    def test_res_partner_log_portal_group(self):
+        Users = self.env['res.users']
+        subtype_note = self.env.ref('mail.mt_note')
+        group_portal, group_user = self.env.ref('base.group_portal'), self.env.ref('base.group_user')
+
+        # check at update
+        new_user = Users.create({
+            'email': 'micheline@test.example.com',
+            'login': 'michmich',
+            'name': 'Micheline Employee',
+        })
+        self.assertEqual(len(new_user.message_ids), 1, 'Should contain Contact created log message')
+        new_msg = new_user.message_ids
+        self.assertNotIn('Portal Access Granted', new_msg.body)
+        self.assertIn('Contact created', new_msg.body)
+
+        new_user.write({'groups_id': [(4, group_portal.id), (3, group_user.id)]})
+        new_msg = new_user.message_ids[0]
+        self.assertIn('Portal Access Granted', new_msg.body)
+        self.assertEqual(new_msg.subtype_id, subtype_note)
+
+        # check at create
+        new_user = Users.create({
+            'email': 'micheline.2@test.example.com',
+            'groups_id': [(4, group_portal.id)],
+            'login': 'michmich.2',
+            'name': 'Micheline Portal',
+        })
+        self.assertEqual(len(new_user.message_ids), 2, 'Should contain Contact created + Portal access log messages')
+        new_msg = new_user.message_ids[0]
+        self.assertIn('Portal Access Granted', new_msg.body)
+        self.assertEqual(new_msg.subtype_id, subtype_note)
