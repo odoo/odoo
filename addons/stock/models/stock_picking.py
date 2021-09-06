@@ -72,6 +72,9 @@ class PickingType(models.Model):
         help="How products in transfers of this operation type should be reserved.")
     reservation_days_before = fields.Integer('Days', help="Maximum number of days before scheduled date that products should be reserved.")
     reservation_days_before_priority = fields.Integer('Days when starred', help="Maximum number of days before scheduled date that priority picking products should be reserved.")
+    auto_show_reception_report = fields.Boolean(
+        "Show Reception Report at Validation",
+        help="If this checkbox is ticked, Odoo will automatically show the reception report (if there are moves to allocate to) when validating a picking.")
 
     count_picking_draft = fields.Integer(compute='_compute_picking_count')
     count_picking_ready = fields.Integer(compute='_compute_picking_count')
@@ -978,8 +981,7 @@ class Picking(models.Model):
         pickings_to_backorder.with_context(cancel_backorder=False)._action_done()
 
         if self.user_has_groups('stock.group_reception_report') \
-                and self.user_has_groups('stock.group_auto_reception_report') \
-                and self.filtered(lambda p: p.picking_type_id.code != 'outgoing'):
+                and self.picking_type_id.auto_show_reception_report:
             lines = self.move_ids.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel' and m.quantity_done and not m.move_dest_ids)
             if lines:
                 # don't show reception report if all already assigned/nothing to assign
