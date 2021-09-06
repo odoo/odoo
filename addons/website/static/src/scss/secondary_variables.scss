@@ -55,7 +55,7 @@ $o-fonts-similar: (
 // palette.
 $-website-values-default: o-safe-nth($o-website-values-palettes, $o-website-values-palette-number, ());
 $-website-values-default: map-merge($o-base-website-values-palette, o-map-omit($-website-values-default));
-$o-user-website-values:  o-map-font-aliases(o-map-omit($o-user-website-values));
+$o-user-website-values: o-map-font-aliases($o-user-website-values);
 $-actual-user-website-values-palette: map-merge($-website-values-default, $o-user-website-values);
 // Default font selection + User font selection have been merged, now need to
 // add the right associated font default config
@@ -120,7 +120,7 @@ $o-has-customized-13-0-color-system:
     or map-get($o-user-theme-color-palette, 'epsilon'));
 
 $o-has-customized-colors:
-    not not (length(map-keys(o-map-omit($o-user-color-palette))) > 0
+    not not (length(map-keys($o-user-color-palette)) > 0
     or map-get($o-user-theme-color-palette, 'success')
     or map-get($o-user-theme-color-palette, 'info')
     or map-get($o-user-theme-color-palette, 'warning')
@@ -133,7 +133,7 @@ $o-has-customized-colors:
 // automatically replaced with corresponsing colors in chosen default color
 // palette.
 $-palette-default: map-get($o-color-palettes, $o-color-palette-name) or ();
-$-actual-user-color-palette: map-merge($-palette-default, o-map-omit($o-user-color-palette));
+$-actual-user-color-palette: map-merge($-palette-default, $o-user-color-palette);
 // Compatibility with old values in old names
 @each $name, $custom-name in (
     // Each of those values were either a number for a color combination, a
@@ -163,7 +163,7 @@ $o-color-palettes: map-merge($o-color-palettes, ('user-palette': $-actual-user-c
 // automatically replaced with corresponsing colors in chosen default color
 // palette.
 $-palette-default: map-get($o-gray-color-palettes, $o-gray-color-palette-name) or ();
-$-actual-user-gray-color-palette: map-merge($-palette-default, o-map-omit($o-user-gray-color-palette));
+$-actual-user-gray-color-palette: map-merge($-palette-default, $o-user-gray-color-palette);
 $o-gray-color-palettes: map-merge($o-gray-color-palettes, ('user-palette': $-actual-user-gray-color-palette));
 
 // Theme color palette
@@ -178,14 +178,14 @@ $-alpha: map-get($o-user-theme-color-palette, 'alpha');
         gamma: desaturate(adjust-hue($-alpha, -45deg), 10%),
         delta: desaturate(adjust-hue($-alpha, 45deg), 10%),
         epsilon: desaturate(adjust-hue($-alpha, 180deg), 10%),
-    ), o-map-omit($o-user-theme-color-palette));
+    ), $o-user-theme-color-palette);
 }
 
 // By default, all user theme color palette values are null. Each null value is
 // automatically replaced with corresponsing colors in chosen default theme
 // color palette.
 $-palette-default: map-get($o-theme-color-palettes, $o-theme-color-palette-name) or ();
-$-actual-user-theme-color-palette: map-merge($-palette-default, o-map-omit($o-user-theme-color-palette));
+$-actual-user-theme-color-palette: map-merge($-palette-default, $o-user-theme-color-palette);
 // Always remove the primary/secondary which were customizable in some theme
 // in Odoo <= 13.3. The customer can always rechoose the right color in the
 // Odoo color system as the first two ones are mapped to primary/secondary.
@@ -205,7 +205,7 @@ $o-gray-color-palette-name: 'user-palette';
 $o-theme-color-palette-name: 'user-palette';
 
 $o-we-auto-contrast-exclusions: () !default;
-$o-we-auto-contrast-exclusions: join($o-we-auto-contrast-exclusions, map-keys(o-map-omit($o-user-color-palette)));
+$o-we-auto-contrast-exclusions: join($o-we-auto-contrast-exclusions, map-keys($o-user-color-palette));
 
 //------------------------------------------------------------------------------
 // Fonts
