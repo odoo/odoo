@@ -598,6 +598,7 @@ class Module(models.Model):
 
         self._cr.commit()
         registry = modules.registry.Registry.new(self._cr.dbname, update_module=True)
+        self._cr.commit()
         self._cr.reset()
         assert self.env.registry is registry
 
