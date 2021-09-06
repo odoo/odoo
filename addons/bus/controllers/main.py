@@ -24,7 +24,7 @@ class BusController(Controller):
     def _poll(self, dbname, channels, last, options):
         # update the user presence
         if request.session.uid and 'bus_inactivity' in options:
-            request.env['bus.presence'].update(options.get('bus_inactivity'))
+            request.env['bus.presence'].update(inactivity_period=options.get('bus_inactivity'), identity_field='user_id', identity_value=request.session.uid)
         request.cr.close()
         request._cr = None
         return dispatch.poll(dbname, channels, last, options)
