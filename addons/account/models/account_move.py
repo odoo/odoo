@@ -461,7 +461,8 @@ class AccountMove(models.Model):
                 line.account_id = new_term_account
 
         self._compute_bank_partner_id()
-        self.partner_bank_id = self.bank_partner_id.bank_ids and self.bank_partner_id.bank_ids[0]
+        bank_ids = self.bank_partner_id.bank_ids.filtered(lambda bank: bank.company_id is False or bank.company_id == self.company_id)
+        self.partner_bank_id = bank_ids and bank_ids[0]
 
         # Find the new fiscal position.
         delivery_partner_id = self._get_invoice_delivery_partner_id()
@@ -1927,7 +1928,13 @@ class AccountMove(models.Model):
             default['date'] = self.company_id._get_user_fiscal_lock_date() + timedelta(days=1)
         if self.move_type == 'entry':
             default['partner_id'] = False
-        return super(AccountMove, self).copy(default)
+        invoice = super().copy(default)
+
+        # Make sure to recompute payment terms. This could be necessary if the date is different for example.
+        # Also, this is necessary when creating a credit note because the current invoice is copied.
+        invoice._recompute_payment_terms_lines()
+
+        return invoice
 
     @api.model_create_multi
     def create(self, vals_list):
