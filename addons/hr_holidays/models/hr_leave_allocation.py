@@ -181,11 +181,13 @@ class HolidaysAllocation(models.Model):
         allocations = self.sudo().search(domain)
         return [('id', 'in', allocations.ids)]
 
-    @api.depends('employee_id', 'holiday_status_id')
+    @api.depends('employee_id', 'holiday_status_id', 'taken_leave_ids.number_of_days', 'taken_leave_ids.state')
     def _compute_leaves(self):
         for allocation in self:
             allocation.max_leaves = allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days
-            allocation.leaves_taken = sum(taken_leave.number_of_hours_display if taken_leave.leave_type_request_unit == 'hour' else taken_leave.number_of_days for taken_leave in allocation.taken_leave_ids)
+            allocation.leaves_taken = sum(taken_leave.number_of_hours_display if taken_leave.leave_type_request_unit == 'hour' else taken_leave.number_of_days\
+                for taken_leave in allocation.taken_leave_ids\
+                if taken_leave.state == 'validate')
 
     @api.depends('number_of_days')
     def _compute_number_of_days_display(self):
