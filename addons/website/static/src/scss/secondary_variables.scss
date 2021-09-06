@@ -54,7 +54,7 @@ $o-fonts-similar: (
 // automatically replaced with corresponsing values in chosen default values
 // palette.
 $-website-values-default: o-safe-nth($o-website-values-palettes, $o-website-values-palette-number, ());
-$-website-values-default: map-merge($o-base-website-values-palette, o-map-omit($-website-values-default));
+$-website-values-default: map-merge($o-base-website-values-palette, $-website-values-default);
 $o-user-website-values: o-map-font-aliases($o-user-website-values);
 $-actual-user-website-values-palette: map-merge($-website-values-default, $o-user-website-values);
 // Default font selection + User font selection have been merged, now need to
