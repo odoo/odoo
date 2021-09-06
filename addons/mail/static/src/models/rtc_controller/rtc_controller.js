@@ -51,6 +51,9 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         async onClickRejectCall(ev) {
+            if (this.callViewer.threadView.thread.hasPendingRtcRequest) {
+                return;
+            }
             await this.callViewer.threadView.thread.leaveCall();
         }
 
@@ -65,6 +68,9 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         async onClickToggleAudioCall(ev) {
+            if (this.callViewer.threadView.thread.hasPendingRtcRequest) {
+                return;
+            }
             await this.callViewer.threadView.thread.toggleCall();
         }
 
@@ -72,6 +78,9 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         async onClickToggleVideoCall(ev) {
+            if (this.callViewer.threadView.thread.hasPendingRtcRequest) {
+                return;
+            }
             await this.callViewer.threadView.thread.toggleCall({
                 startWithVideo: true,
             });
