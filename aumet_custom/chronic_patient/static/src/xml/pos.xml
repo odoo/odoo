@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+	<t t-name="ClientListScreen" t-inherit="point_of_sale.ClientListScreen" t-inherit-mode="extension" owl="1">
+		<xpath expr="//table[hasclass('client-list')]/thead/tr" position="inside">
+			<th>Chronic Patient</th>
+		</xpath>
+	</t>
+	<t t-name="ClientLineInherit" t-inherit="point_of_sale.ClientLine" t-inherit-mode="extension" owl="1">
+		<xpath expr="//tr" position="inside">
+			<td t-if="!env.isMobile" style="width: 130px;">
+				<input t-att-checked="props.partner.chronic_patient || ''" type="checkbox" style="pointer-events: none;"/>
+			</td>
+		</xpath>
+	</t>
+	<t t-name="ClientDetailsEdit" t-inherit="point_of_sale.ClientDetailsEdit" t-inherit-mode="extension" owl="1">
+		<xpath expr="//div[hasclass('client-details-left')]" position="inside">
+			<div class="client-detail">
+				<span class="label">Chronic Patient</span>
+				<input class="detail client-chronic_patient" name="chronic_patient"
+                               t-on-change="captureChange" t-att-value="props.partner.chronic_patient || ''" t-att-checked="props.partner.chronic_patient || ''"
+                               placeholder="Chronic Patient"  type="checkbox"/>
+			</div>
+		</xpath>
+	</t>
+</templates>
