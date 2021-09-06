@@ -10,5 +10,5 @@ class AccountPaymentMethod(models.Model):
     @api.model
     def _get_payment_method_information(self):
         res = super()._get_payment_method_information()
-        res['payumoney'] = {'mode': 'unique', 'domain': [('type', '=', 'bank')]}
+        res['payumoney'] = {'mode': 'unique', 'domain': [('type', '=', 'bank')], 'category': 'electronic'}
         return res
