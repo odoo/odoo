@@ -548,6 +548,8 @@ class TestOnChange(SavepointCaseWithUserDemo):
                     <field name="move_id" readonly="1" required="0"/>
                     <field name="tag_id"/>
                     <field name="tag_name"/>
+                    <field name="tag_repeat"/>
+                    <field name="tag_string"/>
                 </form>
             """,
         })
@@ -556,19 +558,32 @@ class TestOnChange(SavepointCaseWithUserDemo):
         # assigning 'tag_id' should modify 'move_id.tag_id' accordingly, which
         # should in turn recompute `move.tag_name` and `tag_name`
         form = Form(self.env['test_new_api.payment'], view)
+        self.assertEqual(form.tag_name, False)
         form.tag_id = foo
         self.assertEqual(form.tag_name, 'Foo')
+        self.assertEqual(form.tag_string, '')
+        form.tag_repeat = 2
+        self.assertEqual(form.tag_name, 'Foo')
+        self.assertEqual(form.tag_string, 'FooFoo')
 
         payment = form.save()
         self.assertEqual(payment.tag_id, foo)
         self.assertEqual(payment.tag_name, 'Foo')
+        self.assertEqual(payment.tag_repeat, 2)
+        self.assertEqual(payment.tag_string, 'FooFoo')
 
         with Form(payment, view) as form:
             form.tag_id = bar
             self.assertEqual(form.tag_name, 'Bar')
+            self.assertEqual(form.tag_string, 'BarBar')
+            form.tag_repeat = 3
+            self.assertEqual(form.tag_name, 'Bar')
+            self.assertEqual(form.tag_string, 'BarBarBar')
 
         self.assertEqual(payment.tag_id, bar)
         self.assertEqual(payment.tag_name, 'Bar')
+        self.assertEqual(payment.tag_repeat, 3)
+        self.assertEqual(payment.tag_string, 'BarBarBar')
 
 
 class TestComputeOnchange(common.TransactionCase):
