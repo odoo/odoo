@@ -6,10 +6,10 @@ from ast import literal_eval
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import pycompat,float_is_zero
+from odoo.tools import float_is_zero
 from odoo.tools.float_utils import float_round
 
 OPERATORS = {
@@ -20,6 +20,7 @@ OPERATORS = {
     '=': py_operator.eq,
     '!=': py_operator.ne
 }
+
 
 class Product(models.Model):
     _inherit = "product.product"
@@ -174,8 +175,9 @@ class Product(models.Model):
 
         res = dict()
         for product in self.with_context(prefetch_fields=False):
+            origin_product_id = product._origin.id
             product_id = product.id
-            if not product_id:
+            if not origin_product_id:
                 res[product_id] = dict.fromkeys(
                     ['qty_available', 'free_qty', 'incoming_qty', 'outgoing_qty', 'virtual_available'],
                     0.0,
@@ -184,14 +186,14 @@ class Product(models.Model):
             rounding = product.uom_id.rounding
             res[product_id] = {}
             if dates_in_the_past:
-                qty_available = quants_res.get(product_id, [0.0])[0] - moves_in_res_past.get(product_id, 0.0) + moves_out_res_past.get(product_id, 0.0)
+                qty_available = quants_res.get(origin_product_id, [0.0])[0] - moves_in_res_past.get(origin_product_id, 0.0) + moves_out_res_past.get(origin_product_id, 0.0)
             else:
-                qty_available = quants_res.get(product_id, [0.0])[0]
-            reserved_quantity = quants_res.get(product_id, [False, 0.0])[1]
+                qty_available = quants_res.get(origin_product_id, [0.0])[0]
+            reserved_quantity = quants_res.get(origin_product_id, [False, 0.0])[1]
             res[product_id]['qty_available'] = float_round(qty_available, precision_rounding=rounding)
             res[product_id]['free_qty'] = float_round(qty_available - reserved_quantity, precision_rounding=rounding)
-            res[product_id]['incoming_qty'] = float_round(moves_in_res.get(product_id, 0.0), precision_rounding=rounding)
-            res[product_id]['outgoing_qty'] = float_round(moves_out_res.get(product_id, 0.0), precision_rounding=rounding)
+            res[product_id]['incoming_qty'] = float_round(moves_in_res.get(origin_product_id, 0.0), precision_rounding=rounding)
+            res[product_id]['outgoing_qty'] = float_round(moves_out_res.get(origin_product_id, 0.0), precision_rounding=rounding)
             res[product_id]['virtual_available'] = float_round(
                 qty_available + res[product_id]['incoming_qty'] - res[product_id]['outgoing_qty'],
                 precision_rounding=rounding)
@@ -411,8 +413,8 @@ class Product(models.Model):
             product.reordering_max_qty = product_res.get('reordering_max_qty', 0)
 
     @api.onchange('tracking')
-    def onchange_tracking(self):
-        if self.tracking != "none" and self.qty_available > 0:
+    def _onchange_tracking(self):
+        if any(product.tracking != 'none' and product.qty_available > 0 for product in self):
             return {
                 'warning': {
                     'title': _('Warning!'),
@@ -807,8 +809,8 @@ class ProductTemplate(models.Model):
                 )
 
     @api.onchange('tracking')
-    def onchange_tracking(self):
-        return self.mapped('product_variant_ids').onchange_tracking()
+    def _onchange_tracking(self):
+        return self.mapped('product_variant_ids')._onchange_tracking()
 
     @api.onchange('type')
     def _onchange_type(self):
@@ -948,6 +950,7 @@ class ProductTemplate(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_replenishment_product_product_action')
         return action
 
+
 class ProductCategory(models.Model):
     _inherit = 'product.category'
 
@@ -975,6 +978,7 @@ class ProductCategory(models.Model):
                 base_cat = base_cat.parent_id
                 routes |= base_cat.route_ids
             category.total_route_ids = routes
+
 
 class ProductPackaging(models.Model):
     _inherit = "product.packaging"
