@@ -45,8 +45,8 @@ FROM (SELECT
         END AS state,
         m.date::date AS date,
         CASE
-            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -product_qty
-            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN product_qty
+            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -m.product_qty
+            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN m.product_qty
         END AS product_qty,
         m.company_id,
         CASE
@@ -63,7 +63,7 @@ FROM (SELECT
     LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
     WHERE
         pt.type = 'product' AND
-        product_qty != 0 AND
+        m.product_qty != 0 AND
         (whs.id IS NOT NULL OR whd.id IS NOT NULL) AND
         (whs.id IS NULL OR whd.id IS NULL OR whs.id != whd.id) AND
         m.state NOT IN ('cancel', 'draft', 'done')
@@ -103,10 +103,10 @@ FROM (SELECT
             ELSE m.date::date - interval '1 day'
         END, '1 day'::interval)::date date,
         CASE
-            WHEN ((whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit') AND m.state = 'done' THEN product_qty
-            WHEN ((whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit') AND m.state = 'done' THEN -product_qty
-            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -product_qty
-            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN product_qty
+            WHEN ((whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit') AND m.state = 'done' THEN m.product_qty
+            WHEN ((whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit') AND m.state = 'done' THEN -m.product_qty
+            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -m.product_qty
+            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN m.product_qty
         END AS product_qty,
         m.company_id,
         CASE
@@ -123,7 +123,7 @@ FROM (SELECT
     LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
     WHERE
         pt.type = 'product' AND
-        product_qty != 0 AND
+        m.product_qty != 0 AND
         (whs.id IS NOT NULL OR whd.id IS NOT NULL) AND
         (whs.id IS NULL or whd.id IS NULL OR whs.id != whd.id) AND
         m.state NOT IN ('cancel', 'draft')) as forecast_qty
