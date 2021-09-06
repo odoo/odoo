@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="customer_sale_return_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <br/>
+                        <h4>
+                            <strong>
+                                <span t-field="o.name"/>
+                            </strong>
+                        </h4>
+                        <h5>
+                            <strong>Sale Order</strong>
+                        </h5>
+                        <t t-set="qty" t-value="0"/>
+                        <table class="table">
+                            <tr>
+                                <th>Order No.</th>
+                                <th>Order Date</th>
+                                <th>Amount</th>
+                            </tr>
+                            <t t-foreach="get_record_id(o,doc_ids)" t-as="p">
+                                <tr>
+                                    <td>
+                                        <t t-esc="p.name"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="p.date_order"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="p.amount_total"/>
+                                    </td>
+                                    <t t-set="qty" t-value="qty + p.amount_total"/>
+                                </tr>
+                            </t>
+                            <tr>
+                                <th></th>
+                                <th>Total</th>
+                                <th>
+                                    <span t-esc="qty"/>
+                                </th>
+                            </tr>
+                        </table>
+
+                        <h5 t-if="get_return_record_id(o,doc_ids)">
+                            <strong>Return Order</strong>
+                        </h5>
+                        <t t-set="qty1" t-value="0"/>
+                        <table t-if="get_return_record_id(o,doc_ids)" class="table">
+                            <tr>
+                                <th>Order No.</th>
+                                <th>Order Date</th>
+                                <th>Amount</th>
+                            </tr>
+                            <t t-foreach="get_return_record_id(o,doc_ids)" t-as="q">
+                                <tr>
+                                    <td>
+                                        <t t-esc="q.name"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="q.date_order"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="q.amount_total"/>
+                                    </td>
+                                    <t t-set="qty1" t-value="qty1 + q.amount_total"/>
+                                </tr>
+                            </t>
+                            <tr>
+                                <th></th>
+                                <th>Total</th>
+                                <th>
+                                    <span t-esc="qty1"/>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="front_inventory_location_thermal_report_template">
+            <receipt align='center' width='40' value-thousands-separator=''>
+                <t t-foreach="docs" t-as="receipt">
+                    <div align="center">
+                        <div size='double-height' style="font-size:20px;">
+                            <div>Inventory Audit Report</div>
+                            ====================================
+                            <br/>
+                        </div>
+                    </div>
+                    <line>
+                        <left>
+                            Stock Location
+                        </left>
+                        <right t-esc="receipt.name"/>
+                    </line>
+                    <line>
+                        <left>
+                            Report Date
+                        </left>
+                        <right t-esc="receipt.get_current_date_x()"/>
+                    </line>
+                    <line>
+                        <left>
+                            Report Time
+                        </left>
+                        <right t-esc="receipt.get_current_time_x()"/>
+                    </line>
+                    =================================
+                    <t t-if="receipt.get_inventory_details()">
+                        <t t-foreach='receipt.get_inventory_details()' t-as='inv_detail'>
+                            <line>
+                                <left>
+                                    <t t-esc='inv_detail.get("product_id")[1]'/>
+                                </left>
+                                <right>
+                                    <t t-esc='inv_detail.get("used_qty")'/>
+                                    <t t-esc='inv_detail.get("uom_name")'/>
+                                </right>
+                            </line>
+                            <line font='b'>
+                                <left>
+                                    Avl. Qty
+                                    <t t-esc='inv_detail.get("quantity")'/>
+                                    <t t-esc='inv_detail.get("uom_name")'/>
+                                </left>
+                            </line>
+                        </t>
+                    </t>
+                    <t t-if="not receipt.get_inventory_details()">
+                        <br/>
+                        <div size='double-height'>
+                            <div>Records Not Found.</div>
+                        </div>
+                    </t>
+                    <br/>
+                    ---------------- End of Report -----------------
+                </t>
+            </receipt>
+        </template>
+
+    </data>
+</odoo>

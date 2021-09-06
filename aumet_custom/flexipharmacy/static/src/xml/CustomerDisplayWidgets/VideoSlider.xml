@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="VideoSlider" owl="1">
+        <div class="video-slider" t-attf-style="width: {{width}}px">
+            <iframe width="100%" height="100%" class="video-container" t-att-src="videoSrc" allowfullscreen="true"
+                    webkitallowfullscreen="true" mozallowfullscreen="true">
+            </iframe>
+            <Arrow t-if="state.activeIndex != 0" direction="'left'" t-on-click="prevSlide"/>
+            <Arrow t-if="state.activeIndex != (videoList.length - 1)" direction="'right'" t-on-click="nextSlide"/>
+        </div>
+    </t>
+</templates>

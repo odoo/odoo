@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="SelectUserForOrder" owl="1">
+        <div id="wrapper">
+            <div class="select-saleperson-class">
+                <button id="select-order-user" class="select-saleperson" t-att-class="{ active: isActive }"
+                        t-on-click="trigger('open-user-select-popup')"><i class="fa fa-user fa-2x"/></button>
+            </div>
+        </div>
+    </t>
+
+</templates>

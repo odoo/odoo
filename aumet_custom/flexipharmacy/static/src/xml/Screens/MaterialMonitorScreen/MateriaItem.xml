@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="MateriaItem" owl="1">
+        <article class="product" tabindex="0" t-on-keypress="spaceClickProduct"
+                 t-on-click="trigger('click-product', props.product)"
+                 t-att-data-product-id="props.product.id"
+                 t-attf-aria-labelledby="article_product_{{props.product.id}}">
+            <div class="product-img">
+                <img t-att-src="imageUrl" t-att-alt="props.product.display_name"/>
+            </div>
+            <div class="product-name" t-attf-id="article_product_{{props.product.id}}">
+                <div style="padding-left: 5px; margin-bottom: 7px; font-size:15px">
+                    <t t-esc="props.product.display_name"/>
+                </div>
+                <!-- props.product.material_monitor_qty -->
+                <div class="monitor-qty red-beckground"
+                     t-if="props.product.material_monitor_qty != 0 and props.product.qty_available &lt;= 0">
+                    <span>Avail.<span style="float: right;"><b><t t-esc="props.product.qty_available" /></b>
+                        <t t-esc="props.product.uom_id[1]"/></span></span>
+                    <br/>
+                </div>
+                <div class="monitor-qty green-background"
+                     t-if="props.product.material_monitor_qty != 0 and props.product.qty_available  &gt;= props.product.material_monitor_qty">
+                    <span>Avail.<span style="float: right;"><b><t t-esc="props.product.qty_available" /></b>
+                        <t t-esc="props.product.uom_id[1]"/></span></span>
+                    <br/>
+                </div>
+                <div class="monitor-qty normal-background"
+                     t-if="props.product.material_monitor_qty != 0 and props.product.qty_available &gt; 0 and props.product.qty_available  &lt;= props.product.material_monitor_qty">
+                    <span>Avail.<span style="float: right;"><b><t t-esc="props.product.qty_available" /></b>
+                        <t t-esc="props.product.uom_id[1]"/></span></span>
+                    <br/>
+                </div>
+                <div class="monitor-qty green-background"
+                     t-if="props.product.material_monitor_qty == 0 and props.product.qty_available != 0">
+                    <span>Avail.<span style="float: right;"><b><t t-esc="props.product.qty_available" /></b>
+                        <t t-esc="props.product.uom_id[1]"/></span></span>
+                    <br/>
+                </div>
+                <div class="monitor-qty red-beckground"
+                     t-if="props.product.material_monitor_qty == 0 and props.product.qty_available == 0">
+                    <span>Avail.<span style="float: right;"><b><t t-esc="props.product.qty_available" /></b>
+                        <t t-esc="props.product.uom_id[1]"/></span></span>
+                    <br/>
+                </div>
+            </div>
+        </article>
+    </t>
+
+</templates>

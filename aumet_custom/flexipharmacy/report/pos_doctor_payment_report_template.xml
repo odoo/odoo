@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="pos_doctor_payment_template">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <table class="table table-hover table-bordered">
+                        <tr>
+                            <td colspan="5">
+                                <h2>
+                                    <center>Doctor Commission Detail</center>
+                                </h2>
+                            </td>
+                        </tr>
+                        <t t-set="summary" t-value="{}"/>
+                        <br/>
+                        <t t-foreach="data.keys()" t-as="o">
+                            <tr>
+                                <td colspan="5">
+                                    <b>
+                                        Doctor Name:
+                                        <span t-esc="user.partner_id.search([('id', '=', o)]).name"/>
+                                    </b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Source Document</th>
+                                <th>Commission Date</th>
+                                <th>Amount</th>
+                                <th>State</th>
+                            </tr>
+                            <t t-set="total" t-value="0"/>
+                            <t t-foreach="data.get(o)" t-as="line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="line.get('source_document')"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line.get('date')"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line.get('amount')" style="float:right"
+                                              t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    </td>
+                                    <td>
+                                        <t t-if="line.get('state') == 'paid'">
+                                            Paid
+                                        </t>
+                                        <t t-if="line.get('state') == 'draft'">
+                                            Draft
+                                        </t>
+                                        <t t-if="line.get('state') == 'reserved'">
+                                            Reserved
+                                        </t>
+                                        <t t-if="line.get('state') == 'cancelled'">
+                                            Cancelled
+                                        </t>
+                                    </td>
+                                    <t t-set="total" t-value="total + line.get('amount')"/>
+                                </tr>
+                                <t t-set="summary"
+                                   t-esc="summary.update({user.partner_id.search([('id', '=', o)]).name: total})"/>
+                            </t>
+                        </t>
+                        <t t-if="summary">
+                                <br/>
+                                <tr>
+                                    <td colspan="5" style="text-align:center">
+                                        <h4>Commission Summary</h4>
+                                    </td>
+                                </tr>
+                                <tr t-foreach="summary" t-as="each">
+                                    <td>
+                                        <span t-esc="each"/>
+                                    </td>
+                                    <td colspan="4">
+                                        <span t-esc="summary.get(each)"
+                                              t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    </td>
+                                </tr>
+                            </t>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <template id="pos_commission_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="flexipharmacy.pos_doctor_payment_template"/>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OpenDetailButton" owl="1">
+        <div id="wrapper">
+            <button id="slidemenubtn"
+                    style="margin: 13px 12px 7px 5px;background-color: #875a7b;border: 0;color: white;"
+                    t-on-click="toggle('flag')"><i class="fa fa-th-large fa-lg"/></button>
+            <PharmacyDetailSidebar t-if="state.flag" flag="state.flag" t-transition="slide-fade" id="sidebar-wrapper"/>
+        </div>
+    </t>
+
+</templates>

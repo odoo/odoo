@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="RightWidget" owl="1">
+        <div class="container">
+            <div class="top">
+                <Slider t-if="props.imageSlider" width="props.rightWidth"/>
+                <VideoSlider t-if="!props.imageSlider" width="props.rightWidth"/>
+            </div>
+            <div class="bottom">
+                <PaymentDetail changeAmount="props.cartData.change_amount" orderAmount="props.cartData.order_total"/>
+                <div class="header">Payment</div>
+                <PaymentLines paymentLines="props.cartData.payment_info"/>
+            </div>
+        </div>
+    </t>
+</templates>
