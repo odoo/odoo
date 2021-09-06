@@ -179,13 +179,6 @@ tour.register('sale_timesheet_tour', {
         }
     }
 }, {
-    trigger: 'div.o_notebook_headers',
-    content: 'Click on Invoicing tab to configure the invoicing of this project.',
-    run: function (actions) {
-        const notebookId = $('div[name="sale_line_id"]').closest("div.tab-pane").attr('id');
-        actions.click(this.$anchor.find(`a[data-toggle="tab"][href="#${notebookId}"]`));
-    },
-}, {
     trigger: 'div[name="partner_id"]',
     content: Markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
     run: function (actions) {
@@ -195,6 +188,13 @@ tour.register('sale_timesheet_tour', {
     trigger: 'ul.o_partner_autocomplete_dropdown > li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown',
     run: 'click',
+}, {
+    trigger: 'div.o_notebook_headers',
+    content: 'Click on Invoicing tab to configure the invoicing of this project.',
+    run: function (actions) {
+        const notebookId = $('div[name="sale_line_id"]').closest("div.tab-pane").attr('id');
+        actions.click(this.$anchor.find(`a[data-toggle="tab"][href="#${notebookId}"]`));
+    },
 }, {
     trigger: 'div[name="sale_line_id"]',
     content: 'Select a Sales Order Item as Default Sales Order Item for each task in this project.',
