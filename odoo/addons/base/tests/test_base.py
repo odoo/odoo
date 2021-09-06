@@ -5,6 +5,7 @@ import ast
 
 from odoo import SUPERUSER_ID, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase, BaseCase
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
@@ -73,6 +74,7 @@ SAMPLES = [
 ]
 
 
+@tagged('res_partner')
 class TestBase(TransactionCase):
 
     def _check_find_or_create(self, test_string, expected_name, expected_email, check_partner=False, should_create=False):
@@ -88,12 +90,13 @@ class TestBase(TransactionCase):
     def test_00_res_partner_name_create(self):
         res_partner = self.env['res.partner']
         parse = res_partner._parse_partner_name
-        for text, name, mail in SAMPLES:
-            self.assertEqual((name, mail.lower()), parse(text))
-            partner_id, dummy = res_partner.name_create(text)
-            partner = res_partner.browse(partner_id)
-            self.assertEqual(name or mail.lower(), partner.name)
-            self.assertEqual(mail.lower() or False, partner.email)
+        for text, expected_name, expected_mail in SAMPLES:
+            with self.subTest(text=text):
+                self.assertEqual((expected_name, expected_mail.lower()), parse(text))
+                partner_id, dummy = res_partner.name_create(text)
+                partner = res_partner.browse(partner_id)
+                self.assertEqual(expected_name or expected_mail.lower(), partner.name)
+                self.assertEqual(expected_mail.lower() or False, partner.email)
 
         # name_create supports default_email fallback
         partner = self.env['res.partner'].browse(
