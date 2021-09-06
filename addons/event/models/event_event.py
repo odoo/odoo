@@ -88,8 +88,7 @@ class EventEvent(models.Model):
     _order = 'date_begin'
 
     def _get_default_stage_id(self):
-        event_stages = self.env['event.stage'].search([])
-        return event_stages[0] if event_stages else False
+        return self.env['event.stage'].search([], limit=1)
 
     def _default_description(self):
         return self.env['ir.ui.view']._render_template('event.event_default_descripton')
@@ -574,9 +573,9 @@ class EventEvent(models.Model):
         into the first next (by sequence) stage defined as "Ended"
         (if they are not already in an ended stage)
         """
-        first_ended_stage = self.env['event.stage'].search([('pipe_end', '=', True)], order='sequence')
+        first_ended_stage = self.env['event.stage'].search([('pipe_end', '=', True)], limit=1, order='sequence')
         if first_ended_stage:
-            self.write({'stage_id': first_ended_stage[0].id})
+            self.write({'stage_id': first_ended_stage.id})
 
     def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: self.state != 'cancel'):
         for event in self:
