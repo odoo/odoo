@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ProductItem" t-inherit="point_of_sale.ProductItem" t-inherit-mode="extension" owl="1">
+        <xpath expr="//article[hasclass('product')]" position="replace">
+            <div class="product-item" tabindex="0" t-on-keypress="spaceClickProduct"
+                 t-on-click="trigger('click-product', props.product)"
+                 t-att-data-product-id="props.product.id"
+                 t-attf-aria-labelledby="article_product_{{props.product.id}}">
+                <div class="product-item-img">
+                    <img t-att-src="imageUrl" t-att-alt="props.product.display_name"/>
+                </div>
+                  <span class="product-price-tag">
+                    <t t-esc="price"/>
+                </span>
+                <div class="product-item-name" t-attf-id="article_product_{{props.product.id}}">
+                    <t t-esc="props.product.display_name"/>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>
