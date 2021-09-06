@@ -16,6 +16,21 @@
 
             </field>
         </record>
+        <record id="product_product_normal_form_view_sn" model="ir.ui.view">
+            <field name="name">product.product.normal.form.view.sn</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="barcode" position="after">
+                    <field name="qr_code"/>
+                    <field name="manufacturer"/>
+                </field>
+                <field name="uom_id" position="after">
+                    <field name="granular_unit"/>
+	            </field>
+
+            </field>
+        </record>
 
     </data>
 </odoo>
