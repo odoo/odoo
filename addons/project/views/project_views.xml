@@ -807,6 +807,15 @@
                                 <span class="o_stat_text">in Recurrence</span>
                             </div>
                         </button>
+                        <button name="action_dependent_tasks" type="object" attrs="{'invisible': [('dependent_tasks_count', '=', 0)]}" class="oe_stat_button" icon="fa-tasks" groups="project.group_project_task_dependencies">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Blocking</span>
+                                <span class="o_stat_value ">
+                                    <field name="dependent_tasks_count" widget="statinfo" nolabel="1" />
+                                    Tasks
+                                </span>
+                            </div>
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title pr-0">
