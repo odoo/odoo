@@ -37,6 +37,7 @@ class StockPickingToWave(models.TransientModel):
     def attach_pickings(self):
         self.ensure_one()
 
+        self = self.with_context(active_owner_id=self.user_id.id)
         if self.line_ids:
             company = self.line_ids.company_id
             if len(company) > 1:

@@ -36,7 +36,8 @@ class StockMoveLine(models.Model):
 
         if not wave:
             wave = self.env['stock.picking.batch'].create({
-                'is_wave': True
+                'is_wave': True,
+                'user_id': self.env.context.get('active_owner_id'),
             })
         line_by_picking = defaultdict(lambda: self.env['stock.move.line'])
         for line in self:
