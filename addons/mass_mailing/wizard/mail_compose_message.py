@@ -22,7 +22,7 @@ class MailComposeMessage(models.TransientModel):
         # use only for allowed models in mass mailing
         if self.composition_mode == 'mass_mail' and \
                 (self.mass_mailing_name or self.mass_mailing_id) and \
-                self.env['ir.model'].sudo().search([('model', '=', self.model), ('is_mail_thread', '=', True)], limit=1):
+                self.env['ir.model'].sudo().search_count([('model', '=', self.model), ('is_mail_thread', '=', True)]):
             mass_mailing = self.mass_mailing_id
             if not mass_mailing:
                 mass_mailing = self.env['mailing.mailing'].create({
