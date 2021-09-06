@@ -38,7 +38,7 @@ class ProductTemplate(models.Model):
             else:
                 return
 
-            return {'domain': {'payment_method': [('id', 'in', possible_ids)]}}
+            return {'domain': {'payment_method': [('marketplace_payment_method_id', 'in', possible_ids)]}}
 
     @api.model
     def fields_get(self, fields=None, attributes=None):
