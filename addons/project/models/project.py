@@ -628,16 +628,8 @@ class Project(models.Model):
         }
 
     def action_view_kanban_project(self):
-        self.ensure_one()
-        return {
-            'res_model': 'project.project',
-            'type': 'ir.actions.act_window',
-            'name': _("Project"),
-            'res_id': self.id,
-            'views': [(self.env.ref('project.edit_project').id, 'form')],
-            'view_mode': 'form',
-            'context': {'form_view_initial_mode': 'readonly'}
-        }
+        # [XBO] TODO: remove me in master
+        return
 
     # ---------------------------------------------
     #  PROJECT UPDATES
