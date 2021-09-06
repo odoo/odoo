@@ -8,6 +8,7 @@ import {
     makeLegacyDialogMappingService,
     makeLegacyCrashManagerService,
     makeLegacyCommandService,
+    makeLegacyDropdownService,
 } from "./utils";
 import { makeLegacyActionManagerService } from "./backend_utils";
 import * as AbstractService from "web.AbstractService";
@@ -46,6 +47,7 @@ export const legacySetupProm = new Promise((resolve) => {
     serviceRegistry.add("legacy_dialog_mapping", legacyDialogMappingService);
     const legacyCommandService = makeLegacyCommandService(legacyEnv);
     serviceRegistry.add("legacy_command", legacyCommandService);
+    serviceRegistry.add("legacy_dropdown", makeLegacyDropdownService(legacyEnv));
     await Promise.all([whenReady(), session.is_bound]);
     legacyEnv.qweb.addTemplates(session.owlTemplates);
     legacySetupResolver(legacyEnv);
