@@ -69,7 +69,7 @@ function factory(dependencies) {
             if (!this.doesBrowserSupportMediaDevices) {
                 return;
             }
-            const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const audioStream = await navigator.mediaDevices.getUserMedia({ audio: this.messaging.userSetting.getAudioConstraints() });
             this.update({ audioStream });
             this.audioRef.el.srcObject = this.audioStream;
         }
@@ -83,7 +83,7 @@ function factory(dependencies) {
             if (!this.doesBrowserSupportMediaDevices) {
                 return;
             }
-            const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const videoStream = await navigator.mediaDevices.getUserMedia({ video: this.messaging.mailRtc.videoConfig });
             this.update({ videoStream });
             this.videoRef.el.srcObject = this.videoStream;
         }
@@ -148,6 +148,29 @@ function factory(dependencies) {
             return this.videoStream !== null;
         }
 
+        /**
+         * @private
+         * @returns {number}
+         */
+        _computeVideoElementHeight() {
+            return this.videoElementWidth * .75;
+        }
+
+        /**
+         * @private
+         * @returns {number}
+         */
+        _computeVideoElementWidth() {
+            const device = this.messaging && this.messaging.device;
+            if (!device) {
+                return 0;
+            }
+            if (device.isMobile) {
+                return device.globalWindowInnerWidth;
+            }
+            return device.globalWindowInnerWidth / 3;
+        }
+
     }
 
     MediaPreview.fields = {
@@ -172,6 +195,12 @@ function factory(dependencies) {
         }),
         isVideoEnabled: attr({
             compute: '_computeIsVideoEnabled',
+        }),
+        videoElementHeight: attr({
+            compute: '_computeVideoElementHeight',
+        }),
+        videoElementWidth: attr({
+            compute: '_computeVideoElementWidth'
         }),
         /**
          * Ref to the video element used for the video feedback.

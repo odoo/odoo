@@ -3,8 +3,8 @@
 
     <t t-name="mail.MediaPreview" owl="1">
         <div class="o_MediaPreview position-relative d-flex justify-content-center">
-            <video class="o_MediaPreview_videoDisplay shadow rounded bg-dark" height="480" width="640" autoplay="" t-ref="video"/>
-            <p t-if="mediaPreview.doesBrowserSupportMediaDevices and !mediaPreview.isVideoEnabled" class="o_MediaPreview_mediaDevicesStatus position-absolute text-light">
+            <video class="o_MediaPreview_videoDisplay shadow rounded bg-dark" t-att-height="mediaPreview.videoElementHeight" t-att-width="mediaPreview.videoElementWidth" autoplay="" t-ref="video"/>
+            <p t-if="mediaPreview.doesBrowserSupportMediaDevices and !mediaPreview.isVideoEnabled" class="o_MediaPreview_mediaDevicesStatus text-light">
                 Camera is off
             </p>
             <p t-if="!mediaPreview.doesBrowserSupportMediaDevices" class="o_MediaPreview_mediaDevicesStatus text-light">
