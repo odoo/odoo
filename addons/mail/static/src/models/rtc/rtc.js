@@ -795,6 +795,9 @@ function factory(dependencies) {
                 const sendDisplay = force !== undefined ? force : !this.sendDisplay;
                 await this._updateLocalVideoTrack(type, sendDisplay);
             }
+            if (!this.currentRtcSession) {
+                return;
+            }
             if (!this.videoTrack) {
                 this.currentRtcSession.removeVideo();
             } else {
