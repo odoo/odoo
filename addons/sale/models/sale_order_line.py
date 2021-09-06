@@ -301,7 +301,7 @@ class SaleOrderLine(models.Model):
         " They are not copied when duplicating a sales order.")
 
     state = fields.Selection(
-        related='order_id.state', string='Order Status', copy=False, store=True, default='draft')
+        related='order_id.state', string='Order Status', copy=False, store=True)
 
     customer_lead = fields.Float(
         'Lead Time', required=True, default=0.0,
