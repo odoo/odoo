@@ -457,11 +457,26 @@ class Move(models.Model):
     quantity = fields.Integer(compute='_compute_quantity', store=True)
     tag_id = fields.Many2one('test_new_api.multi.tag')
     tag_name = fields.Char(related='tag_id.name')
+    tag_repeat = fields.Integer()
+    tag_string = fields.Char(compute='_compute_tag_string')
+
+    # This field can fool the ORM during onchanges!  When editing a payment
+    # record, modified fields are assigned to the parent record.  When
+    # determining the dependent records, the ORM looks for the payments related
+    # to this record by the field `move_id`.  As this field is an inverse of
+    # `move_id`, it uses it.  If that field was not initialized properly, the
+    # ORM determines its value to be... empty (instead of the payment record.)
+    payment_ids = fields.One2many('test_new_api.payment', 'move_id')
 
     @api.depends('line_ids.quantity')
     def _compute_quantity(self):
         for record in self:
             record.quantity = sum(line.quantity for line in record.line_ids)
+
+    @api.depends('tag_name', 'tag_repeat')
+    def _compute_tag_string(self):
+        for record in self:
+            record.tag_string = (record.tag_name or "") * record.tag_repeat
 
 
 class MoveLine(models.Model):

@@ -6395,12 +6395,21 @@ Fields:
         initial_values = dict(values, **dict.fromkeys(names, False))
 
         # do not force delegate fields to False
-        for name in self._inherits.values():
-            if not initial_values.get(name, True):
-                initial_values.pop(name)
+        for parent_name in self._inherits.values():
+            if not initial_values.get(parent_name, True):
+                initial_values.pop(parent_name)
 
         # create a new record with values
         record = self.new(initial_values, origin=self)
+
+        # make parent records match with the form values; this ensures that
+        # computed fields on parent records have all their dependencies at
+        # their expected value
+        for name in initial_values:
+            field = self._fields.get(name)
+            if field and field.inherited:
+                parent_name, name = field.related.split('.', 1)
+                record[parent_name]._update_cache({name: record[name]})
 
         # make a snapshot based on the initial values of record
         snapshot0 = Snapshot(record, nametree, fetch=(not first_call))
