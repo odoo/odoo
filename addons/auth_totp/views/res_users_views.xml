@@ -31,8 +31,6 @@
                                             disabled="1" type="object" class="fa fa-toggle-off o_auth_2fa_btn disabled" aria-label="Enable 2FA"></button>
                                     <button attrs="{'invisible': &quot;[('id', '!=', uid)]&quot;}" name="action_totp_enable_wizard"
                                         type="object" class="fa fa-toggle-off o_auth_2fa_btn disabled" aria-label="Enable 2FA"></button>
-                                    <button groups="base.group_erp_manager" attrs="{'invisible': &quot;[('id', '=', uid)]&quot;}"
-                                        name="action_totp_invite" string="Invite to use 2FA" type="object" class="btn btn-secondary"></button>
                                 </div>
                                 <button attrs="{'invisible': [('totp_enabled', '=', False)]}" name="action_totp_disable" type="object"
                                         class="fa fa-toggle-on o_auth_2fa_btn text-primary enabled" aria-label="Disable 2FA"></button>
@@ -103,38 +101,6 @@
                     </div>
                 </group>
             </group>
-        </field>
-    </record>
-
-    <!-- View used when coming from "invite to use 2FA" mail -->
-    <record model="ir.ui.view" id="res_users_view_form_security">
-        <field name="name">users preference: Account Security</field>
-        <field name="model">res.users</field>
-        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
-        <field name="mode">primary</field>
-        <field name="arch" type="xml">
-            <form position="attributes">
-                <attribute name='create'>0</attribute>
-                <attribute name='edit'>0</attribute>
-                <attribute name='delete'>0</attribute>
-            </form>
-            <h1 position="replace"/>
-            <xpath expr="//field[@name='image_1920']" position="replace"/>
-            <notebook position="replace">
-                <header>
-                </header>
-                <sheet>$0</sheet>
-            </notebook>
-            <notebook position="before">
-                <field name="image_1920" widget="image" class="oe_avatar" options="{'zoom': true, 'preview_image':'image_128'}"/>
-                    <div class="oe_title">
-                        <h1>
-                            <field name="name" placeholder="Name" required="True" readonly="context.get('from_my_profile', False)"/>
-                        </h1>
-                    </div>
-            </notebook>
-            <page name="preferences_page" position="replace"></page>
-            <footer position="replace"/>
         </field>
     </record>
 </odoo>

@@ -41,16 +41,6 @@ class Users(models.Model):
         for r, v in zip(self, self.sudo()):
             r.totp_enabled = bool(v.totp_secret)
 
-    def action_open_my_account_settings(self):
-        action = {
-            "name": _("Account Security"),
-            "type": "ir.actions.act_window",
-            "res_model": "res.users",
-            "views": [[self.env.ref('auth_totp.res_users_view_form_security').id, "form"]],
-            "res_id": self.id,
-        }
-        return action
-
     def _rpc_api_keys_only(self):
         # 2FA enabled means we can't allow password-based RPC
         self.ensure_one()
@@ -88,32 +78,6 @@ class Users(models.Model):
 
         _logger.info("2FA enable: SUCCESS for %s %r", self, self.login)
         return True
-
-    def get_totp_invite_url(self):
-        return '/web#action=auth_totp.action_activate_two_factor_authentication'
-
-    def action_totp_invite(self):
-        invite_template = self.env.ref('auth_totp.mail_template_totp_invite')
-        users_to_invite = self.sudo().filtered(lambda user: not user.totp_secret)
-        for user in users_to_invite:
-            email_values = {
-                'email_from': self.env.user.email_formatted,
-                'author_id': self.env.user.partner_id.id,
-            }
-            invite_template.send_mail(user.id, force_send=True, email_values=email_values,
-                                      notif_layout='mail.mail_notification_light')
-
-        # Display a confirmation toaster
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'type': 'info',
-                'sticky': False,
-                'message': _("Invitation to use two-factor authentication sent for the following user(s): %s",
-                             ', '.join(users_to_invite.mapped('name'))),
-            }
-        }
 
     @check_identity
     def action_totp_disable(self):
