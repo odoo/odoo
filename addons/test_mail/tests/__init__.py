@@ -13,6 +13,7 @@ from . import test_mail_gateway
 from . import test_mail_multicompany
 from . import test_mail_template_preview
 from . import test_mail_thread_internals
+from . import test_mail_thread_mixins
 from . import test_mail_template
 from . import test_mail_tools
 from . import test_message_management

@@ -121,6 +121,134 @@ class TestMassMailing(TestMassMailCommon):
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_recipients(self):
+        """ Test recipient-specific computation, with email, formatting,
+        multi-emails, ... to test corner cases. Blacklist mixin impact is
+        tested. """
+        (customer_mult, customer_fmt, customer_unic,
+         customer_case, customer_weird, customer_weird_2
+        ) = self.env['res.partner'].create([
+            {
+                'email': 'customer.multi.1@example.com, "Test Multi 2" <customer.multi.2@example.com>',
+                'name': 'MultiEMail',
+            }, {
+                'email': '"Formatted Customer" <test.customer.format@example.com>',
+                'name': 'FormattedEmail',
+            }, {
+                'email': '"Unicode Customer" <test.customer.😊@example.com>',
+                'name': 'UnicodeEmail',
+            }, {
+                'email': 'TEST.CUSTOMER.CASE@EXAMPLE.COM',
+                'name': 'CaseEmail',
+            }, {
+                'email': 'test.customer.weird@example.com Weird Format',
+                'name': 'WeirdFormatEmail',
+            }, {
+                'email': 'Weird Format2 test.customer.weird.2@example.com',
+                'name': 'WeirdFormatEmail2',
+            }
+        ])
+
+        # check difference of email management between a classic model and a model
+        # with an 'email_normalized' field (blacklist mixin)
+        for dst_model in ['mailing.test.customer', 'mailing.test.blacklist']:
+            with self.subTest(dst_model=dst_model):
+                (record_p_mult, record_p_fmt, record_p_unic,
+                 record_p_case, record_p_weird, record_p_weird_2,
+                 record_mult, record_fmt, record_unic
+                ) = self.env[dst_model].create([
+                    {
+                        'customer_id': customer_mult.id,
+                    }, {
+                        'customer_id': customer_fmt.id,
+                    }, {
+                        'customer_id': customer_unic.id,
+                    }, {
+                        'customer_id': customer_case.id,
+                    }, {
+                        'customer_id': customer_weird.id,
+                    }, {
+                        'customer_id': customer_weird_2.id,
+                    }, {
+                        'email_from': 'record.multi.1@example.com, "Record Multi 2" <record.multi.2@example.com>',
+                    }, {
+                        'email_from': '"Formatted Record" <record.format@example.com>',
+                    }, {
+                        'email_from': '"Unicode Record" <record.😊@example.com>',
+                    }
+                ])
+                test_records = (
+                    record_p_mult + record_p_fmt + record_p_unic +
+                    record_p_case + record_p_weird + record_p_weird_2 +
+                    record_mult + record_fmt + record_unic
+                )
+                mailing = self.env['mailing.mailing'].create({
+                    'body_html': """<div><p>Hello ${object.name}</p>""",
+                    'mailing_domain': [('id', 'in', test_records.ids)],
+                    'mailing_model_id': self.env['ir.model']._get_id(dst_model),
+                    'mailing_type': 'mail',
+                    'name': 'SourceName',
+                    'preview': 'Hi ${object.name} :)',
+                    'reply_to_mode': 'thread',
+                    'subject': 'MailingSubject',
+                })
+
+                with self.mock_mail_gateway(mail_unlink_sent=False):
+                    mailing.action_send_mail()
+
+                # difference in email_to management when inheriting from blacklist mixin
+                # as it uses email_normalized if possible
+                if dst_model == 'mailing.test.customer':
+                    formatted_mailmail_email = '"Formatted Record" <record.format@example.com>'
+                    unicode_mailmail_email = '"Unicode Record" <record.😊@example.com>'
+                else:
+                    formatted_mailmail_email = 'record.format@example.com'
+                    unicode_mailmail_email = 'record.😊@example.com'
+                self.assertMailTraces(
+                    [
+                        {'email': False,
+                         'failure_type': False,
+                         'partner': customer_mult,
+                         'state': 'ignored'},
+                        {'email': 'test.customer.format@example.com',
+                         'failure_type': False,
+                         'partner': customer_fmt,
+                         'state': 'sent'},
+                        {'email': 'test.customer.😊@example.com',
+                         'failure_type': False,
+                         'partner': customer_unic,
+                         'state': 'ignored'},  # email_re usage forbids mailing to unicode
+                        {'email': 'test.customer.case@example.com',
+                         'failure_type': False,
+                         'partner': customer_case,
+                         'state': 'sent'},  # lower cased
+                        {'email': 'test.customer.weird@example.comweirdformat',
+                         'failure_type': False,
+                         'partner': customer_weird,
+                         'state': 'sent'},  # concatenates everything after domain
+                        {'email': 'weird format2 test.customer.weird.2@example.com',
+                         'failure_type': False,
+                         'partner': customer_weird_2,
+                         'state': 'sent'},
+                        {'email': 'record.multi.1@example.com, "Record Multi 2" <record.multi.2@example.com>',
+                         'failure_type': False,
+                         'state': 'ignored'},
+                        {'email': 'record.format@example.com',
+                         'email_to_mail': formatted_mailmail_email,
+                         'failure_type': False,
+                         'state': 'sent'},
+                        {'email': 'record.😊@example.com',
+                         'email_to_mail': unicode_mailmail_email,
+                         'failure_type': False,
+                         'state': 'ignored'},  # email_re usage forbids mailing to unicode
+                    ],
+                    mailing,
+                    test_records,
+                    check_mail=True,
+                )
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mailing_reply_to_mode_new(self):
         mailing = self.env['mailing.mailing'].browse(self.mailing_bl.ids)
         recipients = self._create_mailing_test_records(model='mailing.test.blacklist', count=5)
