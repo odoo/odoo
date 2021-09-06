@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
-from odoo import api, fields, models, _, tools
-from odoo.osv import expression
+from odoo import fields, models, _, tools
 
 
 class MassMailing(models.Model):
@@ -14,8 +12,7 @@ class MassMailing(models.Model):
     crm_lead_count = fields.Integer('Leads/Opportunities Count', groups='sales_team.group_sale_salesman', compute='_compute_crm_lead_count')
 
     def _compute_use_leads(self):
-        for mass_mailing in self:
-            mass_mailing.use_leads = self.env.user.has_group('crm.group_use_lead')
+        self.use_leads = self.env.user.has_group('crm.group_use_lead')
 
     def _compute_crm_lead_count(self):
         lead_data = self.env['crm.lead'].with_context(active_test=False).read_group(
