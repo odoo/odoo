@@ -1177,7 +1177,7 @@ class Website(models.Model):
                         if query == FALSE_DOMAIN:
                             continue
 
-                    for rec in converter.generate(uid=self.env.uid, dom=query, args=val):
+                    for rec in converter.generate(self.env, args=val, dom=query):
                         newval.append(val.copy())
                         newval[-1].update({name: rec})
                 values = newval
