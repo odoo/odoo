@@ -1078,14 +1078,13 @@ class BaseModel(metaclass=MetaModel):
         self = self.with_context(_import_current_module=current_module)
 
         cr = self._cr
-        cr.execute('SAVEPOINT model_load')
+        sp = cr.savepoint(flush=False)
 
         fields = [fix_import_export_id_paths(f) for f in fields]
         fg = self.fields_get()
 
         ids = []
         messages = []
-        ModelData = self.env['ir.model.data']
 
         # list of (xid, vals, info) for records to be created in batch
         batch = []
@@ -1204,10 +1203,11 @@ class BaseModel(metaclass=MetaModel):
 
         flush()
         if any(message['type'] == 'error' for message in messages):
-            cr.execute('ROLLBACK TO SAVEPOINT model_load')
+            sp.rollback()
             ids = False
             # cancel all changes done to the registry/ormcache
             self.pool.reset_changes()
+        sp.close(rollback=False)
 
         nextrow = info['rows']['to'] + 1
         if nextrow < limit:
