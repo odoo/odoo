@@ -629,18 +629,6 @@ class Project(models.Model):
             'context': {'search_default_group_date': 1, 'default_account_id': self.analytic_account_id.id}
         }
 
-    def action_view_kanban_project(self):
-        self.ensure_one()
-        return {
-            'res_model': 'project.project',
-            'type': 'ir.actions.act_window',
-            'name': _("Project"),
-            'res_id': self.id,
-            'views': [(self.env.ref('project.edit_project').id, 'form')],
-            'view_mode': 'form',
-            'context': {'form_view_initial_mode': 'readonly'}
-        }
-
     # ---------------------------------------------
     #  PROJECT UPDATES
     # ---------------------------------------------
