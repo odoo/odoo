@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ProductsWidgetControlPanel" t-inherit="point_of_sale.ProductsWidgetControlPanel"
+       t-inherit-mode="extension" owl="1">
+        <xpath expr="//input[@t-ref='search-word-input']" position="replace">
+            <input t-ref="search-word-input" type="text" t-on-keyup="updateSearch"/>
+        </xpath>
+    </t>
+</templates>
