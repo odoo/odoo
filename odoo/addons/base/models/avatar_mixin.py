@@ -35,7 +35,7 @@ class AvatarMixin(models.AbstractModel):
         for record in self:
             avatar = record[image_field]
             if not avatar:
-                if record[record._avatar_name_field]:
+                if record.id and record[record._avatar_name_field]:
                     avatar = record._avatar_generate_svg()
                 else:
                     avatar = record._avatar_get_placeholder()
