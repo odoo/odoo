@@ -476,6 +476,18 @@ class Project(models.Model):
                 project.message_subscribe(project.partner_id.ids)
         if vals.get('privacy_visibility'):
             self._change_privacy_visibility()
+        if 'name' in vals and self.analytic_account_id:
+            projects_read_group = self.env['project.project'].read_group(
+                [('analytic_account_id', 'in', self.analytic_account_id.ids)],
+                ['analytic_account_id'],
+                ['analytic_account_id']
+            )
+            analytic_account_to_update = self.env['account.analytic.account'].browse([
+                res['analytic_account_id'][0]
+                for res in projects_read_group
+                if res['analytic_account_id'] and res['analytic_account_id_count'] == 1
+            ])
+            analytic_account_to_update.write({'name': self.name})
         return res
 
     def action_unlink(self):
