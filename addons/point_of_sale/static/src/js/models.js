@@ -152,8 +152,13 @@ exports.PosModel = Backbone.Model.extend({
             if(this.config.product_load_background)
                 this.loadProductsBackground();
         }
-        if(this.config.partner_load_background )
-            this.loadPartnersBackground();
+
+        if(this.config.limited_partners_loading) {
+            this.env.pos.db.add_partners(await this.loadPartnersFromOffset(0));
+            if(this.config.partner_load_background)
+                this.loadPartnersBackground();
+        }
+
         return Promise.resolve();
     },
     // releases ressources holds by the model at the end of life of the posmodel
@@ -347,20 +352,10 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'res.partner',
         label: 'load_partners',
+        condition: function (self) { return !self.config.limited_partners_loading; },
         fields: ['name','street','city','state_id','country_id','vat','lang',
                  'phone','zip','mobile','email','barcode','write_date',
                  'property_account_position_id','property_product_pricelist'],
-        domain: async function(self){
-            if(self.config.limited_partners_loading) {
-                const result = await self.rpc({
-                      model: 'pos.config',
-                      method: 'get_limited_partners_loading',
-                      args: [self.config.id],
-                });
-                return [['id','in', result.map(elem => elem[0])]];
-            }
-            return [];
-        },
         loaded: function(self,partners){
             self.partners = partners;
             self.db.add_partners(partners);
@@ -910,9 +905,8 @@ exports.PosModel = Backbone.Model.extend({
         }
     },
     loadProductsFromOffset: async function(offset) {
-        let ProductIds = [];
         let product_model = _.find(this.models, (model) => model.model === 'product.product');
-        ProductIds = await this.rpc({
+        return await this.rpc({
             model: 'product.product',
             method: 'search',
             args: [product_model.domain(this)],
@@ -922,7 +916,6 @@ exports.PosModel = Backbone.Model.extend({
             },
             context: this.env.session.user_context,
         });
-        return ProductIds;
     },
     loadProductsBackground: async function() {
         let offset = 0
@@ -933,23 +926,27 @@ exports.PosModel = Backbone.Model.extend({
             offset += 1;
         } while(ProductIds.length);
     },
+
+    loadPartnersFromOffset: async function(offset) {
+        var partner_model = _.find(this.env.pos.models, function(model){ return model.label === 'load_partners'; })
+        return await this.rpc({
+            model: 'res.partner',
+            method: 'search_read',
+            args: [[], partner_model.fields],
+            kwargs: {
+                offset: this.env.pos.config.limited_partners_amount * offset,
+                limit: this.env.pos.config.limited_partners_amount
+            },
+            context: this.env.session.user_context,
+        });
+    },
     loadPartnersBackground: async function() {
-        let i = 1;
+        let offset = 0;
         let PartnerIds = [];
-        var fields = _.find(this.env.pos.models, function(model){ return model.label === 'load_partners'; }).fields;
         do {
-            PartnerIds = await this.rpc({
-                model: 'res.partner',
-                method: 'search_read',
-                args: [[], fields],
-                kwargs: {
-                    limit: this.env.pos.config.limited_partners_amount,
-                    offset: this.env.pos.config.limited_partners_amount * i
-                },
-                context: this.env.session.user_context,
-            });
+            PartnerIds = await this.loadPartnersFromOffset(offset);
             this.env.pos.db.add_partners(PartnerIds);
-            i += 1;
+            offset += 1;
         } while(PartnerIds.length);
     },
     set_start_order: function(){

@@ -40,8 +40,13 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
             this.trigger('update-search', productName);
         }
         async loadProductFromDB() {
-            if(!this.searchWordInput.el.value)
+            if(!this.searchWordInput.el.value) {
+                await this.showPopup('ErrorPopup', {
+                    title: this.env._t(''),
+                    body: this.env._t("Please first, write a product name within the search bar to look for it in the back-office database !"),
+                });
                 return;
+            }
 
             try {
                 let ProductIds = await this.rpc({

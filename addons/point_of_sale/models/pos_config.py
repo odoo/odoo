@@ -230,14 +230,15 @@ class PosConfig(models.Model):
         help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
         "product lead time. Otherwise, it will be based on the shortest.")
     limited_products_loading = fields.Boolean('Limited Product Loading',
-                                              help="we load all starred products (favorite), all services, recent inventory movements of products, and the most recently updated products.\n"
-                                                   "When the session is open, we keep on loading all remaining products in the background.\n"
-                                                   "In the meantime, you can click on the 'database icon' in the searchbar to load products from database.")
+                                              help="By default, 20k products are loaded (in debug mode to modify the value).\n"
+                                                   "Loading rule : we load all starred products (favorite), all services, recent inventory movements of products, and the most recently updated products.\n"
+                                                   "When the session is open, if set below, we keep on loading all remaining products in the background.\n"
+                                                   "In the meantime, you can click on the 'database icon' in the searchbar to load products from database")
     limited_products_amount = fields.Integer(default=20000)
     product_load_background = fields.Boolean()
     limited_partners_loading = fields.Boolean('Limited Partners Loading',
-                                              help="By default, 100 partners are loaded.\n"
-                                                   "When the session is open, we keep on loading all remaining partners in the background.\n"
+                                              help="By default, 100 partners are loaded (in debug mode to modify the value).\n"
+                                                   "When the session is open, if set below, we keep on loading all remaining partners in the background.\n"
                                                    "In the meantime, you can use the 'Load Customers' button to load partners from database.")
     limited_partners_amount = fields.Integer(default=100)
     partner_load_background = fields.Boolean()

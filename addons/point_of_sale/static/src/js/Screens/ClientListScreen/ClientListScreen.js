@@ -176,6 +176,13 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             this.deactivateEditMode();
         }
         async searchClient() {
+            if(!this.state.query || !this.state.query.length) {
+                await this.showPopup('ErrorPopup', {
+                    title: this.env._t(''),
+                    body: this.env._t("Please first, write some customer's information within the search bar to look for it in the back-office database !"),
+                });
+                return;
+            }
             let result = await this.getNewClient();
             this.env.pos.db.add_partners(result);
             if(!result.length) {
