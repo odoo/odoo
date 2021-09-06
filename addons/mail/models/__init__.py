@@ -38,6 +38,7 @@ from . import res_users_settings
 from . import res_users_settings_volumes
 
 # odoo models
+from . import bus_presence
 from . import ir_action_act_window
 from . import ir_actions_server
 from . import ir_attachment
