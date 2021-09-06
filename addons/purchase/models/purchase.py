@@ -194,6 +194,11 @@ class PurchaseOrder(models.Model):
             result.append((po.id, name))
         return result
 
+    @api.onchange('currency_id')
+    def onchange_currency_id(self):
+        for record in self:
+            record.order_line.onchange_currency_id()
+
     @api.onchange('date_planned')
     def onchange_date_planned(self):
         if self.date_planned:
@@ -1002,6 +1007,10 @@ class PurchaseOrderLine(models.Model):
             )
             rec.account_analytic_id = rec.account_analytic_id or default_analytic_account.analytic_id
             rec.analytic_tag_ids = rec.analytic_tag_ids or default_analytic_account.analytic_tag_ids
+
+    @api.onchange('currency_id')
+    def onchange_currency_id(self):
+        self._onchange_quantity()
 
     @api.onchange('product_id')
     def onchange_product_id(self):
