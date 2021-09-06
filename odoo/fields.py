@@ -547,6 +547,11 @@ class Field(MetaField('DummyField', (object,), {})):
             # allow searching on self only if the related field is searchable
             self.search = self._search_related
 
+        # A readonly related field without an inverse method should not have a
+        # default value, as it does not make sense.
+        if self.default and self.readonly and not self.inverse:
+            _logger.warning("Redundant default on %s", self)
+
         # copy attributes from field to self (string, help, etc.)
         for attr, prop in self.related_attrs:
             if not getattr(self, attr):

@@ -46,7 +46,7 @@ class AccountReconcileModelLine(models.Model):
     allow_payment_tolerance = fields.Boolean(related='model_id.allow_payment_tolerance')
     payment_tolerance_param = fields.Float(related='model_id.payment_tolerance_param')
     rule_type = fields.Selection(related='model_id.rule_type')
-    company_id = fields.Many2one(related='model_id.company_id', store=True, default=lambda self: self.env.company)
+    company_id = fields.Many2one(related='model_id.company_id', store=True)
     sequence = fields.Integer(required=True, default=10)
     account_id = fields.Many2one('account.account', string='Account', ondelete='cascade',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]",

@@ -68,7 +68,7 @@ class StockMoveLine(models.Model):
     state = fields.Selection(related='move_id.state', store=True, related_sudo=False)
     is_initial_demand_editable = fields.Boolean(related='move_id.is_initial_demand_editable')
     is_inventory = fields.Boolean(related='move_id.is_inventory')
-    is_locked = fields.Boolean(related='move_id.is_locked', default=True, readonly=True)
+    is_locked = fields.Boolean(related='move_id.is_locked', readonly=True)
     consume_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'consume_line_id', 'produce_line_id', help="Technical link to see who consumed what. ")
     produce_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'produce_line_id', 'consume_line_id', help="Technical link to see which line was produced with this. ")
     reference = fields.Char(related='move_id.reference', store=True, related_sudo=False, readonly=False)
