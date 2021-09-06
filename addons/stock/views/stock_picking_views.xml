@@ -45,6 +45,7 @@
                                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses" force_save="1"/>
                                 <field name="print_label" attrs="{'invisible': [('code', '!=', 'internal')]}"/>
                                 <field name="reservation_method" attrs="{'invisible': [('code', '=', 'incoming')]}" widget="radio"/>
+                                <field name="auto_show_reception_report" attrs="{'invisible': [('code', 'not in', ['incoming', 'internal'])]}" groups="stock.group_reception_report"/>
                                 <label for="reservation_days_before" string="Reserve before scheduled date" attrs="{'invisible': ['|', ('code', '=', 'incoming'), ('reservation_method', '!=', 'by_date')]}"/>
                                 <div class="o_row" attrs="{'invisible': ['|', ('code', '=', 'incoming'), ('reservation_method', '!=', 'by_date')]}">
                                     <span><field name="reservation_days_before" style="width: 23px;"/> days before/</span>
