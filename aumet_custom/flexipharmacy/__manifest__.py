@@ -15,7 +15,7 @@
     'category': 'Point of Sale',
     'author': 'Acespritech Solutions Pvt. Ltd.',
     'website': "http://www.acespritech.com",
-    'version': '3.5.1',
+    'version': '3.5.0',
     'depends': ['base', 'point_of_sale', 'sale_management', 'barcodes', 'stock', 'purchase', 'bus',
                 'hr_attendance', 'account', 'pos_hr', 'product_expiry'],
     'price': 350.00,
