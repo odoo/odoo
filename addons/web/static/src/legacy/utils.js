@@ -107,6 +107,16 @@ export function makeLegacyCommandService(legacyEnv) {
     };
 }
 
+export function makeLegacyDropdownService(legacyEnv) {
+    return {
+        dependencies: ["ui", "hotkey"],
+        start(_, { ui, hotkey }) {
+            legacyEnv.services.ui = ui;
+            legacyEnv.services.hotkey = hotkey;
+        },
+    };
+}
+
 export function makeLegacySessionService(legacyEnv, session) {
     return {
         dependencies: ["user"],
