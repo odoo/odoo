@@ -262,18 +262,18 @@ class Challenge(models.Model):
 
         for challenge in self:
             if challenge.last_report_date != fields.Date.today():
-                # goals closed but still opened at the last report date
-                closed_goals_to_report = Goals.search([
-                    ('challenge_id', '=', challenge.id),
-                    ('start_date', '>=', challenge.last_report_date),
-                    ('end_date', '<=', challenge.last_report_date)
-                ])
-
                 if challenge.next_report_date and fields.Date.today() >= challenge.next_report_date:
                     challenge.report_progress()
-                elif closed_goals_to_report:
-                    # some goals need a final report
-                    challenge.report_progress(subset_goals=closed_goals_to_report)
+                else:
+                    # goals closed but still opened at the last report date
+                    closed_goals_to_report = Goals.search([
+                        ('challenge_id', '=', challenge.id),
+                        ('start_date', '>=', challenge.last_report_date),
+                        ('end_date', '<=', challenge.last_report_date)
+                    ])
+                    if closed_goals_to_report:
+                        # some goals need a final report
+                        challenge.report_progress(subset_goals=closed_goals_to_report)
 
         self._check_challenge_reward()
         return True

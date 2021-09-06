@@ -21,7 +21,8 @@ class ProjectShareWizard(models.TransientModel):
 
     @api.model
     def _selection_target_model(self):
-        return [(model.model, model.name) for model in self.env['ir.model'].sudo().search([('model', '=', 'project.project')])]
+        project_model = self.env['ir.model']._get('project.project')
+        return [(project_model.model, project_model.name)]
 
     access_mode = fields.Selection([('read', 'Readonly'), ('edit', 'Edit')])
     display_access_mode = fields.Boolean()
