@@ -27,6 +27,9 @@ export class RtcInvitationCard extends Component {
      */
     async _onClickAccept(ev) {
         this.thread.open();
+        if (this.thread.hasPendingRtcRequest) {
+            return;
+        }
         await this.thread.toggleCall();
     }
 
@@ -43,6 +46,9 @@ export class RtcInvitationCard extends Component {
      * @param {MouseEvent} ev
      */
     _onClickRefuse(ev) {
+        if (this.thread.hasPendingRtcRequest) {
+            return;
+        }
         this.thread.leaveCall();
     }
 
