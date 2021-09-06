@@ -41,9 +41,6 @@ class AccountJournal(models.Model):
     def _get_bank_statements_available_sources(self):
         return self.__get_bank_statements_available_sources()
 
-    def _default_alias_domain(self):
-        return self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
-
     def _default_invoice_reference_model(self):
         """Get the invoice reference model according to the company's country."""
         country_code = self.env.company.country_id.code
@@ -172,7 +169,7 @@ class AccountJournal(models.Model):
     alias_id = fields.Many2one('mail.alias', string='Email Alias', help="Send one separate email for each invoice.\n\n"
                                                                   "Any file extension will be accepted.\n\n"
                                                                   "Only PDF and XML files will be interpreted by Odoo", copy=False)
-    alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain', default=_default_alias_domain, compute_sudo=True)
+    alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain')
     alias_name = fields.Char('Alias Name', copy=False, related='alias_id.alias_name', help="It creates draft invoices and bills by sending an email.", readonly=False)
 
     journal_group_ids = fields.Many2many('account.journal.group',
@@ -327,9 +324,7 @@ class AccountJournal(models.Model):
                 journal.suspense_account_id = False
 
     def _compute_alias_domain(self):
-        alias_domain = self._default_alias_domain()
-        for record in self:
-            record.alias_domain = alias_domain
+        self.alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
 
     @api.constrains('type_control_ids')
     def _constrains_type_control_ids(self):

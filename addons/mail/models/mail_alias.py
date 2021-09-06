@@ -33,9 +33,6 @@ class Alias(models.Model):
     _rec_name = 'alias_name'
     _order = 'alias_model_id, alias_name'
 
-    def _default_alias_domain(self):
-        return self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
-
     alias_name = fields.Char('Alias Name', copy=False, help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>")
     alias_model_id = fields.Many2one('ir.model', 'Aliased Model', required=True, ondelete="cascade",
                                      help="The model (Odoo Document Kind) to which this alias "
@@ -57,7 +54,7 @@ class Alias(models.Model):
         'Record Thread ID',
         help="Optional ID of a thread (record) to which all incoming messages will be attached, even "
              "if they did not reply to it. If set, this will disable the creation of new records completely.")
-    alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain', default=_default_alias_domain)
+    alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain')
     alias_parent_model_id = fields.Many2one(
         'ir.model', 'Parent Model',
         help="Parent model holding the alias. The model holding the alias reference "
@@ -97,9 +94,7 @@ class Alias(models.Model):
                 ))
 
     def _compute_alias_domain(self):
-        alias_domain = self._default_alias_domain()
-        for record in self:
-            record.alias_domain = alias_domain
+        self.alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
 
     @api.constrains('alias_defaults')
     def _check_alias_defaults(self):
