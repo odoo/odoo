@@ -2055,3 +2055,19 @@ $o-theme-font-configs: (
         background-image: $-gradient;
     }
 };
+
+// Replaces 'NULL' string values in a map by the sass null value (this is useful
+// as a "hack" to allow users to define null values in their custom palette as
+// normal null values are immediately removed to act as "removing the user custo
+// and resetting to theme default": ideally, we should review that system to
+// actually removing the custos in those cases instead of setting a null value
+// but this cannot be migrated at the moment).
+@function o-map-force-nulls($map) {
+    $-map: ();
+    @each $key, $value in $map {
+        $-map: map-merge($-map, (
+            $key: if($value == 'NULL', null, $value),
+        ));
+    }
+    @return $-map;
+}
