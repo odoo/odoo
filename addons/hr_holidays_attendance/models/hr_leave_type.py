@@ -12,8 +12,8 @@ class HRLeaveType(models.Model):
         "Deduct Extra Hours", default=False,
         help="Once a time off of this type is approved, extra hours in attendances will be deducted.")
 
-    def get_employees_days(self, employee_ids):
-        res = super().get_employees_days(employee_ids)
+    def get_employees_days(self, employee_ids, date=None):
+        res = super().get_employees_days(employee_ids, date)
         deductible_time_off_type_ids = self.env['hr.leave.type'].search([
             ('overtime_deductible', '=', True),
             ('requires_allocation', '=', 'no')]).ids

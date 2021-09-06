@@ -647,10 +647,10 @@ class HolidaysRequest(models.Model):
 
     @api.constrains('state', 'number_of_days', 'holiday_status_id')
     def _check_holidays(self):
-        mapped_days = self.mapped('holiday_status_id').get_employees_days(self.mapped('employee_id').ids)
         for holiday in self:
             if holiday.holiday_type != 'employee' or not holiday.employee_id or holiday.holiday_status_id.requires_allocation == 'no':
                 continue
+            mapped_days = holiday.holiday_status_id.get_employees_days([holiday.employee_id.id], holiday.date_from)
             leave_days = mapped_days[holiday.employee_id.id][holiday.holiday_status_id.id]
             if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
                 raise ValidationError(_('The number of remaining time off is not sufficient for this time off type.\n'
