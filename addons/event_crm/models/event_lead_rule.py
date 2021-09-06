@@ -5,7 +5,6 @@ from ast import literal_eval
 from collections import defaultdict
 
 from odoo import fields, models, _
-from odoo.osv import expression
 
 
 class EventLeadRule(models.Model):
@@ -205,10 +204,7 @@ class EventLeadRule(models.Model):
         """
         self.ensure_one()
         if self.event_registration_filter and self.event_registration_filter != '[]':
-            registrations = registrations.search(expression.AND([
-                [('id', 'in', registrations.ids)],
-                literal_eval(self.event_registration_filter)
-            ]))
+            registrations = registrations.filtered_domain(literal_eval(self.event_registration_filter))
 
         # check from direct m2o to linked m2o / o2m to filter first without inner search
         company_ok = lambda registration: registration.company_id == self.company_id if self.company_id else True
