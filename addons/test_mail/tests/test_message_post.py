@@ -650,6 +650,46 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         # notifications emails should not have been deleted: one for customers, one for user
         self.assertEqual(self.env['mail.mail'].sudo().search_count([('mail_message_id', '=', msg.id)]), 2)
 
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
+    def test_message_post_recipients_email_field(self):
+        """ Test various combinations of corner case / not standard filling of
+        email fields: multi email, formatted emails, ... """
+        partner_emails = [
+            'valid.lelitre@agrolait.com, valid.lelitre.cc@agrolait.com',  # multi email
+            '"Valid Lelitre" <valid.lelitre@agrolait.com>',  # email contains formatted email
+            'wrong',  # wrong
+            False, '', ' ',  # falsy
+        ]
+        expected_tos = [
+            # Currently semi-broken: sending to an incorrect email "Name" <address1, address2>
+            [f'"{self.partner_1.name}" <valid.lelitre@agrolait.com, valid.lelitre.cc@agrolait.com>',],
+            # Currently broken: sending to an incorrect email "Name" <"Name" <address>>
+            [f'"{self.partner_1.name}" <"Valid Lelitre" <valid.lelitre@agrolait.com>>',],
+            # sent "normally": formats email based on wrong / falsy email
+            [f'"{self.partner_1.name}" <@wrong>',],
+            [f'"{self.partner_1.name}" <@False>',],
+            [f'"{self.partner_1.name}" <@False>',],
+            [f'"{self.partner_1.name}" <@ >',],
+        ]
+
+        for partner_email, expected_to in zip(partner_emails, expected_tos):
+            with self.subTest(partner_email=partner_email, expected_to=expected_to):
+                self.partner_1.write({'email': partner_email})
+                with self.mock_mail_gateway():
+                    self.test_record.with_user(self.user_employee).message_post(
+                        body='Test multi email',
+                        message_type='comment',
+                        partner_ids=[self.partner_1.id],
+                        subject='Exotic email',
+                        subtype_xmlid='mt_comment',
+                    )
+
+                self.assertSentEmail(
+                    self.user_employee.partner_id,
+                    [self.partner_1],
+                    email_to=expected_to,
+                )
+
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_message_schedule', 'odoo.models.unlink')
     def test_message_post_schedule(self):

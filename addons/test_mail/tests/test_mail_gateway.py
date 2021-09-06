@@ -476,7 +476,32 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(record.message_ids[0].email_from, self.partner_1.email)
         self.assertNotSentEmail()  # No notification / bounce should be sent
 
-    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_process_email_author_multiemail(self):
+        """ Incoming email: recognized author: check multi/formatted email in field """
+        test_email = 'valid.lelitre@agrolait.com'
+        # Email not recognized if partner has a multi-email (source = formatted email)
+        self.partner_1.write({'email': f'{test_email}, "Valid Lelitre" <another.email@test.example.com>'})
+        with self.mock_mail_gateway():
+            record = self.format_and_process(
+                MAIL_TEMPLATE, f'"Valid Lelitre" <{test_email}>', 'groups@test.com', subject='Test3')
+
+        self.assertFalse(record.message_ids[0].author_id,
+                         'message_process (FIXME): unrecognized email -> author_id due to multi email')
+        self.assertEqual(record.message_ids[0].email_from, f'"Valid Lelitre" <{test_email}>')
+        self.assertNotSentEmail()  # No notification / bounce should be sent
+
+        # Email not recognized if partner has a multi-email (source = std email)
+        with self.mock_mail_gateway():
+            record = self.format_and_process(
+                MAIL_TEMPLATE, test_email, 'groups@test.com', subject='Test4')
+
+        self.assertFalse(record.message_ids[0].author_id,
+                         'message_process (FIXME): unrecognized email -> author_id due to multi email')
+        self.assertEqual(record.message_ids[0].email_from, test_email)
+        self.assertNotSentEmail()  # No notification / bounce should be sent
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_email_partner_find(self):
         """ Finding the partner based on email, based on partner / user / follower """
         self.alias.write({'alias_force_thread_id': self.test_record.id})
@@ -676,6 +701,39 @@ class TestMailgateway(TestMailCommon):
 
         # Test: one group created by Raoul (or Sylvie maybe, if we implement it)
         self.assertEqual(len(record), 1)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.tests')
+    def test_message_process_alias_followers_multiemail(self):
+        """ Incoming email from a parent document follower on a Followers only
+        alias depends on email_from / partner recognition, to be tested when
+        dealing with multi emails / formatted emails. """
+        self.alias.write({
+            'alias_contact': 'followers',
+            'alias_parent_model_id': self.env['ir.model']._get('mail.test.gateway').id,
+            'alias_parent_thread_id': self.test_record.id,
+        })
+        self.test_record.message_subscribe(partner_ids=[self.partner_1.id])
+        email_from = formataddr(("Another Name", self.partner_1.email_normalized))
+
+        for partner_email, passed in [
+            (formataddr((self.partner_1.name, self.partner_1.email_normalized)), True),
+            (f'{self.partner_1.email_normalized}, "Multi Email" <multi.email@test.example.com>', False),
+            (f'"Multi Email" <multi.email@test.example.com>, {self.partner_1.email_normalized}', False),
+        ]:
+            with self.subTest(partner_email=partner_email):
+                self.partner_1.write({'email': partner_email})
+                record = self.format_and_process(
+                    MAIL_TEMPLATE, email_from, 'groups@test.com',
+                    subject=f'Test for {partner_email}')
+
+                if passed:
+                    self.assertEqual(len(record), 1)
+                    self.assertEqual(record.email_from, email_from)
+                    self.assertEqual(record.message_partner_ids, self.partner_1)
+                # multi emails not recognized (no normalized email, recognition)
+                else:
+                    self.assertEqual(len(record), 0,
+                                     'Alias check (FIXME): multi-emails bad support for recognition')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_message_process_alias_update(self):
@@ -1678,6 +1736,7 @@ class TestMailgateway(TestMailCommon):
     # Corner cases / Bugs during message process
     # --------------------------------------------------
 
+    @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_file_encoding_ascii(self):
         """ Incoming email containing an xml attachment with unknown characters (�) but an ASCII charset should not
         raise an Exception. UTF-8 is used as a safe fallback.
@@ -1734,6 +1793,7 @@ class TestMailgateway(TestMailCommon):
         self.assertFalse(record.message_ids.parent_id)
 
 
+@tagged('mail_gateway', 'mail_thread')
 class TestMailThreadCC(TestMailCommon):
 
     @classmethod

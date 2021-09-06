@@ -5,6 +5,7 @@ from uuid import uuid4
 
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.tests.common import Form, users
+from odoo.tests import tagged
 
 
 # samples use effective TLDs from the Mozilla public suffix
@@ -22,6 +23,7 @@ SAMPLES = [
 
 ]
 
+@tagged('res_partner', 'mail_tools')
 class TestPartner(MailCommon):
 
     def _check_find_or_create(self, test_string, expected_name, expected_email, expected_email_normalized=False, check_partner=False, should_create=False):
@@ -36,6 +38,7 @@ class TestPartner(MailCommon):
         self.assertEqual(partner.email_normalized or '', expected_email_normalized)
         return partner
 
+    @users('admin')
     def test_res_partner_find_or_create(self):
         Partner = self.env['res.partner']
 
@@ -98,6 +101,85 @@ class TestPartner(MailCommon):
         with self.assertRaises(ValueError):
             self.env['res.partner'].find_or_create("Raoul chirurgiens-dentistes.fr", assert_valid_email=True)
 
+    @users('admin')
+    def test_res_partner_find_or_create_email(self):
+        """ Test 'find_or_create' tool used in mail, notably when linking emails
+        found in recipients to partners when sending emails using the mail
+        composer. """
+        partners = self.env['res.partner'].create([
+            {
+                'email': 'classic.format@test.example.com',
+                'name': 'Classic Format',
+            },
+            {
+                'email': '"FindMe Format" <find.me.format@test.example.com>',
+                'name': 'FindMe Format',
+            }, {
+                'email': 'find.me.multi.1@test.example.com, "FindMe Multi" <find.me.multi.2@test.example.com>',
+                'name': 'FindMe Multi',
+            },
+        ])
+        # check data used for finding / searching
+        self.assertEqual(
+            partners.mapped('email_formatted'),
+            ['"Classic Format" <classic.format@test.example.com>',
+             '"FindMe Format" <"FindMe Format" <find.me.format@test.example.com>>',
+             '"FindMe Multi" <find.me.multi.1@test.example.com, "FindMe Multi" <find.me.multi.2@test.example.com>>']
+        )
+        self.assertEqual(
+            partners.mapped('email_normalized'),
+            ['classic.format@test.example.com', 'find.me.format@test.example.com', False]
+        )
+
+        # classic find or create: use normalized email to compare records
+        for email in ('CLASSIC.FORMAT@TEST.EXAMPLE.COM', '"Another Name" <classic.format@test.example.com>'):
+            with self.subTest(email=email):
+                self.assertEqual(self.env['res.partner'].find_or_create(email), partners[0])
+        # find on encapsulated email: comparison of normalized should work
+        for email in ('FIND.ME.FORMAT@TEST.EXAMPLE.COM', '"Different Format" <find.me.format@test.example.com>'):
+            with self.subTest(email=email):
+                self.assertEqual(self.env['res.partner'].find_or_create(email), partners[1])
+        # multi-emails -> no normalized email -> fails each time, create new partner (FIXME)
+        for email in ('find.me.multi.1@test.example.com', 'find.me.multi.2@test.example.com'):
+            with self.subTest(email=email):
+                partner = self.env['res.partner'].find_or_create(email)
+                self.assertNotIn(partner, partners)
+                self.assertEqual(partner.email, email)
+                partner.unlink()  # do not mess with subsequent tests
+
+        # now input is multi email -> '_parse_partner_name' used in 'find_or_create'
+        # before trying to normalize is quite tolerant, allowing positive checks
+        for email_input, match_partner, exp_email_partner in [
+            ('classic.format@test.example.com,another.email@test.example.com',
+              partners[0], 'classic.format@test.example.com'),  # first found email matches existing
+            ('another.email@test.example.com,classic.format@test.example.com',
+             self.env['res.partner'], 'another.email@test.example.com'),  # first found email does not match
+            ('find.me.multi.1@test.example.com,find.me.multi.2@test.example.com',
+             self.env['res.partner'], 'find.me.multi.1@test.example.com'),
+        ]:
+            with self.subTest(email_input=email_input):
+                partner = self.env['res.partner'].find_or_create(email_input)
+                # either matching existing, either new partner
+                if match_partner:
+                    self.assertEqual(partner, match_partner)
+                else:
+                    self.assertNotIn(partner, partners)
+                self.assertEqual(partner.email, exp_email_partner)
+                if partner not in partners:
+                    partner.unlink()  # do not mess with subsequent tests
+
+    def test_res_partner_get_mention_suggestions_priority(self):
+        name = uuid4()  # unique name to avoid conflict with already existing users
+        self.env['res.partner'].create([{'name': f'{name}-{i}-not-user'} for i in range(0, 2)])
+        for i in range(0, 2):
+            mail_new_test_user(self.env, login=f'{name}-{i}-portal-user', groups='base.group_portal')
+            mail_new_test_user(self.env, login=f'{name}-{i}-internal-user', groups='base.group_user')
+        partners_format = self.env['res.partner'].get_mention_suggestions(name, limit=5)
+        self.assertEqual(len(partners_format), 5, "should have found limit (5) partners")
+        # return format for user is either a dict (there is a user and the dict is data) or a list of command (clear)
+        self.assertEqual(list(map(lambda p: isinstance(p['user'], dict) and p['user']['isInternalUser'], partners_format)), [True, True, False, False, False], "should return internal users in priority")
+        self.assertEqual(list(map(lambda p: isinstance(p['user'], dict), partners_format)), [True, True, True, True, False], "should return partners without users last")
+
     def test_res_partner_log_portal_group(self):
         Users = self.env['res.users']
         subtype_note = self.env.ref('mail.mt_note')
@@ -130,18 +212,6 @@ class TestPartner(MailCommon):
         new_msg = new_user.message_ids[0]
         self.assertIn('Portal Access Granted', new_msg.body)
         self.assertEqual(new_msg.subtype_id, subtype_note)
-
-    def test_res_partner_get_mention_suggestions_priority(self):
-        name = uuid4()  # unique name to avoid conflict with already existing users
-        self.env['res.partner'].create([{'name': f'{name}-{i}-not-user'} for i in range(0, 2)])
-        for i in range(0, 2):
-            mail_new_test_user(self.env, login=f'{name}-{i}-portal-user', groups='base.group_portal')
-            mail_new_test_user(self.env, login=f'{name}-{i}-internal-user', groups='base.group_user')
-        partners_format = self.env['res.partner'].get_mention_suggestions(name, limit=5)
-        self.assertEqual(len(partners_format), 5, "should have found limit (5) partners")
-        # return format for user is either a dict (there is a user and the dict is data) or a list of command (clear)
-        self.assertEqual(list(map(lambda p: isinstance(p['user'], dict) and p['user']['isInternalUser'], partners_format)), [True, True, False, False, False], "should return internal users in priority")
-        self.assertEqual(list(map(lambda p: isinstance(p['user'], dict), partners_format)), [True, True, True, True, False], "should return partners without users last")
 
     @users('admin')
     def test_res_partner_merge_wizards(self):
