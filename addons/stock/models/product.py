@@ -405,7 +405,7 @@ class Product(models.Model):
 
     @api.onchange('tracking')
     def onchange_tracking(self):
-        if any(product.tracking != 'none' and product.qty_available > 0 for product in self):
+        if any(product._origin.tracking != 'none' and product._origin.qty_available > 0 for product in self):
             return {
                 'warning': {
                     'title': _('Warning!'),
