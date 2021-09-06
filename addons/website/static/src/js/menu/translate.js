@@ -144,8 +144,11 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         var current = document.createElement('a');
         current.href = window.location.toString();
         current.search += (current.search ? '&' : '?') + 'enable_editor=1';
-        // we are in translate mode, the pathname starts with '/<url_code/'
-        current.pathname = current.pathname.substr(Math.max(0, current.pathname.indexOf('/', 1)));
+        // We are in translate mode, the pathname starts with '/<url_code>'. By
+        // adding a trailing slash we can simply search for the first slash
+        // after the language code to remove the language part.
+        const startPath = (current.pathname + '/').indexOf('/', 1);
+        current.pathname = current.pathname.substring(startPath);
 
         var link = document.createElement('a');
         link.href = '/website/lang/default';
