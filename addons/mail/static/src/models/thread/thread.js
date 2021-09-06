@@ -954,7 +954,7 @@ function factory(dependencies) {
          * @param {mail.partner} member
          */
         onClickMemberName(member) {
-            member.openProfile();
+            member.openChat();
         }
 
         /**
