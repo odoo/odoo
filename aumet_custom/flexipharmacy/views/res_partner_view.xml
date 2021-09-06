@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//sheet//notebook" position="inside">
-                    <page string="PoS Doctor Commission" attrs="{'invisible':[('is_doctor', '=', False)]}" groups="account.group_account_manager">
+                    <page string="PoS Doctor Commission" attrs="{'invisible':[('is_doctor', '=', False)]}">
                         <group>
                             <group string="Currency">
                                 <field name="currency_id"/>
