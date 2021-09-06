@@ -1007,6 +1007,7 @@ class Task(models.Model):
     dependent_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="depends_on_id",
                                      column2="task_id", string="Block",
                                      domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
+    dependent_tasks_count = fields.Integer(string="Dependent Tasks", compute='_compute_dependent_tasks_count')
 
     # recurrence fields
     allow_recurring_tasks = fields.Boolean(related='project_id.allow_recurring_tasks')
@@ -1261,6 +1262,21 @@ class Task(models.Model):
         tasks_count = {c.get('recurrence_id')[0]: c.get('recurrence_id_count') for c in count}
         for task in recurring_tasks:
             task.recurring_count = tasks_count.get(task.recurrence_id.id, 0)
+
+    @api.depends('dependent_ids')
+    def _compute_dependent_tasks_count(self):
+        tasks_with_dependency = self.filtered('allow_task_dependencies')
+        (self - tasks_with_dependency).dependent_tasks_count = 0
+        if tasks_with_dependency:
+            group_dependent = self.env['project.task'].read_group([
+                ('depend_on_ids', 'in', tasks_with_dependency.ids),
+            ], ['depend_on_ids'], ['depend_on_ids'])
+            dependent_tasks_count_dict = {
+                group['depend_on_ids'][0]: group['depend_on_ids_count']
+                for group in group_dependent
+            }
+            for task in tasks_with_dependency:
+                task.dependent_tasks_count = dependent_tasks_count_dict.get(task.id, 0)
 
     @api.depends('partner_id.email')
     def _compute_partner_email(self):
@@ -1995,6 +2011,26 @@ class Task(models.Model):
             'type': 'ir.actions.act_window',
             'context': self._context
         }
+
+    def action_dependent_tasks(self):
+        self.ensure_one()
+        if self.dependent_tasks_count == 1:
+            return {
+                'view_mode': 'form',
+                'res_model': 'project.task',
+                'res_id': self.dependent_ids.id,
+                'type': 'ir.actions.act_window',
+                'context': {**self._context, 'default_depend_on_ids': [Command.link(self.id)]},
+            }
+        else:
+            return {
+                'name': 'Dependent Tasks',
+                'type': 'ir.actions.act_window',
+                'res_model': 'project.task',
+                'view_mode': 'tree,form,kanban,calendar,pivot,graph,gantt,activity,map',
+                'domain': [('depend_on_ids', '=', self.id)],
+                'context': {'default_depend_on_ids': [Command.link(self.id)]},
+            }
 
     def action_recurring_tasks(self):
         return {
