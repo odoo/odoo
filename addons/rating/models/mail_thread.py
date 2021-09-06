@@ -16,11 +16,10 @@ class MailThread(models.AbstractModel):
         # create rating.rating record linked to given rating_value. Using sudo as portal users may have
         # rights to create messages and therefore ratings (security should be checked beforehand)
         if rating_value:
-            ir_model = self.env['ir.model'].sudo().search([('model', '=', self._name)])
             self.env['rating.rating'].sudo().create({
                 'rating': float(rating_value) if rating_value is not None else False,
                 'feedback': rating_feedback,
-                'res_model_id': ir_model.id,
+                'res_model_id': self.env['ir.model']._get_id(self._name),
                 'res_id': self.id,
                 'message_id': message.id,
                 'consumed': True,

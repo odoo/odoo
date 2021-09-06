@@ -131,11 +131,10 @@ class RatingMixin(models.AbstractModel):
         rated_partner = self.rating_get_rated_partner_id()
         ratings = self.rating_ids.sudo().filtered(lambda x: x.partner_id.id == partner.id and not x.consumed)
         if not ratings:
-            record_model_id = self.env['ir.model'].sudo().search([('model', '=', self._name)], limit=1).id
             rating = self.env['rating.rating'].sudo().create({
                 'partner_id': partner.id,
                 'rated_partner_id': rated_partner.id,
-                'res_model_id': record_model_id,
+                'res_model_id': self.env['ir.model']._get_id(self._name),
                 'res_id': self.id,
                 'is_internal': False,
             })
