@@ -52,7 +52,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         check_company=True,
         domain=_get_account_domain,
     )
-    preview_data = fields.Binary(compute='_compute_preview_data')
+    preview_data = fields.Text(compute='_compute_preview_data')
     display_amount = fields.Boolean(compute='_compute_display_amount')
 
     @api.depends('date', 'amount')
@@ -126,6 +126,7 @@ class AccruedExpenseRevenue(models.TransientModel):
             raise UserError(_('Entries can only be created for a single company at a time.'))
 
         orders_with_entries = []
+        fnames = []
         for order in orders:
             total_balance = 0.0
             total_amount_currency = 0.0
@@ -164,16 +165,18 @@ class AccruedExpenseRevenue(models.TransientModel):
                         account = order_line.product_id.property_account_expense_id or order_line.product_id.categ_id.property_account_expense_categ_id
                         amount = self.company_id.currency_id.round(order_line.qty_to_invoice * order_line.price_unit / rate)
                         amount_currency = order_line.currency_id.round(order_line.qty_to_invoice * order_line.price_unit)
+                        fnames = ['qty_to_invoice', 'qty_received', 'qty_invoiced', 'invoice_lines']
                     else:
                         account = order_line.product_id.property_account_income_id or order_line.product_id.categ_id.property_account_income_categ_id
                         amount = self.company_id.currency_id.round(order_line.untaxed_amount_to_invoice / rate)
                         amount_currency = order_line.untaxed_amount_to_invoice
+                        fnames = ['qty_to_invoice', 'untaxed_amount_to_invoice', 'qty_invoiced', 'qty_delivered', 'invoice_lines']
                     inc_exp_accounts[account]['amount'] += amount
                     inc_exp_accounts[account]['amount_currency'] += amount_currency
                     total_balance += amount
                     total_amount_currency += amount_currency
                 # must invalidate cache or o can mess when _create_invoices().action_post() of original order after this
-                self.invalidate_cache()
+                order.order_line.invalidate_cache(fnames=fnames)
 
             if not self.company_id.currency_id.is_zero(total_balance):
                 orders_with_entries.append(order)
