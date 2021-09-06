@@ -526,6 +526,8 @@ class ProcurementGroup(models.Model):
         # ensure that qty_* which depends on datetime.now() are correctly
         # recomputed
         orderpoints.sudo()._compute_qty_to_order()
+        if use_new_cursor:
+            self._cr.commit()
         orderpoints.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id, raise_user_error=False)
 
         # Search all confirmed stock_moves and try to assign them
