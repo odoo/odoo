@@ -1886,6 +1886,12 @@ class MailThread(models.AbstractModel):
     def _message_update_content_after_hook(self, message):
         """ Hook to add custom behavior after having updated the message content. """
 
+    def _message_add_reaction_after_hook(self, message, content):
+        """ Hook to add custom behavior after having added a reaction to a message. """
+
+    def _message_remove_reaction_after_hook(self, message, content):
+        """ Hook to add custom behavior after having removed a reaction from a message. """
+
     def _check_can_update_message_content(self, message):
         """" Checks that the current user can update the content of the message. """
         note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')

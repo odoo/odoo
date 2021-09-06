@@ -139,6 +139,11 @@
                                 </ul>
                             </t>
                         </div>
+                        <div class="d-flex flex-wrap ml-2">
+                            <t t-foreach="message.messageReactionGroups" t-as="messageReactionGroup" t-key="messageReactionGroup.localId">
+                                <MessageReactionGroup messageReactionGroupLocalId="messageReactionGroup.localId"/>
+                            </t>
+                        </div>
                         <t t-if="message.subject and !message.isSubjectSimilarToOriginThreadName">
                             <p class="o_Message_subject m-2 mt-0">Subject: <t t-esc="message.subject"/></p>
                         </t>

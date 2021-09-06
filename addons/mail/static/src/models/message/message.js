@@ -74,6 +74,9 @@ function factory(dependencies) {
             if ('is_notification' in data) {
                 data2.is_notification = data.is_notification;
             }
+            if ('messageReactionGroups' in data) {
+                data2.messageReactionGroups = data.messageReactionGroups;
+            }
             if ('message_type' in data) {
                 data2.message_type = data.message_type;
             }
@@ -201,6 +204,22 @@ function factory(dependencies) {
         }
 
         /**
+         * Adds the given reaction on this message.
+         *
+         * @param {string} content
+         */
+        async addReaction(content) {
+            const messageData = await this.env.services.rpc({
+                route: '/mail/message/add_reaction',
+                params: { content, message_id: this.id },
+            });
+            if (!this.exists()) {
+                return;
+            }
+            this.update(messageData);
+        }
+
+        /**
          * Mark this message as read, so that it no longer appears in current
          * partner Inbox.
          */
@@ -231,6 +250,22 @@ function factory(dependencies) {
          */
         refreshDateFromNow() {
             this.update({ dateFromNow: this._computeDateFromNow() });
+        }
+
+        /**
+         * Removes the given reaction from this message.
+         *
+         * @param {string} content
+         */
+        async removeReaction(content) {
+            const messageData = await this.env.services.rpc({
+                route: '/mail/message/remove_reaction',
+                params: { content, message_id: this.id },
+            });
+            if (!this.exists()) {
+                return;
+            }
+            this.update(messageData);
         }
 
         /**
@@ -638,6 +673,14 @@ function factory(dependencies) {
          */
         isStarred: attr({
             default: false,
+        }),
+        /**
+         * Groups of reactions per content allowing to know the number of
+         * reactions for each.
+         */
+        messageReactionGroups: one2many('mail.message_reaction_group', {
+            inverse: 'message',
+            isCausal: true,
         }),
         message_type: attr(),
         notifications: one2many('mail.notification', {

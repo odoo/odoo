@@ -81,6 +81,7 @@ odoo.define('web.Popover', function (require) {
 
         _close() {
             this.state.displayed = false;
+            this.trigger('o-popover-closed');
         }
 
         /**
@@ -171,6 +172,11 @@ odoo.define('web.Popover', function (require) {
          */
         _onClick(ev) {
             this.state.displayed = !this.state.displayed;
+            if (this.state.displayed) {
+                this.trigger('o-popover-opened');
+            } else {
+                this.trigger('o-popover-closed');
+            }
         }
 
         /**
@@ -322,6 +328,7 @@ odoo.define('web.Popover', function (require) {
             validate: (p) => ['top', 'bottom', 'left', 'right'].includes(p),
         },
         title: { type: String, optional: true },
+        titleAttribute: { type: String, optional: true },
     };
 
     QWeb.registerComponent('Popover', Popover);

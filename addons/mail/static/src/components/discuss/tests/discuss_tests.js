@@ -1174,7 +1174,7 @@ QUnit.test('open channel from active_id as channel id', async function (assert) 
 
 QUnit.test('basic rendering of message', async function (assert) {
     // AKU TODO: should be in message-only tests
-    assert.expect(13);
+    assert.expect(14);
 
     // channel expected to be rendered, with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
@@ -1253,13 +1253,18 @@ QUnit.test('basic rendering of message', async function (assert) {
     );
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_MessageActionList_action`).length,
-        1,
-        "should have a single action in action list of message"
+        2,
+        "should have 2 actions in action list of message"
     );
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_MessageActionList_actionStar`).length,
         1,
         "should have action to star message"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_MessageActionList_actionReaction',
+        "should have action to add a reaction"
     );
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_Message_content`).length,
@@ -2876,7 +2881,7 @@ QUnit.test('do not post message on channel with "SHIFT-Enter" keyboard shortcut'
 });
 QUnit.test('rendering of inbox message', async function (assert) {
     // AKU TODO: kinda message specific test
-    assert.expect(7);
+    assert.expect(8);
 
     this.data['mail.message'].records.push({
         body: "not empty",
@@ -2925,8 +2930,13 @@ QUnit.test('rendering of inbox message', async function (assert) {
     await afterNextRender(() => message.click());
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_MessageActionList_action`).length,
-        3,
-        "should display 3 actions"
+        4,
+        "should display 4 actions"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_MessageActionList_actionReaction',
+        "should have action to add a reaction"
     );
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_MessageActionList_actionStar`).length,

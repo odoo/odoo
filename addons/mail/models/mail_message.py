@@ -176,6 +176,7 @@ class Message(models.Model):
     # Besides for new messages, and messages never sending emails, there was no mail, and it was searching for nothing.
     mail_ids = fields.One2many('mail.mail', 'mail_message_id', string='Mails', groups="base.group_system")
     canned_response_ids = fields.One2many('mail.shortcode', 'message_ids', string="Canned Responses", store=False)
+    reaction_ids = fields.One2many('mail.message.reaction', 'message_id', string="Reactions", groups="base.group_system")
 
     def _compute_description(self):
         for message in self:
@@ -758,6 +759,40 @@ class Message(models.Model):
         notification = {'type': 'toggle_star', 'message_ids': [self.id], 'starred': starred}
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
 
+    def _message_add_reaction(self, content):
+        self.ensure_one()
+        self.check_access_rule('write')
+        self.check_access_rights('write')
+        if self.env.user._is_public() and 'guest' in self.env.context:
+            guest = self.env.context.get('guest')
+            partner = self.env['res.partner']
+        else:
+            guest = self.env['mail.guest']
+            partner = self.env.user.partner_id
+        reaction = self.env['mail.message.reaction'].sudo().search([('message_id', '=', self.id), ('partner_id', '=', partner.id), ('guest_id', '=', guest.id), ('content', '=', content)])
+        if not reaction:
+            reaction = self.env['mail.message.reaction'].sudo().create({
+                'message_id': self.id,
+                'content': content,
+                'partner_id': partner.id,
+                'guest_id': guest.id,
+            })
+        self.env[self.model].browse(self.res_id)._message_add_reaction_after_hook(message=self, content=reaction.content)
+
+    def _message_remove_reaction(self, content):
+        self.ensure_one()
+        self.check_access_rule('write')
+        self.check_access_rights('write')
+        if self.env.user._is_public() and 'guest' in self.env.context:
+            guest = self.env.context.get('guest')
+            partner = self.env['res.partner']
+        else:
+            guest = self.env['mail.guest']
+            partner = self.env.user.partner_id
+        reaction = self.env['mail.message.reaction'].sudo().search([('message_id', '=', self.id), ('partner_id', '=', partner.id), ('guest_id', '=', guest.id), ('content', '=', content)])
+        reaction.unlink()
+        self.env[self.model].browse(self.res_id)._message_remove_reaction_after_hook(message=self, content=content)
+
     # ------------------------------------------------------
     # MESSAGE READ / FETCH / FAILURE API
     # ------------------------------------------------------
@@ -818,10 +853,21 @@ class Message(models.Model):
                 })]
             else:
                 vals['author_id'] = author
+            reactions_per_content = defaultdict(lambda: self.env['mail.message.reaction'])
+            for reaction in message_sudo.reaction_ids:
+                reactions_per_content[reaction.content] |= reaction
+            reaction_groups = [('insert-and-replace', [{
+                'messageId': message_sudo.id,
+                'content': content,
+                'count': len(reactions),
+                'partners': [('insert-and-replace', [{'id': partner.id, 'name': partner.name} for partner in reactions.partner_id])],
+                'guests': [('insert-and-replace', [{'id': guest.id, 'name': guest.name} for guest in reactions.guest_id])],
+            } for content, reactions in reactions_per_content.items()])]
             vals.update({
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachment_ids': attachments_formatted,
                 'tracking_value_ids': tracking_value_ids,
+                'messageReactionGroups': reaction_groups,
                 'record_name': record_name,
             })
 

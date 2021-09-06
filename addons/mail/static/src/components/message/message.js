@@ -132,7 +132,11 @@ export class Message extends Component {
      * @returns {boolean}
      */
     get isActive() {
-        return this.state.isHovered || this.state.isClicked;
+        return Boolean(
+            this.state.isHovered ||
+            this.state.isClicked ||
+            (this.message && this.message.actionList.isReactionPopoverOpened)
+        );
     }
 
     /**
@@ -470,7 +474,8 @@ export class Message extends Component {
             !isEventHandled(ev, 'Message.ClickAuthorAvatar') &&
             !isEventHandled(ev, 'Message.ClickAuthorName') &&
             !isEventHandled(ev, 'Message.ClickFailure') &&
-            !isEventHandled(ev, 'MessageActionList.Click')
+            !isEventHandled(ev, 'MessageActionList.Click') &&
+            !isEventHandled(ev, 'MessageReactionGroup.Click')
         ) {
             this.state.isClicked = !this.state.isClicked;
         }
