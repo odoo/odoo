@@ -205,7 +205,7 @@ class StockLandedCost(models.Model):
         AdjustementLines = self.env['stock.valuation.adjustment.lines']
         AdjustementLines.search([('cost_id', 'in', self.ids)]).unlink()
 
-        digits = self.env['decimal.precision'].precision_get('Product Price')
+        digits = self.currency_id.decimal_places
         towrite_dict = {}
         for cost in self.filtered(lambda cost: cost._get_targeted_move_ids()):
             total_qty = 0.0
