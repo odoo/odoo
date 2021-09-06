@@ -575,16 +575,14 @@ class TestCursor(BaseCursor):
                                     |
               cr.execute(query)     | query
                                     |
-              cr.commit()           | SAVEPOINT test_cursor_N
+              cr.commit()           | RELEASE SAVEPOINT test_cursor_N
+                                    | SAVEPOINT test_cursor_N (lazy)
                                     |
-              cr.rollback()         | ROLLBACK TO SAVEPOINT test_cursor_N
+              cr.rollback()         | ROLLBACK TO SAVEPOINT test_cursor_N (if savepoint)
                                     |
-              cr.close()            | ROLLBACK TO SAVEPOINT test_cursor_N
-                                    |
-
+              cr.close()            | ROLLBACK TO SAVEPOINT test_cursor_N (if savepoint)
+                                    | RELEASE SAVEPOINT test_cursor_N (if savepoint)
     """
-    _savepoint_seq = itertools.count()
-
     def __init__(self, cursor, lock):
         super().__init__()
         self._closed = False
@@ -593,14 +591,22 @@ class TestCursor(BaseCursor):
         self._lock = lock
         self._lock.acquire()
         # in order to simulate commit and rollback, the cursor maintains a
-        # savepoint at its last commit
-        self._savepoint = "test_cursor_%s" % next(self._savepoint_seq)
-        self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
+        # savepoint at its last commit, the savepoint is created lazily
+        self._savepoint = self._cursor.savepoint(flush=False)
+
+    @check
+    def execute(self, *args, **kwargs):
+        if not self._savepoint:
+            self._savepoint = self._cursor.savepoint(flush=False)
+
+        return self._cursor.execute(*args, **kwargs)
 
     def close(self):
         if not self._closed:
             self.rollback()
             self._closed = True
+            if self._savepoint:
+                self._savepoint.close(rollback=False)
             self._lock.release()
 
     def autocommit(self, on):
@@ -610,7 +616,9 @@ class TestCursor(BaseCursor):
     def commit(self):
         """ Perform an SQL `COMMIT` """
         self.flush()
-        self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
+        if self._savepoint:
+            self._savepoint.close(rollback=False)
+            self._savepoint = None
         self.clear()
         self.prerollback.clear()
         self.postrollback.clear()
@@ -622,7 +630,8 @@ class TestCursor(BaseCursor):
         self.clear()
         self.postcommit.clear()
         self.prerollback.run()
-        self._cursor.execute('ROLLBACK TO SAVEPOINT "%s"' % self._savepoint)
+        if self._savepoint:
+            self._savepoint.rollback()
         self.postrollback.run()
 
     def __getattr__(self, name):

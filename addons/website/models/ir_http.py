@@ -451,11 +451,11 @@ class ModelConverter(ir_http.ModelConverter):
             return value.env.context.get('_converter_value', str(value.id))
         return super().to_url(value)
 
-    def generate(self, uid, dom=None, args=None):
-        Model = request.env[self.model].with_user(uid)
+    def generate(self, env, args, dom=None):
+        Model = env[self.model]
         # Allow to current_website_id directly in route domain
-        args.update(current_website_id=request.env['website'].get_current_website().id)
-        domain = safe_eval(self.domain, (args or {}).copy())
+        args['current_website_id'] = env['website'].get_current_website().id
+        domain = safe_eval(self.domain, args)
         if dom:
             domain += dom
         for record in Model.search(domain):
