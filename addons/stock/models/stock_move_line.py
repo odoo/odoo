@@ -57,11 +57,10 @@ class StockMoveLine(models.Model):
     location_id = fields.Many2one('stock.location', 'From', domain="[('usage', '!=', 'view')]", check_company=True, required=True)
     location_dest_id = fields.Many2one('stock.location', 'To', domain="[('usage', '!=', 'view')]", check_company=True, required=True)
     lots_visible = fields.Boolean(compute='_compute_lots_visible')
-    picking_type_id = fields.Many2one(related='picking_id.picking_type_id', readonly=True)
     picking_partner_id = fields.Many2one(related='picking_id.partner_id', readonly=True)
     picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
     picking_type_id = fields.Many2one(
-        'stock.picking.type', 'Operation type', compute='_compute_picking_type_id')
+        'stock.picking.type', 'Operation type', compute='_compute_picking_type_id', search='_search_picking_type_id')
     picking_type_use_create_lots = fields.Boolean(related='picking_id.picking_type_id.use_create_lots', readonly=True)
     picking_type_use_existing_lots = fields.Boolean(related='picking_id.picking_type_id.use_existing_lots', readonly=True)
     picking_type_entire_packs = fields.Boolean(related='picking_id.picking_type_id.show_entire_packs', readonly=True)
@@ -91,6 +90,9 @@ class StockMoveLine(models.Model):
         for line in self:
             if line.picking_id:
                 line.picking_type_id = line.picking_id.picking_type_id
+
+    def _search_picking_type_id(self, operator, value):
+        return [('picking_id.picking_type_id', operator, value)]
 
     @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
     def _compute_product_qty(self):

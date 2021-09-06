@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, exceptions, fields, models, _
+from odoo import api, fields, models
+from odoo.osv import expression
 from odoo.tools import float_compare, float_round, float_is_zero, OrderedSet
 
 
@@ -21,6 +22,19 @@ class StockMoveLine(models.Model):
             line.picking_type_id = line.production_id.picking_type_id
             line_to_remove |= line
         return super(StockMoveLine, self - line_to_remove)._compute_picking_type_id()
+
+    def _search_picking_type_id(self, operator, value):
+        res = super()._search_picking_type_id(operator=operator, value=value)
+        if operator in ['not in', '!=', 'not ilike']:
+            if value is False:
+                return expression.OR([[('production_id.picking_type_id', operator, value)], res])
+            else:
+                return expression.AND([[('production_id.picking_type_id', operator, value)], res])
+        else:
+            if value is False:
+                return expression.AND([[('production_id.picking_type_id', operator, value)], res])
+            else:
+                return expression.OR([[('production_id.picking_type_id', operator, value)], res])
 
     @api.model_create_multi
     def create(self, values):
