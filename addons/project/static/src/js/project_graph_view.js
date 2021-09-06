@@ -7,6 +7,6 @@ import { registry } from "@web/core/registry";
 const viewRegistry = registry.category("views");
 
 class ProjectGraphView extends GraphView {}
-ProjectGraphView.components = { ...GraphView, ControlPanel: ProjectControlPanel };
+ProjectGraphView.components = { ...GraphView.components, ControlPanel: ProjectControlPanel };
 
 viewRegistry.add("project_graph", ProjectGraphView);
