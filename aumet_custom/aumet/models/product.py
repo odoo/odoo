@@ -21,7 +21,6 @@ class ProductTemplate(models.Model):
             mpapi_response = CartAPI.get_product_details(self.env.user.marketplace_token,
                                                          self.marketplace_product[0].marketplace_id)
             if mpapi_response["data"]["data"]["payment_methods"]:
-                possible_ids = [i["paymentMethodId"] for i in mpapi_response["data"]["data"]["payment_methods"]]
                 return {
                     'domain':
                         {'payment_method': [
