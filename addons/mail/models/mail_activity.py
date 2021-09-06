@@ -540,6 +540,7 @@ class MailActivity(models.Model):
                     'res_id': activity.res_id,
                     'res_model': activity.res_model,
                     'res_model_id': self.env['ir.model']._get(activity.res_model).id,
+                    'summary': activity.summary,
                 })
                 virtual_activity = Activity.new(vals)
                 virtual_activity._onchange_previous_activity_type_id()
