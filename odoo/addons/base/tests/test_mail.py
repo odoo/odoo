@@ -8,10 +8,11 @@ import email.message
 import re
 import threading
 
+from odoo.tests import tagged
 from odoo.tests.common import BaseCase, SavepointCase, TransactionCase
 from odoo.tools import (
     is_html_empty, html_sanitize, append_content_to_html, plaintext2html,
-    email_split,
+    email_normalize, email_split, email_split_and_format,
     misc, formataddr,
     prepend_html_content,
 )
@@ -388,10 +389,40 @@ class TestHtmlTools(BaseCase):
         self.assertEqual(result, "<html><body><div>test</div><div>test</div></body></html>")
 
 
+@tagged('mail_tools')
 class TestEmailTools(BaseCase):
     """ Test some of our generic utility functions for emails """
 
+    def test_email_normalize(self):
+        """ Test 'email_normalize'. Note that it is built on 'email_split' so
+        some use cases are already managed in 'test_email_split(_and_format)'
+        hence having more specific test cases here about normalization itself. """
+        sources = [
+            '"Super Déboulonneur" <deboulonneur@example.com>',  # formatted
+            'Déboulonneur deboulonneur@example.com',  # wrong formatting
+            'deboulonneur@example.com Déboulonneur',  # wrong formatting (happens, alas)
+            '"Super Déboulonneur" <DEBOULONNEUR@example.com>, "Super Déboulonneur 2" <deboulonneur2@EXAMPLE.com>',  # multi + case
+            ' Déboulonneur deboulonneur@example.com déboulonneur deboulonneur2@example.com',  # wrong formatting + wrong multi
+            '"Déboulonneur 😊" <deboulonneur.😊@example.com>',  # unicode in name and email left-part
+            '"Déboulonneur" <déboulonneur@examplé.com>',  # utf-8
+            '"Déboulonneur" <DéBoulonneur@Examplé.com>',  # utf-8
+        ]
+        expected_list = [
+            'deboulonneur@example.com',
+            'déboulonneur deboulonneur@example.com',
+            'deboulonneur@example.comdéboulonneur',
+            False,
+            '@example.com',  # funny
+            'deboulonneur.😊@example.com',
+            'déboulonneur@examplé.com',
+            'déboulonneur@examplé.com',
+        ]
+        for source, expected in zip(sources, expected_list):
+            with self.subTest(source=source):
+                self.assertEqual(email_normalize(source), expected)
+
     def test_email_split(self):
+        """ Test 'email_split' """
         cases = [
             ("John <12345@gmail.com>", ['12345@gmail.com']),  # regular form
             ("d@x; 1@2", ['d@x', '1@2']),  # semi-colon + extra space
@@ -401,6 +432,51 @@ class TestEmailTools(BaseCase):
         ]
         for text, expected in cases:
             self.assertEqual(email_split(text), expected, 'email_split is broken')
+
+    def test_email_split_and_format(self):
+        """ Test 'email_split_and_format', notably in case of multi encapsulation
+        or multi emails. """
+        sources = [
+            'deboulonneur@example.com',
+            '"Super Déboulonneur" <deboulonneur@example.com>',  # formatted
+            # wrong formatting
+            'Déboulonneur <deboulonneur@example.com',  # with a final typo
+            'Déboulonneur deboulonneur@example.com',  # wrong formatting
+            'deboulonneur@example.com Déboulonneur',  # wrong formatting (happens, alas)
+            # multi
+            'Déboulonneur, deboulonneur@example.com',  # multi-like with errors
+            'deboulonneur@example.com, deboulonneur2@example.com',  # multi
+            ' Déboulonneur deboulonneur@example.com déboulonneur deboulonneur2@example.com',  # wrong formatting + wrong multi
+            # format / misc
+            '"Déboulonneur" <"Déboulonneur Encapsulated" <deboulonneur@example.com>>',  # double formatting
+            '"Super Déboulonneur" <deboulonneur@example.com>, "Super Déboulonneur 2" <deboulonneur2@example.com>',
+            '"Super Déboulonneur" <deboulonneur@example.com>, wrong, ',
+            '"Déboulonneur 😊" <deboulonneur@example.com>',  # unicode in name
+            '"Déboulonneur 😊" <deboulonneur.😊@example.com>',  # unicode in name and email left-part
+            '"Déboulonneur" <déboulonneur@examplé.com>',  # utf-8
+        ]
+        expected_list = [
+            ['deboulonneur@example.com'],
+            ['"Super Déboulonneur" <deboulonneur@example.com>'],
+            # wrong formatting
+            ['"Déboulonneur" <deboulonneur@example.com>'],
+            ['Déboulonneur deboulonneur@example.com'],  # returned as it, a bit strange but hey
+            ['deboulonneur@example.comDéboulonneur'],  # concatenated, not sure why
+            # multi
+            ['deboulonneur@example.com'],
+            ['deboulonneur@example.com', 'deboulonneur2@example.com'],
+            ['@example.com'],  # funny one
+            # format / misc
+            ['deboulonneur@example.com'],
+            ['"Super Déboulonneur" <deboulonneur@example.com>', '"Super Déboulonneur 2" <deboulonneur2@example.com>'],
+            ['"Super Déboulonneur" <deboulonneur@example.com>'],
+            ['"Déboulonneur 😊" <deboulonneur@example.com>'],
+            ['"Déboulonneur 😊" <deboulonneur.😊@example.com>'],
+            ['"Déboulonneur" <déboulonneur@examplé.com>'],
+        ]
+        for source, expected in zip(sources, expected_list):
+            with self.subTest(source=source):
+                self.assertEqual(email_split_and_format(source), expected)
 
     def test_email_formataddr(self):
         email = 'joe@example.com'
