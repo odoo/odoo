@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <report
+            string="POS Receipt"
+            id="action_pos_backend_receipt"
+            model="pos.order"
+            report_type="qweb-pdf"
+            name="pos_receipt_backend.pos_receipt"
+            file="pos_receipt_backend.pos_receipt"
+            print_report_name="'Order - %s' % (object.name)"
+            paperformat="pos_receipt_backend.order_backend_receipt_paperformat"
+        />
+
+    </data>
+</odoo>
