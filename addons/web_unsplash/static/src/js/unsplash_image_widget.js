@@ -3,6 +3,7 @@ odoo.define('web_unsplash.image_widgets', function (require) {
 
 var core = require('web.core');
 var UnsplashAPI = require('unsplash.api');
+const {UploadProgressToast} = require('@web_editor/js/wysiwyg/widgets/upload_progress_toast');
 var widgetsMedia = require('wysiwyg.widgets.media');
 const {_t} = require('web.core');
 
@@ -91,7 +92,7 @@ widgetsMedia.ImageWidget.include({
                     _.str.sprintf(_t("Uploading '%s' image."), this._unsplash.query),
                 size: null,
             }]);
-            const images = await this._rpcShowProgress({
+            const images = await this.uploader.rpcShowProgress({
                 route: '/web_unsplash/attachment/add',
                 params: {
                     unsplashurls: selectedImages,
@@ -100,7 +101,7 @@ widgetsMedia.ImageWidget.include({
                     query: this._unsplash.query,
                 },
             }, 0);
-            this._closeProgressToast();
+            this.uploader.close(3000);
             this.attachments.push(...images);
             this.selectedAttachments.push(...images);
         }
