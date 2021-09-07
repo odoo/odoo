@@ -131,6 +131,84 @@ export function useEffect(effect, computeDependencies = () => [NaN]) {
 }
 
 // -----------------------------------------------------------------------------
+// useListener
+// -----------------------------------------------------------------------------
+
+/**
+ * The useListener hook offers an alternative to Owl's classical event
+ * registration mechanism (with attribute 't-on-eventName' in xml).
+ *
+ * It is especially useful for abstract components, meant to be extended by
+ * specific ones. If those abstract components need to define event handlers,
+ * but don't have any template (because the template completely depends on
+ * specific cases), then using the 't-on' mechanism isn't adequate, as the
+ * handlers would be lost by the template override. In this case, using this
+ * hook instead is more convenient.
+ *
+ * Usage: like all Owl hooks, this function has to be called in the
+ * constructor of an Owl component:
+ *
+ *   useListener('click', () => { console.log('clicked'); });
+ *
+ * It also allows to do event delegation, by specifying a native query selector
+ * as second argument. In this case, the handler is only called if the event
+ * is triggered on an element matching the given selector.
+ *
+ *   useListener('click', 'button', () => { console.log('clicked'); });
+ *
+ * Note: components that alter the event's target (e.g. Portal) are not
+ * expected to behave as expected with event delegation.
+ *
+ * @param {string} eventName the name of the event
+ * @param {string} [querySelector] a JS native selector for event delegation
+ * @param {function} handler the event handler (will be bound to the component)
+ * @param {Object} [options] to be passed to addEventListener as options.
+ *   Useful for listening in the capture phase
+ */
+export function useListener(eventName, querySelector, handler, options = {}) {
+    if (typeof arguments[1] !== "string") {
+        querySelector = null;
+        handler = arguments[1];
+        options = arguments[2] || {};
+    }
+    if (typeof handler !== "function") {
+        throw new Error("The handler must be a function");
+    }
+
+    const comp = useComponent();
+    let boundHandler;
+    if (querySelector) {
+        boundHandler = function (ev) {
+            let el = ev.target;
+            let target;
+            while (el && !target) {
+                if (el.matches(querySelector)) {
+                    target = el;
+                } else if (el === comp.el) {
+                    el = null;
+                } else {
+                    el = el.parentElement;
+                }
+            }
+            if (el) {
+                handler.call(comp, ev);
+            }
+        };
+    } else {
+        boundHandler = handler.bind(comp);
+    }
+    useEffect(
+        () => {
+            comp.el.addEventListener(eventName, boundHandler, options);
+            return () => {
+                comp.el.removeEventListener(eventName, boundHandler, options);
+            };
+        },
+        () => []
+    );
+}
+
+// -----------------------------------------------------------------------------
 // useService
 // -----------------------------------------------------------------------------
 
