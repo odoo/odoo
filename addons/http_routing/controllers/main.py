@@ -3,7 +3,7 @@
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.web.controllers.main import WebClient, Home
+from odoo.addons.web.controllers.main import WebClient, Home, Session
 
 
 class Routing(Home):
@@ -15,3 +15,10 @@ class Routing(Home):
         if mods:
             modules += mods
         return WebClient().translations(unique, mods=','.join(modules), lang=lang)
+
+
+class SessionWebsite(Session):
+
+    @http.route('/web/session/logout', type='http', auth="none", website=True, multilang=False, sitemap=False)
+    def logout(self, redirect='/web'):
+        return super().logout(redirect=redirect)
