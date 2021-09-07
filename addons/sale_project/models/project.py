@@ -76,14 +76,15 @@ class Project(models.Model):
 
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
-        buttons.append({
-            'icon': 'dollar',
-            'text': _('Sales Order'),
-            'action_type': 'object',
-            'action': 'action_view_so',
-            'show': self.user_has_groups('sales_team.group_sale_salesman_all_leads') and bool(self.sale_order_id),
-            'sequence': 1,
-        })
+        if self.user_has_groups('sales_team.group_sale_salesman_all_leads'):
+            buttons.append({
+                'icon': 'dollar',
+                'text': _('Sales Order'),
+                'action_type': 'object',
+                'action': 'action_view_so',
+                'show': bool(self.sale_order_id),
+                'sequence': 1,
+            })
         return buttons
 
 class ProjectTask(models.Model):
