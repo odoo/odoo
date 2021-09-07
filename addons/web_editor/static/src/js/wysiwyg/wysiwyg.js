@@ -565,8 +565,8 @@ const Wysiwyg = Widget.extend({
     /**
      * Reset the history.
      */
-    resetHistory: function () {
-        this.odooEditor.resetHistory();
+    historyReset: function () {
+        this.odooEditor.historyReset();
     },
 
     /**
