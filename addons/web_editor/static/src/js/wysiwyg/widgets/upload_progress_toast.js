@@ -1,8 +1,6 @@
 /** @odoo-module */
-
 import Widget from "web.Widget";
-import concurrency from "web.concurrency";
-import { getDataURLFromFile } from "web.utils";
+import {qweb} from 'web.core';
 
 export const UploadProgressToast = Widget.extend({
     xmlDependencies: ['/web_editor/static/src/xml/wysiwyg.xml'],
@@ -14,62 +12,34 @@ export const UploadProgressToast = Widget.extend({
     /**
      * @override
      */
-    init(parent, { files, resModel, resId, isImage }) {
+    init(parent, files) {
         this._super(...arguments);
-        this.resId = resId;
-        this.resModel = resModel;
-        this.isImage = isImage;
-
-        // Upload the smallest file first to block the user the least possible.
-        this.files = [...files].sort((a, b) => a.size - b.size);
-        this.files.forEach((file, index) => {
-            file.id = index;
-            if (!file.size) {
-                file.displaySize = null;
-            } else if (file.size < 1024) {
-                file.displaySize = file.size.toFixed(2) + " bytes";
-            } else if (file.size < 1048576) {
-                file.displaySize = (file.size / 1024).toFixed(2) + " KB";
-            } else {
-                file.displaySize = (file.size / 1048576).toFixed(2) + " MB";
-            }
-        });
+        this.files = files;
     },
     /**
      * @override
      */
     start() {
-        this.hasError = false;
-        const uploadMutex = new concurrency.Mutex();
-        this.files.forEach((file, index) => {
-            // Upload one file at a time: no need to parallel as upload is
-            // limited by bandwidth.
-            uploadMutex.exec(async () => {
-                const dataURL = await getDataURLFromFile(file);
-                const attachment = await this._rpcShowProgress({
-                    route: '/web_editor/attachment/add_data',
-                    params: {
-                        name: file.name,
-                        data: dataURL.split(',')[1],
-                        res_id: this.resId,
-                        res_model: this.resModel,
-                        is_image: this.isImage,
-                        width: 0,
-                        quality: 0,
-                    }
-                }, this.$el.find(`.js_progressbar_${index}`));
-                if (!attachment.error) {
-                    this.trigger_up('file_complete', attachment);
-                }
-            });
-        });
+        this.$progress = $('<div/>');
+        _.each(this.files, (file, index) => {
+            let fileSize = file.size;
+            if (!fileSize) {
+                fileSize = null;
+            } else if (fileSize < 1024) {
+                fileSize = fileSize.toFixed(2) + " bytes";
+            } else if (fileSize < 1048576) {
+                fileSize = (fileSize / 1024).toFixed(2) + " KB";
+            } else {
+                fileSize = (fileSize / 1048576).toFixed(2) + " MB";
+            }
 
-        uploadMutex.getUnlockedDef().then(() => {
-            this.trigger_up('upload_complete');
-            this.destroyOnClose = true;
-            this.close(2000);
+            this.$progress.append(qweb.render('wysiwyg.widgets.upload.progressbar', {
+                fileId: index,
+                fileName: file.name,
+                fileSize: fileSize,
+            }));
         });
-        this.uploadMutex = uploadMutex;
+        this.$el.find('.o_notification_content').append(this.$progress);
     },
 
     //--------------------------------------------------------------------------
@@ -84,32 +54,21 @@ export const UploadProgressToast = Widget.extend({
      */
      close(delay = 0) {
         window.setTimeout(() => {
-            if (!this.hasError || delay === 0) {
-                this.el.querySelector('.fade').classList.remove('show');
-                window.setTimeout(() => {
-                    if (this.destroyOnClose) {
-                        this.destroy();
-                    } else {
-                        this.el.classList.add('d-none');
-                    }
-                }, 150);
-            }
+            this.el.querySelector('.fade').classList.remove('show');
+            window.setTimeout(() => {
+                this.destroy();
+            }, 150);
         }, delay);
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * Calls a RPC and shows its progress status.
      *
-     * @private
      * @param {Object} params regular `_rpc()` parameters
-     * @param {jQuery} $progressBar the element holding the progress bar
-     * @returns {Promise} resolved when the RPC is complete
+     * @param {integer} index file index to retrieve its related progress bar
+     * @returns {Promise}
      */
-    async _rpcShowProgress(params, $progressBar) {
+    async rpcShowProgress(params, index) {
+        let $progressBar = this.$el.find(`.js_progressbar_${index}`);
         try {
             const xhr = new XMLHttpRequest();
             xhr.upload.addEventListener('progress', ev => {
@@ -122,7 +81,7 @@ export const UploadProgressToast = Widget.extend({
                 // Don't show yet success as backend code only starts now
                 $progressBar.find('.progress-bar').css({width: '100%'}).text('100%');
             });
-            const attachment = await this._rpc(params, { xhr });
+            const attachment = await this._rpc(params, {xhr});
             $progressBar.find('.fa-spinner, .progress').addClass('d-none');
             if (attachment.error) {
                 this.hasError = true;
