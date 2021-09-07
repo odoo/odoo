@@ -49,6 +49,9 @@ export const viewService = {
 
         env.bus.on("CLEAR-CACHES", null, () => {
             cache = {};
+            const processedArchs = registry.category("__processed_archs__");
+            processedArchs.content = {};
+            processedArchs.trigger("UPDATE");
         });
 
         /**
