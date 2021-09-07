@@ -88,30 +88,32 @@ function factory(dependencies) {
             this.messaging.userSetting.rtcConfigurationMenu.toggle();
         }
 
-        /**
-         * @param {boolean} force Force the fullScreen state.
-         */
-        async toggleFullScreen(force) {
-            if (!this.exists()) {
-                return;
-            }
+        async activateFullScreen() {
             const el = document.body;
-            const fullScreenElement = document.webkitFullscreenElement || document.fullscreenElement;
-            if (force !== undefined ? force : !fullScreenElement) {
-                try {
-                    if (el.requestFullscreen) {
-                        await el.requestFullscreen();
-                    } else if (el.mozRequestFullScreen) {
-                        await el.mozRequestFullScreen();
-                    } else if (el.webkitRequestFullscreen) {
-                        await el.webkitRequestFullscreen();
-                    }
+            try {
+                if (el.requestFullscreen) {
+                    await el.requestFullscreen();
+                } else if (el.mozRequestFullScreen) {
+                    await el.mozRequestFullScreen();
+                } else if (el.webkitRequestFullscreen) {
+                    await el.webkitRequestFullscreen();
+                }
+                if (this.exists()) {
                     this.update({ isFullScreen: true });
-                } catch (e) {
+                }
+            } catch (e) {
+                if (this.exists()) {
                     this.update({ isFullScreen: false });
                 }
-                return;
+                this.env.services.notification.notify({
+                    message: this.env._t("The FullScreen mode was denied by the browser"),
+                    type: 'warning',
+                });
             }
+        }
+
+        async deactivateFullScreen() {
+            const fullScreenElement = document.webkitFullscreenElement || document.fullscreenElement;
             if (fullScreenElement) {
                 if (document.exitFullscreen) {
                     await document.exitFullscreen();
@@ -120,6 +122,8 @@ function factory(dependencies) {
                 } else if (document.webkitCancelFullScreen) {
                     await document.webkitCancelFullScreen();
                 }
+            }
+            if (this.exists()) {
                 this.update({ isFullScreen: false });
             }
         }
@@ -271,7 +275,7 @@ function factory(dependencies) {
          * @private
          */
         _onChangeMailRtcChannel() {
-            this.toggleFullScreen(false);
+            this.deactivateFullScreen();
             this.update({ filterVideoGrid: false });
         }
 
