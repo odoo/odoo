@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import { registry } from '@web/core/registry';
 import { useBus, useEffect, useService } from '@web/core/utils/hooks';
 import { ActionContainer } from '@web/webclient/actions/action_container';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
-import { DebugMenu } from "@web/core/debug/debug_menu";
 import { ErrorHandler, NotUpdatable } from "@web/core/utils/components";
 import { session } from '@web/session';
 
@@ -18,15 +16,6 @@ export class ProjectSharingWebClient extends Component {
         this.user = useService("user");
         useService("legacy_service_provider");
         useOwnDebugContext({ categories: ["default"] });
-        if (this.env.debug) {
-            registry.category("systray").add(
-                "web.debug_mode_menu",
-                {
-                    Component: DebugMenu,
-                },
-                { sequence: 100 }
-            );
-        }
         useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", (mode) => {
             if (mode !== "new") {
                 this.el.classList.toggle("o_fullscreen", mode === "fullscreen");
