@@ -127,10 +127,6 @@ var FileWidget = SearchableMediaWidget.extend({
         'click .o_existing_attachment_remove': '_onRemoveClick',
         'click .o_load_more': '_onLoadMoreClick',
     }),
-    custom_events: Object.assign({}, SearchableMediaWidget.prototype.events || {}, {
-        'file_complete': '_onAttachmentUploaded',
-        'upload_complete': '_onUploadCompleted',
-    }),
     existingAttachmentsTemplate: undefined,
 
     IMAGE_MIMETYPES: ['image/jpg', 'image/jpeg', 'image/jpe', 'image/png', 'image/svg+xml', 'image/gif'],
@@ -205,7 +201,6 @@ var FileWidget = SearchableMediaWidget.extend({
         if (this.uploader) {
             // Prevent uploader from being destroyed with call to super so it can linger
             this.uploader.setParent(null);
-            this.uploader.destroyOnClose = true;
             this.uploader.close(2000);
         }
         this._super(...arguments);
@@ -580,18 +575,49 @@ var FileWidget = SearchableMediaWidget.extend({
      * @returns {Promise}
      */
     async _addData() {
-        const files = this.$fileInput[0].files;
+        let files = this.$fileInput[0].files;
         if (!files.length) {
             // Case if the input is emptied, return resolved promise
             return;
         }
-        this.uploader = new UploadProgressToast(this, {
-            files: files,
-            resModel: this.options.res_model,
-            resId: this.options.res_id,
-            isImage: this.widgetType === 'image',
+
+        const uploadMutex = new concurrency.Mutex();
+
+        // Upload the smallest file first to block the user the least possible.
+        files = _.sortBy(files, 'size');
+        await this._setUpProgressToast(files);
+        _.each(files, (file, index) => {
+            // Upload one file at a time: no need to parallel as upload is
+            // limited by bandwidth.
+            uploadMutex.exec(async () => {
+                const dataURL = await utils.getDataURLFromFile(file);
+                const attachment = await this.uploader.rpcShowProgress({
+                    route: '/web_editor/attachment/add_data',
+                    params: {
+                        'name': file.name,
+                        'data': dataURL.split(',')[1],
+                        'res_id': this.options.res_id,
+                        'res_model': this.options.res_model,
+                        'is_image': this.widgetType === 'image',
+                        'width': 0,
+                        'quality': 0,
+                    }
+                }, index);
+                if (!attachment.error) {
+                    this._handleNewAttachment(attachment);
+                }
+            });
         });
-        this.uploader.appendTo(document.body);
+
+        return uploadMutex.getUnlockedDef().then(() => {
+            if (!this.uploader.hasError) {
+                this.uploader.close(3000);
+            }
+            if (!this.options.multiImages && !this.noSave) {
+                this.trigger_up('save_request');
+            }
+            this.noSave = false;
+        });
     },
     /**
      * @private
@@ -695,22 +721,20 @@ var FileWidget = SearchableMediaWidget.extend({
         this.numberOfAttachmentsToDisplay = this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY;
         this._super.apply(this, arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
+     * Sets up a progress bar for every file being uploaded in a toast.
+     *
      * @private
+     * @param {Object[]} files
      */
-    _onAttachmentUploaded({ data: attachment }) {
-        if (!attachment.error) {
-            this._handleNewAttachment(attachment);
-        }
-    },
-    /**
-     * @private
-     */
-    _onUploadCompleted() {
-        if (!this.options.multiImages && !this.noSave) {
-            this.trigger_up('save_request');
-        }
-        this.noSave = false;
+    _setUpProgressToast: async function (files) {
+        this.uploader = new UploadProgressToast(this, files);
+        await this.uploader.appendTo(document.body);
     },
 });
 

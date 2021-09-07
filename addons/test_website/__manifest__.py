@@ -13,6 +13,7 @@ and we don't want to reload the website module every time, including it's possib
 dependencies. Neither we want to add in website module some routes, views and
 models which only purpose is to run tests.""",
     'depends': [
+        'web_unsplash',
         'website',
     ],
     'data': [
