@@ -53,10 +53,10 @@ define("ace/mode/qweb_highlight_rules", ["require", "exports", "module", "ace/li
 
                 attributes_groups: [{
                     token: ["entity.other.attribute-name.xml.qweb", "keyword.operator.attribute-equals.xml", "text", "string.attribute-value.xml.start", "string.attribute-value.xml", "string.attribute-value.xml.end"],
-                    regex: '(groups)(=)(\\s*)(")([\\s\\na-zA-Z0-9,_-]*)(")',
+                    regex: '(groups)(=)(\\s*)(")([\\s\\na-zA-Z0-9.,_-]*)(")',
                 }, {
                     token: ["entity.other.attribute-name.xml.qweb", "keyword.operator.attribute-equals.xml", "text", "string.attribute-value.xml.start", "string.attribute-value.xml", "string.attribute-value.xml.end"],
-                    regex: "(groups)(=)(\\s*)(')((?:[\\s\\na-zA-Z0-9,_-]*)*)(')",
+                    regex: "(groups)(=)(\\s*)(')((?:[\\s\\na-zA-Z0-9.,_-]*)*)(')",
                 }],
 
                 attributes_sample: [{
