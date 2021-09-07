@@ -227,12 +227,8 @@ export class OdooEditor extends EventTarget {
         this.editable.before(this._collabSelectionsContainer);
 
         this.idSet(editable);
-        this.historyReset();
         this._historyStepsActive = true;
-        const firstStep = this._historyGetSnapshotStep();
-        this._firstStepId = firstStep.id;
-        this._historySnapshots = [{ step: firstStep }];
-        this._historySteps.push(firstStep);
+        this.historyReset();
 
         this._createCommandBar();
 
@@ -562,19 +558,11 @@ export class OdooEditor extends EventTarget {
     // -------------------------------------------------------------------------
 
     historyReset() {
-        this._historySteps = [];
-        this._currentStep = {
-            selection: {
-                anchorNodeOid: undefined,
-                anchorOffset: undefined,
-                focusNodeOid: undefined,
-                focusOffset: undefined,
-            },
-            mutations: [],
-            id: undefined,
-            clientId: undefined,
-        };
-        this._historyStepsStates = new Map();
+        this._historyClean();
+        const firstStep = this._historyGetSnapshotStep();
+        this._firstStepId = firstStep.id;
+        this._historySnapshots = [{ step: firstStep }];
+        this._historySteps.push(firstStep);
     }
     historyGetSnapshotSteps() {
         // If the current snapshot has no time, it means that there is the no
@@ -607,7 +595,7 @@ export class OdooEditor extends EventTarget {
         for (const node of [...this.editable.childNodes]) {
             node.remove();
         }
-        this.historyReset();
+        this._historyClean();
         for (const step of steps) {
             this.historyApply(step.mutations);
         }
@@ -886,6 +874,21 @@ export class OdooEditor extends EventTarget {
     }
     historyUnpauseSteps() {
         this._historyStepsActive = true;
+    }
+    _historyClean() {
+        this._historySteps = [];
+        this._currentStep = {
+            selection: {
+                anchorNodeOid: undefined,
+                anchorOffset: undefined,
+                focusNodeOid: undefined,
+                focusOffset: undefined,
+            },
+            mutations: [],
+            id: undefined,
+            clientId: undefined,
+        };
+        this._historyStepsStates = new Map();
     }
     _historyGetSnapshotStep() {
         return {
