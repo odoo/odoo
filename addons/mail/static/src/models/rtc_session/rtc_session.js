@@ -104,19 +104,31 @@ function factory(dependencies) {
          * @param {boolean} param0.isMuted
          * @param {boolean} param0.isTalking
          */
-        setAudio({ audioStream, isMuted, isTalking }) {
+        async setAudio({ audioStream, isMuted, isTalking }) {
             this._removeAudio();
             const audioElement = this.audioElement || new window.Audio();
             audioElement.srcObject = audioStream;
             audioElement.volume = this.partner && this.partner.volumeSetting ? this.partner.volumeSetting.volume : this.volume;
             audioElement.muted = this.messaging.mailRtc.currentRtcSession.isDeaf;
-            audioElement.play();
+            // Using both autoplay and play() as safari may prevent play() outside of user interactions
+            // while some browsers may not support or block autoplay.
+            audioElement.autoplay = true;
             this.update({
                 audioElement,
                 audioStream,
                 isMuted,
                 isTalking,
             });
+            try {
+                await audioElement.play();
+            } catch (error)  {
+                if (typeof error === 'object' && error.name === 'NotAllowedError') {
+                    // Ignored as some browsers may reject play() calls that do not
+                    // originate from a user input.
+                    return;
+                }
+                throw error;
+            }
         }
 
         /**

@@ -60,11 +60,22 @@ export class RtcVideo extends Component {
     //--------------------------------------------------------------------------
 
     /**
+     * Plays the video as some browsers may not support or block autoplay.
+     *
      * @private
      * @param {Event} ev
      */
     async _onVideoLoadedMetaData(ev) {
-        await ev.target.play();
+        try {
+            await ev.target.play();
+        } catch (error)  {
+            if (typeof error === 'object' && error.name === 'NotAllowedError') {
+                // Ignored as some browsers may reject play() calls that do not
+                // originate from a user input.
+                return;
+            }
+            throw error;
+        }
     }
 }
 
