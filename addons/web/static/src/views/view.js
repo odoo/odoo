@@ -201,15 +201,12 @@ export class View extends Component {
             rootAttrs[attrName] = rootNode.getAttribute(attrName);
         }
 
-        //////////////////////////////////////////////////////////////////
-        /** @todo take care of banner_route rootAttribute*/
-        //////////////////////////////////////////////////////////////////
-
         // determine ViewClass to instantiate (if not already done)
-
         if (rootAttrs.js_class) {
             ViewClass = viewRegistry.get(rootAttrs.js_class);
         }
+
+        const bannerRoute = rootAttrs.banner_route;
 
         // prepare the view props
         let viewProps = {
@@ -228,6 +225,7 @@ export class View extends Component {
             fields,
             resModel,
             useSampleModel: false,
+            bannerRoute,
         };
 
         if ("useSampleModel" in this.props) {
