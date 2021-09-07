@@ -12,13 +12,10 @@ class TestMrpProductionBackorder(TestMrpCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
-
-    def setUp(self):
-        super().setUp()
-        warehouse_form = Form(self.env['stock.warehouse'])
+        warehouse_form = Form(cls.env['stock.warehouse'])
         warehouse_form.name = 'Test Warehouse'
         warehouse_form.code = 'TWH'
-        self.warehouse = warehouse_form.save()
+        cls.warehouse = warehouse_form.save()
 
     def test_no_tracking_1(self):
         """Create a MO for 4 product. Produce 4. The backorder button should

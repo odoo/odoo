@@ -137,10 +137,11 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
 
 @tagged('-at_install', 'post_install')
 class TestStockValuationLCFIFO(TestStockValuationLCCommon):
-    def setUp(self):
-        super(TestStockValuationLCFIFO, self).setUp()
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        cls.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
 
     def test_normal_1(self):
         move1 = self._make_in_move(self.product1, 10, unit_cost=10, create_picking=True)
@@ -253,10 +254,11 @@ class TestStockValuationLCFIFO(TestStockValuationLCCommon):
 
 @tagged('-at_install', 'post_install')
 class TestStockValuationLCAVCO(TestStockValuationLCCommon):
-    def setUp(self):
-        super(TestStockValuationLCAVCO, self).setUp()
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        cls.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
 
     def test_normal_1(self):
         move1 = self._make_in_move(self.product1, 10, unit_cost=10, create_picking=True)

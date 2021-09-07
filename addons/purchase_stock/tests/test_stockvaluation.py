@@ -13,48 +13,49 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class TestStockValuation(TransactionCase):
-    def setUp(self):
-        super(TestStockValuation, self).setUp()
-        self.supplier_location = self.env.ref('stock.stock_location_suppliers')
-        self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.partner_id = self.env['res.partner'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.partner_id = cls.env['res.partner'].create({
             'name': 'Wood Corner Partner',
-            'company_id': self.env.user.company_id.id,
+            'company_id': cls.env.user.company_id.id,
         })
-        self.product1 = self.env['product.product'].create({
+        cls.product1 = cls.env['product.product'].create({
             'name': 'Large Desk',
             'standard_price': 1299.0,
             'list_price': 1799.0,
             'type': 'product',
         })
-        Account = self.env['account.account']
-        self.stock_input_account = Account.create({
+        Account = cls.env['account.account']
+        cls.stock_input_account = Account.create({
             'name': 'Stock Input',
             'code': 'StockIn',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
             'reconcile': True,
         })
-        self.stock_output_account = Account.create({
+        cls.stock_output_account = Account.create({
             'name': 'Stock Output',
             'code': 'StockOut',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
             'reconcile': True,
         })
-        self.stock_valuation_account = Account.create({
+        cls.stock_valuation_account = Account.create({
             'name': 'Stock Valuation',
             'code': 'Stock Valuation',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
         })
-        self.stock_journal = self.env['account.journal'].create({
+        cls.stock_journal = cls.env['account.journal'].create({
             'name': 'Stock Journal',
             'code': 'STJTEST',
             'type': 'general',
         })
-        self.product1.categ_id.write({
-            'property_stock_account_input_categ_id': self.stock_input_account.id,
-            'property_stock_account_output_categ_id': self.stock_output_account.id,
-            'property_stock_valuation_account_id': self.stock_valuation_account.id,
-            'property_stock_journal': self.stock_journal.id,
+        cls.product1.categ_id.write({
+            'property_stock_account_input_categ_id': cls.stock_input_account.id,
+            'property_stock_account_output_categ_id': cls.stock_output_account.id,
+            'property_stock_valuation_account_id': cls.stock_valuation_account.id,
+            'property_stock_journal': cls.stock_journal.id,
         })
 
     def test_change_unit_cost_average_1(self):

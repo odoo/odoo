@@ -5,12 +5,9 @@ from odoo.tests import Form, HttpCase, tagged
 
 @tagged('-at_install', 'post_install')
 class TestStockReportTour(HttpCase):
-    def setUp(self):
-        super().setUp()
 
     def _get_report_url(self):
         return '/web#&model=product.template&action=stock.product_template_action_product'
-
 
     def test_stock_route_diagram_report(self):
         """ Open the route diagram report."""
