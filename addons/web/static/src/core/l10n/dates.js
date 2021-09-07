@@ -1,18 +1,14 @@
 /** @odoo-module **/
 
-import { memoize } from "../utils/functions";
-import { sprintf } from "../utils/strings";
-import { localization } from "./localization";
-import { _t } from "./translation";
+import { localization } from "@web/core/l10n/localization";
+import { _t } from "@web/core/l10n/translation";
+import { memoize } from "@web/core/utils/functions";
+import { sprintf } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
 
-/**
- * Change the method toJSON to return the formated value to send server side.
- */
-DateTime.prototype.toJSON = function () {
-    return this.toFormat("yyyy-MM-dd HH:mm:ss");
-};
+const SERVER_DATE_FORMAT = "yyyy-MM-dd";
+const SERVER_TIME_FORMAT = "HH:mm:ss";
 
 // -----------------------------------------------------------------------------
 // Helpers
@@ -146,7 +142,24 @@ export const strftimeToLuxonFormat = memoize(function strftimeToLuxonFormat(valu
 // -----------------------------------------------------------------------------
 
 /**
- * Format a DateTime object
+ * Formats a DateTime object to a date string
+ *
+ * `options.timezone` is defaulted to false on dates since we assume they
+ * shouldn't be affected by timezones like datetimes.
+ *
+ * @see formatDateTime
+ * @returns {string}
+ */
+export function formatDate(value, options = {}) {
+    return formatDateTime(value, {
+        timezone: false, // Timezone should never alter a 'date' value.
+        ...options,
+        format: options.format || localization.dateFormat,
+    });
+}
+
+/**
+ * Formats a DateTime object to a datetime string
  *
  * @param {DateTime | false} value
  * @param {Object} options
@@ -178,28 +191,21 @@ export function formatDateTime(value, options = {}) {
 // -----------------------------------------------------------------------------
 
 /**
- * Parses a string value to an UTC Luxon DateTime object.
+ * Parses a string value to a Luxon DateTime object.
  *
- * @param {string} value value to parse.
- *  - Value can take the form of a smart date:
- *    e.g. "+3w" for three weeks from now.
- *    (`options.format` and `options.timezone` are ignored in this case)
+ * `options.timezone` is defaulted to false on dates since we assume they
+ * shouldn't be affected by timezones like datetimes.
  *
- *  - If value cannot be parsed within the provided format,
- *    ISO8601 and SQL formats are then tried.
- *
- * @param {object} options
- * @param {string} [options.format]
- *  Provided format used to parse the input value.
- *  Default=the session localization format
- * @returns {DateTime|false} Luxon DateTime object (in the UTC timezone)
+ * @see parseDateTime (Note: since we're only interested by the date itself, the
+ *  returned value will always be set at the start of the day)
+ * @returns {DateTime | false} Luxon DateTime object
  */
 export function parseDate(value, options = {}) {
-    return parseDateTime(value, { dateOnly: true, format: options.format });
+    return parseDateTime(value, { timezone: false, ...options }).startOf("day");
 }
 
 /**
- * Parses a string value to an UTC Luxon DateTime object.
+ * Parses a string value to a Luxon DateTime object.
  *
  * @param {string} value value to parse.
  *  - Value can take the form of a smart date:
@@ -210,11 +216,6 @@ export function parseDate(value, options = {}) {
  *    ISO8601 and SQL formats are then tried.
  *
  * @param {object} options
- * @param {boolean} [options.dateOnly]
- *  The output date will represent the start of day (time is truncated).
- *
- *  Default=false.
- *
  * @param {string} [options.format]
  *  Provided format used to parse the input value.
  *
@@ -222,19 +223,18 @@ export function parseDate(value, options = {}) {
  *
  * @param {boolean} [options.timezone]
  *  - True = input value is considered being in localtime.
- *  - False = input value is considered being in utc time.
+ *  - False = input value is considered being in utc time, and the returned
+ *            value will have the UTC zone.
  *
  *  NB: ISO strings containing timezone information
  *      will have priority over this option.
  *
  *  Default=false.
  *
- * @returns {DateTime|false} Luxon DateTime object (in the UTC timezone)
+ * @returns {DateTime | false} Luxon DateTime object
  */
 export function parseDateTime(value, options = {}) {
     if (!value) {
-        // BOI: is {DateTime|false} really what we want ?
-        // I think we  should return a DateTime.invalid when falsy.
         return false;
     }
 
@@ -242,6 +242,7 @@ export function parseDateTime(value, options = {}) {
     const parseOpts = {
         setZone: true,
         zone: options.timezone ? "local" : "utc",
+        locale: options.locale,
     };
 
     let result = constrain(parseSmartDateInput(value));
@@ -279,6 +280,23 @@ export function parseDateTime(value, options = {}) {
         throw new Error(sprintf(_t("'%s' is not a correct date or datetime"), value));
     }
 
-    result = result.toUTC();
-    return options.dateOnly ? result.startOf("day") : result;
+    return options.timezone ? result : result.toUTC();
 }
+
+/**
+ * Returns a serialized string representing the given date.
+ * @param {DateTime} value
+ * @returns {string}
+ */
+export const serializeDate = (value) => {
+    return formatDate(value, { format: SERVER_DATE_FORMAT });
+};
+
+/**
+ * Returns a serialized string representing the given datetime.
+ * @param {DateTime} value
+ * @returns {string}
+ */
+export const serializeDateTime = (value) => {
+    return formatDateTime(value, { format: `${SERVER_DATE_FORMAT} ${SERVER_TIME_FORMAT}` });
+};

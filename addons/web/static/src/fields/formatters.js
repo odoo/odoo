@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { formatDateTime } from "@web/core/l10n/dates";
+import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { localization as l10n } from "@web/core/l10n/localization";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -312,6 +312,7 @@ export function formatPercentage(value, options = {}) {
 
 registry
     .category("formatters")
+    .add("date", formatDate)
     .add("datetime", formatDateTime)
     .add("float", formatFloat)
     .add("float_factor", formatFloatFactor)
