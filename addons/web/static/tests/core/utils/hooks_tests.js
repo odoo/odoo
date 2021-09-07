@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
-import { useBus, useEffect, useService } from "@web/core/utils/hooks";
+import { useBus, useEffect, useListener, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { getFixture, nextTick } from "../../helpers/utils";
+import { click, getFixture, nextTick } from "../../helpers/utils";
+import { registerCleanup } from "../../helpers/cleanup";
 
 const { Component, mount, tags, useState } = owl;
 const serviceRegistry = registry.category("services");
@@ -229,6 +230,93 @@ QUnit.module("utils", () => {
                 ]);
             }
         );
+
+        QUnit.module("useListener");
+
+        QUnit.test("useListener: simple usecase", async function (assert) {
+            class MyComponent extends Component {
+                setup() {
+                    useListener("click", () => assert.step("click"));
+                }
+            }
+            MyComponent.template = tags.xml`<button>Click Me</button>`;
+
+            const env = await makeTestEnv();
+            const target = getFixture();
+            const comp = await mount(MyComponent, { env, target });
+            registerCleanup(() => {
+                comp.destroy();
+            });
+
+            await click(comp.el);
+            assert.verifySteps(["click"]);
+        });
+
+        QUnit.test("useListener: event delegation", async function (assert) {
+            class MyComponent extends Component {
+                setup() {
+                    this.flag = true;
+                    useListener("click", "button", () => assert.step("click"));
+                }
+            }
+            MyComponent.template = tags.xml`
+                <div>
+                    <button t-if="flag">Click Here</button>
+                    <button t-else="">
+                        <span>or Here</span>
+                    </button>
+                </div>`;
+
+            const env = await makeTestEnv();
+            const target = getFixture();
+            const comp = await mount(MyComponent, { env, target });
+            registerCleanup(() => {
+                comp.destroy();
+            });
+
+            await click(comp.el);
+            assert.verifySteps([]);
+            await click(comp.el.querySelector("button"));
+            assert.verifySteps(["click"]);
+
+            comp.flag = false;
+            await comp.render();
+            await click(comp.el.querySelector("button span"));
+            assert.verifySteps(["click"]);
+        });
+
+        QUnit.test("useListener: event delegation with capture option", async function (assert) {
+            class MyComponent extends Component {
+                setup() {
+                    this.flag = false;
+                    useListener("click", "button", () => assert.step("click"), { capture: true });
+                }
+            }
+            MyComponent.template = tags.xml`
+                <div>
+                    <button t-if="flag">Click Here</button>
+                    <button t-else="">
+                        <span>or Here</span>
+                    </button>
+                </div>`;
+
+            const env = await makeTestEnv();
+            const target = getFixture();
+            const comp = await mount(MyComponent, { env, target });
+            registerCleanup(() => {
+                comp.destroy();
+            });
+
+            await click(comp.el);
+            assert.verifySteps([]);
+            await click(comp.el.querySelector("button"));
+            assert.verifySteps(["click"]);
+
+            comp.flag = false;
+            await comp.render();
+            await click(comp.el.querySelector("button span"));
+            assert.verifySteps(["click"]);
+        });
 
         QUnit.module("useService");
 
