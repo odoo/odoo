@@ -72,6 +72,9 @@ This module contains all the common features of Sales Management and eCommerce.
             'sale/static/tests/product_configurator_tests.js',
             'sale/static/tests/sales_team_dashboard_tests.js',
         ],
+        'web.assets_qweb': [
+            'sale/static/src/xml/**/*',
+        ],
     },
     'license': 'LGPL-3',
 }

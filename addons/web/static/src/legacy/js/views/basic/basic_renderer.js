@@ -737,6 +737,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
             // This is needed as modifiers are set after first render
             hasReadonlyModifier: modifiers.readonly,
             mode: modifiers.readonly ? 'readonly' : mode,
+            actualMode: mode,
             viewType: this.viewType,
         };
         let widget;

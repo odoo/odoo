@@ -19,6 +19,12 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
     events: _.extend({}, relationalFields.FieldMany2One.prototype.events, {
         'click .o_edit_product_configuration': '_onEditConfiguration'
     }),
+    template: 'ProductConfiguratorMany2One',
+
+    init(parent, name, record, options) {
+        this._super(...arguments);
+        this.actualMode = options.actualMode;
+    },
 
      /**
       * @override
@@ -35,6 +41,16 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
         } else {
             this.$('.o_external_button').hide();
             this.$('.o_edit_product_configuration').hide();
+        }
+    },
+    /**
+     * @private
+     */
+    _renderReadonly: function () {
+        this.$el.html(this._renderValueLines(true));
+        if (!this.noOpen && this.value && this.actualMode === 'edit') {
+            this.$el.attr('href', _.str.sprintf('#id=%s&model=%s', this.value.res_id, this.field.relation));
+            this.$el.addClass('o_form_uri');
         }
     },
 
