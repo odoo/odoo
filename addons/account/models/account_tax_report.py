@@ -140,8 +140,13 @@ class AccountTaxReportLine(models.Model):
     )
     is_carryover_persistent = fields.Boolean(
         string="Persistent",
-        help="If set, each new carryover amount is added to the previous ones. And the amounts are carried over from period to period.\n"
-             "If not set, each new carryover amount overrides the former one.",
+        help="Defines how this report line creates carry over lines when performing tax closing."
+             "If true, the amounts carried over will always be added on top of each other: "
+             "for example, a report line with a balance of 10 with an existing carryover of 50 "
+             "will add an additional 10 to it when doing the closing, making a total carryover of 60. "
+             "If false, the total carried over amount will be forced to the total of this report line: "
+             "a report line with a balance of 10 with an existing carryover of 50 will create a new "
+             "carryover line of -40, so that the total carryover becomes 10.",
         default=True,
     )
     is_carryover_used_in_balance = fields.Boolean(
