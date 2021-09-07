@@ -8,7 +8,7 @@
                 <t t-if='has_out_of_stock_message' t-out='out_of_stock_message'/>
                 <t t-elif="!allow_out_of_stock_order">Out of Stock</t>
             </div>
-            <div id="threshold_message" t-elif="show_availibility and free_qty lte available_threshold" t-attf-class="availability_message_#{product_template}">
+            <div id="threshold_message" t-elif="show_availability and free_qty lte available_threshold" t-attf-class="availability_message_#{product_template}">
                 Only <t t-esc='free_qty'/> <t t-esc="uom_name" /> left in stock.
             </div>
 
