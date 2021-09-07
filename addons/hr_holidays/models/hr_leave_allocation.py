@@ -282,13 +282,11 @@ class HolidaysAllocation(models.Model):
         for allocation in self:
             allocation.manager_id = allocation.employee_id and allocation.employee_id.parent_id
 
-    @api.depends('employee_id', 'accrual_plan_id')
+    @api.depends('accrual_plan_id')
     def _compute_holiday_status_id(self):
         default_holiday_status_id = None
         for holiday in self:
-            if holiday.employee_id.user_id != self.env.user and holiday._origin.employee_id != holiday.employee_id:
-                holiday.holiday_status_id = False
-            elif not holiday.holiday_status_id:
+            if not holiday.holiday_status_id:
                 if holiday.accrual_plan_id:
                     holiday.holiday_status_id = holiday.accrual_plan_id.time_off_type_id
                 else:
