@@ -20,9 +20,9 @@
         <field name="name">project.profitability.report.graph</field>
         <field name="model">project.profitability.report</field>
         <field name="arch" type="xml">
-            <graph string="Profitability Analysis" type="bar" sample="1" js_class="hr_timesheet_graphview">
-                <field name="project_id" type="row"/>
-                <field name="product_id" type="col"/>
+            <graph string="Profitability Analysis" sample="1" js_class="hr_timesheet_graphview">
+                <field name="project_id"/>
+                <field name="product_id"/>
                 <field name="amount_untaxed_to_invoice" type="measure"/>
                 <field name="amount_untaxed_invoiced" type="measure"/>
                 <field name="timesheet_cost" type="measure"/>

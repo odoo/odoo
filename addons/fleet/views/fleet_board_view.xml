@@ -37,9 +37,9 @@
         <field name="name">fleet.vehicle.cost.view.graph</field>
         <field name="model">fleet.vehicle.cost.report</field>
         <field name="arch" type="xml">
-            <graph string="Fleet Costs Analysis" type="bar" sample="1">
-                <field name="date_start" type="row" interval="month"/>
-                <field name="cost_type" type="row"/>
+            <graph string="Fleet Costs Analysis" sample="1">
+                <field name="date_start" interval="month"/>
+                <field name="cost_type"/>
                 <field name="cost" type="measure"/>
             </graph>
         </field>

@@ -473,7 +473,7 @@
             <field name="name">mrp.production.graph</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <graph string="Manufacturing Orders" type="bar" stacked="False" sample="1">
+                <graph string="Manufacturing Orders" stacked="0" sample="1">
                     <field name="date_planned_finished"/>
                     <field name="product_uom_qty" type="measure"/>
                     <field name="backorder_sequence" invisible="1"/>

@@ -114,9 +114,9 @@
         <field name="name">Mail Statistics Graph</field>
         <field name="model">mailing.trace</field>
         <field name="arch" type="xml">
-            <graph string="Mail Statistics" type="bar" stacked="True" sample="1">
-                <field name="write_date" type="row" interval="day"/>
-                <field name="trace_status" type="row"/>
+            <graph string="Mail Statistics" sample="1">
+                <field name="write_date" interval="day"/>
+                <field name="trace_status"/>
             </graph>
         </field>
     </record>
