@@ -3,6 +3,7 @@ odoo.define('web.control_panel_tests', function (require) {
 
 const AbstractAction = require('web.AbstractAction');
 const ControlPanelView = require('web.ControlPanelView');
+const config = require('web.config');
 const core = require('web.core');
 const testUtils = require('web.test_utils');
 
@@ -687,6 +688,48 @@ QUnit.module('Views', {
             "there should not be groupby dropdown");
 
         controlPanel.destroy();
+    });
+
+    QUnit.test('search field should be autofocused', async function (assert) {
+        assert.expect(2);
+
+        testUtils.mock.patch(config.device, {
+            isMobileDevice: false,
+        });
+
+        const controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: '<search></search>',
+            data: this.data,
+        });
+
+        assert.containsOnce(controlPanel, '.o_searchview_input', "has a search field");
+        assert.containsOnce(controlPanel, '.o_searchview_input:focus-within',
+            "has autofocused search field");
+
+        controlPanel.destroy();
+        testUtils.mock.unpatch(config.device);
+    });
+
+    QUnit.test("search field's autofocus should be disabled on mobile device", async function (assert) {
+        assert.expect(2);
+
+        testUtils.mock.patch(config.device, {
+            isMobileDevice: true,
+        });
+
+        const controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: '<search></search>',
+            data: this.data,
+        });
+
+        assert.containsOnce(controlPanel, '.o_searchview_input', "has a search field");
+        assert.containsNone(controlPanel, '.o_searchview_input:focus-within',
+            "hasn't autofocused search field");
+
+        controlPanel.destroy();
+        testUtils.mock.unpatch(config.device);
     });
 });
 });
