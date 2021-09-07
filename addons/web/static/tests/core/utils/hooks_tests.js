@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { useBus, useEffect, useListener, useService } from "@web/core/utils/hooks";
+import { useAutofocus, useBus, useEffect, useListener, useService } from "@web/core/utils/hooks";
+import { uiService } from "@web/core/ui/ui_service";
 import { registry } from "@web/core/registry";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { click, getFixture, nextTick } from "../../helpers/utils";
@@ -35,6 +36,29 @@ QUnit.module("utils", () => {
             env.bus.trigger("test-event");
             await nextTick();
             assert.verifySteps([]);
+
+            comp.destroy();
+        });
+
+        QUnit.module("useAutofocus");
+
+        QUnit.test("useAutofocus hook: simple usecase", async function (assert) {
+            assert.expect(1);
+
+            class MyComponent extends Component {
+                setup() {
+                    this.uiService = useService("ui");
+                    useAutofocus({ selector: 'input' });
+                }
+            }
+            MyComponent.template = tags.xml`<div><input /></div>`;
+
+            serviceRegistry.add("ui", uiService);
+            const env = await makeTestEnv();
+            const target = getFixture();
+            const comp = await mount(MyComponent, { env, target });
+            assert.strictEqual(document.activeElement, comp.el.querySelector('input'),
+                "active element should be input");
 
             comp.destroy();
         });

@@ -40,22 +40,22 @@ export function useAutofocus(params = {}) {
         return () => {};
     }
     const selector = params.selector || "[autofocus]";
-    let forceFocusCount = 0;
-    useEffect(
-        function autofocus(target) {
-            if (target) {
-                target.focus();
-                if (["INPUT", "TEXTAREA"].includes(target.tagName)) {
-                    const inputEl = target;
-                    inputEl.selectionStart = inputEl.selectionEnd = inputEl.value.length;
-                }
+    let target = null;
+    const autofocus = () => {
+        const prevTarget = target;
+        target = comp.el.querySelector(selector);
+        if (target && target !== prevTarget) {
+            target.focus();
+            if (["INPUT", "TEXTAREA"].includes(target.tagName)) {
+                const inputEl = target;
+                inputEl.selectionStart = inputEl.selectionEnd = inputEl.value.length;
             }
-        },
-        () => [comp.el.querySelector(selector), forceFocusCount]
-    );
+        }
+    };
+    useEffect(autofocus);
 
     return function focusOnUpdate() {
-        forceFocusCount++; // force the effect to rerun on next patch
+        target = null;
     };
 }
 
