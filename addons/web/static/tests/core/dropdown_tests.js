@@ -146,32 +146,6 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.containsNone(parent.el, "ul.o_dropdown_menu");
     });
 
-    QUnit.test("close on activeElement change", async (assert) => {
-        class Parent extends owl.Component {
-            setup() {
-                this.dc = mainComponentsRegistry.get("DialogContainer");
-            }
-        }
-        Parent.template = owl.tags.xml`
-            <div>
-                <Dropdown />
-                <t t-component="dc.Component" t-props="dc.props" />
-            </div>
-        `;
-        class CustomDialog extends Dialog {}
-        CustomDialog.title = "Dropdown Killer";
-        serviceRegistry.add("dialog", dialogService);
-        env = await makeTestEnv();
-        parent = await mount(Parent, { env, target });
-        await click(parent.el, "button.o_dropdown_toggler");
-        await nextTick(); // await that the dropdown sets its active element
-        assert.containsOnce(parent.el, "ul.o_dropdown_menu");
-        env.services.dialog.add(CustomDialog);
-        await nextTick(); // await that the dropdown starts to close
-        await nextTick(); // await that the dropdown is closed
-        assert.containsNone(parent.el, "ul.o_dropdown_menu");
-    });
-
     QUnit.test("close on item selection", async (assert) => {
         class Parent extends owl.Component {}
         Parent.template = owl.tags.xml`
@@ -254,46 +228,6 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.containsN(parent.el, "ul.o_dropdown_menu", 3);
         await click(parent.el, "div.outside");
         assert.containsNone(parent.el, "ul.o_dropdown_menu");
-    });
-
-    QUnit.test("multi-level dropdown: close on activeElement change", async (assert) => {
-        patchWithCleanup(Dropdown.prototype, {
-            close() {
-                assert.step("closed");
-                this._super();
-            },
-        });
-        class Parent extends owl.Component {
-            setup() {
-                this.dc = mainComponentsRegistry.get("DialogContainer");
-            }
-        }
-        Parent.template = owl.tags.xml`
-            <div>
-                <Dropdown>
-                    <Dropdown>
-                        <Dropdown/>
-                    </Dropdown>
-                </Dropdown>
-                <t t-component="dc.Component" t-props="dc.props" />
-            </div>
-        `;
-        class CustomDialog extends Dialog {}
-        CustomDialog.title = "Dropdown Killer";
-        serviceRegistry.add("dialog", dialogService);
-        env = await makeTestEnv();
-        parent = await mount(Parent, { env, target });
-        await click(parent.el, "button.o_dropdown_toggler:last-child");
-        await click(parent.el, "button.o_dropdown_toggler:last-child");
-        await click(parent.el, "button.o_dropdown_toggler:last-child");
-        assert.containsN(parent.el, "ul.o_dropdown_menu", 3);
-        await nextTick(); // await that the dropdowns set their active elements
-        env.services.dialog.add(CustomDialog);
-        assert.verifySteps([]);
-        await nextTick(); // await that the dropdowns start to close
-        await nextTick(); // await that the dropdowns are closed
-        assert.containsNone(parent.el, "ul.o_dropdown_menu");
-        assert.verifySteps(["closed", "closed", "closed"]);
     });
 
     QUnit.test("multi-level dropdown: close on item selection", async (assert) => {
