@@ -49,13 +49,14 @@ class Project(models.Model):
 
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
-        buttons.append({
-            'icon': 'credit-card',
-            'text': _('Purchase Orders'),
-            'number': self.purchase_orders_count,
-            'action_type': 'object',
-            'action': 'action_open_project_purchase_orders',
-            'show': self.user_has_groups('purchase.group_purchase_user') and self.purchase_orders_count > 0,
-            'sequence': 13,
-        })
+        if self.user_has_groups('purchase.group_purchase_user'):
+            buttons.append({
+                'icon': 'credit-card',
+                'text': _('Purchase Orders'),
+                'number': self.purchase_orders_count,
+                'action_type': 'object',
+                'action': 'action_open_project_purchase_orders',
+                'show': self.purchase_orders_count > 0,
+                'sequence': 13,
+            })
         return buttons
