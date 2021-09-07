@@ -3,7 +3,7 @@
 
 from ast import literal_eval
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.tools import float_is_zero, float_round
 
 
@@ -38,7 +38,9 @@ class MrpProduction(models.Model):
         if vals.get('name'):
             for production in self:
                 production.move_raw_ids.analytic_account_line_id.ref = production.display_name
-                production.workorder_ids.mo_analytic_account_line_id.ref = production.display_name
+                for workorder in production.workorder_ids:
+                    workorder.mo_analytic_account_line_id.ref = production.display_name
+                    workorder.mo_analytic_account_line_id.name = _("[WC] %s", workorder.display_name)
         return res
 
     def action_view_stock_valuation_layers(self):
