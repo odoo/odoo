@@ -21,15 +21,14 @@ Allows users to create custom dashboard.
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'board/static/src/scss/dashboard.scss',
-            'board/static/src/js/board_view.js',
-            'board/static/src/js/add_to_board_menu.js',
+            'board/static/src/**/*.scss',
+            'board/static/src/**/*.js',
         ],
         'web.qunit_suite_tests': [
             'board/static/tests/**/*',
         ],
         'web.assets_qweb': [
-            'board/static/src/xml/**/*',
+            'board/static/src/**/*.xml',
         ],
     },
     'license': 'LGPL-3',
