@@ -3,9 +3,9 @@
     <data noupdate="1">
 
         <record id="mail_template_data_portal_welcome" model="mail.template">
-            <field name="name">Portal: new user</field>
+            <field name="name">Portal: User Invite</field>
             <field name="model_id" ref="portal.model_portal_wizard_user"/>
-            <field name="subject">Your Odoo account at ${object.user_id.company_id.name}</field>
+            <field name="subject">Your account at ${object.user_id.company_id.name}</field>
             <field name="email_to">${object.user_id.email_formatted | safe}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
@@ -36,17 +36,17 @@
                 <tr><td valign="top" style="font-size: 13px;">
                     <div>
                         Dear ${object.user_id.name or ''},<br/> <br/>
-                        You have been given access to ${object.user_id.company_id.name}'s portal.<br/>
-                        Your login account data is:
-                        <ul>
-                            <li>Username: ${object.user_id.login or ''}</li>
-                            <li>Portal: <a href="${'portal_url' in ctx and ctx['portal_url'] or ''}">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>
-                            <li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>
-                        </ul>
-                        You can set or change your password via the following url:
-                        <ul>
-                            <li><a href="${object.user_id.signup_url}">${object.user_id.signup_url}</a></li>
-                        </ul>
+                        Welcome to ${object.user_id.company_id.name}'s Portal!<br/><br/>
+                        An account has been created for you with the following login: ${object.user_id.login}<br/><br/>
+                        Click on the button below to pick a password and activate your account.
+                        <div style="margin: 16px 0px 16px 0px; text-align: center;">
+                            <a href="${object.user_id.signup_url}" style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;">
+                                <strong>Activate Account</strong>
+                            </a>
+                            <a href="/web/login" style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px;">
+                                <strong>Log in</strong>
+                            </a>
+                        </div>
                         ${object.wizard_id.welcome_message or ''}
                     </div>
                 </td></tr>
