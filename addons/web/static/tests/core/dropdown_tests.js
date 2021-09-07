@@ -42,7 +42,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         parent = await mount(Parent, { env, target });
         assert.strictEqual(
             parent.el.outerHTML,
-            '<div class="o_dropdown"><button class="o_dropdown_toggler "><span></span></button></div>'
+            '<div class="o_dropdown"><button class="o_dropdown_toggler "><span class="d-flex align-items-center"></span></button></div>'
         );
         assert.containsOnce(parent.el, "button.o_dropdown_toggler");
         assert.containsNone(parent.el, "ul.o_dropdown_menu");
@@ -55,7 +55,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         parent = await mount(Parent, { env, target });
         assert.strictEqual(
             parent.el.outerHTML,
-            '<ged class="o_dropdown"><button class="o_dropdown_toggler "><span></span></button></ged>'
+            '<ged class="o_dropdown"><button class="o_dropdown_toggler "><span class="d-flex align-items-center"></span></button></ged>'
         );
         assert.containsOnce(parent.el, "button.o_dropdown_toggler");
         assert.containsNone(parent.el, "ul.o_dropdown_menu");
