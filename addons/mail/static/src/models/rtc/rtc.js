@@ -633,7 +633,7 @@ function factory(dependencies) {
                 for (const token of targetTokens) {
                     const dataChannel = this._dataChannels[token];
                     if (!dataChannel || dataChannel.readyState !== 'open') {
-                        return;
+                        continue;
                     }
                     dataChannel.send(content);
                 }
