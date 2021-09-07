@@ -125,9 +125,9 @@
        <field name="name">fleet.vehicle.log.contract.graph</field>
        <field name="model">fleet.vehicle.log.contract</field>
        <field name="arch" type="xml">
-            <graph string="Contract Costs Per Month" type="bar" stacked="True" sample="1">
-                <field name="date" type="row"/>
-                <field name="vehicle_id" type="row"/>
+            <graph string="Contract Costs Per Month" sample="1">
+                <field name="date"/>
+                <field name="vehicle_id"/>
                 <field name="amount" type="measure"/>
             </graph>
         </field>
@@ -332,9 +332,9 @@
        <field name="name">fleet.vehicle.log.services.graph</field>
        <field name="model">fleet.vehicle.log.services</field>
        <field name="arch" type="xml">
-            <graph string="Services Costs Per Month" stacked="True" sample="1">
-                <field name="date" type="row"/>
-                <field name="vehicle_id" type="row"/>
+            <graph string="Services Costs Per Month" sample="1">
+                <field name="date"/>
+                <field name="vehicle_id"/>
                 <field name="amount" type="measure"/>
             </graph>
         </field>

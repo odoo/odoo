@@ -34,7 +34,7 @@
         <field name="model">project.task.burndown.chart.report</field>
         <field name="arch" type="xml">
             <graph string="Burndown Chart" type="line" sample="1" disable_linking="1" js_class="burndown_chart">
-                <field name="date" string="Date" interval="month" type="row"/>
+                <field name="date" string="Date" interval="month"/>
                 <field name="stage_id"/>
                 <field name="nb_tasks" type="measure"/>
             </graph>
