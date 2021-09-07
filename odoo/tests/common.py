@@ -1744,7 +1744,7 @@ class Form(object):
 
     .. versionadded:: 12.0
     """
-    def __init__(self, recordp, view=None):
+    def __init__(self, recordp, view=None, check_required_fields=True):
         # necessary as we're overriding setattr
         assert isinstance(recordp, BaseModel)
         env = recordp.env
@@ -1778,6 +1778,7 @@ class Form(object):
             self._init_from_values(recordp)
         else:
             self._init_from_defaults(self._model)
+        object.__setattr__(self, '_check_required_fields', check_required_fields)
 
     def _o2m_set_edition_view(self, descr, node, level):
         default_view = next(
@@ -2079,7 +2080,7 @@ class Form(object):
             v = record_values[f]
             # note: maybe `invisible` should not skip `required` if model attribute
             if v is False and not (all_fields or f == parent_link or descr['type'] == 'boolean' or get_modifier('invisible') or get_modifier('column_invisible')):
-                if get_modifier('required'):
+                if self._check_required_fields and get_modifier('required'):
                     raise AssertionError("{} is a required field ({})".format(f, view['modifiers'][f]))
 
             # skip unmodified fields unless all_fields
@@ -2349,7 +2350,7 @@ class O2MForm(Form):
             return values
 
         for f in self._view['fields']:
-            if self._get_modifier(f, 'required') and not (self._get_modifier(f, 'column_invisible') or self._get_modifier(f, 'invisible')):
+            if self._proxy._parent._check_required_fields and self._get_modifier(f, 'required') and not (self._get_modifier(f, 'column_invisible') or self._get_modifier(f, 'invisible')):
                 assert self._values[f] is not False, "{} is a required field".format(f)
 
         return values
