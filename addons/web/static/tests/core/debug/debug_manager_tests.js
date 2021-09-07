@@ -15,6 +15,7 @@ import {
     fakeCommandService,
     makeFakeDialogService,
     makeFakeLocalizationService,
+    makeFakeUserService,
 } from "../../helpers/mock_services";
 import { click, getFixture, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "../../webclient/helpers";
@@ -357,6 +358,7 @@ QUnit.module("DebugMenu", (hooks) => {
             debug: true,
         });
 
+        registry.category("services").add("user", makeFakeUserService());
         registry.category("debug").category("view").add("editViewItem", editView);
 
         const serverData = getActionManagerServerData();

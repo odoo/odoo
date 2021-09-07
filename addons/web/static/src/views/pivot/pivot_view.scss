@@ -1,5 +1,4 @@
 .o_pivot {
-
     .o_pivot_cell_value {
         font-size: 1em;
         .o_comparison {
@@ -16,6 +15,13 @@
     }
 
     table {
+        th > .o_dropdown > .o_dropdown_toggler {
+            background: none!important;
+            border: none!important;
+            padding: 0!important;
+            // width: 100%!important;
+            // text-align: left!important;
+        }
         background-color: $o-view-background-color;
         width: auto;  // bootstrap override
 
@@ -108,8 +114,8 @@
         top: 10px;
     }
 
-    .o_pivot_field_menu .dropdown-item.disabled {
-        color: $text-muted;
-        cursor: default;
-    }
+    // .o_pivot_field_menu .dropdown-item.disabled {
+    //     color: $text-muted;
+    //     cursor: default;
+    // }
 }

@@ -6,6 +6,8 @@ var PivotView = require('web.PivotView');
 const PivotController = require("web.PivotController");
 var testUtils = require('web.test_utils');
 var testUtilsDom = require('web.test_utils_dom');
+const { registry } = require('@web/core/registry');
+const legacyViewRegistry = require('web.view_registry');
 
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 
@@ -31,6 +33,9 @@ let serverData;
 
 QUnit.module('Views', {
     beforeEach: function () {
+        registry.category("views").remove("pivot"); // remove new pivot from registry
+        legacyViewRegistry.add("pivot", PivotView); // add legacy pivot -> will be wrapped and added to new registry
+
         this.data = {
             partner: {
                 fields: {
@@ -117,7 +122,7 @@ QUnit.module('Views', {
         serverData = { models: this.data };
     },
 }, function () {
-    QUnit.module('PivotView');
+    QUnit.module('Legacy PivotView');
 
     QUnit.test('simple pivot rendering', async function (assert) {
         assert.expect(3);
@@ -2984,67 +2989,6 @@ QUnit.module('Views', {
         assert.isVisible(pivot.el.querySelector('.o_pivot_measures_list'));
 
         pivot.destroy();
-    });
-
-    QUnit.test('Navigation list view for a group and back with breadcrumbs', async function (assert) {
-        assert.expect(16);
-        // create a webClient to test the interactions with the search view
-
-        serverData.views = {
-            'partner,false,pivot': '<pivot>' +
-                    '<field name="customer" type="row"/>' +
-              '</pivot>',
-            'partner,false,search': '<search><filter name="bayou" string="Bayou" domain="[(\'foo\',\'=\', 12)]"/></search>',
-            'partner,false,list': '<tree><field name="foo"/></tree>',
-            'partner,false,form': '<form><field name="foo"/></form>',
-        };
-
-        let readGroupCount = 0;
-        const mockRPC = (route, args) => {
-            if (args.method === 'read_group') {
-                assert.step('read_group');
-                const domain = args.kwargs.domain;
-                if ([0,1].indexOf(readGroupCount) !== -1) {
-                    assert.deepEqual(domain, [], 'domain empty');
-                } else if ([2,3,4,5].indexOf(readGroupCount) !== -1) {
-                    assert.deepEqual(domain, [['foo', '=', 12]],
-                        'domain conserved when back with breadcrumbs');
-                }
-                readGroupCount++;
-            }
-            if (route === '/web/dataset/search_read') {
-                assert.step('search_read');
-                const domain = args.domain;
-                assert.deepEqual(domain, ['&', ['customer', '=', 1], ['foo', '=', 12]],
-                    'list domain is correct');
-            }
-        };
-
-        const webClient = await createWebClient({serverData, mockRPC});
-
-        await doAction(webClient, {
-            res_model: 'partner',
-            type: 'ir.actions.act_window',
-            views: [[false, 'pivot']],
-        });
-
-
-        await cpHelpers.toggleFilterMenu(webClient);
-        await cpHelpers.toggleMenuItem(webClient, 0);
-        await testUtils.nextTick();
-
-        await testUtilsDom.click($(webClient.el).find('.o_pivot_cell_value:nth(1)'));
-        await testUtils.nextTick();
-
-        assert.containsOnce(webClient, '.o_list_view');
-
-        await testUtilsDom.click($(webClient.el).find('.o_control_panel ol.breadcrumb li.breadcrumb-item').eq(0));
-
-        assert.verifySteps([
-            'read_group', 'read_group',
-            'read_group', 'read_group',
-            'search_read',
-            'read_group', 'read_group']);
     });
 
     QUnit.test('Cell values are kept when flippin a pivot view in comparison mode', async function (assert) {

@@ -246,6 +246,17 @@ export function makeFakeDialogService(addDialog) {
     };
 }
 
+export function makeFakeUserService(hasGroup = () => false) {
+    return {
+        ...userService,
+        start() {
+            const fakeUserService = userService.start(...arguments);
+            fakeUserService.hasGroup = hasGroup;
+            return fakeUserService;
+        },
+    };
+}
+
 export const mocks = {
     company: () => companyService,
     command: () => fakeCommandService,

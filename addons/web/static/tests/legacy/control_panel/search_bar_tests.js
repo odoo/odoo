@@ -2,9 +2,11 @@
 
 import testUtils from "web.test_utils";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
 import { Model } from "web.Model";
 import Registry from "web.Registry";
 import SearchBar from "web.SearchBar";
+import { registry } from "@web/core/registry";
 
 let serverData;
 
@@ -320,6 +322,8 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
                     <field name="foo" type="row"/>
                 </pivot>
             `;
+
+            registry.category("services").add("user", makeFakeUserService());
 
             let rpcs;
             const webClient = await createWebClient({

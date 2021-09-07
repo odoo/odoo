@@ -22,6 +22,7 @@ import { errorService } from "../../../src/core/errors/error_service";
 import { RPCError } from "@web/core/network/rpc_service";
 import { registerCleanup } from "../../helpers/cleanup";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
+import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
 
 let serverData;
 const serviceRegistry = registry.category("services");
@@ -2304,6 +2305,8 @@ QUnit.module("ActionManager", (hooks) => {
                 assert.step(args.method);
             }
         };
+
+        registry.category("services").add("user", makeFakeUserService());
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         assert.doesNotHaveClass(
