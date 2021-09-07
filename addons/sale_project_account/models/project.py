@@ -35,13 +35,14 @@ class Project(models.Model):
 
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
-        buttons.append({
-            'icon': 'pencil-square-o',
-            'text': _('Vendor Bills'),
-            'number': self.vendor_bill_count,
-            'action_type': 'object',
-            'action': 'action_open_project_vendor_bills',
-            'show': self.user_has_groups('account.group_account_readonly') and self.vendor_bill_count > 0,
-            'sequence': 14,
-        })
+        if self.user_has_groups('account.group_account_readonly'):
+            buttons.append({
+                'icon': 'pencil-square-o',
+                'text': _('Vendor Bills'),
+                'number': self.vendor_bill_count,
+                'action_type': 'object',
+                'action': 'action_open_project_vendor_bills',
+                'show': self.vendor_bill_count > 0,
+                'sequence': 14,
+            })
         return buttons

@@ -717,48 +717,51 @@ class Project(models.Model):
             }),
             'show': True,
             'sequence': 2,
-        },
-        {
-            'icon': 'smile-o',
-            'text': _('Customer Satisfaction'),
-            'number': '%s %%' % (self.rating_percentage_satisfaction),
-            'action_type': 'object',
-            'action': 'action_view_all_rating',
-            'show': self.user_has_groups('project.group_project_rating') and self.rating_active and self.rating_percentage_satisfaction > -1,
-            'sequence': 5,
-        },
-        {
-            'icon': 'area-chart',
-            'text': _('Burndown Chart'),
-            'action_type': 'action',
-            'action': 'project.action_project_task_burndown_chart_report',
-            'additional_context': json.dumps({
-                'active_id': self.id,
-            }),
-            'show': self.user_has_groups('project.group_project_manager'),
-            'sequence': 7,
-        },
-        {
-            'icon': 'usd',
-            'text': _('Gross Margin'),
-            'number': format_amount(self.env, self.analytic_account_balance, self.company_id.currency_id),
-            'action_type': 'object',
-            'action': 'action_view_analytic_account_entries',
-            'show': self.user_has_groups('analytic.group_analytic_accounting'),
-            'sequence': 18,
-        },
-        {
-            'icon': 'users',
-            'text': _('Collaborators'),
-            'number': self.collaborator_count,
-            'action_type': 'action',
-            'action': 'project.project_collaborator_action',
-            'additional_context': json.dumps({
-                'active_id': self.id,
-            }),
-            'show': self.user_has_groups('project.group_project_manager'),
-            'sequence': 19,
         }]
+        if self.user_has_groups('project.group_project_rating'):
+            buttons.append({
+                'icon': 'smile-o',
+                'text': _('Customer Satisfaction'),
+                'number': '%s %%' % (self.rating_percentage_satisfaction),
+                'action_type': 'object',
+                'action': 'action_view_all_rating',
+                'show': self.rating_active and self.rating_percentage_satisfaction > -1,
+                'sequence': 5,
+            })
+        if self.user_has_groups('project.group_project_manager'):
+            buttons.append({
+                'icon': 'area-chart',
+                'text': _('Burndown Chart'),
+                'action_type': 'action',
+                'action': 'project.action_project_task_burndown_chart_report',
+                'additional_context': json.dumps({
+                    'active_id': self.id,
+                }),
+                'show': True,
+                'sequence': 7,
+            })
+            buttons.append({
+                'icon': 'users',
+                'text': _('Collaborators'),
+                'number': self.collaborator_count,
+                'action_type': 'action',
+                'action': 'project.project_collaborator_action',
+                'additional_context': json.dumps({
+                    'active_id': self.id,
+                }),
+                'show': True,
+                'sequence': 23,
+            })
+        if self.user_has_groups('analytic.group_analytic_accounting'):
+            buttons.append({
+                'icon': 'usd',
+                'text': _('Gross Margin'),
+                'number': format_amount(self.env, self.analytic_account_balance, self.company_id.currency_id),
+                'action_type': 'object',
+                'action': 'action_view_analytic_account_entries',
+                'show': True,
+                'sequence': 18,
+            })
         return buttons
 
     def _get_tasks_analysis_counts(self, created=False, updated=False):

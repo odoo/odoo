@@ -204,15 +204,16 @@ class Project(models.Model):
 
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
-        buttons.append({
-            'icon': 'clock-o',
-            'text': _('Recorded'),
-            'number': '%s %s' % (self.total_timesheet_time, self.env.company.timesheet_encode_uom_id.name),
-            'action_type': 'object',
-            'action': 'action_show_timesheets_by_employee_invoice_type',
-            'show': self.user_has_groups('hr_timesheet.group_hr_timesheet_user') and self.allow_timesheets,
-            'sequence': 4,
-        })
+        if self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
+            buttons.append({
+                'icon': 'clock-o',
+                'text': _('Recorded'),
+                'number': '%s %s' % (self.total_timesheet_time, self.env.company.timesheet_encode_uom_id.name),
+                'action_type': 'object',
+                'action': 'action_show_timesheets_by_employee_invoice_type',
+                'show': self.allow_timesheets,
+                'sequence': 4,
+            })
         return buttons
 
 
