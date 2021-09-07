@@ -185,8 +185,8 @@
         <field name="name">Jobs - Recruitment Graph</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-              <graph string="Cases By Stage and Estimates" type="bar" stacked="True" sample="1">
-                <field name="stage_id" type="col"/>
+              <graph string="Cases By Stage and Estimates" sample="1">
+                <field name="stage_id"/>
             </graph>
         </field>
     </record>
@@ -1007,8 +1007,8 @@ action = act
          <field name="model">hr.applicant</field>
          <field name="arch" type="xml">
              <graph string="Recruitment Analysis" sample="1">
-                 <field name="stage_id" type="row"/>
-                 <field name="job_id" type="col"/>
+                 <field name="stage_id"/>
+                 <field name="job_id"/>
              </graph>
          </field>
     </record>
