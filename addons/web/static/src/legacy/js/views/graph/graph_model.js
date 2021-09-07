@@ -75,6 +75,10 @@ return AbstractModel.extend({
             orderBy: params.orderBy
         });
 
+        if (this.chart.measure === "__count") {
+            this.chart.measure = "__count__";
+        }
+
         this._computeDerivedParams();
 
         return this._loadGraph();
@@ -115,6 +119,10 @@ return AbstractModel.extend({
         }
         if ('timeRanges' in params) {
             this.chart.timeRanges = params.timeRanges;
+        }
+
+        if (this.chart.measure === "__count") {
+            this.chart.measure = "__count__";
         }
 
         this._computeDerivedParams();
