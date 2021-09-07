@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from dateutil.relativedelta import relativedelta
-from collections import defaultdict
 import json
 from odoo import models, fields, api, _, Command
 from odoo.tools import format_date
 from odoo.exceptions import UserError
-
+from odoo.tools.misc import formatLang
 
 class AccruedExpenseRevenue(models.TransientModel):
     _name = 'account.accrued.orders.wizard'
@@ -100,22 +99,27 @@ class AccruedExpenseRevenue(models.TransientModel):
             })
 
     def _compute_move_vals(self):
-        def _get_aml_vals(order, balance, amount_currency, account_id):
+        def _get_aml_vals(order, balance, amount_currency, account_id, label=""):
             if not is_purchase:
                 balance *= -1
                 amount_currency *= -1
             values = {
-                'name': _('Accrued for %s', order.name),
+                'name': label,
                 'debit': balance if balance > 0 else 0.0,
                 'credit': balance * -1 if balance < 0 else 0.0,
                 'account_id': account_id,
             }
-            if self.company_id.currency_id != order.currency_id:
+            if len(order) == 1 and self.company_id.currency_id != order.currency_id:
                 values.update({
                     'amount_currency': amount_currency,
                     'currency_id': order.currency_id.id,
                 })
             return values
+
+        def _ellipsis(string, size):
+            if len(string) > size:
+                return string[0:size - 3] + '...'
+            return string
 
         self.ensure_one()
         move_lines = []
@@ -127,10 +131,8 @@ class AccruedExpenseRevenue(models.TransientModel):
 
         orders_with_entries = []
         fnames = []
+        total_balance = 0.0
         for order in orders:
-            total_balance = 0.0
-            total_amount_currency = 0.0
-            inc_exp_accounts = defaultdict(lambda: defaultdict(float))
             if len(orders) == 1 and self.amount:
                 total_balance = self.amount
                 order_line = order.order_line[0]
@@ -138,7 +140,8 @@ class AccruedExpenseRevenue(models.TransientModel):
                     account = order_line.product_id.property_account_expense_id or order_line.product_id.categ_id.property_account_expense_categ_id
                 else:
                     account = order_line.product_id.property_account_income_id or order_line.product_id.categ_id.property_account_income_categ_id
-                inc_exp_accounts[account]['amount'] += self.amount
+                values = _get_aml_vals(order, self.amount, 0, account.id, label=_('Manual entry'))
+                move_lines.append(Command.create(values))
             else:
                 other_currency = self.company_id.currency_id != order.currency_id
                 rate = order.currency_id._get_rates(self.company_id, self.date).get(order.currency_id.id) if other_currency else 1.0
@@ -166,30 +169,23 @@ class AccruedExpenseRevenue(models.TransientModel):
                         amount = self.company_id.currency_id.round(order_line.qty_to_invoice * order_line.price_unit / rate)
                         amount_currency = order_line.currency_id.round(order_line.qty_to_invoice * order_line.price_unit)
                         fnames = ['qty_to_invoice', 'qty_received', 'qty_invoiced', 'invoice_lines']
+                        label = _('%s - %s; %s Billed, %s Received at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_received, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
                     else:
                         account = order_line.product_id.property_account_income_id or order_line.product_id.categ_id.property_account_income_categ_id
                         amount = self.company_id.currency_id.round(order_line.untaxed_amount_to_invoice / rate)
                         amount_currency = order_line.untaxed_amount_to_invoice
                         fnames = ['qty_to_invoice', 'untaxed_amount_to_invoice', 'qty_invoiced', 'qty_delivered', 'invoice_lines']
-                    inc_exp_accounts[account]['amount'] += amount
-                    inc_exp_accounts[account]['amount_currency'] += amount_currency
+                        label = _('%s - %s; %s Invoiced, %s Delivered at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_delivered, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
+                    values = _get_aml_vals(order, amount, amount_currency, account.id, label=label)
+                    move_lines.append(Command.create(values))
                     total_balance += amount
-                    total_amount_currency += amount_currency
                 # must invalidate cache or o can mess when _create_invoices().action_post() of original order after this
                 order.order_line.invalidate_cache(fnames=fnames)
 
-            if not self.company_id.currency_id.is_zero(total_balance):
-                orders_with_entries.append(order)
-                # create an aml for each different account that will be used for the products
-                for inc_exp_account, amounts in inc_exp_accounts.items():
-                    balance = amounts['amount']
-                    amount_currency = amounts.get('amount_currency', 0.0)
-                    values = _get_aml_vals(order, balance, amount_currency, inc_exp_account.id)
-                    move_lines.append(Command.create(values))
-
-                # globalized counterpart for the whole order
-                values = _get_aml_vals(order, -total_balance, -total_amount_currency, self.account_id.id)
-                move_lines.append(Command.create(values))
+        if not self.company_id.currency_id.is_zero(total_balance):
+            # globalized counterpart for the whole orders selection
+            values = _get_aml_vals(orders, -total_balance, 0.0, self.account_id.id, label=_('Accrued total'))
+            move_lines.append(Command.create(values))
 
         move_type = _('Expense') if is_purchase else _('Revenue')
         move_vals = {

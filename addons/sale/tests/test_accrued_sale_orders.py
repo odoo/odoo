@@ -102,9 +102,9 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
             # reverse move lines
             {'account_id': self.alt_inc_account.id, 'debit': 150 / 1.5, 'credit': 0, 'amount_currency': 150},
             {'account_id': self.account_revenue.id, 'debit': 250 / 1.5, 'credit': 0, 'amount_currency': 250},
-            {'account_id': self.account_expense.id, 'debit': 0, 'credit': 400 / 1.5, 'amount_currency': -400},
+            {'account_id': self.account_expense.id, 'debit': 0, 'credit': 400 / 1.5, 'amount_currency': 0.0},
             # move lines
             {'account_id': self.alt_inc_account.id, 'debit': 0, 'credit': 150 / 1.5, 'amount_currency': -150},
             {'account_id': self.account_revenue.id, 'debit': 0, 'credit': 250 / 1.5, 'amount_currency': -250},
-            {'account_id': self.account_expense.id, 'debit': 400 / 1.5, 'credit': 0, 'amount_currency': 400},
+            {'account_id': self.account_expense.id, 'debit': 400 / 1.5, 'credit': 0, 'amount_currency': 0.0},
         ])
