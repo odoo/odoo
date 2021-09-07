@@ -5,10 +5,12 @@ odoo.define('pos_coupon.tour.PosCouponTourMethods', function (require) {
     const { Do: ProductScreenDo } = require('point_of_sale.tour.ProductScreenTourMethods');
     const { Do: PaymentScreenDo } = require('point_of_sale.tour.PaymentScreenTourMethods');
     const { Do: ReceiptScreenDo } = require('point_of_sale.tour.ReceiptScreenTourMethods');
+    const { Do: ChromeDo } = require('point_of_sale.tour.ChromeTourMethods');
 
     const ProductScreen = { do: new ProductScreenDo() };
     const PaymentScreen = { do: new PaymentScreenDo() };
     const ReceiptScreen = { do: new ReceiptScreenDo() };
+    const Chrome = { do: new ChromeDo() };
 
     class Do {
         selectRewardLine(rewardName) {
@@ -92,7 +94,11 @@ odoo.define('pos_coupon.tour.PosCouponTourMethods', function (require) {
             ];
         }
         removeRewardLine(name) {
-            return [...this.do.selectRewardLine(name), ...ProductScreen.do.pressNumpad('Backspace Backspace')];
+            return [
+                ...this.do.selectRewardLine(name),
+                ...ProductScreen.do.pressNumpad('Backspace'),
+                ...Chrome.do.confirmPopup(),
+            ];
         }
     }
 
