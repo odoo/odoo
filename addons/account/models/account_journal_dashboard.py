@@ -368,7 +368,7 @@ class account_journal(models.Model):
                 company_id
             FROM account_move move
             WHERE journal_id = %(journal_id)s
-            AND invoice_date_due <= %(today)s
+            AND invoice_date_due < %(today)s
             AND state = 'posted'
             AND payment_state in ('not_paid', 'partial')
             AND move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
