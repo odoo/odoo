@@ -8,53 +8,54 @@ from odoo.tests.common import Form
 
 
 class TestReportStockQuantity(tests.TransactionCase):
-    def setUp(self):
-        super().setUp()
-        self.product1 = self.env['product.product'].create({
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product1 = cls.env['product.product'].create({
             'name': 'Mellohi',
             'default_code': 'C418',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_all').id,
             'tracking': 'lot',
             'barcode': 'scan_me'
         })
-        self.wh = self.env['stock.warehouse'].create({
+        cls.wh = cls.env['stock.warehouse'].create({
             'name': 'Base Warehouse',
             'code': 'TESTWH'
         })
-        self.categ_unit = self.env.ref('uom.product_uom_categ_unit')
-        self.uom_unit = self.env['uom.uom'].search([('category_id', '=', self.categ_unit.id), ('uom_type', '=', 'reference')], limit=1)
-        self.customer_location = self.env.ref('stock.stock_location_customers')
-        self.supplier_location = self.env.ref('stock.stock_location_suppliers')
+        cls.categ_unit = cls.env.ref('uom.product_uom_categ_unit')
+        cls.uom_unit = cls.env['uom.uom'].search([('category_id', '=', cls.categ_unit.id), ('uom_type', '=', 'reference')], limit=1)
+        cls.customer_location = cls.env.ref('stock.stock_location_customers')
+        cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
         # replenish
-        self.move1 = self.env['stock.move'].create({
+        cls.move1 = cls.env['stock.move'].create({
             'name': 'test_in_1',
-            'location_id': self.supplier_location.id,
-            'location_dest_id': self.wh.lot_stock_id.id,
-            'product_id': self.product1.id,
-            'product_uom': self.uom_unit.id,
+            'location_id': cls.supplier_location.id,
+            'location_dest_id': cls.wh.lot_stock_id.id,
+            'product_id': cls.product1.id,
+            'product_uom': cls.uom_unit.id,
             'product_uom_qty': 100.0,
             'state': 'done',
             'date': fields.Datetime.now(),
         })
-        self.quant1 = self.env['stock.quant'].create({
-            'product_id': self.product1.id,
-            'location_id': self.wh.lot_stock_id.id,
+        cls.quant1 = cls.env['stock.quant'].create({
+            'product_id': cls.product1.id,
+            'location_id': cls.wh.lot_stock_id.id,
             'quantity': 100.0,
         })
         # ship
-        self.move2 = self.env['stock.move'].create({
+        cls.move2 = cls.env['stock.move'].create({
             'name': 'test_out_1',
-            'location_id': self.wh.lot_stock_id.id,
-            'location_dest_id': self.customer_location.id,
-            'product_id': self.product1.id,
-            'product_uom': self.uom_unit.id,
+            'location_id': cls.wh.lot_stock_id.id,
+            'location_dest_id': cls.customer_location.id,
+            'product_id': cls.product1.id,
+            'product_uom': cls.uom_unit.id,
             'product_uom_qty': 120.0,
             'state': 'partially_available',
             'date': fields.Datetime.add(fields.Datetime.now(), days=3),
             'date_deadline': fields.Datetime.add(fields.Datetime.now(), days=3),
         })
-        self.env['base'].flush()
 
     def test_report_stock_quantity(self):
         from_date = fields.Date.to_string(fields.Date.add(fields.Date.today(), days=-1))

@@ -7,31 +7,32 @@ from odoo.exceptions import UserError
 
 class TestMrpMulticompany(common.TransactionCase):
 
-    def setUp(self):
-        super(TestMrpMulticompany, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        group_user = self.env.ref('base.group_user')
-        group_mrp_manager = self.env.ref('mrp.group_mrp_manager')
-        self.company_a = self.env['res.company'].create({'name': 'Company A'})
-        self.company_b = self.env['res.company'].create({'name': 'Company B'})
-        self.warehouse_a = self.env['stock.warehouse'].search([('company_id', '=', self.company_a.id)], limit=1)
-        self.warehouse_b = self.env['stock.warehouse'].search([('company_id', '=', self.company_b.id)], limit=1)
-        self.stock_location_a = self.warehouse_a.lot_stock_id
-        self.stock_location_b = self.warehouse_b.lot_stock_id
+        group_user = cls.env.ref('base.group_user')
+        group_mrp_manager = cls.env.ref('mrp.group_mrp_manager')
+        cls.company_a = cls.env['res.company'].create({'name': 'Company A'})
+        cls.company_b = cls.env['res.company'].create({'name': 'Company B'})
+        cls.warehouse_a = cls.env['stock.warehouse'].search([('company_id', '=', cls.company_a.id)], limit=1)
+        cls.warehouse_b = cls.env['stock.warehouse'].search([('company_id', '=', cls.company_b.id)], limit=1)
+        cls.stock_location_a = cls.warehouse_a.lot_stock_id
+        cls.stock_location_b = cls.warehouse_b.lot_stock_id
 
-        self.user_a = self.env['res.users'].create({
+        cls.user_a = cls.env['res.users'].create({
             'name': 'user company a with access to company b',
             'login': 'user a',
             'groups_id': [(6, 0, [group_user.id, group_mrp_manager.id])],
-            'company_id': self.company_a.id,
-            'company_ids': [(6, 0, [self.company_a.id, self.company_b.id])]
+            'company_id': cls.company_a.id,
+            'company_ids': [(6, 0, [cls.company_a.id, cls.company_b.id])]
         })
-        self.user_b = self.env['res.users'].create({
+        cls.user_b = cls.env['res.users'].create({
             'name': 'user company a with access to company b',
             'login': 'user b',
             'groups_id': [(6, 0, [group_user.id, group_mrp_manager.id])],
-            'company_id': self.company_b.id,
-            'company_ids': [(6, 0, [self.company_a.id, self.company_b.id])]
+            'company_id': cls.company_b.id,
+            'company_ids': [(6, 0, [cls.company_a.id, cls.company_b.id])]
         })
 
     def test_bom_1(self):

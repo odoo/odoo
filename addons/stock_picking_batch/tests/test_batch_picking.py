@@ -10,79 +10,80 @@ from odoo.tests.common import TransactionCase
 
 class TestBatchPicking(TransactionCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         """ Create a picking batch with two pickings from stock to customer """
-        super(TestBatchPicking, self).setUp()
-        self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.customer_location = self.env.ref('stock.stock_location_customers')
-        self.picking_type_out = self.env['ir.model.data']._xmlid_to_res_id('stock.picking_type_out')
-        self.env['stock.picking.type'].browse(self.picking_type_out).reservation_method = 'manual'
-        self.productA = self.env['product.product'].create({
+        super().setUpClass()
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.customer_location = cls.env.ref('stock.stock_location_customers')
+        cls.picking_type_out = cls.env['ir.model.data']._xmlid_to_res_id('stock.picking_type_out')
+        cls.env['stock.picking.type'].browse(cls.picking_type_out).reservation_method = 'manual'
+        cls.productA = cls.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_all').id,
         })
-        self.productB = self.env['product.product'].create({
+        cls.productB = cls.env['product.product'].create({
             'name': 'Product B',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_all').id,
         })
 
-        self.picking_client_1 = self.env['stock.picking'].create({
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-            'picking_type_id': self.picking_type_out,
-            'company_id': self.env.company.id,
+        cls.picking_client_1 = cls.env['stock.picking'].create({
+            'location_id': cls.stock_location.id,
+            'location_dest_id': cls.customer_location.id,
+            'picking_type_id': cls.picking_type_out,
+            'company_id': cls.env.company.id,
         })
 
-        self.env['stock.move'].create({
-            'name': self.productA.name,
-            'product_id': self.productA.id,
+        cls.env['stock.move'].create({
+            'name': cls.productA.name,
+            'product_id': cls.productA.id,
             'product_uom_qty': 10,
-            'product_uom': self.productA.uom_id.id,
-            'picking_id': self.picking_client_1.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
+            'product_uom': cls.productA.uom_id.id,
+            'picking_id': cls.picking_client_1.id,
+            'location_id': cls.stock_location.id,
+            'location_dest_id': cls.customer_location.id,
         })
 
-        self.picking_client_2 = self.env['stock.picking'].create({
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-            'picking_type_id': self.picking_type_out,
-            'company_id': self.env.company.id,
+        cls.picking_client_2 = cls.env['stock.picking'].create({
+            'location_id': cls.stock_location.id,
+            'location_dest_id': cls.customer_location.id,
+            'picking_type_id': cls.picking_type_out,
+            'company_id': cls.env.company.id,
         })
 
-        self.env['stock.move'].create({
-            'name': self.productB.name,
-            'product_id': self.productB.id,
+        cls.env['stock.move'].create({
+            'name': cls.productB.name,
+            'product_id': cls.productB.id,
             'product_uom_qty': 10,
-            'product_uom': self.productA.uom_id.id,
-            'picking_id': self.picking_client_2.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
+            'product_uom': cls.productA.uom_id.id,
+            'picking_id': cls.picking_client_2.id,
+            'location_id': cls.stock_location.id,
+            'location_dest_id': cls.customer_location.id,
         })
 
-        self.picking_client_3 = self.env['stock.picking'].create({
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-            'picking_type_id': self.picking_type_out,
-            'company_id': self.env.company.id,
+        cls.picking_client_3 = cls.env['stock.picking'].create({
+            'location_id': cls.stock_location.id,
+            'location_dest_id': cls.customer_location.id,
+            'picking_type_id': cls.picking_type_out,
+            'company_id': cls.env.company.id,
         })
 
-        self.env['stock.move'].create({
-            'name': self.productB.name,
-            'product_id': self.productB.id,
+        cls.env['stock.move'].create({
+            'name': cls.productB.name,
+            'product_id': cls.productB.id,
             'product_uom_qty': 10,
-            'product_uom': self.productA.uom_id.id,
-            'picking_id': self.picking_client_3.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
+            'product_uom': cls.productA.uom_id.id,
+            'picking_id': cls.picking_client_3.id,
+            'location_id': cls.stock_location.id,
+            'location_dest_id': cls.customer_location.id,
         })
 
-        self.batch = self.env['stock.picking.batch'].create({
+        cls.batch = cls.env['stock.picking.batch'].create({
             'name': 'Batch 1',
-            'company_id': self.env.company.id,
-            'picking_ids': [(4, self.picking_client_1.id), (4, self.picking_client_2.id)]
+            'company_id': cls.env.company.id,
+            'picking_ids': [(4, cls.picking_client_1.id), (4, cls.picking_client_2.id)]
         })
 
     def test_batch_scheduled_date(self):

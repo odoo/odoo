@@ -7,24 +7,25 @@ from odoo.tests import common
 
 class TestMrpByProduct(common.TransactionCase):
 
-    def setUp(self):
-        super(TestMrpByProduct, self).setUp()
-        self.MrpBom = self.env['mrp.bom']
-        self.warehouse = self.env.ref('stock.warehouse0')
-        route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
-        route_mto = self.warehouse.mto_pull_id.route_id.id
-        self.uom_unit_id = self.ref('uom.product_uom_unit')
+    @classmethod
+    def setUpClass(cls):
+        super(TestMrpByProduct, cls).setUpClass()
+        cls.MrpBom = cls.env['mrp.bom']
+        cls.warehouse = cls.env.ref('stock.warehouse0')
+        route_manufacture = cls.warehouse.manufacture_pull_id.route_id.id
+        route_mto = cls.warehouse.mto_pull_id.route_id.id
+        cls.uom_unit_id = cls.env.ref('uom.product_uom_unit').id
         def create_product(name, route_ids=[]):
-            return self.env['product.product'].create({
+            return cls.env['product.product'].create({
                 'name': name,
                 'type': 'product',
                 'route_ids': route_ids})
 
         # Create product A, B, C.
         # --------------------------
-        self.product_a = create_product('Product A', route_ids=[(6, 0, [route_manufacture, route_mto])])
-        self.product_b = create_product('Product B', route_ids=[(6, 0, [route_manufacture, route_mto])])
-        self.product_c_id = create_product('Product C', route_ids=[]).id
+        cls.product_a = create_product('Product A', route_ids=[(6, 0, [route_manufacture, route_mto])])
+        cls.product_b = create_product('Product B', route_ids=[(6, 0, [route_manufacture, route_mto])])
+        cls.product_c_id = create_product('Product C', route_ids=[]).id
 
     def test_00_mrp_byproduct(self):
         """ Test by product with production order."""
