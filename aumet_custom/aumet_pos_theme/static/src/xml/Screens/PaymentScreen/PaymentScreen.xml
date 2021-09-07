@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="PaymentScreen" t-inherit="point_of_sale.PaymentScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('top-content')]//div[hasclass('back')]" position="replace">
+             <div class="button back" t-on-click="showScreen('ProductScreen')">
+                 <span class="back_text">Back</span>
+             </div>
+        </xpath>
+        <xpath expr="//div[hasclass('top-content')]//div[hasclass('next')]" position="replace">
+            <div class="button next" t-att-class="{ highlight: currentOrder.is_paid() }"
+                 t-on-click="validateOrder(false)">
+                <span class="next_text">Validate</span>
+            </div>
+        </xpath>
+
+<!--        <xpath expr="//div[hasclass('right-content')]" position="replace">-->
+<!--            <div class="right-content">-->
+<!--                <div class="payment-buttons-container">-->
+<!--                    <section class="payment-numpad">-->
+<!--                        <PaymentScreenNumpad/>-->
+<!--                    </section>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </xpath>-->
+<!--        <xpath expr="//div[hasclass('payment-buttons')]" position="replace"/>-->
+
+<!--        <xpath expr="//div[hasclass('paymentmethods-container')]" position="after">-->
+<!--            <div class="payment-buttons">-->
+<!--                                <div class="customer-button">-->
+<!--                                    <div class="button" t-on-click="selectClient">-->
+<!--                                        <i class="fa fa-user" role="img" aria-label="Customer"-->
+<!--                                           title="Customer"/>-->
+<!--                                        <span class="js_customer_name">-->
+<!--                                            <t t-if="env.pos.get_client()">-->
+<!--                                                <t t-esc="env.pos.get_client().name"/>-->
+<!--                                            </t>-->
+<!--                                            <t t-if="!env.pos.get_client()">-->
+<!--                                                Customer-->
+<!--                                            </t>-->
+<!--                                        </span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                    <div class="payment-controls">-->
+<!--                                    <div t-if="env.pos.config.module_account" class="button js_invoice"-->
+<!--                                         t-att-class="{ highlight: currentOrder.is_to_invoice() }"-->
+<!--                                         t-on-click="toggleIsToInvoice">-->
+<!--                                        <i class="fa fa-file-text-o"/>-->
+<!--                                        Invoice-->
+<!--                                    </div>-->
+<!--                                        <div t-if="env.pos.config.tip_product_id" class="button js_tip"-->
+<!--                                             t-on-click="addTip">-->
+<!--                                        <i class="fa fa-heart"/>-->
+<!--                                            Tip-->
+<!--                                    </div>-->
+<!--                                        <div t-if="env.pos.config.iface_cashdrawer" class="button js_cashdrawer"-->
+<!--                                             t-on-click="openCashbox">-->
+<!--                                        <i class="fa fa-archive"/>-->
+<!--                                            Open Cashbox-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--        </xpath>-->
+    </t>
+</templates>

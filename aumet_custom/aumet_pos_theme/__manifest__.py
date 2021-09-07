@@ -31,7 +31,8 @@
         'static/src/xml/Screens/ProductScreen/ActionpadWidget.xml',
         'static/src/xml/Screens/ProductScreen/ProductsWidgetControlPanel.xml',
         'static/src/xml/ChromeWidgets/HeaderLockButton.xml',
-
+        'static/src/xml/Screens/PaymentScreen/PaymentScreen.xml',
+        'static/src/xml/Screens/PaymentScreen/PaymentScreenStatus.xml',
     ],
     "auto_install": False,
     "installable": True,

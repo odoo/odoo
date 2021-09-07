@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="PaymentScreenStatus" t-inherit="point_of_sale.PaymentScreenStatus" t-inherit-mode="extension" owl="1">
+    <xpath expr="//div[hasclass('payment-status-container')]" position="replace">
+        <div class="payment-status-container" >
+            <div>
+                <div class="payment-status-total-due">
+                    <span class="label">Total Due:</span>
+                    <span class="total">
+                        <t t-esc="totalDueText"/>
+                    </span>
+                </div>
+            </div>
+            <div>
+                <div class="payment-status-change">
+                    <span class="label">Change:</span>
+                    <span class="amount"
+                          t-att-class="{ highlight: currentOrder.get_change() > 0 }">
+                        <t t-esc="changeText"/>
+                    </span>
+                </div>
+                <div class="payment-status-remaining">
+                    <span class="label">Remaining:</span>
+                    <span class="amount"
+                          t-att-class="{ highlight: currentOrder.get_due() > 0 }">
+                        <t t-esc="remainingText"/>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</t>
+</templates>
