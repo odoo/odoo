@@ -2383,9 +2383,8 @@ QUnit.module('Views', {
         assert.containsNone(webClient, '.o_content .o_search_panel');
 
         await cpHelpers.switchView(webClient, 'pivot');
-        await legacyExtraNextTick();
-        assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_pivot');
-        assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_search_panel');
+        assert.containsOnce(webClient, '.o_content.o_component_with_search_panel .o_pivot');
+        assert.containsOnce(webClient, '.o_content.o_component_with_search_panel .o_search_panel');
     });
 
     QUnit.test('search panel state is shared between views', async function (assert) {

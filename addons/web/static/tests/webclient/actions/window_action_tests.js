@@ -2327,25 +2327,38 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test(
-        "doAction supports being passed controlletState (searchModel)",
-        async function (assert) {
-            assert.expect(1);
-            const mockRPC = async (route, args) => {
-                if (route === "/web/dataset/search_read") {
-                    assert.deepEqual(args.domain, [["id", "=", 99]]);
-                }
-            };
-
-            const webClient = await createWebClient({ serverData, mockRPC });
-            await doAction(webClient, 1, {
-                props: {
-                    searchModel:
-                        '{"ControlPanelModelExtension":{"filters":{"1":{"type":"field","description":"Foo","fieldName":"foo","fieldType":"char","groupId":1,"id":1},"2":{"description":"ID is \\"99\\"","domain":"[[\\"id\\",\\"=\\",99]]","type":"filter","groupId":3,"groupNumber":2,"id":2}},"query":[{"groupId":3,"filterId":2}]}}',
+    QUnit.test("doAction supports being passed globalState prop", async function (assert) {
+        assert.expect(1);
+        const searchModel = JSON.stringify({
+            nextGroupId: 2,
+            nextGroupNumber: 2,
+            nextId: 2,
+            searchItems: {
+                1: {
+                    description: `ID is "99"`,
+                    domain: `[("id","=",99)]`,
+                    type: "filter",
+                    groupId: 1,
+                    groupNumber: 1,
+                    id: 1,
                 },
-            });
-        }
-    );
+            },
+            query: [{ searchItemId: 1 }],
+            sections: [],
+        });
+        const mockRPC = async (route, args) => {
+            if (route === "/web/dataset/search_read") {
+                assert.deepEqual(args.domain, [["id", "=", 99]]);
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1, {
+            props: {
+                globalState: { searchModel },
+            },
+        });
+    });
 
     QUnit.test("window action in target new fails (onchange)", async (assert) => {
         assert.expect(3);

@@ -7,10 +7,12 @@ $o-searchpanel-p-tiny: $o-searchpanel-p-small*0.5;
 $o-searchpanel-category-default-color: $o-brand-primary;
 $o-searchpanel-filter-default-color: #D59244;
 
+.o_component_with_search_panel,
 .o_controller_with_searchpanel {
     display: flex;
     align-items: flex-start;
 
+    .o_renderer,
     .o_renderer_with_searchpanel {
         flex: 1 1 100%;
         overflow: auto; // make the renderer and search panel scroll individually

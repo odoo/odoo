@@ -17,7 +17,7 @@ odoo.define('web.filter_menu_tests', function (require) {
         },
     }, function () {
 
-        QUnit.module('FilterMenu');
+        QUnit.module('FilterMenu (legacy)');
 
         QUnit.test('simple rendering with no filter', async function (assert) {
             assert.expect(2);

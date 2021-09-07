@@ -47,6 +47,14 @@
         }
 
         //---------------------------------------------------------------------
+        // Getters
+        //---------------------------------------------------------------------
+
+        get sections() {
+            return this.model.get("sections", s => !s.empty);
+        }
+
+        //---------------------------------------------------------------------
         // Public
         //---------------------------------------------------------------------
 
@@ -204,6 +212,6 @@
         importedState: { type: String, optional: 1 },
         searchModel: Model,
     };
-    SearchPanel.template = "web.SearchPanel";
+    SearchPanel.template = "web.Legacy.SearchPanel";
 
     export default SearchPanel;

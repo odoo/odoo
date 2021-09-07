@@ -20,7 +20,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
         },
     }, function () {
 
-        QUnit.module('GroupByMenu');
+        QUnit.module('GroupByMenu (legacy)');
 
         QUnit.test('simple rendering with neither groupbys nor groupable fields', async function (assert) {
 
