@@ -483,6 +483,10 @@ class AccountMove(models.Model):
         self.ensure_one()
         return -1 if self.type in ('out_invoice', 'in_refund', 'out_receipt') else 1
 
+    def _preprocess_taxes_map(self, taxes_map):
+        """ Useful in case we want to pre-process taxes_map """
+        return taxes_map
+
     def _recompute_tax_lines(self, recompute_tax_base_amount=False):
         ''' Compute the dynamic tax lines of the journal entry.
 
@@ -642,6 +646,9 @@ class AccountMove(models.Model):
                 taxes_map_entry['grouping_dict'] = grouping_dict
             if not recompute_tax_base_amount:
                 line.tax_exigible = tax_exigible
+
+        # ==== Pre-process taxes_map ====
+        taxes_map = self._preprocess_taxes_map(taxes_map)
 
         # ==== Process taxes_map ====
         for taxes_map_entry in taxes_map.values():
