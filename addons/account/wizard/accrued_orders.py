@@ -172,8 +172,10 @@ class AccruedExpenseRevenue(models.TransientModel):
                     inc_exp_accounts[account]['amount_currency'] += amount_currency
                     total_balance += amount
                     total_amount_currency += amount_currency
-                # must invalidate cache or o can mess when _create_invoices().action_post() of original order after this
-                self.invalidate_cache()
+                # must invalidate original order.order_line.invoice_lines because "o" can mess
+                # with _create_invoices().action_post() of original order after this
+                if lines:
+                    order.order_line.invalidate_cache(fnames=['invoice_lines'])
 
             if not self.company_id.currency_id.is_zero(total_balance):
                 orders_with_entries.append(order)
