@@ -46,13 +46,14 @@ class Project(models.Model):
 
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
-        buttons.append({
-            'icon': 'money',
-            'text': _('Expenses'),
-            'number': self.expenses_count,
-            'action_type': 'object',
-            'action': 'action_open_project_expenses',
-            'show': self.user_has_groups('hr_expense.group_hr_expense_team_approver') and self.expenses_count > 0,
-            'sequence': 10,
-        })
+        if self.user_has_groups('hr_expense.group_hr_expense_team_approver'):
+            buttons.append({
+                'icon': 'money',
+                'text': _('Expenses'),
+                'number': self.expenses_count,
+                'action_type': 'object',
+                'action': 'action_open_project_expenses',
+                'show': self.expenses_count > 0,
+                'sequence': 10,
+            })
         return buttons

@@ -14,13 +14,14 @@ class Project(models.Model):
 
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
-        buttons.append({
-            'icon': 'pencil-square-o',
-            'text': _('Invoices'),
-            'number': self.invoice_count,
-            'action_type': 'object',
-            'action': 'action_open_project_invoices',
-            'show': self.user_has_groups('account.group_account_readonly') and bool(self.analytic_account_id) and self.invoice_count > 0,
-            'sequence': 11,
-        })
+        if self.user_has_groups('account.group_account_readonly'):
+            buttons.append({
+                'icon': 'pencil-square-o',
+                'text': _('Invoices'),
+                'number': self.invoice_count,
+                'action_type': 'object',
+                'action': 'action_open_project_invoices',
+                'show': bool(self.analytic_account_id) and self.invoice_count > 0,
+                'sequence': 11,
+            })
         return buttons

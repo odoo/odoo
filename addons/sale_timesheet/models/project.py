@@ -387,19 +387,20 @@ class Project(models.Model):
 
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
-        buttons.append({
-            'icon': 'clock-o',
-            'text': _('Billable Time'),
-            'number': '%s %%' % (self.billable_percentage),
-            'action_type': 'object',
-            'action': 'action_billable_time_button',
-            'additional_context': json.dumps({
-                'active_id': self.id,
-                'default_project_id': self.id
-            }),
-            'show': self.user_has_groups('hr_timesheet.group_hr_timesheet_approver') and self.allow_timesheets and bool(self.analytic_account_id),
-            'sequence': 9,
-        })
+        if self.user_has_groups('hr_timesheet.group_hr_timesheet_approver'):
+            buttons.append({
+                'icon': 'clock-o',
+                'text': _('Billable Time'),
+                'number': '%s %%' % (self.billable_percentage),
+                'action_type': 'object',
+                'action': 'action_billable_time_button',
+                'additional_context': json.dumps({
+                    'active_id': self.id,
+                    'default_project_id': self.id
+                }),
+                'show': self.allow_timesheets and bool(self.analytic_account_id),
+                'sequence': 9,
+            })
         return buttons
 
 class ProjectTask(models.Model):
