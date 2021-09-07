@@ -306,6 +306,7 @@ VIEW_TYPES = [
     ('kanban', 'Kanban'),
 ]
 
+
 class IrActionsActWindowView(models.Model):
     _name = 'ir.actions.act_window.view'
     _description = 'Action Window View'
@@ -336,9 +337,9 @@ class IrActionsActWindowclose(models.Model):
 
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {
-            # 'effect' is not a real field of ir.actions.act_window_close but is
-            # used to display the rainbowman
-            "effect"
+            # 'effect' and 'infos' are not real fields of `ir.actions.act_window_close` but they are
+            # used to display the rainbowman ('effect') and waited by the action_service ('infos').
+            "effect", "infos"
         }
 
 
