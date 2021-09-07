@@ -6,6 +6,7 @@
 # Ivan Marijanović <ivanm101@yahoo.com>, 2020
 # Martin Trigaux, 2020
 # Bole <bole@dajmi5.com>, 2021
+# Hrvoje Sić <hrvoje.sic@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-02-25 08:38+0000\n"
 "PO-Revision-Date: 2020-05-14 12:49+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2021\n"
+"Last-Translator: Hrvoje Sić <hrvoje.sic@gmail.com>, 2021\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,18 +40,19 @@ msgstr "Zaokruživanje gotovine"
 #. module: pos_cash_rounding
 #: model:ir.model.fields,field_description:pos_cash_rounding.field_pos_config__rounding_method
 msgid "Cash rounding"
-msgstr ""
+msgstr "Zaokruživanje gotovine"
 
 #. module: pos_cash_rounding
 #: code:addons/pos_cash_rounding/models/pos_config.py:19
 #, python-format
 msgid "Cash rounding strategy must be: 'Add a rounding line'"
 msgstr ""
+"Strategija zaokruživanja gotovine mora biti: 'Dodaj stavku zaokruživanja'"
 
 #. module: pos_cash_rounding
 #: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_config_view_form_inherit_cash_rounding
 msgid "Define the smallest coinage of the currency used to pay"
-msgstr ""
+msgstr "Definiraj najmanju kovanicu kojom možete platiti"
 
 #. module: pos_cash_rounding
 #: model_terms:ir.ui.view,arch_db:pos_cash_rounding.res_config_view_form_inherit_pos_cash_rounding
@@ -65,7 +67,7 @@ msgstr "Konto gubitka"
 #. module: pos_cash_rounding
 #: model:ir.model.fields,field_description:pos_cash_rounding.field_pos_config__only_round_cash_method
 msgid "Only apply rounding on cash"
-msgstr ""
+msgstr "Zaokruživanje primjeni samo na gotovinu"
 
 #. module: pos_cash_rounding
 #: model_terms:ir.ui.view,arch_db:pos_cash_rounding.res_config_view_form_inherit_pos_cash_rounding
@@ -121,7 +123,7 @@ msgstr ""
 #. module: pos_cash_rounding
 #: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_order_view_form_inherit_cash_rounding
 msgid "Total Paid (with rounding)"
-msgstr ""
+msgstr "Ukupno plaćeno (sa zaokruživanjem)"
 
 #. module: pos_cash_rounding
 #: code:addons/pos_cash_rounding/models/account_cash_rounding.py:20
@@ -130,3 +132,5 @@ msgid ""
 "You are not allowed to change the cash rounding configuration while a pos "
 "session using it is already opened."
 msgstr ""
+"Nije vam dopušteno mijenjati konfiguraciju zaokruživanja gotovine dok je pos"
+" sesija koja je koristi već otvorena."

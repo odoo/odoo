@@ -9,21 +9,21 @@
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # gebri <gebri@inmail.sk>, 2019
 # Jan Prokop, 2019
-# Rastislav Brenčič <rastislav.brencic99@gmail.com>, 2020
+# rastislav Brencic <rastislav.brencic99@gmail.com>, 2020
 # Lívia Dudejová <livia.dudejova@26house.com>, 2020
 # Filip Brenčič <brencicf5@gmail.com>, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2021
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-01 06:19+0000\n"
+"POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2019-07-01 06:20+0000\n"
-"Last-Translator: Damian Brencic <brencicdamian12313@gmail.com>, 2021\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1006,6 +1006,16 @@ msgid "Lead Generation Views"
 msgstr "Zobrazenie generovania Potenciálnych príležitostí"
 
 #. module: crm_reveal
+#: code:addons/crm_reveal/models/crm_reveal_rule.py:79
+#, python-format
+msgid ""
+"Lead Generation requires a GeoIP resolver which could not be found on your "
+"system. Please consult https://pypi.org/project/GeoIP/."
+msgstr ""
+"Generovanie potenciálnych príležitostí vyžaduje prekladač GeoIP, ktorý sa vo"
+" vašom systéme nenašiel. Navštívte stránku https://pypi.org/project/GeoIP/."
+
+#. module: crm_reveal
 #: model:ir.actions.server,name:crm_reveal.ir_cron_crm_reveal_lead_ir_actions_server
 #: model:ir.cron,cron_name:crm_reveal.ir_cron_crm_reveal_lead
 #: model:ir.cron,name:crm_reveal.ir_cron_crm_reveal_lead
@@ -1141,6 +1151,12 @@ msgstr ""
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_89
 msgid "Mining & Metals"
 msgstr ""
+
+#. module: crm_reveal
+#: code:addons/crm_reveal/models/crm_reveal_rule.py:82
+#, python-format
+msgid "Missing Library"
+msgstr "Chýbajúca knižnica"
 
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_236

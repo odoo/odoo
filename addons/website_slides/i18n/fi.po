@@ -18,6 +18,7 @@
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2019
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
+# Miika Nissi <miika.nissi@tawasta.fi>, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021\n"
+"Last-Translator: Miika Nissi <miika.nissi@tawasta.fi>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -310,6 +311,8 @@ msgid ""
 "<span class=\"fa fa-arrow-right\"/>\n"
 "                                    Create a Google Project and Get a Key"
 msgstr ""
+"<span class=\"fa fa-arrow-right\"/>\n"
+"                                    Luo Google -projekti ja hanki avain"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -551,6 +554,8 @@ msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
 "%s"
 msgstr ""
+"Tietoja ei voitu hakea URL -osoitteesta. Asiakirja tai käyttöoikeus ei ole käytettävissä:\n"
+"%s"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slide_channels
@@ -816,7 +821,7 @@ msgstr "Google Doc-avain"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Google Drive API Key"
-msgstr ""
+msgstr "Google Drive API avain"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_graph
@@ -889,13 +894,15 @@ msgid ""
 "Internal server error, please try again later or contact administrator.\n"
 "Here is the error message: %s"
 msgstr ""
+"Sisäinen palvelinvirhe, yritä myöhemmin uudestaan tai ota yhteyttä järjestelmän hallinnoijjaan.\n"
+"Tässä on virheilmoitus: %s"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:86
 #, python-format
 msgid "Invalid file type. Please select pdf or image file"
-msgstr ""
+msgstr "Väärä tiedostotyyppi. Valitse pdf- tai kuvatiedosto"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_is_follower
@@ -1021,6 +1028,7 @@ msgstr "Nimi"
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
 msgstr ""
+"Uusi ${object.slide_type} julkaistu kanavalla ${object.channel_id.name}"
 
 #. module: website_slides
 #. openerp-web
@@ -1206,13 +1214,13 @@ msgstr ""
 #: code:addons/website_slides/models/slides.py:562
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
-msgstr ""
+msgstr "Anna voimassa oleva Youtube- tai Google -dokumentin URL -osoite"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:256
 #, python-format
 msgid "Please enter valid youtube or google doc url"
-msgstr ""
+msgstr "Anna voimassa oleva Youtube- tai Google -dokumentin URL -osoite"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__slide_id
@@ -1507,6 +1515,9 @@ msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
 msgstr ""
+"Asiakirjatyyppi asetetaan automaattisesti asiakirjan URL -osoitteen ja "
+"ominaisuuksien perusteella (esim. Esityksen ja asiakirjan korkeus ja "
+"leveys)."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_url
@@ -1522,7 +1533,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__url
 msgid "Third Party Website URL"
-msgstr ""
+msgstr "Kolmannen osapuolen verkkosivuston URL -osoite"
 
 #. module: website_slides
 #: model_terms:slide.channel,access_error_msg:website_slides.channel_partial
@@ -1590,7 +1601,7 @@ msgstr ""
 #: code:addons/website_slides/models/slides.py:551
 #, python-format
 msgid "Unknown document"
-msgstr ""
+msgstr "Tuntematon asiakirja"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_grid_view
@@ -1612,7 +1623,7 @@ msgstr "Lukemattomien viestien laskuri"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__upload_group_ids
 msgid "Upload Groups"
-msgstr ""
+msgstr "Lataajaryhmät"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.home
@@ -1628,7 +1639,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 #, python-format
 msgid "Upload Presentation"
-msgstr ""
+msgstr "Lataa esitys"
 
 #. module: website_slides
 #. openerp-web
@@ -1747,7 +1758,7 @@ msgstr "Verkkosivun opengraph kuva"
 #: code:addons/website_slides/static/src/js/slides_upload.js:116
 #, python-format
 msgid "You can not upload password protected file."
-msgstr ""
+msgstr "Et voi ladata salasanalla suojattua tiedostoa."
 
 #. module: website_slides
 #. openerp-web

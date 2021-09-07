@@ -15,6 +15,7 @@
 # Ugur Yilmaz <ugurlu2001@hotmail.com>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
 # Ediz Duman <neps1192@gmail.com>, 2019
+# Murat Durmuş <muratd@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-08 13:50+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
+"Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +40,7 @@ msgstr "% indirim"
 #. module: sale_management
 #: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
 msgid "4 Person Desk"
-msgstr ""
+msgstr "4 Kişilik Çalışma Masası"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -114,6 +115,8 @@ msgid ""
 "Before archiving \"%s\" please select another default template in the "
 "settings."
 msgstr ""
+"\"%s\" arşivlemeden önce lütfen ayarlardan başka bir varsayılan şablon "
+"seçin."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_config_settings
@@ -138,12 +141,12 @@ msgstr "Fatura Oluştur"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid "Create standardized offers with default products"
-msgstr ""
+msgstr "Varsayılan ürünlerle standart teklifler oluşturun"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid "Create your quotation template"
-msgstr ""
+msgstr "Teklif şablonunuzu oluşturun"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_uid
@@ -181,6 +184,8 @@ msgid ""
 "Design your quotation templates using building blocks<br/>\n"
 "                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Warning: this option will install the Website app.</em>"
 msgstr ""
+"Teklif şablonlarınızı yapı taşlarını kullanarak tasarlayın<br/>\n"
+"                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Uyarı: Bu seçenek Web sitesi uygulamasını yükleyecektir.</em>"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -219,16 +224,20 @@ msgid ""
 "Forbidden product, unit price, quantity, and UoM on non-accountable sale "
 "quote line"
 msgstr ""
+"Sorumlu olmayan Satış Teklif satırında yasak ürün, birim fiyat, miktar ve "
+"UoM"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
 msgid "Gives the sequence order when displaying a list of optional products."
 msgstr ""
+"İsteğe bağlı ürünlerin bir listesini görüntülerken dizi sırasını verir."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr ""
+"Satış teklifi satırlarının bir listesini görüntülerken sıra sırasını verir."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__id
@@ -243,12 +252,12 @@ msgstr "ID"
 msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
-msgstr ""
+msgstr "İşaretlenmezse, şablonunu kaldırmadan gizlemenize izin verir"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
 msgid "Kpi All Sale Total Value"
-msgstr ""
+msgstr "Kpi Tüm Satılık Toplam Değer"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option____last_update
@@ -288,7 +297,7 @@ msgstr "Satırlar"
 #. module: sale_management
 #: sql_constraint:sale.order.template.line:0
 msgid "Missing required product and UoM on accountable sale quote line."
-msgstr ""
+msgstr "Sorumlu satış teklif satırında gerekli ürün ve UoM eksik."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -304,7 +313,7 @@ msgstr "Teklif geçerlilik tarihinin hesaplanması için gün sayısı"
 #. module: sale_management
 #: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
 msgid "Office Chair"
-msgstr ""
+msgstr "Ofis sandalyesi"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
@@ -387,7 +396,7 @@ msgstr "Teklif Şablonu Satırları"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr ""
+msgstr "Teklif Şablonu Seçeneği"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sale_order_template_id
@@ -425,6 +434,7 @@ msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
 msgstr ""
+"Siparişleri otomatik olarak onaylamak için müşteriye çevrimiçi imza isteyin."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
@@ -432,6 +442,8 @@ msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
 msgstr ""
+"Siparişleri otomatik olarak onaylamak için müşteriye çevrimiçi ödeme talep "
+"edin."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
@@ -456,7 +468,7 @@ msgstr "Satış Sipariş Satırı"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__order_id
 msgid "Sales Order Reference"
-msgstr ""
+msgstr "Müşteri Siparişi Referansı"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
@@ -534,6 +546,9 @@ msgid ""
 "                Send these quotes by email and let your customers sign online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
+"Birkaç dakika içinde özenilmiş, profesyonel teklifler oluşturmak için şablonları kullanın.\n"
+"                Bu teklifleri e-postayla gönderin ve müşterilerinizin çevrimiçi olarak imzalamasına izin verin.\n"
+"                Satışlarınızı artırmak ve güçlendirmek için çapraz satış ve indirimleri kullanın."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:198
@@ -548,6 +563,8 @@ msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"Satış teklifi satırının türünü değiştiremezsiniz. Bunun yerine, geçerli "
+"satırı silmeli ve uygun türde yeni bir satır oluşturmalısınız."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

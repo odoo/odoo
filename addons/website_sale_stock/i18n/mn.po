@@ -4,10 +4,10 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # baaska sh <sh.baaskash@gmail.com>, 2019
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2020
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:18+0000\n"
 "PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2020\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +34,7 @@ msgstr "<strong>Сануулга!</strong>"
 #: model:ir.model.fields,help:website_sale_stock.field_product_template__inventory_availability
 msgid "Adds an inventory availability status on the web product page."
 msgstr ""
+"Вебсайт дээрх барааны хуудсанд нөөцийн хүрэлцээний төлөв байдлыг харуулах."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -45,7 +46,7 @@ msgstr "Бэлэн байдал"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
 msgid "Availability Threshold"
-msgstr ""
+msgstr "Боломжит нөөцийн босго"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__cart_qty
@@ -61,7 +62,7 @@ msgstr "Тохируулга"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__custom_message
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__custom_message
 msgid "Custom Message"
-msgstr ""
+msgstr "Тусгай мэдэгдэл"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -74,6 +75,9 @@ msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
+"Нөөц харуулах гормын анхны утга нь Нөөц хадгалах төрөлтэй барааг шинээр "
+"үүсгэх үед сонгогдоно. Харин явцдаа нөөцийн байдлаас хамааран энэ утгыг "
+"сольж хэрэглэнэ."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -97,7 +101,7 @@ msgstr "Агуулах"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__inventory_availability
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__inventory_availability
 msgid "Inventory Availability"
-msgstr ""
+msgstr "Нөөцийн хүрэлцээт байдал"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -105,6 +109,7 @@ msgid ""
 "Manage the inventory of your products and display their availability status "
 "on the website."
 msgstr ""
+"Барааны нөөцийн хүрэлцээний төлөв байдлыг үнэлж вебсайт дээр харуулна."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
@@ -137,18 +142,22 @@ msgstr "Бараа материалаас үл хамааран зарна"
 #: selection:res.config.settings,inventory_availability:0
 msgid "Show inventory below a threshold and prevent sales if not enough stock"
 msgstr ""
+"Үлдэгдэл нь босго хэмжээнээс доошилсон үед боломжит нөөцийг харуулж үлдэгдэл"
+" хүрэлцэхгүй захиалга авахаас сэргийлнэ"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
 #: selection:res.config.settings,inventory_availability:0
 msgid "Show inventory on website and prevent sales if not enough stock"
 msgstr ""
+"Барааны бодит нөөцийг харуулж үлдэгдэл хүрэлцэхгүй захиалга бичигдэхээс "
+"сэргийлнэ"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
 #: selection:res.config.settings,inventory_availability:0
 msgid "Show product-specific notifications"
-msgstr ""
+msgstr "Барааны тусгай мэдэгдэл харуулах"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/sale_order.py:30
@@ -157,13 +166,15 @@ msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry"
 " for the inconvenience."
 msgstr ""
+"Зарим барааны нөөц хүрэлцэхгүй байгаа учир таны сагс дахь захиалгын тоо "
+"хэмжээ шинэчлэгдсэн. Ийм өөрчлөлт оруулсанд хүлцэл өчье."
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
 #, python-format
 msgid "Temporarily out of stock"
-msgstr ""
+msgstr "Нөөц дууссан"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -191,7 +202,7 @@ msgstr "Вэбсайт"
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website this picking belongs to."
-msgstr ""
+msgstr "Энэ бэлтгэх баримтын хамаарах вебсайт."
 
 #. module: website_sale_stock
 #. openerp-web
@@ -204,7 +215,7 @@ msgstr "Аль хэдийн нэмэгдсэн байна"
 #: code:addons/website_sale_stock/models/sale_order.py:27
 #, python-format
 msgid "You ask for %s products but only %s is available"
-msgstr ""
+msgstr "Та %s бараа хүссэн боловч ердөө %s боломжит нөөцтэй байна"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -219,11 +230,11 @@ msgstr "бүгд"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:14
 #, python-format
 msgid "available"
-msgstr ""
+msgstr "боломжит"
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
 #, python-format
 msgid "in your cart."
-msgstr ""
+msgstr "таны сагсанд."
