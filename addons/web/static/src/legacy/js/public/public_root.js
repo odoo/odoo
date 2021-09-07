@@ -34,7 +34,9 @@ function getLang() {
     return (html.getAttribute('lang') || 'en_US').replace('-', '_');
 }
 var lang = utils.get_cookie('frontend_lang') || getLang(); // FIXME the cookie value should maybe be in the ctx?
-var localeDef = ajax.loadJS('/web/webclient/locale/' + lang.replace('-', '_'));
+// momentjs don't have config for en_US, so avoid useless RPC
+var localeDef = lang !== 'en_US' ? ajax.loadJS('/web/webclient/locale/' + lang.replace('-', '_')) : Promise.resolve();
+
 
 /**
  * Element which is designed to be unique and that will be the top-most element
