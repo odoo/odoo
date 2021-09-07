@@ -9,7 +9,7 @@ odoo.define('web.groupby_menu_generator_tests', function (require) {
 
     QUnit.module('Components', {}, function () {
 
-        QUnit.module('CustomGroupByItem');
+        QUnit.module('CustomGroupByItem (legacy)');
 
         QUnit.test('click on add custom group toggle group selector', async function (assert) {
             assert.expect(6);

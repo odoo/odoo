@@ -203,16 +203,16 @@ function matchCondition(record, condition) {
             return fieldValue > value;
         case ">=":
             return fieldValue >= value;
-        case "in":
-            if (Array.isArray(fieldValue)) {
-                return fieldValue.some((fv) => value.includes(fv));
-            }
-            return value.includes(fieldValue);
-        case "not in":
-            if (Array.isArray(fieldValue)) {
-                return !fieldValue.some((fv) => value.includes(fv));
-            }
-            return !value.includes(fieldValue);
+        case "in": {
+            const val = Array.isArray(value) ? value : [value];
+            const fieldVal = Array.isArray(fieldValue) ? fieldValue : [fieldValue];
+            return fieldVal.some((fv) => val.includes(fv));
+        }
+        case "not in": {
+            const val = Array.isArray(value) ? value : [value];
+            const fieldVal = Array.isArray(fieldValue) ? fieldValue : [fieldValue];
+            return !fieldVal.some((fv) => val.includes(fv));
+        }
         case "like":
             if (fieldValue === false) {
                 return false;

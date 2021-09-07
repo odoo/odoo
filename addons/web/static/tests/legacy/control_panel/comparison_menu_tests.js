@@ -30,7 +30,7 @@ odoo.define('web.comparison_menu_tests', function (require) {
         },
     }, function () {
 
-        QUnit.module('ComparisonMenu');
+        QUnit.module('ComparisonMenu (legacy)');
 
         QUnit.test('simple rendering', async function (assert) {
             assert.expect(6);

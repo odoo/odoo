@@ -1,9 +1,13 @@
 /** @odoo-module **/
 
+import { click, makeDeferred } from "@web/../tests/helpers/utils";
+import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
+import { isItemSelected, toggleFilterMenu, toggleMenuItem } from "@web/../tests/search/helpers";
+import { legacyExtraNextTick, nextTick } from "../../helpers/utils";
 import { registry } from "@web/core/registry";
 import testUtils from "web.test_utils";
-import { legacyExtraNextTick, nextTick } from "../../helpers/utils";
-import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
+import { useSetupView } from "@web/views/helpers/view_hook";
 
 const { Component, tags } = owl;
 const actionRegistry = registry.category("actions");
@@ -616,5 +620,83 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         await legacyExtraNextTick();
         assert.containsOnce(webClient, ".o_form_view");
+    });
+
+    QUnit.test("local state, global state, and race conditions", async function (assert) {
+        serverData.views = {
+            "partner,false,toy": `<toy/>`,
+            "partner,false,list": `<list><field name="foo"/></list>`,
+            "partner,false,search": `
+                <search>
+                    <filter name="foo" string="Foo" domain="[]"/>
+                </search>
+            `,
+        };
+
+        let def = Promise.resolve();
+
+        let id = 1;
+        class ToyView extends Component {
+            setup() {
+                this.id = id++;
+                assert.step(JSON.stringify(this.props.state || "no state"));
+                useSetupView({
+                    exportLocalState: () => {
+                        return { fromId: this.id };
+                    },
+                });
+            }
+            async willStart() {
+                await def;
+            }
+        }
+        ToyView.components = { ControlPanel };
+        ToyView.display_name = "Toy";
+        ToyView.icon = "fab fa-android";
+        ToyView.multiRecord = true;
+        ToyView.searchMenuTypes = ["filter"];
+        ToyView.template = owl.tags.xml`
+            <div class="o_toy_view">
+                <ControlPanel t-props="props.info"/>
+            </div>
+        `;
+        ToyView.type = "toy";
+        registry.category("views").add("toy", ToyView);
+
+        const webClient = await createWebClient({ serverData });
+
+        await doAction(webClient, {
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            // list (or something else) must be added to have the view switcher displayed
+            views: [
+                [false, "toy"],
+                [false, "list"],
+            ],
+        });
+
+        await toggleFilterMenu(webClient);
+        await toggleMenuItem(webClient, "Foo");
+        assert.ok(isItemSelected(webClient, "Foo"));
+
+        // reload twice by clicking on toy view switcher
+        def = makeDeferred();
+        await click(webClient.el.querySelector(".o_control_panel .o_switch_view.o_toy"));
+        await click(webClient.el.querySelector(".o_control_panel .o_switch_view.o_toy"));
+
+        def.resolve();
+        await nextTick();
+
+        await toggleFilterMenu(webClient);
+        assert.ok(isItemSelected(webClient, "Foo"));
+        // this test is not able to detect that getGlobalState is put on the right place:
+        // currentController.action.globalState contains in any case the search state
+        // of the first instantiated toy view.
+
+        assert.verifySteps([
+            `"no state"`, // setup first view instantiated
+            `{"fromId":1}`, // setup second view instantiated
+            `{"fromId":1}`, // setup third view instantiated
+        ]);
     });
 });

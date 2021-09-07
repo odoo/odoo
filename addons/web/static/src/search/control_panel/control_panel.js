@@ -1,8 +1,20 @@
 /** @odoo-module **/
 
+import { ComparisonMenu } from "../comparison_menu/comparison_menu";
+import { FavoriteMenu } from "../favorite_menu/favorite_menu";
+import { FilterMenu } from "../filter_menu/filter_menu";
+import { GroupByMenu } from "../group_by_menu/group_by_menu";
+import { SearchBar } from "../search_bar/search_bar";
 import { useService } from "@web/core/utils/hooks";
 
 const { Component } = owl;
+
+const MAPPING = {
+    filter: FilterMenu,
+    groupBy: GroupByMenu,
+    comparison: ComparisonMenu,
+    favorite: FavoriteMenu,
+};
 
 export class ControlPanel extends Component {
     setup() {
@@ -20,11 +32,29 @@ export class ControlPanel extends Component {
                 "bottom-left": true,
                 "bottom-right": true,
             },
-            this.props.display
+            this.props.display || this.env.searchModel.display.controlPanel
         );
         display.top = display["top-left"] || display["top-right"];
         display.bottom = display["bottom-left"] || display["bottom-right"];
         return display;
+    }
+
+    /**
+     * @returns {Component[]}
+     */
+    get searchMenus() {
+        const searchMenus = [];
+        for (const key of this.env.searchModel.searchMenuTypes) {
+            // look in display instead?
+            if (
+                key === "comparison" &&
+                this.env.searchModel.getSearchItems((i) => i.type === "comparison").length === 0
+            ) {
+                continue;
+            }
+            searchMenus.push({ Component: MAPPING[key], key });
+        }
+        return searchMenus;
     }
 
     /**
@@ -46,8 +76,27 @@ export class ControlPanel extends Component {
     }
 }
 
+ControlPanel.components = { ComparisonMenu, FavoriteMenu, FilterMenu, GroupByMenu, SearchBar };
 ControlPanel.template = "web.ControlPanel";
+// ControlPanel.props = {
+//     breadcrumbs: { type: Array, element: { jsId: String, name: String }, optional: true },
+//     display: { type: Object, optional: true },
+//     displayName: { type: String, optional: true },
+//     viewSwitcherEntries: {
+//         type: Array,
+//         element: {
+//             type: Object,
+//             shape: {
+//                 active: { type: Boolean, optional: true },
+//                 icon: String,
+//                 multiRecord: { type: Boolean, optional: true },
+//                 name: [Object, String],
+//                 type: String,
+//             },
+//         },
+//         optional: true,
+//     },
+// };
 ControlPanel.defaultProps = {
     breadcrumbs: [],
-    display: {},
 };

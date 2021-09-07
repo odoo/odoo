@@ -68,21 +68,14 @@
   &_menu {
     @extend .dropdown-menu;
 
-    &.o_dropdown_menu_right {
-      // FIXME: does commenting this break anything?
-      // @extend .dropdown-menu-right;
-    }
-
     & > li.o_dropdown {
       &.focus > .o_dropdown_toggler {
         background-color: $dropdown-link-hover-bg;
       }
       & > .o_dropdown_toggler {
-        // FIXME: without this there is no selection feedback
-        // @extend .dropdown-item;
         &:after {
-          @include o-position-absolute($right: 0);
-          transform: translate(-.6em, .3em);
+          @include o-position-absolute($right: 0, $top: 0);
+          transform: translate(-.6em, .6em);
           font: .9em/1em FontAwesome;
           content: "\f0da";
         }
@@ -143,10 +136,6 @@ button.o_dropdown_toggler {
   &%--state-active {
     outline: none;
     box-shadow: none !important;
-  }
-
-  &.o_dropdown_active {
-    @extend %--state-active;
   }
 
   @include hover-focus-active() {
