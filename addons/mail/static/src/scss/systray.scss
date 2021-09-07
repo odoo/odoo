@@ -111,7 +111,16 @@
             top: 10%;
         }
         .o_mail_systray_dropdown {
-            position: relative;
+
+            position: fixed;
+            top: $o-mail-chat-window-header-height-mobile;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: map-get($sizes, 100);
+            margin: 0;
+            max-height: none;
+
             .o_mail_systray_dropdown_top {
                 padding: 5px;
             }
