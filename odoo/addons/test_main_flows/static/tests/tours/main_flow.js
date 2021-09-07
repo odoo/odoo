@@ -911,12 +911,12 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     position: 'bottom',
 }, {
     trigger: '.dropdown-item.selected:contains(Employee)',
-    extra_trigger: '.dropdown-menu.show',
+    extra_trigger: '.o_dropdown.show',
     content: _t('Remove group by employee'),
     position: 'bottom',
 }, {
     trigger: '.dropdown-item.selected:contains(Billable Type)',
-    extra_trigger: '.dropdown-menu.show',
+    extra_trigger: '.o_dropdown.show',
     content: _t('Remove group by billable type'),
     position: 'bottom',
 }, {
