@@ -93,6 +93,7 @@ function factory(dependencies) {
     RtcController.fields = {
         callViewer: one2one('mail.rtc_call_viewer', {
             inverse: 'rtcController',
+            required: true,
         }),
         isSmall: attr({
             compute: '_computeIsSmall',
