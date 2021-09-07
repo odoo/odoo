@@ -10,3 +10,14 @@ export function shallowEqual(obj1, obj2) {
         obj1Keys.every((key) => obj1[key] === obj2[key])
     );
 }
+
+/**
+ * Deep copies an object. As it relies on JSON this function as some limitations
+ * - no support for circular objects
+ * - no support for specific classes, that will at best be lost and at worst crash (Map, Set etc...)
+ * @param  {Object} An object that is fully JSON stringifiable
+ * @return {Object}
+ */
+export function deepCopy(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
