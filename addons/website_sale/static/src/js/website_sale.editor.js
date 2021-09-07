@@ -448,6 +448,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      */
     createRibbon(previewMode, widgetValue, params) {
         this.saveMethod = 'create';
+        this.setRibbon(false);
         this.$ribbon.html('Ribbon text');
         this.$ribbon.addClass('bg-primary o_ribbon_left');
         this._toggleEditingUI(true);
