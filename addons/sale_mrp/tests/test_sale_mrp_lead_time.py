@@ -11,28 +11,29 @@ from odoo.tests import Form
 
 class TestSaleMrpLeadTime(TestStockCommon):
 
-    def setUp(self):
-        super(TestSaleMrpLeadTime, self).setUp()
-        self.env.ref('stock.route_warehouse0_mto').active = True
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('stock.route_warehouse0_mto').active = True
         # Update the product_1 with type, route, Manufacturing Lead Time and Customer Lead Time
-        with Form(self.product_1) as p1:
+        with Form(cls.product_1) as p1:
             p1.type = 'product'
             p1.produce_delay = 5.0
             p1.sale_delay = 5.0
             p1.route_ids.clear()
-            p1.route_ids.add(self.warehouse_1.manufacture_pull_id.route_id)
-            p1.route_ids.add(self.warehouse_1.mto_pull_id.route_id)
+            p1.route_ids.add(cls.warehouse_1.manufacture_pull_id.route_id)
+            p1.route_ids.add(cls.warehouse_1.mto_pull_id.route_id)
 
         # Update the product_2 with type
-        with Form(self.product_2) as p2:
+        with Form(cls.product_2) as p2:
             p2.type = 'consu'
 
         # Create Bill of materials for product_1
-        with Form(self.env['mrp.bom']) as bom:
-            bom.product_tmpl_id = self.product_1.product_tmpl_id
+        with Form(cls.env['mrp.bom']) as bom:
+            bom.product_tmpl_id = cls.product_1.product_tmpl_id
             bom.product_qty = 2
             with bom.bom_line_ids.new() as line:
-                line.product_id = self.product_2
+                line.product_id = cls.product_2
                 line.product_qty = 4
 
     def test_00_product_company_level_delays(self):

@@ -5,7 +5,7 @@ from odoo.tests.common import Form
 from odoo.addons.stock.tests.test_report import TestReportsCommon
 
 
-class TestSaleStockReports(TestReportsCommon):
+class TestMrpStockReports(TestReportsCommon):
     def test_report_forecast_1_mo_count(self):
         """ Creates and configures a product who could be produce and could be a component.
         Plans some producing and consumming MO and check the report values.

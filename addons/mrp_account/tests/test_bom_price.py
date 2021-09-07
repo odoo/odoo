@@ -8,28 +8,30 @@ from odoo.tools.float_utils import float_round, float_compare
 
 class TestBomPrice(common.TransactionCase):
 
-    def _create_product(self, name, price):
-        return self.Product.create({
+    @classmethod
+    def _create_product(cls, name, price):
+        return cls.Product.create({
             'name': name,
             'type': 'product',
             'standard_price': price,
         })
 
-    def setUp(self):
-        super(TestBomPrice, self).setUp()
-        self.Product = self.env['product.product']
-        self.Bom = self.env['mrp.bom']
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Product = cls.env['product.product']
+        cls.Bom = cls.env['mrp.bom']
 
         # Products.
-        self.dining_table = self._create_product('Dining Table', 1000)
-        self.table_head = self._create_product('Table Head', 300)
-        self.screw = self._create_product('Screw', 10)
-        self.leg = self._create_product('Leg', 25)
-        self.glass = self._create_product('Glass', 100)
+        cls.dining_table = cls._create_product('Dining Table', 1000)
+        cls.table_head = cls._create_product('Table Head', 300)
+        cls.screw = cls._create_product('Screw', 10)
+        cls.leg = cls._create_product('Leg', 25)
+        cls.glass = cls._create_product('Glass', 100)
 
         # Unit of Measure.
-        self.unit = self.env.ref("uom.product_uom_unit")
-        self.dozen = self.env.ref("uom.product_uom_dozen")
+        cls.unit = cls.env.ref("uom.product_uom_unit")
+        cls.dozen = cls.env.ref("uom.product_uom_dozen")
 
         # Bills Of Materials.
         # -------------------------------------------------------------------------------
@@ -41,31 +43,31 @@ class TestBomPrice(common.TransactionCase):
         # Total = 550 [718.75 if components of Table Head considered] (for 1 Unit)
         # -------------------------------------------------------------------------------
 
-        bom_form = Form(self.Bom)
-        bom_form.product_id = self.dining_table
-        bom_form.product_tmpl_id = self.dining_table.product_tmpl_id
+        bom_form = Form(cls.Bom)
+        bom_form.product_id = cls.dining_table
+        bom_form.product_tmpl_id = cls.dining_table.product_tmpl_id
         bom_form.product_qty = 1.0
-        bom_form.product_uom_id = self.unit
+        bom_form.product_uom_id = cls.unit
         bom_form.type = 'normal'
         with bom_form.bom_line_ids.new() as line:
-            line.product_id = self.table_head
+            line.product_id = cls.table_head
             line.product_qty = 1
         with bom_form.bom_line_ids.new() as line:
-            line.product_id = self.screw
+            line.product_id = cls.screw
             line.product_qty = 5
         with bom_form.bom_line_ids.new() as line:
-            line.product_id = self.leg
+            line.product_id = cls.leg
             line.product_qty = 4
         with bom_form.bom_line_ids.new() as line:
-            line.product_id = self.glass
+            line.product_id = cls.glass
             line.product_qty = 1
-        self.bom_1 = bom_form.save()
+        cls.bom_1 = bom_form.save()
 
         # Table Head's components.
-        self.plywood_sheet = self._create_product('Plywood Sheet', 200)
-        self.bolt = self._create_product('Bolt', 10)
-        self.colour = self._create_product('Colour', 100)
-        self.corner_slide = self._create_product('Corner Slide', 25)
+        cls.plywood_sheet = cls._create_product('Plywood Sheet', 200)
+        cls.bolt = cls._create_product('Bolt', 10)
+        cls.colour = cls._create_product('Colour', 100)
+        cls.corner_slide = cls._create_product('Corner Slide', 25)
 
         # -----------------------------------------------------------------
         # Cost of BoM (Table Head 1 Dozen)
@@ -77,25 +79,25 @@ class TestBomPrice(common.TransactionCase):
         #                          1 Unit price (5625/12) =  468.75
         # -----------------------------------------------------------------
 
-        bom_form2 = Form(self.Bom)
-        bom_form2.product_id = self.table_head
-        bom_form2.product_tmpl_id = self.table_head.product_tmpl_id
+        bom_form2 = Form(cls.Bom)
+        bom_form2.product_id = cls.table_head
+        bom_form2.product_tmpl_id = cls.table_head.product_tmpl_id
         bom_form2.product_qty = 1.0
-        bom_form2.product_uom_id = self.dozen
+        bom_form2.product_uom_id = cls.dozen
         bom_form2.type = 'phantom'
         with bom_form2.bom_line_ids.new() as line:
-            line.product_id = self.plywood_sheet
+            line.product_id = cls.plywood_sheet
             line.product_qty = 12
         with bom_form2.bom_line_ids.new() as line:
-            line.product_id = self.bolt
+            line.product_id = cls.bolt
             line.product_qty = 60
         with bom_form2.bom_line_ids.new() as line:
-            line.product_id = self.colour
+            line.product_id = cls.colour
             line.product_qty = 12
         with bom_form2.bom_line_ids.new() as line:
-            line.product_id = self.corner_slide
+            line.product_id = cls.corner_slide
             line.product_qty = 57
-        self.bom_2 = bom_form2.save()
+        cls.bom_2 = bom_form2.save()
 
     def test_00_compute_price(self):
         """Test multi-level BoM cost"""

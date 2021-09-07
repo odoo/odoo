@@ -8,47 +8,48 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 @tagged('post_install', '-at_install')
 class TestMultistepManufacturingWarehouse(TestMrpCommon):
 
-    def setUp(self):
-        super(TestMultistepManufacturingWarehouse, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         # Create warehouse
-        self.customer_location = self.env['ir.model.data']._xmlid_to_res_id('stock.stock_location_customers')
-        warehouse_form = Form(self.env['stock.warehouse'])
+        cls.customer_location = cls.env['ir.model.data']._xmlid_to_res_id('stock.stock_location_customers')
+        warehouse_form = Form(cls.env['stock.warehouse'])
         warehouse_form.name = 'Test Warehouse'
         warehouse_form.code = 'TWH'
-        self.warehouse = warehouse_form.save()
+        cls.warehouse = warehouse_form.save()
 
-        self.uom_unit = self.env.ref('uom.product_uom_unit')
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
 
         # Create manufactured product
-        product_form = Form(self.env['product.product'])
+        product_form = Form(cls.env['product.product'])
         product_form.name = 'Stick'
-        product_form.uom_id = self.uom_unit
-        product_form.uom_po_id = self.uom_unit
+        product_form.uom_id = cls.uom_unit
+        product_form.uom_po_id = cls.uom_unit
         product_form.detailed_type = 'product'
         product_form.route_ids.clear()
-        product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
-        product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
-        self.finished_product = product_form.save()
+        product_form.route_ids.add(cls.warehouse.manufacture_pull_id.route_id)
+        product_form.route_ids.add(cls.warehouse.mto_pull_id.route_id)
+        cls.finished_product = product_form.save()
 
         # Create raw product for manufactured product
-        product_form = Form(self.env['product.product'])
+        product_form = Form(cls.env['product.product'])
         product_form.name = 'Raw Stick'
         product_form.detailed_type = 'product'
-        product_form.uom_id = self.uom_unit
-        product_form.uom_po_id = self.uom_unit
-        self.raw_product = product_form.save()
+        product_form.uom_id = cls.uom_unit
+        product_form.uom_po_id = cls.uom_unit
+        cls.raw_product = product_form.save()
 
         # Create bom for manufactured product
-        bom_product_form = Form(self.env['mrp.bom'])
-        bom_product_form.product_id = self.finished_product
-        bom_product_form.product_tmpl_id = self.finished_product.product_tmpl_id
+        bom_product_form = Form(cls.env['mrp.bom'])
+        bom_product_form.product_id = cls.finished_product
+        bom_product_form.product_tmpl_id = cls.finished_product.product_tmpl_id
         bom_product_form.product_qty = 1.0
         bom_product_form.type = 'normal'
         with bom_product_form.bom_line_ids.new() as bom_line:
-            bom_line.product_id = self.raw_product
+            bom_line.product_id = cls.raw_product
             bom_line.product_qty = 2.0
 
-        self.bom = bom_product_form.save()
+        cls.bom = bom_product_form.save()
 
     def _check_location_and_routes(self):
         # Check manufacturing pull rule.

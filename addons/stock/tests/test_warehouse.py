@@ -8,9 +8,10 @@ from odoo.tools import mute_logger
 
 class TestWarehouse(TestStockCommon):
 
-    def setUp(self):
-        super(TestWarehouse, self).setUp()
-        self.partner = self.env['res.partner'].create({'name': 'Deco Addict'})
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.partner = cls.env['res.partner'].create({'name': 'Deco Addict'})
 
     def test_inventory_product(self):
         self.product_1.type = 'product'

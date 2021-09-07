@@ -7,11 +7,12 @@ from odoo.exceptions import UserError
 
 
 class TestUnbuild(TestMrpCommon):
-    def setUp(self):
-        super(TestUnbuild, self).setUp()
-        self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.env.ref('base.group_user').write({
-            'implied_ids': [(4, self.env.ref('stock.group_production_lot').id)]
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.env.ref('base.group_user').write({
+            'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]
         })
 
     def test_unbuild_standart(self):

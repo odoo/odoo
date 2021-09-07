@@ -129,10 +129,11 @@ class TestStockValuationCommon(TransactionCase):
 
 
 class TestStockValuationStandard(TestStockValuationCommon):
-    def setUp(self):
-        super(TestStockValuationStandard, self).setUp()
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-        self.product1.product_tmpl_id.standard_price = 10
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        cls.product1.product_tmpl_id.standard_price = 10
 
     def test_normal_1(self):
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
@@ -302,9 +303,10 @@ class TestStockValuationStandard(TestStockValuationCommon):
 
 
 class TestStockValuationAVCO(TestStockValuationCommon):
-    def setUp(self):
-        super(TestStockValuationAVCO, self).setUp()
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
 
     def test_normal_1(self):
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
@@ -518,9 +520,10 @@ class TestStockValuationAVCO(TestStockValuationCommon):
 
 
 class TestStockValuationFIFO(TestStockValuationCommon):
-    def setUp(self):
-        super(TestStockValuationFIFO, self).setUp()
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
 
     def test_normal_1(self):
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'

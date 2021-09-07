@@ -592,49 +592,51 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
 
 class TestSubcontractingTracking(TransactionCase):
-    def setUp(self):
-        super(TestSubcontractingTracking, self).setUp()
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         # 1: Create a subcontracting partner
-        main_company_1 = self.env['res.partner'].create({'name': 'main_partner'})
-        self.subcontractor_partner1 = self.env['res.partner'].create({
+        main_company_1 = cls.env['res.partner'].create({'name': 'main_partner'})
+        cls.subcontractor_partner1 = cls.env['res.partner'].create({
             'name': 'Subcontractor 1',
             'parent_id': main_company_1.id,
-            'company_id': self.env.ref('base.main_company').id
+            'company_id': cls.env.ref('base.main_company').id
         })
 
         # 2. Create a BOM of subcontracting type
         # 2.1. Comp1 has tracking by lot
-        self.comp1_sn = self.env['product.product'].create({
+        cls.comp1_sn = cls.env['product.product'].create({
             'name': 'Component1',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_all').id,
             'tracking': 'serial'
         })
-        self.comp2 = self.env['product.product'].create({
+        cls.comp2 = cls.env['product.product'].create({
             'name': 'Component2',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_all').id,
         })
 
         # 2.2. Finished prodcut has tracking by serial number
-        self.finished_product = self.env['product.product'].create({
+        cls.finished_product = cls.env['product.product'].create({
             'name': 'finished',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_all').id,
             'tracking': 'lot'
         })
-        bom_form = Form(self.env['mrp.bom'])
+        bom_form = Form(cls.env['mrp.bom'])
         bom_form.type = 'subcontract'
         bom_form.consumption = 'strict'
-        bom_form.subcontractor_ids.add(self.subcontractor_partner1)
-        bom_form.product_tmpl_id = self.finished_product.product_tmpl_id
+        bom_form.subcontractor_ids.add(cls.subcontractor_partner1)
+        bom_form.product_tmpl_id = cls.finished_product.product_tmpl_id
         with bom_form.bom_line_ids.new() as bom_line:
-            bom_line.product_id = self.comp1_sn
+            bom_line.product_id = cls.comp1_sn
             bom_line.product_qty = 1
         with bom_form.bom_line_ids.new() as bom_line:
-            bom_line.product_id = self.comp2
+            bom_line.product_id = cls.comp2
             bom_line.product_qty = 1
-        self.bom_tracked = bom_form.save()
+        cls.bom_tracked = bom_form.save()
 
     def test_flow_tracked_1(self):
         """ This test mimics test_flow_1 but with a BoM that has tracking included in it.

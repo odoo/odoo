@@ -9,15 +9,16 @@ from odoo.tools import mute_logger
 
 class TestProcRule(TransactionCase):
 
-    def setUp(self):
-        super(TestProcRule, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.uom_unit = self.env.ref('uom.product_uom_unit')
-        self.product = self.env['product.product'].create({
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
+        cls.product = cls.env['product.product'].create({
             'name': 'Desk Combination',
             'type': 'consu',
         })
-        self.partner = self.env['res.partner'].create({'name': 'Partner'})
+        cls.partner = cls.env['res.partner'].create({'name': 'Partner'})
 
     def test_proc_rule(self):
         # Create a product route containing a stock rule that will
