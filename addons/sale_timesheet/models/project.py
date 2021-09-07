@@ -264,7 +264,7 @@ class Project(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("hr_timesheet.timesheet_action_all")
         action.update({
             'context': {
-                'search_default_groupby_timesheet_invoice_type': True,
+                'search_default_groupby_task': True,
                 'default_project_id': self.id,
             },
             'domain': [('project_id', '=', self.id)],
