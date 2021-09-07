@@ -61,7 +61,7 @@ tour.register('sale_timesheet_tour', {
     run: function (actions) {
         actions.text('Project for Freeman', this.$anchor);
     },
-},  {
+}, {
     trigger: 'button[name="action_view_tasks"]',
     content: 'Click on Create button to create and enter to this newest project.',
     run: 'click',
@@ -239,36 +239,135 @@ tour.register('sale_timesheet_tour', {
     content: 'Save Project',
 }, {
     trigger: 'li[data-menu-xmlid="project.menu_projects"]',
-    content: 'Select Projects'
+    content: 'Select Projects',
 }, {
+    // an invisible element cannot be used as a trigger so this small hack is mandatory for the next step
     trigger: 'div.o_kanban_primary_left :contains("Project for Freeman")',
-    content: 'Select Project for Freeman'
+    content: 'Open the project dropdown',
+    run: function () {
+        $('.o_kanban_record:contains("Project for Freeman") .o_dropdown_kanban').css('visibility', 'visible');
+    },
+}, {
+    trigger: '.oe_kanban_global_click :contains("Project for Freeman") .o_dropdown_kanban',
+    content: 'Open the project dropdown',
+}, {
+    trigger: '.o_kanban_record:contains("Project for Freeman") .dropdown-menu a:contains("Edit")',
+    content: 'Start editing the project',
+}, {
+    trigger: 'div.o_notebook_headers',
+    content: 'Click on Invoicing tab to configure the invoicing of this project.',
+    run: function (actions) {
+        const notebookId = $('div[name="sale_line_id"]').closest("div.tab-pane").attr('id');
+        actions.click(this.$anchor.find(`a[data-toggle="tab"][href="#${notebookId}"]`));
+    },
+}, {
+    trigger: 'div[name="sale_line_id"]',
+    content: 'Select the first sale order of the list',
+    run: function (actions) {
+        actions.text('Prepaid', this.$anchor.find('input'));
+    },
+}, {
+    trigger: 'ul.ui-autocomplete > li:first-child > a',
+    content: 'Select the first item on the autocomplete dropdown',
+}, {
+    trigger: '.o_form_button_save',
+    content: 'Save the modifications',
+}, {
+    trigger: '.o_back_button',
+    content: 'Go back to the kanban view the project created',
+}, {
+    trigger: '.oe_kanban_global_click :contains("Project for Freeman")',
+    content: 'Open the project',
 }, {
     trigger: ".o_project_updates_breadcrumb",
-    content: 'Open Updates'
+    content: 'Open Updates',
 }, {
     trigger: ".o_rightpanel_title:eq(0):contains('Sold')",
-    content: 'Check the user sees Sold section'
+    content: 'Check the user sees Sold section',
+    run: function () {},
 }, {
     trigger: ".o_rightpanel_left_text:eq(0):contains('Prepaid Hours')",
     content: 'Check the user sees Sold subsection',
     run: function () {},
-},  {
+}, {
     trigger: ".o_rightpanel_title:eq(1):contains('Total Sold')",
-    content: 'Check the user sees Total Sold section'
+    content: 'Check the user sees Total Sold section',
+    run: function () {},
+}, {
+    trigger: ".oe_button_box .o_stat_text:contains('Sales Order')",
+    content: 'Check the user sees Sales Order Stat Button',
+    run: function () {},
+}, {
+    trigger: ".o_rightpanel_header:eq(1) .o_rightpanel_right_col:contains('Hours')",
+    content: 'Check the user sees Hours title',
+    run: function () {},
+}, {
+    trigger: ".o_rightpanel_section:eq(2) .o_rightpanel_data_row:contains('Effective')",
+    content: 'Check the user sees Effective subsection row',
+    run: function () {},
+}, {
+    trigger: ".o_rightpanel_section:eq(2) .o_rightpanel_data_row:contains('Remaining')",
+    content: 'Check the user sees Remaining subsection row',
+    run: function () {},
 }, {
     trigger: ".o_rightpanel_title:eq(2):contains('Profitability')",
-    content: 'Check the user sees Profitability section'
+    content: 'Check the user sees Profitability section',
+    run: function () {},
+}, {
+    trigger: ".o_rightpanel_section:eq(3) .o_rightpanel_data_row:contains('Revenues')",
+    content: 'Check the user sees Profitability subsection row',
+    run: function () {},
+}, {
+    trigger: ".o_rightpanel_section:eq(3) .o_rightpanel_data_row:contains('Costs')",
+    content: 'Check the user sees Profitability subsection row',
+    run: function () {},
+}, {
+    trigger: ".o_rightpanel_section:eq(3) .o_rightpanel_data_row:contains('Margin')",
+    content: 'Check the user sees Profitability subsection row',
+    run: function () {},
 }, {
     trigger: ".o_rightpanel_title:eq(3):contains('Milestones')",
-    content: 'Check the user sees Milestones section'
+    content: 'Check the user sees Milestones section',
 }, {
-    trigger: ".o-kanban-button-new"
+    trigger: ".o_add_milestone a",
+    content: "Add a first milestone",
 }, {
     trigger: "input.o_field_widget[name=name]",
-    run: 'text New update'
+    content: "Edit new Milestone",
+    run: 'text New milestone',
 }, {
-    trigger: ".o_form_button_save"
+    trigger: "input.datetimepicker-input[name=deadline]",
+    content: "Edit new Milestone",
+    run: 'text 12/12/2099',
+}, {
+    trigger: ".modal-footer button",
+    content: "Save new Milestone",
+}, {
+    trigger: ".o-kanban-button-new",
+    content: "Create new Project Update",
+}, {
+    trigger: "input.o_field_widget[name=name]",
+    content: "Give a name to Project Update",
+    run: 'text New update',
+}, {
+    trigger: ".o_form_button_save",
+    content: "Save Project Update",
+}, {
+    trigger: ".o_field_widget[name=description] h3:contains('Sold')",
+    content: "Sold title must be in description in description",
+    run: function () {},
+    }, {
+    trigger: ".o_field_widget[name=description] td:contains('Prepaid Hours')",
+    content: "Prepaid Hours title must be in description",
+    run: function () {},
+}, {
+    trigger: ".o_field_widget[name=description] h3:contains('Profitability')",
+    content: "Profitability title must be in description",
+    run: function () {},
+}, {
+    trigger: ".o_field_widget[name=description] h3:contains('Milestones')",
+    content: "Milestones title must be in description",
+    run: function () {},
 }]);
 
 });
