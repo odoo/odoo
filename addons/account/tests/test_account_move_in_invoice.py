@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from freezegun import freeze_time
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
@@ -148,6 +150,22 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             with Form(self.invoice) as move_form:
                 move_form.invoice_date = invoice_date
             self.assertEqual(self.invoice.date, fields.Date.to_date(accounting_date))
+
+    @freeze_time('2021-09-16')
+    def test_in_invoice_onchange_invoice_date_2(self):
+        invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice', account_predictive_bills_disable_prediction=True))
+        invoice_form.partner_id = self.partner_a
+        invoice_form.invoice_payment_term_id = self.env.ref('account.account_payment_term_30days')
+        with invoice_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_a
+        invoice_form.invoice_date = fields.Date.from_string('2021-09-01')
+        invoice = invoice_form.save()
+
+        self.assertRecordValues(invoice, [{
+            'date': fields.Date.from_string('2021-09-16'),
+            'invoice_date': fields.Date.from_string('2021-09-01'),
+            'invoice_date_due': fields.Date.from_string('2021-10-01'),
+        }])
 
     def test_in_invoice_line_onchange_product_1(self):
         move_form = Form(self.invoice)
