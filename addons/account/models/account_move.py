@@ -441,6 +441,8 @@ class AccountMove(models.Model):
             if accounting_date != self.date:
                 self.date = accounting_date
                 self._onchange_currency()
+            else:
+                self._onchange_recompute_dynamic_lines()
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
