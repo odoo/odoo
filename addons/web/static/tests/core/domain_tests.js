@@ -205,12 +205,16 @@ QUnit.module("domain", {}, () => {
     });
 
     QUnit.test("other operators", function (assert) {
+        assert.ok(new Domain([["a", "in", 3]]).contains({ a: 3 }));
         assert.ok(new Domain([["a", "in", [1, 2, 3]]]).contains({ a: 3 }));
         assert.ok(new Domain([["a", "in", [1, 2, 3]]]).contains({ a: [3] }));
+        assert.notOk(new Domain([["a", "in", 3]]).contains({ a: 5 }));
         assert.notOk(new Domain([["a", "in", [1, 2, 3]]]).contains({ a: 5 }));
         assert.notOk(new Domain([["a", "in", [1, 2, 3]]]).contains({ a: [5] }));
+        assert.notOk(new Domain([["a", "not in", 3]]).contains({ a: 3 }));
         assert.notOk(new Domain([["a", "not in", [1, 2, 3]]]).contains({ a: 3 }));
         assert.notOk(new Domain([["a", "not in", [1, 2, 3]]]).contains({ a: [3] }));
+        assert.ok(new Domain([["a", "not in", 3]]).contains({ a: 5 }));
         assert.ok(new Domain([["a", "not in", [1, 2, 3]]]).contains({ a: 5 }));
         assert.ok(new Domain([["a", "not in", [1, 2, 3]]]).contains({ a: [5] }));
         assert.ok(new Domain([["a", "like", "abc"]]).contains({ a: "abc" }));
