@@ -74,6 +74,11 @@ class HrLeave(models.Model):
                 contracts = self.env['hr.contract'].sudo().search(domain)
                 raise ValidationError(_('A leave cannot be set across multiple contracts.') + '\n' + ', '.join(contracts.mapped('name')))
 
+    def _work_entry_generation_date_to(self):
+        # This is required for french holidays to make sure all work entries are generated properly.
+        self.ensure_one()
+        return self.date_to
+
     def _cancel_work_entry_conflict(self):
         """
         Creates a leave work entry for each hr.leave in self.
@@ -92,19 +97,22 @@ class HrLeave(models.Model):
 
         # 1. Create a work entry for each leave
         work_entries_vals_list = []
+        leaves_date_to = []
         for leave in self:
-            contracts = leave.employee_id.sudo()._get_contracts(leave.date_from, leave.date_to, states=['open', 'close'])
+            leave_date_to = leave._work_entry_generation_date_to()
+            leaves_date_to.append(leave_date_to)
+            contracts = leave.employee_id.sudo()._get_contracts(leave.date_from, leave_date_to, states=['open', 'close'])
             for contract in contracts:
                 # Generate only if it has aleady been generated
-                if leave.date_to >= contract.date_generated_from and leave.date_from <= contract.date_generated_to:
-                    work_entries_vals_list += contracts._get_work_entries_values(leave.date_from, leave.date_to)
+                if leave_date_to >= contract.date_generated_from and leave.date_from <= contract.date_generated_to:
+                    work_entries_vals_list += contracts._get_work_entries_values(leave.date_from, leave_date_to)
 
         new_leave_work_entries = self.env['hr.work.entry'].create(work_entries_vals_list)
 
         if new_leave_work_entries:
             # 2. Fetch overlapping work entries, grouped by employees
             start = min(self.mapped('date_from'), default=False)
-            stop = max(self.mapped('date_to'), default=False)
+            stop = max(leaves_date_to, default=False)
             work_entry_groups = self.env['hr.work.entry'].read_group([
                 ('date_start', '<', stop),
                 ('date_stop', '>', start),
