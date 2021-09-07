@@ -11,7 +11,7 @@ class AccrualPlan(models.Model):
     name = fields.Char('Name', required=True)
     time_off_type_id = fields.Many2one('hr.leave.type', string="Time Off Type")
     employees_count = fields.Integer("Employees", compute='_compute_employee_count')
-    level_ids = fields.One2many('hr.leave.accrual.level', 'accrual_plan_id')
+    level_ids = fields.One2many('hr.leave.accrual.level', 'accrual_plan_id', copy=True)
     allocation_ids = fields.One2many('hr.leave.allocation', 'accrual_plan_id')
     transition_mode = fields.Selection([
         ('immediately', 'Immediately'),
