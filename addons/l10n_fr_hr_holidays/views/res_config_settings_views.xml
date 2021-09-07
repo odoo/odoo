@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_l10n_fr_holidays" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.fr.holidays</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='work_organization_setting_container']" position="after">
+                <field name="company_country_code" invisible="1"/>
+                <h2 attrs="{'invisible': [('company_country_code', '!=', 'FR')]}">Time Off</h2>
+                <div class="row mt16 o_settings_container" name="l10n_fr_timeoff_settings_container" attrs="{'invisible': [('company_country_code', '!=', 'FR')]}">
+                    <div class="col-12 col-lg-6 o_setting_box" id="reference_calendar_setting">
+                        <div class="o_setting_right_pane">
+                            <label for="time_off_reference_calendar"/>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific" role="img"
+                                aria-label="Values set here are company-specific" groups="base.group_multi_company"/>
+                            <div class="row">
+                                <div class="text-muted col-lg-8">
+                                    Set the reference calendar for time off, this calendar will be used to compute the amount of days a time off will take from the employee.
+                                </div>
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="time_off_reference_calendar" required="1" class="o_light_label"
+                                        domain="[('company_id', '=', company_id)]" context="{'default_company_id': company_id}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
