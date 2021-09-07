@@ -527,7 +527,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
             // Wait the next tick because some mutation have to be processed by
             // the Odoo editor before resetting the history.
             setTimeout(() => {
-                this.wysiwyg.resetHistory();
+                this.wysiwyg.historyReset();
             }, 0);
         });
 
