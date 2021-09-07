@@ -2499,7 +2499,7 @@ class TestRoutes(TestStockCommon):
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': self.product1.id,
             'product_tmpl_id': self.product1.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': self.product_uom_qty,
             'warehouse_id': self.wh.id,
         })

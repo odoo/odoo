@@ -1736,7 +1736,7 @@ class TestStockFlow(TestStockCommon):
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': product.id,
             'product_tmpl_id': product.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': '5',
             'warehouse_id': warehouse_company_1.id,
         })
