@@ -243,19 +243,17 @@ const Wysiwyg = Widget.extend({
         this._collaborationChannelName = channelName;
         Wysiwyg.activeCollaborationChannelNames.add(channelName);
 
+        this._channelNames = new Set();
+
         this.call('bus_service', 'onNotification', this, (notifications) => {
             for (const [channel, busData] of notifications) {
                 if (
-                    channel[1] === 'editor_collaboration' &&
-                    channel[2] === modelName &&
-                    channel[3] === fieldName &&
-                    channel[4] === resId
+                    this._channelNames.has(channel)
                 ) {
                     this._peerToPeerLoading.then(() => this.ptp.handleNotification(busData));
                 }
             }
         });
-        this.call('bus_service', 'addChannel', this._collaborationChannelName);
         this.call('bus_service', 'startPolling');
 
         // Wether or not the history has been sent or received at least once.
@@ -274,7 +272,58 @@ const Wysiwyg = Widget.extend({
         const rpcMutex = new Mutex();
 
         this._peerToPeerLoading = new Promise(async (resolve) => {
-            let iceServers = await this._rpc({route: '/web_editor/get_ice_servers'});
+            const getChannelName = (channelId) => `editor_collaboration_${channelId}`;
+            const resetChannels = async () => {
+                // Retrie new infos
+                const infos = await this._rpc({
+                    route: '/web_editor/collaboration/start',
+                    params: {
+                        model_name: modelName,
+                        field_name: fieldName,
+                        res_id: resId,
+                    }
+                });
+                if (!infos.channel_ids) {
+                    return false;
+                }
+                // The current channel id is always the second entry in the
+                // array because the first and third entries are the previous
+                // and next broadcasting channels that we continue to listen in
+                // order to never miss a message whenever switching channels.
+                this._broadcastChannelId = infos.channel_ids[1];
+                // Remove all outdated channels. It is important for the
+                // security to stop listening the messages of outdated channels
+                // so that if a client had an access to a document revoked in
+                // the meantime, he will eventually be disconnected from others.
+                const channelNames = new Set(infos.channel_ids.map(getChannelName));
+                for (const channelName of this._channelNames) {
+                    if (!channelNames.has(channelName)) {
+                        this._channelNames.delete(channelName);
+                        this.call('bus_service', 'deleteChannel', channelName);
+                    }
+                }
+                // Subscribe to newer channels.
+                for (const channelName of channelNames) {
+                    if (!this._channelNames.has(channelName)) {
+                        this._channelNames.add(channelName);
+                        this.call('bus_service', 'addChannel', channelName);
+                    }
+                }
+
+                const msExpirationTimestamp = infos.next_expiration_timestamp * 1000;
+                const differenceTimestamp = msExpirationTimestamp - Date.now();
+
+                setTimeout(resetChannels, differenceTimestamp);
+
+                return infos;
+            };
+
+            const infos = await resetChannels();;
+            if (!infos) {
+                return;
+            }
+
+            let iceServers = infos.ice_servers;
             if (!iceServers.length) {
                 iceServers = [
                     {
@@ -291,12 +340,11 @@ const Wysiwyg = Widget.extend({
                 currentClientId: currentClientId,
                 broadcastAll: (rpcData) => {
                     return rpcMutex.exec(async () => {
+                        await this._peerToPeerLoading;
                         return this._rpc({
-                            route: '/web_editor/bus_broadcast',
+                            route: '/web_editor/collaboration/notify',
                             params: {
-                                model_name: modelName,
-                                field_name: fieldName,
-                                res_id: resId,
+                                channel_id: this._broadcastChannelId,
                                 bus_data: rpcData,
                             },
                         });
