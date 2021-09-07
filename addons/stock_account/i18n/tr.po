@@ -12,6 +12,7 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2018
 # Ediz Duman <neps1192@gmail.com>, 2018
 # Umur Akın <umura@projetgrup.com>, 2019
+# Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:152
 #, python-format
 msgid "%s changed cost from %s to %s - %s"
-msgstr ""
+msgstr "%s maliyeti %sden %s-%solarak değiştirildi "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -76,6 +77,8 @@ msgid ""
 "Affect landed costs on reception operations and split them among products to"
 " update their cost price."
 msgstr ""
+"Malın bedelini güncellemek için, ek maliyetleri ürünler arasında bölün ve "
+"ürün maliyetlerinin üzerine yükleyin."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -221,6 +224,8 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
+"Otomatik envanter değerlemesi durumunda muhasebe kayıtlarının oluşturulacağı"
+" tarih. Boşsa, envanter tarihi kullanılacaktır."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__display_name
@@ -422,7 +427,7 @@ msgstr "Ters Transfer"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr ""
+msgstr "Ters Transfer Satırları"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -542,6 +547,8 @@ msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company."
 msgstr ""
+"Hareket satırları istikrarlı bir durumda değildir: Bazıları girilir, "
+"diğerleri şirketten ayrılır."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:375
@@ -730,6 +737,8 @@ msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts."
 msgstr ""
+"Ürün kategorisine tanımlı bir stok yevmiyesi bulunamadı. Eğer muhasebe hesap"
+" planı yüklediyseniz bunu mutlaka kontrol edin."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:130

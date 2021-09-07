@@ -62,7 +62,7 @@ odoo.define('website_rating.thread', function(require) {
                         if(0 < rating && rating <= 5){
                             rating_data['percent'].push({
                                 'num': rating,
-                                'percent': result['rating_stats']['percent'][rating],
+                                'percent': Math.round(result['rating_stats']['percent'][rating]),
                             });
                         }
                     });

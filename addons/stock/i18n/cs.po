@@ -14,7 +14,7 @@
 # Jakub Snášel <jakub@potisk-tricek.cz>, 2019
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
-# trendspotter, 2021
+# trendspotter <jirka.p@volny.cz>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: trendspotter, 2021\n"
+"Last-Translator: trendspotter <jirka.p@volny.cz>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -307,6 +307,9 @@ msgid ""
 "                The done move line has been corrected.\n"
 "            </strong>"
 msgstr ""
+"<strong>\n"
+"               Řádek provedeného přesunu byl opraven.\n"
+"            </strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -1202,7 +1205,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Counterpart Locations"
-msgstr ""
+msgstr "Lokality protistrany"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -2147,7 +2150,7 @@ msgstr "Získejte plnou sledovatelnost od dodavatelů k zákazníkům"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get informative or blocking warnings on partners"
-msgstr ""
+msgstr "Získání informativních nebo blokačních upozornění o partnerech"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_fixed_putaway_strat__sequence
@@ -3340,7 +3343,7 @@ msgstr "Přesunout"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Move Detail"
-msgstr ""
+msgstr "Detail přesunu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_type_entire_packs
@@ -3435,7 +3438,7 @@ msgstr "Název"
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Negative Forecasted Quantity"
-msgstr ""
+msgstr "Záporné předpokládané množství"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -3494,7 +3497,7 @@ msgstr "Další ovlivněné převody:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
-msgstr ""
+msgstr "Žádné zpětné objednávky"
 
 #. module: stock
 #: selection:res.partner,picking_warn:0
@@ -3509,7 +3512,7 @@ msgstr ""
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "No Tracking"
-msgstr ""
+msgstr "Žádné sledování"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.quantsact
@@ -3525,7 +3528,7 @@ msgstr "Nejsou povolena negativní množství"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "No operation made on this lot."
-msgstr ""
+msgstr "Na tomto dílu se neprovádějí žádné operace."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:305
@@ -3542,6 +3545,8 @@ msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
 "can be returned)."
 msgstr ""
+"Žádné produkty k vrácení (vrátit lze pouze položky ve stavu Hotovo a dosud "
+"ne zcela vrácené)."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:172
@@ -3739,7 +3744,7 @@ msgstr "Volitelné podrobnosti umístění, pouze pro informační účely"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__returned_move_ids
 msgid "Optional: all returned moves created from this move"
-msgstr ""
+msgstr "Nepovinné: všechny vrácené pohyby vytvořené z tohoto pohybu."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__move_dest_ids
@@ -4518,7 +4523,7 @@ msgstr "násobek množ."
 #. module: stock
 #: sql_constraint:stock.warehouse.orderpoint:0
 msgid "Qty Multiple must be greater than or equal to zero."
-msgstr ""
+msgstr "Qty Multiple musí být větší nebo rovno nule."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:445
@@ -4614,6 +4619,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 msgstr ""
+"Množství plánovaných příchozích produktů.\n"
+"V kontextu s jedním skladovým místem zahrnuje zboží, které přichází do tohoto místa nebo do kteréhokoli z jeho podřízených míst.\n"
+"V kontextu s jedním skladem zahrnuje zboží, které přichází do skladového umístění tohoto skladu nebo do kteréhokoli z jeho podřízených umístění.\n"
+"Jinak sem patří zboží, které přichází do jakéhokoli skladového místa s typem \"interní\"."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__outgoing_qty
@@ -5881,6 +5890,8 @@ msgid ""
 "The parent location that includes this location. Example : The 'Dispatch "
 "Zone' is the 'Gate 1' parent location."
 msgstr ""
+"Nadřazené umístění, které zahrnuje toto umístění. Příklad: \"Dispečerská "
+"zóna\" je nadřazená lokace \"Brána 1\"."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__qty_multiple

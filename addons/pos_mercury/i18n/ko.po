@@ -32,7 +32,7 @@ msgstr ""
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Buy a card reader"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>카드 리더기 구매하기"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -49,14 +49,14 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:46
 #, python-format
 msgid "ABOVE AMOUNT PURSUANT"
-msgstr ""
+msgstr "기준 양 이상"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:60
 #, python-format
 msgid "APPROVAL CODE:"
-msgstr ""
+msgstr "승인 코드 :"
 
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
@@ -81,41 +81,41 @@ msgstr "바코드 규칙"
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
 msgid "Barcode Scanner/Card Reader"
-msgstr ""
+msgstr "바코드 스캐너/카드 리더"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:45
 #, python-format
 msgid "CARDHOLDER WILL PAY CARD ISSUER"
-msgstr ""
+msgstr "카드홀더가 카드 발급자에게 지불할 것입니다."
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_card_brand
 msgid "Card Brand"
-msgstr ""
+msgstr "카드 상표"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_card_number
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_order
 msgid "Card Number"
-msgstr ""
+msgstr "카드 번호"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_prefixed_card_number
 msgid "Card Number Prefix"
-msgstr ""
+msgstr "카드 번호 접두사"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_card_owner_name
 msgid "Card Owner Name"
-msgstr ""
+msgstr "카드 소유자 이름"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_tree
 msgid "Card Reader"
-msgstr ""
+msgstr "카드 리더기"
 
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
@@ -130,14 +130,14 @@ msgstr "클라이언트"
 #. module: pos_mercury
 #: model_terms:ir.actions.act_window,help:pos_mercury.action_configuration_form
 msgid "Configure your card reader"
-msgstr ""
+msgstr "카드 리더기 구성"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:360
 #, python-format
 msgid "Could not read card"
-msgstr ""
+msgstr "카드를 읽을 수 없습니다"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__create_uid
@@ -165,6 +165,8 @@ msgid ""
 "payment method, click 'Validate' and refund the original charge manually "
 "through the Vantiv backend."
 msgstr ""
+"신용 카드 환불은 지원되지 않습니다. 대신 신용 카드 결제 방법을 선택하고 '확인'을 클릭한 후 Vantiv 백엔드를 통해 원래 청구 "
+"금액을 수동으로 환불하십시오."
 
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
@@ -191,20 +193,23 @@ msgid ""
 "                                (without having pressed anything else) will charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
+"빠른 주문 처리: 결제 화면에서 (다른 것을 누르지 않고) \n"
+"                                  신용 카드를 스윕하면 주문의 전체 금액이 \n"
+"                                   카드에 청구됩니다."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:256
 #, python-format
 msgid "Go to payment screen to use cards"
-msgstr ""
+msgstr "카드를 사용하려면 결제 화면으로 이동"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:396
 #, python-format
 msgid "Handling transaction..."
-msgstr ""
+msgstr "거래 처리 중 ..."
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__id
@@ -215,7 +220,7 @@ msgstr "ID"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_id
 msgid "ID of the merchant to authenticate him on the payment provider server"
-msgstr ""
+msgstr "지불 제공자 서버에서 그를 인증하기 위한 판매자의 ID"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -318,7 +323,7 @@ msgstr ""
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:22
 #, python-format
 msgid "No opened point of sale session for user %s found."
-msgstr ""
+msgstr "사용자 %s에 대한 열린 POS를 찾을 수 없습니다."
 
 #. module: pos_mercury
 #. openerp-web
@@ -332,7 +337,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:330
 #, python-format
 msgid "No response from server (connected to network?)"
-msgstr ""
+msgstr "서버에서 응답이 없습니다 (네트워크에 연결되어 있습니까?)"
 
 #. module: pos_mercury
 #. openerp-web
@@ -340,14 +345,14 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:577
 #, python-format
 msgid "Odoo error while processing transaction."
-msgstr ""
+msgstr "트랜잭션을 처리하는 동안 Odoo 오류가 발생했습니다."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:652
 #, python-format
 msgid "One credit card swipe already pending."
-msgstr ""
+msgstr "하나의 신용 카드 스와이프가 이미 보류 중입니다."
 
 #. module: pos_mercury
 #. openerp-web
@@ -366,20 +371,20 @@ msgstr "포장품"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:470
 #, python-format
 msgid "Partially approved"
-msgstr ""
+msgstr "부분 승인"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_pwd
 msgid ""
 "Password of the merchant to authenticate him on the payment provider server"
-msgstr ""
+msgstr "지불 제공자 서버에서 그를 인증하기위한 판매자의 비밀번호"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:512
 #, python-format
 msgid "Pay with: "
-msgstr ""
+msgstr "결제 방법 :"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_record_no
@@ -423,45 +428,45 @@ msgstr "가격이 책정된 제품"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:345
 #, python-format
 msgid "Refunds not supported"
-msgstr ""
+msgstr "환불은 지원 않됨"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:549
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
-msgstr ""
+msgstr "취소에 실패하여 VoidSale을 보냈습니다 ..."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:591
 #, python-format
 msgid "Reversal succeeded"
-msgstr ""
+msgstr "반전 성공"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:552
 #, python-format
 msgid "Sending reversal..."
-msgstr ""
+msgstr "반전 전송 중 ..."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:47
 #, python-format
 msgid "TO CARDHOLDER AGREEMENT"
-msgstr ""
+msgstr "TO CARDHOLDER AGREEMENT"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_card_brand
 msgid "The brand of the payment card (e.g. Visa, AMEX, ...)"
-msgstr ""
+msgstr "결제 카드 브랜드 (예 : Visa, AMEX, ...)"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_prefixed_card_number
 msgid "The card number used for the payment."
-msgstr ""
+msgstr "결제에 사용된 카드 번호입니다."
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_journal__pos_mercury_config_id
@@ -471,12 +476,12 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_card_number
 msgid "The last 4 numbers of the card used to pay"
-msgstr ""
+msgstr "결제에 사용한 카드의 마지막 4자리 번호"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_card_owner_name
 msgid "The name of the card owner"
-msgstr ""
+msgstr "카드 소유자의 이름"
 
 #. module: pos_mercury
 #. openerp-web
@@ -486,13 +491,15 @@ msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
 "layout set to US QWERTY (not US International)."
 msgstr ""
+"스와이프가 잘못 실행되었거나 키보드 레이아웃이 US QWERTY(US International이 아님)로 설정되어 있지 않아 발생할 수 "
+"있습니다."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:146
 #, python-format
 msgid "Transaction approved"
-msgstr ""
+msgstr "거래 승인"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_barcode_rule__type
@@ -516,21 +523,21 @@ msgstr ""
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
 msgid "Vantiv Accounts"
-msgstr ""
+msgstr "Vantiv 계정"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:599
 #, python-format
 msgid "VoidSale succeeded"
-msgstr ""
+msgstr "보이드 세일 성공"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:17
 #, python-format
 msgid "WAITING FOR SWIPE"
-msgstr ""
+msgstr "스와이프 대기"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -538,6 +545,8 @@ msgid ""
 "We currently support the MagTek Dynamag card reader device. It can be connected\n"
 "                                directly to the Point Of Sale device or it can be connected to the IoTBox."
 msgstr ""
+"우리는 현재 MagTek Dynamag 카드 리더 장치를 지원합니다. \n"
+"                                  POS 장치에 직접 연결하거나 IoTBox에 연결할 수 있습니다."
 
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
@@ -549,4 +558,4 @@ msgstr "중량이 있는 상품"
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:50
 #, python-format
 msgid "X______________________________"
-msgstr ""
+msgstr "X______________________________"
