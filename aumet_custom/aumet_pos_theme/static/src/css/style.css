@@ -3,6 +3,40 @@
     src: url(/aumet_pos_theme/static/src/fonts/OpenSans-Regular.ttf);
 }
 
+.pos .green-border-bottom {
+    border-bottom: 0 !important;
+}
+
+.pos .category-simple-button {
+    background-color: #606161 !important;
+    border-right: 0 !important;
+    border-top: 0 !important;
+    color: #ffffff !important;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 25px;
+}
+
+.pos .breadcrumb {
+    background-color: #606161 !important;
+}
+
+.pos .breadcrumb-button {
+    color: #ffffff !important;
+    font-weight: normal;
+    font-size: 18px;
+}
+
+.pos .rightpane-header {
+    background-color: #606161 !important;
+
+}
+
+.pos .breadcrumb-button.breadcrumb-home {
+    background-color: #606161 !important;
+    color: #ffffff !important;
+}
+
 .product-item {
     width: 116px;
     height: 164px;
@@ -10,7 +44,6 @@
     border: 1px solid #C4C4C4;
     margin-left: 25px;
     margin-top: 58px;
-
 }
 
 .product-item .product-item-img {
@@ -65,18 +98,18 @@
     background: #FFFFFF;
 }
 
-.order-empty {
+.product-screen .order-empty {
     background: #FFFFFF;
     margin: 48px 0 0 0 !important;
 }
 
-.order-empty i {
+.product-screen .order-empty i {
     color: rgba(95, 89, 85, 0.3);
     font-size: 128px !important;
 
 }
 
-.order-empty h1 {
+.product-screen .order-empty h1 {
     color: #000000;
     height: 50px;
     font-family: Cairo;
@@ -87,7 +120,7 @@
 
 }
 
-.order-empty p {
+.product-screen .order-empty p {
     color: #000000;
     height: 64px;
     font-family: Cairo;
@@ -97,7 +130,7 @@
     padding: 0 58px 0 76px;
 }
 
-.numpad {
+.product-screen .numpad {
     width: 320px !important;
     height: 220px !important;
     margin-left: auto !important;
@@ -105,14 +138,14 @@
     border: none !important;
 }
 
-.pos .numpad button {
+.product-screen .numpad button {
+    font-family: Cairo;
+
     float: none !important;
     width: 79px !important;
     height: 55px !important;
     color: #5F5955 !important;
     background: #E2E2E2 !important;
-
-    font-family: Cairo;
     font-style: normal;
     text-align: center;
 }
@@ -148,6 +181,20 @@ button.pay {
 
 .pos .middel {
     background: #FFFFFF;
+    width: 5% !important;
+    max-width: 5% !important;
+}
+
+.pos .middel .middle-component {
+    overflow: visible !important;
+    align-content: center;
+    align-items: center;
+}
+
+.middle-component-buttons {
+
+    width: 100% !important;
+    margin: auto;
 }
 
 .pos .pos-content {
@@ -249,30 +296,317 @@ button.pay {
     margin-top: 10px !important;
 }
 
-.actionpad {
-    padding: 0 !important;
-    border-top: 0 !important;
-}
 
 .pos .actionpad {
     padding-top: 0 !important;
+    padding: 0 !important;
     display: inline-flex !important;
     border-left: 0 !important;
     width: 320px !important;
-    margin: 0 !important;
+    margin: auto !important;
 }
 
-.pos .actionpad .button.set-customer {
+.product-screen .actionpad .button.set-customer {
     width: 160px !important;
     border-top-left-radius: 0 !important;
 }
 
-.pos .leftpane .pads {
+.product-screen .leftpane .pads {
     border-top: 0 !important;
 }
 
-.pos .control-buttons {
+.product-screen .control-buttons {
     width: 320px !important;
     margin-left: auto;
     margin-right: auto;
 }
+
+.pos #wrapper button#slidemenubtn {
+    background-color: #04bca6 !important;
+}
+
+
+/*--------------------payment-screen---------------------------*/
+.payment-screen > .screen-content {
+    border: 0;
+    width: 80%;
+    height: 96%;
+    padding: 32px 0 0 0;
+    max-width: 60% !important;
+}
+
+.payment-screen .top-content {
+    border-bottom: 0;
+    padding-bottom: 32px;
+}
+
+.payment-screen .top-content .back {
+    background: #E5E5E5 !important;
+    border-radius: 3px;
+    width: 135px;
+    height: 46px;
+}
+
+.payment-screen .top-content .back span.back_text {
+    font-family: Cairo;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 50px;
+    text-align: center;
+    color: #5F5955;
+    justify-content: center !important;
+}
+
+.payment-screen .top-content .top-content-center > h1 {
+    font-family: Cairo;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 34px;
+    line-height: 25px;
+    text-align: center;
+    color: #000000;
+}
+
+.payment-screen .top-content .next {
+    background: #12B9A9 !important;
+    border-radius: 3px;
+    width: 200px;
+    height: 50px;
+}
+
+.payment-screen .top-content .next:hover {
+    background: #12B9A9 !important;
+}
+
+.payment-screen .top-content .next span.next_text {
+    font-family: Cairo;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25px;
+    text-align: center;
+    line-height: 50px;
+    color: #FFFFFF;
+}
+
+.payment-screen .left-content {
+    border-right: 0;
+}
+
+.payment-screen .left-content .paymentmethods-container .toggle-serial-print .print-serial-label {
+    font-family: Cairo;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    text-align: center;
+    color: #000000;
+}
+
+.pos .toggle-serial-print .slider.round {
+    background-color: #C4C4C4;
+    box-shadow: 0 0 0 !important;
+}
+
+.pos .toggle-serial-print .slider.round:checked {
+    color: #1FBBA6;
+}
+
+.payment-screen .left-content {
+    max-width: 30% !important;
+    border: 0;
+    padding-top: 20px !important;
+}
+
+.paymentmethods .paymentmethod.button {
+    font-family: Cairo;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 60px;
+    text-align: center;
+    color: #000000 !important;
+    opacity: 0.3 !important;
+    margin-bottom: 5px !important;
+    height: 60px !important;
+    width: 100px !important;
+}
+
+.paymentmethods .paymentmethod:hover {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    background-color: #1FBBA6 !important;
+}
+
+.payment-screen .paymentlines-container {
+    border: 0 !important;
+}
+
+.payment-screen .paymentlines {
+    max-height: 250px;
+    overflow-y: auto;
+
+}
+
+.payment-screen .paymentlines-empty .total {
+
+    font-family: Cairo;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 75px;
+    line-height: 187px;
+    text-align: center;
+    color: #12B9A9;
+    text-shadow: 0 0 !important;
+}
+
+.payment-status-total-due .label, .payment-status-change .label, .payment-status-remaining .label {
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    text-align: center;
+    color: #000000;
+}
+
+.payment-status-change .amount, .payment-status-remaining .amount {
+    font-family: Cairo;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 50px;
+    text-align: center;
+    color: #5F5955 !important;
+}
+
+.payment-status-total-due .total {
+    font-family: Cairo;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 60px !important;
+    text-align: center;
+    color: #12B9A9;
+    width: 100%;
+}
+
+.payment-numpad .numpad {
+
+    width: 442px !important;
+    height: 442px !important;
+    box-sizing: border-box;
+    /*border-radius: 10px;*/
+}
+
+.payment-numpad .numpad .input-button {
+    width: 110px !important;
+    height: 110px !important;
+    background: #e2e2e2 !important;
+    opacity: 0.4;
+    color: #5F5955 !important;
+}
+
+.payment-numpad .numpad .mode-button {
+    width: 110px !important;
+    height: 110px !important;
+    background: #e2e2e2 !important;
+    opacity: 0.4;
+    color: #5F5955 !important;
+}
+
+.payment-screen .payment-buttons .button {
+    background: #E2E2E2;
+    opacity: 0.3;
+    border: 1px solid #BFBFBF;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+.payment-screen .payment-buttons .button:hover, .payment-numpad .numpad .input-button:hover, .payment-numpad .numpad .mode-button:hover {
+    background: #12B9A9 !important;
+    opacity: 1;
+    color: #ffffff !important;
+
+}
+
+.pos .paymentline {
+    background: #F6F6F6;
+    opacity: 0.5;
+    border: 1px solid #CDCDCD;
+}
+
+.pos .paymentline {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    text-align: center;
+    color: #000000;
+}
+
+@media only screen and (max-width: 600px) {
+    .payment-screen > .screen-content {
+        padding: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+
+    }
+
+    .payment-screen .payment-numpad {
+        padding-top: 0 !important;
+    }
+}
+
+/*--------------------End-Payment-Screen---------------------------*/
+
+/*--------------------Receipt-Screen-------------------------------*/
+.pos .receipt-screen {
+    background: #F0EEEE;
+}
+
+.pos .receipt-screen .screen-content {
+    border-left: 0 !important;
+    border-right: 0 !important;
+    max-width: 80%;
+
+}
+
+.pos .receipt-screen .top-content {
+    min-width: 100%;
+    border-bottom: 0 !important
+}
+
+
+.pos .receipt-screen .top-content .button {
+    width: 135px;
+    height: 46px;
+    position: absolute;
+    right: 0;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 45px;
+    text-align: center;
+    color: #FFFFFF;
+    background: #12B9A9 !important;
+    border-radius: 3px;
+    justify-content: right;
+
+}
+
+.receipt-screen .default-view .actions h1 {
+    font-style: normal !important;
+    font-weight: bold !important;
+    font-size: 30px !important;
+    line-height: 56px !important;
+    text-align: center !important;
+    color: #000000;
+
+}
+
+.receipt-screen .default-view .actions .buttons .button, .receipt-screen .default-view .actions .send-email {
+    flex: none !important;
+    margin: auto;
+    width: 431px !important;
+
+}
+
+/*--------------------End-Receipt-Screen---------------------------*/
+
