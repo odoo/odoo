@@ -1441,7 +1441,7 @@ class MrpProduction(models.Model):
 
     def _get_backorder_mo_vals(self):
         self.ensure_one()
-        next_seq = max(self.procurement_group_id.mrp_production_ids.mapped("backorder_sequence"))
+        next_seq = max(self.procurement_group_id.mrp_production_ids.mapped("backorder_sequence"), default=1)
         return {
             'name': self._get_name_backorder(self.name, next_seq + 1),
             'backorder_sequence': next_seq + 1,
