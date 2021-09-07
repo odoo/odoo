@@ -19,27 +19,12 @@
 
     <div t-name="project.ControlPanel" t-inherit="web.Legacy.ControlPanel" t-inherit-mode="extension" owl="1">
         <xpath expr="//ol[hasclass('breadcrumb')]" position="inside">
-            <t t-call="project.ControlPanelContent"/>
+            <t t-call="project.ProjectControlPanelContent">
+                <t t-set="showProjectUpdate" t-value="show_project_update"/>
+                <t t-set="isProjectUser" t-value="is_project_user"/>
+            </t>
         </xpath>
     </div>
-
-    <t t-name="project.ControlPanelContentBadge" owl="1">
-        <t t-tag="is_project_user ? 'button' : 'span'" class="badge border d-flex p-2 ml-2 bg-white">
-            <span t-attf-class="o_status_bubble o_color_bubble_{{data.color}}"/>
-            <span class="font-weight-normal ml-1" t-esc="data.status"/>
-        </t>
-    </t>
-
-    <t t-name="project.ControlPanelContent" owl="1">
-        <t t-if="show_project_update">
-            <li t-if="is_project_user" class="o_project_updates_breadcrumb pl-3" t-on-click="onStatusClick">
-                <t t-call="project.ControlPanelContentBadge"></t>
-            </li>
-            <li t-else="" class="o_project_updates_breadcrumb pl-3">
-                <t t-call="project.ControlPanelContentBadge"></t>
-            </li>
-        </t>
-    </t>
 
     <t t-name="project.ProjectRightPanel" owl="1">
         <div class="o_rightpanel">

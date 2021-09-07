@@ -956,7 +956,7 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
         }
     }
 
-    GraphRenderer.template = "web.GraphRenderer";
+    GraphRenderer.template = "web.Legacy.GraphRenderer";
     GraphRenderer.props = {
         arch: {
             type: Object,
