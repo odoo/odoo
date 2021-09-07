@@ -73,7 +73,7 @@ class StockMove(models.Model):
         subcontracted product. Otherwise use standard behavior.
         """
         self.ensure_one()
-        if self._subcontrating_can_be_record():
+        if self._subcontrating_should_be_record() or self._subcontrating_can_be_record():
             return self._action_record_components()
         action = super(StockMove, self).action_show_details()
         if self.is_subcontract and self._get_subcontract_production():
