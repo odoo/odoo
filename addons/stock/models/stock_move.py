@@ -794,6 +794,10 @@ class StockMove(models.Model):
         ]
 
     @api.model
+    def _prepare_merge_negative_moves_excluded_distinct_fields(self):
+        return []
+
+    @api.model
     def _prepare_merge_move_sort_method(self, move):
         move.ensure_one()
         return [
@@ -817,6 +821,10 @@ class StockMove(models.Model):
         into another existing one, return this one and not the (now unlinked) original.
         """
         distinct_fields = self._prepare_merge_moves_distinct_fields()
+        neg_qty_moves = self.filtered(lambda m: float_compare(m.product_qty, 0, precision_rounding=m.product_uom.rounding) < 0)
+        if len(neg_qty_moves) > 0:
+            excluded_fields = self._prepare_merge_negative_moves_excluded_distinct_fields()
+            distinct_fields = [field for field in distinct_fields if field not in excluded_fields]
 
         candidate_moves_list = []
         if not merge_into:
@@ -830,7 +838,7 @@ class StockMove(models.Model):
         for candidate_moves in candidate_moves_list:
             # First step find move to merge.
             candidate_moves = candidate_moves.with_context(prefetch_fields=False)
-            for k, g in groupby(sorted(candidate_moves, key=self._prepare_merge_move_sort_method), key=itemgetter(*distinct_fields)):
+            for __, g in groupby(sorted(candidate_moves, key=self._prepare_merge_move_sort_method, reverse=True), key=itemgetter(*distinct_fields)):
                 moves = self.env['stock.move'].concat(*g).filtered(lambda m: m.state not in ('done', 'cancel', 'draft'))
                 # If we have multiple records we will merge then in a single one.
                 if len(moves) > 1:
