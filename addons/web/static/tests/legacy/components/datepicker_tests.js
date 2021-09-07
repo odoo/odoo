@@ -9,7 +9,7 @@ odoo.define('web.datepicker_tests', function (require) {
 
     QUnit.module('Components', {}, function () {
 
-        QUnit.module('DatePicker');
+        QUnit.module('DatePicker (legacy)');
 
         QUnit.test("basic rendering", async function (assert) {
             assert.expect(8);
@@ -164,7 +164,7 @@ odoo.define('web.datepicker_tests', function (require) {
             testUtils.mock.unpatch(time);
         });
 
-        QUnit.module('DateTimePicker');
+        QUnit.module('DateTimePicker (legacy)');
 
         QUnit.test("basic rendering", async function (assert) {
             assert.expect(11);
