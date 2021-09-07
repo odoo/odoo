@@ -49,6 +49,7 @@ export function prepareRegistriesWithCleanup() {
     cloneRegistryWithCleanup(registry.category("error_handlers"));
     cloneRegistryWithCleanup(registry.category("command_provider"));
     cloneRegistryWithCleanup(registry.category("view_widgets"));
+    cloneRegistryWithCleanup(registry.category("fields"));
 
     cloneRegistryWithCleanup(registry.category("main_components"));
 
