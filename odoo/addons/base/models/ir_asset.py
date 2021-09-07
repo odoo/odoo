@@ -9,8 +9,7 @@ from werkzeug import urls
 
 import odoo
 from odoo.tools import misc
-from odoo import tools
-from odoo.modules import module
+from odoo import tools, modules
 from odoo.addons import __path__ as ADDONS_PATH
 from odoo import api, fields, http, models
 
@@ -206,7 +205,7 @@ class IrAsset(models.Model):
 
         # 2. Process all addons' manifests.
         for addon in self._topological_sort(tuple(addons)):
-            manifest = module.addons_manifest.get(addon)
+            manifest = modules.module.addons_manifest.get(addon)
             if not manifest:
                 continue
             manifest_assets = manifest.get('assets', {})
@@ -273,7 +272,7 @@ class IrAsset(models.Model):
         IrModule = self.env['ir.module.module']
 
         def mapper(addon):
-            manif = module.addons_manifest.get(addon, {})
+            manif = modules.module.addons_manifest.get(addon, {})
             from_terp = IrModule.get_values_from_terp(manif)
             from_terp['name'] = addon
             from_terp['depends'] = manif.get('depends', ['base'])
@@ -318,7 +317,7 @@ class IrAsset(models.Model):
         path_url = fs2web(path_def)
         path_parts = [part for part in path_url.split('/') if part]
         addon = path_parts[0]
-        addon_manifest = module.addons_manifest.get(addon)
+        addon_manifest = modules.module.addons_manifest.get(addon)
 
         safe_path = True
         if addon_manifest:

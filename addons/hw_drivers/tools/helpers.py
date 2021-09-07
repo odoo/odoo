@@ -17,7 +17,7 @@ from threading import Thread
 import time
 
 from odoo import _, http
-from odoo.modules import get_resource_path, module
+from odoo import modules
 
 _logger = logging.getLogger(__name__)
 
@@ -240,15 +240,16 @@ def load_iot_handlers():
     And execute these python drivers and interfaces
     """
     for directory in ['interfaces', 'drivers']:
-        path = get_resource_path('hw_drivers', 'iot_handlers', directory)
+        path = modules.get_resource_path('hw_drivers', 'iot_handlers', directory)
         filesList = os.listdir(path)
         for file in filesList:
             path_file = os.path.join(path, file)
             spec = util.spec_from_file_location(file, path_file)
             if spec:
-                spec.loader.exec_module(util.module_from_spec(spec))
-    module.addons_manifest = {}
-    module.load_addons_manifest()
+                module = util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+    modules.module.addons_manifest = {}
+    modules.module.load_addons_manifest()
     http.root = http.Root()
 
 def odoo_restart(delay):
