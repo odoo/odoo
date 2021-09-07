@@ -161,10 +161,8 @@ class Project(models.Model):
         task_data = self.env['project.task'].read_group(
             [('project_id', 'in', self.ids),
              '|',
-                '&',
-                ('stage_id.is_closed', '=', False),
                 ('stage_id.fold', '=', False),
-             ('stage_id', '=', False)],
+                ('stage_id', '=', False)],
             ['project_id', 'display_project_id:count'], ['project_id'])
         result_wo_subtask = defaultdict(int)
         result_with_subtasks = defaultdict(int)
