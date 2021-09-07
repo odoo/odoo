@@ -5,7 +5,10 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('oe_title')]/h1/field[@name='name']" position="attributes">
+            <xpath expr="//div[hasclass('oe_title')]/h1/field[@id='company']" position="attributes">
+                <attribute name="widget">field_partner_autocomplete</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]/h1/field[@id='individual']" position="attributes">
                 <attribute name="widget">field_partner_autocomplete</attribute>
             </xpath>
             <xpath expr="//field[@name='vat']" position="attributes">
@@ -23,7 +26,10 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_simple_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('oe_title')]/h1/field[@name='name']" position="attributes">
+            <xpath expr="//div[hasclass('oe_title')]/h1/field[@id='company']" position="attributes">
+                <attribute name="widget">field_partner_autocomplete</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]/h1/field[@id='individual']" position="attributes">
                 <attribute name="widget">field_partner_autocomplete</attribute>
             </xpath>
             <xpath expr="//field[last()]" position="after">
