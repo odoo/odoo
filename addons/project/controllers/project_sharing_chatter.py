@@ -4,7 +4,6 @@
 from werkzeug.exceptions import Forbidden
 
 from odoo.http import request, route
-from odoo.tools import consteq
 
 from odoo.addons.portal.controllers.mail import PortalChatter
 from .portal import ProjectCustomerPortal
@@ -24,10 +23,6 @@ class ProjectSharingChatter(PortalChatter):
         """
         project_sudo = ProjectCustomerPortal._document_check_access(self, 'project.project', project_id, token)
         can_access = project_sudo and res_model == 'project.task' and project_sudo.with_user(request.env.user)._check_project_sharing_access()
-        if token:
-            can_access &= consteq(project_sudo.access_token, token)
-        else:
-            can_access &= request.env.user.partner_id.commercial_partner_id in project_sudo.message_partner_ids
         task = None
         if can_access:
             task = request.env['project.task'].sudo().search([('id', '=', res_id), ('project_id', '=', project_sudo.id)])
