@@ -19,7 +19,7 @@ import {
 import { click, getFixture, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "../../webclient/helpers";
 import { openViewItem } from "@web/webclient/debug_items";
-import { editView, editSearchView } from "@web/legacy/debug_manager";
+import { editSearchView, editView } from "@web/views/debug_items";
 
 const { Component, mount, tags } = owl;
 const { xml } = tags;
