@@ -221,7 +221,7 @@ odoo.define('web.DatePickerOwl', function (require) {
         useCurrent: Boolean,
         widgetParent: String,
     };
-    DatePicker.template = 'web.DatePicker';
+    DatePicker.template = "web.Legacy.DatePicker";
 
     /**
      * Date/time picker
