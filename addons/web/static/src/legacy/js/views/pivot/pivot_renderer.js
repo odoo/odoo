@@ -49,7 +49,7 @@
         }
     }
 
-    PivotCustomGroupByItem.template = "web.PivotCustomGroupByItem";
+    PivotCustomGroupByItem.template = "web.legacy.PivotCustomGroupByItem";
     PivotCustomGroupByItem.props = { fields: Array };
 
     export class PivotGroupByMenu extends DropdownMenu {
@@ -98,7 +98,7 @@
         }
     }
 
-    PivotGroupByMenu.template = "web.PivotGroupByMenu";
+    PivotGroupByMenu.template = "web.legacy.PivotGroupByMenu";
     PivotGroupByMenu.components = { PivotCustomGroupByItem };
     PivotGroupByMenu.props = {
         ...DropdownMenu.props,
@@ -303,7 +303,7 @@
         }
     }
 
-    PivotRenderer.template = 'web.PivotRenderer';
+    PivotRenderer.template = 'web.legacy.PivotRenderer';
     PivotRenderer.components = { PivotGroupByMenu };
 
     export default PivotRenderer;
