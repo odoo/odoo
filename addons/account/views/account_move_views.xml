@@ -1309,10 +1309,10 @@
                     <separator/>
                     <filter string="To Check" name="to_check" domain="[('to_check', '=', True)]"/>
                     <separator/>
-                    <!-- in_payment & not_paid & partial -->
-                    <filter name="open" string="Open" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('in_payment', 'not_paid', 'partial'))]"/>
-                    <!-- paid & reversed -->
-                    <filter name="closed" string="Closed" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('paid', 'reversed'))]"/>
+                    <!-- not_paid & partial -->
+                    <filter name="open" string="Unpaid" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]"/>
+                    <!-- in_payment & paid -->
+                    <filter name="closed" string="Paid" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('in_payment', 'paid'))]"/>
                     <!-- overdue -->
                     <filter name="late" string="Overdue" domain="[
                         ('invoice_date_due', '&lt;', time.strftime('%%Y-%%m-%%d')),
