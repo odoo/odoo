@@ -1,0 +1,25 @@
+.o-tooltip {
+    font-size: smaller;
+
+    .o-tooltip--string {
+        background-color: $o-tooltip-title-background-color;
+        font-weight: bold;
+        padding: 5px 8px;
+    }
+
+    .o-tooltip--help {
+        white-space: pre-line;
+        padding: 8px;
+        margin-bottom: 0px;
+    }
+
+    .o-tooltip--technical {
+        padding: 8px;
+        margin: 0 0 0 15px;
+        list-style-type: circle;
+
+        .o-tooltip--technical--title {
+            font-weight: bold;
+        }
+    }
+}
