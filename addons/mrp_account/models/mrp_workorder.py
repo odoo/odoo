@@ -8,8 +8,8 @@ from odoo.tools import float_is_zero
 class MrpWorkorder(models.Model):
     _inherit = 'mrp.workorder'
 
-    mo_analytic_account_line_id = fields.Many2one('account.analytic.line')
-    wc_analytic_account_line_id = fields.Many2one('account.analytic.line')
+    mo_analytic_account_line_id = fields.Many2one('account.analytic.line', copy=False)
+    wc_analytic_account_line_id = fields.Many2one('account.analytic.line', copy=False)
 
     def _compute_duration(self):
         res = super()._compute_duration()
