@@ -11,44 +11,45 @@ from odoo.tests import tagged, Form
 @tagged('post_install', '-at_install')
 class TestLandedCosts(TestStockLandedCostsCommon):
 
-    def setUp(self):
-        super(TestLandedCosts, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         # Create picking incoming shipment
-        self.picking_in = self.Picking.create({
-            'partner_id': self.supplier_id,
-            'picking_type_id': self.warehouse.in_type_id.id,
-            'location_id': self.supplier_location_id,
-            'location_dest_id': self.warehouse.lot_stock_id.id})
-        self.Move.create({
-            'name': self.product_refrigerator.name,
-            'product_id': self.product_refrigerator.id,
+        cls.picking_in = cls.Picking.create({
+            'partner_id': cls.supplier_id,
+            'picking_type_id': cls.warehouse.in_type_id.id,
+            'location_id': cls.supplier_location_id,
+            'location_dest_id': cls.warehouse.lot_stock_id.id})
+        cls.Move.create({
+            'name': cls.product_refrigerator.name,
+            'product_id': cls.product_refrigerator.id,
             'product_uom_qty': 5,
-            'product_uom': self.product_refrigerator.uom_id.id,
-            'picking_id': self.picking_in.id,
-            'location_id': self.supplier_location_id,
-            'location_dest_id': self.warehouse.lot_stock_id.id})
-        self.Move.create({
-            'name': self.product_oven.name,
-            'product_id': self.product_oven.id,
+            'product_uom': cls.product_refrigerator.uom_id.id,
+            'picking_id': cls.picking_in.id,
+            'location_id': cls.supplier_location_id,
+            'location_dest_id': cls.warehouse.lot_stock_id.id})
+        cls.Move.create({
+            'name': cls.product_oven.name,
+            'product_id': cls.product_oven.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_oven.uom_id.id,
-            'picking_id': self.picking_in.id,
-            'location_id': self.supplier_location_id,
-            'location_dest_id': self.warehouse.lot_stock_id.id})
+            'product_uom': cls.product_oven.uom_id.id,
+            'picking_id': cls.picking_in.id,
+            'location_id': cls.supplier_location_id,
+            'location_dest_id': cls.warehouse.lot_stock_id.id})
         # Create picking outgoing shipment
-        self.picking_out = self.Picking.create({
-            'partner_id': self.customer_id,
-            'picking_type_id': self.warehouse.out_type_id.id,
-            'location_id': self.warehouse.lot_stock_id.id,
-            'location_dest_id': self.customer_location_id})
-        self.Move.create({
-            'name': self.product_refrigerator.name,
-            'product_id': self.product_refrigerator.id,
+        cls.picking_out = cls.Picking.create({
+            'partner_id': cls.customer_id,
+            'picking_type_id': cls.warehouse.out_type_id.id,
+            'location_id': cls.warehouse.lot_stock_id.id,
+            'location_dest_id': cls.customer_location_id})
+        cls.Move.create({
+            'name': cls.product_refrigerator.name,
+            'product_id': cls.product_refrigerator.id,
             'product_uom_qty': 2,
-            'product_uom': self.product_refrigerator.uom_id.id,
-            'picking_id': self.picking_out.id,
-            'location_id': self.warehouse.lot_stock_id.id,
-            'location_dest_id': self.customer_location_id})
+            'product_uom': cls.product_refrigerator.uom_id.id,
+            'picking_id': cls.picking_out.id,
+            'location_id': cls.warehouse.lot_stock_id.id,
+            'location_dest_id': cls.customer_location_id})
 
     def test_00_landed_costs_on_incoming_shipment(self):
         """ Test landed cost on incoming shipment """

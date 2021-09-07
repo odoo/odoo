@@ -2146,9 +2146,10 @@ class TestSinglePicking(TestStockCommon):
 
 
 class TestStockUOM(TestStockCommon):
-    def setUp(self):
-        super(TestStockUOM, self).setUp()
-        dp = self.env.ref('product.decimal_product_uom')
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        dp = cls.env.ref('product.decimal_product_uom')
         dp.digits = 7
 
     def test_pickings_transfer_with_different_uom_and_back_orders(self):
@@ -2398,15 +2399,16 @@ class TestStockUOM(TestStockCommon):
 
 
 class TestRoutes(TestStockCommon):
-    def setUp(self):
-        super(TestRoutes, self).setUp()
-        self.product1 = self.env['product.product'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product1 = cls.env['product.product'].create({
             'name': 'product a',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_all').id,
         })
-        self.uom_unit = self.env.ref('uom.product_uom_unit')
-        self.partner = self.env['res.partner'].create({'name': 'Partner'})
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
+        cls.partner = cls.env['res.partner'].create({'name': 'Partner'})
 
     def _enable_pick_ship(self):
         self.wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
