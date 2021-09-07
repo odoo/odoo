@@ -67,6 +67,45 @@ class TestReportStockQuantity(tests.TransactionCase):
         forecast_report = [x['product_qty'] for x in report if x['state'] == 'forecast']
         self.assertEqual(forecast_report, [0, 100, 100, 100, -20, -20])
 
+    def test_report_stock_quantity_stansit(self):
+        wh2 = self.env['stock.warehouse'].create({'name': 'WH2', 'code': 'WH2'})
+        transit_loc = self.wh.company_id.internal_transit_location_id
+
+        self.move_transit_out = self.env['stock.move'].create({
+            'name': 'test_transit_out_1',
+            'location_id': self.wh.lot_stock_id.id,
+            'location_dest_id': transit_loc.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 25.0,
+            'state': 'assigned',
+            'date': fields.Datetime.now(),
+            'date_deadline': fields.Datetime.now(),
+        })
+        self.move_transit_in = self.env['stock.move'].create({
+            'name': 'test_transit_in_1',
+            'location_id': transit_loc.id,
+            'location_dest_id': wh2.lot_stock_id.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 25.0,
+            'state': 'waiting',
+            'date': fields.Datetime.now(),
+            'date_deadline': fields.Datetime.now(),
+        })
+
+        self.env['base'].flush()
+        report = self.env['report.stock.quantity'].read_group(
+            [('date', '>=', fields.Date.today()), ('date', '<=', fields.Date.today()), ('product_id', '=', self.product1.id)],
+            ['product_qty', 'date', 'product_id', 'state'],
+            ['date:day', 'product_id', 'state'],
+            lazy=False)
+
+        forecast_in_report = [x['product_qty'] for x in report if x['state'] == 'in']
+        self.assertEqual(forecast_in_report, [25])
+        forecast_out_report = [x['product_qty'] for x in report if x['state'] == 'out']
+        self.assertEqual(forecast_out_report, [-25])
+
     def test_report_stock_quantity_with_product_qty_filter(self):
         from_date = fields.Date.to_string(fields.Date.add(fields.Date.today(), days=-1))
         to_date = fields.Date.to_string(fields.Date.add(fields.Date.today(), days=4))

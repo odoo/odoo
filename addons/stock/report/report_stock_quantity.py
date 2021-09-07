@@ -40,18 +40,18 @@ FROM (SELECT
         m.product_id,
         pt.id as product_tmpl_id,
         CASE
-            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN 'out'
-            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN 'in'
+            WHEN whs.id IS NOT NULL AND whd.id IS NULL THEN 'out'
+            WHEN whd.id IS NOT NULL AND whs.id IS NULL THEN 'in'
         END AS state,
         m.date::date AS date,
         CASE
-            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -m.product_qty
-            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN m.product_qty
+            WHEN whs.id IS NOT NULL AND whd.id IS NULL THEN -m.product_qty
+            WHEN whd.id IS NOT NULL AND whs.id IS NULL THEN m.product_qty
         END AS product_qty,
         m.company_id,
         CASE
-            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN whs.id
-            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN whd.id
+            WHEN whs.id IS NOT NULL AND whd.id IS NULL THEN whs.id
+            WHEN whd.id IS NOT NULL AND whs.id IS NULL THEN whd.id
         END AS warehouse_id
     FROM
         stock_move m
@@ -103,15 +103,15 @@ FROM (SELECT
             ELSE m.date::date - interval '1 day'
         END, '1 day'::interval)::date date,
         CASE
-            WHEN ((whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit') AND m.state = 'done' THEN m.product_qty
-            WHEN ((whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit') AND m.state = 'done' THEN -m.product_qty
-            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -m.product_qty
-            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN m.product_qty
+            WHEN whs.id IS NOT NULL AND whd.id IS NULL AND m.state = 'done' THEN m.product_qty
+            WHEN whd.id IS NOT NULL AND whs.id IS NULL AND m.state = 'done' THEN -m.product_qty
+            WHEN whs.id IS NOT NULL AND whd.id IS NULL THEN -m.product_qty
+            WHEN whd.id IS NOT NULL AND whs.id IS NULL THEN m.product_qty
         END AS product_qty,
         m.company_id,
         CASE
-            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN whs.id
-            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN whd.id
+            WHEN whs.id IS NOT NULL AND whd.id IS NULL THEN whs.id
+            WHEN whd.id IS NOT NULL AND whs.id IS NULL THEN whd.id
         END AS warehouse_id
     FROM
         stock_move m
