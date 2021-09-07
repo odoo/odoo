@@ -37,3 +37,21 @@ web_studio/static/src/legacy/**/*
 addons/web/static/tests/**/legacy/*
 web_enterprise/static/tests/**/legacy/*
 web_studio/static/tests/**/legacy/*
+
+# web_dashboard
+# whitelist new code
+!web_dashboard
+!web_dashboard/**/*
+
+# blacklist legacy
+web_dashboard/static/src/legacy/**/*
+web_dashboard/static/tests/legacy/**/*
+
+# web_cohort
+# whitelist new code
+!web_cohort
+!web_cohort/**/*
+
+# blacklist legacy
+web_cohort/static/src/legacy/**/*
+web_cohort/static/tests/legacy/**/*
