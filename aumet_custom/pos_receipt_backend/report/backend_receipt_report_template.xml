@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="pos_receipt">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.basic_layout">
+                        <div class="page" style="page-break-after:always;page-break-inside: avoid;">
+                            <div class="text-center" t-if='o.company_id.logo'>
+                                <img style="width:100px;height:100px;" src='/web/binary/company_logo'/>
+                                <br/>
+                            </div>
+                            <div class="text-center">
+                                <span t-esc="o.company_id.name" style="font-size:20pt !important;">&amp;nbsp;</span>
+                            </div>
+                            <div class="text-center">
+                                <span>Tel:
+                                </span>
+                                <span t-if="o.company_id.phone" t-esc="o.company_id.phone"
+                                      style="font-size:20pt !important;">&amp;nbsp;
+                                </span>
+                            </div>
+                            <div class="text-center">
+                                <span t-esc="o.company_id.email" style="font-size:20pt !important;">&amp;nbsp;</span>
+                            </div>
+                            <div class="text-center">
+                                <span t-esc="o.company_id.website" style="font-size:20pt !important;">&amp;nbsp;</span>
+                            </div>
+                            <div class="text-center">
+                                <div>--------------------------------</div>
+                                <div>Served by
+                                    <t t-esc="o.user_id.name"/>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <div>--------------------------------</div>
+                                <div>Customer:
+                                    <t t-esc="o.partner_id.name"/>
+                                </div>
+                            </div>
+                            <table style="border-bottom:1pt dashed black; font-size:14pt" width='100%'
+                                   class='orderlines'>
+                                <colgroup>
+                                    <col width='60%'/>
+                                    <col width='15%'/>
+                                    <col width='25%'/>
+                                </colgroup>
+                                <thead width='100%'>
+                                    <th style="vertical-align:bottom; margin-bottom:5pt;padding-bottom:3pt;">
+                                        Description
+                                    </th>
+                                    <th style="vertical-align:bottom;text-align:right;margin-bottom:5pt;padding-bottom:3pt">
+                                        Quantity
+                                    </th>
+                                    <th style="vertical-align:bottom;text-align:right;margin-bottom:5pt;padding-bottom:3pt">
+                                        Sub.Total
+                                    </th>
+
+                                </thead>
+                                <t t-set="qty" t-value="0"/>
+                                <tbody>
+                                    <t t-foreach="o.lines" t-as="line" style="margin-top:5pt">
+                                        <t t-set="qty" t-value="qty + line.qty"/>
+                                        <tr>
+                                            <td>
+                                                <span t-esc='line.full_product_name'></span>
+                                            </td>
+                                            <td style="text-align:right;">
+                                                <t t-esc="line.qty"/>
+                                            </td>
+                                            <td style="text-align:right;">
+                                                <t t-esc='"%.2f" % line.price_subtotal'></t>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <table style="font-size:14pt" width='100%'
+                                   class='orderlines'>
+                                <colgroup>
+                                    <col width='60%'/>
+                                    <col width='40%'/>
+                                </colgroup>
+                                <t>
+                                    <td>
+                                        <strong>Total:</strong>
+                                    </td>
+                                    <td style="text-align:right;" class="pos-receipt-right-align">
+                                        <strong>
+                                            <t t-esc="o.amount_total"
+                                               t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                        </strong>
+                                    </td>
+                                </t>
+                                <tr>
+                                    <td>Total Tax:</td>
+                                    <td style="text-align:right;" class="pos-receipt-right-align">
+                                        <t t-esc="o.amount_tax"/>
+                                    </td>
+                                </tr>
+                                <t t-set="payment_methods" t-value="o.get_payment_methods()"/>
+                                <t t-foreach='payment_methods' t-as='line'>
+                                    <tr>
+                                        <td>
+                                            <t t-esc="line['name']"/>
+                                        </td>
+                                        <td style="text-align:right;" class="pos-receipt-right-align">
+                                            <t t-esc="'%.2f' % line['amount']"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td>
+                                        <t t-esc="o.date_order"/>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                            <div class="text-center"
+                                 style="font-size:14pt">
+                                <span style="font-size:14pt">
+                                    <t t-esc="o.pos_reference"/>
+                                </span>
+
+                            </div>
+                            <div class="text-center">
+                                <img style="width:150px;height:150px;" t-attf-src="data:image/png;base64,#{o.action_receipt_qrcode(o.pos_reference)}"/>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
