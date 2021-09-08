@@ -21,6 +21,8 @@ const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy
 const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 const { FieldOne2Many } = relationalFields;
+const AbstractFieldOwl = require('web.AbstractFieldOwl');
+const fieldRegistryOwl = require('web.field_registry_owl');
 
 QUnit.module('fields', {}, function () {
 
@@ -10024,6 +10026,69 @@ QUnit.module('fields', {}, function () {
             ], "should have saved the updated turtle_int sequence");
 
             form.destroy();
+        });
+
+        QUnit.test("add_record in an o2m with an OWL field: wait mounted before success", async function (assert) {
+            assert.expect(7);
+
+            let testInst = 0;
+            class TestField extends AbstractFieldOwl {
+                setup() {
+                    super.setup();
+                    const ID = testInst++;
+                    owl.hooks.onMounted(() => {
+                        assert.step(`mounted ${ID}`);
+                    });
+
+                    owl.hooks.onWillUnmount(() => {
+                        assert.step(`willUnmount ${ID}`);
+                    });
+                }
+                activate() {
+                    return true;
+                }
+            }
+
+            TestField.template = owl.tags.xml`<span>test</span>`;
+            fieldRegistryOwl.add('test_field', TestField);
+
+            const def = testUtils.makeTestPromise();
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                debug: 1,
+                data: this.data,
+                arch: `<form>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="name" widget="test_field"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            const list = form.renderer.allFieldWidgets[form.handle][0];
+
+            list.trigger_up('add_record', {
+                context: [{
+                    default_name: 'this is a test',
+                }],
+                allowWarning: true,
+                forceEditable: 'bottom',
+                onSuccess: function () {
+                    assert.step("onSuccess");
+                    def.resolve();
+                }
+            });
+
+            await testUtils.nextTick();
+            await def;
+            assert.verifySteps(["mounted 0", "willUnmount 0", "mounted 1", "onSuccess"]);
+            form.destroy();
+            assert.verifySteps(["willUnmount 1"]);
         });
     });
 });
