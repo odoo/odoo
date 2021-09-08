@@ -529,8 +529,8 @@ class SurveyUserInputLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            score_vals = self._get_answer_score_values(vals)
             if not vals.get('answer_score'):
+                score_vals = self._get_answer_score_values(vals)
                 vals.update(score_vals)
         return super(SurveyUserInputLine, self).create(vals_list)
 
@@ -544,8 +544,8 @@ class SurveyUserInputLine(models.Model):
                 'question_id': line.question_id.id,
                 **vals_copy
             }
-            score_vals = self._get_answer_score_values(getter_params, compute_speed_score=False)
             if not vals_copy.get('answer_score'):
+                score_vals = self._get_answer_score_values(getter_params, compute_speed_score=False)
                 vals_copy.update(score_vals)
             res = super(SurveyUserInputLine, line).write(vals_copy) and res
         return res
