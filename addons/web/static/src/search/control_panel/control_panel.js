@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Pager } from "@web/core/pager/pager";
 import { useService } from "@web/core/utils/hooks";
 import { ComparisonMenu } from "../comparison_menu/comparison_menu";
 import { FavoriteMenu } from "../favorite_menu/favorite_menu";
@@ -114,5 +115,12 @@ export class ControlPanel extends Component {
     }
 }
 
-ControlPanel.components = { ComparisonMenu, FavoriteMenu, FilterMenu, GroupByMenu, SearchBar };
+ControlPanel.components = {
+    ComparisonMenu,
+    FavoriteMenu,
+    FilterMenu,
+    GroupByMenu,
+    Pager,
+    SearchBar,
+};
 ControlPanel.template = "web.ControlPanel";

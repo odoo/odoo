@@ -28,7 +28,12 @@
                         </div>
                     </t>
 
-                    <div class="o_cp_pager"/>
+                    <div class="o_cp_pager" role="search">
+                        <t t-if="env.config.getPagerProps">
+                            <t t-set="pagerProps" t-value="env.config.getPagerProps()" />
+                            <Pager t-if="pagerProps.total > 0" t-props="pagerProps" />
+                        </t>
+                    </div>
 
                     <t t-if="(env.config.viewSwitcherEntries or []).length">
                         <nav class="btn-group o_cp_switch_buttons">

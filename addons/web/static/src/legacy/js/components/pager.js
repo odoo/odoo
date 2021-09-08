@@ -219,7 +219,7 @@ odoo.define('web.Pager', function (require) {
         validate: Function,
         withAccessKey: Boolean,
     };
-    Pager.template = 'web.Pager';
+    Pager.template = 'web.legacy.Pager';
 
     return Pager;
 });
