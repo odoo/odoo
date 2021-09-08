@@ -33,7 +33,7 @@
                         <group>
                             <field name="display_create_order" invisible="1"/>
                             <field name="pricing_type" invisible="1" widget="radio"/>
-                            <field name="timesheet_product_id" string="Default Service" invisible="1" context="{'default_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
+                            <field name="timesheet_product_id" string="Default Service" invisible="1" context="{'default_detailed_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
                             <field name="sale_order_id" invisible="1" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
                             <field name="sale_line_id" string="Default Sales Order Item" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
                         </group>
