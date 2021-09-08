@@ -267,9 +267,11 @@ export class OdooEditor extends EventTarget {
         this._resizeObserver.observe(this.editable);
         this.addDomListener(this.editable, 'scroll', this.multiselectionRefresh);
 
-        this._snapshotInterval = setInterval(() => {
-            this._historyMakeSnapshot();
-        }, HISTORY_SNAPSHOT_INTERVAL);
+        if (this._collabClientId) {
+            this._snapshotInterval = setInterval(() => {
+                this._historyMakeSnapshot();
+            }, HISTORY_SNAPSHOT_INTERVAL);
+        }
 
         // -------
         // Toolbar
