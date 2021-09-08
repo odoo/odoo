@@ -31,7 +31,7 @@
                 t-att-class="{ active: model.metaData.stacked }"
             />
         </div>
-        <div t-if="model.metaData.mode !== 'pie' and env.searchModel.domains.length === 1" class="btn-group ml-3" role="toolbar" aria-label="Sort graph">
+        <div t-if="model.metaData.mode !== 'pie' and model.metaData.domains.length === 1" class="btn-group ml-3" role="toolbar" aria-label="Sort graph">
             <button class="btn btn-secondary fa fa-sort-amount-desc o_graph_button" data-tooltip="Descending" aria-label="Descending"
                 t-on-click="toggleOrder('DESC')"
                 t-att-class="{ active: model.metaData.order === 'DESC' }"

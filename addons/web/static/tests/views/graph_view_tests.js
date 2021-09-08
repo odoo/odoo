@@ -381,10 +381,12 @@ QUnit.module("Views", (hooks) => {
                 </graph>
             `,
             groupBy: [],
-            domains: [
-                { arrayRepr: [["bar", "=", true]], description: "True group" },
-                { arrayRepr: [["bar", "=", false]], description: "False group" },
-            ],
+            comparison: {
+                domains: [
+                    { arrayRepr: [["bar", "=", true]], description: "True group" },
+                    { arrayRepr: [["bar", "=", false]], description: "False group" },
+                ],
+            },
         });
         checkLabels(assert, graph, ["Total"]);
         checkDatasets(
@@ -449,10 +451,12 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                 </graph>
             `,
-            domains: [
-                { arrayRepr: [["bar", "=", true]], description: "True group" },
-                { arrayRepr: [["bar", "=", false]], description: "False group" },
-            ],
+            comparison: {
+                domains: [
+                    { arrayRepr: [["bar", "=", true]], description: "True group" },
+                    { arrayRepr: [["bar", "=", false]], description: "False group" },
+                ],
+            },
         });
         checkLabels(assert, graph, ["1", "2", "3", "4"]);
         checkDatasets(
@@ -530,23 +534,6 @@ QUnit.module("Views", (hooks) => {
                 { date: "2021-02-17", revenue: false },
                 { date: false, revenue: 0 },
             ];
-            const domains = [
-                {
-                    arrayRepr: [
-                        ["date", ">=", "2021-02-01"],
-                        ["date", "<=", "2021-02-28"],
-                    ],
-                    description: "February 2021",
-                },
-                {
-                    arrayRepr: [
-                        ["date", ">=", "2021-01-01"],
-                        ["date", "<=", "2021-01-31"],
-                    ],
-                    description: "January 2021",
-                },
-            ];
-            domains.fieldName = "date";
             const graph = await makeView({
                 serverData,
                 type: "graph",
@@ -557,7 +544,25 @@ QUnit.module("Views", (hooks) => {
                         <field name="date" interval="week"/>
                     </graph>
                 `,
-                domains,
+                comparison: {
+                    domains: [
+                        {
+                            arrayRepr: [
+                                ["date", ">=", "2021-02-01"],
+                                ["date", "<=", "2021-02-28"],
+                            ],
+                            description: "February 2021",
+                        },
+                        {
+                            arrayRepr: [
+                                ["date", ">=", "2021-01-01"],
+                                ["date", "<=", "2021-01-31"],
+                            ],
+                            description: "January 2021",
+                        },
+                    ],
+                    fieldName: "date",
+                },
             });
             checkLabels(assert, graph, ["W05 2021", "W07 2021", "", ""]);
             checkDatasets(
@@ -644,23 +649,6 @@ QUnit.module("Views", (hooks) => {
                 { date: "2021-02-17", bar: false, revenue: false },
                 { date: false, bar: true, revenue: 0 },
             ];
-            const domains = [
-                {
-                    arrayRepr: [
-                        ["date", ">=", "2021-02-01"],
-                        ["date", "<=", "2021-02-28"],
-                    ],
-                    description: "February 2021",
-                },
-                {
-                    arrayRepr: [
-                        ["date", ">=", "2021-01-01"],
-                        ["date", "<=", "2021-01-31"],
-                    ],
-                    description: "January 2021",
-                },
-            ];
-            domains.fieldName = "date";
             const graph = await makeView({
                 serverData,
                 type: "graph",
@@ -672,7 +660,25 @@ QUnit.module("Views", (hooks) => {
                         <field name="date" interval="week"/>
                     </graph>
                 `,
-                domains,
+                comparison: {
+                    domains: [
+                        {
+                            arrayRepr: [
+                                ["date", ">=", "2021-02-01"],
+                                ["date", "<=", "2021-02-28"],
+                            ],
+                            description: "February 2021",
+                        },
+                        {
+                            arrayRepr: [
+                                ["date", ">=", "2021-01-01"],
+                                ["date", "<=", "2021-01-31"],
+                            ],
+                            description: "January 2021",
+                        },
+                    ],
+                    fieldName: "date",
+                },
             });
             checkLabels(assert, graph, ["true", "false"]);
             checkDatasets(
@@ -863,10 +869,12 @@ QUnit.module("Views", (hooks) => {
                     <field name="revenue" type="measure"/>
                 </graph>
             `,
-            domains: [
-                { arrayRepr: [["bar", "=", true]], description: "True group" },
-                { arrayRepr: [["bar", "=", false]], description: "False group" },
-            ],
+            comparison: {
+                domains: [
+                    { arrayRepr: [["bar", "=", true]], description: "True group" },
+                    { arrayRepr: [["bar", "=", false]], description: "False group" },
+                ],
+            },
         });
         checkLabels(assert, graph, ["", "Total", ""]);
         checkDatasets(
@@ -923,10 +931,12 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                 </graph>
             `,
-            domains: [
-                { arrayRepr: [["bar", "=", true]], description: "True group" },
-                { arrayRepr: [["bar", "=", false]], description: "False group" },
-            ],
+            comparison: {
+                domains: [
+                    { arrayRepr: [["bar", "=", true]], description: "True group" },
+                    { arrayRepr: [["bar", "=", false]], description: "False group" },
+                ],
+            },
         });
         checkLabels(assert, graph, ["1", "2", "3", "4"]);
         checkDatasets(
@@ -1012,23 +1022,6 @@ QUnit.module("Views", (hooks) => {
                 { date: "2021-02-17", revenue: false },
                 { date: false, revenue: 0 },
             ];
-            const domains = [
-                {
-                    arrayRepr: [
-                        ["date", ">=", "2021-02-01"],
-                        ["date", "<=", "2021-02-28"],
-                    ],
-                    description: "February 2021",
-                },
-                {
-                    arrayRepr: [
-                        ["date", ">=", "2021-01-01"],
-                        ["date", "<=", "2021-01-31"],
-                    ],
-                    description: "January 2021",
-                },
-            ];
-            domains.fieldName = "date";
             const graph = await makeView({
                 serverData,
                 type: "graph",
@@ -1039,7 +1032,25 @@ QUnit.module("Views", (hooks) => {
                         <field name="date" interval="week"/>
                     </graph>
                 `,
-                domains,
+                comparison: {
+                    domains: [
+                        {
+                            arrayRepr: [
+                                ["date", ">=", "2021-02-01"],
+                                ["date", "<=", "2021-02-28"],
+                            ],
+                            description: "February 2021",
+                        },
+                        {
+                            arrayRepr: [
+                                ["date", ">=", "2021-01-01"],
+                                ["date", "<=", "2021-01-31"],
+                            ],
+                            description: "January 2021",
+                        },
+                    ],
+                    fieldName: "date",
+                },
             });
             checkLabels(assert, graph, ["W05 2021", "W07 2021", "", ""]);
             checkDatasets(
@@ -1118,23 +1129,6 @@ QUnit.module("Views", (hooks) => {
                 { date: "2021-02-17", bar: false, revenue: false },
                 { date: false, bar: true, revenue: 0 },
             ];
-            const domains = [
-                {
-                    arrayRepr: [
-                        ["date", ">=", "2021-02-01"],
-                        ["date", "<=", "2021-02-28"],
-                    ],
-                    description: "February 2021",
-                },
-                {
-                    arrayRepr: [
-                        ["date", ">=", "2021-01-01"],
-                        ["date", "<=", "2021-01-31"],
-                    ],
-                    description: "January 2021",
-                },
-            ];
-            domains.fieldName = "date";
             const graph = await makeView({
                 serverData,
                 type: "graph",
@@ -1146,7 +1140,25 @@ QUnit.module("Views", (hooks) => {
                         <field name="date" interval="week"/>
                     </graph>
                 `,
-                domains,
+                comparison: {
+                    domains: [
+                        {
+                            arrayRepr: [
+                                ["date", ">=", "2021-02-01"],
+                                ["date", "<=", "2021-02-28"],
+                            ],
+                            description: "February 2021",
+                        },
+                        {
+                            arrayRepr: [
+                                ["date", ">=", "2021-01-01"],
+                                ["date", "<=", "2021-01-31"],
+                            ],
+                            description: "January 2021",
+                        },
+                    ],
+                    fieldName: "date",
+                },
             });
             checkLabels(assert, graph, ["true", "false"]);
             checkDatasets(
@@ -1316,10 +1328,12 @@ QUnit.module("Views", (hooks) => {
                     <field name="revenue" type="measure"/>
                 </graph>
             `,
-            domains: [
-                { arrayRepr: [["bar", "=", true]], description: "True group" },
-                { arrayRepr: [["bar", "=", false]], description: "False group" },
-            ],
+            comparison: {
+                domains: [
+                    { arrayRepr: [["bar", "=", true]], description: "True group" },
+                    { arrayRepr: [["bar", "=", false]], description: "False group" },
+                ],
+            },
         });
         checkLabels(assert, graph, ["Total"]);
         checkDatasets(
@@ -1384,10 +1398,12 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                 </graph>
             `,
-            domains: [
-                { arrayRepr: [["bar", "=", true]], description: "True group" },
-                { arrayRepr: [["bar", "=", false]], description: "False group" },
-            ],
+            comparison: {
+                domains: [
+                    { arrayRepr: [["bar", "=", true]], description: "True group" },
+                    { arrayRepr: [["bar", "=", false]], description: "False group" },
+                ],
+            },
         });
         checkLabels(assert, graph, ["1", "2", "4"]);
         checkDatasets(
@@ -1465,23 +1481,6 @@ QUnit.module("Views", (hooks) => {
                 { date: "2021-02-17" },
                 { date: false },
             ];
-            const domains = [
-                {
-                    arrayRepr: [
-                        ["date", ">=", "2021-02-01"],
-                        ["date", "<=", "2021-02-28"],
-                    ],
-                    description: "February 2021",
-                },
-                {
-                    arrayRepr: [
-                        ["date", ">=", "2021-01-01"],
-                        ["date", "<=", "2021-01-31"],
-                    ],
-                    description: "January 2021",
-                },
-            ];
-            domains.fieldName = "date";
             const graph = await makeView({
                 serverData,
                 type: "graph",
@@ -1491,7 +1490,25 @@ QUnit.module("Views", (hooks) => {
                         <field name="date" interval="week"/>
                     </graph>
                 `,
-                domains,
+                comparison: {
+                    domains: [
+                        {
+                            arrayRepr: [
+                                ["date", ">=", "2021-02-01"],
+                                ["date", "<=", "2021-02-28"],
+                            ],
+                            description: "February 2021",
+                        },
+                        {
+                            arrayRepr: [
+                                ["date", ">=", "2021-01-01"],
+                                ["date", "<=", "2021-01-31"],
+                            ],
+                            description: "January 2021",
+                        },
+                    ],
+                    fieldName: "date",
+                },
             });
             checkLabels(assert, graph, [
                 "W05 2021, W01 2021",
@@ -1592,23 +1609,6 @@ QUnit.module("Views", (hooks) => {
                 { date: "2021-02-17", bar: false, revenue: false },
                 { date: false, bar: true, revenue: 0 },
             ];
-            const domains = [
-                {
-                    arrayRepr: [
-                        ["date", ">=", "2021-02-01"],
-                        ["date", "<=", "2021-02-28"],
-                    ],
-                    description: "February 2021",
-                },
-                {
-                    arrayRepr: [
-                        ["date", ">=", "2021-01-01"],
-                        ["date", "<=", "2021-01-31"],
-                    ],
-                    description: "January 2021",
-                },
-            ];
-            domains.fieldName = "date";
             const graph = await makeView({
                 serverData,
                 type: "graph",
@@ -1620,7 +1620,25 @@ QUnit.module("Views", (hooks) => {
                         <field name="date" interval="week"/>
                     </graph>
                 `,
-                domains,
+                comparison: {
+                    domains: [
+                        {
+                            arrayRepr: [
+                                ["date", ">=", "2021-02-01"],
+                                ["date", "<=", "2021-02-28"],
+                            ],
+                            description: "February 2021",
+                        },
+                        {
+                            arrayRepr: [
+                                ["date", ">=", "2021-01-01"],
+                                ["date", "<=", "2021-01-31"],
+                            ],
+                            description: "January 2021",
+                        },
+                    ],
+                    fieldName: "date",
+                },
             });
             checkLabels(assert, graph, ["true / W05 2021", "true / W01 2021", "false / W02 2021"]);
             checkDatasets(
@@ -1715,10 +1733,12 @@ QUnit.module("Views", (hooks) => {
                     <field name="product_id"/>
                 <graph/>
             `,
-            domains: [
-                { arrayRepr: [["bar", "=", true]], description: "True group" },
-                { arrayRepr: [["bar", "=", false]], description: "False group" },
-            ],
+            comparison: {
+                domains: [
+                    { arrayRepr: [["bar", "=", true]], description: "True group" },
+                    { arrayRepr: [["bar", "=", false]], description: "False group" },
+                ],
+            },
         });
         checkLabels(assert, graph, ["xphone", "No data"]);
         checkDatasets(

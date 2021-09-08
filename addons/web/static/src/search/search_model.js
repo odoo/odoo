@@ -20,6 +20,28 @@ import { deepCopy } from "@web/core/utils/objects";
 const { DateTime } = luxon;
 const EventBus = owl.core.EventBus;
 
+/**
+ * @typedef {Object} ComparisonDomain
+ * @property {DomainListRepr} arrayRepr
+ * @property {string} description
+ */
+
+/**
+ * @typedef {Object} Comparison
+ * @property {ComparisonDomain[]} domains
+ * @property {string} [fieldName]
+ */
+
+/**
+ * @typedef {Object} SearchParams
+ * @property {Comparison | null} comparison
+ * @property {Context} context
+ * @property {DomainListRepr} domain
+ * @property {string[]} groupBy
+ * @property {string[]} orderBy
+ * @property {boolean} [useSampleModel] to remove?
+ */
+
 /** @todo rework doc */
 // interface SectionCommon { // check optional keys
 //     color: string;
@@ -170,10 +192,10 @@ export class SearchModel extends EventBus {
      *
      * @param {Object} [config.action={id:false,views:[]}]
      * @param {boolean} [config.activateFavorite=true]
+     * @param {Object | null} [config.comparison]
      * @param {Object} [config.context={}]
      * @param {String} [config.displayName=""]
      * @param {Array} [config.domain=[]]
-     * @param {Array} [config.domains]
      * @param {Array} [config.dynamicFilters=[]]
      * @param {string[]} [config.groupBy=[]]
      * @param {boolean} [config.loadIrFilters=false]
@@ -197,17 +219,17 @@ export class SearchModel extends EventBus {
         this.view = view || { id: false };
 
         // used to avoid useless recomputations
+        // this._comparison is left undefined (we have to distinguish it from null)
         this._context = null;
         this._domain = null;
-        this._domains = null;
         this._groupBy = null;
         this._orderBy = null;
 
-        const { context, domain, domains, groupBy, orderBy } = config;
+        const { comparison, context, domain, groupBy, orderBy } = config;
 
+        this.globalComparison = comparison;
         this.globalContext = context || {};
         this.globalDomain = domain || [];
-        this.globalDomains = domains; // rework that part
         this.globalGroupBy = groupBy || [];
         this.globalOrderBy = orderBy || [];
 
@@ -362,25 +384,25 @@ export class SearchModel extends EventBus {
 
     /**
      * @param {Object} [config={}]
+     * @param {Object | null} [config.comparison]
      * @param {Object} [config.context={}]
      * @param {Array} [config.domain=[]]
-     * @param {Object[]} [config.domains]
      * @param {string[]} [config.groupBy=[]]
      * @param {string[]} [config.orderBy=[]]
      */
     async reload(config = {}) {
         // used to avoid useless recomputations
+        delete this._comparison;
         this._context = null;
         this._domain = null;
-        this._domains = null;
         this._groupBy = null;
         this._orderBy = null;
 
-        const { context, domain, domains, groupBy, orderBy } = config;
+        const { comparison, context, domain, groupBy, orderBy } = config;
 
         this.globalContext = context || {};
         this.globalDomain = domain || [];
-        this.globalDomains = domains; // how to use this?
+        this.globalComparison = comparison;
         this.globalGroupBy = groupBy || [];
         this.globalOrderBy = orderBy || [];
 
@@ -396,13 +418,6 @@ export class SearchModel extends EventBus {
      */
     get categories() {
         return [...this.sections.values()].filter((s) => s.type === "category");
-    }
-
-    /**
-     * @returns {Object}
-     */
-    get comparison() {
-        return this._getComparison();
     }
 
     /**
@@ -425,12 +440,18 @@ export class SearchModel extends EventBus {
         return this._domain;
     }
 
-    get domains() {
-        if (!this._domains) {
-            if (this.globalDomains) {
-                this._domains = this.globalDomains;
+    /**
+     * @returns {Comparison}
+     */
+    get comparison() {
+        if (!this.searchMenuTypes.has("comparison")) {
+            return null;
+        }
+        if (this._comparison === undefined) {
+            if (this.globalComparison) {
+                this._comparison = this.globalComparison;
             } else {
-                const comparison = this._getComparison();
+                const comparison = this.getFullComparison();
                 if (comparison) {
                     const {
                         fieldName,
@@ -439,7 +460,7 @@ export class SearchModel extends EventBus {
                         comparisonRange,
                         comparisonRangeDescription,
                     } = comparison;
-                    this._domains = [
+                    const domains = [
                         {
                             arrayRepr: Domain.and([this.domain, range]).toList(),
                             description: rangeDescription,
@@ -449,13 +470,13 @@ export class SearchModel extends EventBus {
                             description: comparisonRangeDescription,
                         },
                     ];
-                    this._domains.fieldName = fieldName; // bad but for now okay
+                    this._comparison = { domains, fieldName };
                 } else {
-                    this._domains = [{ arrayRepr: this.domain, description: null }];
+                    this._comparison = null;
                 }
             }
         }
-        return this._domains;
+        return this._comparison;
     }
 
     get facets() {
@@ -686,6 +707,57 @@ export class SearchModel extends EventBus {
     getDomainParts() {
         const copy = deepCopy(this.domainParts);
         return sortBy(Object.values(copy), (part) => part.groupId);
+    }
+
+    getFullComparison() {
+        let searchItem = null;
+        for (const queryElem of this.query.slice().reverse()) {
+            const item = this.searchItems[queryElem.searchItemId];
+            if (item.type === "comparison") {
+                searchItem = item;
+                break;
+            } else if (item.type === "favorite" && item.comparison) {
+                searchItem = item;
+                break;
+            }
+        }
+        if (!searchItem) {
+            return null;
+        } else if (searchItem.type === "favorite") {
+            return searchItem.comparison;
+        }
+        const { dateFilterId, comparisonOptionId } = searchItem;
+        const { fieldName, fieldType, description: dateFilterDescription } = this.searchItems[
+            dateFilterId
+        ];
+        const selectedGeneratorIds = this._getSelectedGeneratorIds(dateFilterId);
+        // compute range and range description
+        const { domain: range, description: rangeDescription } = constructDateDomain(
+            this.referenceMoment,
+            fieldName,
+            fieldType,
+            selectedGeneratorIds
+        );
+        // compute comparisonRange and comparisonRange description
+        const {
+            domain: comparisonRange,
+            description: comparisonRangeDescription,
+        } = constructDateDomain(
+            this.referenceMoment,
+            fieldName,
+            fieldType,
+            selectedGeneratorIds,
+            comparisonOptionId
+        );
+        return {
+            comparisonId: comparisonOptionId,
+            fieldName,
+            fieldDescription: dateFilterDescription,
+            range: range.toList(),
+            rangeDescription,
+            comparisonRange: comparisonRange.toList(),
+            comparisonRangeDescription,
+        };
     }
 
     getIrFilterValues(params) {
@@ -1264,57 +1336,6 @@ export class SearchModel extends EventBus {
         return domain;
     }
 
-    _getComparison() {
-        let searchItem = null;
-        for (const queryElem of this.query.slice().reverse()) {
-            const item = this.searchItems[queryElem.searchItemId];
-            if (item.type === "comparison") {
-                searchItem = item;
-                break;
-            } else if (item.type === "favorite" && item.comparison) {
-                searchItem = item;
-                break;
-            }
-        }
-        if (!searchItem) {
-            return null;
-        } else if (searchItem.type === "favorite") {
-            return searchItem.comparison;
-        }
-        const { dateFilterId, comparisonOptionId } = searchItem;
-        const { fieldName, fieldType, description: dateFilterDescription } = this.searchItems[
-            dateFilterId
-        ];
-        const selectedGeneratorIds = this._getSelectedGeneratorIds(dateFilterId);
-        // compute range and range description
-        const { domain: range, description: rangeDescription } = constructDateDomain(
-            this.referenceMoment,
-            fieldName,
-            fieldType,
-            selectedGeneratorIds
-        );
-        // compute comparisonRange and comparisonRange description
-        const {
-            domain: comparisonRange,
-            description: comparisonRangeDescription,
-        } = constructDateDomain(
-            this.referenceMoment,
-            fieldName,
-            fieldType,
-            selectedGeneratorIds,
-            comparisonOptionId
-        );
-        return {
-            comparisonId: comparisonOptionId,
-            fieldName,
-            fieldDescription: dateFilterDescription,
-            range: range.toList(),
-            rangeDescription,
-            comparisonRange: comparisonRange.toList(),
-            comparisonRangeDescription,
-        };
-    }
-
     /**
      * Construct a single context from the contexts of
      * filters of type 'filter', 'favorite', and 'field'.
@@ -1736,7 +1757,7 @@ export class SearchModel extends EventBus {
         }
         const rawDomain = this._getDomain({ raw: true, withGlobal: false });
         const groupBys = this._getGroupBy();
-        const comparison = this._getComparison();
+        const comparison = this.getFullComparison();
         const orderBy = saveParams.orderBy ? saveParams.orderBy : this._getOrderBy() || [];
         const userId = isShared ? false : this.userService.userId;
 
@@ -1996,9 +2017,9 @@ export class SearchModel extends EventBus {
         if (this.blockNotification) {
             return;
         }
+        delete this._comparison;
         this._context = null;
         this._domain = null;
-        this._domains = null;
         this._groupBy = null;
         this._orderBy = null;
 
