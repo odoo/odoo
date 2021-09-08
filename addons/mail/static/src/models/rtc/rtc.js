@@ -1,15 +1,5 @@
 /** @odoo-module **/
 
-function temporaryLog(message, { trace } = {}) {
-    if (trace) {
-        console.groupCollapsed(message);
-        console.trace(trace);
-        console.groupEnd();
-        return;
-    }
-    console.log(message);
-}
-
 import { browser } from "@web/core/browser/browser";
 
 import { registerNewModel } from '@mail/model/model_core';
@@ -118,6 +108,7 @@ function factory(dependencies) {
             }
             for (const token of Object.keys(this._peerConnections)) {
                 if (!currentSessionsTokens.has(token)) {
+                    this._addLogEntry(token, 'session removed from the server');
                     this._removePeer(token);
                 }
             }
@@ -164,24 +155,23 @@ function factory(dependencies) {
             }
             switch (event) {
                 case "offer":
-                    temporaryLog(`RECEIVED NOTIFICATION: ${event} from: ${rtcSession.name}`);
+                    this._addLogEntry(sender, `received notification: ${event}`, { step: 'received offer' });
                     await this._handleRtcTransactionOffer(sender, payload);
                     break;
                 case "answer":
-                    temporaryLog(`RECEIVED NOTIFICATION: ${event} from: ${rtcSession.name}`);
+                    this._addLogEntry(sender, `received notification: ${event}`, { step: 'received answer' });
                     await this._handleRtcTransactionAnswer(sender, payload);
                     break;
                 case "ice-candidate":
                     await this._handleRtcTransactionICECandidate(sender, payload);
                     break;
                 case "disconnect":
+                    this._addLogEntry(sender, `received notification: ${event}`, { step: ' peer cleanly disconnected ' });
                     this._removePeer(sender);
                     break;
                 case 'trackChange':
                     this._handleTrackChange(rtcSession, payload);
                     break;
-                case 'onOpenDataChannel':
-                    temporaryLog(`DATA CHANNEL: onOpenDataChannel - peer connection with ${sender} established`);
             }
         }
 
@@ -238,6 +228,7 @@ function factory(dependencies) {
 
             this.update({
                 currentRtcSession: clear(),
+                logs: clear(),
                 sendUserVideo: clear(),
                 sendDisplay: clear(),
                 videoTrack: clear(),
@@ -374,6 +365,33 @@ function factory(dependencies) {
         /**
          * @private
          * @param {String} token
+         * @param {String} entry
+         * @param {Object} [param2]
+         * @param {String} [param2.step] current step of the flow
+         * @param {String} [param2.state] current state of the connection
+         */
+        _addLogEntry(token, entry, { step, state } = {}) {
+            if (!this.env.isDebug()) {
+                return;
+            }
+            if (!(token in this.logs)) {
+                this.logs[token] = { step: '', state: '', logs: [] };
+            }
+            this.logs[token].logs.push({
+                event: `${window.moment().format('h:mm:ss')}: ${entry}`,
+                trace: window.Error().stack.split('\n').slice(1, 15),
+            });
+            if (step) {
+                this.logs[token].step = step;
+            }
+            if (state) {
+                this.logs[token].state = state;
+            }
+        }
+
+        /**
+         * @private
+         * @param {String} token
          */
         async _callPeer(token) {
             const peerConnection = this._createPeerConnection(token);
@@ -400,8 +418,9 @@ function factory(dependencies) {
                     continue;
                 }
                 session.update({
-                    connectionState: 'Disconnected: sending initial RTC offer',
+                    connectionState: 'Not connected: sending initial RTC offer',
                 });
+                this._addLogEntry(session.peerToken, 'init call', { step: 'init call' });
                 this._callPeer(session.peerToken);
             }
         }
@@ -422,6 +441,7 @@ function factory(dependencies) {
          */
         _createPeerConnection(token) {
             const peerConnection = new window.RTCPeerConnection({ iceServers: this.iceServers });
+            this._addLogEntry(token, `RTCPeerConnection created`, { step: 'peer connection created' });
             peerConnection.onicecandidate = async (event) => {
                 if (!event.candidate) {
                     return;
@@ -432,26 +452,26 @@ function factory(dependencies) {
                 });
             };
             peerConnection.oniceconnectionstatechange = (event) => {
-                temporaryLog('ICE STATE UPDATE: ' + peerConnection.iceConnectionState);
                 this._onICEConnectionStateChange(peerConnection.iceConnectionState, token);
             };
             peerConnection.onconnectionstatechange = (event) => {
-                temporaryLog('CONNECTION STATE UPDATE:' + peerConnection.connectionState);
                 this._onConnectionStateChange(peerConnection.connectionState, token);
             };
             peerConnection.onicecandidateerror = async (error) => {
-                temporaryLog('=== ERROR: onIceCandidate ===', { trace: error });
+                this._addLogEntry(token, `ice candidate error`);
                 this._recoverConnection(token, { delay: this.recoveryTimeout, reason: 'ice candidate error' });
             };
             peerConnection.onnegotiationneeded = async (event) => {
                 const offer = await peerConnection.createOffer();
                 await peerConnection.setLocalDescription(offer);
+                this._addLogEntry(token, `sending notification: offer`, { step: 'sending offer' });
                 await this._notifyPeers([token], {
                     event: 'offer',
                     payload: { sdp: peerConnection.localDescription },
                 });
             };
             peerConnection.ontrack = ({ transceiver, track }) => {
+                this._addLogEntry(token, `received ${track.kind} track`);
                 this._updateExternalSessionTrack(track, token);
             };
             const dataChannel = peerConnection.createDataChannel("notifications", { negotiated: true, id: 1 });
@@ -459,10 +479,6 @@ function factory(dependencies) {
                 this.handleNotification(token, event.data);
             };
             dataChannel.onopen = async () => {
-                await this._notifyPeers([token], {
-                    event: 'onOpenDataChannel',
-                    type: 'peerToPeer',
-                });
                 /**
                  * FIXME? it appears that the track yielded by the peerConnection's 'ontrack' event is always enabled,
                  * even when it is disabled on the sender-side.
@@ -511,6 +527,7 @@ function factory(dependencies) {
             try {
                 await peerConnection.setRemoteDescription(rtcSessionDescription);
             } catch (e) {
+                this._addLogEntry(fromToken, 'answer handling: Failed at setting remoteDescription');
                 // ignored the transaction may have been resolved by another concurrent offer.
             }
         }
@@ -530,7 +547,7 @@ function factory(dependencies) {
             try {
                 await peerConnection.addIceCandidate(rtcIceCandidate);
             } catch (error) {
-                temporaryLog('=== ERROR: ADD ICE CANDIDATE ===', { trace: error });
+                this._addLogEntry(fromToken, 'ICE candidate handling: failed at adding the candidate to the connection');
                 this._recoverConnection(fromToken, { delay: this.recoveryTimeout, reason: 'failed at adding ice candidate' });
             }
         }
@@ -555,16 +572,16 @@ function factory(dependencies) {
             try {
                 await peerConnection.setRemoteDescription(rtcSessionDescription);
             } catch (e) {
-                // ignored the transaction may have been resolved by another concurrent offer.
+                this._addLogEntry(fromToken, 'offer handling: failed at setting remoteDescription');
                 return;
             }
-            await peerConnection.setRemoteDescription(rtcSessionDescription);
             await this._updateRemoteTrack(peerConnection, 'audio', { token: fromToken });
             await this._updateRemoteTrack(peerConnection, 'video', { token: fromToken });
 
             const answer = await peerConnection.createAnswer();
             await peerConnection.setLocalDescription(answer);
 
+            this._addLogEntry(fromToken, `sending notification: answer`, { step: 'sending answer' });
             await this._notifyPeers([fromToken], {
                 event: 'answer',
                 payload: { sdp: peerConnection.localDescription },
@@ -616,7 +633,6 @@ function factory(dependencies) {
             });
 
             if (type === 'server') {
-                temporaryLog(`SEND NOTIFICATION: - ${event} to: [${targetTokens}]`);
                 await this.env.services.rpc({
                     route: '/mail/rtc/session/notify_call_members',
                     params: {
@@ -667,8 +683,7 @@ function factory(dependencies) {
                 if (['connected', 'closed'].includes(peerConnection.connectionState)) {
                     return;
                 }
-
-                temporaryLog(`RECOVERY: calling back ${token} to salvage the connection ${peerConnection.iceConnectionState}, reason: ${reason}`);
+                this._addLogEntry(token, `calling back to recover ${peerConnection.iceConnectionState} connection, reason: ${reason}`);
                 await this._notifyPeers([token], {
                     event: 'disconnect',
                 });
@@ -700,6 +715,7 @@ function factory(dependencies) {
             delete this._fallBackTimeouts[token];
 
             this._outGoingCallTokens.delete(token);
+            this._addLogEntry(token, 'peer removed', { step: 'peer removed' });
         }
 
         /**
@@ -928,6 +944,7 @@ function factory(dependencies) {
          * @param {String} [param2.token]
          */
         async _updateRemoteTrack(peerConnection, trackKind, { initTransceiver, token } = {}) {
+            this._addLogEntry(token, `updating ${trackKind} transceiver`);
             const track = trackKind === 'audio' ? this.audioTrack : this.videoTrack;
             const fullDirection = track ? 'sendrecv' : 'recvonly';
             const limitedDirection = track ? 'sendonly' : 'inactive';
@@ -979,6 +996,7 @@ function factory(dependencies) {
          * @param {String} token of the peer whose the connection changed
          */
         async _onConnectionStateChange(state, token) {
+            this._addLogEntry(token, `connection state changed: ${state}`);
             switch (state) {
                 case "closed":
                     this._removePeer(token);
@@ -996,6 +1014,7 @@ function factory(dependencies) {
          * @param {String} token of the peer whose the connection changed
          */
         async _onICEConnectionStateChange(connectionState, token) {
+            this._addLogEntry(token, `ICE connection state changed: ${connectionState}`, { state: connectionState });
             const rtcSession = this.messaging.models['mail.rtc_session'].findFromIdentifyingData({ id: token });
             if (!rtcSession) {
                 return;
@@ -1102,13 +1121,20 @@ function factory(dependencies) {
             ],
         }),
         /**
-         * How long to wait before considering a connection as needing recovery.
+         * Contains the logs of the current session by token.
+         * { token: { name<String>, logs<Array> } }
+         */
+        logs: attr({
+            default: {},
+        }),
+        /**
+         * How long to wait before considering a connection as needing recovery in ms.
          */
         recoveryTimeout: attr({
             default: 15000,
         }),
         /**
-         * How long to wait before recovering a connection that has failed.
+         * How long to wait before recovering a connection that has failed in ms.
          */
         recoveryDelay: attr({
             default: 3000,
