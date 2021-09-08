@@ -1900,7 +1900,7 @@ const ListUserValueWidget = UserValueWidget.extend({
         if (this.createWidget) {
             const selectedIds = currentValues.map(({ id }) => id)
                 .filter(id => typeof id === 'number');
-            this.createWidget.options.domain = ['!', ['id', 'in', selectedIds]];
+            this.createWidget.options.domain = [...this.createWidget.options.domain, ['id', 'not in', selectedIds]];
             this.createWidget.setValue('');
             this.createWidget.inputEl.value = '';
             $(this.createWidget.inputEl).trigger('input');
