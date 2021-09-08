@@ -130,8 +130,10 @@ var FormRenderer = BasicRenderer.extend({
      *  @param {Object} alertFields
      */
     updateAlertFields: function (alertFields) {
-        this.alertFields[this.state.res_id] = _.extend(this.alertFields[this.state.res_id] || {}, alertFields);
-        this.displayTranslationAlert();
+        if (this.state.res_id) {
+            this.alertFields[this.state.res_id] = _.extend(this.alertFields[this.state.res_id] || {}, alertFields);
+            this.displayTranslationAlert();
+        }
     },
     /**
      * Show a warning message if the user modified a translated field.  For each
