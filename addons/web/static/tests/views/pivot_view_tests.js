@@ -4882,6 +4882,48 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getCurrentValues(pivot), ["2", "4", "1", "1", "1", "3"].join(","));
     });
 
+    QUnit.test("flip axis while loading a filter", async function (assert) {
+        let def;
+        const pivot = await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <pivot>
+                    <field name="foo" type="measure"/>
+                    <field name="date" type="col"/>
+                    <field name="product_id" type="row"/>
+                </pivot>`,
+            searchViewArch: `
+                <search>
+                    <filter name="my_filter" string="My Filter" domain="[('product_id', '=', 41)]"/>
+                </search>`,
+            mockRPC(route, args) {
+                if (args.method === "read_group") {
+                    return Promise.resolve(def);
+                }
+            },
+        });
+
+        const values = ["29", "1", "2", "32", "12", "12", "17", "1", "2", "20"];
+        assert.strictEqual(getCurrentValues(pivot), values.join(","));
+
+        // Set a domain (this reload is delayed)
+        def = makeDeferred();
+        await toggleFilterMenu(pivot);
+        await toggleMenuItem(pivot, "My Filter");
+        assert.strictEqual(getCurrentValues(pivot), values.join(","));
+
+        // Flip axis
+        await click(pivot.el.querySelector(".o_pivot_flip_button"));
+        assert.strictEqual(getCurrentValues(pivot), values.join(","));
+
+        def.resolve();
+        await nextTick();
+
+        assert.strictEqual(getCurrentValues(pivot), ["20", "1", "17", "2"].join(","));
+    });
+
     QUnit.test(
         "concurrent reloads: add a filter, and directly toggle a measure",
         async function (assert) {
