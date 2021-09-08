@@ -57,7 +57,7 @@ class ProductTemplate(models.Model):
             if product.service_policy:
                 product.invoice_policy, product.service_type = SERVICE_TO_GENERAL.get(product.service_policy, (False, False))
 
-    @api.depends('service_tracking', 'service_policy')
+    @api.depends('service_tracking', 'service_policy', 'type')
     def _compute_product_tooltip(self):
         super()._compute_product_tooltip()
         for record in self.filtered(lambda record: record.type == 'service'):

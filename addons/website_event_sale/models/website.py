@@ -8,4 +8,4 @@ class Website(models.Model):
 
     def sale_product_domain(self):
         # remove product event from the website content grid and list view (not removed in detail view)
-        return ['&'] + super(Website, self).sale_product_domain() + [('type', '!=', 'event')]
+        return ['&'] + super(Website, self).sale_product_domain() + [('detailed_type', '!=', 'event')]

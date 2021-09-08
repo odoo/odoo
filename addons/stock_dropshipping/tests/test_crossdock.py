@@ -26,7 +26,7 @@ class TestCrossdock(common.TransactionCase):
 
         p_f = Form(self.env['product.template'])
         p_f.name = 'PCE'
-        p_f.type = 'product'
+        p_f.detailed_type = 'product'
         p_f.categ_id = self.env.ref('product.product_category_1')
         p_f.list_price = 100.0
         with p_f.seller_ids.new() as seller:

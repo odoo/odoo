@@ -32,7 +32,7 @@ class TestSaleMrpProcurement(TransactionCase):
         product.categ_id = product_category_allproductssellable0
         product.list_price = 200.0
         product.name = 'Slider Mobile'
-        product.type = 'product'
+        product.detailed_type = 'product'
         product.uom_id = uom_unit
         product.uom_po_id = uom_unit
         product.route_ids.clear()
