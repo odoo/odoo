@@ -576,6 +576,9 @@ const Wysiwyg = Widget.extend({
             const restoreSelection = preserveCursor(this.odooEditor.document);
             linkDialog.open();
             linkDialog.on('save', this, data => {
+                if (!data) {
+                    return;
+                }
                 const linkWidget = linkDialog.linkWidget;
                 getDeepRange(this.$editable[0], {range: data.range, select: true});
                 if (!linkWidget.$link.length) {
@@ -645,6 +648,9 @@ const Wysiwyg = Widget.extend({
         mediaDialog.open();
 
         mediaDialog.on('save', this, function (element) {
+            if (!element) {
+                return;
+            }
             // restore saved html classes
             if (params.htmlClass) {
                 element.className += " " + params.htmlClass;
