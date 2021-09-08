@@ -631,10 +631,10 @@ class ProductTemplate(models.Model):
         help="This user will be responsible of the next activities related to logistic operations for this product.")
     detailed_type = fields.Selection(selection_add=[
         ('product', 'Storable Product')
-    ], tracking=True, ondelete={'product': 'set default'})
+    ], tracking=True, ondelete={'product': 'set consu'})
     type = fields.Selection(selection_add=[
         ('product', 'Storable Product')
-    ], tracking=True, ondelete={'product': 'set default'})
+    ], ondelete={'product': 'set consu'})
     property_stock_production = fields.Many2one(
         'stock.location', "Production Location",
         company_dependent=True, check_company=True, domain="[('usage', '=', 'production'), '|', ('company_id', '=', False), ('company_id', '=', allowed_company_ids[0])]",
