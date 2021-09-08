@@ -204,9 +204,9 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         record = self.env['mail.test.cc'].create({'email_cc': 'cc1@example.com, cc2@example.com, cc3 <cc3@example.com>'})
         suggestions = record._message_get_suggested_recipients()[record.id]
         self.assertEqual(sorted(suggestions), [
-            (False, '"cc3" <cc3@example.com>', 'CC Email'),
-            (False, 'cc1@example.com', 'CC Email'),
-            (False, 'cc2@example.com', 'CC Email'),
+            (False, '"cc3" <cc3@example.com>', None, 'CC Email'),
+            (False, 'cc1@example.com', None, 'CC Email'),
+            (False, 'cc2@example.com', None, 'CC Email'),
         ], 'cc should be in suggestions')
 
     def test_inbox_message_fetch_needaction(self):

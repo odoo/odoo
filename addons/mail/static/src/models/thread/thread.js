@@ -541,12 +541,13 @@ registerModel({
             }, { shadow: true });
             for (const id in data) {
                 const recipientInfoList = data[id].map(recipientInfoData => {
-                    const [partner_id, emailInfo, reason] = recipientInfoData;
+                    const [partner_id, emailInfo, lang, reason] = recipientInfoData;
                     const [name, email] = emailInfo && mailUtils.parseEmail(emailInfo);
                     return {
                         email,
                         id: getSuggestedRecipientInfoNextTemporaryId(),
                         name,
+                        lang,
                         partner: partner_id ? insert({ id: partner_id }) : unlink(),
                         reason,
                     };
