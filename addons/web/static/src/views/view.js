@@ -27,9 +27,9 @@ const { Component } = owl;
  *  @property {Object[]} [irFilters]
  *  @property {boolean} [loadIrFilters=false]
  *
+ *  @property {Object} [comparison]
  *  @property {Object} [context={}]
  *  @property {DomainRepr} [domain]
- *  @property {Object[]} [domains]
  *  @property {string[]} [groupBy]
  *  @property {string[]} [orderBy]
  *
@@ -71,9 +71,9 @@ const STANDARD_PROPS = new Set([
     "irFilters",
     "loadIrFilters",
 
+    "comparison",
     "context",
     "domain",
-    "domains",
     "groupBy",
     "orderBy",
 
@@ -280,9 +280,9 @@ export class View extends Component {
 
     async willUpdateProps(nextProps) {
         // we assume that nextProps can only vary in the search keys:
-        // context, domain, domains, groupBy, orderBy
-        const { context, domain, domains, groupBy, orderBy } = nextProps;
-        Object.assign(this.withSearchProps, { context, domain, domains, groupBy, orderBy });
+        // comparison, context, domain, groupBy, orderBy
+        const { comparison, context, domain, groupBy, orderBy } = nextProps;
+        Object.assign(this.withSearchProps, { comparison, context, domain, groupBy, orderBy });
     }
 }
 

@@ -38,11 +38,10 @@ export class AddToBoard extends Component {
             action,
             displayName,
             domain,
-            comparison,
             context,
             groupBy,
             orderedBy,
-            view
+            view,
         } = this.env.searchModel;
 
         // Retrieves view context
@@ -57,8 +56,9 @@ export class AddToBoard extends Component {
             ...viewContext,
         };
 
-        if (comparison) {
-            contextToSave.comparison = comparison;
+        const detailedComparison = this.env.searchModel.getFullComparison();
+        if (detailedComparison) {
+            contextToSave.comparison = detailedComparison;
         }
 
         const result = await this.rpc("/board/add_to_dashboard", {

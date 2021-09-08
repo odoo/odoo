@@ -7,7 +7,7 @@ import { CallbackRecorder, useSetupAction } from "@web/webclient/actions/action_
 const { Component, hooks } = owl;
 const { useSubEnv } = hooks;
 
-export const SEARCH_KEYS = ["context", "domain", "domains", "groupBy", "orderBy"];
+export const SEARCH_KEYS = ["comparison", "context", "domain", "groupBy", "orderBy"];
 const OTHER_SEARCH_KEYS = ["irFilters", "searchViewArch", "searchViewFields", "searchViewId"];
 
 export class WithSearch extends Component {
@@ -63,7 +63,7 @@ export class WithSearch extends Component {
     async willUpdateProps(nextProps) {
         const config = {};
         for (const key of SEARCH_KEYS) {
-            if (nextProps[key]) {
+            if (nextProps[key] !== undefined) {
                 config[key] = nextProps[key];
             }
         }
@@ -122,9 +122,10 @@ WithSearch.props = {
     display: { type: Object, optional: true },
 
     // search query elements
+    comparison: { validate: () => true, optional: true }, // fix problem with validation with type: [Object, null]
+    // Issue OWL: https://github.com/odoo/owl/issues/910
     context: { type: Object, optional: true },
     domain: { type: Array, element: [String, Array], optional: true },
-    domains: { type: Array, element: Object, optional: true },
     groupBy: { type: Array, element: String, optional: true },
     orderBy: { type: Array, element: String, optional: true },
 
