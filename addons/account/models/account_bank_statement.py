@@ -175,9 +175,10 @@ class AccountBankStatement(models.Model):
         journal_type = self.env.context.get('journal_type', False)
         company_id = self.env.company.id
         if journal_type:
-            journals = self.env['account.journal'].search([('type', '=', journal_type), ('company_id', '=', company_id)])
-            if journals:
-                return journals[0]
+            return self.env['account.journal'].search([
+                ('type', '=', journal_type),
+                ('company_id', '=', company_id)
+            ], limit=1)
         return self.env['account.journal']
 
     @api.depends('balance_start', 'previous_statement_id')
