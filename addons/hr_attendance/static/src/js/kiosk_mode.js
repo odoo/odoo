@@ -25,7 +25,7 @@ var KioskMode = AbstractAction.extend({
         var def = this._rpc({
                 model: 'res.company',
                 method: 'search_read',
-                args: [[['id', '=', this.session.company_id]], ['name']],
+                args: [[['id', '=', this.session.user_context.allowed_company_ids && this.session.user_context.allowed_company_ids[0] || this.session.company_id]], ['name']],
             })
             .then(function (companies){
                 self.company_name = companies[0].name;
