@@ -50,6 +50,11 @@ registerModel({
             default: true,
         }),
         /**
+         * Determines the lang of 'this'. Serves as default partner lang when
+         * creating a new partner from 'this'.
+         */
+        lang: attr(),
+        /**
          * Determines the name of `this`. It serves as visual clue when
          * displaying `this`, and also serves as default partner name when
          * creating a new partner from `this`.
