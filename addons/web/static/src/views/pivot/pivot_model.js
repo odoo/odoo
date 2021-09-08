@@ -399,6 +399,10 @@ export class PivotModel extends Model {
      * @param {string} [params.interval]
      */
     async addGroupBy(params) {
+        if (this.loadProm) {
+            return; // we are currently reloaded the table
+        }
+
         const { groupId, fieldName, type, custom } = params;
         let { interval } = params;
         const meta = this._buildMeta();
@@ -436,7 +440,10 @@ export class PivotModel extends Model {
      * @param {'row'|'col'} type
      */
     closeGroup(groupId, type) {
-        this._cancelPreviousOperation();
+        if (this.loadProm) {
+            return; // we are currently reloading the table
+        }
+
         let groupBys;
         let expandedGroupBys;
         let keyPart;
@@ -717,7 +724,9 @@ export class PivotModel extends Model {
      * @param {number[]} sortedColumn.groupId
      */
     sortRows(sortedColumn) {
-        this._cancelPreviousOperation();
+        if (this.loadProm) {
+            return; // we are currently reloaded the table
+        }
 
         const config = { meta: this.meta, data: this.data };
         this._sortRows(sortedColumn, config);
@@ -819,14 +828,6 @@ export class PivotModel extends Model {
             },
         });
         return meta;
-    }
-    /**
-     * Used in synchronous operations that need to prevent a possible previous
-     * ongoing asynchronous operation that could commit new information leading
-     * to a non valid state model.
-     */
-    _cancelPreviousOperation() {
-        this.keepLast.add(Promise.resolve());
     }
     /**
      * Expand a group by using groupBy to split it.
