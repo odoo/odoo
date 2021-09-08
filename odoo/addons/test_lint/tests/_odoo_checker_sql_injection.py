@@ -38,6 +38,11 @@ class OdooBaseChecker(checkers.BaseChecker):
         """
         :type node: NodeNG
         """
+        infered = checkers.utils.safe_infer(node)
+        # The package 'psycopg2' must be installed to infer
+        # ignore sql.SQL().format
+        if infered and infered.pytype().startswith('psycopg2'):
+            return True
         if isinstance(node, astroid.Call):
             node = node.func
         # self._thing is OK (mostly self._table), self._thing() also because
@@ -45,6 +50,8 @@ class OdooBaseChecker(checkers.BaseChecker):
         return (isinstance(node, astroid.Attribute)
             and isinstance(node.expr, astroid.Name)
             and node.attrname.startswith('_')
+            # cr.execute('SELECT * FROM %s' % 'table') is OK since that is a constant
+            or isinstance(node, astroid.Const)
         )
 
     def _check_concatenation(self, node):
@@ -60,12 +67,24 @@ class OdooBaseChecker(checkers.BaseChecker):
             elif not self._allowable(node.right):
                 # execute("..." % self._table)
                 return True
+            # Consider cr.execute('SELECT ' + operator + ' FROM table' + 'WHERE')"
+            # node.repr_tree()
+            # BinOp(
+            #    op='+',
+            #    left=BinOp(
+            #       op='+',
+            #       left=BinOp(
+            #          op='+',
+            #          left=Const(value='SELECT '),
+            #          right=Name(name='operator')),
+            #       right=Const(value=' FROM table')),
+            #    right=Const(value='WHERE'))
+            # Notice that left node is another BinOp node
+            return not self._allowable(node.left) and self._check_concatenation(node.left)
 
         # check execute("...".format(self._table, table=self._table))
-        # ignore sql.SQL().format
         if isinstance(node, astroid.Call) \
                 and isinstance(node.func, astroid.Attribute) \
-                and isinstance(node.func.expr, astroid.Const) \
                 and node.func.attrname == 'format':
 
             if not all(map(self._allowable, node.args or [])):
@@ -105,13 +124,15 @@ class OdooBaseChecker(checkers.BaseChecker):
             current = node
             while (current and not isinstance(current.parent, astroid.FunctionDef)):
                 current = current.parent
+            if not current:
+                return is_concatenation
             parent = current.parent
 
             # 2) check how was the variable built
-            for node_ofc in parent.nodes_of_class(astroid.Assign):
-                if node_ofc.targets[0].as_string() != first_arg.as_string():
+            for node_assign in parent.nodes_of_class(astroid.Assign):
+                if node_assign.targets[0].as_string() != first_arg.as_string():
                     continue
-                is_concatenation = self._check_concatenation(node_ofc.value)
+                is_concatenation = self._check_concatenation(node_assign.value)
                 if is_concatenation:
                     break
         return is_concatenation
