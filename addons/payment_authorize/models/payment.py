@@ -261,7 +261,7 @@ class TxAuthorize(models.Model):
     def authorize_s2s_void_transaction(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
-        tree = transaction.void(self.acquirer_reference or '')
+        tree = transaction.void(self.acquirer_reference or '0')
         return self._authorize_s2s_validate_tree(tree)
 
     def _authorize_s2s_validate_tree(self, tree):
