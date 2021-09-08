@@ -1338,15 +1338,16 @@ var VideoWidget = MediaWidget.extend({
      */
     save: function () {
         this._updateVideo();
+        const videoSrc = this.$content.attr('src');
         if (this.isForBgVideo) {
-            return Promise.resolve({bgVideoSrc: this.$content.attr('src')});
+            return Promise.resolve({bgVideoSrc: videoSrc});
         }
-        if (this.$('.o_video_dialog_iframe').is('iframe')) {
+        if (this.$('.o_video_dialog_iframe').is('iframe') && videoSrc) {
             this.$media = $(
-                '<div class="media_iframe_video" data-oe-expression="' + this.$content.attr('src') + '">' +
+                '<div class="media_iframe_video" data-oe-expression="' + videoSrc + '">' +
                     '<div class="css_editable_mode_display">&nbsp;</div>' +
                     '<div class="media_iframe_video_size" contenteditable="false">&nbsp;</div>' +
-                    '<iframe src="' + this.$content.attr('src') + '" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>' +
+                    '<iframe src="' + videoSrc + '" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>' +
                 '</div>'
             );
             this.media = this.$media[0];
