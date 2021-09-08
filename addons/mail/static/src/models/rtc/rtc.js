@@ -301,7 +301,15 @@ function factory(dependencies) {
                         ),
                         type: 'warning',
                     });
-                    this.currentRtcSession.updateAndBroadcast({ isMuted: true });
+                    if (this.currentRtcSession) {
+                        this.currentRtcSession.updateAndBroadcast({ isMuted: true });
+                    }
+                    return;
+                }
+                if (!this.currentRtcSession) {
+                    // The getUserMedia promise could resolve when the call is ended
+                    // in which case the track is no longer relevant.
+                    audioTrack.stop();
                     return;
                 }
                 audioTrack.addEventListener('ended', async () => {
