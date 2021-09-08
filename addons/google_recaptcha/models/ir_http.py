@@ -15,6 +15,16 @@ class Http(models.AbstractModel):
 
     def session_info(self):
         session_info = super().session_info()
+        return self._add_public_key_to_session_info(session_info)
+
+    @api.model
+    def get_frontend_session_info(self):
+        frontend_session_info = super().get_frontend_session_info()
+        return self._add_public_key_to_session_info(frontend_session_info)
+
+    @api.model
+    def _add_public_key_to_session_info(self, session_info):
+        """Add the ReCaptcha public key to the given session_info object"""
         public_key = self.env['ir.config_parameter'].sudo().get_param('recaptcha_public_key')
         if public_key:
             session_info['recaptcha_public_key'] = public_key
