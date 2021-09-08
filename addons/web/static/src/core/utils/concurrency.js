@@ -117,3 +117,36 @@ export class Mutex {
         return this._unlockedProm || Promise.resolve();
     }
 }
+
+/**
+ * Hook to allow components in an arbitrary hierarchy to use the same
+ * concurrency object and mechanism in order to coordinate the actions or rpc
+ * they want to execute
+ * @param  {Object} [params]
+ * @param  {Function} [params.CreateClass] When no concurrency object is available, instanciate that class
+ *   and put it in the env
+ * @return {Function}  The function that will wrap a given promise into the concurrency object
+ */
+export function useConcurrency(params) {
+    const env = owl.hooks.useEnv();
+
+    let concurrencyObject;
+    if ("__concurrency__" in env) {
+        concurrencyObject = env.__concurrency__;
+    } else if (params && params.CreateClass) {
+        concurrencyObject = new params.CreateClass();
+        owl.hooks.useSubEnv({
+            __concurrency__: concurrencyObject,
+        });
+    }
+    if (!concurrencyObject) {
+        return (prom) => prom;
+    }
+    let exec;
+    if ("add" in concurrencyObject) {
+        exec = concurrencyObject.add.bind(concurrencyObject);
+    } else if ("exec" in concurrencyObject) {
+        exec = concurrencyObject.exec.bind(concurrencyObject);
+    }
+    return exec;
+}
