@@ -105,7 +105,7 @@
         <template id="price_dynamic_filter_template_product_product" name="Dynamic Product Filter Price">
             <span t-esc="data['price']" class="font-weight-bold"
                   t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-            <del t-if="data['has_discounted_price']" class="text-danger ml-1 h6" style="white-space: nowrap;"
+            <del t-if="data.get('has_discounted_price')" class="text-danger ml-1 h6" style="white-space: nowrap;"
                  t-esc="data['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
         </template>
     </data>
