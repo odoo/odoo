@@ -339,3 +339,28 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(fields.Date.to_date(new_order.date_order), fields.Date.today() + timedelta(days=2))
         self.assertEqual(new_order.order_line.product_uom_qty, 5.0)
         self.patcher.stop()
+
+    def test_supplier_lead_time(self):
+        """ Basic stock configuration and a supplier with a minimum qty and a lead time """
+        self.env['stock.warehouse.orderpoint'].search([]).unlink()
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = self.product_1
+        orderpoint_form.product_min_qty = 10
+        orderpoint_form.product_max_qty = 50
+        orderpoint = orderpoint_form.save()
+
+        self.env['product.supplierinfo'].search([('product_tmpl_id', '=', self.product_1.product_tmpl_id.id)]).unlink()
+        self.env['product.supplierinfo'].create({
+            'name': self.partner_1.id,
+            'min_qty': 1,
+            'price': 1,
+            'delay': 7,
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+        })
+
+        self.env['procurement.group'].run_scheduler()
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner_1.id)])
+
+        today = fields.Datetime.start_of(fields.Datetime.now(), 'day')
+        self.assertEqual(purchase_order.date_order, today)
+        self.assertEqual(fields.Datetime.start_of(purchase_order.date_planned, 'day'), today + timedelta(days=7))
