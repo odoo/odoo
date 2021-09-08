@@ -4,7 +4,6 @@ import { useDebugCategory } from "@web/core/debug/debug_context";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { registry } from "@web/core/registry";
 import { useListener, useService } from "@web/core/utils/hooks";
-import { useConcurrency } from "@web/core/utils/concurrency";
 import { evaluateExpr } from "@web/core/py_js/py";
 
 const { useComponent } = owl.hooks;
@@ -56,7 +55,15 @@ export function useViewArch(arch, params = {}) {
 export function useActionLinks({ resModel, reload }) {
     const selector = `a[type="action"]`;
     const component = owl.hooks.useComponent();
-    const concurrencyExec = useConcurrency();
+
+    let concurrencyExec;
+    if ("keepLast" in component.env) {
+        const keepLast = component.env.keepLast;
+        concurrencyExec = keepLast.add.bind(keepLast);
+    } else {
+        concurrencyExec = (prom) => prom;
+    }
+
     const orm = useService("orm");
     const { doAction } = useService("action");
 
