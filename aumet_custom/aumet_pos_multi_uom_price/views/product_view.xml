@@ -1,0 +1,21 @@
+<odoo>
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='pos']" position="inside">
+                <group name="uom_price" attrs="{'invisible': [('available_in_pos', '=', False)]}">
+                    <field name="multi_uom_price_id">
+                        <tree editable="bottom">
+                            <field name="category_id" invisible="1"/>
+                            <field name="default_uom_id" invisible="1"/>
+                            <field name="uom_id"/>
+                            <field name="price"/>
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
