@@ -26,12 +26,12 @@ export class Model extends EventBus {
      * @param {Object} params
      * @param {Object} services
      */
-    setup(params, services) {}
+    setup(/* params, services */) {}
 
     /**
      * @param {SearchParams} searchParams
      */
-    load(searchParams) {}
+    load(/* searchParams */) {}
 
     notify() {
         this.trigger("update");
@@ -78,7 +78,7 @@ export function useModel(ModelClass, params, options = {}) {
 
     onWillUpdateProps((nextProps) => {
         const searchParams = getSearchParams(nextProps);
-        searchParams.useSampleModel = false; // not sure it is good --> we'll know when implementing dashboard
+        searchParams.useSampleModel = false;
         return model.load(searchParams);
     });
     return model;
