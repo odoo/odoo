@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click } from "@web/../tests/helpers/utils";
+import { click, nextTick } from "@web/../tests/helpers/utils";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { makeWithSearch, setupControlPanelServiceRegistry } from "./helpers";
 
@@ -107,5 +107,32 @@ QUnit.module("Search", (hooks) => {
 
         await click(views[1]);
         assert.verifySteps(["kanban"]);
+    });
+
+    QUnit.test("pager", async (assert) => {
+        let pagerInfo = {
+            offset: 0,
+            limit: 10,
+            total: 50,
+            onUpdate: () => {},
+        };
+
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            config: {
+                getPagerProps() {
+                    return pagerInfo;
+                },
+            },
+            searchMenuTypes: [],
+        });
+        assert.containsOnce(controlPanel.el, ".o_pager");
+
+        pagerInfo.total = 0;
+        controlPanel.render();
+        await nextTick();
+        assert.containsNone(controlPanel.el, ".o_pager");
     });
 });
