@@ -196,7 +196,8 @@ class ResourceCalendar(models.Model):
         default=lambda self: self.env.company)
     attendance_ids = fields.One2many(
         'resource.calendar.attendance', 'calendar_id', 'Working Time',
-        compute='_compute_attendance_ids', store=True, readonly=False, copy=True)
+        compute='_compute_attendance_ids', store=True, readonly=False,
+        domain=[('resource_id', '=', False)], copy=True)
     leave_ids = fields.One2many(
         'resource.calendar.leaves', 'calendar_id', 'Time Off')
     global_leave_ids = fields.One2many(
@@ -793,15 +794,18 @@ class ResourceCalendarAttendance(models.Model):
         ('4', 'Friday'),
         ('5', 'Saturday'),
         ('6', 'Sunday')
-        ], 'Day of Week', required=True, index=True, default='0')
+        ], 'Day of Week', index=True)
     date_from = fields.Date(string='Starting Date')
     date_to = fields.Date(string='End Date')
-    hour_from = fields.Float(string='Work from', required=True, index=True,
+    hour_from = fields.Float(
+        string='Work from', required=True, index=True,
         help="Start and End time of working.\n"
              "A specific value of 24:00 is interpreted as 23:59:59.999999.")
     hour_to = fields.Float(string='Work to', required=True)
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
-    day_period = fields.Selection([('morning', 'Morning'), ('afternoon', 'Afternoon')], required=True, default='morning')
+    day_period = fields.Selection([
+        ('morning', 'Morning'),
+        ('afternoon', 'Afternoon')])
     resource_id = fields.Many2one('resource.resource', 'Resource')
     week_type = fields.Selection([
         ('1', 'Second'),

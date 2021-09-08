@@ -227,16 +227,33 @@
                     <field name="name"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
-                    <field name="dayofweek"/>
+                    <field name="dayofweek" required="1"/>
                     <label for="hour_from" string="Hours"/>
                     <div class="o_row">
                         <field name="hour_from" widget="float_time"/> -
                         <field name="hour_to" widget="float_time"/>
                     </div>
-                    <field name="day_period"/>
+                    <field name="day_period" required="1"/>
                 </group>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="resource_calendar_attendance_view_search" model="ir.ui.view">
+        <field name="name">resource.calendar.attendance.view.search</field>
+        <field name="model">resource.calendar.attendance</field>
+        <field name="arch" type="xml">
+            <search string="Search Attendances">
+                <field name="name"/>
+                <field name="resource_id"/>
+                <field name="calendar_id"/>
+                <filter name="filter_date" date="date_from" default_period="this_year" string="Period"/>
+                <group expand="0" string="Group By">
+                    <filter string="Resource" name="resource" domain="[]" context="{'group_by':'resource_id'}"/>
+                    <filter string="Leave Date" name="leave_month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Leave"/>
+                </group>
+           </search>
         </field>
     </record>
 

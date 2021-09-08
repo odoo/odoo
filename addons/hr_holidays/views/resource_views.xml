@@ -52,9 +52,52 @@
         <field name="domain">[('resource_id', '=', False)]</field>
         <field name="context">{
             'default_calendar_id': active_id,
+            'search_default_calendar_id': active_id}</field>
+        <field name="search_view_id" ref="hr_holidays.resource_calendar_leaves_view_search_inherit"/>
+    </record>
+
+    <record id="resource_calendar_attendance_tree_inherit" model="ir.ui.view">
+        <field name="name">resource.calendar.attendance.tree.inherit</field>
+        <field name="model">resource.calendar.attendance</field>
+        <field name="inherit_id" ref="resource.view_resource_calendar_attendance_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="editable">bottom</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="string">Name</attribute>
+            </xpath>
+            <field name="name" position="after">
+                <field name="resource_id"/>
+            </field>
+            <field name="date_from" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="date_to" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="week_type" position="replace"/>
+            <field name="dayofweek" position="attributes">
+                <attribute name="required">0</attribute>
+            </field>
+            <field name="day_period" position="attributes">
+                <attribute name="required">0</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="resource_calendar_specific_attendance_action_from_calendar" model="ir.actions.act_window">
+        <field name="name">Specific Attendances</field>
+        <field name="res_model">resource.calendar.attendance</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="resource_calendar_attendance_tree_inherit"/>
+        <field name="domain">[('resource_id', '!=', False)]</field>
+        <field name="context">{
+            'default_calendar_id': active_id,
             'search_default_calendar_id': active_id,
             'search_default_filter_date': True}</field>
-        <field name="search_view_id" ref="hr_holidays.resource_calendar_leaves_view_search_inherit"/>
     </record>
 
     <record id="resource_calendar_form_inherit" model="ir.ui.view">
@@ -65,6 +108,9 @@
             <xpath expr="//button[@name='%(resource.resource_calendar_leaves_action_from_calendar)d']" position="before">
                 <button name="%(resource_calendar_global_leaves_action_from_calendar)d" type="action"
                                 string="Public Time Off" icon="fa-sun-o"
+                                class="oe_stat_button"/>
+                <button name="%(resource_calendar_specific_attendance_action_from_calendar)d" type="action"
+                                string="Specific Attendance" icon="fa-suitcase"
                                 class="oe_stat_button"/>
             </xpath>
         </field>

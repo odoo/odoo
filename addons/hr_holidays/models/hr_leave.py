@@ -964,21 +964,47 @@ class HolidaysRequest(models.Model):
         """ This method will create entry in resource calendar time off object at the time of holidays cancel/removed """
         return self.env['resource.calendar.leaves'].search([('holiday_id', 'in', self.ids)]).unlink()
 
+    def _create_resource_attendance(self):
+        """ This method will create entry in resource calendar attendance object at the time of holidays validated
+        :returns: created `resource.calendar.attendance`
+        """
+        vals_list = [{
+            'name': _("%s: Attendance", leave.employee_id.name),
+            'date_from': leave.date_from.date(),
+            'date_to': leave.date_to.date(),
+            'hour_from': leave.date_from.hour + leave.date_from.minute / 60.0 + leave.date_from.second / 3600.0,
+            'hour_to': leave.date_to.hour + leave.date_to.minute / 60.0 + leave.date_to.second / 3600.0,
+            'holiday_id': leave.id,
+            'resource_id': leave.employee_id.resource_id.id,
+            'calendar_id': leave.employee_id.resource_calendar_id.id,
+        } for leave in self]
+        return self.env['resource.calendar.attendance'].sudo().create(vals_list)
+
     def _validate_leave_request(self):
         """ Validate time off requests (holiday_type='employee')
         by creating a calendar event and a resource time off. """
         holidays = self.filtered(lambda request: request.holiday_type == 'employee')
-        holidays._create_resource_leave()
-        meeting_holidays = holidays.filtered(lambda l: l.holiday_status_id.create_calendar_meeting)
-        if meeting_holidays:
-            meeting_values = meeting_holidays._prepare_holidays_meeting_values()
-            meetings = self.env['calendar.event'].with_context(
-                no_mail_to_attendees=True,
-                calendar_no_videocall=True,
-                active_model=self._name
-            ).create(meeting_values)
-            for holiday, meeting in zip(meeting_holidays, meetings):
-                holiday.meeting_id = meeting
+
+        # hr.leave could generate resource.calendar.leave or resource.calendar.attendance
+        # according to the work entry type (eg: Home Working is a specific attendance)
+        attendance_holidays = holidays.filtered(lambda l: l.holiday_status_id.work_entry_type_id and not l.holiday_status_id.work_entry_type_id.is_leave)
+        leave_holidays = holidays - attendance_holidays
+
+        if leave_holidays:
+            leave_holidays._create_resource_leave()
+            meeting_holidays = leave_holidays.filtered(lambda l: l.holiday_status_id.create_calendar_meeting)
+            if meeting_holidays:
+                meeting_values = meeting_holidays._prepare_holidays_meeting_values()
+                meetings = self.env['calendar.event'].with_context(
+                    no_mail_to_attendees=True,
+                    calendar_no_videocall=True,
+                    active_model=self._name
+                ).create(meeting_values)
+                for holiday, meeting in zip(meeting_holidays, meetings):
+                    holiday.meeting_id = meeting
+
+        if attendance_holidays:
+            attendance_holidays._create_resource_attendance()
 
     def _prepare_holidays_meeting_values(self):
         result = []

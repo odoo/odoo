@@ -4,7 +4,13 @@
 from odoo import fields, models
 
 
-class CalendarLeaves(models.Model):
+class ResourceCalendarLeaves(models.Model):
     _inherit = "resource.calendar.leaves"
+
+    holiday_id = fields.Many2one("hr.leave", string='Leave Request')
+
+
+class ResourceCalendarAttendance(models.Model):
+    _inherit = "resource.calendar.attendance"
 
     holiday_id = fields.Many2one("hr.leave", string='Leave Request')
