@@ -309,12 +309,7 @@ import { computeReportMeasures, processMeasure } from "@web/views/helpers/utils"
  */
 
 /**
- * @typedef SearchParams
- * @property {Array[]} domain
- * @property {Object} context
- * @property {string[]} groupBy
- * @property {Array[]} domains
- * @property {string[]} origins
+ * @typedef {import("@web/search/search_model").SearchParams} SearchParams
  */
 
 /**
@@ -669,13 +664,7 @@ export class PivotModel extends Model {
     }
     /**
      * @override
-     *
-     * @param {Object} searchParams
-     * @param {Object} params.context
-     * @param {Array[]} params.domain
-     * @param {string[]} params.groupBy
-     * @param {string[]} params.measures
-     * @param {Object} [params.domains]
+     * @param {SearchParams} searchParams
      */
     async load(searchParams) {
         this.orm2Use = this.realORM;
@@ -1475,17 +1464,23 @@ export class PivotModel extends Model {
         }
     }
     /**
+     * @todo review comment
      * Determine this.searchParams.domains and this.searchParams.origins from
      * this.searchParams.domains.
      *
      * @private
+     * @param {SearchParams} searchParams
      */
-    _computeDerivedParams(params) {
-        const domains = params.domains.reverse();
-        return {
-            domains: domains.map((d) => d.arrayRepr),
-            origins: domains.map((d) => d.description || ""),
-        };
+    _computeDerivedParams(searchParams) {
+        const { comparison, domain } = searchParams;
+        if (comparison) {
+            const domains = searchParams.comparison.domains.slice().reverse();
+            return {
+                domains: domains.map((d) => d.arrayRepr),
+                origins: domains.map((d) => d.description),
+            };
+        }
+        return { domains: [domain], origins: [""] };
     }
     /**
      * Make any group in tree a leaf if it was a leaf in oldTree.

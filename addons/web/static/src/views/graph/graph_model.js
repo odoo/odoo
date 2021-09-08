@@ -11,6 +11,10 @@ import { computeReportMeasures, processMeasure } from "@web/views/helpers/utils"
 
 export const SEP = " / ";
 
+/**
+ * @typedef {import("@web/search/search_model").SearchParams} SearchParams
+ */
+
 class DateClasses {
     // We view the param "array" as a matrix of values and undefined.
     // An equivalence class is formed of defined values of a column.
@@ -100,15 +104,17 @@ export class GraphModel extends Model {
     //--------------------------------------------------------------------------
 
     /**
-     * @param {Object} [searchParams]
-     * @param {Object} [searchParams.context]
-     * @param {Object[]} [searchParams.domains]
-     * @param {string[]} [searchParams.groupBy]
+     * @param {SearchParams} searchParams
      */
     async load(searchParams) {
-        const { context, domains, groupBy } = searchParams;
-        const metaData = Object.assign({}, this.metaData, { context, domains });
-
+        const { comparison, domain, context, groupBy } = searchParams;
+        const metaData = Object.assign({}, this.metaData, { context });
+        if (comparison) {
+            metaData.domains = comparison.domains;
+            metaData.comparisonField = comparison.fieldName;
+        } else {
+            metaData.domains = [{ arrayRepr: domain, description: null }];
+        }
         metaData.measure = context.graph_measure || metaData.measure;
         metaData.mode = context.graph_mode || metaData.mode;
 
@@ -183,10 +189,10 @@ export class GraphModel extends Model {
      * @returns {Object}
      */
     _getData(dataPoints) {
-        const { domains, groupBy, mode } = this.metaData;
+        const { comparisonField, groupBy, mode } = this.metaData;
 
         let identify = false;
-        if (domains.length && groupBy.length && groupBy[0].fieldName === domains.fieldName) {
+        if (comparisonField && groupBy.length && groupBy[0].fieldName === comparisonField) {
             identify = true;
         }
         const dateClasses = identify ? this._getDateClasses(dataPoints) : null;

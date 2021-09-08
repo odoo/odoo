@@ -7,6 +7,10 @@ const { core, hooks } = owl;
 const { EventBus } = core;
 const { onWillStart, onWillUpdateProps, useComponent } = hooks;
 
+/**
+ * @typedef {import("@web/search/search_model").SearchParams} SearchParams
+ */
+
 export class Model extends EventBus {
     /**
      * @param {Object} env
@@ -25,7 +29,7 @@ export class Model extends EventBus {
     setup(params, services) {}
 
     /**
-     * @param {Object} searchParams
+     * @param {SearchParams} searchParams
      */
     load(searchParams) {}
 
@@ -35,6 +39,10 @@ export class Model extends EventBus {
 }
 Model.services = [];
 
+/**
+ * @param {Object} props
+ * @returns {SearchParams}
+ */
 function getSearchParams(props) {
     const params = {};
     for (const key of SEARCH_KEYS) {
