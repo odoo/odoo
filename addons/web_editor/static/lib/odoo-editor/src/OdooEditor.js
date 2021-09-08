@@ -904,7 +904,7 @@ export class OdooEditor extends EventTarget {
                 type: 'add',
                 append: 1,
                 id: node.oid,
-                node: serializeNode(node),
+                node: this.serializeNode(node),
             })),
             id: this._generateId(),
             clientId: this.clientId,
