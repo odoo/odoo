@@ -504,6 +504,25 @@ class MailActivity(models.Model):
             'target': 'new',
         }
 
+    def _prepare_next_activity_values(self):
+        """ Prepare a dict of values based on the current activity record and applies _onchange methods
+        :returns a dict of values for the new mail.activity record
+        """
+        self.ensure_one()
+        vals = self.default_get(self.fields_get())
+
+        vals.update({
+            'previous_activity_type_id': self.activity_type_id.id,
+            'res_id': self.res_id,
+            'res_model': self.res_model,
+            'res_model_id': self.env['ir.model']._get(self.res_model).id,
+            'summary': self.summary,
+        })
+        virtual_activity = self.new(vals)
+        virtual_activity._onchange_previous_activity_type_id()
+        virtual_activity._onchange_activity_type_id()
+        return virtual_activity._convert_to_write(virtual_activity._cache)
+
     def _action_done(self, feedback=False, attachment_ids=None):
         """ Private implementation of marking activity as done: posting a message, deleting activity
             (since done), and eventually create the automatical next activity (depending on config).
@@ -532,20 +551,8 @@ class MailActivity(models.Model):
         for activity in self:
             # extract value to generate next activities
             if activity.chaining_type == 'trigger':
-                Activity = self.env['mail.activity'].with_context(activity_previous_deadline=activity.date_deadline)  # context key is required in the onchange to set deadline
-                vals = Activity.default_get(Activity.fields_get())
-
-                vals.update({
-                    'previous_activity_type_id': activity.activity_type_id.id,
-                    'res_id': activity.res_id,
-                    'res_model': activity.res_model,
-                    'res_model_id': self.env['ir.model']._get(activity.res_model).id,
-                    'summary': activity.summary,
-                })
-                virtual_activity = Activity.new(vals)
-                virtual_activity._onchange_previous_activity_type_id()
-                virtual_activity._onchange_activity_type_id()
-                next_activities_values.append(virtual_activity._convert_to_write(virtual_activity._cache))
+                vals = activity.with_context(activity_previous_deadline=activity.date_deadline)._prepare_next_activity_values()
+                next_activities_values.append(vals)
 
             # post message on activity, before deleting it
             record = self.env[activity.res_model].browse(activity.res_id)
