@@ -14,6 +14,7 @@ var mixins = require('web.mixins');
 var pyUtils = require('web.py_utils');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
+var ViewDialogs = require('web.view_dialogs');
 var widgetRegistry = require('web.widget_registry');
 const widgetRegistryOwl = require('web.widgetRegistry');
 var Widget = require('web.Widget');
@@ -7085,6 +7086,42 @@ QUnit.module('Views', {
         assert.strictEqual(nbTranslateCalls, 1, "should call_button translate once");
 
         form.destroy();
+        _t.database.multi_lang = multi_lang;
+    });
+
+    QUnit.test('check the translate alert in the wizard', async function (assert) {
+        assert.expect(1);
+
+        // Check whether it is alert before the dialog closes
+        testUtils.mock.patch(ViewDialogs.FormViewDialog, {
+            close() {
+                assert.containsNone(this.$el, '.o_notification_box');
+                this._super(...arguments);
+            },
+        });
+
+        this.data.product.fields.name.translate = true;
+
+        const multi_lang = _t.database.multi_lang;
+        _t.database.multi_lang = true;
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form><field name="product_id"/></form>`,
+            archs: {
+                'product,false,form': `<form><field name="name"/></form>`,
+            },
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.many2one.createAndEdit('product_id', "Ralts");
+        await testUtils.dom.click($('.modal-footer button.btn-primary'));
+
+        form.destroy();
+        testUtils.mock.unpatch(ViewDialogs.FormViewDialog);
         _t.database.multi_lang = multi_lang;
     });
 
