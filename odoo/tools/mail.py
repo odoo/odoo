@@ -13,6 +13,7 @@ import time
 
 from email.header import decode_header, Header
 from email.utils import getaddresses, formataddr
+import werkzeug.urls
 from lxml import etree
 
 import odoo
@@ -635,3 +636,15 @@ def encapsulate_email(old_email, new_email):
         name_part,
         new_email_split[0][1],
     ))
+
+
+def url_domain_extract(url):
+    """ Extract the company domain to be used by IAP services notably. Domain
+    is extracted from an URL e.g:
+        - www.info.proximus.be -> proximus.be
+    """
+    parser_results = werkzeug.urls.url_parse(url)
+    company_hostname = parser_results.netloc
+    if company_hostname and '.' in company_hostname:
+        return '.'.join(company_hostname.split('.')[-2:])  # remove subdomains
+    return False

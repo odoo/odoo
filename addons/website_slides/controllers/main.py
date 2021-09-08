@@ -5,7 +5,7 @@ import base64
 import logging
 import werkzeug
 
-from odoo import http, _
+from odoo import http, tools, _
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import slug
@@ -301,19 +301,42 @@ class WebsiteSlides(http.Controller):
     # --------------------------------------------------
     @http.route('/slides/embed/<int:slide_id>', type='http', auth='public', website=True, sitemap=False)
     def slides_embed(self, slide_id, page="1", **kw):
+        """
+        Detect if the slide is embedded in a website outside of the Odoo database.
+        The detection is there to differentiate cases where the slide is present on a webpage that is different than
+        the website for which the slide was created
+
+        This is how we decide if the slide is embedded or not:
+        if referer_url is Falsly -> Not embedded (it's the default behavior)
+
+        if there is a website_id (which means the slide is just available for 1 website) ->
+            is_embedded = False  if and only if  domain of referer is equal to domain of website
+        else (Available for all websites) ->
+            is_embedded = False  if and only if  domain of referer is equal to ANY of the domain of the odoo DB
+
+
+        This is important because externally embedding the slide will display Share options inside the slide itself,
+        rather than on the bottom of the page in the Odoo slide module
+
+        In case of uncertainty about the situation, we should assume it is NOT embedded
+        """
         # Note : don't use the 'model' in the route (use 'slide_id'), otherwise if public cannot access the embedded
         # slide, the error will be the website.403 page instead of the one of the website_slides.embed_slide.
         # Do not forget the rendering here will be displayed in the embedded iframe
 
         # determine if it is embedded from external web page
-        referrer_url = request.httprequest.headers.get('Referer', '')
-        base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        is_embedded = referrer_url and not bool(base_url in referrer_url) or False
-        # try accessing slide, and display to corresponding template
+        referer_url = request.httprequest.headers.get('Referer', False)
+        referer_domain = tools.url_domain_extract(referer_url)
         try:
             slide = request.env['slide.slide'].browse(slide_id)
+            website_id = slide.website_id
+            if website_id:
+                is_embedded = referer_domain and not website_id._get_http_domain().endswith(referer_domain)
+            else:
+                is_embedded = referer_domain and not any(web_id._get_http_domain().endswith(referer_domain) for web_id
+                                                         in request.env['website'].search([('domain', '!=', False)]))
             if is_embedded:
-                request.env['slide.embed'].sudo().add_embed_url(slide.id, referrer_url)
+                request.env['slide.embed'].sudo().add_embed_url(slide.id, referer_url)
             values = self._get_slide_detail(slide)
             values['page'] = page
             values['is_embedded'] = is_embedded
