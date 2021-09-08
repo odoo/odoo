@@ -6693,6 +6693,31 @@ registry.SelectTemplate = SnippetOptionWidget.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Retrieves a template either from cache or through RPC.
+     *
+     * @private
+     * @param {string} xmlid
+     * @returns {string}
+     */
+    async _getTemplate(xmlid) {
+        if (!this._templates[xmlid]) {
+            this._templates[xmlid] = await this._rpc({
+                model: 'ir.ui.view',
+                method: 'render_public_asset',
+                args: [`${xmlid}`, {}],
+                kwargs: {
+                    context: this.options.context,
+                },
+            });
+        }
+        return this._templates[xmlid];
+    },
+
+    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -6712,14 +6737,7 @@ registry.SelectTemplate = SnippetOptionWidget.extend({
             // TODO should be better and retrieve all rendering in one RPC (but
             // those ~10 RPC are only done once per edit mode if the option is
             // opened, so I guess this is acceptable).
-            this._templates[xmlid] = await this._rpc({
-                model: 'ir.ui.view',
-                method: 'render_public_asset',
-                args: [`${xmlid}`, {}],
-                kwargs: {
-                    context: this.options.context,
-                },
-            });
+            await this._getTemplate(xmlid);
         });
         this._templatesLoading = Promise.all(proms);
     },
