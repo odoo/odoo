@@ -591,10 +591,12 @@ export class PivotModel extends Model {
         };
     }
     /**
-     * Swap the pivot columns and the rows. It is a synchronous operation.
+     * Swap the pivot columns and the rows. The flip operation is synchronous.
+     * However, we must wait for a potential pending reload to complete before
+     * flipping the axes. This method is thus async.
      */
-    flip() {
-        this._cancelPreviousOperation();
+    async flip() {
+        await Promise.resolve(this.loadProm);
 
         // swap the data: the main column and the main row
         let temp = this.data.rowGroupTree;
