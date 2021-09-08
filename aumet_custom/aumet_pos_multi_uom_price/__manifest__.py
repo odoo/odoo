@@ -8,7 +8,9 @@
     'description': """
         With this module you can sell your products with different units of measure in POS.
     """,
-    'depends': ['point_of_sale'],
+
+    'author': "ehuerta _at_ ixer.mx",
+    'depends': ['point_of_sale', 'flexipharmacy'],
     'data': [
         'security/ir.model.access.csv',
         'views/product_view.xml',
