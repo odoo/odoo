@@ -379,6 +379,8 @@ export class PivotModel extends Model {
             domains: null, // not the same as searchParams.domains from cp
             origins: null, // generated from searchParams.domains from cp
         };
+
+        this.nextActiveMeasures = null; // allows to toggle several measures consecutively
     }
 
     //--------------------------------------------------------------------------
@@ -741,17 +743,21 @@ export class PivotModel extends Model {
      */
     async toggleMeasure(fieldName) {
         const meta = this._buildMeta();
+        this.nextActiveMeasures = this.nextActiveMeasures || meta.activeMeasures;
+        meta.activeMeasures = this.nextActiveMeasures;
         const index = meta.activeMeasures.indexOf(fieldName);
         if (index !== -1) {
-            this._cancelPreviousOperation();
             // in this case, we already have all data in memory, no need to
-            // actually reload a lesser amount of information
+            // actually reload a lesser amount of information (but still, we need
+            // to wait in case there is a pending load)
             meta.activeMeasures.splice(index, 1);
+            await Promise.resolve(this.loadProm);
         } else {
             meta.activeMeasures.push(fieldName);
             const config = { meta, data: this.data, searchParams: this.searchParams };
             this.data = await this._loadData(config);
         }
+        this.nextActiveMeasures = null;
         this.meta = meta;
         this.notify();
     }
