@@ -192,6 +192,11 @@ var FormRenderer = BasicRenderer.extend({
                 self.canBeSaved(self.state.id);
             }
             self._postProcessLabels();
+            if (self._button_box_node) {
+                self.defs = [];
+                $('.oe_button_box').replaceWith(self._renderButtonBox(self._button_box_node));
+                delete self.defs;
+            }
             return resetWidgets;
         });
     },
@@ -797,6 +802,7 @@ var FormRenderer = BasicRenderer.extend({
             return renderer.call(this, node);
         }
         if (node.tag === 'div' && node.attrs.name === 'button_box') {
+            this._button_box_node = node;
             return this._renderButtonBox(node);
         }
         if (_.isString(node)) {
