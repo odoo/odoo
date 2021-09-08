@@ -8,7 +8,7 @@ import { registry } from "@web/core/registry";
 import { View } from "@web/views/view";
 import { OnboardingBanner } from "@web/views/onboarding_banner";
 import { viewService } from "@web/views/view_service";
-import { click } from "../helpers/utils";
+import { click, makeDeferred } from "../helpers/utils";
 import { actionService } from "@web/webclient/actions/action_service";
 
 const { Component, mount, hooks, tags } = owl;
@@ -983,6 +983,70 @@ QUnit.module("Views", (hooks) => {
         await nextTick();
         assert.verifySteps([]);
         assert.containsOnce(toy, ".setmybodyfree");
+    });
+
+    QUnit.test("click on action-bound links in banner (concurrency)", async (assert) => {
+        assert.expect(1);
+
+        const prom = makeDeferred();
+
+        const expectedAction = {
+            type: "ir.actions.client",
+            tag: "gout",
+        };
+
+        const fakeActionService = {
+            name: "action",
+            start() {
+                return {
+                    doAction(action) {
+                        assert.deepEqual(action, expectedAction);
+                        return Promise.resolve(true);
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", fakeActionService, { force: true });
+
+        serverData.views["animal,1,toy"] = `
+            <toy banner_route="/banner_route">
+                <Banner t-if="props.bannerRoute" bannerRoute="props.bannerRoute"/>
+                <a type="action" data-method="setTheControl" data-model="animal" />
+            </toy>`;
+
+        const mockRPC = async (route) => {
+            if (route.includes("banner_route")) {
+                return {
+                    html: `<div><a type="action" data-method="heartOfTheSun" data-model="animal" /></div>`,
+                };
+            }
+            if (route.includes("setTheControl")) {
+                await prom;
+                return {
+                    type: "ir.actions.client",
+                    tag: "toug",
+                };
+            }
+            if (route.includes("heartOfTheSun")) {
+                return {
+                    type: "ir.actions.client",
+                    tag: "gout",
+                };
+            }
+        };
+
+        const toy = await makeView({
+            mockRPC,
+            serverData,
+            resModel: "animal",
+            type: "toy",
+            views: [[1, "toy"]],
+        });
+
+        await click(toy.el.querySelector("a[data-method='setTheControl']"));
+        click(toy.el.querySelector("a[data-method='heartOfTheSun']"));
+        prom.resolve();
+        await nextTick();
     });
 
     QUnit.test("real life banner", async (assert) => {
