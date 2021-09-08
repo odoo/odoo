@@ -800,7 +800,7 @@ QUnit.module("Views", (hooks) => {
 
         serverData.views["animal,1,toy"] = `
             <toy>
-                //<a type="action" title="myTitle" data-model="animal" data-resId="66" data-views="[[55, 'toy']]" data-domain="[['field', '=', 'val']]" data-context="{ &quot;somekey&quot;: &quot;somevalue&quot; }"/>
+                <a type="action" title="myTitle" data-model="animal" data-resId="66" data-views="[[55, 'toy']]" data-domain="[['field', '=', 'val']]" data-context="{ &quot;somekey&quot;: &quot;somevalue&quot; }"/>
             </toy>`;
 
         const toy = await makeView({
