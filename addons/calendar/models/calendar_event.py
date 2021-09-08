@@ -56,9 +56,7 @@ class Meeting(models.Model):
         # super default_model='crm.lead' for easier use in addons
         if self.env.context.get('default_res_model') and not self.env.context.get('default_res_model_id'):
             self = self.with_context(
-                default_res_model_id=self.env['ir.model'].sudo().search([
-                    ('model', '=', self.env.context['default_res_model'])
-                ], limit=1).id
+                default_res_model_id=self.env['ir.model']._get_id(self.env.context['default_res_model'])
             )
 
         defaults = super(Meeting, self).default_get(fields)
@@ -66,7 +64,7 @@ class Meeting(models.Model):
         # support active_model / active_id as replacement of default_* if not already given
         if 'res_model_id' not in defaults and 'res_model_id' in fields and \
                 self.env.context.get('active_model') and self.env.context['active_model'] != 'calendar.event':
-            defaults['res_model_id'] = self.env['ir.model'].sudo().search([('model', '=', self.env.context['active_model'])], limit=1).id
+            defaults['res_model_id'] = self.env['ir.model']._get_id(self.env.context['active_model'])
             defaults['res_model'] = self.env.context.get('active_model')
         if 'res_id' not in defaults and 'res_id' in fields and \
                 defaults.get('res_model_id') and self.env.context.get('active_id'):

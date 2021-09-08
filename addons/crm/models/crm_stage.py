@@ -24,13 +24,15 @@ class Stage(models.Model):
 
     @api.model
     def default_get(self, fields):
-        """ Hack :  when going from the pipeline, creating a stage with a sales team in
-            context should not create a stage for the current Sales Team only
-        """
-        ctx = dict(self.env.context)
-        if ctx.get('default_team_id') and not ctx.get('crm_team_mono'):
+        """ As we have lots of default_team_id in context used to filter out
+        leads and opportunities, we pop this key from default of stage creation.
+        Otherwise stage will be created for a given team only which is not the
+        standard behavior of stages. """
+        if 'default_team_id' in self.env.context:
+            ctx = dict(self.env.context)
             ctx.pop('default_team_id')
-        return super(Stage, self.with_context(ctx)).default_get(fields)
+            self = self.with_context(ctx)
+        return super(Stage, self).default_get(fields)
 
     name = fields.Char('Stage Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help="Used to order stages. Lower is better.")
@@ -40,10 +42,8 @@ class Stage(models.Model):
         help='Specific team that uses this stage. Other teams will not be able to see or use this stage.')
     fold = fields.Boolean('Folded in Pipeline',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
-
     # This field for interface only
     team_count = fields.Integer('team_count', compute='_compute_team_count')
 
     def _compute_team_count(self):
-        for stage in self:
-            stage.team_count = self.env['crm.team'].search_count([])
+        self.team_count = self.env['crm.team'].search_count([])
