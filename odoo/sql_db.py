@@ -371,6 +371,21 @@ class Cursor(BaseCursor):
         self.sql_log_count = 0
         self.sql_log = False
 
+    @contextmanager
+    def _enable_logging(self):
+        """ Forcefully enables logging for this cursor, restores it afterwards.
+
+        Updates the logger in-place, so not thread-safe.
+        """
+        previous, self.sql_log = self.sql_log, True
+        level = _logger.level
+        _logger.setLevel(logging.DEBUG)
+        try:
+            yield
+        finally:
+            _logger.setLevel(level)
+            self.sql_log = previous
+
     @check
     def close(self):
         return self._close(False)
