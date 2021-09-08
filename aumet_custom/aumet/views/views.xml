@@ -8,6 +8,7 @@
 
             <xpath expr="//field[@name='price_unit']" position="after">
                 <field name="bonus"/>
+                <field name="is_marketplace_order" readonly="1"/>
             </xpath>
         </field>
     </record>
@@ -69,11 +70,8 @@
             <tree string="Marketplace Products">
                 <field name="name"/>
                 <field name="unit_price"/>
-                <field name="marketplace_seller_id"/>
-                <field name="is_archived"/>
-                <field name="is_locked"/>
-                <field name="marketplace_id"/>
-                <field name="uom"/>
+                <field name="marketplace_distributor"/>
+<!--                <field name="uom"/>-->
             </tree>
         </field>
     </record>
@@ -100,21 +98,5 @@
         </field>
     </record>
 
-
-    <record id="purchase_order_form_aumet" model="ir.ui.view">
-        <field name="name">purchase.order.inherited.aumet</field>
-        <field name="model">purchase.order</field>
-        <field name="inherit_id" ref="purchase.purchase_order_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//header" position="inside">
-                <button name="button_marketplace" type="object" string="Lock" states="in marketplace"/>
-            </xpath>
-
-            <xpath expr="//field[@name='state']" position="replace">
-                <field name="state" widget="statusbar" statusbar_visible="draft,in marketplace,sent,purchase"
-                       readonly="1"/>
-            </xpath>
-        </field>
-    </record>
 
 </odoo>

@@ -48,22 +48,22 @@ class ProductSync(Command):
         for i in range(0, count, 1000):
             distributors = get_all_dist(1000, i)["data"]["data"]
             cur = cls.conn.cursor()
+            """
+            INSERT INTO public.res_partner
+            ("name", display_name, title, active,is_company, company_name, create_uid, write_uid, write_date) 
+                VALUES();"""
+
 
             insert_into_marketplace_dists = """INSERT INTO aumet_marketplace_distributor
-                            (name, country_id, marketplace_id,
+                            (name, country_id, id,
                              create_uid, create_date, write_uid, write_date) 
                             VALUES(%s, %s, %s, %s, %s, %s, %s);
                             """
 
             for i in distributors:
-                print(i)
-
-                print(i["name"], i["countryId"],
-                      i["id"],1, datetime.now(), 1, datetime.now())
-                cur.execute(insert_into_marketplace_dists, (i["name"], i["countryId"],
+                cur.execute(insert_into_marketplace_dists, (i["name"], i["name"],
                                                             i["id"], 1, datetime.now(), 1, datetime.now()))
             cls.conn.commit()
-
 
 
     @classmethod
@@ -94,8 +94,8 @@ class ProductSync(Command):
             cur = cls.conn.cursor()
 
             insert_into_marketplace_products = """INSERT INTO aumet_marketplace_product
-                        (name, unit_price, marketplace_seller_id, is_archived, is_locked,
-                         marketplace_id, create_uid, create_date, write_uid, write_date) 
+                        (name, unit_price, marketplace_distributor, is_archived, is_locked,
+                         id, create_uid, create_date, write_uid, write_date) 
                         VALUES(%s,%s,%s, %s, %s, %s, %s, %s, %s, %s);
                         """
 
@@ -109,6 +109,6 @@ class ProductSync(Command):
 
 
 if __name__ == "__main__":
-    # ProductSync.handle_products()
-    # ProductSync.handle_payment_methods()
     ProductSync.handle_vendors()
+    ProductSync.handle_products()
+    ProductSync.handle_payment_methods()

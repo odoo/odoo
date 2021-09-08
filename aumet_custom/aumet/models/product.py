@@ -29,13 +29,13 @@ class ProductTemplate(models.Model):
 
     @api.onchange('marketplace_distributor')
     def onchange_marketplace_distributor(self):
-        return {'domain': {'marketplace_product': [('marketplace_seller_id', '=', self.marketplace_distributor.marketplace_id)]}}
+        return {'domain': {'marketplace_product': [('marketplace_distributor', '=', self.marketplace_distributor.id)]}}
 
     @api.onchange('marketplace_product')
     def onchange_marketplace_product(self):
         if self.marketplace_product:
             mpapi_response = CartAPI.get_product_details(self.env.user.marketplace_token,
-                                                         self.marketplace_product[0].marketplace_id)
+                                                         self.marketplace_product[0].id)
             if mpapi_response["data"]["data"]["payment_methods"]:
                 possible_ids = [i["paymentMethodId"] for i in mpapi_response["data"]["data"]["payment_methods"]]
             else:
@@ -46,9 +46,7 @@ class ProductTemplate(models.Model):
     @api.model
     def fields_get(self, fields=None, attributes=None):
         result = super(ProductTemplate, self).fields_get(fields, attributes)
-
         payment_method_field = super(ProductTemplate, self).fields_get("payment_method", attributes)
-
         domains = self.onchange_marketplace_product()
 
         if domains:

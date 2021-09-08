@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_supplierinfo_tree_view_aumet_mp" model="ir.ui.view">
+        <field name="name">product.supplierinfo.tree.view.aumet_mp</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="is_mp"/>
+                <field name="mp_product_id"
+                       attrs="{'readonly': [('is_mp', '=', False)], 'required': [('is_mp', '=', True)]}"
+                       domain="[('partner_id', '=', name), ('is_product_locked', '=', False), ('is_archived', '=', False)]"/>
+                <field name="payment_method_id"
+                       attrs="{'readonly': [('is_mp', '=', False)], 'required': [('is_mp', '=', True)]}"/>
+            </field>
+            <field name="price" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_mp', '=', True)]}</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>
