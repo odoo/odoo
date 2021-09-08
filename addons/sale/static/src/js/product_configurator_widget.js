@@ -45,9 +45,11 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
     },
     /**
      * @private
+     * @override
      */
-    _renderReadonly: function () {
-        this.$el.html(this._renderValueLines(true));
+    _renderReadonly() {
+        this.$el.empty();
+        this.$el.append(this._renderValueLines(true));
         if (!this.noOpen && this.value && this.actualMode === 'edit') {
             this.$el.attr('href', _.str.sprintf('#id=%s&model=%s', this.value.res_id, this.field.relation));
             this.$el.addClass('o_form_uri');
