@@ -4883,6 +4883,52 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test(
+        "concurrent reloads: add a filter, and directly toggle a measure",
+        async function (assert) {
+            let def;
+            const pivot = await makeView({
+                type: "pivot",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <pivot>
+                        <field name="foo" type="measure"/>
+                        <field name="product_id" type="row"/>
+                    </pivot>`,
+                searchViewArch: `
+                    <search>
+                        <filter name="my_filter" string="My Filter" domain="[('product_id', '=', 37)]"/>
+                    </search>`,
+                mockRPC(route, args) {
+                    if (args.method === "read_group") {
+                        return Promise.resolve(def);
+                    }
+                },
+            });
+
+            assert.strictEqual(getCurrentValues(pivot), ["32", "12", "20"].join(","));
+
+            // Set a domain (this reload is delayed)
+            def = makeDeferred();
+            await toggleFilterMenu(pivot);
+            await toggleMenuItem(pivot, "My Filter");
+
+            assert.strictEqual(getCurrentValues(pivot), ["32", "12", "20"].join(","));
+
+            // Toggle a measure
+            await toggleMenu(pivot, "Measures");
+            await toggleMenuItem(pivot, "Count");
+
+            assert.strictEqual(getCurrentValues(pivot), ["32", "12", "20"].join(","));
+
+            def.resolve();
+            await nextTick();
+
+            assert.strictEqual(getCurrentValues(pivot), ["12", "1", "12", "1"].join(","));
+        }
+    );
+
+    QUnit.test(
         "if no measure is set in arch, 'Count' is used as measure initially",
         async function (assert) {
             const pivot = await makeView({

@@ -281,7 +281,6 @@ import { computeReportMeasures, processMeasure } from "@web/views/helpers/utils"
 
 /**
  * @typedef Meta
- * @property {Object} meta
  * @property {string[]} activeMeasures
  * @property {string[]} colGroupBys
  * @property {boolean} disableLinking
@@ -296,6 +295,8 @@ import { computeReportMeasures, processMeasure } from "@web/views/helpers/utils"
  * @property {string[]} expandedRowGroupBys
  * @property {string[]} expandedColGroupBys
  * @property {Object} sortedColumn
+ * @property {Array[]} domains
+ * @property {string[]} origins
  */
 
 /**
@@ -316,7 +317,6 @@ import { computeReportMeasures, processMeasure } from "@web/views/helpers/utils"
  * @typedef Config
  * @property {Meta} meta
  * @property {Data} data
- * @property {SearchParams} searchParams
  */
 
 export class PivotModel extends Model {
@@ -360,8 +360,13 @@ export class PivotModel extends Model {
             expandedColGroupBys: params.meta.expandedColGroupBys || [],
             sortedColumn,
         });
-        this.meta = this._buildMeta(meta);
 
+        this.searchParams = {
+            context: {},
+            domain: [],
+            domains: [],
+            groupBy: [],
+        };
         this.data = params.data || {
             colGroupTree: null,
             rowGroupTree: null,
@@ -370,16 +375,12 @@ export class PivotModel extends Model {
             counts: {},
             numbering: {},
         };
+        this.meta = this._buildMeta(meta);
 
-        this.searchParams = {
-            context: {},
-            domain: [],
-            groupBy: [],
-
-            domains: null, // not the same as searchParams.domains from cp
-            origins: null, // generated from searchParams.domains from cp
-        };
-
+        this.reload = false; // used to discriminate between the first load and subsequent reloads
+        // loadProm ensures that loadData always returns a promise that resolves when
+        // the final data is loaded (in case several load requests arrive consecutively)
+        this.loadProm = null;
         this.nextActiveMeasures = null; // allows to toggle several measures consecutively
     }
 
@@ -421,7 +422,7 @@ export class PivotModel extends Model {
         } else {
             meta.expandedColGroupBys.push(groupBy);
         }
-        const config = { meta, data: this.data, searchParams: this.searchParams };
+        const config = { meta, data: this.data };
         await this._expandGroup(groupId, type, config);
         this.meta = meta;
         this.notify();
@@ -493,8 +494,8 @@ export class PivotModel extends Model {
      * This is the easiest way to expand all the groups that are not expanded
      */
     async expandAll() {
-        const config = { meta: this.meta, data: this.data, searchParams: this.searchParams };
-        this.data = await this._loadData(config);
+        const config = { meta: this.meta, data: this.data };
+        await this._loadData(config, false);
         this.notify();
     }
     /**
@@ -504,7 +505,11 @@ export class PivotModel extends Model {
      * @param {'row'|'col'} type
      */
     async expandGroup(groupId, type) {
-        const config = { meta: this.meta, data: this.data, searchParams: this.searchParams };
+        if (this.loadProm) {
+            return; // we are currently reloaded the table
+        }
+
+        const config = { meta: this.meta, data: this.data };
         await this._expandGroup(groupId, type, config);
         this.notify();
     }
@@ -516,7 +521,7 @@ export class PivotModel extends Model {
      */
     exportData() {
         const measureCount = this.meta.activeMeasures.length;
-        const originCount = this.searchParams.origins.length;
+        const originCount = this.meta.origins.length;
 
         const table = this.getTable();
 
@@ -633,7 +638,7 @@ export class PivotModel extends Model {
      * @returns {Array[]}
      */
     getGroupDomain(group) {
-        const config = { meta: this.meta, data: this.data, searchParams: this.searchParams };
+        const config = { meta: this.meta, data: this.data };
         return this._getGroupDomain(group, config);
     }
     /**
@@ -661,8 +666,7 @@ export class PivotModel extends Model {
      * @returns {boolean} true iff there's no data in the table
      */
     hasData() {
-        const config = { meta: this.meta, data: this.data, searchParams: this.searchParams };
-        return this._hasData(config);
+        return this._hasData(this.data);
     }
     /**
      * @override
@@ -670,7 +674,7 @@ export class PivotModel extends Model {
      */
     async load(searchParams) {
         this.orm2Use = this.realORM;
-        searchParams = JSON.parse(JSON.stringify(searchParams)); //This to prevent errors in the Dashboard
+        this.searchParams = JSON.parse(JSON.stringify(searchParams));
 
         const activeMeasures =
             processMeasure(searchParams.context.pivot_measures) || this.meta.activeMeasures;
@@ -687,10 +691,6 @@ export class PivotModel extends Model {
         }
         meta.colGroupBys = searchParams.context.pivot_column_groupby || this.meta.colGroupBys;
 
-        const { domains, origins } = this._computeDerivedParams(searchParams);
-        searchParams.domains = domains;
-        searchParams.origins = origins;
-
         if (JSON.stringify(meta.rowGroupBys) !== JSON.stringify(this.meta.rowGroupBys)) {
             meta.expandedRowGroupBys = [];
         }
@@ -704,20 +704,8 @@ export class PivotModel extends Model {
             meta.activeMeasures,
             meta.additionalMeasures
         );
-        const config = { meta, data: this.data, searchParams };
-        const data = await this._loadData(config);
-        const oldConfig = { meta: this.meta, data: this.data, searchParams: this.searchParams };
-        if (this._hasData(oldConfig)) {
-            if (symmetricalDifference(meta.rowGroupBys, this.meta.rowGroupBys).length === 0) {
-                this._pruneTree(data.rowGroupTree, this.data.rowGroupTree);
-            }
-            if (symmetricalDifference(meta.colGroupBys, this.meta.colGroupBys).length === 0) {
-                this._pruneTree(data.colGroupTree, this.data.colGroupTree);
-            }
-        }
-        this.data = data;
-        this.meta = meta;
-        this.searchParams = searchParams;
+        const config = { meta, data: this.data };
+        return this._loadData(config);
     }
     /**
      * Sort the rows, depending on the values of a given column.  This is an
@@ -729,7 +717,7 @@ export class PivotModel extends Model {
     sortRows(sortedColumn) {
         this._cancelPreviousOperation();
 
-        const config = { meta: this.meta, data: this.data, searchParams: this.searchParams };
+        const config = { meta: this.meta, data: this.data };
         this._sortRows(sortedColumn, config);
 
         this.notify();
@@ -752,13 +740,13 @@ export class PivotModel extends Model {
             // to wait in case there is a pending load)
             meta.activeMeasures.splice(index, 1);
             await Promise.resolve(this.loadProm);
+            this.meta = meta;
         } else {
             meta.activeMeasures.push(fieldName);
-            const config = { meta, data: this.data, searchParams: this.searchParams };
-            this.data = await this._loadData(config);
+            let config = { meta, data: this.data };
+            await this._loadData(config);
         }
         this.nextActiveMeasures = null;
-        this.meta = meta;
         this.notify();
     }
 
@@ -810,6 +798,14 @@ export class PivotModel extends Model {
         meta.customGroupBys = new Map([...meta.customGroupBys]);
         // shallow copy sortedColumn because we never modify groupId in place
         meta.sortedColumn = meta.sortedColumn ? { ...meta.sortedColumn } : null;
+        if (this.searchParams.comparison) {
+            const domains = this.searchParams.comparison.domains.slice().reverse();
+            meta.domains = domains.map((d) => d.arrayRepr);
+            meta.origins = domains.map((d) => d.description);
+        } else {
+            meta.domains = [this.searchParams.domain];
+            meta.origins = [""];
+        }
         Object.defineProperty(meta, "fullColGroupBys", {
             get() {
                 return meta.colGroupBys.concat(meta.expandedColGroupBys);
@@ -961,7 +957,7 @@ export class PivotModel extends Model {
             measureSpecs,
             groupBy,
             options,
-            config.searchParams.context
+            this.searchParams.context
         );
         return {
             group: group,
@@ -1016,7 +1012,7 @@ export class PivotModel extends Model {
      * @returns {Array}
      */
     _getMeasurements(group, config) {
-        const { meta, searchParams } = config;
+        const { meta } = config;
         return meta.activeMeasures.reduce((measurements, measureName) => {
             var measurement = group[measureName];
             if (measurement instanceof Array) {
@@ -1026,7 +1022,7 @@ export class PivotModel extends Model {
             if (meta.measures[measureName].type === "boolean" && measurement instanceof Boolean) {
                 measurement = measurement ? 1 : 0;
             }
-            if (searchParams.origins.length > 1 && !measurement) {
+            if (meta.origins.length > 1 && !measurement) {
                 measurement = 0;
             }
             measurements[measureName] = measurement;
@@ -1051,7 +1047,7 @@ export class PivotModel extends Model {
                     height: 1,
                     measure: measureName,
                     title: this.meta.measures[measureName].string,
-                    width: 2 * this.searchParams.origins.length - 1,
+                    width: 2 * this.meta.origins.length - 1,
                 };
                 if (
                     sortedColumn.measure === measureName &&
@@ -1135,7 +1131,7 @@ export class PivotModel extends Model {
             const isSortedByOrigin = isSorted && !sortedColumn.originIndexes[1];
             const isSortedByVariation = isSorted && sortedColumn.originIndexes[1];
 
-            this.searchParams.origins.forEach((origin, originIndex) => {
+            this.meta.origins.forEach((origin, originIndex) => {
                 const originCell = {
                     groupId: groupId,
                     height: 1,
@@ -1181,7 +1177,7 @@ export class PivotModel extends Model {
         const colGroupBys = this.meta.fullColGroupBys;
         const height = colGroupBys.length + 1;
         const measureCount = this.meta.activeMeasures.length;
-        const originCount = this.searchParams.origins.length;
+        const originCount = this.meta.origins.length;
         const leafCounts = this._getLeafCounts(this.data.colGroupTree);
         let headers = [];
         const measureColumns = []; // used to generate the measure cells
@@ -1330,11 +1326,10 @@ export class PivotModel extends Model {
     }
     /**
      * @private
-     * @param {Config} config
+     * @param {Data} data
      * @returns {boolean} true iff there's no data in the table
      */
-    _hasData(config) {
-        const { data } = config;
+    _hasData(data) {
         return (data.counts[JSON.stringify([[], []])] || []).some((count) => {
             return count > 0;
         });
@@ -1350,9 +1345,18 @@ export class PivotModel extends Model {
      * @private
      * @param {Config} config
      */
-    async _loadData(config) {
+    async _loadData(config, prune = true) {
+        if (!this.loadProm) {
+            this.loadProm = new Promise((resolve) => {
+                this.resolveLoadProm = () => {
+                    this.loadProm = null;
+                    resolve();
+                };
+            });
+        }
+
         config.data = {}; // data will be completely recomputed
-        const { data, meta, searchParams } = config;
+        const { data, meta } = config;
         data.rowGroupTree = { root: { labels: [], values: [] }, directSubTrees: new Map() };
         data.colGroupTree = { root: { labels: [], values: [] }, directSubTrees: new Map() };
         data.measurements = {};
@@ -1360,24 +1364,46 @@ export class PivotModel extends Model {
         data.groupDomains = {};
         data.numbering = {};
         const key = JSON.stringify([[], []]);
-        data.groupDomains[key] = searchParams.domains.slice(0);
+        data.groupDomains[key] = meta.domains.slice(0);
 
         const group = { rowValues: [], colValues: [] };
         const leftDivisors = sections(meta.fullRowGroupBys);
         const rightDivisors = sections(meta.fullColGroupBys);
         const divisors = cartesian(leftDivisors, rightDivisors);
 
-        await this._subdivideGroup(group, divisors.slice(0, 1), config);
-        await this._subdivideGroup(group, divisors.slice(1), config);
+        this._subdivideGroup(group, divisors.slice(0, 1), config)
+            .then(() => {
+                return this._subdivideGroup(group, divisors.slice(1), config);
+            })
+            .then(async () => {
+                if (meta.useSampleModel && !this._hasData(config.data)) {
+                    const fakeORM = buildSampleORM(meta.resModel, meta.fields, this.user);
+                    this.orm2Use = fakeORM;
+                    await this._loadData(config);
+                } else if (this.orm2Use.rpc.name !== "fakeRPC") {
+                    meta.useSampleModel = false;
+                }
 
-        if (meta.useSampleModel && !this._hasData(config)) {
-            const fakeORM = buildSampleORM(meta.resModel, meta.fields, this.user);
-            this.orm2Use = fakeORM;
-            return this._loadData(config);
-        } else if (this.orm2Use.rpc.name !== "fakeRPC") {
-            meta.useSampleModel = false;
-        }
-        return config.data;
+                // keep folded groups folded after the reload if the structure of the table is the same
+                if (prune && this._hasData(data) && this._hasData(this.data)) {
+                    if (
+                        symmetricalDifference(meta.rowGroupBys, this.meta.rowGroupBys).length === 0
+                    ) {
+                        this._pruneTree(data.rowGroupTree, this.data.rowGroupTree);
+                    }
+                    if (
+                        symmetricalDifference(meta.colGroupBys, this.meta.colGroupBys).length === 0
+                    ) {
+                        this._pruneTree(data.colGroupTree, this.data.colGroupTree);
+                    }
+                }
+
+                this.data = config.data;
+                this.meta = config.meta;
+                this.resolveLoadProm();
+            });
+
+        return this.loadProm;
     }
     /**
      * Extract the information in the read_group results (groupSubdivisions)
@@ -1392,7 +1418,7 @@ export class PivotModel extends Model {
      * @param {Config} config
      */
     _prepareData(group, groupSubdivisions, config) {
-        const { data, meta, searchParams } = config;
+        const { data, meta } = config;
         const groupRowValues = group.rowValues;
         let groupRowLabels = [];
         let rowSubTree = data.rowGroupTree;
@@ -1438,21 +1464,21 @@ export class PivotModel extends Model {
                 const originIndex = groupSubdivision.group.originIndex;
 
                 if (!(key in data.measurements)) {
-                    data.measurements[key] = searchParams.origins.map(() => {
+                    data.measurements[key] = meta.origins.map(() => {
                         return this._getMeasurements({}, config);
                     });
                 }
                 data.measurements[key][originIndex] = this._getMeasurements(subGroup, config);
 
                 if (!(key in data.counts)) {
-                    data.counts[key] = searchParams.origins.map(function () {
+                    data.counts[key] = meta.origins.map(function () {
                         return 0;
                     });
                 }
                 data.counts[key][originIndex] = subGroup.__count;
 
                 if (!(key in data.groupDomains)) {
-                    data.groupDomains[key] = searchParams.origins.map(function () {
+                    data.groupDomains[key] = meta.origins.map(function () {
                         return Domain.FALSE.toList();
                     });
                 }
@@ -1468,25 +1494,6 @@ export class PivotModel extends Model {
         if (meta.sortedColumn) {
             this._sortRows(meta.sortedColumn, config);
         }
-    }
-    /**
-     * @todo review comment
-     * Determine this.searchParams.domains and this.searchParams.origins from
-     * this.searchParams.domains.
-     *
-     * @private
-     * @param {SearchParams} searchParams
-     */
-    _computeDerivedParams(searchParams) {
-        const { comparison, domain } = searchParams;
-        if (comparison) {
-            const domains = searchParams.comparison.domains.slice().reverse();
-            return {
-                domains: domains.map((d) => d.arrayRepr),
-                origins: domains.map((d) => d.description),
-            };
-        }
-        return { domains: [domain], origins: [""] };
     }
     /**
      * Make any group in tree a leaf if it was a leaf in oldTree.
@@ -1561,10 +1568,10 @@ export class PivotModel extends Model {
      * @param {Config} config
      */
     async _subdivideGroup(group, divisors, config) {
-        const { data, searchParams } = config;
+        const { data, meta } = config;
         const key = JSON.stringify([group.rowValues, group.colValues]);
 
-        const proms = searchParams.origins.reduce((acc, origin, originIndex) => {
+        const proms = meta.origins.reduce((acc, origin, originIndex) => {
             // if no information on group content is available, we fetch data.
             // if group is known to be empty for the given origin,
             // we don't need to fetch data for that origin.
