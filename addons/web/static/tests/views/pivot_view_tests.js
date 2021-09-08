@@ -4924,6 +4924,175 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getCurrentValues(pivot), ["20", "1", "17", "2"].join(","));
     });
 
+    QUnit.test("sort rows while loading a filter", async function (assert) {
+        let def;
+        const pivot = await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <pivot>
+                    <field name="foo" type="measure"/>
+                    <field name="product_id" type="row"/>
+                </pivot>`,
+            searchViewArch: `
+                <search>
+                    <filter name="my_filter" string="My Filter" domain="[('product_id', '=', 41)]"/>
+                </search>`,
+            mockRPC(route, args) {
+                if (args.method === "read_group") {
+                    return Promise.resolve(def);
+                }
+            },
+        });
+
+        assert.strictEqual(getCurrentValues(pivot), ["32", "12", "20"].join(","));
+
+        // Set a domain (this reload is delayed)
+        def = makeDeferred();
+        await toggleFilterMenu(pivot);
+        await toggleMenuItem(pivot, "My Filter");
+        assert.strictEqual(getCurrentValues(pivot), ["32", "12", "20"].join(","));
+
+        // Sort rows (this operation should be ignored as it concerns the old
+        // table, which will be replaced soon)
+        await click(pivot.el.querySelector("th.o_pivot_measure_row"));
+        assert.strictEqual(getCurrentValues(pivot), ["32", "12", "20"].join(","));
+
+        def.resolve();
+        await nextTick();
+
+        assert.strictEqual(getCurrentValues(pivot), ["20", "20"].join(","));
+    });
+
+    QUnit.test("close a group while loading a filter", async function (assert) {
+        let def;
+        const pivot = await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <pivot>
+                    <field name="foo" type="measure"/>
+                    <field name="product_id" type="row"/>
+                </pivot>`,
+            searchViewArch: `
+                <search>
+                    <filter name="my_filter" string="My Filter" domain="[('product_id', '=', 41)]"/>
+                </search>`,
+            mockRPC(route, args) {
+                if (args.method === "read_group") {
+                    return Promise.resolve(def);
+                }
+            },
+        });
+
+        assert.strictEqual(getCurrentValues(pivot), ["32", "12", "20"].join(","));
+
+        // Set a domain (this reload is delayed)
+        def = makeDeferred();
+        await toggleFilterMenu(pivot);
+        await toggleMenuItem(pivot, "My Filter");
+        assert.strictEqual(getCurrentValues(pivot), ["32", "12", "20"].join(","));
+
+        // Close a group (this operation should be ignored as it concerns the old
+        // table, which will be replaced soon)
+        await click(pivot.el.querySelector("tbody .o_pivot_header_cell_opened"));
+        assert.strictEqual(getCurrentValues(pivot), ["32", "12", "20"].join(","));
+
+        def.resolve();
+        await nextTick();
+
+        assert.strictEqual(getCurrentValues(pivot), ["20", "20"].join(","));
+    });
+
+    QUnit.test("add a groupby while loading a filter", async function (assert) {
+        let def;
+        const pivot = await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <pivot>
+                    <field name="foo" type="measure"/>
+                    <field name="product_id" type="row"/>
+                </pivot>`,
+            searchViewArch: `
+                <search>
+                    <filter name="my_filter" string="My Filter" domain="[('product_id', '=', 41)]"/>
+                </search>`,
+            mockRPC(route, args) {
+                if (args.method === "read_group") {
+                    return Promise.resolve(def);
+                }
+            },
+        });
+
+        assert.strictEqual(getCurrentValues(pivot), ["32", "12", "20"].join(","));
+
+        // Set a domain (this reload is delayed)
+        def = makeDeferred();
+        await toggleFilterMenu(pivot);
+        await toggleMenuItem(pivot, "My Filter");
+        assert.strictEqual(getCurrentValues(pivot), ["32", "12", "20"].join(","));
+
+        // Add a groupby (this operation should be ignored as it concerns the old
+        // table, which will be replaced soon)
+        await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
+        await click(pivot.el.querySelector("thead .o_dropdown_menu .o_dropdown_item"));
+        assert.strictEqual(getCurrentValues(pivot), ["32", "12", "20"].join(","));
+
+        def.resolve();
+        await nextTick();
+
+        assert.strictEqual(getCurrentValues(pivot), ["20", "20"].join(","));
+    });
+
+    QUnit.test("expand a group while loading a filter", async function (assert) {
+        let def;
+        const pivot = await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <pivot>
+                    <field name="foo" type="measure"/>
+                    <field name="product_id" type="row"/>
+                </pivot>`,
+            searchViewArch: `
+                <search>
+                    <filter name="my_filter" string="My Filter" domain="[('product_id', '=', 41)]"/>
+                </search>`,
+            mockRPC(route, args) {
+                if (args.method === "read_group") {
+                    return Promise.resolve(def);
+                }
+            },
+        });
+
+        // Add a groupby, to have a group to expand afterwards
+        await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
+        await click(pivot.el.querySelector("tbody .o_dropdown_menu .o_dropdown_item"));
+
+        assert.strictEqual(getCurrentValues(pivot), ["32", "12", "12", "20"].join(","));
+
+        // Set a domain (this reload is delayed)
+        def = makeDeferred();
+        await toggleFilterMenu(pivot);
+        await toggleMenuItem(pivot, "My Filter");
+        assert.strictEqual(getCurrentValues(pivot), ["32", "12", "12", "20"].join(","));
+
+        // Expand a group (this operation should be ignored as it concerns the old
+        // table, which will be replaced soon)
+        await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_closed")[1]);
+        assert.strictEqual(getCurrentValues(pivot), ["32", "12", "12", "20"].join(","));
+
+        def.resolve();
+        await nextTick();
+
+        assert.strictEqual(getCurrentValues(pivot), ["20", "20"].join(","));
+    });
+
     QUnit.test(
         "concurrent reloads: add a filter, and directly toggle a measure",
         async function (assert) {
