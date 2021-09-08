@@ -1646,6 +1646,7 @@ MockServer.include({
                 result[record.id].push([
                     false,
                     record.email_cc,
+                    undefined,
                     'CC email',
                 ]);
             }
@@ -1658,6 +1659,7 @@ MockServer.include({
                     result[record.id].push([
                         partner.id,
                         partner.display_name,
+                        undefined,
                         'Email partner',
                     ]);
                 }
