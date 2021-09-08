@@ -317,7 +317,7 @@
         t-att-data-save-attribute="save_attribute"
         t-att-data-attribute-name="attribute_name"
         data-no-preview="true"
-        t-att-data-model="model" t-att-data-call-with="call_with" data-select-record="" t-att-data-fields="data_fields"
+        t-att-data-model="model" t-att-data-call-with="call_with" data-select-record="" t-att-data-fields="data_fields" t-att-data-domain="domain"
         data-allow-delete="true" data-fakem2m="true"/>
 </template>
 
@@ -1132,6 +1132,7 @@
     </div>
 
     <div data-js="ConditionalVisibility" data-selector="section">
+        <t t-set="current_website" t-value="request.env['website'].get_current_website()"/>
         <we-collapse>
             <we-select string="Visibility" data-attribute-name="visibility" data-no-preview="true">
                 <we-button data-select-data-attribute="">Always visible</we-button>
@@ -1149,14 +1150,17 @@
                     <t t-set="data_fields">[&quot;code&quot;]</t>
                 </t>
             </t>
-            <t t-call="website.snippet_options_conditional_visibility">
-                <t t-set="option_name">⌙ Languages</t>
-                <t t-set="attribute_rule">visibilityValueLangRule</t>
-                <t t-set="save_attribute">visibilityValueLang</t>
-                <t t-set="attribute_name">lang</t>
-                <t t-set="model">res.lang</t>
-                <t t-set="call_with">code</t>
-                <t t-set="data_fields">[&quot;code&quot;]</t>
+            <t t-if="len(current_website.language_ids) > 1">
+                <t t-call="website.snippet_options_conditional_visibility">
+                    <t t-set="option_name">⌙ Languages</t>
+                    <t t-set="attribute_rule">visibilityValueLangRule</t>
+                    <t t-set="save_attribute">visibilityValueLang</t>
+                    <t t-set="attribute_name">lang</t>
+                    <t t-set="model">res.lang</t>
+                    <t t-set="call_with">code</t>
+                    <t t-set="domain">[["id", "in", <t t-out="current_website.language_ids.ids"/>]]</t>
+                    <t t-set="data_fields">[&quot;code&quot;]</t>
+                </t>
             </t>
             <t t-call="website.snippet_options_conditional_visibility">
                 <t t-set="option_name">⌙ UTM Campaign</t>
