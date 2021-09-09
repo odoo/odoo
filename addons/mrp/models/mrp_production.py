@@ -1119,6 +1119,9 @@ class MrpProduction(models.Model):
     def action_confirm(self):
         self._check_company()
         for production in self:
+            # Avoid confirming it twice
+            if production.state != 'draft':
+                continue
             if production.bom_id:
                 production.consumption = production.bom_id.consumption
             if not production.move_raw_ids:
