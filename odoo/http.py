@@ -1684,11 +1684,14 @@ def content_disposition(filename):
 def set_safe_image_headers(headers, content):
     """Return new headers based on `headers` but with `Content-Length` and
     `Content-Type` set appropriately depending on the given `content` only if it
-    is safe to do."""
+    is safe to do, as well as `X-Content-Type-Options: nosniff` so that if the
+    file is of an unsafe type, it is not interpreted as that type if the
+    `Content-type` header was already set to a different mimetype"""
     content_type = guess_mimetype(content)
     safe_types = ['image/jpeg', 'image/png', 'image/gif', 'image/x-icon']
     if content_type in safe_types:
         headers = set_header_field(headers, 'Content-Type', content_type)
+    headers = set_header_field(headers, 'X-Content-Type-Options', 'nosniff')
     set_header_field(headers, 'Content-Length', len(content))
     return headers
 

@@ -68,17 +68,23 @@ class DiscussController(http.Controller):
 
     @http.route('/mail/channel/<int:channel_id>/partner/<int:partner_id>/avatar_128', methods=['GET'], type='http', auth='public')
     def mail_channel_partner_avatar_128(self, channel_id, partner_id, **kwargs):
-        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
-        if not channel_partner_sudo.env['mail.channel.partner'].search([('channel_id', '=', int(channel_id)), ('partner_id', '=', int(partner_id))], limit=1):
-            raise NotFound()
-        return channel_partner_sudo.env['ir.http']._content_image(model='res.partner', res_id=int(partner_id), field='avatar_128')
+        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request(request=request, channel_id=channel_id)
+        if not channel_partner_sudo or not channel_partner_sudo.env['mail.channel.partner'].search([('channel_id', '=', channel_id), ('partner_id', '=', partner_id)], limit=1):
+            if request.env.user.share:
+                placeholder = channel_partner_sudo.env['res.partner'].browse(partner_id).exists()._avatar_get_placeholder()
+                return channel_partner_sudo.env['ir.http']._placeholder_image_get_response(placeholder)
+            return channel_partner_sudo.sudo(False).env['ir.http']._content_image(model='res.partner', res_id=partner_id, field='avatar_128')
+        return channel_partner_sudo.env['ir.http']._content_image(model='res.partner', res_id=partner_id, field='avatar_128')
 
     @http.route('/mail/channel/<int:channel_id>/guest/<int:guest_id>/avatar_128', methods=['GET'], type='http', auth='public')
     def mail_channel_guest_avatar_128(self, channel_id, guest_id, **kwargs):
-        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
-        if not channel_partner_sudo.env['mail.channel.partner'].search([('channel_id', '=', int(channel_id)), ('guest_id', '=', int(guest_id))], limit=1):
-            raise NotFound()
-        return channel_partner_sudo.env['ir.http']._content_image(model='mail.guest', res_id=int(guest_id), field='avatar_128')
+        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request(request=request, channel_id=channel_id)
+        if not channel_partner_sudo or not channel_partner_sudo.env['mail.channel.partner'].search([('channel_id', '=', channel_id), ('guest_id', '=', guest_id)], limit=1):
+            if request.env.user.share:
+                placeholder = channel_partner_sudo.env['mail.guest'].browse(guest_id).exists()._avatar_get_placeholder()
+                return channel_partner_sudo.env['ir.http']._placeholder_image_get_response(placeholder)
+            return channel_partner_sudo.sudo(False).env['ir.http']._content_image(model='mail.guest', res_id=guest_id, field='avatar_128')
+        return channel_partner_sudo.env['ir.http']._content_image(model='mail.guest', res_id=guest_id, field='avatar_128')
 
     @http.route('/mail/channel/<int:channel_id>/attachment/<int:attachment_id>', methods=['GET'], type='http', auth='public')
     def mail_channel_attachment(self, channel_id, attachment_id, **kwargs):
