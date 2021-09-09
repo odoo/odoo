@@ -119,6 +119,13 @@
                     }
                 }
 
+                h3 {
+                    margin: 0 0 !important;
+                    @include o-base-settings-horizontal-padding(.4rem);
+                    font-weight: 400;
+                    font-size: 13px;
+                }
+
                 .o_settings_container {
                     max-width: map-get($grid-breakpoints, lg); // Provide a maximum container size to ensure readability
                     @include o-base-settings-horizontal-padding(0);
