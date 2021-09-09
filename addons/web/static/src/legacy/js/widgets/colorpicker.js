@@ -111,7 +111,11 @@ var ColorpickerWidget = Widget.extend({
     setSelectedColor: function (color) {
         var rgba = ColorpickerWidget.convertCSSColorToRgba(color);
         if (rgba) {
+            const oldPreviewActive = this.previewActive;
+            this.previewActive = false;
             this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
+            this.previewActive = oldPreviewActive;
+            this._updateUI();
         }
     },
 
