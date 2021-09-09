@@ -856,13 +856,17 @@ const Wysiwyg = Widget.extend({
                             this.odooEditor.resetCursorOnLastHistoryCursor();
                         }
                         this._processAndApplyColor(eventName, ev.data.color);
-                        this.odooEditor.historyStep();
                     });
                     colorpicker.on('color_hover color_leave', null, ev => {
                         if (hadNonCollapsedSelection && !isCurrentSelectionInEditable()) {
                             this.odooEditor.resetCursorOnLastHistoryCursor();
                         }
-                        this._processAndApplyColor(eventName, ev.data.color);
+                        this.odooEditor.historyPauseSteps();
+                        try {
+                            this._processAndApplyColor(eventName, ev.data.color);
+                        } finally {
+                            this.odooEditor.historyUnpauseSteps();
+                        }
                     });
                     colorpicker.on('enter_key_color_colorpicker', null, () => {
                         $dropdown.children('.dropdown-toggle').dropdown('hide');
