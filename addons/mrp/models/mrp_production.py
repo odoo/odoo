@@ -1157,7 +1157,7 @@ class MrpProduction(models.Model):
                         'product_uom': move_finish.product_id.uom_id
                     })
             production.move_raw_ids._adjust_procure_method()
-            (production.move_raw_ids | production.move_finished_ids)._action_confirm()
+            (production.move_raw_ids | production.move_finished_ids)._action_confirm(merge=False)
             production.workorder_ids._action_confirm()
         # run scheduler for moves forecasted to not have enough in stock
         self.move_raw_ids._trigger_scheduler()
