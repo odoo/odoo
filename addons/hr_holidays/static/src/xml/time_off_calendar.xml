@@ -21,6 +21,21 @@
                         <t t-if="timeoff[1]['request_unit'] == 'hour'"><span class="o_timeoff_purple">HOURS</span></t><t t-else=""><span class="o_timeoff_purple">DAYS</span></t> <span class="o_timeoff_purple">TAKEN</span>
                     </t>
                 </div>
+
+                <t t-if="requires_allocation and timeoff[1]['closest_allocation_expire'] != false">
+                    <t t-if="timeoff[1]['closest_allocation_remaining'] == timeoff[1]['virtual_remaining_leaves']">
+                        <span class="o_timeoff_purple o_timeoff_normal">
+                            (VALID UNTIL <span t-esc="timeoff[1]['closest_allocation_expire']"/>)
+                        </span>
+                    </t>
+                    <t t-else="">
+                    <span class="o_timeoff_purple o_timeoff_normal">
+                        (<span t-esc="timeoff[1]['closest_allocation_remaining']"/> <t t-if="timeoff[1]['request_unit'] == 'hour'"><span>HOURS</span></t><t t-else=""><span>DAYS</span></t>
+                        VALID UNTIL <span t-esc="timeoff[1]['closest_allocation_expire']"/>)
+                    </span>
+                    </t>
+                </t>
+
             </div>
         </div>
     </t>
