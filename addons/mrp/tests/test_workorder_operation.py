@@ -1552,3 +1552,39 @@ class TestRoutingAndKits(SavepointCase):
         wo2.button_start()
         self.assertEqual(wo2.qty_producing, 10)
         self.assertEqual(wo2.finished_lot_id, lot1)
+
+    def test_confirm_twice(self):
+        """
+        Test that when confirming a production twice (mark as to do), the moves are only generated once
+        One assert and one "assertNotRaise"
+        """
+        product_inside = self.env['product.product'].create({'name': 'Wood'})
+        product = self.env['product.product'].create({'name': 'Woooden stick'})
+        bom = self.env['mrp.bom'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': product_inside.id, 'product_qty': 1})]
+        })
+
+        production_table_form = Form(self.env['mrp.production'])
+        production_table_form.product_id = product
+        production_table_form.bom_id = bom
+        production_table_form.product_qty = 2.0
+        production_table = production_table_form.save()
+        # Confirm twice to generate the issue
+        production_table.action_confirm()
+        previous_move_finished_ids = production_table.move_finished_ids
+        production_table.action_confirm()
+        # The actual test
+        self.assertEqual(production_table.move_finished_ids, previous_move_finished_ids, "Confirming it twice should not generate another move finished id")
+        # Then we continue testing the business flow for double protection
+        # since there is a blocking traceback we want to ensure it doesn't appear
+        production_table.action_assign()
+        context = {'active_id': production_table.id, 'active_model': 'mrp.production'}
+        wizard = self.env['mrp.product.produce'].with_context(context).create({})
+
+        # Will raise Expected Singleton if we actually managed to confirm twice
+        wizard.do_produce()
+
