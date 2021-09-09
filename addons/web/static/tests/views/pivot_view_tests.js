@@ -337,7 +337,7 @@ QUnit.module("Views", (hooks) => {
 
         // this is important for export functionality.
         assert.strictEqual(
-            pivot.model.meta.title,
+            pivot.model.metaData.title,
             pivot.env._t("Untitled"),
             "should have a valid title"
         );

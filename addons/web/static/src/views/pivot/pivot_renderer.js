@@ -23,8 +23,8 @@ export class PivotRenderer extends Component {
      * @returns {string} Formatted value
      */
     getFormattedValue(cell) {
-        const field = this.model.meta.measures[cell.measure];
-        let formatType = this.model.meta.widgets[cell.measure];
+        const field = this.model.metaData.measures[cell.measure];
+        let formatType = this.model.metaData.widgets[cell.measure];
         if (!formatType) {
             const fieldType = field.type;
             formatType = fieldType === "many2one" ? "integer" : fieldType;
@@ -49,7 +49,7 @@ export class PivotRenderer extends Component {
             return "-";
         }
         const formatPercentage = formatterRegistry.get("percentage");
-        return formatPercentage(cell.value, this.model.meta.fields[cell.measure]);
+        return formatPercentage(cell.value, this.model.metaData.fields[cell.measure]);
     }
     /**
      * Retrieve the padding of a left header.
@@ -123,7 +123,7 @@ export class PivotRenderer extends Component {
         if (ev.currentTarget.tagName === "TH") {
             if (
                 !ev.currentTarget.classList.contains("o_pivot_origin_row") &&
-                this.model.meta.origins.length === 2
+                this.model.metaData.origins.length === 2
             ) {
                 index = 3 * index; // two origins + comparison column
             }
