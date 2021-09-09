@@ -110,4 +110,4 @@ class ChannelPartner(models.Model):
         guest = self.env['mail.guest']._get_guest_from_request(request)
         if guest:
             return guest.env['mail.channel.partner'].sudo().search([('channel_id', '=', channel_id), ('guest_id', '=', guest.id)], limit=1)
-        return self.env['mail.channel.partner']
+        return self.env['mail.channel.partner'].sudo()
