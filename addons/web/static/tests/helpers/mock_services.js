@@ -257,6 +257,27 @@ export function makeFakeUserService(hasGroup = () => false) {
     };
 }
 
+export function makeFakeHTTPService(getResponse, postResponse) {
+    getResponse = getResponse || ((route, readMethod) => {
+        return readMethod === "json" ? {} : "";
+    });
+    postResponse = postResponse || ((route, params, readMethod) => {
+        return readMethod === "json" ? {} : "";
+    });
+    return {
+        start() {
+            return {
+                async get(...args) {
+                    return getResponse(...args);
+                },
+                async post(...args) {
+                    return postResponse(...args);
+                }
+            };
+        },
+    };
+}
+
 export const mocks = {
     company: () => companyService,
     command: () => fakeCommandService,
