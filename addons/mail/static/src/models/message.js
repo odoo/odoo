@@ -24,6 +24,9 @@ registerModel({
             if ('author' in data) {
                 data2.author = data.author;
             }
+            if ('sender' in data) {
+                data2.sender = data.sender;
+            }
             if ('body' in data) {
                 data2.body = data.body;
             }
@@ -285,6 +288,10 @@ registerModel({
         attachments: many('Attachment', {
             inverse: 'messages',
         }),
+        /**
+         * This value describes the author of the message. It's not necessarily the sender of
+         * the message but the individual used to be impersonated by the sender.
+         */
         author: one('Partner'),
         avatarUrl: attr({
             compute() {
@@ -714,6 +721,12 @@ registerModel({
             },
         }),
         recipients: many('Partner'),
+        /**
+         * The sender is the one that wrote and send the message. By default, the sender
+         * and the author are the same. They can be different when an author is specified
+         * manually on a template.
+         */
+         sender: one('Partner'),
         shortTime: attr({
             compute() {
                 if (!this.momentDate) {

@@ -60,6 +60,8 @@
                             </page>
                             <page string="Email Configuration" name="email_configuration">
                                 <group>
+                                    <field name="author"
+                                            placeholder="Author user's id, override the author"/>
                                     <field name="email_from"
                                             placeholder="Override author's email"/>
                                     <field name="use_default_to"/>
@@ -115,6 +117,7 @@
                     <field name="model_id" groups="base.group_no_one"/>
                     <field name="description"/>
                     <field name="subject" optional="hidden"/>
+                    <field name="author" optional="hidden"/>
                     <field name="email_from" optional="hidden"/>
                     <field name="email_to" optional="hidden"/>
                     <field name="partner_to" optional="hidden"/>

@@ -322,6 +322,88 @@ class TestComposerInternals(TestMailComposer):
             self.assertEqual(composer.email_from, self.test_from)
 
     @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_composer_author_template_comment(self):
+        """ Test author_id / email_from synchronization when an author
+        is set in the template. """
+        template = self.env['mail.template'].browse(self.template.ids)
+        template.write({
+            'author': '{{ (object.user_id.id or user.id) }}',
+            'email_from': False,
+        })
+
+        # ensure initial values
+        self.assertEqual(self.test_record.user_id, self.user_employee_2)
+
+        ctx = self._get_web_context(self.test_record, add_web=False,
+                                    default_template_id=template.id)
+        composer = self.env['mail.compose.message'].with_context(ctx).create({
+            'body': '<p>Test Body</p>',
+        })
+        # currently onchange necessary
+        composer._onchange_template_id_wrapper()
+
+        self.assertEqual(composer.author_id, self.test_record.user_id.partner_id,
+                         'MailComposer: should take value rendered by template')
+        self.assertEqual(composer.email_from, self.test_record.user_id.email_formatted,
+                         'MailComposer: should take email_from of the author')
+
+        template.write({
+            'email_from': '{{user.email_formatted}}',
+        })
+        composer._onchange_template_id_wrapper()
+
+        self.assertEqual(composer.author_id, self.test_record.user_id.partner_id,
+                         'MailComposer: should take value rendered by template')
+        self.assertEqual(composer.email_from, self.env.user.email_formatted,
+                         'MailComposer: should take email_from defined in template and not the one of the author')
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_composer_author_template_mass_mail(self):
+        """ Test author_id / email_from synchronization when an author
+        is set in the template. """
+        template = self.env['mail.template'].browse(self.template.ids)
+        template.write({
+            'author': '{{ (object.user_id.id or user.id) }}',
+            'email_from': False,
+        })
+
+        # ensure initial values
+        self.assertEqual(self.test_records.message_ids, self.env['mail.message'])
+        self.test_records[0].user_id = self.user_employee
+        self.test_records[1].user_id = self.user_employee_2
+
+        ctx = self._get_web_context(self.test_records, add_web=False,
+                                    default_template_id=template.id)
+        composer = self.env['mail.compose.message'].with_context(ctx).create({
+            'body': '<p>Test Body</p>',
+        })
+        # currently onchange necessary
+        composer._onchange_template_id_wrapper()
+
+        # launch composer and check author/email_from are effectively generated
+        composer._action_send_mail()
+
+        # check if the message have the correct author and the email_from
+        self.assertEqual(self.test_records[0].message_ids.author_id, self.user_employee.partner_id)
+        self.assertEqual(self.test_records[0].message_ids.email_from, self.user_employee.email_formatted)
+        self.assertEqual(self.test_records[1].message_ids.author_id, self.user_employee_2.partner_id)
+        self.assertEqual(self.test_records[1].message_ids.email_from, self.user_employee_2.email_formatted)
+
+        template.write({
+            'email_from': '{{user.email_formatted}}',
+        })
+        composer._onchange_template_id_wrapper()
+        composer._action_send_mail()
+
+        # check if the email_from from the template is used
+        self.assertEqual(self.test_records[0].message_ids[0].author_id, self.user_employee.partner_id)
+        self.assertEqual(self.test_records[0].message_ids[0].email_from, self.env.user.email_formatted)
+        self.assertEqual(self.test_records[1].message_ids[0].author_id, self.user_employee_2.partner_id)
+        self.assertEqual(self.test_records[1].message_ids[0].email_from, self.env.user.email_formatted)
+
+    @users('employee')
     def test_mail_composer_content(self):
         """ Test content management (subject, body, server) in both comment and
         mass mailing mode. Template update is also tested. """

@@ -72,6 +72,10 @@
                                             <t t-esc="messageView.message.author.nameOrDisplayName"/>
                                         </t>
                                     </strong>
+                                    <span t-if="messageView.message.sender and messageView.message.sender !== messageView.message.author"
+                                        class="me-1 small fw-light">
+                                        impersonated by <t t-esc="messageView.message.sender.nameOrDisplayName"/>
+                                    </span>
                                 </t>
                                 <t t-elif="messageView.message.guestAuthor">
                                     <strong class="o_Message_authorName me-2 text-truncate text-muted">

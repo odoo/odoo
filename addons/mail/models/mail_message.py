@@ -841,6 +841,17 @@ class Message(models.Model):
                     .display_name
             else:
                 record_name = False
+
+            if message_sudo.author_guest_id:
+                sender = guestAuthor
+            elif len(message_sudo.author_id.user_ids) > 0:
+                sender = {
+                    'id': message_sudo.create_uid.partner_id.id,
+                    'name': message_sudo.create_uid.partner_id.display_name,
+                }
+            else:
+                sender = author
+
             reactions_per_content = defaultdict(lambda: self.env['mail.message.reaction'])
             for reaction in message_sudo.reaction_ids:
                 reactions_per_content[reaction.content] |= reaction
@@ -857,6 +868,7 @@ class Message(models.Model):
             vals.update({
                 'author': author,
                 'guestAuthor': guestAuthor,
+                'sender': sender,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachment_ids': message_sudo.attachment_ids._attachment_format() if not legacy else message_sudo.attachment_ids._attachment_format(legacy=True),
                 'trackingValues': allowed_tracking_ids._tracking_value_format(),
@@ -917,7 +929,8 @@ class Message(models.Model):
                             ],
                         }
                     ],
-                    'author_id': (3, u'Administrator'),
+                    'author': { 'id': 3, 'name': 'Administrator' },
+                    'sender': { 'id': 3, 'name': 'Administrator' },
                     'email_from': 'sacha@pokemon.com' # email address or False
                     'subtype_id': (1, u'Discussions'),
                     'date': '2015-06-30 08:22:33',
