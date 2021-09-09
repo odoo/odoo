@@ -1,14 +1,18 @@
 /** @odoo-module **/
 
-import { getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { ormService } from "@web/core/orm_service";
-import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import {
+    click,
+    getFixture,
+    makeDeferred,
+    nextTick,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
+import { setupControlPanelServiceRegistry } from "@web/../tests/search/helpers";
+import { makeView } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
-import { View } from "@web/views/view";
 import { OnboardingBanner } from "@web/views/onboarding_banner";
-import { viewService } from "@web/views/view_service";
-import { click, makeDeferred } from "../helpers/utils";
+import { View } from "@web/views/view";
 import { actionService } from "@web/webclient/actions/action_service";
 
 const { Component, mount, hooks, tags } = owl;
@@ -17,28 +21,6 @@ const { xml } = tags;
 
 const serviceRegistry = registry.category("services");
 const viewRegistry = registry.category("views");
-
-async function makeView(params) {
-    const serverData = params.serverData;
-    const mockRPC = params.mockRPC;
-    const env = await makeTestEnv({ serverData, mockRPC });
-
-    // we don't want "fields" to be added here !!!
-    const props = Object.assign({}, params);
-    delete props.serverData;
-    delete props.mockRPC;
-
-    const target = getFixture();
-
-    const view = await mount(View, { env, props, target });
-
-    registerCleanup(() => view.destroy());
-
-    const withSearch = Object.values(view.__owl__.children)[0];
-    const concreteView = Object.values(withSearch.__owl__.children)[0];
-
-    return concreteView;
-}
 
 let serverData;
 
@@ -55,6 +37,7 @@ QUnit.module("Views", (hooks) => {
                             selection: [
                                 ["omnivorous", "Omnivorous"],
                                 ["herbivorous", "Herbivorous"],
+
                                 ["carnivorous", "Carnivorous"],
                             ],
                             store: true,
@@ -109,8 +92,7 @@ QUnit.module("Views", (hooks) => {
         viewRegistry.add("toy", ToyView);
         viewRegistry.add("toy_imp", ToyViewImp);
 
-        serviceRegistry.add("orm", ormService);
-        serviceRegistry.add("view", viewService);
+        setupControlPanelServiceRegistry();
 
         const fakeActionService = {
             name: "action",
@@ -140,7 +122,7 @@ QUnit.module("Views", (hooks) => {
                 assert.strictEqual(arch, serverData.views["animal,false,toy"]);
                 assert.deepEqual(fields, serverData.models.animal.fields);
                 assert.strictEqual(info.actionMenus, undefined);
-                assert.strictEqual(info.viewId, false);
+                assert.strictEqual(this.env.config.viewId, false);
             },
         });
 
@@ -174,7 +156,7 @@ QUnit.module("Views", (hooks) => {
                 assert.strictEqual(arch, serverData.views["animal,1,toy"]);
                 assert.deepEqual(fields, serverData.models.animal.fields);
                 assert.strictEqual(info.actionMenus, undefined);
-                assert.strictEqual(info.viewId, 1);
+                assert.strictEqual(this.env.config.viewId, 1);
             },
         });
 
@@ -207,13 +189,14 @@ QUnit.module("Views", (hooks) => {
                 assert.strictEqual(arch, serverData.views["animal,1,toy"]);
                 assert.deepEqual(fields, serverData.models.animal.fields);
                 assert.strictEqual(info.actionMenus, undefined);
-                assert.strictEqual(info.viewId, 1);
+                assert.strictEqual(this.env.config.viewId, 1);
             },
         });
 
         const view = await makeView({
             serverData,
             mockRPC: (_, args) => {
+                console.log(_);
                 assert.deepEqual(args.kwargs.views, [[1, "toy"]]);
                 assert.deepEqual(args.kwargs.options, {
                     action_id: false,
@@ -223,7 +206,9 @@ QUnit.module("Views", (hooks) => {
             },
             resModel: "animal",
             type: "toy",
-            views: [[1, "toy"]],
+            config: {
+                views: [[1, "toy"]],
+            },
         });
         assert.hasClass(view.el, "o_toy_view");
         assert.strictEqual(view.el.innerHTML, serverData.views["animal,1,toy"]);
@@ -242,7 +227,7 @@ QUnit.module("Views", (hooks) => {
                     assert.strictEqual(arch, serverData.views["animal,false,toy"]);
                     assert.deepEqual(fields, serverData.models.animal.fields);
                     assert.strictEqual(info.actionMenus, undefined);
-                    assert.strictEqual(info.viewId, false);
+                    assert.strictEqual(this.env.config.viewId, false);
                 },
             });
 
@@ -261,7 +246,9 @@ QUnit.module("Views", (hooks) => {
                 },
                 resModel: "animal",
                 type: "toy",
-                views: [[false, "other"]],
+                config: {
+                    views: [[false, "other"]],
+                },
             });
             assert.hasClass(view.el, "o_toy_view");
             assert.strictEqual(view.el.innerHTML, serverData.views["animal,false,toy"]);
@@ -279,7 +266,7 @@ QUnit.module("Views", (hooks) => {
                 assert.strictEqual(arch, serverData.views["animal,1,toy"]);
                 assert.deepEqual(fields, serverData.models.animal.fields);
                 assert.strictEqual(info.actionMenus, undefined);
-                assert.strictEqual(info.viewId, 1);
+                assert.strictEqual(this.env.config.viewId, 1);
             },
         });
 
@@ -299,10 +286,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "animal",
             type: "toy",
             viewId: 1,
-            views: [
-                [3, "toy"],
-                [false, "other"],
-            ],
+            config: {
+                views: [
+                    [3, "toy"],
+                    [false, "other"],
+                ],
+            },
         });
         assert.hasClass(view.el, "o_toy_view");
         assert.strictEqual(view.el.innerHTML, serverData.views["animal,1,toy"]);
@@ -319,7 +308,7 @@ QUnit.module("Views", (hooks) => {
                 assert.strictEqual(arch, `<toy>Specific arch content</toy>`);
                 assert.deepEqual(fields, {});
                 assert.strictEqual(info.actionMenus, undefined);
-                assert.strictEqual(info.viewId, undefined);
+                assert.strictEqual(this.env.config.viewId, undefined);
             },
         });
 
@@ -348,7 +337,7 @@ QUnit.module("Views", (hooks) => {
                 assert.strictEqual(arch, serverData.views["animal,false,toy"]);
                 assert.deepEqual(fields, serverData.models.animal.fields);
                 assert.deepEqual(info.actionMenus, {});
-                assert.strictEqual(info.viewId, false);
+                assert.strictEqual(this.env.config.viewId, false);
             },
         });
 
@@ -384,7 +373,7 @@ QUnit.module("Views", (hooks) => {
                     assert.strictEqual(arch, `<toy>Specific arch content</toy>`);
                     assert.deepEqual(fields, {});
                     assert.deepEqual(info.actionMenus, {});
-                    assert.strictEqual(info.viewId, false);
+                    assert.strictEqual(this.env.config.viewId, false);
                 },
             });
 
@@ -423,7 +412,7 @@ QUnit.module("Views", (hooks) => {
                     assert.strictEqual(arch, `<toy>Specific arch content</toy>`);
                     assert.deepEqual(fields, {});
                     assert.deepEqual(info.actionMenus, {});
-                    assert.strictEqual(info.viewId, undefined);
+                    assert.strictEqual(this.env.config.viewId, undefined);
                 },
             });
 
@@ -714,7 +703,9 @@ QUnit.module("Views", (hooks) => {
             mockRPC,
             resModel: "animal",
             type: "toy",
-            views: [[1, "toy"]],
+            config: {
+                views: [[1, "toy"]],
+            },
         });
 
         assert.containsOnce(toy, "a");
@@ -757,7 +748,9 @@ QUnit.module("Views", (hooks) => {
             serverData,
             resModel: "animal",
             type: "toy",
-            views: [[1, "toy"]],
+            config: {
+                views: [[1, "toy"]],
+            },
         });
 
         assert.containsOnce(toy, "a");
@@ -807,7 +800,9 @@ QUnit.module("Views", (hooks) => {
             serverData,
             resModel: "animal",
             type: "toy",
-            views: [[1, "toy"]],
+            config: {
+                views: [[1, "toy"]],
+            },
         });
 
         assert.containsOnce(toy, "a");
@@ -818,7 +813,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(3);
         serverData.views["animal,1,toy"] = `
             <toy banner_route="/mybody/isacage">
-                <Banner t-if="props.bannerRoute" bannerRoute="props.bannerRoute"/>
+                <Banner t-if="env.config.bannerRoute" />
             </toy>`;
 
         const mockRPC = (route) => {
@@ -833,7 +828,9 @@ QUnit.module("Views", (hooks) => {
             mockRPC,
             resModel: "animal",
             type: "toy",
-            views: [[1, "toy"]],
+            config: {
+                views: [[1, "toy"]],
+            },
         });
 
         assert.verifySteps(["/mybody/isacage"]);
@@ -844,7 +841,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(7);
         serverData.views["animal,1,toy"] = `
             <toy banner_route="/mybody/isacage">
-                <Banner t-if="props.bannerRoute" bannerRoute="props.bannerRoute"/>
+                <Banner t-if="env.config.bannerRoute" />
             </toy>`;
 
         const bannerArch = `
@@ -893,7 +890,9 @@ QUnit.module("Views", (hooks) => {
             mockRPC,
             resModel: "animal",
             type: "toy",
-            views: [[1, "toy"]],
+            config: {
+                views: [[1, "toy"]],
+            },
         });
 
         assert.verifySteps(["/mybody/isacage", "js loaded", "css loaded"]);
@@ -910,7 +909,7 @@ QUnit.module("Views", (hooks) => {
 
         serverData.views["animal,1,toy"] = `
             <toy banner_route="/mybody/isacage">
-                <Banner t-if="props.bannerRoute" bannerRoute="props.bannerRoute"/>
+                <Banner t-if="env.config.bannerRoute" />
             </toy>`;
 
         const banners = [
@@ -938,7 +937,9 @@ QUnit.module("Views", (hooks) => {
             mockRPC,
             resModel: "animal",
             type: "toy",
-            views: [[1, "toy"]],
+            config: {
+                views: [[1, "toy"]],
+            },
         });
 
         assert.verifySteps(["/mybody/isacage"]);
@@ -954,7 +955,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(5);
         serverData.views["animal,1,toy"] = `
             <toy banner_route="/mybody/isacage">
-                <Banner t-if="props.bannerRoute" bannerRoute="props.bannerRoute"/>
+                <Banner t-if="env.config.bannerRoute" />
             </toy>`;
 
         const bannerArch = `
@@ -974,7 +975,9 @@ QUnit.module("Views", (hooks) => {
             mockRPC,
             resModel: "animal",
             type: "toy",
-            views: [[1, "toy"]],
+            config: {
+                views: [[1, "toy"]],
+            },
         });
 
         assert.verifySteps(["/mybody/isacage"]);
@@ -1010,7 +1013,7 @@ QUnit.module("Views", (hooks) => {
 
         serverData.views["animal,1,toy"] = `
             <toy banner_route="/banner_route">
-                <Banner t-if="props.bannerRoute" bannerRoute="props.bannerRoute"/>
+                <Banner t-if="env.config.bannerRoute" />
                 <a type="action" data-method="setTheControl" data-model="animal" />
             </toy>`;
 
@@ -1040,7 +1043,9 @@ QUnit.module("Views", (hooks) => {
             serverData,
             resModel: "animal",
             type: "toy",
-            views: [[1, "toy"]],
+            config: {
+                views: [[1, "toy"]],
+            },
         });
 
         await click(toy.el.querySelector("a[data-method='setTheControl']"));
@@ -1054,7 +1059,7 @@ QUnit.module("Views", (hooks) => {
 
         serverData.views["animal,1,toy"] = `
             <toy banner_route="/mybody/isacage">
-                <Banner t-if="props.bannerRoute" bannerRoute="props.bannerRoute"/>
+                <Banner t-if="env.config.bannerRoute" />
             </toy>`;
 
         const bannerArch = `
@@ -1104,7 +1109,9 @@ QUnit.module("Views", (hooks) => {
             mockRPC,
             resModel: "animal",
             type: "toy",
-            views: [[1, "toy"]],
+            config: {
+                views: [[1, "toy"]],
+            },
         });
 
         const prom = new Promise((resolve) => {
@@ -1252,7 +1259,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("'resModel' must be passed as prop", async function (assert) {
         assert.expect(2);
         try {
-            await makeView({ serverData });
+            await makeView({ serverData }, { noFields: true });
         } catch (error) {
             assert.step(error.message);
         }
@@ -1272,7 +1279,10 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("'arch' cannot be passed as prop alone", async function (assert) {
         assert.expect(2);
         try {
-            await makeView({ serverData, resModel: "animal", type: "toy", arch: "<toy/>" });
+            await makeView(
+                { serverData, resModel: "animal", type: "toy", arch: "<toy/>" },
+                { noFields: true }
+            );
         } catch (error) {
             assert.step(error.message);
         }

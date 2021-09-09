@@ -75,7 +75,9 @@ QUnit.module("Search", (hooks) => {
             Component: ControlPanel,
             searchMenuTypes: ["favorite"],
             searchViewId: false,
-            displayName: "Action Name",
+            config: {
+                displayName: "Action Name",
+            },
         });
 
         await toggleFavoriteMenu(controlPanel);
@@ -288,7 +290,7 @@ QUnit.module("Search", (hooks) => {
                     if (args.model === "ir.filters" && args.method === "create_or_replace") {
                         const irFilter = args.args[0];
                         assert.deepEqual(irFilter, {
-                            action_id: false,
+                            action_id: undefined,
                             context: { group_by: [] },
                             domain: "[]",
                             is_default: false,
