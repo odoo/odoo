@@ -1096,6 +1096,7 @@ const Wysiwyg = Widget.extend({
                             backgroundGradient = backgroundImage;
                         }
                     }
+                    const hadNonCollapsedSelection = range && !selection.isCollapsed;
                     colorpicker = new ColorPaletteWidget(this, {
                         excluded: ['transparent_grayscale'],
                         $editable: $(this.odooEditor.editable), // Our parent is the root widget, we can't retrieve the editable section from it...
@@ -1103,10 +1104,16 @@ const Wysiwyg = Widget.extend({
                         withGradients: true,
                     });
                     colorpicker.on('custom_color_picked color_picked', null, ev => {
+                        if (hadNonCollapsedSelection) {
+                            this.odooEditor.historyResetLatestComputedSelection(true);
+                        }
                         this._processAndApplyColor(eventName, ev.data.color);
                         this.odooEditor.historyStep();
                     });
                     colorpicker.on('color_hover color_leave', null, ev => {
+                        if (hadNonCollapsedSelection) {
+                            this.odooEditor.historyResetLatestComputedSelection(true);
+                        }
                         this._processAndApplyColor(eventName, ev.data.color);
                     });
                     colorpicker.on('enter_key_color_colorpicker', null, () => {
