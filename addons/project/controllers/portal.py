@@ -48,7 +48,6 @@ class ProjectCustomerPortal(CustomerPortal):
         values = self._prepare_portal_layout_values()
         searchbar_sortings = self._task_get_searchbar_sortings()
 
-        searchbar_inputs = self._task_get_searchbar_inputs()
         searchbar_groupby = self._task_get_searchbar_groupby()
 
         # default sort by value
@@ -107,7 +106,7 @@ class ProjectCustomerPortal(CustomerPortal):
             pager=pager,
             searchbar_sortings=searchbar_sortings,
             searchbar_groupby=searchbar_groupby,
-            searchbar_inputs=searchbar_inputs,
+            searchbar_inputs=self._task_get_searchbar_inputs(),
             search_in=search_in,
             search=search,
             sortby=sortby,
@@ -117,7 +116,7 @@ class ProjectCustomerPortal(CustomerPortal):
         return self._get_page_view_values(project, access_token, values, 'my_projects_history', False, **kwargs)
 
     @http.route(['/my/projects', '/my/projects/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
+    def portal_my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='name', **kw):
         values = self._prepare_portal_layout_values()
         Project = request.env['project.project']
         domain = []
@@ -126,6 +125,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
             'name': {'label': _('Name'), 'order': 'name'},
         }
+
         if not sortby:
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
@@ -133,12 +133,15 @@ class ProjectCustomerPortal(CustomerPortal):
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
+        if search and search_in:
+            domain += self._projects_get_search_domain(search_in, search)
+
         # projects count
         project_count = Project.search_count(domain)
         # pager
         pager = portal_pager(
             url="/my/projects",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'search': search, 'search_in': search_in},
             total=project_count,
             page=page,
             step=self._items_per_page
@@ -155,10 +158,25 @@ class ProjectCustomerPortal(CustomerPortal):
             'page_name': 'project',
             'default_url': '/my/projects',
             'pager': pager,
+            'searchbar_inputs': self._projects_get_searchbar_inputs(),
             'searchbar_sortings': searchbar_sortings,
+            'search': search,
+            'search_in': search_in,
             'sortby': sortby
         })
         return request.render("project.portal_my_projects", values)
+
+    def _projects_get_searchbar_inputs(self):
+        values = {
+            'name': {'input': 'name', 'label': _('Search in Name'), 'order': 1},
+        }
+        return dict(sorted(values.items(), key=lambda item: item[1]["order"]))
+
+    def _projects_get_search_domain(self, search_in, search):
+        search_domain = []
+        if search_in in ('name', 'all'):
+            search_domain.append([('name', 'ilike', search)])
+        return OR(search_domain)
 
     @http.route(['/my/project/<int:project_id>'], type='http', auth="public", website=True)
     def portal_my_project(self, project_id=None, access_token=None, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='content', groupby=None, **kw):
@@ -345,7 +363,6 @@ class ProjectCustomerPortal(CustomerPortal):
             'all': {'label': _('All'), 'domain': []},
         }
 
-        searchbar_inputs = self._task_get_searchbar_inputs()
         searchbar_groupby = self._task_get_searchbar_groupby()
 
         # extends filterby criteria with project the customer has access to
@@ -427,7 +444,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
             'searchbar_groupby': searchbar_groupby,
-            'searchbar_inputs': searchbar_inputs,
+            'searchbar_inputs': self._task_get_searchbar_inputs(),
             'search_in': search_in,
             'search': search,
             'sortby': sortby,

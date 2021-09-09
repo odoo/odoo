@@ -103,8 +103,6 @@ class TimesheetCustomerPortal(CustomerPortal):
 
         searchbar_sortings = self._get_searchbar_sortings()
 
-        searchbar_inputs = self._get_searchbar_inputs()
-
         searchbar_groupby = self._get_searchbar_groupby()
 
         today = fields.Date.today()
@@ -181,7 +179,7 @@ class TimesheetCustomerPortal(CustomerPortal):
             'search': search,
             'sortby': sortby,
             'groupby': groupby,
-            'searchbar_inputs': searchbar_inputs,
+            'searchbar_inputs': self._get_searchbar_inputs(),
             'searchbar_groupby': searchbar_groupby,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,

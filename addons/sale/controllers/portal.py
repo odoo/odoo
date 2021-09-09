@@ -13,6 +13,7 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.portal.controllers.mail import _message_post_helper
 from odoo.addons.portal.controllers import portal
 from odoo.addons.portal.controllers.portal import pager as portal_pager, get_records_pager
+from odoo.osv.expression import OR
 
 
 class CustomerPortal(portal.CustomerPortal):
@@ -54,7 +55,7 @@ class CustomerPortal(portal.CustomerPortal):
     #
 
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_quotes(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
+    def portal_my_quotes(self, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='name', **kw):
         values = self._prepare_portal_layout_values()
         partner = request.env.user.partner_id
         SaleOrder = request.env['sale.order']
@@ -78,12 +79,15 @@ class CustomerPortal(portal.CustomerPortal):
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
+        if search and search_in:
+            domain += self._quotes_get_search_domain(search_in, search)
+
         # count for pager
         quotation_count = SaleOrder.search_count(domain)
         # make pager
         pager = portal_pager(
             url="/my/quotes",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'search': search, 'search_in': search_in},
             total=quotation_count,
             page=page,
             step=self._items_per_page
@@ -98,13 +102,28 @@ class CustomerPortal(portal.CustomerPortal):
             'page_name': 'quote',
             'pager': pager,
             'default_url': '/my/quotes',
+            'searchbar_inputs': self._quotes_get_searchbar_inputs(),
             'searchbar_sortings': searchbar_sortings,
+            'search': search,
+            'search_in': search_in,
             'sortby': sortby,
         })
         return request.render("sale.portal_my_quotations", values)
 
+    def _quotes_get_searchbar_inputs(self):
+        values = {
+            'name': {'input': 'name', 'label': _('Search in Reference'), 'order': 1},
+        }
+        return dict(sorted(values.items(), key=lambda item: item[1]["order"]))
+
+    def _quotes_get_search_domain(self, search_in, search):
+        search_domain = []
+        if search_in in ('name', 'all'):
+            search_domain.append([('name', 'ilike', search)])
+        return OR(search_domain)
+
     @http.route(['/my/orders', '/my/orders/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_orders(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
+    def portal_my_orders(self, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='name', **kw):
         values = self._prepare_portal_layout_values()
         partner = request.env.user.partner_id
         SaleOrder = request.env['sale.order']
@@ -119,6 +138,7 @@ class CustomerPortal(portal.CustomerPortal):
             'name': {'label': _('Reference'), 'order': 'name'},
             'stage': {'label': _('Stage'), 'order': 'state'},
         }
+
         # default sortby order
         if not sortby:
             sortby = 'date'
@@ -127,12 +147,15 @@ class CustomerPortal(portal.CustomerPortal):
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
+        if search and search_in:
+            domain += self._orders_get_search_domain(search_in, search)
+
         # count for pager
         order_count = SaleOrder.search_count(domain)
         # pager
         pager = portal_pager(
             url="/my/orders",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'search': search, 'search_in': search_in},
             total=order_count,
             page=page,
             step=self._items_per_page
@@ -147,10 +170,25 @@ class CustomerPortal(portal.CustomerPortal):
             'page_name': 'order',
             'pager': pager,
             'default_url': '/my/orders',
+            'searchbar_inputs': self._orders_get_searchbar_inputs(),
             'searchbar_sortings': searchbar_sortings,
+            'search': search,
+            'search_in': search_in,
             'sortby': sortby,
         })
         return request.render("sale.portal_my_orders", values)
+
+    def _orders_get_searchbar_inputs(self):
+        values = {
+            'name': {'input': 'name', 'label': _('Search in Reference'), 'order': 1},
+        }
+        return dict(sorted(values.items(), key=lambda item: item[1]["order"]))
+
+    def _orders_get_search_domain(self, search_in, search):
+        search_domain = []
+        if search_in in ('name', 'all'):
+            search_domain.append([('name', 'ilike', search)])
+        return OR(search_domain)
 
     @http.route(['/my/orders/<int:order_id>'], type='http', auth="public", website=True)
     def portal_order_page(self, order_id, report_type=None, access_token=None, message=False, download=False, **kw):

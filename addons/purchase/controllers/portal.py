@@ -13,6 +13,8 @@ from odoo.tools.translate import _
 from odoo.addons.portal.controllers import portal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 
+from odoo.osv.expression import OR
+
 
 class CustomerPortal(portal.CustomerPortal):
 
@@ -43,7 +45,7 @@ class CustomerPortal(portal.CustomerPortal):
         })
         return values
 
-    def _render_portal(self, template, page, date_begin, date_end, sortby, filterby, domain, searchbar_filters, default_filter, url, history, page_name, key):
+    def _render_portal(self, template, page, date_begin, date_end, sortby, filterby, domain, searchbar_filters, default_filter, url, history, page_name, key, searchbar_inputs, search_domain, search, search_in):
         values = self._prepare_portal_layout_values()
         PurchaseOrder = request.env['purchase.order']
 
@@ -66,13 +68,16 @@ class CustomerPortal(portal.CustomerPortal):
                 filterby = default_filter
             domain += searchbar_filters[filterby]['domain']
 
+        if search_domain:
+            domain += search_domain
+
         # count for pager
         count = PurchaseOrder.search_count(domain)
 
         # make pager
         pager = portal_pager(
             url=url,
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby},
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby, 'search': search, 'search_in': search_in},
             total=count,
             page=page,
             step=self._items_per_page
@@ -95,6 +100,9 @@ class CustomerPortal(portal.CustomerPortal):
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
+            'searchbar_inputs': searchbar_inputs,
+            'search': search,
+            'search_in': search_in,
             'filterby': filterby,
             'default_url': url,
         })
@@ -119,7 +127,11 @@ class CustomerPortal(portal.CustomerPortal):
         return self._get_page_view_values(order, access_token, values, history, False, **kwargs)
 
     @http.route(['/my/rfq', '/my/rfq/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_requests_for_quotation(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
+    def portal_my_requests_for_quotation(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='name', **kw):
+        if search_in and search:
+            search_domain = self._rfq_get_search_domain(search_in, search)
+        else:
+            search_domain = None
         return self._render_portal(
             "purchase.portal_my_purchase_rfqs",
             page, date_begin, date_end, sortby, filterby,
@@ -129,11 +141,31 @@ class CustomerPortal(portal.CustomerPortal):
             "/my/rfq",
             'my_rfqs_history',
             'rfq',
-            'rfqs'
+            'rfqs',
+            self._rfq_get_searchbar_inputs(),
+            search_domain,
+            search,
+            search_in,
         )
 
+    def _rfq_get_searchbar_inputs(self):
+        values = {
+            'name': {'input': 'name', 'label': _('Search in Name'), 'order': 1},
+        }
+        return dict(sorted(values.items(), key=lambda item: item[1]["order"]))
+
+    def _rfq_get_search_domain(self, search_in, search):
+        search_domain = []
+        if search_in in ('name', 'all'):
+            search_domain.append([('name', 'ilike', search)])
+        return OR(search_domain)
+
     @http.route(['/my/purchase', '/my/purchase/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_purchase_orders(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
+    def portal_my_purchase_orders(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='name', **kw):
+        if search_in and search:
+            search_domain = self._purchase_get_search_domain(search_in, search)
+        else:
+            search_domain = None
         return self._render_portal(
             "purchase.portal_my_purchase_orders",
             page, date_begin, date_end, sortby, filterby,
@@ -148,8 +180,24 @@ class CustomerPortal(portal.CustomerPortal):
             "/my/purchase",
             'my_purchases_history',
             'purchase',
-            'orders'
+            'orders',
+            self._purchase_get_searchbar_inputs(),
+            search_domain,
+            search,
+            search_in,
         )
+
+    def _purchase_get_searchbar_inputs(self):
+        values = {
+            'name': {'input': 'name', 'label': _('Search in Name'), 'order': 1},
+        }
+        return dict(sorted(values.items(), key=lambda item: item[1]["order"]))
+
+    def _purchase_get_search_domain(self, search_in, search):
+        search_domain = []
+        if search_in in ('name', 'all'):
+            search_domain.append([('name', 'ilike', search)])
+        return OR(search_domain)
 
     @http.route(['/my/purchase/<int:order_id>'], type='http', auth="public", website=True)
     def portal_my_purchase_order(self, order_id=None, access_token=None, **kw):

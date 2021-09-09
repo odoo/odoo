@@ -6,7 +6,7 @@ from odoo.addons.portal.controllers.portal import CustomerPortal, pager as porta
 from odoo.exceptions import AccessError, MissingError
 from collections import OrderedDict
 from odoo.http import request
-
+from odoo.osv.expression import OR
 
 class PortalAccount(CustomerPortal):
 
@@ -41,7 +41,7 @@ class PortalAccount(CustomerPortal):
         return [('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]
 
     @http.route(['/my/invoices', '/my/invoices/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_invoices(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
+    def portal_my_invoices(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='name', **kw):
         values = self._prepare_portal_layout_values()
         AccountInvoice = request.env['account.move']
 
@@ -63,6 +63,7 @@ class PortalAccount(CustomerPortal):
             'invoices': {'label': _('Invoices'), 'domain': [('move_type', '=', ('out_invoice', 'out_refund'))]},
             'bills': {'label': _('Bills'), 'domain': [('move_type', '=', ('in_invoice', 'in_refund'))]},
         }
+
         # default filter by value
         if not filterby:
             filterby = 'all'
@@ -71,12 +72,21 @@ class PortalAccount(CustomerPortal):
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
+        if search and search_in:
+            domain += self._invoice_get_search_domain(search_in, search)
+
         # count for pager
         invoice_count = AccountInvoice.search_count(domain)
         # pager
         pager = portal_pager(
             url="/my/invoices",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
+            url_args={
+                'date_begin': date_begin,
+                'date_end': date_end,
+                'sortby': sortby,
+                'search_in': search_in,
+                'search': search
+            },
             total=invoice_count,
             page=page,
             step=self._items_per_page
@@ -92,9 +102,12 @@ class PortalAccount(CustomerPortal):
             'pager': pager,
             'default_url': '/my/invoices',
             'searchbar_sortings': searchbar_sortings,
+            'searchbar_inputs': self._invoice_get_searchbar_inputs(),
+            'search_in': search_in,
+            'search': search,
             'sortby': sortby,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
-            'filterby':filterby,
+            'filterby': filterby,
         })
         return request.render("account.portal_my_invoices", values)
 
@@ -130,3 +143,17 @@ class PortalAccount(CustomerPortal):
                 error['company_name'] = 'error'
                 error_message.append(_('Changing your company name is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
         return error, error_message
+
+    def _invoice_get_searchbar_inputs(self):
+        values = {
+            'name': {'input': 'name', 'label': _('Search in #'), 'order': 1},
+        }
+        return dict(sorted(values.items(), key=lambda item: item[1]["order"]))
+
+    def _invoice_get_search_domain(self, search_in, search):
+        search_domain = []
+        if search_in in ('name', 'all'):
+            search_domain.append([('name', 'ilike', search)])
+        if search_in in ('ref', 'all'):
+            search_domain.append([('ref', 'ilike', search)])
+        return OR(search_domain)

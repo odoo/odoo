@@ -14,6 +14,7 @@ from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
+from odoo.osv.expression import OR
 
 from odoo.tools.translate import _
 
@@ -59,7 +60,7 @@ class WebsiteAccount(CustomerPortal):
         return request.env['res.users'].with_context(active_test=False).sudo().search([('login', '=', '__system__')]).has_group('crm.group_use_lead')
 
     @http.route(['/my/leads', '/my/leads/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_leads(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
+    def portal_my_leads(self, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='all', **kw):
         if not self._get_group_use_lead():
             return request.redirect('/my/opportunities')
         values = self._prepare_portal_layout_values()
@@ -80,11 +81,14 @@ class WebsiteAccount(CustomerPortal):
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
+        if search and search_in:
+            domain += self._leads_get_search_domain(search_in, search)
+
         # pager
         lead_count = CrmLead.search_count(domain)
         pager = request.website.pager(
             url="/my/leads",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'search': search, 'search_in': search_in},
             total=lead_count,
             page=page,
             step=self._items_per_page
@@ -99,12 +103,31 @@ class WebsiteAccount(CustomerPortal):
             'default_url': '/my/leads',
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
+            'searchbar_inputs': self._leads_get_searchbar_inputs(),
             'sortby': sortby,
+            'search': search,
+            'search_in': search_in,
         })
         return request.render("website_crm_partner_assign.portal_my_leads", values)
 
+    def _leads_get_searchbar_inputs(self):
+        values = {
+            'all': {'label': _('Search in All'), 'input': 'all', 'order': 1},
+            'name': {'label': _('Search in Name'), 'input': 'name', 'order': 2},
+            'contact_name': {'label': _('Search in Contact Name'), 'input': 'contact_name', 'order': 3}
+        }
+        return dict(sorted(values.items(), key=lambda item: item[1]["order"]))
+
+    def _leads_get_search_domain(self, search_in, search):
+        search_domain = []
+        if search_in in ('name', 'all'):
+            search_domain.append([('name', 'ilike', search)])
+        if search_in in ('contact_name', 'all'):
+            search_domain.append([('contact_name', 'ilike', search)])
+        return OR(search_domain)
+
     @http.route(['/my/opportunities', '/my/opportunities/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_opportunities(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
+    def portal_my_opportunities(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='all', **kw):
         values = self._prepare_portal_layout_values()
         CrmLead = request.env['crm.lead']
         domain = self.get_domain_my_opp(request.env.user)
@@ -112,15 +135,17 @@ class WebsiteAccount(CustomerPortal):
         today = fields.Date.today()
         this_week_end_date = fields.Date.to_string(fields.Date.from_string(today) + datetime.timedelta(days=7))
 
-        searchbar_filters = {
-            'all': {'label': _('Active'), 'domain': []},
-            'today': {'label': _('Today Activities'), 'domain': [('activity_date_deadline', '=', today)]},
-            'week': {'label': _('This Week Activities'),
-                     'domain': [('activity_date_deadline', '>=', today), ('activity_date_deadline', '<=', this_week_end_date)]},
-            'overdue': {'label': _('Overdue Activities'), 'domain': [('activity_date_deadline', '<', today)]},
-            'won': {'label': _('Won'), 'domain': [('stage_id.is_won', '=', True)]},
-            'lost': {'label': _('Lost'), 'domain': [('active', '=', False), ('probability', '=', 0)]},
-        }
+        searchbar_filters = OrderedDict([
+            ('all', {'label': _('Active'), 'domain': []}),
+            ('overdue', {'label': _('Overdue Activities'), 'domain': [('activity_date_deadline', '<', today)]}),
+            ('today', {'label': _('Today Activities'),
+                       'domain': [('activity_date_deadline', '=', today)]}),
+            ('week', {'label': _('This Week Activities'),
+                      'domain': [('activity_date_deadline', '>=', today), ('activity_date_deadline', '<=', this_week_end_date)]}),
+            ('lost', {'label': _('Lost'), 'domain': [('active', '=', False), ('probability', '=', 0)]}),
+            ('won', {'label': _('Won'), 'domain': [('stage_id.is_won', '=', True)]}),
+        ])
+
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
             'name': {'label': _('Name'), 'order': 'name'},
@@ -143,11 +168,15 @@ class WebsiteAccount(CustomerPortal):
 
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+
+        if search and search_in:
+            domain += self._opportunities_get_search_domain(search_in, search)
+
         # pager
         opp_count = CrmLead.search_count(domain)
         pager = request.website.pager(
             url="/my/opportunities",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby},
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby, 'search': search, 'search_in': search_in},
             total=opp_count,
             page=page,
             step=self._items_per_page
@@ -163,10 +192,32 @@ class WebsiteAccount(CustomerPortal):
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
-            'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
+            'searchbar_filters': searchbar_filters,
+            'searchbar_inputs': self._opportunities_get_searchbar_inputs(),
+            'search': search,
+            'search_in': search_in,
             'filterby': filterby,
         })
         return request.render("website_crm_partner_assign.portal_my_opportunities", values)
+
+    def _opportunities_get_searchbar_inputs(self):
+        values = {
+            'all': {'label': _('Search in All'), 'input': 'all', 'order': 1},
+            'name': {'label': _('Search in Name'), 'input': 'name', 'order': 2},
+            'contact_name': {'label': _('Search in Contact Name'), 'input': 'contact_name', 'order': 3},
+            'stage': {'label': _('Search in Stage'), 'input': 'stage', 'order': 4},
+        }
+        return dict(sorted(values.items(), key=lambda item: item[1]["order"]))
+
+    def _opportunities_get_search_domain(self, search_in, search):
+        search_domain = []
+        if search_in in ('name', 'all'):
+            search_domain.append([('name', 'ilike', search)])
+        if search_in in ('contact_name', 'all'):
+            search_domain.append([('contact_name', 'ilike', search)])
+        if search_in in ('stage', 'all'):
+            search_domain.append([('stage_id.name', 'ilike', search)])
+        return OR(search_domain)
 
     @http.route(['''/my/lead/<model('crm.lead', "[('type','=', 'lead')]"):lead>'''], type='http', auth="user", website=True)
     def portal_my_lead(self, lead, **kw):
