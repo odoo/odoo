@@ -497,6 +497,117 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(pivot, ".o_cell_hover");
     });
 
+    QUnit.test("columns are highlighted when hovering a measure", async function (assert) {
+        assert.expect(15);
+
+        patchDate(2016, 11, 20, 1, 0, 0);
+
+        serverData.models.partner.records[0].date = "2016-11-15";
+        serverData.models.partner.records[1].date = "2016-12-17";
+        serverData.models.partner.records[2].date = "2016-11-22";
+        serverData.models.partner.records[3].date = "2016-11-03";
+
+        const pivot = await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <pivot>
+                    <field name="product_id" type="row"/>
+                    <field name="date" type="col"/>
+                </pivot>`,
+            searchViewArch: `
+                <search>
+                    <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
+                </search>`,
+            context: { search_default_date_filter: true },
+        });
+
+        await toggleComparisonMenu(pivot);
+        await toggleMenuItem(pivot, "Date: Previous period");
+
+        // hover Count in first group
+        await triggerEvents(pivot.el, "th.o_pivot_measure_row:nth-of-type(1)", ["mouseover"]);
+        assert.containsN(pivot, ".o_cell_hover", 3);
+        for (let i = 1; i <= 3; i++) {
+            assert.hasClass(
+                pivot.el.querySelector(`tbody tr:nth-of-type(${i}) td:nth-of-type(1)`),
+                "o_cell_hover"
+            );
+        }
+        await triggerEvents(pivot.el, "th.o_pivot_measure_row:nth-of-type(1)", ["mouseout"]);
+        assert.containsNone(pivot, ".o_cell_hover");
+
+        // hover Count in second group
+        await triggerEvents(pivot.el, "th.o_pivot_measure_row:nth-of-type(2)", ["mouseover"]);
+        assert.containsN(pivot, ".o_cell_hover", 3);
+        for (let i = 1; i <= 3; i++) {
+            assert.hasClass(
+                pivot.el.querySelector(`tbody tr:nth-of-type(${i}) td:nth-of-type(4)`),
+                "o_cell_hover"
+            );
+        }
+        await triggerEvents(pivot.el, "th.o_pivot_measure_row:nth-of-type(2)", ["mouseout"]);
+        assert.containsNone(pivot, ".o_cell_hover");
+
+        // hover Count in total column
+        await triggerEvents(pivot.el, "th.o_pivot_measure_row:nth-of-type(3)", ["mouseover"]);
+        assert.containsN(pivot, ".o_cell_hover", 3);
+        for (let i = 1; i <= 3; i++) {
+            assert.hasClass(
+                pivot.el.querySelector(`tbody tr:nth-of-type(${i}) td:nth-of-type(7)`),
+                "o_cell_hover"
+            );
+        }
+        await triggerEvents(pivot.el, "th.o_pivot_measure_row:nth-of-type(3)", ["mouseout"]);
+        assert.containsNone(pivot, ".o_cell_hover");
+    });
+
+    QUnit.test(
+        "columns are highlighted when hovering an origin (comparison mode)",
+        async function (assert) {
+            assert.expect(5);
+
+            patchDate(2016, 11, 20, 1, 0, 0);
+
+            serverData.models.partner.records[0].date = "2016-11-15";
+            serverData.models.partner.records[1].date = "2016-12-17";
+            serverData.models.partner.records[2].date = "2016-11-22";
+            serverData.models.partner.records[3].date = "2016-11-03";
+
+            const pivot = await makeView({
+                type: "pivot",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <pivot>
+                    <field name="product_id" type="row"/>
+                    <field name="date" type="col"/>
+                </pivot>`,
+                searchViewArch: `
+                <search>
+                    <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
+                </search>`,
+                context: { search_default_date_filter: true },
+            });
+
+            await toggleComparisonMenu(pivot);
+            await toggleMenuItem(pivot, "Date: Previous period");
+
+            // hover the second origin in second group
+            await triggerEvents(pivot.el, "th.o_pivot_origin_row:nth-of-type(5)", ["mouseover"]);
+            assert.containsN(pivot, ".o_cell_hover", 3);
+            for (let i = 1; i <= 3; i++) {
+                assert.hasClass(
+                    pivot.el.querySelector(`tbody tr:nth-of-type(${i}) td:nth-of-type(5)`),
+                    "o_cell_hover"
+                );
+            }
+            await triggerEvents(pivot.el, "th.o_pivot_origin_row:nth-of-type(5)", ["mouseout"]);
+            assert.containsNone(pivot, ".o_cell_hover");
+        }
+    );
+
     QUnit.test('pivot view with disable_linking="True"', async function (assert) {
         const fakeActionService = {
             start() {
