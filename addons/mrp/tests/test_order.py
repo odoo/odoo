@@ -1287,6 +1287,30 @@ class TestMrpOrder(TestMrpCommon):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
 
+    def test_product_produce_14(self):
+        """ Check two component move with the same product are not merged."""
+        product = self.env['product.product'].create({
+            'name': 'Product no BoM',
+            'type': 'product',
+        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product
+        mo = mo_form.save()
+        for i in range(2):
+            move = self.env['stock.move'].create({
+                'name': 'mrp_move_' + str(i),
+                'product_id': self.product_2.id,
+                'product_uom': self.ref('uom.product_uom_unit'),
+                'production_id': mo.id,
+                'location_id': self.ref('stock.stock_location_stock'),
+                'location_dest_id': self.ref('stock.stock_location_output'),
+                'product_uom_qty': 0,
+                'quantity_done': 0,
+            })
+            mo.move_raw_ids |= move
+        mo.action_confirm()
+        self.assertEqual(len(mo.move_raw_ids), 2)
+
     def test_product_produce_uom(self):
         """ Produce a finished product tracked by serial number. Set another
         UoM on the bom. The produce wizard should keep the UoM of the product (unit)
