@@ -10,6 +10,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.tools import format_date
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
 
@@ -68,6 +69,7 @@ class HolidaysType(models.Model):
         compute='_compute_leaves', string='Virtual Time Off Already Taken',
         help='Sum of validated and non validated time off requests.')
     # KBA TODO in master: rename, change to int
+    closest_allocation_to_expire = fields.Many2one('hr.leave.allocation', 'Allocation', compute='_compute_leaves')
     group_days_allocation = fields.Float(
         compute='_compute_group_days_allocation', string='Days Allocated')
     group_days_leave = fields.Float(
@@ -216,6 +218,7 @@ class HolidaysType(models.Model):
                     'remaining_leaves': 0,
                     'virtual_remaining_leaves': 0,
                     'virtual_leaves_taken': 0,
+                    'closest_allocation_to_expire': False,
                 } for leave_type in self
             } for employee_id in employee_ids
         }
@@ -255,6 +258,15 @@ class HolidaysType(models.Model):
                                                     if request.leave_type_request_unit == 'hour'
                                                     else request.number_of_days)
 
+        allocation_closest_by_type = {}
+        for holiday_status_id in self.ids:
+            allocations_of_that_type = allocations.filtered(lambda a: a.holiday_status_id.id == holiday_status_id and a.date_to and a.state == 'validate')
+            allocations_sorted = sorted(allocations_of_that_type, key=lambda a: a.date_to)
+            allocation_closest = allocations_sorted[0] if allocations_sorted else False
+            allocation_closest_by_type[holiday_status_id] = {
+                'closest_allocation_to_expire': allocation_closest,
+            }
+
         for allocation in allocations.sudo():
             status_dict = result[allocation.employee_id.id][allocation.holiday_status_id.id]
             if allocation.state == 'validate':
@@ -276,6 +288,7 @@ class HolidaysType(models.Model):
                     status_dict['max_leaves'] += allocation.max_leaves
                     status_dict['remaining_leaves'] += remaining_leaves
                     status_dict['leaves_taken'] += allocation.leaves_taken
+                    status_dict['closest_allocation_to_expire'] = allocation_closest_by_type[allocation.holiday_status_id.id]['closest_allocation_to_expire']
         return result
 
     @api.model
@@ -285,6 +298,7 @@ class HolidaysType(models.Model):
 
     def _get_days_request(self):
         self.ensure_one()
+        closest_allocation_remaining = (self.closest_allocation_to_expire.max_leaves - self.closest_allocation_to_expire.leaves_taken) if self.closest_allocation_to_expire else False
         return (self.name, {
                 'remaining_leaves': ('%.2f' % self.remaining_leaves).rstrip('0').rstrip('.'),
                 'virtual_remaining_leaves': ('%.2f' % self.virtual_remaining_leaves).rstrip('0').rstrip('.'),
@@ -293,6 +307,8 @@ class HolidaysType(models.Model):
                 'virtual_leaves_taken': ('%.2f' % self.virtual_leaves_taken).rstrip('0').rstrip('.'),
                 'leaves_requested': ('%.2f' % (self.max_leaves - self.virtual_remaining_leaves - self.leaves_taken)).rstrip('0').rstrip('.'),
                 'leaves_approved': ('%.2f' % self.leaves_taken).rstrip('0').rstrip('.'),
+                'closest_allocation_remaining': ('%.2f' % closest_allocation_remaining).rstrip('0').rstrip('.'),
+                'closest_allocation_expire': format_date(self.env, self.closest_allocation_to_expire.date_to, date_format="MM/dd/yyyy") if self.closest_allocation_to_expire.date_to else False,
                 'request_unit': self.request_unit,
                 'icon': self.sudo().icon_id.url,
                 }, self.requires_allocation, self.id)
@@ -320,6 +336,7 @@ class HolidaysType(models.Model):
             holiday_status.remaining_leaves = result.get('remaining_leaves', 0)
             holiday_status.virtual_remaining_leaves = result.get('virtual_remaining_leaves', 0)
             holiday_status.virtual_leaves_taken = result.get('virtual_leaves_taken', 0)
+            holiday_status.closest_allocation_to_expire = result.get('closest_allocation_to_expire', 0)
 
     def _compute_group_days_allocation(self):
         date_from = fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
