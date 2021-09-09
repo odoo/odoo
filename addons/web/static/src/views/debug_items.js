@@ -70,8 +70,8 @@ export function editSearchView({ accessRights, component, env }) {
     if (!accessRights.canEditView) {
         return null;
     }
-    let { searchViewId } = component.props.info || {}; // fallback is there for legacy
-    if ("viewParams" in component.props) {
+    let { view_id: searchViewId } = component.props.viewInfo || {}; // fallback is there for legacy
+    if (!searchViewId && "viewParams" in component.props) {
         //legacy
         searchViewId = component.props.viewParams.action.controlPanelFieldsView.view_id;
     }
