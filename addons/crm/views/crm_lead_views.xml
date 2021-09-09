@@ -95,6 +95,7 @@
                         <group>
                             <group name="lead_partner" attrs="{'invisible': [('type', '=', 'opportunity')]}">
                                 <!-- Preload all the partner's information -->
+                                <field name="is_partner_visible" invisible='1'/>
                                 <field name="partner_id" widget="res_partner_many2one"
                                     context="{
                                         'default_name': contact_name,
@@ -113,7 +114,7 @@
                                         'default_team_id': team_id,
                                         'default_website': website,
                                         'show_vat': True
-                                    }" groups="base.group_no_one"/>
+                                    }" attrs="{'invisible': [('is_partner_visible', '=', False)]}"/>
                                 <field name="partner_name"/>
                                 <label for="street" string="Address"/>
                                 <div class="o_address_format">
