@@ -34,6 +34,7 @@ import {
     fakeTitleService,
     makeFakeLocalizationService,
     makeFakeRouterService,
+    makeFakeHTTPService,
 } from "../helpers/mock_services";
 import { getFixture, legacyExtraNextTick, nextTick, patchWithCleanup } from "../helpers/utils";
 import session from "web.session";
@@ -77,6 +78,7 @@ export function setupWebClientRegistries() {
         dialog: () => dialogService,
         effect: () => effectService,
         hotkey: () => hotkeyService,
+        http: () => makeFakeHTTPService(),
         legacy_service_provider: () => legacyServiceProvider,
         localization: () => makeFakeLocalizationService(),
         menu: () => menuService,
