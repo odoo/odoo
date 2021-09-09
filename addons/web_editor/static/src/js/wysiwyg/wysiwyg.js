@@ -1,5 +1,7 @@
 odoo.define('web_editor.wysiwyg', function (require) {
 'use strict';
+
+const dom = require('web.dom');
 const core = require('web.core');
 const Widget = require('web.Widget');
 const Dialog = require('web.Dialog');
@@ -1147,10 +1149,9 @@ const Wysiwyg = Widget.extend({
                         $dropdown.children('.dropdown-toggle').dropdown('show');
                         const $colorpicker = $dropdown.find('.colorpicker');
                         const colorpickerHeight = $colorpicker.outerHeight();
-                        const toolbarPos = this.toolbar.$el.offset();
-                        const colorpickerBottom = toolbarPos.top + this.toolbar.$el.outerHeight() + colorpickerHeight;
-                        const clientHeight = this.odooEditor.document.documentElement.clientHeight;
-                        $dropdown[0].classList.toggle('dropup', colorpickerBottom > clientHeight);
+                        const toolbarContainerTop = dom.closestScrollable(this.toolbar.el).getBoundingClientRect().top;
+                        const toolbarColorButtonTop = this.toolbar.el.querySelector('#colorInputButtonGroup').getBoundingClientRect().top;
+                        $dropdown[0].classList.toggle('dropup', colorpickerHeight + toolbarContainerTop <= toolbarColorButtonTop);
                         manualOpening = false;
                     });
                 });
