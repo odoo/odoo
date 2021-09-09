@@ -942,9 +942,9 @@ function makeActionManager(env) {
             report_file: action.report_file,
             report_name: action.report_name,
             report_url: _getReportUrl(action, "html"),
+            context: Object.assign({}, action.context),
         });
         const clientActionOptions = Object.assign({}, options, {
-            context: action.context,
             props,
         });
         return doAction("report.client_action", clientActionOptions);
