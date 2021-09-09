@@ -226,6 +226,7 @@ class Lead(models.Model):
     # UX
     partner_email_update = fields.Boolean('Partner Email will Update', compute='_compute_partner_email_update')
     partner_phone_update = fields.Boolean('Partner Phone will Update', compute='_compute_partner_phone_update')
+    is_partner_visible = fields.Boolean('Is Partner Visible', compute='_compute_is_partner_visible')
 
     _sql_constraints = [
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
@@ -550,6 +551,24 @@ class Lead(models.Model):
     def _compute_partner_phone_update(self):
         for lead in self:
             lead.partner_phone_update = lead._get_partner_phone_update()
+
+    @api.depends_context('uid')
+    @api.depends('partner_id', 'type')
+    def _compute_is_partner_visible(self):
+        """ When the crm.lead is of type 'lead', we don't want to display the "Customer" field on the form view
+        unless it's set (or debug mode).
+
+        Indeed, most of the times leads will not have this information set, since when we assign a Customer we
+        usually convert the lead to an opportunity as well.
+
+        This means that on the lead form, we don't want to display this field since it may be misleading for the
+        end user.
+        When it's set however, we want to display it, mainly because there are a few automatic synchronizations between
+        the lead and its partner (phone and email for examples), and this needs to be clear that modifying
+        one of those fields will in turn modify the linked partner."""
+        is_debug_mode = self.user_has_groups('base.group_no_one')
+        for lead in self:
+            lead.is_partner_visible = bool(lead.type == 'opportunity' or lead.partner_id or is_debug_mode)
 
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):
