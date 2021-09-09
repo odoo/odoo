@@ -41,20 +41,20 @@
                     <div class="o_rightpanel_title">
                         <span class="o_rightpanel_left_col o_rightpanel_left_text"> Total Sold </span>
                     </div>
-                    <span class="o_rightpanel_right_col font-weight-bold float-right"><t t-esc="sold_items.total_sold"/> <t t-esc="sold_items.company_unit_name"/></span>
+                    <span class="o_rightpanel_right_col font-weight-bold float-right"><t t-esc="formatFloat(sold_items.total_sold)"/> <t t-esc="sold_items.company_unit_name"/></span>
                 </div>
                 <div class="o_rightpanel_data">
                     <div class="o_rightpanel_data_row">
                         <span class="o_rightpanel_left_col o_rightpanel_left_text">Effective</span>
-                        <span class="o_rightpanel_right_col"><t t-esc="sold_items.effective_sold"/> <t t-esc="sold_items.company_unit_name"/></span>
+                        <span class="o_rightpanel_right_col"><t t-esc="formatFloat(sold_items.effective_sold)"/> <t t-esc="sold_items.company_unit_name"/></span>
                     </div>
                     <div class="o_rightpanel_data_row" t-if="sold_items.planned_sold > 0 and sold_items.allow_forecast">
                         <span class="o_rightpanel_left_col o_rightpanel_left_text">Planned</span>
-                        <span class="o_rightpanel_right_col"><t t-esc="sold_items.planned_sold"/> <t t-esc="sold_items.company_unit_name"/></span>
+                        <span class="o_rightpanel_right_col"><t t-esc="formatFloat(sold_items.planned_sold)"/> <t t-esc="sold_items.company_unit_name"/></span>
                     </div>
                     <div class="o_rightpanel_data_row">
                         <span class="o_rightpanel_left_col o_rightpanel_left_text">Remaining</span>
-                        <span class="o_rightpanel_right_col" t-attf-class="o_color_{{sold_items.remaining.color}}"><t t-esc="sold_items.remaining.value"/> <t t-esc="sold_items.company_unit_name"/></span>
+                        <span class="o_rightpanel_right_col" t-attf-class="o_color_{{sold_items.remaining.color}}"><t t-esc="formatFloat(sold_items.remaining['value'])"/> <t t-esc="sold_items.company_unit_name"/></span>
                     </div>
                 </div>
             </div>
