@@ -333,6 +333,7 @@ class AccountAccount(models.Model):
                         field: amount,
                         'move_id': opening_move.id,
                         'account_id': self.id,
+                        'currency_id': self.currency_id.id or self.company_id.currency_id.id,
                 })
 
             # Then, we automatically balance the opening move, to make sure it stays valid
