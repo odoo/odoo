@@ -12,11 +12,26 @@
         </field>
     </record>
 
+    <record id="event_track_view_form_quick_create" model="ir.ui.view">
+        <field name="name">event.track.view.form.quick.create</field>
+        <field name="model">event.track</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="event_id" invisible="context.get('default_event_id', False)"/>
+                    <field name="name" placeholder="e.g. Inspiring Business Talk"/>
+                    <field name="date"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="view_event_track_kanban">
         <field name="name">event.track.kanban</field>
         <field name="model">event.track</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="stage_id">
+            <kanban default_group_by="stage_id" quick_create_view="website_event_track.event_track_view_form_quick_create">
                 <field name="color"/>
                 <field name="partner_id"/>
                 <field name="stage_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
