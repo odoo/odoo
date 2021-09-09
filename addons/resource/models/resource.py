@@ -957,7 +957,7 @@ class ResourceResource(models.Model):
                 # Make sure to only search end after start
                 search_range = (
                     start,
-                    end + relativedelta(days=1, hour=0, minute=0, second=0),
+                    end + relativedelta(hour=23, minute=59, second=59),
                 )
             calendar_end = resource.calendar_id._get_closest_work_time(end, match_end=True, resource=resource, search_range=search_range)
             result[resource] = (
