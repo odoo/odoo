@@ -68,10 +68,10 @@ class ResConfigSettings(models.TransientModel):
     google_maps_api_key = fields.Char(related='website_id.google_maps_api_key', readonly=False)
     group_multi_website = fields.Boolean("Multi-website", implied_group="website.group_multi_website")
 
+    @api.onchange('website_id')
     @api.depends('website_id.auth_signup_uninvited')
     def _compute_auth_signup(self):
-        for config in self:
-            config.auth_signup_uninvited = config.website_id.auth_signup_uninvited
+        self.auth_signup_uninvited = self.website_id.auth_signup_uninvited
 
     def _set_auth_signup(self):
         for config in self:
