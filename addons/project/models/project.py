@@ -661,7 +661,7 @@ class Project(models.Model):
             'user': self._get_user_values(),
             'tasks_analysis': self._get_tasks_analysis(),
             'milestones': self._get_milestones(),
-            'buttons': sorted(self._get_stat_buttons(), key=lambda k: k['sequence'])
+            'buttons': sorted(self._get_stat_buttons(), key=lambda k: k['sequence']),
         }
 
     def _get_user_values(self):

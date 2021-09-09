@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { AddMilestone, OpenMilestone } from '@project/js/right_panel/project_utils';
+import { formatFloat } from "@web/fields/formatters";
 const { useState } = owl.hooks;
 
 export default class ProjectRightPanel extends owl.Component {
@@ -17,6 +18,10 @@ export default class ProjectRightPanel extends owl.Component {
                 user: {},
             }
         });
+    }
+
+    formatFloat(value) {
+        return formatFloat(value, { digits: [false, 1] });
     }
 
     async willStart() {

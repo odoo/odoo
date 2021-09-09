@@ -130,9 +130,9 @@ tour.register('project_update_tour', {
     trigger: ".o_field_widget[name=description] div[name='milestone'] ul li:contains('(12/12/2099 => 12/12/2100)')",
     run: function () {},
 }, {
-    trigger: ".o_field_widget[name=description] div[name='milestone'] ul li span:contains('(due on 12/12/2022)')",
+    trigger: ".o_field_widget[name=description] div[name='milestone'] ul li span:contains('(due 12/12/2022)')",
     run: function () {},
 }, {
-    trigger: ".o_field_widget[name=description] div[name='milestone'] ul li span:contains('(due on 12/12/2100)')",
+    trigger: ".o_field_widget[name=description] div[name='milestone'] ul li span:contains('(due 12/12/2100)')",
     run: function () {},
 }]);
