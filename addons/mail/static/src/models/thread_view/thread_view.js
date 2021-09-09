@@ -72,6 +72,9 @@ function factory(dependencies) {
          */
         _computeRtcCallViewer() {
             if (this.thread && this.thread.model === 'mail.channel' && this.thread.rtcSessions.length > 0) {
+                if (this.rtcCallViewer) {
+                    return;
+                }
                 return create();
             }
             return unlink();
