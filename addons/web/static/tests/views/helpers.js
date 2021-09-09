@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { View } from "@web/views/view";
-import { getFixture } from "@web/../tests/helpers/utils";
-import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { getFixture } from "@web/../tests/helpers/utils";
+import { View } from "@web/views/view";
 import { _fieldsViewGet } from "../helpers/mock_server";
 import { addLegacyMockEnvironment } from "../webclient/helpers";
 
@@ -21,20 +21,26 @@ const { mount } = owl;
 
 /**
  * @param {MakeViewParams} params
+ * @param {Object} [options={}]
+ * @param {boolean} [options.noFields] Do not add default fields
  * @returns {owl.Component}
  */
-export async function makeView(params) {
-    const serverData = params.serverData;
-    const mockRPC = params.mockRPC;
-    const legacyParams = params.legacyParams || {};
-    const props = Object.assign({}, params);
+export const makeView = async (params, options = {}) => {
+    const props = { ...params };
+    const serverData = props.serverData;
+    const mockRPC = props.mockRPC;
+    const config = props.config || {};
+    const legacyParams = props.legacyParams || {};
+
     delete props.serverData;
     delete props.mockRPC;
     delete props.legacyParams;
+    delete props.config;
 
-    const env = await makeTestEnv({ serverData, mockRPC });
-    const defaultFields = serverData.models[props.resModel].fields;
-    if (props.arch) {
+    const env = await makeTestEnv({ serverData, mockRPC, config });
+
+    if (!options.noFields && props.arch) {
+        const defaultFields = serverData.models[props.resModel].fields;
         if (!props.fields) {
             props.fields = Object.assign({}, defaultFields);
             // write the field name inside the field description (as done by fields_get)
@@ -81,4 +87,4 @@ export async function makeView(params) {
     const concreteView = Object.values(withSearch.__owl__.children)[0];
 
     return concreteView;
-}
+};
