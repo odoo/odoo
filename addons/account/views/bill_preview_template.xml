@@ -2,8 +2,8 @@
 <odoo>
     <data>
         <template id="bill_preview">
-            <div id="wrapwrap" class="shadow p-4">
-                <main>
+            <div id="wrapwrap" class="p-4">
+                <main class="shadow p-4">
                     <div class="article">
                         <div class="o_company_1_layout">
                             <div class="row">
@@ -22,9 +22,10 @@
                         </div>
                         <div class="o_report_layout_standard o_company_1_layout ">
                             <div class="pt-3">
-                                <div class="address row">
-                                    <div name="address" class="col-sm-5 ml-auto">
-                                        <address class="mb-0" itemscope="itemscope" itemtype="http://schema.org/Organization">
+                                <div id="addr" class="page"  style="margin-top: 32px !important;">
+                                    <div style="width:49%; display:inline-block;"></div>
+                                    <div  style="width:50%; display:inline-block;">
+                                        <address class="mb-0" itemscope="itemscope" itemtype="http://schema.org/Organization" style="width:100%">
                                             <div>
                                                 <span itemprop="name"><t t-esc="company_name"/></span>
                                             </div>
@@ -41,18 +42,23 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="page" style="margin-top: 26px !important;">
+                            <div class="pt-3" style="margin-top: 32px;">
                                 <h2><t t-esc="invoice_name"/></h2>
-                                <div id="informations" class="row" style="margin-bottom: 32px !important; margin-top: 32px !important;">
-                                    <div class="col-auto col-3 mw-100 mb-2" name="invoice_date">
+                                <div id="dates" class="page"  style="margin-top: 28px !important;">
+                                    <div style="width:25%; display:inline-block;">
                                         <strong>Invoice Date:</strong>
                                         <p class="m-0"><t t-esc="invoice_date"/></p>
                                     </div>
-                                    <div class="col-auto col-3 mw-100 mb-2" name="due_date">
-                                        <strong>Due Date:</strong>
-                                        <p class="m-0"><t t-esc="invoice_due_date"/></p>
+
+                                    <div  style="width:25%; display:inline-block;">
+                                        <div class="mb-0" itemscope="itemscope" itemtype="http://schema.org/Organization" style="width:100%">
+                                                <strong>Due Date:</strong>
+                                                <p class="m-0"><t t-esc="invoice_due_date"/></p>
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="page" style="margin-top: 32px !important;">
                                 <table class="table table-sm o_main_table" name="invoice_line_table" style="width: 100%;">
                                     <thead>
                                         <tr>
@@ -64,63 +70,61 @@
                                         </tr>
                                     </thead>
                                     <tbody class="invoice_tbody">
-                                            <tr class="">
-                                                <td name="account_invoice_line_name">
-                                                    [FURN_8999] Three-Seat Sofa
-                                                </td>
-                                                <td class="text-right">
-                                                    <span>5.00</span>
-                                                </td>
-                                                <td class="text-right d-md-table-cell">
-                                                    <span class="text-nowrap">1,500.00</span>
-                                                </td>
-                                                <td class="text-left d-md-table-cell">
-                                                    <span>Tax 0%</span>
-                                                </td>
-                                                <td class="text-right o_price_total">
-                                                    <span class="text-nowrap">$ <span class="oe_currency_value">7,500.00</span></span>
-                                                </td>
-                                            </tr>
-                                            <tr class="">
-                                                <td name="account_invoice_line_name">
-                                                    [FURN_8220] Four Person Desk
-                                                </td>
-                                                <td class="text-right">
-                                                    <span>5.00</span>
-                                                </td>
-                                                <td class="text-right d-md-table-cell">
-                                                    <span class="text-nowrap">2,350.00</span>
-                                                </td>
-                                                <td class="text-left d-md-table-cell">
-                                                    <span>Tax 0%</span>
-                                                </td>
-                                                <td class="text-right o_price_total">
-                                                    <span class="text-nowrap">$ <span class="oe_currency_value">11,750.00</span></span>
-                                                </td>
-                                            </tr>
+                                        <tr class="">
+                                            <td name="account_invoice_line_name">
+                                                [FURN_8999] Three-Seat Sofa
+                                            </td>
+                                            <td class="text-right">
+                                                <span>5.00</span>
+                                            </td>
+                                            <td class="text-right d-md-table-cell">
+                                                <span class="text-nowrap">1,500.00</span>
+                                            </td>
+                                            <td class="text-left d-md-table-cell">
+                                                <span>Tax 0%</span>
+                                            </td>
+                                            <td class="text-right o_price_total">
+                                                <span class="text-nowrap">$ <span class="oe_currency_value">7,500.00</span></span>
+                                            </td>
+                                        </tr>
+                                        <tr class="">
+                                            <td name="account_invoice_line_name">
+                                                [FURN_8220] Four Person Desk
+                                            </td>
+                                            <td class="text-right">
+                                                <span>5.00</span>
+                                            </td>
+                                            <td class="text-right d-md-table-cell">
+                                                <span class="text-nowrap">2,350.00</span>
+                                            </td>
+                                            <td class="text-left d-md-table-cell">
+                                                <span>Tax 0%</span>
+                                            </td>
+                                            <td class="text-right o_price_total">
+                                                <span class="text-nowrap">$ <span class="oe_currency_value">11,750.00</span></span>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
-                                <!-- <div class="clearfix"> -->
-                                    <div id="total" class="page"  style="margin-top: 32px !important;">
-                                        <div style="width:49%; display:inline-block;"></div>
-                                        <div  style="width:50%; display:inline-block;">
-                                            <table class="table table-sm" style="page-break-inside: avoid; width:100%">
-                                                <tbody><tr class="border-black o_subtotal" style="">
-                                                    <td><strong>Subtotal</strong></td>
-                                                    <td class="text-right">
-                                                        <span>$ <span class="oe_currency_value">19,250.00</span></span>
-                                                    </td>
-                                                </tr>
-                                                <tr class="border-black o_total">
-                                                    <td><strong>Total</strong></td>
-                                                    <td class="text-right">
-                                                        <span class="text-nowrap">$ <span class="oe_currency_value">19,250.00</span></span>
-                                                    </td>
-                                                </tr>
-                                            </tbody></table>
-                                        </div>
+                                <div id="total" class="page"  style="margin-top: 32px !important;">
+                                    <div style="width:49%; display:inline-block;"></div>
+                                    <div  style="width:50%; display:inline-block;">
+                                        <table class="table table-sm" style="page-break-inside: avoid; width:100%">
+                                            <tbody><tr class="border-black o_subtotal" style="">
+                                                <td><strong>Subtotal</strong></td>
+                                                <td class="text-right">
+                                                    <span>$ <span class="oe_currency_value">19,250.00</span></span>
+                                                </td>
+                                            </tr>
+                                            <tr class="border-black o_total">
+                                                <td><strong>Total</strong></td>
+                                                <td class="text-right">
+                                                    <span class="text-nowrap">$ <span class="oe_currency_value">19,250.00</span></span>
+                                                </td>
+                                            </tr>
+                                        </tbody></table>
                                     </div>
-                                <!-- </div> -->
+                                </div>
                                 <div class="mt-4">
                                     <p>Please use the following communication for your payment : <b><t t-esc="invoice_ref"/></b></p>
                                     <p>Payment terms: 30 Days</p>
