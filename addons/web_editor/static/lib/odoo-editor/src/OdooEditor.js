@@ -833,18 +833,23 @@ export class OdooEditor extends EventTarget {
      * Place the selection on the last known selection position from the history
      * steps.
      *
+     * @param {boolean} [limitToEditable=false] When true returns the latest selection that
+     *     happened within the editable.
      * @returns {boolean}
      */
-    historyResetLatestComputedSelection() {
-        if (this._latestComputedSelection && this._latestComputedSelection.anchorNode) {
-            const anchorNode = this.idFind(this._latestComputedSelection.anchorNode.oid);
-            const focusNode = this.idFind(this._latestComputedSelection.focusNode.oid) || anchorNode;
+    historyResetLatestComputedSelection(limitToEditable) {
+        const computedSelection = limitToEditable
+            ? this._latestComputedSelectionInEditable
+            : this._latestComputedSelection;
+        if (computedSelection && computedSelection.anchorNode) {
+            const anchorNode = this.idFind(computedSelection.anchorNode.oid);
+            const focusNode = this.idFind(computedSelection.focusNode.oid) || anchorNode;
             if (anchorNode) {
                 setSelection(
                     anchorNode,
-                    this._latestComputedSelection.anchorOffset,
+                    computedSelection.anchorOffset,
                     focusNode,
-                    this._latestComputedSelection.focusOffset,
+                    computedSelection.focusOffset,
                 );
             }
         }
@@ -1507,6 +1512,9 @@ export class OdooEditor extends EventTarget {
             focusNode: sel.focusNode,
             focusOffset: sel.focusOffset,
         };
+        if (this._isSelectionInEditable(sel)) {
+            this._latestComputedSelectionInEditable = this._latestComputedSelection;
+        }
         return this._latestComputedSelection;
     }
     /**
@@ -2188,11 +2196,7 @@ export class OdooEditor extends EventTarget {
         this._computeHistorySelection();
 
         const selection = this.document.getSelection();
-        const isSelectionInEditable =
-            !selection.isCollapsed &&
-            this.editable.contains(selection.anchorNode) &&
-            this.editable.contains(selection.focusNode);
-        this._updateToolbar(isSelectionInEditable);
+        this._updateToolbar(this._isSelectionInEditable(selection));
 
         if (this._currentMouseState === 'mouseup') {
             this._fixFontAwesomeSelection();
@@ -2206,6 +2210,18 @@ export class OdooEditor extends EventTarget {
         }
     }
 
+    /**
+     * Returns true if the current selection is inside the editable.
+     *
+     * @private
+     * @param {Object} selection
+     * @returns {boolean}
+     */
+    _isSelectionInEditable(selection) {
+        return !selection.isCollapsed &&
+            this.editable.contains(selection.anchorNode) &&
+            this.editable.contains(selection.focusNode);
+    }
     getCurrentCollaborativeSelection() {
         const selection = this._latestComputedSelection || this._computeHistorySelection();
         if (!selection) return;
