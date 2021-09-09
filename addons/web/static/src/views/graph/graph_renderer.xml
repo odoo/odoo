@@ -6,16 +6,16 @@
             <table>
                 <thead>
                     <tr>
-                        <th class="o_measure" t-esc="measure"/>
+                        <th class="o_measure" t-esc="measure" />
                     </tr>
                 </thead>
                 <tbody>
                     <tr t-foreach="tooltipItems" t-as="tooltipItem" t-key="tooltipItem.id">
                         <td>
-                            <span class="o_square" t-attf-style="background-color: {{ tooltipItem.boxColor }}"/>
-                            <span class="o_label" t-attf-style="max-width: {{ maxWidth }}" t-esc="tooltipItem.label"/>
+                            <span class="o_square" t-attf-style="background-color: {{ tooltipItem.boxColor }}" />
+                            <span class="o_label" t-attf-style="max-width: {{ maxWidth }}" t-esc="tooltipItem.label" />
                         </td>
-                        <td class="o_value" t-esc="tooltipItem.value"/>
+                        <td class="o_value" t-esc="tooltipItem.value" />
                     </tr>
                 </tbody>
             </table>
@@ -25,7 +25,7 @@
     <t t-name="web.GraphRenderer" owl="1">
         <div class="o_graph_renderer">
             <div class="o_graph_canvas_container" t-ref="container">
-                <canvas t-ref="canvas"/>
+                <canvas t-ref="canvas" />
             </div>
         </div>
     </t>
