@@ -3,7 +3,7 @@
 
     <t t-name="web.PivotRenderer" owl="1">
         <div class="o_pivot table-responsive">
-            <table class="table-hover table-sm table-bordered" t-att-class="{ o_enable_linking: !model.meta.disableLinking, o_sample_data_disabled: model.meta.useSampleModel }">
+            <table class="table-hover table-sm table-bordered" t-att-class="{ o_enable_linking: !model.metaData.disableLinking, o_sample_data_disabled: model.metaData.useSampleModel }">
                 <thead>
                     <tr t-foreach="table.headers" t-as="row" t-key="'header_' + row_index">
                         <t t-foreach="row" t-as="cell" t-key="'header_row_' + cell_index">
@@ -33,7 +33,7 @@
                                              o_negative: cell.value &lt; 0,
                                              o_null: cell.value === 0,
                                         }" t-esc="getFormattedVariation(cell)"/>
-                                    <div t-elif="model.meta.measures[cell.measure].type === 'boolean'" class="o_value">
+                                    <div t-elif="model.metaData.measures[cell.measure].type === 'boolean'" class="o_value">
                                         <CheckBox disabled="true" value="cell.value" />
                                     </div>
                                     <div t-else="1" class="o_value" t-esc="getFormattedValue(cell)"/>
@@ -56,7 +56,7 @@
                     tag="'span'"
                     toggler="'parent'"
                     cell="cell"
-                    customGroupBys="model.meta.customGroupBys"
+                    customGroupBys="model.metaData.customGroupBys"
                     showActiveItems="false"
                     t-on-click.stop=""
                     t-on-dropdown-item-selected="onDropdownItemSelected(isXAxis ? 'col' : 'row')"
