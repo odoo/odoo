@@ -7,7 +7,7 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <tree string="Channels">
-                <field name="partner_id"/>
+                <field name="display_name"/>
                 <field name="channel_id"/>
                 <field name="seen_message_id"/>
             </tree>
@@ -22,6 +22,7 @@
                 <sheet>
                     <group>
                         <field name="partner_id"/>
+                        <field name="guest_id"/>
                         <field name="channel_id"/>
                         <field name="seen_message_id"/>
                         <field name="rtc_inviting_session_id"/>
