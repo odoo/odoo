@@ -110,6 +110,7 @@ export async function makeTestEnv(config = {}) {
     });
 
     const env = makeEnv();
+    env.config = config.config || {};
     await startServices(env);
     env.qweb.addTemplates(window.__ODOO_TEMPLATES__);
     return env;

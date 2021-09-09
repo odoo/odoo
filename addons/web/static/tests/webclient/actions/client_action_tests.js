@@ -313,9 +313,9 @@ QUnit.module("ActionManager", (hooks) => {
         class ClientAction extends Component {
             setup() {
                 this.breadcrumbTitle = "myOwlAction";
-                const breadCrumbs = this.props.breadcrumbs;
-                assert.strictEqual(breadCrumbs.length, 1);
-                assert.strictEqual(breadCrumbs[0].name, "Favorite Ponies");
+                const { breadcrumbs } = this.env.config;
+                assert.strictEqual(breadcrumbs.length, 1);
+                assert.strictEqual(breadcrumbs[0].name, "Favorite Ponies");
             }
             mounted() {
                 this.trigger("controller-title-updated", this.breadcrumbTitle);
@@ -422,10 +422,12 @@ QUnit.module("ActionManager", (hooks) => {
                 title: "title",
                 message: "message %s <R&D>",
                 sticky: true,
-                links: [{
-                    label: "test <R&D>",
-                    url: '#action={action.id}&id={order.id}&model=purchase.order',
-                }],
+                links: [
+                    {
+                        label: "test <R&D>",
+                        url: "#action={action.id}&id={order.id}&model=purchase.order",
+                    },
+                ],
             },
         });
         const notificationSelector = ".o_notification_manager .o_notification";
@@ -460,10 +462,12 @@ QUnit.module("ActionManager", (hooks) => {
             params: {
                 message: "message %s <R&D>",
                 sticky: true,
-                links: [{
-                    label: "test <R&D>",
-                    url: '#action={action.id}&id={order.id}&model=purchase.order',
-                }],
+                links: [
+                    {
+                        label: "test <R&D>",
+                        url: "#action={action.id}&id={order.id}&model=purchase.order",
+                    },
+                ],
             },
         });
         assert.containsOnce(
@@ -473,7 +477,8 @@ QUnit.module("ActionManager", (hooks) => {
         );
         notificationElement = document.body.querySelector(notificationSelector);
         assert.containsNone(
-            notificationElement, ".o_notification_title",
+            notificationElement,
+            ".o_notification_title",
             "the notification should not have title"
         );
     });

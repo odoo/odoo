@@ -67,7 +67,9 @@ QUnit.module("Search", (hooks) => {
                 Component: ControlPanel,
                 searchMenuTypes: ["favorite"],
                 searchViewId: false,
-                displayName: "Action Name",
+                config: {
+                    displayName: "Action Name",
+                },
             });
 
             assert.containsOnce(controlPanel, "div.o_favorite_menu > button i.fa.fa-star");
@@ -98,7 +100,9 @@ QUnit.module("Search", (hooks) => {
             Component: ControlPanel,
             searchMenuTypes: ["favorite"],
             searchViewId: false,
-            displayName: "Action Name",
+            config: {
+                displayName: "Action Name",
+            },
         });
 
         assert.containsOnce(controlPanel, "div.o_favorite_menu > button i.fa.fa-star");

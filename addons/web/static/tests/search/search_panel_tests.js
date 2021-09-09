@@ -382,7 +382,7 @@ QUnit.module("Search", (hooks) => {
             Component: TestComponent,
             resModel: "partner",
             searchViewId: false,
-            view: { type: "toy" },
+            config: { viewType: "toy" },
         });
 
         const sectionHeaderIcons = comp.el.querySelectorAll(".o_search_panel_section_header i");
@@ -418,7 +418,7 @@ QUnit.module("Search", (hooks) => {
             Component: TestComponent,
             resModel: "partner",
             searchViewId: false,
-            view: { type: "kanban" },
+            config: { viewType: "kanban" },
         });
 
         assert.containsOnce(comp, ".o_search_panel_section");
@@ -443,7 +443,7 @@ QUnit.module("Search", (hooks) => {
             Component: TestComponent,
             resModel: "partner",
             searchViewId: false,
-            view: { type: "kanban" },
+            config: { viewType: "kanban" },
         });
 
         const headers = comp.el.getElementsByClassName("o_search_panel_section_header");

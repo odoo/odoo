@@ -1,18 +1,18 @@
 /** @odoo-module **/
 
-import { cleanDomFromBootstrap } from "@web/legacy/utils";
 import { browser } from "@web/core/browser/browser";
-import { useBus } from "@web/core/utils/hooks";
 import { makeContext } from "@web/core/context";
+import { useDebugCategory } from "@web/core/debug/debug_context";
 import { download } from "@web/core/network/download";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { useBus } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
-import { useDebugCategory } from "@web/core/debug/debug_context";
+import { cleanDomFromBootstrap } from "@web/legacy/utils";
+import { View } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
 import { CallbackRecorder } from "./action_hook";
-import { View } from "@web/views/view";
 
 const { Component, hooks, tags } = owl;
 const { useRef, useSubEnv } = hooks;
@@ -307,10 +307,19 @@ function makeActionManager(env) {
     /**
      * @param {ClientAction | ActWindowAction} action
      * @param {Object} props
-     * @returns {ActionProps}
+     * @returns {{ props: ActionProps, config: Config }}
      */
-    function _getActionProps(action, props) {
-        return Object.assign({}, props, { action, actionId: action.id });
+    function _getActionInfo(action, props) {
+        return {
+            props: Object.assign({}, props, { action, actionId: action.id }),
+            config: {
+                actionId: action.id,
+                actionType: action.type,
+                actionFlags: action.flags,
+                displayName: action.display_name || action.name || "",
+                views: action.views,
+            },
+        };
     }
 
     /**
@@ -366,9 +375,9 @@ function makeActionManager(env) {
      * @param {ActWindowAction} action
      * @param {BaseView[]} views
      * @param {Object} props
-     * @returns {ViewProps}
+     * @returns {{ props: ViewProps, config: Config }}
      */
-    function _getViewProps(view, action, views, props = {}) {
+    function _getViewInfo(view, action, views, props = {}) {
         const target = action.target;
         const viewSwitcherEntries = views
             .filter((v) => v.multiRecord === view.multiRecord)
@@ -385,25 +394,15 @@ function makeActionManager(env) {
                 return viewSwitcherEntry;
             });
         const context = action.context || {};
-        const flags = action.flags || {};
         const viewProps = Object.assign({}, props, {
-            actionFlags: Object.assign({}, flags, flags[view.type]), // review system
-            action: {
-                id: action.id || false,
-                type: action.type || false,
-                views: action.views || [],
-            },
             context,
             display: { mode: target === "new" ? "inDialog" : target },
-            displayName: action.display_name || action.name,
             domain: action.domain || [],
             groupBy: action.context.group_by || [],
             loadActionMenus: target !== "new" && target !== "inline",
             loadIrFilters: action.views.some((v) => v[1] === "search"),
             resModel: action.res_model,
             type: view.type,
-            views: action.views,
-            viewSwitcherEntries,
         });
 
         if (target === "inline") {
@@ -433,11 +432,25 @@ function makeActionManager(env) {
         // LEGACY CODE COMPATIBILITY: remove when all views will be written in owl
         if (view.isLegacy) {
             const legacyActionInfo = { ...action, ...viewProps.action };
-            Object.assign(viewProps, { action: legacyActionInfo, View: view });
+            Object.assign(viewProps, {
+                action: legacyActionInfo,
+                View: view,
+                views: action.views,
+            });
         }
         // END LEGACY CODE COMPATIBILITY
 
-        return viewProps;
+        return {
+            props: viewProps,
+            config: {
+                actionId: action.id,
+                actionType: action.type,
+                actionFlags: action.flags,
+                displayName: action.display_name || action.name || "",
+                views: action.views,
+                viewSwitcherEntries,
+            },
+        };
     }
 
     /**
@@ -502,11 +515,24 @@ function makeActionManager(env) {
         });
         const action = controller.action;
 
+        // Compute breadcrumbs
+        const index = _computeStackIndex(options);
+        const controllerArray = [controller];
+        if (options.lazyController) {
+            controllerArray.unshift(options.lazyController);
+        }
+        const nextStack = controllerStack.slice(0, index).concat(controllerArray);
+        controller.config.breadcrumbs = _getBreadcrumbs(nextStack.slice(0, -1));
+        if (controller.Component.isLegacy) {
+            controller.props.breadcrumbs = controller.config.breadcrumbs;
+        }
+
         class ControllerComponent extends Component {
             setup() {
                 this.Component = controller.Component;
                 this.componentRef = useRef("component");
                 useDebugCategory("action", { action });
+                useSubEnv({ config: controller.config });
                 if (action.target !== "new") {
                     this.__beforeLeave__ = new CallbackRecorder();
                     this.__getGlobalState__ = new CallbackRecorder();
@@ -679,13 +705,6 @@ function makeActionManager(env) {
             controller.props.globalState = controller.action.globalState;
         }
 
-        const index = _computeStackIndex(options);
-        const controllerArray = [controller];
-        if (options.lazyController) {
-            controllerArray.unshift(options.lazyController);
-        }
-        const nextStack = controllerStack.slice(0, index).concat(controllerArray);
-        controller.props.breadcrumbs = _getBreadcrumbs(nextStack.slice(0, nextStack.length - 1));
         const closingProm = _executeCloseAction();
 
         controller.__info__ = {
@@ -772,7 +791,7 @@ function makeActionManager(env) {
             action,
             view,
             views,
-            props: _getViewProps(view, action, views, options.props),
+            ..._getViewInfo(view, action, views, options.props),
         };
         action.controllers[view.type] = controller;
 
@@ -789,7 +808,7 @@ function makeActionManager(env) {
                 action,
                 view: lazyView,
                 views,
-                props: _getViewProps(lazyView, action, views),
+                ..._getViewInfo(lazyView, action, views),
             };
         }
 
@@ -829,7 +848,7 @@ function makeActionManager(env) {
                 jsId: `controller_${++id}`,
                 Component: clientAction,
                 action,
-                props: _getActionProps(action, options.props),
+                ..._getActionInfo(action, options.props),
             };
             return _updateUI(controller, {
                 clearBreadcrumbs: options.clearBreadcrumbs,
@@ -1197,7 +1216,10 @@ function makeActionManager(env) {
         }
         // END LEGACY CODE COMPATIBILITY
 
-        newController.props = _getViewProps(view, controller.action, controller.views, props);
+        Object.assign(
+            newController,
+            _getViewInfo(view, controller.action, controller.views, props)
+        );
         controller.action.controllers[viewType] = newController;
         let index;
         if (view.multiRecord) {
@@ -1235,7 +1257,10 @@ function makeActionManager(env) {
         }
         const controller = controllerStack[index];
         if (controller.action.type === "ir.actions.act_window") {
-            controller.props = _getViewProps(controller.view, controller.action, controller.views);
+            Object.assign(
+                controller,
+                _getViewInfo(controller.view, controller.action, controller.views)
+            );
         }
         await clearUncommittedChanges(env);
         return _updateUI(controller, { index });
