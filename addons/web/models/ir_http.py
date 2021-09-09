@@ -175,6 +175,14 @@ class Http(models.AbstractModel):
         return response
 
     @api.model
+    def _placeholder_image_get_response(self, placeholder_base64):
+        content = base64.b64decode(placeholder_base64)
+        headers = http.set_safe_image_headers([], content)
+        response = request.make_response(content, headers)
+        response.status_code = 200
+        return response
+
+    @api.model
     def _placeholder(self, image=False):
         if not image:
             image = 'web/static/img/placeholder.png'
