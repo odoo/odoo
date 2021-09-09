@@ -4,11 +4,10 @@ import { _lt } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { SearchPanel } from "@web/search/search_panel/search_panel";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
+import { Layout } from "@web/views/layout";
 import { PivotArchParser } from "@web/views/pivot/pivot_arch_parser";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 import { PivotRenderer } from "@web/views/pivot/pivot_renderer";
@@ -130,8 +129,9 @@ export class PivotView extends Component {
         });
 
         // retrieve form and list view ids from the action
+        const { views = [] } = this.env.config;
         this.views = ["list", "form"].map((viewType) => {
-            const view = this.props.info.views.find((view) => view[1] === viewType);
+            const view = views.find((view) => view[1] === viewType);
             return [view ? view[0] : false, viewType];
         });
 
@@ -157,7 +157,7 @@ export class PivotView extends Component {
 
 PivotView.template = "web.PivotView";
 PivotView.buttonTemplate = "web.PivotView.Buttons";
-PivotView.components = { ControlPanel, SearchPanel, Renderer: PivotRenderer };
+PivotView.components = { Renderer: PivotRenderer, Layout };
 
 PivotView.props = {
     ...standardViewProps,
