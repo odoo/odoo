@@ -57,6 +57,7 @@ export function prepareRegistriesWithCleanup() {
     clearRegistryWithCleanup(registry.category("command_categories"));
     clearRegistryWithCleanup(registry.category("debug"));
     clearRegistryWithCleanup(registry.category("error_dialogs"));
+    clearRegistryWithCleanup(registry.category("ir.actions.report handlers"));
 
     clearRegistryWithCleanup(registry.category("services"));
     clearServicesMetadataWithCleanup();

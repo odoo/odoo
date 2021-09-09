@@ -5,7 +5,7 @@ import { uiService } from "@web/core/ui/ui_service";
 import testUtils from "web.test_utils";
 import ReportClientAction from "report.client_action";
 import { makeFakeNotificationService } from "../../helpers/mock_services";
-import { patchWithCleanup } from "../../helpers/utils";
+import { patchWithCleanup, click } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 import { mockDownload } from "@web/../tests/helpers/utils";
 import { clearRegistryWithCleanup } from "../../helpers/mock_env";
@@ -301,5 +301,57 @@ QUnit.module("ActionManager", (hooks) => {
             "/report/check_wkhtmltopdf",
             "/report/download",
         ]);
+    });
+
+    QUnit.test("context is correctly passed to the client action report", async (assert) => {
+        assert.expect(8);
+
+        mockDownload((options) => {
+            assert.step(options.url);
+            assert.deepEqual(JSON.parse(options.data.data), [
+                "/report/pdf/ennio.morricone/99",
+                "qweb-pdf",
+            ]);
+            return Promise.resolve();
+        });
+        const mockRPC = async (route, args) => {
+            assert.step((args && args.method) || route);
+            if (route === "/report/check_wkhtmltopdf") {
+                return "ok";
+            }
+            if (route.includes("/report/html")) {
+                return true;
+            }
+        };
+
+        testUtils.mock.patch(ReportClientAction, {
+            async start() {
+                await this._super(...arguments);
+                this._rpc({ route: this.iframe.getAttribute("src") });
+                this.iframe.setAttribute("src", "about:blank");
+            },
+        });
+        const webClient = await createWebClient({ serverData, mockRPC });
+
+        const action = {
+            context: {
+                rabbia: "E Tarantella",
+                active_ids: [99],
+            },
+            data: null,
+            name: "Ennio Morricone",
+            report_name: "ennio.morricone",
+            report_type: "qweb-html",
+            type: "ir.actions.report",
+        };
+        assert.verifySteps(["/web/webclient/load_menus"]);
+
+        await doAction(webClient, action);
+        assert.verifySteps([
+            "/report/html/ennio.morricone/99?context=%7B%22lang%22%3A%22en%22%2C%22uid%22%3A7%2C%22tz%22%3A%22taht%22%7D",
+        ]);
+        await click(webClient.el.querySelector(".o_report_print"));
+        assert.verifySteps(["/report/check_wkhtmltopdf", "/report/download"]);
+        testUtils.mock.unpatch(ReportClientAction);
     });
 });
