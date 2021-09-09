@@ -7,6 +7,7 @@ from werkzeug.urls import url_encode
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.tools import formatLang
 
 STATUS_COLOR = {
     'on_track': 20,  # green / success
@@ -76,6 +77,13 @@ class ProjectUpdate(models.Model):
         update.project_id.sudo().last_update_id = update
         return update
 
+    def unlink(self):
+        projects = self.project_id
+        res = super().unlink()
+        for project in projects:
+            project.last_update_id = self.search([('project_id', "=", project.id)], order="date desc", limit=1)
+        return res
+
     # ---------------------------------
     # Build default description
     # ---------------------------------
@@ -86,10 +94,13 @@ class ProjectUpdate(models.Model):
 
     @api.model
     def _get_template_values(self, project):
+        milestones = self._get_milestone_values(project)
         return {
             'user': self.env.user,
             'project': project,
-            'milestones': self._get_milestone_values(project)
+            'show_activities': milestones['show_section'],
+            'milestones': milestones,
+            'format_lang': lambda value, digits: formatLang(self.env, value, digits=digits),
         }
 
     @api.model
@@ -100,14 +111,14 @@ class ProjectUpdate(models.Model):
              '|', ('deadline', '<', fields.Date.context_today(self) + relativedelta(years=1)), ('deadline', '=', False)])._get_data_list()
         updated_milestones = self._get_last_updated_milestone(project)
         domain = [('project_id', '=', project.id)]
-        if project.last_update_id.date:
-            domain = expression.AND([domain, [('create_date', '>=', project.last_update_id.date)]])
+        if project.last_update_id.create_date:
+            domain = expression.AND([domain, [('create_date', '>', project.last_update_id.create_date)]])
         created_milestones = Milestone.search(domain)._get_data_list()
         return {
             'show_section': (list_milestones or updated_milestones or created_milestones) and True or False,
             'list': list_milestones,
             'updated': updated_milestones,
-            'last_update_date': project.last_update_id.date or None,
+            'last_update_date': project.last_update_id.create_date or None,
             'created': created_milestones,
         }
 
@@ -131,8 +142,8 @@ class ProjectUpdate(models.Model):
                         AND mm.message_type = 'notification'
                         AND pm.project_id = %(project_id)s
          """
-        if project.last_update_id.date:
-            query = query + "AND mm.date <= %(last_update_date)s"
+        if project.last_update_id.create_date:
+            query = query + "AND mm.date > %(last_update_date)s"
         query = query + """
                      WINDOW w_partition AS (
                              PARTITION BY pm.id
@@ -142,8 +153,8 @@ class ProjectUpdate(models.Model):
                    LIMIT 1;
         """
         query_params = {'project_id': project.id}
-        if project.last_update_id.date:
-            query_params['last_update_date'] = project.last_update_id.date
+        if project.last_update_id.create_date:
+            query_params['last_update_date'] = project.last_update_id.create_date
         self.env.cr.execute(query, query_params)
         results = self.env.cr.dictfetchall()
         mapped_result = {res['milestone_id']: {'new_value': res['new_value'], 'old_value': res['old_value']} for res in results}
