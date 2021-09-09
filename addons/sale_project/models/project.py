@@ -4,7 +4,7 @@
 from ast import literal_eval
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, AccessError
 
 
 class Project(models.Model):
@@ -149,9 +149,12 @@ class ProjectTask(models.Model):
     invoice_count = fields.Integer("Number of invoices", related='sale_order_id.invoice_count')
     task_to_invoice = fields.Boolean("To invoice", compute='_compute_task_to_invoice', search='_search_task_to_invoice', groups='sales_team.group_sale_salesman_all_leads')
 
+    # Project sharing  fields
+    display_sale_order_button = fields.Boolean(string='Display Sales Order', compute='_compute_display_sale_order_button')
+
     @property
     def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS | {'sale_order_id', 'sale_line_id'}
+        return super().SELF_READABLE_FIELDS | {'sale_order_id', 'sale_line_id', 'display_sale_order_button'}
 
     @api.depends('sale_line_id', 'project_id', 'commercial_partner_id')
     def _compute_sale_order_id(self):
@@ -177,6 +180,18 @@ class ProjectTask(models.Model):
             if task.sale_line_id.order_partner_id.commercial_partner_id != task.partner_id.commercial_partner_id:
                 task.sale_line_id = False
 
+    @api.depends('sale_order_id')
+    def _compute_display_sale_order_button(self):
+        if not self.sale_order_id:
+            self.display_sale_order_button = False
+            return
+        try:
+            sale_orders = self.env['sale.order'].search([('id', 'in', self.sale_order_id.ids)])
+            for task in self:
+                task.display_sale_order_button = task.sale_order_id in sale_orders
+        except AccessError:
+            self.display_sale_order_button = False
+
     @api.constrains('sale_line_id')
     def _check_sale_line_type(self):
         for task in self.sudo():
@@ -196,7 +211,6 @@ class ProjectTask(models.Model):
         return self.sale_order_id.ids
 
     def action_view_so(self):
-        self.ensure_one()
         so_ids = self._get_action_view_so_ids()
         action_window = {
             "type": "ir.actions.act_window",
@@ -211,6 +225,18 @@ class ProjectTask(models.Model):
             action_window["res_id"] = so_ids[0]
 
         return action_window
+
+    def action_project_sharing_view_so(self):
+        self.ensure_one()
+        if self.user_has_groups('base.group_portal'):
+            if not self.display_sale_order_button:
+                return {}
+            return {
+                "name": "Portal Sale Order",
+                "type": "ir.actions.act_url",
+                "url": self.sale_order_id.access_url,
+            }
+        return self.action_view_so()
 
     def rating_get_partner_id(self):
         partner = self.partner_id or self.sale_line_id.order_id.partner_id
