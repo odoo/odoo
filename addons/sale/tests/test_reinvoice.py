@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from freezegun import freeze_time
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.tests import Form, tagged
 
@@ -114,6 +115,42 @@ class TestReInvoice(TestSaleCommon):
 
         self.assertEqual((sale_order_line5.price_unit, sale_order_line5.qty_delivered, sale_order_line5.product_uom_qty, sale_order_line5.qty_invoiced), (self.company_data['product_order_cost'].standard_price, 2, 0, 0), 'Sale line 5 is wrong after confirming 2e vendor invoice')
         self.assertEqual((sale_order_line6.price_unit, sale_order_line6.qty_delivered, sale_order_line6.product_uom_qty, sale_order_line6.qty_invoiced), (self.company_data['product_delivery_cost'].standard_price, 2, 0, 0), 'Sale line 6 is wrong after confirming 2e vendor invoice')
+
+    @freeze_time('2020-01-15')
+    def test_sales_team_invoiced(self):
+        """ Test invoiced field from  sales team ony take into account the amount the sales channel has invoiced this month """
+
+        invoices = self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2020-01-10',
+                'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 1000.0})],
+            },
+            {
+                'move_type': 'out_refund',
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2020-01-10',
+                'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 500.0})],
+            },
+            {
+                'move_type': 'in_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2020-01-01',
+                'date': '2020-01-01',
+                'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 800.0})],
+            },
+        ])
+        invoices.action_post()
+
+        for invoice in invoices:
+            self.env['account.payment.register']\
+                .with_context(active_model='account.move', active_ids=invoice.ids)\
+                .create({})\
+                ._create_payments()
+
+        invoices.flush()
+        self.assertRecordValues(invoices.team_id, [{'invoiced': 500.0}])
 
     def test_sales_price(self):
         """ Test invoicing vendor bill at sales price for products based on delivered and ordered quantities. Check no existing SO line is incremented, but when invoicing a
