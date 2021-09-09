@@ -7,7 +7,7 @@ from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import format_amount, float_is_zero
+from odoo.tools import format_amount, float_is_zero, formatLang
 
 # YTI PLEASE SPLIT ME
 class Project(models.Model):
@@ -280,6 +280,19 @@ class Project(models.Model):
         })
         return action
 
+    def action_view_all_rating(self):
+        return {
+            'name': _('Rating'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'rating.rating',
+            'view_mode': 'kanban,list,graph,pivot,form',
+            'view_type': 'ir.actions.act_window',
+            'context': {
+                'search_default_rating_last_30_days': True,
+            },
+            'domain': [('consumed','=',True), ('parent_res_model','=','project.project'), ('parent_res_id', '=', self.id)],
+        }
+
     # ----------------------------
     #  Project Updates
     # ----------------------------
@@ -290,7 +303,7 @@ class Project(models.Model):
             **panel_data,
             'analytic_account_id': self.analytic_account_id.id,
             'sold_items': self._get_sold_items(),
-            'profitability_items': self._get_profitability_items()
+            'profitability_items': self._get_profitability_items(),
         }
 
     def _get_sale_order_lines(self):
@@ -308,19 +321,20 @@ class Project(models.Model):
             'effective_sold': 0,
             'company_unit_name': self.env.company.timesheet_encode_uom_id.name
         }
+        product_uom_unit = self.env.ref('uom.product_uom_unit')
         for sol in sols:
             name = [x[1] for x in sol.name_get()] if number_sale_orders > 1 else sol.name
-            qty_delivered = int(sol.qty_delivered) if sol.qty_delivered.is_integer() else sol.qty_delivered
-            product_uom_qty = int(sol.product_uom_qty) if sol.product_uom_qty.is_integer() else sol.product_uom_qty
+            qty_delivered = sol.product_uom._compute_quantity(sol.qty_delivered, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
+            product_uom_qty = sol.product_uom._compute_quantity(sol.product_uom_qty, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
             sold_items['data'].append({
                 'name': name,
-                'value': '%s / %s %s' % (qty_delivered, product_uom_qty, sol.product_uom.name),
+                'value': '%s / %s %s' % (formatLang(self.env, qty_delivered, 1), formatLang(self.env, product_uom_qty, 1), sol.product_uom.name if sol.product_uom == product_uom_unit else self.env.company.timesheet_encode_uom_id.name),
                 'color': 'red' if qty_delivered > product_uom_qty else 'black'
             })
             #We only want to consider hours and days for this calculation
             if sol.product_uom.category_id == self.env.company.timesheet_encode_uom_id.category_id:
-                sold_items['total_sold'] += sol.product_uom._compute_quantity(sol.product_uom_qty, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
-            sold_items['effective_sold'] = round(sol.product_uom._compute_quantity(self.total_timesheet_time, self.env.company.timesheet_encode_uom_id, raise_if_failure=False), 2)
+                sold_items['total_sold'] += product_uom_qty
+                sold_items['effective_sold'] += sol.product_uom._compute_quantity(qty_delivered, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
         remaining = sold_items['total_sold'] - sold_items['effective_sold']
         sold_items['remaining'] = {
             'value': remaining,
