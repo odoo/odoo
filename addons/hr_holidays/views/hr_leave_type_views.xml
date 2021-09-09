@@ -33,7 +33,7 @@
                                 <span class="o_stat_text">Time Off</span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" type="object" name="action_see_accrual_plans" icon="fa-calendar" attrs="{'invisible': [('id', '=', False)]}">
+                        <button class="oe_stat_button" type="object" name="action_see_accrual_plans" icon="fa-calendar" attrs="{'invisible': ['|', ('id', '=', False), ('accrual_count', '=', 0)]}">
                             <div class="o_stat_info">
                                 <field name="accrual_count"/>
                                 <span class="o_stat_text">Accruals</span>

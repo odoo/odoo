@@ -67,6 +67,7 @@ class HolidaysType(models.Model):
     virtual_leaves_taken = fields.Float(
         compute='_compute_leaves', string='Virtual Time Off Already Taken',
         help='Sum of validated and non validated time off requests.')
+    # KBA TODO in master: rename, change to int
     group_days_allocation = fields.Float(
         compute='_compute_group_days_allocation', string='Days Allocated')
     group_days_leave = fields.Float(
@@ -322,23 +323,22 @@ class HolidaysType(models.Model):
         date_from = fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
         domain = [
             ('holiday_status_id', 'in', self.ids),
-            ('state', '=', 'validate'),
             '|',
             ('date_from', '>=', date_from),
             ('date_from', '=', False),
         ]
         grouped_res = self.env['hr.leave.allocation'].read_group(
             domain,
-            ['holiday_status_id', 'number_of_days'],
+            ['holiday_status_id'],
             ['holiday_status_id'],
         )
-        grouped_dict = dict((data['holiday_status_id'][0], data['number_of_days']) for data in grouped_res)
+        grouped_dict = dict((data['holiday_status_id'][0], data['holiday_status_id_count']) for data in grouped_res)
         for allocation in self:
             allocation.group_days_allocation = grouped_dict.get(allocation.id, 0)
 
     def _compute_group_days_leave(self):
         grouped_res = self.env['hr.leave'].read_group(
-            [('holiday_status_id', 'in', self.ids), ('state', '=', 'validate'),
+            [('holiday_status_id', 'in', self.ids),
              ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)))],
             ['holiday_status_id'],
             ['holiday_status_id'],
@@ -348,8 +348,8 @@ class HolidaysType(models.Model):
             allocation.group_days_leave = grouped_dict.get(allocation.id, 0)
 
     def _compute_accrual_count(self):
-        accrual_allocations = self.env['hr.leave.allocation'].read_group([('employee_id', '!=', False), ('accrual_plan_id', '!=', False), ('state', '=', 'validate')], ['id'], ['holiday_status_id'])
-        mapped_data = dict((data['holiday_status_id'][0], data['holiday_status_id_count']) for data in accrual_allocations)
+        accrual_allocations = self.env['hr.leave.accrual.plan'].read_group([('time_off_type_id', 'in', self.ids)], ['time_off_type_id'], ['time_off_type_id'])
+        mapped_data = dict((data['time_off_type_id'][0], data['time_off_type_id_count']) for data in accrual_allocations)
         for leave_type in self:
             leave_type.accrual_count = mapped_data.get(leave_type.id, 0)
 
@@ -424,6 +424,10 @@ class HolidaysType(models.Model):
     def action_see_accrual_plans(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.open_view_accrual_plans")
+        action['domain'] = [
+            ('time_off_type_id', '=', self.id),
+        ]
         action['context'] = {
             'default_time_off_type_id': self.id,
         }
+        return action

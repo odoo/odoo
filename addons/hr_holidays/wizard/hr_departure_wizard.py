@@ -19,8 +19,8 @@ class HrDepartureWizard(models.TransientModel):
         if self.cancel_leaves:
             future_leaves = self.env['hr.leave'].search([('employee_id', '=', self.employee_id.id), 
                                                          ('date_to', '>', self.departure_date),
-                                                         ('state', 'not in', ['cancel', 'refuse'])])
-            future_leaves.write({'state': 'cancel'})
+                                                         ('state', '!=', 'refuse')])
+            future_leaves.write({'state': 'refuse'})
 
         if self.archive_allocation:
             employee_allocations = self.env['hr.leave.allocation'].search([('employee_id', '=', self.employee_id.id)])
