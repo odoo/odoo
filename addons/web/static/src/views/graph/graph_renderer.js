@@ -6,6 +6,7 @@ import { formatFloat } from "@web/fields/formatters";
 import { SEP } from "./graph_model";
 import { sortBy } from "@web/core/utils/arrays";
 import { useAssets } from "@web/core/assets";
+import { useEffect } from "@web/core/utils/hooks";
 
 const { Component, hooks } = owl;
 const { useRef } = hooks;
@@ -48,14 +49,8 @@ export class GraphRenderer extends Component {
         this.legendTooltip = null;
 
         useAssets({ jsLibs: ["/web/static/lib/Chart/Chart.js"] });
-    }
 
-    mounted() {
-        this.renderChart();
-    }
-
-    patched() {
-        this.renderChart();
+        useEffect(() => this.renderChart());
     }
 
     willUnmount() {
