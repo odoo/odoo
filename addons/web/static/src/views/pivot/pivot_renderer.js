@@ -121,7 +121,13 @@ export class PivotRenderer extends Component {
     onMouseEnter(ev) {
         var index = [...ev.currentTarget.parentNode.children].indexOf(ev.currentTarget);
         if (ev.currentTarget.tagName === "TH") {
-            index += 1;
+            if (
+                !ev.currentTarget.classList.contains("o_pivot_origin_row") &&
+                this.model.meta.origins.length === 2
+            ) {
+                index = 3 * index; // two origins + comparison column
+            }
+            index += 1; // row groupbys column
         }
         this.el
             .querySelectorAll("td:nth-child(" + (index + 1) + ")")
