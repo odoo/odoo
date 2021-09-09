@@ -477,8 +477,8 @@ class Channel(models.Model):
                     },
                 },
             ])
-        notification = _('%s started a live conference', partner.name)
-        self.message_post(body=notification, message_type="notification")
+        notification = _("%s started a live conference", partner.name or guest.name)
+        self.message_post(body=notification, message_type='notification')
         self.env['bus.bus'].sendmany(notifications)
         return invited_partners, invited_guests
 
