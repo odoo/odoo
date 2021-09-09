@@ -263,6 +263,11 @@ class Registry(Mapping):
                 env.all.tocompute, stack_info=True,
             )
 
+        # we must setup ir.model before adding manual fields because _add_manual_models may
+        # depend on behavior that is implemented through overrides, such as is_mail_thread which
+        # is implemented through an override to env['ir.model']._instanciate
+        env['ir.model']._prepare_setup()
+
         # add manual models
         if self._init_modules:
             env['ir.model']._add_manual_models()
