@@ -11,7 +11,6 @@ class ChannelPartner(models.Model):
     _name = 'mail.channel.partner'
     _description = 'Listeners of a Channel'
     _table = 'mail_channel_partner'
-    _rec_name = 'partner_id'
 
     # identity
     partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade', readonly=True, index=True)
@@ -28,6 +27,9 @@ class ChannelPartner(models.Model):
     is_pinned = fields.Boolean("Is pinned on the interface", default=True)
     last_interest_dt = fields.Datetime("Last Interest", default=fields.Datetime.now, help="Contains the date and time of the last interesting event that happened in this channel for this partner. This includes: creating, joining, pinning, and new message posted.")
     rtc_inviting_session_id = fields.Many2one('mail.channel.rtc.session', string='Ringing session')
+
+    def name_get(self):
+        return [(record.id, record.partner_id.name or record.guest_id.name) for record in self]
 
     def _remove_rtc_invitation(self):
         """ Removes the invitation to the rtc call and notifies the inviting partner if removed. """
