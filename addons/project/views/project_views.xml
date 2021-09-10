@@ -614,7 +614,7 @@
                     <field name="last_update_color"/>
                     <field name="last_update_status"/>
                     <field name="tag_ids"/>
-                    <progressbar field="last_update_status" colors='{"on_track": "success", "off_track": "danger", "on_hold": "muted", "at_risk": "warning"}'/>
+                    <progressbar field="last_update_status" colors='{"on_track": "success", "at_risk": "warning", "off_track": "danger", "on_hold": "info"}'/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon oe_kanban_content oe_kanban_card">
