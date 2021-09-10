@@ -77,7 +77,7 @@ msgstr "+ Transações"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Gerenciar\" title=\"Gerenciar\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_snippets
@@ -97,7 +97,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amount\"/>"
-msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amount\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Montante\" title=\"Montante\"/>"
 
 #. module: point_of_sale
 #. openerp-web
@@ -791,7 +791,7 @@ msgstr "Marque se o produto deve ser pesado usando a integração com balança."
 #: model:ir.model.fields,help:point_of_sale.field_product_product__show_root_category
 #: model:ir.model.fields,help:point_of_sale.field_product_template__show_root_category
 msgid "Check if you want this product to appear in the Point of Sale root category."
-msgstr "Marque para este produto aparecer na categoria raiz do Ponto de Venda."
+msgstr "Marque para este produto aparecer na categoria principal do Ponto de Venda."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__available_in_pos
@@ -1045,6 +1045,11 @@ msgid "Created on"
 msgstr "Criado em"
 
 #. module: point_of_sale
+#: selection:barcode.rule,type:0
+msgid "Credit Card"
+msgstr "Cartão de Crédito"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Credit Card Reader"
 msgstr "Leitor de cartão de crédito"
@@ -1258,7 +1263,7 @@ msgstr "Diferença"
 #: code:addons/point_of_sale/models/pos_order.py:527
 #, python-format
 msgid "Difference at closing PoS session"
-msgstr "Diferença ao encerrar a PoS session"
+msgstr "Diferença ao encerrar a sessão PoS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_difference
@@ -1386,7 +1391,7 @@ msgstr "Não acione esta opção se você toma pedidos em dispositivos como celu
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1024
 #, python-format
 msgid "Download"
-msgstr "Download"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -2289,7 +2294,7 @@ msgstr "Valores de abertura/fechamento"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_type_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Operation Type"
-msgstr "Tipo de operação"
+msgstr "Tipo de Operação"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2727,7 +2732,7 @@ msgstr "Configuração do Ponto de Vendas"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_tree
 msgid "Point of Sale Configuration"
-msgstr "Configuração do Ponto de Vendas"
+msgstr "Configuração do Ponto de Venda"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saledetails
@@ -2769,7 +2774,7 @@ msgstr "Linhas de pedido de Ponto de Venda"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Point of Sale Orders"
-msgstr "Pedidos do Ponto de Vendas"
+msgstr "Pedidos do Ponto de Venda"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
@@ -2787,7 +2792,7 @@ msgstr "Pagamento do Ponto de Vendas"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_tree
 msgid "Point of Sale Session"
-msgstr "Sessão do Ponto de Vendas"
+msgstr "Sessão do Ponto de Venda"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_user_id
@@ -3014,7 +3019,7 @@ msgstr "Categorias de produto"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_qty
 msgid "Product Quantity"
-msgstr "Quantidade do produto"
+msgstr "Quantidade do Produto"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
@@ -3541,7 +3546,7 @@ msgstr "Mostre checkout aos clientes com uma tela remotamente conectada."
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__show_root_category
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__show_root_category
 msgid "Show in Root Category"
-msgstr "Mostrar na categoria Raiz"
+msgstr "Mostrar na Categoria Principal"
 
 #. module: point_of_sale
 #. openerp-web
