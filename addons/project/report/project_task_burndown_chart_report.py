@@ -18,7 +18,8 @@ class ReportProjectTaskBurndownChart(models.Model):
     display_project_id = fields.Many2one('project.project', readonly=True)
     stage_id = fields.Many2one('project.task.type', readonly=True)
     date = fields.Datetime('Date', readonly=True)
-    user_id = fields.Many2one('res.users', string='Assigned to', readonly=True)
+    user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
+                                string='Assignees', readonly=True)
     date_assign = fields.Datetime(string='Assignment Date', readonly=True)
     date_deadline = fields.Date(string='Deadline', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
@@ -59,7 +60,6 @@ WITH all_moves_stage_task AS (
            COALESCE(LAG(mm.date) OVER (PARTITION BY mm.res_id ORDER BY mm.id), pt.create_date) as date_begin,
            mm.date as date_end,
            mtv.old_value_integer as stage_id,
-           usr_rel.user_id,
            pt.date_assign,
            pt.date_deadline,
            pt.partner_id
@@ -71,7 +71,6 @@ WITH all_moves_stage_task AS (
       JOIN ir_model_fields imf ON mtv.field = imf.id
                               AND imf.model = 'project.task'
                               AND imf.name = 'stage_id'
-      JOIN project_task_user_rel usr_rel ON pt.id=usr_rel.task_id
      WHERE pt.active
 
     --We compute the last reached stage
@@ -83,7 +82,6 @@ WITH all_moves_stage_task AS (
            COALESCE(md.date, pt.create_date) as date_begin,
            (CURRENT_DATE + interval '1 month')::date as date_end,
            pt.stage_id,
-           usr_rel.user_id,
            pt.date_assign,
            pt.date_deadline,
            pt.partner_id
@@ -99,7 +97,6 @@ WITH all_moves_stage_task AS (
                        AND mm.model = 'project.task'
                   ORDER BY mm.id DESC
                      FETCH FIRST ROW ONLY) md ON TRUE
-      JOIN project_task_user_rel usr_rel ON pt.id=usr_rel.task_id
      WHERE pt.active
 )
 SELECT (task_id*10^7 + 10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,
@@ -108,7 +105,6 @@ SELECT (task_id*10^7 + 10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,
        display_project_id,
        stage_id,
        d as date,
-       user_id,
        date_assign,
        date_deadline,
        partner_id,
@@ -125,7 +121,6 @@ SELECT (task_id*10^7 + 2*10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,
        display_project_id,
        stage_id,
        date_trunc('week', d) as date,
-       user_id,
        date_assign,
        date_deadline,
        partner_id,
@@ -144,7 +139,6 @@ SELECT (task_id*10^7 + 3*10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,
        display_project_id,
        stage_id,
        date_trunc('month', d) as date,
-       user_id,
        date_assign,
        date_deadline,
        partner_id,
@@ -163,7 +157,6 @@ SELECT (task_id*10^7 + 4*10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,
        display_project_id,
        stage_id,
        date_trunc('quarter', d) as date,
-       user_id,
        date_assign,
        date_deadline,
        partner_id,
@@ -182,7 +175,6 @@ SELECT (task_id*10^7 + 5*10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,
        display_project_id,
        stage_id,
        date_trunc('year', d) as date,
-       user_id,
        date_assign,
        date_deadline,
        partner_id,

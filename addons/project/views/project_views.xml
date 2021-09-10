@@ -24,7 +24,7 @@
                     <field name="partner_id" operator="child_of"/>
                     <field name="parent_id"/>
                     <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
-                    <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', False)]"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', [])]"/>
                     <separator/>
                     <filter string="Starred" name="starred" domain="[('priority', 'in', [0, 1])]"/>
                     <separator/>
