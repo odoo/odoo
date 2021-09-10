@@ -9,6 +9,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
     var CalendarModel = require("web.CalendarModel");
     var CalendarView = require("web.CalendarView");
     var dialogs = require('web.view_dialogs');
+    var Dialog = require('web.Dialog');
     var viewRegistry = require('web.view_registry');
 
     var _t = core._t;
@@ -71,6 +72,35 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
             } else {
                 this.$('.o_calendar_buttons').replaceWith(this.$buttons);
             }
+        },
+
+        //--------------------------------------------------------------------------
+        // Private
+        //--------------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        _getFormDialogOptions(self, event) {
+            var options = this._super(self, event);
+            // Get the time off data from the event
+            var timeoffData = event.target.state.data.filter((timeOff) => timeOff.id === parseInt(event.data._id));
+            // Take the record associated to the timeoffData and read its state to hide or not the Delete button
+            var timeoffState = timeoffData[0].record.state;
+            if(timeoffState && ['validate', 'refuse'].indexOf(timeoffState) === -1) {
+                options.deletable = true;
+                options.removeButtonText = _t("Delete");
+                options.on_remove = function() {
+                    Dialog.confirm(self, _t("Are you sure you want to delete this record ?"), {
+                        confirm_callback: function () {
+                            self.model.deleteRecords(self._getEventId(event), self.modelName).then(function () {
+                                self.reload();
+                            });
+                        }
+                    });
+                };
+            }
+            return options;
         },
 
         //--------------------------------------------------------------------------
@@ -145,6 +175,17 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
                 });
                 self.allocationDialog.open();
             });
+        },
+
+        _onOpenCreate: function() {
+            var self = this;
+            this._super(...arguments);
+            if(this.previousOpen) {
+                this.previousOpen.on('closed', this, function(ev){
+                    // we reload as record can be created or modified (sent, unpublished, ...)
+                    self.reload();
+                });
+            }
         },
 
         /**

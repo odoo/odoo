@@ -292,7 +292,7 @@ var FormViewDialog = ViewDialog.extend({
     _setRemoveButtonOption(options, btnClasses) {
         const self = this;
         options.buttons.push({
-            text: _t("Remove"),
+            text: options.removeButtonText || _t("Remove"),
             classes: 'btn-secondary ' + btnClasses,
             click: function() {
                 self._remove().then(self.close.bind(self));
