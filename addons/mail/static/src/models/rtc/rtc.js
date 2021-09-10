@@ -220,9 +220,6 @@ function factory(dependencies) {
         reset() {
             if (this._peerConnections) {
                 const peerTokens = Object.keys(this._peerConnections);
-                this._notifyPeers(peerTokens, {
-                    event: 'disconnect',
-                });
                 for (const token of peerTokens) {
                     this._removePeer(token);
                 }
