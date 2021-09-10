@@ -1,39 +1,13 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2many, many2one } from '@mail/model/model_field';
+import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
 function factory(dependencies) {
 
     class MessageReactionGroup extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
-        _created() {
-            super._created();
-            this.onClick = this.onClick.bind(this);
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
-        /**
-         * Handles click on the reaction group.
-         *
-         * @param {MouseEvent} ev
-         */
-        onClick(ev) {
-            markEventHandled(ev, 'MessageReactionGroup.Click');
-            if (this.hasUserReacted) {
-                this.message.removeReaction(this.content);
-            } else {
-                this.message.addReaction(this.content);
-            }
-        }
 
         //----------------------------------------------------------------------
         // Private
@@ -113,6 +87,14 @@ function factory(dependencies) {
         messageId: attr({
             readonly: true,
             required: true,
+        }),
+        messageReactionGroupViews: one2many('mail.message_reaction_group_view', {
+            inverse: 'messageReactionGroup',
+            isCausal: true,
+        }),
+        messageReactionGroupSummaryViews: one2many('mail.message_reaction_group_summary_view', {
+            inverse: 'messageReactionGroup',
+            isCausal: true,
         }),
         /**
          * States the partners that have used this reaction on this message.

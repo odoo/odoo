@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MessageReactionGroupSummaryView" owl="1">
+        <div class="o_MessageReactionGroupSummaryView mr-1 mb-1"
+             t-att-class="{ 'o-activeReaction': messageReactionGroupSummaryView and messageReactionGroupSummaryView.messageReactionGroup === messageReactionGroupSummaryView.messageReactionsSummaryView.highlightedReaction }"
+             t-on-click="messageReactionGroupSummaryView and messageReactionGroupSummaryView.onClickReaction(messageReactionGroupSummaryView.messageReactionGroup)">
+            <t t-if="messageReactionGroupSummaryView">
+                <span class="o_MessageReactionGroupSummaryView_reactionEmote mx-1" t-esc="messageReactionGroupSummaryView.messageReactionGroup.content"/>
+                <span class="o_MessageReactionGroupSummaryView_reactionCount  mx-1" t-att-class="{ 'o-activeReactionCount': messageReactionGroupSummaryView.messageReactionGroup === messageReactionGroupSummaryView.messageReactionsSummaryView.highlightedReaction }" t-esc="messageReactionGroupSummaryView.messageReactionGroup.count"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

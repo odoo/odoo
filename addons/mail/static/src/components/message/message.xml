@@ -158,9 +158,9 @@
                             </t>
                         </div>
                         <AttachmentList t-if="messageView.attachmentList" attachmentListLocalId="messageView.attachmentList.localId"/>
-                        <div t-if="messageView.message.messageReactionGroups.length > 0" class="d-flex flex-wrap ml-2">
-                            <t t-foreach="messageView.message.messageReactionGroups" t-as="messageReactionGroup" t-key="messageReactionGroup.localId">
-                                <MessageReactionGroup class="mr-1 mb-1" messageReactionGroupLocalId="messageReactionGroup.localId"/>
+                        <div t-if="messageView.messageReactionGroupViews.length > 0" class="d-flex flex-wrap ml-2">
+                            <t t-foreach="messageView.messageReactionGroupViews" t-as="messageReactionGroupView" t-key="messageReactionGroupView.localId">
+                                <MessageReactionGroup class="mr-1 mb-1" messageReactionGroupViewLocalId="messageReactionGroupView.localId"/>
                             </t>
                         </div>
                     </div>

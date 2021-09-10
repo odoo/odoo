@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2one, one2one } from '@mail/model/model_field';
+import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
@@ -114,6 +114,24 @@ function factory(dependencies) {
             ) ? insertAndReplace() : clear();
         }
 
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeMessageReactionGroupViews() {
+            if (this.message.messageReactionGroups.length === 0) {
+                return clear();
+            }
+            const messageReactionGroupViewsData = [];
+            for (const reaction of this.message.messageReactionGroups) {
+                messageReactionGroupViewsData.push({
+                    messageReactionGroup: replace(reaction),
+                    messageView: replace(this),
+                });
+            }
+            return insertAndReplace(messageReactionGroupViewsData);
+        }
+
     }
 
     MessageView.fields = {
@@ -174,6 +192,11 @@ function factory(dependencies) {
             inverse: 'messageViewForDelete',
             isCausal: true,
             readonly: true,
+        }),
+        messageReactionGroupViews: one2many('mail.message_reaction_group_view', {
+            compute: '_computeMessageReactionGroupViews',
+            inverse: 'messageView',
+            isCausal: true,
         }),
         /**
          * Determines the message that is displayed by this message view.

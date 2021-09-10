@@ -1,0 +1,33 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_MessageReactionsSummaryView {
+    display:flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.o_MessageReactionsSummaryView_partnerAvatarContainer {
+    display: flex;
+    flex: 0 0 $o-mail-message-sidebar-width;
+    height: 36px;
+    justify-content: center;
+    max-width: $o-mail-message-sidebar-width;
+    position: relative;
+    width: 36px;
+}
+
+.o_MessageReactionsSummaryView_reactionsGroup {
+    cursor: pointer;
+    display:flex;
+    flex-direction: row;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_MessageReactionsSummaryView {
+    background: gray('200');
+}

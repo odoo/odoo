@@ -39,6 +39,9 @@
                         <t t-elif="threadView.composerView">
                             <div class="o-autogrow"/>
                         </t>
+                        <t t-if="threadView.messageReactionsSummaryView">
+                            <MessageReactionsSummaryView messageReactionsSummaryViewLocalId="threadView.messageReactionsSummaryView.localId"/>
+                        </t>
                         <t t-if="threadView.composerView">
                             <Composer
                                 class="o_ThreadView_composer"

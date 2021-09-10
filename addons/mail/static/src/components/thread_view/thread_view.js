@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-
+import { clear } from '@mail/model/model_field_command';
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
@@ -16,6 +16,15 @@ export class ThreadView extends Component {
          * Reference of the message list. Useful to determine scroll positions.
          */
         this._messageListRef = useRef('messageList');
+        this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
+    }
+
+    mounted() {
+        document.addEventListener('click', this._onClickCaptureGlobal, true);
+    }
+
+    willUnmount() {
+        document.removeEventListener('click', this._onClickCaptureGlobal, true);
     }
 
     //--------------------------------------------------------------------------
@@ -67,6 +76,16 @@ export class ThreadView extends Component {
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
+    _onClickCaptureGlobal(ev) {
+        if (this.threadView.messageReactionsSummaryView &&
+            this.threadView.messageReactionsSummaryView.component.el.contains(ev.target)) {
+            return;
+        }
+        this.threadView.threadViewer.update({
+            messageReactionsSummaryView: clear(),
+        });
+    }
 
     /**
      * @private

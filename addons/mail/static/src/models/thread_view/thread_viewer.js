@@ -117,6 +117,7 @@ function factory(dependencies) {
         hasTopbar: attr({
             default: false,
         }),
+        messageReactionsSummaryView: many2one('mail.message_reactions_summary_view'),
         /**
          * Determines the order mode of the messages on this thread viewer.
          * Either 'asc', or 'desc'.

@@ -5,15 +5,15 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 export class MessageReactionGroup extends Component {
 
-    get messageReactionGroup() {
-        return this.messaging.models['mail.message_reaction_group'].get(this.props.messageReactionGroupLocalId);
+    get messageReactionGroupView() {
+        return this.messaging.models['mail.message_reaction_group_view'].get(this.props.messageReactionGroupViewLocalId);
     }
 
 }
 
 Object.assign(MessageReactionGroup, {
     props: {
-        messageReactionGroupLocalId: String,
+        messageReactionGroupViewLocalId: String,
     },
     template: 'mail.MessageReactionGroup',
 });

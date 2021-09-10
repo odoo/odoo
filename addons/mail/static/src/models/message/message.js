@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
+import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, replace, unlinkAll } from '@mail/model/model_field_command';
 import emojis from '@mail/js/emojis';
 import { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } from '@mail/js/utils';
@@ -735,6 +735,10 @@ function factory(dependencies) {
          * reactions for each.
          */
         messageReactionGroups: one2many('mail.message_reaction_group', {
+            inverse: 'message',
+            isCausal: true,
+        }),
+        messageReactionsSummaryViews: one2many('mail.message_reactions_summary_view', {
             inverse: 'message',
             isCausal: true,
         }),

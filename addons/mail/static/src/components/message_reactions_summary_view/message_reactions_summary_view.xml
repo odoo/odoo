@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MessageReactionsSummaryView" owl="1">
+        <div  class="o_MessageReactionsSummaryView">
+            <t t-if="messageReactionsSummaryView and messageReactionsSummaryView.highlightedReaction">
+                <div class="o_MessageReactionsSummaryView_reactionsGroup mt-2 mx-2">
+                    <t t-foreach="messageReactionsSummaryView.messageReactionGroupSummaryViews" t-as="reaction" t-key="reaction.localId">
+                        <MessageReactionGroupSummaryView messageReactionGroupSummaryViewLocalId="reaction.localId"/>
+                    </t>
+                </div>
+                <div>
+                    <hr></hr>
+                </div>
+                <div class="o_MessageReactionsSummaryView_content">
+                    <t t-foreach="messageReactionsSummaryView.partners" t-as="partner" t-key="partner.localId">
+                        <div class="o_MessageReactionsSummaryView_partner d-flex flex-row ml-2 mb-2">
+                            <div class="o_MessageReactionsSummaryView_partnerAvatarContainer">
+                                <img class="rounded-circle" t-att-src="partner.avatarUrl"/>
+                            </div>
+                            <span class="m-2" t-esc="partner.name"/>
+                        </div>
+                    </t>
+                    <t t-foreach="messageReactionsSummaryView.guests" t-as="guest" t-key="guest.localId">
+                        <div class="o_MessageReactionsSummaryView_partner d-flex flex-row ml-2 mb-2">
+                            <div class="o_MessageReactionsSummaryView_partnerAvatarContainer">
+                                <img class="rounded-circle" t-att-src="guest.avatarUrl"/>
+                            </div>
+                            <span class="m-2" t-esc="guest.name"/>
+                        </div>
+                    </t>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="o_MessageReactionsSummaryView_noReaction d-flex align-items-center justify-content-center">
+                    <span class="m-2 font-italic">
+                        No reaction to display
+                    </span>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>
