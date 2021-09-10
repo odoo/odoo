@@ -505,6 +505,7 @@ function factory(dependencies) {
         }),
         volumeSetting: one2one('mail.volume_setting', {
             inverse: 'partner',
+            isCausal: true,
         }),
     };
 
