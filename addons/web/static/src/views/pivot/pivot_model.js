@@ -6,7 +6,6 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { computeVariation } from "@web/core/utils/numbers";
 import { DEFAULT_INTERVAL } from "@web/search/utils/dates";
 import { Model } from "@web/views/helpers/model";
-import { buildSampleORM } from "@web/views/helpers/sample_server";
 import { computeReportMeasures, processMeasure } from "@web/views/helpers/utils";
 
 /**
@@ -338,10 +337,7 @@ export class PivotModel extends Model {
      * @param {Object|null} [params.metaData.sortedColumn=null]
      * @param {Object} [params.data] previously exported data
      */
-    setup(params, { orm, user }) {
-        this.realORM = orm;
-        this.orm2Use = this.realORM;
-        this.user = user;
+    setup(params) {
         this.keepLast = new KeepLast();
 
         let sortedColumn = params.metaData.sortedColumn || null;
@@ -681,8 +677,7 @@ export class PivotModel extends Model {
      * @param {SearchParams} searchParams
      */
     async load(searchParams) {
-        this.orm2Use = this.realORM;
-        this.searchParams = JSON.parse(JSON.stringify(searchParams));
+        this.searchParams = searchParams;
 
         const activeMeasures =
             processMeasure(searchParams.context.pivot_measures) || this.metaData.activeMeasures;
@@ -954,7 +949,7 @@ export class PivotModel extends Model {
         const measureSpecs = this._getMeasureSpecs(config);
         const groupBy = rowGroupBy.concat(colGroupBy);
         const options = { lazy: false };
-        const subGroups = await this.orm2Use.readGroup(
+        const subGroups = await this.orm.readGroup(
             config.metaData.resModel,
             groupDomain,
             measureSpecs,
@@ -1382,14 +1377,6 @@ export class PivotModel extends Model {
                 return this._subdivideGroup(group, divisors.slice(1), config);
             })
             .then(async () => {
-                if (metaData.useSampleModel && !this._hasData(config.data)) {
-                    const fakeORM = buildSampleORM(metaData.resModel, metaData.fields, this.user);
-                    this.orm2Use = fakeORM;
-                    await this._loadData(config);
-                } else if (this.orm2Use.rpc.name !== "fakeRPC") {
-                    metaData.useSampleModel = false;
-                }
-
                 // keep folded groups folded after the reload if the structure of the table is the same
                 if (prune && this._hasData(data) && this._hasData(this.data)) {
                     if (
@@ -1653,4 +1640,3 @@ export class PivotModel extends Model {
         });
     }
 }
-PivotModel.services = ["orm", "user"];

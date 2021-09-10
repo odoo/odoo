@@ -46,7 +46,6 @@ export class PivotView extends Component {
                 resModel: this.props.resModel,
                 rowGroupBys: archInfo.rowGroupBys,
                 title: this.props.title || archInfo.title || this.env._t("Untitled"),
-                useSampleModel: Boolean(this.props.useSampleModel),
                 widgets: archInfo.widgets,
             };
         }

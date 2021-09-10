@@ -222,11 +222,14 @@ export class View extends Component {
                 displayName: this.props.displayName,
             },
             arch,
+            bannerRoute,
             fields,
             resModel,
             useSampleModel: false,
-            bannerRoute,
         };
+        if (this.props.globalState) {
+            viewProps.globalState = this.props.globalState;
+        }
 
         if ("useSampleModel" in this.props) {
             viewProps.useSampleModel = this.props.useSampleModel;

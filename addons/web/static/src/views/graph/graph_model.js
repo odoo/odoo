@@ -6,7 +6,6 @@ import { rankInterval } from "@web/search/utils/dates";
 import { getGroupBy } from "@web/search/utils/group_by";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { Model } from "@web/views/helpers/model";
-import { buildSampleORM } from "@web/views/helpers/sample_server";
 import { computeReportMeasures, processMeasure } from "@web/views/helpers/utils";
 
 export const SEP = " / ";
@@ -85,13 +84,8 @@ export class GraphModel extends Model {
     /**
      * @override
      */
-    setup(params, services) {
-        const { orm, user } = services;
-        this.orm = orm;
-        this.user = user;
-
+    setup(params) {
         this.keepLast = new KeepLast();
-        this._fakeORM = null;
 
         this.initialGroupBy = null;
 
@@ -138,6 +132,13 @@ export class GraphModel extends Model {
     }
 
     /**
+     * @override
+     */
+    hasData() {
+        return this.dataPoints.length > 0;
+    }
+
+    /**
      * Only supposed to be called to change one or several parameters among
      * "measure", "mode", "order", and "stacked".
      * @param {Object} params
@@ -162,22 +163,14 @@ export class GraphModel extends Model {
     //--------------------------------------------------------------------------
 
     /**
-     * Fetch the data points (possibly sample ones) determined by the metaData.
-     * This function has several side effects. It can alter metaData
-     * (e.g. change metaData.useSampleModel value) and set this.metaData and
-     * this.dataPoints (sometimes this._fakeORM).
+     * Fetch the data points determined by the metaData. This function has
+     * several side effects. It can alter this.metaData and set this.dataPoints.
      * @protected
      * @param {Object} metaData
      */
     async _fetchDataPoints(metaData) {
-        let dataPoints = await this.keepLast.add(this._loadDataPoints(metaData));
-        if (metaData.useSampleModel && dataPoints.length === 0) {
-            dataPoints = await this.keepLast.add(this._loadDataPoints(metaData, true));
-        } else {
-            metaData.useSampleModel = false;
-        }
+        this.dataPoints = await this.keepLast.add(this._loadDataPoints(metaData));
         this.metaData = metaData;
-        this.dataPoints = dataPoints;
     }
 
     /**
@@ -376,20 +369,10 @@ export class GraphModel extends Model {
      * with an aggregation function, such as my_date:week.
      * @protected
      * @param {Object} metaData
-     * @param {boolean} [sample=false]
      * @returns {Object[]}
      */
-    async _loadDataPoints(metaData, sample = false) {
+    async _loadDataPoints(metaData) {
         const { measure, domains, fields, groupBy, resModel } = metaData;
-
-        if (sample && !this._fakeORM) {
-            this._fakeORM = buildSampleORM(
-                resModel,
-                Object.assign({ __count: { type: "integer" } }, fields),
-                this.user
-            );
-        }
-        const orm2use = sample ? this._fakeORM : this.orm;
 
         const measures = ["__count"];
         if (measure !== "__count") {
@@ -410,7 +393,7 @@ export class GraphModel extends Model {
         // for instance [1, "ABC"] [3, "ABC"] should be distinguished.
         domains.forEach((domain, originIndex) => {
             proms.push(
-                orm2use
+                this.orm
                     .webReadGroup(
                         resModel,
                         domain.arrayRepr,
@@ -538,4 +521,3 @@ export class GraphModel extends Model {
         }
     }
 }
-GraphModel.services = ["orm", "user"];
