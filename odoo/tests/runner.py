@@ -1,3 +1,4 @@
+import contextlib
 import logging
 import time
 import unittest
@@ -18,9 +19,21 @@ class OdooTestResult(unittest.result.TestResult):
         super().__init__()
         self.time_start = None
         self.queries_start = None
+        self._soft_fail = False
+        self.had_failure = False
 
     def __str__(self):
         return f'{len(self.failures)} failed, {len(self.errors)} error(s) of {self.testsRun} tests'
+
+    @contextlib.contextmanager
+    def soft_fail(self):
+        self.had_failure = False
+        self._soft_fail = True
+        try:
+            yield
+        finally:
+            self._soft_fail = False
+            self.had_failure = False
 
     def update(self, other):
         """ Merges an other test result into this one, only updates contents
@@ -73,11 +86,17 @@ class OdooTestResult(unittest.result.TestResult):
         self.queries_start = sql_db.sql_counter
 
     def addError(self, test, err):
-        super().addError(test, err)
+        if self._soft_fail:
+            self.had_failure = True
+        else:
+            super().addError(test, err)
         self.logError("ERROR", test, err)
 
     def addFailure(self, test, err):
-        super().addFailure(test, err)
+        if self._soft_fail:
+            self.had_failure = True
+        else:
+            super().addFailure(test, err)
         self.logError("FAIL", test, err)
 
     def addSubTest(self, test, subtest, err):
