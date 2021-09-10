@@ -11,5 +11,8 @@ class PurchaseOrder(models.Model):
     def _compute_sale_order_count(self):
         super(PurchaseOrder, self)._compute_sale_order_count()
 
+class PurchaseOrderLine(models.Model):
+    _inherit = 'purchase.order.line'
+
     def _get_sale_orders(self):
-        return super(PurchaseOrder, self)._get_sale_orders() | self.order_line.move_dest_ids.group_id.sale_id | self.order_line.move_ids.move_dest_ids.group_id.sale_id
+        return super()._get_sale_orders() | self.move_dest_ids.group_id.sale_id | self.move_ids.move_dest_ids.group_id.sale_id

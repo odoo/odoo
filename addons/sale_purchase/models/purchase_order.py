@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-
+from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.tools.float_utils import float_compare
+from datetime import date
+from collections import defaultdict
 
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
@@ -43,7 +45,7 @@ class PurchaseOrder(models.Model):
         return result
 
     def _get_sale_orders(self):
-        return self.order_line.sale_order_id
+        return self.order_line._get_sale_orders()
 
     def _activity_cancel_on_sale(self):
         """ If some PO are cancelled, we need to put an activity on their origin SO (only the open ones). Since a PO can have
@@ -72,3 +74,28 @@ class PurchaseOrderLine(models.Model):
 
     sale_order_id = fields.Many2one(related='sale_line_id.order_id', string="Sale Order", store=True, readonly=True)
     sale_line_id = fields.Many2one('sale.order.line', string="Origin Sale Item", index=True)
+
+    def _get_sale_orders(self):
+        return self.sale_order_id
+
+    def write(self, vals):
+        if not vals.get('product_qty'):
+            return super().write(vals)
+
+        sales_to_nofify = defaultdict(lambda: self.env['purchase.order.line'])
+        for purchase_line in self:
+            # Notify related SO if quantity has been decreased in PO
+            if float_compare(purchase_line.product_qty, vals['product_qty'], precision_rounding=purchase_line.product_uom.rounding) > 0:
+                related_sale_orders = purchase_line._get_sale_orders()
+                for sale_order in related_sale_orders:
+                    sales_to_nofify[sale_order] |= purchase_line
+
+        for sale_order, purchase_lines in sales_to_nofify.items():
+            sale_order.activity_schedule(
+                'mail.mail_activity_data_warning',
+                date.today(),
+                note="Something happened in the PO",
+                user_id=sale_order.user_id.id or SUPERUSER_ID
+            )
+
+        return super().write(vals)
