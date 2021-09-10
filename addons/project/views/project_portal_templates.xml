@@ -209,7 +209,7 @@
                     </div>
                     <div class="row mt-3" t-if="task.user_ids or task.partner_id">
                         <div class="col-12 col-md-6 pb-2" t-if="task.user_ids">
-                            <strong>Assigned to</strong>
+                            <strong>Assignees</strong>
                             <div class="row">
                                 <t t-foreach="task.user_ids" t-as="user">
                                     <div class="col d-flex align-items-center flex-grow-0 pr-3">
