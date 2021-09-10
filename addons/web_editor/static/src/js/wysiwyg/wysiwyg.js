@@ -1178,7 +1178,7 @@ const Wysiwyg = Widget.extend({
                     if (
                         !ev.target.closest('#create-link') &&
                         (!ev.target.closest('.oe-toolbar') || !ev.target.closest('we-customizeblock-option')) &&
-                        !ev.target.closest('.ui-autocomplete') &&
+                        !ev.target.closest('.ui-autocomplete, .o_technical_modal') &&
                         (!this.linkTools || ![ev.target, ...wysiwygUtils.ancestors(ev.target)].includes(this.linkTools.$link[0]))
                     ) {
                         // Destroy the link tools on click anywhere outside the

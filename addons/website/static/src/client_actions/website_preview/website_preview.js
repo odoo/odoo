@@ -331,7 +331,7 @@ export class WebsitePreview extends Component {
                 return;
             }
 
-            const { href, target, classList } = linkEl;
+            const { href, target, classList, download } = linkEl;
             if (classList.contains('o_add_language')) {
                 ev.preventDefault();
                 this.action.doAction('base.action_view_base_language_install', {
@@ -358,7 +358,7 @@ export class WebsitePreview extends Component {
                     },
                     reloadIframe: false,
                 });
-            } else if (href && target !== '_blank' && !isEditing && this._isTopWindowURL(linkEl)) {
+            } else if (href && target !== '_blank' && !isEditing && this._isTopWindowURL(linkEl) && !download) {
                 ev.preventDefault();
                 this.router.redirect(href);
             }

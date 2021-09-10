@@ -123,17 +123,7 @@ const Link = Widget.extend({
     start: function () {
         for (const option of this._getLinkOptions()) {
             const $option = $(option);
-            const value = $option.is('input') ? $option.val() : $option.data('value');
-            let active = true;
-            if (value) {
-                const subValues = value.split(',');
-                let subActive = true;
-                for (let subValue of subValues) {
-                    const classPrefix = new RegExp('(^|btn-| |btn-outline-|btn-fill-)' + subValue);
-                    subActive = subActive && classPrefix.test(this.data.iniClassName);
-                }
-                active = subActive;
-            }
+            const active = this._isOptionValueActive($option);
             this._setSelectOption($option, active);
         }
         if (this.data.url) {
@@ -461,6 +451,28 @@ const Link = Widget.extend({
      * @private
      */
     _updateOptionsUI: function () {},
+    /**
+     * Returns if an option value should be active or not, based
+     * on the initialization of the Link.
+     *
+     * @private
+     * @param $option
+     * @returns {boolean}
+     */
+    _isOptionValueActive($option) {
+        const value = $option.is('input') ? $option.val() : $option.data('value');
+        let active = true;
+        if (value) {
+            const subValues = value.split(',');
+            let subActive = true;
+            for (let subValue of subValues) {
+                const classPrefix = new RegExp('(^|btn-| |btn-outline-|btn-fill-)' + subValue);
+                subActive = subActive && classPrefix.test(this.data.iniClassName);
+            }
+            active = subActive;
+        }
+        return active;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers

@@ -1580,6 +1580,13 @@ body.editor_enable.editor_has_snippets {
                 flex: 0 1 auto;
                 min-width: 0;
                 margin-top: $o-we-sidebar-content-field-spacing;
+
+                &.o_we_truncated_content {
+                    max-width: $o-we-sidebar-content-field-content-width;
+                    > span {
+                        @include o-text-overflow();
+                    }
+                }
             }
 
             &:not(.o_we_fw) {

@@ -11,6 +11,8 @@ const {
     getNumericAndUnit,
     isColorGradient,
 } = require('web_editor.utils');
+const { ComponentWrapper } = require('web.OwlCompatibility');
+const { MediaDialogWrapper, TABS } = require('@web_editor/components/media_dialog/media_dialog');
 
 /**
  * Allows to customize link content and style.
@@ -23,6 +25,8 @@ const LinkTools = Link.extend({
         'change .link-custom-color-border input': '_onChangeCustomBorderWidth',
         'keypress .link-custom-color-border input': '_onKeyPressCustomBorderWidth',
         'click we-select [name="link_border_style"] we-button': '_onBorderStyleSelectOption',
+        'click .o_we_upload_file': '_onUploadFileClick',
+        'click .o_we_remove_file': '_onRemoveFileClick',
     }),
 
     /**
@@ -41,6 +45,8 @@ const LinkTools = Link.extend({
         this.colorpickers = {};
         this.colorpickersPromises = {};
         this.fileName = this.linkEl.dataset.fileName;
+        this.mimetype = this.linkEl.dataset.mimetype;
+        this.download = this.linkEl.hasAttribute('download') || /download=true/.test(this.linkEl.href);
     },
     /**
      * @override
@@ -49,6 +55,9 @@ const LinkTools = Link.extend({
         this._addHintClasses();
         return this._super(...arguments);
     },
+    /**
+     * @override
+     */
     destroy: function () {
         if (!this.el) {
             return this._super(...arguments);
@@ -61,22 +70,52 @@ const LinkTools = Link.extend({
         this._super(...arguments);
         this._removeHintClasses();
     },
-    shouldUnlink: function () {
-        return !this.$link.attr('href') && !this.colorCombinationClass
-    },
-    applyLinkToDom() {
-        this._observer.disconnect();
-        this._removeHintClasses();
-        this._super(...arguments);
-        this.options.wysiwyg.odooEditor.historyStep();
-        this._addHintClasses();
-        this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
-    },
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
+    shouldUnlink: function () {
+        return !this.$link.attr('href') && !this.colorCombinationClass
+    },
+    /**
+     * @override
+     */
+    applyLinkToDom(data) {
+        this._observer.disconnect();
+        this._removeHintClasses();
+
+        // If a file was uploaded, we want to display its filename as the
+        // text content
+        if (!this.data.originalText && this.fileName) {
+            data.content = this.fileName;
+        }
+        this._super(data);
+
+        if (this.fileName) {
+            if (this.mimetype === 'application/octet-stream' || this._getFileAction() === 'download') {
+                this.linkEl.setAttribute('download', this.fileName);
+                if (this.linkEl.target === '_blank') {
+                    this.linkEl.removeAttribute('target');
+                }
+            } else {
+                this.linkEl.removeAttribute('download');
+                let href = data.url.replace(/[&?]+download=true/, '');
+                // Sets the document.title of the new tab in some browsers.
+                if (href.indexOf('#') < 0) {
+                    href += `#${this.fileName}`;
+                }
+                this.linkEl.setAttribute('href', href);
+            }
+        } else {
+            this.linkEl.removeAttribute('download');
+        }
+        this.linkEl.setAttribute('title', this.fileName);
+
+        this.options.wysiwyg.odooEditor.historyStep();
+        this._addHintClasses();
+        this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
+    },
     /**
      * @override
      */
@@ -113,6 +152,7 @@ const LinkTools = Link.extend({
             'we-selection-items[name="link_style_color"] > we-button',
             'we-selection-items[name="link_style_size"] > we-button',
             'we-selection-items[name="link_style_shape"] > we-button',
+            'we-selection-items[name="file_action"] > we-button',
         ];
         return this.$(options.join(','));
     },
@@ -133,6 +173,15 @@ const LinkTools = Link.extend({
      */
     _getLinkType: function () {
         return this.$('we-selection-items[name="link_style_color"] we-button.active').data('value') || '';
+    },
+    /**
+     * Returns the opening method for the file.
+     *
+     * @private
+     * @returns {string}
+     */
+    _getFileAction() {
+        return this.$('we-selection-items[name="file_action"] we-button.active').data('value') || '';
     },
     /**
      * @override
@@ -234,6 +283,31 @@ const LinkTools = Link.extend({
             const $activeBorderStyleToggler = $activeBorderStyleButton.closest('we-select').find('we-toggler');
             $activeBorderStyleToggler.empty();
             $activeBorderStyleButton.find('div').clone().appendTo($activeBorderStyleToggler);
+        }
+        if (!this.isButton) {
+            this.el.querySelector('.o_we_upload_file_wrapper').classList.toggle('d-none', !!this.fileName);
+            this.el.querySelector('.o_we_edit_file_wrapper').classList.toggle('d-none', !this.fileName);
+            // For binary data whose true type is unknown, the browser will
+            // interpret itself how to serve the data. The file actions
+            // should not be shown.
+            const genericBinaryData = this.mimetype === 'application/octet-stream';
+            const displayFileActions = this.fileName && !genericBinaryData;
+            const displayNewWindowSwitch = this._getFileAction() !== 'download' && !genericBinaryData || !this.fileName;
+            const newWindowSwitchEl = this.el.querySelector('we-checkbox[name="is_new_window"]').closest('we-button.o_we_checkbox_wrapper');
+            const fileActionsEl = this.el.querySelector('.o_we_file_action_wrapper');
+            fileActionsEl.classList.toggle('d-none', !displayFileActions);
+            newWindowSwitchEl.classList.toggle('d-none', !displayNewWindowSwitch);
+            if (displayNewWindowSwitch) {
+                const newWindowRow = newWindowSwitchEl.parentElement;
+                if (displayFileActions) {
+                    fileActionsEl.after(newWindowRow);
+                } else {
+                    this.el.append(newWindowRow);
+                }
+            }
+            this.el.querySelector('.o_we_filename').textContent = this.fileName;
+            this.el.querySelector('.o_we_filename').setAttribute('title', this.fileName);
+            this.el.querySelector('input[name="url"]').readOnly = !!this.fileName;
         }
     },
     /**
@@ -349,16 +423,35 @@ const LinkTools = Link.extend({
         this.$button.removeClass('active');
         this.options.wysiwyg.odooEditor.observerActive("hint_classes");
     },
+    /**
+     * @override
+     */
+   _isOptionValueActive($option) {
+       const optionEl = $option[0];
+       if (optionEl.closest('.o_we_file_action_wrapper')) {
+           const value = optionEl.dataset.value;
+           return value === 'download' ? this.download : !this.download;
+       }
+       return this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {Event} ev
+     */
     _onClickCheckbox: function (ev) {
         const $target = $(ev.target);
         $target.closest('we-button.o_we_checkbox_wrapper').toggleClass('active');
         this._adaptPreview();
     },
+    /**
+     * @private
+     * @param {Event} ev
+     */
     _onPickSelectOption: function (ev) {
         const $target = $(ev.target);
         if ($target.closest('[name="link_border_style"]').length) {
@@ -412,6 +505,48 @@ const LinkTools = Link.extend({
             $target.siblings('we-button').removeClass("active");
             this.options.wysiwyg.odooEditor.historyStep();
         }
+    },
+    /**
+     * @private
+     */
+    _onUploadFileClick() {
+        const dialog = new ComponentWrapper(this, MediaDialogWrapper, {
+            noIcons: true,
+            activeTab: TABS.DOCUMENTS.id,
+            save: this._onFileUploaded.bind(this),
+        });
+        dialog.mount(this.el);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onRemoveFileClick(ev) {
+        this.el.querySelector('input[name="url"]').value = '';
+        this.el.querySelector('we-checkbox[name="is_new_window"]').closest('we-button.o_we_checkbox_wrapper').classList.remove('active');
+        delete this.fileName;
+        delete this.linkEl.dataset.fileName;
+        this._updateOptionsUI();
+        this._adaptPreview();
+    },
+    /**
+     * @private
+     * @param {Object} data
+     */
+    _onFileUploaded(data) {
+        if (data) {
+            const {src, href, title, dataset: {mimetype}} = data;
+            let url = href || src;
+            url = url.replace(window.location.origin, '');
+            this.el.querySelector('we-checkbox[name="is_new_window"]').closest('we-button.o_we_checkbox_wrapper').classList.add('active');
+            this.el.querySelector('input[name="url"]').value = url;
+            this.mimetype = mimetype;
+            this.linkEl.dataset.mimetype = this.mimetype;
+            this.fileName = title || url.split('/').slice(-1)[0];
+            this.linkEl.dataset.fileName = this.fileName;
+        }
+        this._updateOptionsUI();
+        this._adaptPreview();
     },
 });
 

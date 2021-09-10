@@ -200,6 +200,37 @@
                 </div>
             </we-input>
         </we-row>
+        <we-row t-attf-class="#{widget.isButton ? ' d-none' : ''}" class="o_we_sublevel_1">
+            <we-title>Media</we-title>
+            <div class="o_we_edit_file_wrapper o_we_truncated_content">
+                <span class="o_we_filename"><t t-out="widget.fileName"/></span>
+                <we-button class="o_we_bg_success o_we_upload_file fa fa-fw fa-refresh" title="Replace file"/>
+                <we-button class="o_we_bg_danger o_we_remove_file fa fa-fw fa-trash" title="Remove file"/>
+            </div>
+            <div class="o_we_upload_file_wrapper">
+                <we-button class="o_we_bg_success o_we_upload_file" title="Upload file">Upload a file</we-button>
+            </div>
+        </we-row>
+        <we-row t-attf-class="o_we_file_action_wrapper #{widget.isButton ? ' d-none' : ''}">
+            <we-select class="o_we_user_value_widget o_we_sublevel_1">
+                <we-title>Action</we-title>
+                <div class="dropdown">
+                    <button class="dropdown-toggle"
+                        data-bs-toggle="dropdown" title="" tabindex="-1"
+                        data-original-title="File Action" aria-expanded="false">
+                        <we-toggler>Open</we-toggler>
+                    </button>
+                    <we-selection-items name="file_action" class="dropdown-menu">
+                        <we-button t-attf-class="dropdown-item" href="#" data-value="download">
+                            Download
+                        </we-button>
+                        <we-button t-attf-class="dropdown-item" href="#" data-value="">
+                            Open
+                        </we-button>
+                    </we-selection-items>
+                </div>
+            </we-select>
+        </we-row>
         <we-row class="o_strip_domain d-none" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
             <we-button class="o_we_user_value_widget o_we_checkbox_wrapper o_we_sublevel_1 active">
                 <we-title class="o_long_title">Autoconvert to relative link</we-title>
@@ -331,12 +362,12 @@
                 </div>
             </we-select>
         </we-row>
-        <we-row  t-if="!widget.isButton &amp;&amp; !widget.options.forceNewWindow">
+        <we-row t-if="!widget.isButton &amp;&amp; !widget.options.forceNewWindow">
             <we-button t-attf-class="o_we_user_value_widget o_we_checkbox_wrapper o_we_sublevel_1 #{widget.data.isNewWindow ? 'active' : ''}">
                 <we-title class="o_long_title">Open in new window</we-title>
-                    <div class="o_switch">
-                        <we-checkbox name="is_new_window" t-att-checked="widget.data.isNewWindow ? 'checked' : undefined"/>
-                    </div>
+                <div class="o_switch">
+                    <we-checkbox name="is_new_window" t-att-checked="widget.data.isNewWindow ? 'checked' : undefined"/>
+                </div>
             </we-button>
         </we-row>
     </we-customizeblock-option>

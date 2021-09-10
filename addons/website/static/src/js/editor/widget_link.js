@@ -109,5 +109,19 @@ weWidgets.LinkTools.include({
         }
         this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    _onRemoveFileClick() {
+        this._super(...arguments);
+        this._adaptPageAnchor();
+    },
+    /**
+     * @override
+     */
+    _onFileUploaded() {
+        this._super(...arguments);
+        this._adaptPageAnchor();
+    },
 });
 });
