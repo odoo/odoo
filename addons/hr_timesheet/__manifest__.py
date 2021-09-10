@@ -46,6 +46,7 @@ up a management by affair.
     'application': False,
     'auto_install': False,
     'post_init_hook': 'create_internal_project',
+    'uninstall_hook': '_uninstall_hook',
     'assets': {
         'web.assets_backend': [
             'hr_timesheet/static/src/scss/timesheets_task_form.scss',
