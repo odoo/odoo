@@ -89,7 +89,7 @@ class SaleOrder(models.Model):
                 sol.qty_delivered,
                 sol.product_uom_qty * (sol.product_id.service_upsell_threshold or 1.0),
                 precision_digits=precision
-            ) >= 0
+            ) > 0
         )
 
     def action_view_timesheet(self):
