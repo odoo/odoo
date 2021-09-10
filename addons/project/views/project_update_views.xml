@@ -58,7 +58,7 @@
                 <field name="color"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_global_click o_pupdate_kanban_card">
+                        <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + record.color.raw_value : ''}} oe_kanban_global_click o_pupdate_kanban_card">
                             <!-- Project Update Kanban View is always ungrouped - see js_class -->
                             <div class="o_kanban_detail_ungrouped row">
                                 <div class="col-lg-4 o_pupdate_name">
