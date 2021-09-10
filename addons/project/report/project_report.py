@@ -11,7 +11,8 @@ class ReportProjectTaskUser(models.Model):
     _auto = False
 
     name = fields.Char(string='Task', readonly=True)
-    user_id = fields.Many2one('res.users', string='Assigned To', readonly=True)
+    user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
+                                string='Assignees', readonly=True)
     create_date = fields.Datetime("Create Date", readonly=True)
     date_assign = fields.Datetime(string='Assignment Date', readonly=True)
     date_end = fields.Datetime(string='Ending Date', readonly=True)
@@ -55,7 +56,6 @@ class ReportProjectTaskUser(models.Model):
                     t.date_end as date_end,
                     t.date_last_stage_update as date_last_stage_update,
                     t.date_deadline as date_deadline,
-                    tu.user_id,
                     t.project_id,
                     t.priority,
                     t.name as name,
@@ -82,7 +82,6 @@ class ReportProjectTaskUser(models.Model):
                     t.date_end,
                     t.date_deadline,
                     t.date_last_stage_update,
-                    tu.user_id,
                     t.project_id,
                     t.priority,
                     t.name,

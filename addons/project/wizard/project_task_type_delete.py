@@ -58,7 +58,7 @@ class ProjectTaskTypeDelete(models.TransientModel):
             action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_task")
             action['domain'] = [('project_id', '=', project_id)]
             action['context'] = str({
-                'pivot_row_groupby': ['user_id'],
+                'pivot_row_groupby': ['user_ids'],
                 'default_project_id': project_id,
             })
         elif self.env.context.get('stage_view'):
