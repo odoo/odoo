@@ -2,9 +2,15 @@
 
 import { legacyExtraNextTick } from "@web/../tests/helpers/utils";
 import {
-    getFacetTexts, removeFacet, setupControlPanelServiceRegistry, switchView,
+    getFacetTexts,
+    removeFacet,
+    saveFavorite,
+    setupControlPanelServiceRegistry,
+    switchView,
+    toggleFavoriteMenu,
     toggleMenu,
-    toggleMenuItem
+    toggleMenuItem,
+    toggleSaveFavorite,
 } from "@web/../tests/search/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { dialogService } from "@web/core/dialog/dialog_service";
@@ -241,6 +247,48 @@ QUnit.module("Views", (hooks) => {
 
             assert.containsOnce(webClient, ".o_switch_view.o_toy.active");
             assert.deepEqual(getFacetTexts(webClient), ["My favorite"]);
+        }
+    );
+
+    QUnit.test(
+        "newly created favorite in a new view can be used in a legacy view",
+        async function (assert) {
+            assert.expect(5);
+
+            const webClient = await createWebClient({
+                serverData,
+                mockRPC(_, args) {
+                    if (args.method === "create_or_replace") {
+                        assert.ok(typeof args.args[0].domain === "string");
+                        return 7; // fake serverId to simulate the creation of
+                        // the favorite in db.
+                    }
+                },
+            });
+
+            await doAction(webClient, {
+                name: "Action name",
+                res_model: "foo",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "toy"],
+                    [false, "legacy_toy"],
+                ],
+            });
+
+            assert.containsOnce(webClient, ".o_switch_view.o_toy.active");
+
+            await toggleFavoriteMenu(webClient);
+            await toggleSaveFavorite(webClient);
+            await saveFavorite(webClient);
+
+            assert.deepEqual(getFacetTexts(webClient), ["Action name"]);
+
+            await switchView(webClient, "legacy_toy");
+            await legacyExtraNextTick();
+
+            assert.containsOnce(webClient, ".o_switch_view.o_legacy_toy.active");
+            assert.deepEqual(getFacetTexts(webClient), ["Action name"]);
         }
     );
 
