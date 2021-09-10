@@ -168,7 +168,10 @@ const LinkPopoverWidget = Widget.extend({
      * @param {Event} ev
      */
     _onEditLinkClick(ev) {
-        $('#toolbar #create-link').click();
+        $('#wrapwrap').data('wysiwyg').toggleLinkTools({
+            forceOpen: true,
+            link: this.$target[0],
+        });
         ev.stopImmediatePropagation();
     },
     /**

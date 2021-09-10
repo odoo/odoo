@@ -127,12 +127,14 @@ const Link = Widget.extend({
         this._updateOptionsUI();
         this._adaptPreview();
 
-        // ensure the focus in the first input of the link modal
-        setTimeout(()=> {
-            const firstInput = this.$('input:visible:first');
-            firstInput.focus();
-            firstInput.select();
-        }, 0);
+        if (!this.options.noFocusUrl) {
+            // ensure the focus in the first input of the link modal
+            setTimeout(()=> {
+                const firstInput = this.$('input:visible:first');
+                firstInput.focus();
+                firstInput.select();
+            }, 0);
+        }
 
         return this._super.apply(this, arguments);
     },
