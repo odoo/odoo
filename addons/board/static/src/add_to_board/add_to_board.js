@@ -34,32 +34,14 @@ export class AddToBoard extends Component {
     //---------------------------------------------------------------------
 
     async addToBoard() {
-        const {
-            action,
-            displayName,
-            domain,
-            comparison,
-            context,
-            groupBy,
-            orderedBy,
-            view
-        } = this.env.searchModel;
-
-        // Retrieves view context
-        const fns = this.env.__saveParams__.callbacks;
-        const { context: viewContext } = Object.assign({}, ...fns.map((fn) => fn()));
+        const { action, displayName, orderedBy, view } = this.env.searchModel;
+        const { context, domain } = this.env.searchModel.getIrFilterValues();
 
         const contextToSave = {
             ...context,
-            group_by: groupBy,
             orderedBy,
             dashboard_merge_domains_contexts: false,
-            ...viewContext,
         };
-
-        if (comparison) {
-            contextToSave.comparison = comparison;
-        }
 
         const result = await this.rpc("/board/add_to_dashboard", {
             action_id: action.id,
