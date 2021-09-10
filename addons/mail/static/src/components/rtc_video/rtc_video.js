@@ -50,9 +50,10 @@ export class RtcVideo extends Component {
         }
         if (!this.rtcSession || !this.rtcSession.videoStream) {
             this._videoRef.el.srcObject = undefined;
-            return;
+        } else {
+            this._videoRef.el.srcObject = this.rtcSession.videoStream;
         }
-        this._videoRef.el.srcObject = this.rtcSession.videoStream;
+        this._videoRef.el.load();
     }
 
     //--------------------------------------------------------------------------
