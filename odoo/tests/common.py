@@ -48,7 +48,7 @@ from odoo.exceptions import AccessError
 from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
 from odoo.service import security
 from odoo.sql_db import Cursor
-from odoo.tools import float_compare, single_email_re, profiler
+from odoo.tools import float_compare, single_email_re, profiler, lower_logging
 from odoo.tools.misc import find_in_path
 from odoo.tools.safe_eval import safe_eval
 
@@ -347,6 +347,21 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
         super().__init__(methodName)
         self.addTypeEqualityFunc(etree._Element, self.assertTreesEqual)
         self.addTypeEqualityFunc(html.HtmlElement, self.assertTreesEqual)
+
+    def run(self, result):
+        tests_run_count = int(os.environ.get('ODOO_TEST_FAILURE_RETRIES', 0)) + 1
+        failure = False
+        for retry in range(tests_run_count):
+            if retry:
+                _logger.runbot(f'Retrying a failed test: {self}')
+            if retry < tests_run_count-1:
+                with result.soft_fail(), lower_logging(25) as quiet_log:
+                    super().run(result)
+                    failure = result.had_failure or quiet_log.had_error_log
+            else:  # last try
+                super().run(result)
+            if not failure:
+                break
 
     def shortDescription(self):
         return None

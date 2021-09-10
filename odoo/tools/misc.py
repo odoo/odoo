@@ -767,7 +767,7 @@ class UnquoteEvalContext(defaultdict):
         return unquote(key)
 
 
-class mute_logger(object):
+class mute_logger(logging.Handler):
     """Temporary suppress the logging.
     Can be used as context manager or decorator.
 
@@ -780,20 +780,21 @@ class mute_logger(object):
 
     """
     def __init__(self, *loggers):
+        super().__init__()
         self.loggers = loggers
-
-    def filter(self, record):
-        return 0
+        self.old_params = {}
 
     def __enter__(self):
-        for logger in self.loggers:
-            assert isinstance(logger, str),\
-                "A logger name must be a string, got %s" % type(logger)
-            logging.getLogger(logger).addFilter(self)
+        for logger_name in self.loggers:
+            logger = logging.getLogger(logger_name)
+            self.old_params[logger_name] = (logger.handlers, logger.propagate)
+            logger.propagate = False
+            logger.handlers = [self]
 
     def __exit__(self, exc_type=None, exc_val=None, exc_tb=None):
-        for logger in self.loggers:
-            logging.getLogger(logger).removeFilter(self)
+        for logger_name in self.loggers:
+            logger = logging.getLogger(logger_name)
+            logger.handlers, logger.propagate = self.old_params[logger_name]
 
     def __call__(self, func):
         @wraps(func)
@@ -801,6 +802,46 @@ class mute_logger(object):
             with self:
                 return func(*args, **kwargs)
         return deco
+
+    def emit(self, record):
+        pass
+
+
+class lower_logging(logging.Handler):
+    """Temporary lower the max logging level.
+    """
+    def __init__(self, max_level):
+        super().__init__()
+        self.old_handlers = None
+        self.old_propagate = None
+        self.had_error_log = False
+        self.max_level = max_level
+
+    def __enter__(self):
+        logger = logging.getLogger()
+        self.old_handlers = logger.handlers[:]
+        self.old_propagate = logger.propagate
+        logger.propagate = False
+        logger.handlers = [self]
+        self.had_error_log = False
+        return self
+
+    def __exit__(self, exc_type=None, exc_val=None, exc_tb=None):
+        logger = logging.getLogger()
+        logger.handlers = self.old_handlers
+        logger.propagate = self.old_propagate
+
+    def emit(self, record):
+        if record.levelno > self.max_level:
+            record.levelname = f'_{record.levelname}'
+            record.levelno = self.max_level
+            self.had_error_log = True
+            record.args = tuple(arg.replace('Traceback (most recent call last):', '_Traceback_ (most recent call last):') for arg in record.args)
+
+        for handler in self.old_handlers:
+            if handler.level <= record.levelno:
+                handler.emit(record)
+
 
 _ph = object()
 class CountingStream(object):
