@@ -500,7 +500,9 @@ class HolidaysAllocation(models.Model):
             if not self._context.get('import_file'):
                 holiday.activity_update()
             if holiday.validation_type == 'no':
-                holiday.state = 'validate'
+                if holiday.state == 'draft':
+                    holiday.action_confirm()
+                    holiday.action_validate()
         return holidays
 
     def write(self, values):
@@ -534,6 +536,7 @@ class HolidaysAllocation(models.Model):
             'number_of_days': self.number_of_days,
             'parent_id': self.id,
             'employee_id': employee.id,
+            'employee_ids': [(6, 0, [employee.id])],
             'state': 'confirm',
             'allocation_type': self.allocation_type,
             'date_from': self.date_from,
@@ -564,13 +567,15 @@ class HolidaysAllocation(models.Model):
 
     def action_validate(self):
         current_employee = self.env.user.employee_id
+        if any(holiday.state != 'confirm' for holiday in self):
+            raise UserError(_('Allocation request must be confirmed in order to approve it.'))
+
+        self.write({
+            'state': 'validate',
+            'approver_id': current_employee.id
+        })
+
         for holiday in self:
-            if holiday.state != 'confirm':
-                raise UserError(_('Allocation request must be confirmed in order to approve it.'))
-
-            holiday.write({'state': 'validate'})
-            holiday.write({'approver_id': current_employee.id})
-
             holiday._action_validate_create_childs()
         self.activity_update()
         return True
@@ -596,7 +601,7 @@ class HolidaysAllocation(models.Model):
                 mail_notify_force_send=False,
                 mail_activity_automation_skip=True
             ).create(allocation_create_vals)
-            if childs and self.validation_type != 'no':
+            if childs:
                 childs.action_validate()
         return childs
 
