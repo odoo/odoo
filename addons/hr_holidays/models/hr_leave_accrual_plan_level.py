@@ -37,19 +37,20 @@ class AccrualPlanLevel(models.Model):
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', "Accrual Plan", required=True)
     start_count = fields.Integer(
         "Start after",
-        help="The accrual starts after a defined period from the employee start date. This field define the number of days, month or years after which accrual is used.", default="1")
+        help="The accrual starts after a defined period from the employee start date. This field defines the number of days, months or years after which accrual is used.", default="1")
     start_type = fields.Selection(
         [('day', 'day(s)'),
          ('month', 'month(s)'),
          ('year', 'year(s)')],
         default='day', string=" ", required=True,
-        help="This field define the unit of time after which the accrual starts.")
-    is_based_on_worked_time = fields.Boolean("Based on worked time")
+        help="This field defines the unit of time after which the accrual starts.")
+    is_based_on_worked_time = fields.Boolean("Based on worked time",
+        help="Only accrue for the time worked by the employee. This is the time when the employee did not take time off.")
 
     # Accrue of
     added_value = fields.Float(
-        "Gain", required=True,
-        help="The number of days that will be incremented for every period")
+        "Rate", required=True,
+        help="The number of hours/days that will be incremented in the specified Time Off Type for every period")
     added_value_type = fields.Selection(
         [('days', 'Days'),
          ('hours', 'Hours')],
@@ -93,7 +94,7 @@ class AccrualPlanLevel(models.Model):
         _get_selection_days, compute='_compute_days_display', inverse='_inverse_second_month_day_display')
     second_month = fields.Selection([
         ('jul', 'July'),
-        ('aug', 'Augustus'),
+        ('aug', 'August'),
         ('sep', 'September'),
         ('oct', 'October'),
         ('nov', 'November'),
@@ -107,7 +108,7 @@ class AccrualPlanLevel(models.Model):
         ('may', 'May'),
         ('jun', 'June'),
         ('jul', 'July'),
-        ('aug', 'Augustus'),
+        ('aug', 'August'),
         ('sep', 'September'),
         ('oct', 'October'),
         ('nov', 'November'),
@@ -118,14 +119,14 @@ class AccrualPlanLevel(models.Model):
         _get_selection_days, compute='_compute_days_display', inverse='_inverse_yearly_day_display')
     maximum_leave = fields.Float(
         'Limit to', required=False, default=100,
-        help="Choose a maximum limit of days for this accrual. 0 means no limit.")
+        help="Choose a cap for this accrual. 0 means no cap.")
     parent_id = fields.Many2one(
         'hr.leave.accrual.level', string="Previous Level",
         help="If this field is empty, this level is the first one.")
     action_with_unused_accruals = fields.Selection(
-        [('postponed', 'Postponed to next year'),
+        [('postponed', 'Transferred to the next year'),
          ('lost', 'Lost')],
-        string="At the end of the year, unused accruals will be",
+        string="At the end of the calendar year, unused accruals will be",
         default='postponed', required='True')
 
     _sql_constraints = [
@@ -138,7 +139,7 @@ class AccrualPlanLevel(models.Model):
          "(yearly_day > 0 AND yearly_day <= 31 AND frequency = 'yearly'))",
          "The dates you've set up aren't correct. Please check them."),
         ('start_count_check', "CHECK( start_count >= 0 )", "You can not start an accrual in the past."),
-        ('added_value_greater_than_zero', 'CHECK(added_value > 0)', 'You must give the gain greater than 0 in accrual plan levels.')
+        ('added_value_greater_than_zero', 'CHECK(added_value > 0)', 'You must give a rate greater than 0 in accrual plan levels.')
     ]
 
     @api.depends('start_count', 'start_type')
