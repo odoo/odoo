@@ -322,9 +322,9 @@ class Picking(models.Model):
         states={'draft': [('readonly', False)]})
     picking_type_code = fields.Selection(
         related='picking_type_id.code',
-        readonly=True)
+        readonly=True, depends=['picking_type_id'])
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs',
-        readonly=True)
+        readonly=True, depends=['picking_type_id'])
     hide_picking_type = fields.Boolean(compute='_compute_hide_pickign_type')
     partner_id = fields.Many2one(
         'res.partner', 'Contact',
@@ -356,7 +356,7 @@ class Picking(models.Model):
     show_validate = fields.Boolean(
         compute='_compute_show_validate',
         help='Technical field used to decide whether the button "Validate" should be displayed.')
-    use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots')
+    use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots', depends=['picking_type_id'])
     owner_id = fields.Many2one(
         'res.partner', 'Assign Owner',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
@@ -370,7 +370,7 @@ class Picking(models.Model):
     # Used to search on pickings
     product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id', readonly=True)
     show_operations = fields.Boolean(compute='_compute_show_operations')
-    show_reserved = fields.Boolean(related='picking_type_id.show_reserved')
+    show_reserved = fields.Boolean(related='picking_type_id.show_reserved', depends=['picking_type_id'])
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
     has_tracking = fields.Boolean(compute='_compute_has_tracking')
     immediate_transfer = fields.Boolean(default=False)
@@ -421,7 +421,7 @@ class Picking(models.Model):
                 picking.products_availability = _('Exp %s', format_date(self.env, forecast_date))
                 picking.products_availability_state = 'late' if picking.date_deadline and picking.date_deadline < forecast_date else 'expected'
 
-    @api.depends('picking_type_id.show_operations')
+    @api.depends('picking_type_id')
     def _compute_show_operations(self):
         for picking in self:
             if self.env.context.get('force_detailed_view'):
@@ -435,7 +435,7 @@ class Picking(models.Model):
             else:
                 picking.show_operations = False
 
-    @api.depends('move_line_ids', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'state')
+    @api.depends('move_line_ids', 'picking_type_id', 'state')
     def _compute_show_lots_text(self):
         group_production_lot_enabled = self.user_has_groups('stock.group_production_lot')
         for picking in self:
