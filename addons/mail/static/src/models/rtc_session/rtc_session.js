@@ -108,6 +108,7 @@ function factory(dependencies) {
             this._removeAudio();
             const audioElement = this.audioElement || new window.Audio();
             audioElement.srcObject = audioStream;
+            audioElement.load();
             audioElement.volume = this.partner && this.partner.volumeSetting ? this.partner.volumeSetting.volume : this.volume;
             audioElement.muted = this.messaging.mailRtc.currentRtcSession.isDeaf;
             // Using both autoplay and play() as safari may prevent play() outside of user interactions
