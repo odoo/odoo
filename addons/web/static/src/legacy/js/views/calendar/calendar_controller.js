@@ -179,6 +179,34 @@ var CalendarController = AbstractController.extend({
         return this.model.updateRecord(record).then(reload, reload);
     },
 
+    /**
+     * @private
+     */
+    _getEventId(event) {
+        var id = event.data._id;
+        id = id && parseInt(id).toString() === id ? parseInt(id) : id;
+        return id;
+    },
+
+    /**
+     * @private
+     */
+    _getFormDialogOptions: function(self, event) {
+        var id = this._getEventId(event);
+        return {
+            res_model: self.modelName,
+            res_id: id || null,
+            context: event.context || self.context,
+            title: _.str.sprintf(_t("Open: %s"), event.data.title),
+            on_saved: function () {
+                if (event.data.on_save) {
+                    event.data.on_save();
+                }
+                self.reload();
+            },
+        };
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -412,8 +440,7 @@ var CalendarController = AbstractController.extend({
      */
     _onOpenEvent: function (event) {
         var self = this;
-        var id = event.data._id;
-        id = id && parseInt(id).toString() === id ? parseInt(id) : id;
+        var id = self._getEventId(event);
 
         if (!this.eventOpenPopup) {
             this._rpc({
@@ -435,18 +462,8 @@ var CalendarController = AbstractController.extend({
             return;
         }
 
-        var options = {
-            res_model: self.modelName,
-            res_id: id || null,
-            context: event.context || self.context,
-            title: _.str.sprintf(_t("Open: %s"), event.data.title),
-            on_saved: function () {
-                if (event.data.on_save) {
-                    event.data.on_save();
-                }
-                self.reload();
-            },
-        };
+        var options = self._getFormDialogOptions(self, event);
+
         if (this.formViewId) {
             options.view_id = parseInt(this.formViewId);
         }
