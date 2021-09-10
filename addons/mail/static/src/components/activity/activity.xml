@@ -130,6 +130,7 @@
                                     <i class="fa fa-upload"/> Upload Document
                                 </button>
                                 <FileUploader
+                                    t-if="activity.thread"
                                     attachmentLocalIds="activity.attachments.map(attachment => attachment.localId)"
                                     threadLocalId="activity.thread.localId"
                                     t-on-o-attachment-created="_onAttachmentCreated"
