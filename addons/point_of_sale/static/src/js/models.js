@@ -160,7 +160,7 @@ exports.PosModel = Backbone.Model.extend({
             return this.connect_to_proxy();
         }
         if(this.config.limited_products_loading) {
-            await this.env.pos._addProducts(await this.loadProductsFromOffset(0));
+            await this.loadLimitedProducts();
             if(this.config.product_load_background)
                 this.loadProductsBackground();
         }
@@ -930,29 +930,37 @@ exports.PosModel = Backbone.Model.extend({
             partnerModel.loaded(this, partners);
         }
     },
-    loadProductsFromOffset: async function(offset) {
-        let ProductIds = [];
+    // Load the products following specific rules into the `db`
+    loadLimitedProducts: async function() {
         let product_model = _.find(this.models, (model) => model.model === 'product.product');
-        ProductIds = await this.rpc({
-            model: 'product.product',
-            method: 'search',
-            args: [product_model.domain(this)],
-            kwargs: {
-                offset: this.env.pos.config.limited_products_amount * offset,
-                limit: this.env.pos.config.limited_products_amount,
-            },
-            context: this.env.session.user_context,
+        const products = await this.rpc({
+            model: 'pos.config',
+            method: 'get_limited_products_loading',
+            args: [this.config_id, product_model.fields],
+            context: { ...this.session.user_context, ...product_model.context() },
         });
-        return ProductIds;
+        product_model.loaded(this, products);
+        return products.length
     },
     loadProductsBackground: async function() {
-        let offset = 0
-        let ProductIds = [];
+        let page = 0;
+        let product_model = _.find(this.models, (model) => model.model === 'product.product');
+        let products = [];
         do {
-            ProductIds = await this.loadProductsFromOffset(offset)
-            this.env.pos._addProducts(ProductIds);
-            offset += 1;
-        } while(ProductIds.length);
+            products = await this.rpc({
+                model: 'product.product',
+                method: 'search_read',
+                kwargs: {
+                    'domain': product_model.domain(this),
+                    'fields': product_model.fields,
+                    'offset': page * this.env.pos.config.limited_products_amount,
+                    'limit': this.env.pos.config.limited_products_amount
+                },
+                context: { ...this.session.user_context, ...product_model.context() },
+            });
+            product_model.loaded(this, products);
+            page += 1;
+        } while(products.length == this.config.limited_products_amount);
     },
     loadPartnersBackground: async function() {
         let i = 1;
