@@ -1627,8 +1627,7 @@ def set_safe_image_headers(headers, content):
     safe_types = ['image/jpeg', 'image/png', 'image/gif', 'image/x-icon']
     if content_type in safe_types:
         headers = set_header_field(headers, 'Content-Type', content_type)
-    set_header_field(headers, 'Content-Length', len(content))
-    return headers
+    return set_header_field(headers, 'Content-Length', len(content))
 
 
 def set_header_field(headers, name, value):
