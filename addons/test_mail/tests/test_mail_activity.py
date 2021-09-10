@@ -266,6 +266,27 @@ class TestActivityFlow(TestActivityCommon):
             self.assertEqual(attachment.res_id, activity_message.id)
             self.assertEqual(attachment.res_model, activity_message._name)
 
+    def test_chained_activities(self):
+        Partner = self.env['ir.model']._get('res.partner')
+        partner = self.env['res.partner'].create({
+            'name': 'Tester',
+        })
+        chained_activity = self.env['mail.activity'].create({
+            'summary': 'Test',
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_chained_1').id,
+            'res_model_id': Partner.id,
+            'res_id': partner.id,
+        })
+        chained_activity.action_feedback(feedback='Done')
+
+        self.assertFalse(chained_activity.exists())
+
+        next_activity = partner.activity_ids
+
+        self.assertNotEqual(chained_activity.id, next_activity.id)
+        self.assertEqual(next_activity.summary, 'Take the second step.')
+        self.assertEqual(next_activity.date_deadline, date.today() + relativedelta(days=10))
+
 
 @tests.tagged('mail_activity')
 class TestActivityMixin(TestActivityCommon):
