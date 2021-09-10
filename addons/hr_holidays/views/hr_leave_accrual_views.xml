@@ -46,7 +46,9 @@
                         <div class="o_col">
                             <div class="o_row">
                                 <field name="maximum_leave"/>
-                                <field name="added_value_type" nolabel="1" readonly="1"/>
+                                <!-- force_save is required here since it would otherwise not be saved due to the readonly
+                                     there is an issue when the field is present twice in the view. -->
+                                <field name="added_value_type" nolabel="1" readonly="1" force_save="1"/>
                             </div>
                         </div>
                         <field name="action_with_unused_accruals"/>
