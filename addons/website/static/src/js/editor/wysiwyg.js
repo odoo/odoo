@@ -50,15 +50,13 @@ Wysiwyg.include({
      */
     start: function () {
         this.options.toolbarHandler = $('#web_editor-top-edit');
-        this.options.preventLinkDoubleClick = true;
-
 
         $(document.body).on('mousedown', (ev) => {
             const $target = $(ev.target);
+
             // Keep popover open if clicked inside it, but not on a button
-            if (!($target.parents('.o_edit_menu_popover').length && !$target.parent('a').addBack('a').length)) {
-                $('.o_edit_menu_popover').popover('hide');
-                $('.o_edit_menu_popover').find('[data-toggle="tooltip"]').tooltip('hide');
+            if ($target.parents('.o_edit_menu_popover').length && !$target.parent('a').addBack('a').length) {
+                ev.preventDefault();
             }
 
             if ($target.is('a') && !$target.attr('data-oe-model') && !$target.find('> [data-oe-model]').length && $target.closest('#wrapwrap').length) {
