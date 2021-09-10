@@ -21,6 +21,18 @@ class AccrualPlan(models.Model):
         string="Level Transition", default="immediately", required=True,
         help="""Immediately: When the date corresponds to the new level, your accrual is automatically computed, granted and you switch to new level
                 After this accrual's period: When the accrual is complete (a week, a month), and granted, you switch to next level if allocation date corresponds""")
+    level_count = fields.Integer('Levels', compute='_compute_level_count')
+
+    @api.depends('level_ids')
+    def _compute_level_count(self):
+        level_read_group = self.env['hr.leave.accrual.level'].read_group(
+            [('accrual_plan_id', 'in', self.ids)],
+            fields=['accrual_plan_id'],
+            groupby=['accrual_plan_id'],
+        )
+        mapped_count = {group['accrual_plan_id'][0]: group['accrual_plan_id_count'] for group in level_read_group}
+        for plan in self:
+            plan.level_count = mapped_count[plan.id]
 
     @api.depends('allocation_ids')
     def _compute_employee_count(self):
