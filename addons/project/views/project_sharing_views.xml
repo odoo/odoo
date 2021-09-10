@@ -223,7 +223,7 @@
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <group expand="0" string="Group By">
                     <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
-                    <filter string="Assigned to" name="user" context="{'group_by': 'user_ids'}"/>
+                    <filter string="Assignees" name="user" context="{'group_by': 'user_ids'}"/>
                     <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
                     <filter string="Customer" name="customer" context="{'group_by': 'partner_id'}"/>
                     <filter string="Kanban State" name="kanban_state" context="{'group_by': 'kanban_state'}"/>
