@@ -32,6 +32,19 @@ class MailPerformanceTracking(models.Model):
     field_2 = fields.Char(tracking=True)
 
 
+class MailTestLang(models.Model):
+    """ A simple chatter model with lang-based capabilities, allowing to
+    test translations. """
+    _description = 'Lang Chatter Model'
+    _name = 'mail.test.lang'
+    _inherit = ['mail.thread']
+
+    name = fields.Char()
+    email_from = fields.Char()
+    customer_id = fields.Many2one('res.partner')
+    lang = fields.Char('Lang')
+
+
 class MailTestTrackCompute(models.Model):
     _name = 'mail.test.track.compute'
     _description = "Test tracking with computed fields"
