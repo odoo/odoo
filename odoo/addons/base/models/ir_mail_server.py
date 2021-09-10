@@ -88,11 +88,11 @@ class IrMailServer(models.Model):
     NO_VALID_RECIPIENT = ("At least one valid recipient address should be "
                           "specified for outgoing emails (To/Cc/Bcc)")
 
-    name = fields.Char(string='Description', required=True, index=True)
+    name = fields.Char(string='Name', required=True, index=True)
     from_filter = fields.Char(
-      "From Filter",
-      help='Define for which email address or domain this server can be used.\n'
-      'e.g.: "notification@odoo.com" or "odoo.com"')
+        "FROM Filtering",
+        help='Define for which email address or domain this server can be used.\n'
+             'e.g.: "notification@odoo.com" or "odoo.com"')
     smtp_host = fields.Char(string='SMTP Server', required=True, help="Hostname or IP of SMTP server")
     smtp_port = fields.Integer(string='SMTP Port', required=True, default=25, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.")
     smtp_authentication = fields.Selection([('login', 'Username'), ('certificate', 'SSL Certificate')], string='Authenticate with', required=True, default='login')
@@ -101,7 +101,7 @@ class IrMailServer(models.Model):
     smtp_encryption = fields.Selection([('none', 'None'),
                                         ('starttls', 'TLS (STARTTLS)'),
                                         ('ssl', 'SSL/TLS')],
-                                       string='Connection Security', required=True, default='none',
+                                       string='Connection Encryption', required=True, default='none',
                                        help="Choose the connection encryption scheme:\n"
                                             "- None: SMTP sessions are done in cleartext.\n"
                                             "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session (Recommended)\n"
@@ -428,6 +428,7 @@ class IrMailServer(models.Model):
         domain = get_param('mail.catchall.domain')
         if postmaster and domain:
             return '%s@%s' % (postmaster, domain)
+        return
 
     @api.model
     def _get_default_from_address(self):
