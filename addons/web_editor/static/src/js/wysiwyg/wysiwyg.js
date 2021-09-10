@@ -837,16 +837,31 @@ const Wysiwyg = Widget.extend({
                     const targetElement = targetNode && targetNode.nodeType === Node.ELEMENT_NODE
                         ? targetNode
                         : targetNode && targetNode.parentNode;
+                    const hadNonCollapsedSelection = range && !selection.isCollapsed;
+                    const isCurrentSelectionInEditable = () => {
+                        const selection = this.odooEditor.document.getSelection();
+                        const isSelectionInEditable =
+                            !selection.isCollapsed &&
+                            this.odooEditor.editable.contains(selection.anchorNode) &&
+                            this.odooEditor.editable.contains(selection.focusNode);
+                        return isSelectionInEditable;
+                    }
                     colorpicker = new ColorPaletteWidget(this, {
                         excluded: ['transparent_grayscale'],
                         $editable: $(this.odooEditor.editable), // Our parent is the root widget, we can't retrieve the editable section from it...
                         selectedColor: $(targetElement).css(eventName === "foreColor" ? 'color' : 'backgroundColor'),
                     });
                     colorpicker.on('custom_color_picked color_picked', null, ev => {
+                        if (hadNonCollapsedSelection && !isCurrentSelectionInEditable()) {
+                            this.odooEditor.resetCursorOnLastHistoryCursor();
+                        }
                         this._processAndApplyColor(eventName, ev.data.color);
                         this.odooEditor.historyStep();
                     });
                     colorpicker.on('color_hover color_leave', null, ev => {
+                        if (hadNonCollapsedSelection && !isCurrentSelectionInEditable()) {
+                            this.odooEditor.resetCursorOnLastHistoryCursor();
+                        }
                         this._processAndApplyColor(eventName, ev.data.color);
                     });
                     colorpicker.on('enter_key_color_colorpicker', null, () => {
