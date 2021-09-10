@@ -90,6 +90,9 @@ class TestSMSPost(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, 
         })
         link = self.env['link.tracker'].search([('url', '=', link)])
         self.assertIn(link.short_url, new_body)
+        # Bugfix: ensure void content convert does not crash
+        new_body = self.env['link.tracker']._convert_links_text(False, self.tracker_values)
+        self.assertFalse(new_body)
 
     def test_body_link_shorten_wshort(self):
         link = 'https://test.odoo.com/r/RAOUL'
