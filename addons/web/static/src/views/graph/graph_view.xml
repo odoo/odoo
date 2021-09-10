@@ -46,7 +46,7 @@
     </t>
 
     <t t-name="web.GraphView" owl="1">
-        <div class="o_graph_view" t-att-class="{ o_view_sample_data: model.metaData.useSampleModel }">
+        <div class="o_graph_view" t-att-class="{ o_view_sample_data: model.useSampleModel }">
             <ControlPanel t-if="env.searchModel.display.controlPanel" t-props="props.info">
                 <t t-set-slot="control-panel-bottom-left">
                     <t t-call="{{ constructor.buttonTemplate }}"/>
@@ -55,14 +55,14 @@
             <div class="o_content">
                 <SearchPanel t-if="env.searchModel.display.searchPanel" />
                 <t t-if="model.data">
-                    <t t-if="model.metaData.useSampleModel and props.info.noContentHelp" t-call="web.ActionHelper">
+                    <t t-if="model.useSampleModel and props.info.noContentHelp" t-call="web.ActionHelper">
                         <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
                     </t>
                     <Renderer
                         class="o_renderer"
                         data="model.data"
                         metaData="model.metaData"
-                        t-att-class="{ o_sample_data_disabled: model.metaData.useSampleModel }"
+                        t-att-class="{ o_sample_data_disabled: model.useSampleModel }"
                         t-on-inspect-domain-records="onInspectDomainRecords"
                     />
                 </t>
