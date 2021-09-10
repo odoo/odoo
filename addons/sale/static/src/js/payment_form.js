@@ -22,11 +22,10 @@ odoo.define('sale.payment_form', require => {
          */
         _prepareTransactionRouteParams: function (provider, paymentOptionId, flow) {
             const transactionRouteParams = this._super(...arguments);
-            return {
-                ...transactionRouteParams,
+            return Object.assign({}, transactionRouteParams, {
                 'sale_order_id': this.txContext.saleOrderId
                     ? parseInt(this.txContext.saleOrderId) : undefined,
-            };
+            });
         },
 
     };

@@ -384,7 +384,7 @@
                     if (groupType === "LEFT_BRACE" &&
                         isLeftSeparator(prevToken) &&
                         isRightSeparator(nextToken)) {
-                        tokens.splice(i + 1, 0, { type: "COLON", value: ":" }, { ...token });
+                        tokens.splice(i + 1, 0, { type: "COLON", value: ":" }, Object.assign({}, token));
                         nextToken = tokens[i + 1];
                     }
                     if (prevToken.type === "OPERATOR" && prevToken.value === ".") {
