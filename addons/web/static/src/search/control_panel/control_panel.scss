@@ -30,7 +30,15 @@
     }
 
     .o_cp_bottom_left {
-        display: flex;
+        // Bottom left holds only btn-groups
+        // they will handle pushing buttons on the relevant line
+        display: inline-block;
+
+        > .btn-group {
+            margin-bottom: map-get($spacers, 2);
+            // Before owl, the margin was handled by a real space!
+            margin-right: map-get($spacers, 1);
+        }
 
         > .o_cp_action_menus {
             padding-right: 10px;
