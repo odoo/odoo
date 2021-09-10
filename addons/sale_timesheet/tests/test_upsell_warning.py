@@ -25,7 +25,7 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
         """
         # 1) Configure the upsell warning in prepaid service product
         self.product_order_timesheet1.write({
-            'service_upsell_threshold': 0.6,
+            'service_upsell_threshold': 0.5,
         })
 
         # 2) Create SO with a SOL containing this updated product
