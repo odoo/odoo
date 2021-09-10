@@ -79,7 +79,7 @@ class PurchaseOrderLine(models.Model):
         return self.sale_order_id
 
     def write(self, vals):
-        if not vals.get('product_qty'):
+        if not vals.get('product_qty') or self.env.context.get('disable_sale_order_warning', False):
             return super().write(vals)
 
         sales_to_nofify = defaultdict(lambda: self.env['purchase.order.line'])

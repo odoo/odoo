@@ -21,6 +21,10 @@ class SaleOrder(models.Model):
         for order in self:
             order.purchase_order_count = len(self._get_purchase_orders())
 
+    def write(self, vals):
+        self = self.with_context(disable_sale_order_warning=True)
+        return super().write(vals)
+
     def _action_confirm(self):
         result = super(SaleOrder, self)._action_confirm()
         for order in self:
