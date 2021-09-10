@@ -9,12 +9,12 @@ from odoo import api, fields, models
 class Track(models.Model):
     _inherit = 'event.track'
 
-    youtube_video_url = fields.Char('Youtube Video URL',
+    youtube_video_url = fields.Char('YouTube Video Link',
         help="Configure this URL so that event attendees can see your Track in video!")
-    youtube_video_id = fields.Char('Youtube video ID', compute='_compute_youtube_video_id',
+    youtube_video_id = fields.Char('YouTube video ID', compute='_compute_youtube_video_id',
         help="Extracted from the video URL and used to infer various links (embed/thumbnail/...)")
-    is_youtube_replay = fields.Boolean('Is Youtube Replay',
-        help="Check this option if the video is already available on Youtube to avoid showing 'Direct' options (Chat, ...)")
+    is_youtube_replay = fields.Boolean('Is YouTube Replay',
+        help="Check this option if the video is already available on YouTube to avoid showing 'Direct' options (Chat, ...)")
     is_youtube_chat_available = fields.Boolean('Is Chat Available', compute='_compute_is_youtube_chat_available')
 
     @api.depends('youtube_video_url')
