@@ -6,10 +6,29 @@ const wTourUtils = require('website.tour_utils');
 
 const FIRST_PARAGRAPH = '#wrap .s_text_image p:nth-child(2)';
 
-const clickFooter = {
+const clickFooter = [{
     content: "Save the link by clicking outside the URL input (not on a link element)",
-    trigger: 'footer h5',
-};
+    trigger: 'footer h5:first',
+}, {
+    content: "Wait delayed click on footer",
+    trigger: '.o_we_customize_panel we-title:contains("Footer")',
+    run: function () {}, // it's a check
+}];
+
+const clickEditLink = [{
+    content: "Click on Edit Link in Popover",
+    trigger: '.o_edit_menu_popover .o_we_edit_link',
+    // FIXME this run shouldnt be needed but click not working as real click
+    run: (actions) => {
+        actions.click();
+        $('.o_edit_menu_popover').popover('hide');
+    },
+}, {
+    content: "Ensure popover is closed",
+    trigger: 'html:not(:has(.o_edit_menu_popover))', // popover should be closed
+    run: function () {}, // it's a check
+    in_modal: false,
+}];
 
 tour.register('edit_link_popover', {
     test: true,
@@ -29,11 +48,11 @@ tour.register('edit_link_popover', {
         trigger: "#toolbar #create-link",
     },
     {
-        content: "Type the link URL",
+        content: "Type the link URL /contactus",
         trigger: '#o_link_dialog_url_input',
         run: 'text /contactus'
     },
-    clickFooter,
+    ...clickFooter,
     {
         content: "Click on newly created link",
         trigger: `${FIRST_PARAGRAPH} a`,
@@ -43,19 +62,21 @@ tour.register('edit_link_popover', {
         trigger: '.o_edit_menu_popover .o_we_url_link:contains("Contact Us")', // At this point preview is loaded
         run: function () {}, // it's a check
     },
+    ...clickEditLink,
     {
-        content: "Click on Edit Link in Popover",
-        trigger: '.o_edit_menu_popover .o_we_edit_link',
-    },
-    {
-        content: "Type the link URL",
+        content: "Type the link URL /",
         trigger: '#o_link_dialog_url_input',
         run: "text /"
     },
-    clickFooter,
+    ...clickFooter,
     {
         content: "Click on link",
         trigger: `${FIRST_PARAGRAPH} a`,
+        // FIXME this run shouldnt be needed but click not working as real click
+        run: function (actions) {
+            actions.click();
+            this.$anchor.popover('show');
+        },
     },
     {
         content: "Popover should be shown with updated preview data",
@@ -69,6 +90,15 @@ tour.register('edit_link_popover', {
     {
         content: "Link should be removed",
         trigger: `${FIRST_PARAGRAPH}:not(:has(a))`,
+        // run: function () {}, // it's a check
+        // FIXME this run shouldnt be needed but click not working as real click
+        run: (actions) => {
+            $('.o_edit_menu_popover').popover('hide');
+        },
+    },
+    {
+        content: "Ensure popover is closed",
+        trigger: 'html:not(:has(.o_edit_menu_popover))', // popover should be closed
         run: function () {}, // it's a check
     },
     // 2. Test links in navbar (website)
@@ -81,10 +111,7 @@ tour.register('edit_link_popover', {
         trigger: '.o_edit_menu_popover .o_we_url_link:contains("Home")',
         run: function () {}, // it's a check
     },
-    {
-        content: "Click on Edit Link in Popover",
-        trigger: '.o_edit_menu_popover .o_we_edit_link',
-    },
+    ...clickEditLink,
     {
         content: "Change the URL",
         trigger: '#o_link_dialog_url_input',
@@ -96,11 +123,16 @@ tour.register('edit_link_popover', {
     },
     {
         content: "Click on the Home menu again",
-        trigger: '#top_menu a:contains("Home")',
         extra_trigger: '#top_menu a:contains("Home")[href="/contactus"]', // href should be changed
+        trigger: '#top_menu a:contains("Home")',
+        // FIXME this run shouldnt be needed but click not working as real click
+        run: function (actions) {
+            actions.click();
+            this.$anchor.popover('show');
+        },
     },
     {
-        content: "Popover should be shown with updated preview data",
+        content: "Popover should be shown with updated preview data (2)",
         trigger: '.o_edit_menu_popover .o_we_url_link:contains("Contact Us")',
         run: function () {}, // it's a check
     },
@@ -137,31 +169,36 @@ tour.register('edit_link_popover', {
         run: function () {}, // it's a check
     },
     // 4. Popover should close when clicking non-link element
+    ...clickFooter,
+    // FIXME this step shouldnt be needed but click not working as real click
     {
-        content: "Ensure popover is closed",
-        trigger: 'footer h5',
+        content: "REMOVEME",
+        trigger: '.o_edit_menu_popover',
+        run: (actions) => {
+            $('.o_edit_menu_popover').popover('hide');
+        },
     },
-    // 5. Double click shouldn't do anything
+    // 5. Double click should not open popover but should open toolbar link
     {
         content: "Double click on link",
-        trigger: 'html:not(:has(.o_edit_menu_popover))', // popover should be closed
-        run: function () {
-            const $footerHomeLink = $('footer a[href="/"]').first();
-
+        extra_trigger: 'html:not(:has(.o_edit_menu_popover))', // popover should be closed
+        trigger: 'footer a[href="/"]',
+        run: function (actions) {
             // Create range to simulate real double click, see pull request
             const range = document.createRange();
-            range.selectNodeContents($footerHomeLink[0]);
+            range.selectNodeContents(this.$anchor[0]);
             const sel = window.getSelection();
             sel.removeAllRanges();
             sel.addRange(range);
-
-            $footerHomeLink.click().dblclick();
+            actions.click();
+            actions.dblclick();
+            // FIXME this step shouldnt be needed but click not working as real click
+            this.$anchor.popover('show');
         },
     },
     {
-        content: "Ensure nothing happened on double click (except showing popover)",
-        extra_trigger: 'html:not(:has(#o_link_dialog_url_input))',
-        trigger: '.o_edit_menu_popover',
+        content: "Ensure popover is opened on double click, and so is right panel edit link",
+        trigger: 'html:has(#o_link_dialog_url_input):has(.o_edit_menu_popover)',
         run: function () {}, // it's a check
     },
 ]);
