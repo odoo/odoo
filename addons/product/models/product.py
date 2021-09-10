@@ -149,6 +149,16 @@ class ProductProduct(models.Model):
         for record in self:
             record.image_1920 = record.image_variant_1920 or record.product_tmpl_id.image_1920
 
+    @api.depends("create_date", "write_date", "product_tmpl_id.create_date", "product_tmpl_id.write_date")
+    def compute_concurrency_field_with_access(self):
+        super().compute_concurrency_field_with_access()
+        for record in self:
+            record[self.CONCURRENCY_CHECK_FIELD] = max(filter(None, (
+                record.product_tmpl_id.create_date,
+                record.product_tmpl_id.write_date,
+                record[self.CONCURRENCY_CHECK_FIELD],
+            )))
+
     def _set_image_1920(self):
         for record in self:
             if (
