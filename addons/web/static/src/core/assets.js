@@ -4,7 +4,8 @@ const { useEnv, onWillStart } = owl.hooks;
 import { memoize } from "./utils/functions";
 import { browser } from "./browser/browser";
 
-class AssetsLoadingError extends Error {}
+class AssetsLoadingError extends Error {
+}
 
 //------------------------------------------------------------------------------
 // Types
@@ -14,10 +15,8 @@ class AssetsLoadingError extends Error {}
  * An object describing a bundle to load
  * @typedef {Object} Bundle
  * @property {boolean} [templates] whether to load the qweb templates
- * @property {boolean} [js] whether to load the js from the bundle. Currently
- *      not implemented.
- * @property {boolean} [css] whether to load the css from the bundle. Currently
- *      not implemented.
+ * @property {boolean} [js] whether to load the js from the bundle.
+ * @property {boolean} [css] whether to load the css from the bundle.
  */
 
 /**
@@ -28,8 +27,10 @@ class AssetsLoadingError extends Error {}
 /**
  * An object describing a loaded bundle
  * @typedef {Object} LoadedBundle
- * @property {XMLDocument} templates an XML document containing the owl
+ * @property {XMLDocument} [templates] an XML document containing the owl
  *      templates defined in that bundle
+ * @property {true[]} [js] a promise or the resolution of that promise that signifies that the js has been loaded
+ * @property {true[]} [css] a promise or the resolution of that promise that signifies that the css has been loaded
  */
 
 /**
@@ -37,6 +38,13 @@ class AssetsLoadingError extends Error {}
  * @typedef {Object<string, LoadedBundle>} LoadedBundles
  */
 
+/**
+ * An object describing a bundle to load
+ * @typedef {Object} BundleInfo
+ * @property {'script'|'link'} [type] the type of file in this bundle
+ * @property {string} [src] the url of the file for this bundle, for this type of file
+ * @example `[{"type": "script", "src": "/web/assets/266-d34b0b4/documents_spreadsheet.o_spreadsheet.min.js"}]`
+ */
 //------------------------------------------------------------------------------
 // Helpers
 //------------------------------------------------------------------------------
@@ -45,7 +53,7 @@ class AssetsLoadingError extends Error {}
  * Loads the given url inside a script tag.
  *
  * @param {string} url the url of the script
- * @returns {Promise} resolved when the script has been loaded
+ * @returns {Promise<true>} resolved when the script has been loaded
  */
 const loadJS = memoize(function loadJS(url) {
     if (document.querySelector(`script[src="${url}"]`)) {
@@ -60,7 +68,7 @@ const loadJS = memoize(function loadJS(url) {
     scriptEl.src = url;
     document.head.appendChild(scriptEl);
     return new Promise((resolve, reject) => {
-        scriptEl.addEventListener("load", resolve);
+        scriptEl.addEventListener("load", () => resolve(true));
         scriptEl.addEventListener("error", () => {
             reject(new AssetsLoadingError(`The loading of ${url} failed`));
         });
@@ -70,7 +78,7 @@ const loadJS = memoize(function loadJS(url) {
  * Loads the given url as a stylesheet.
  *
  * @param {string} url the url of the stylesheet
- * @returns {Promise} resolved when the stylesheet has been loaded
+ * @returns {Promise<true>} resolved when the stylesheet has been loaded
  */
 const loadCSS = memoize(function loadCSS(url) {
     if (document.querySelector(`link[href="${url}"]`)) {
@@ -86,7 +94,7 @@ const loadCSS = memoize(function loadCSS(url) {
     linkEl.href = url;
     document.head.appendChild(linkEl);
     return new Promise(function (resolve, reject) {
-        linkEl.addEventListener("load", resolve);
+        linkEl.addEventListener("load", () => resolve(true));
         linkEl.addEventListener("error", () => {
             reject(new AssetsLoadingError(`The loading of ${url} failed`));
         });
@@ -108,7 +116,19 @@ export const loadBundleTemplates = memoize(async function loadBundleTemplates(na
     return processTemplates(templates);
 });
 
+
+/**
+ * Loads the content definition of a bundle
+ * @param {string} name the bundleName of the bundle as declared in the manifest.
+ * @returns {Promise<BundleInfo[]>} A promise of the content definition of the bundle
+ */
+const loadBundleDefinition = memoize(async function (bundleName) {
+    const request = await browser.fetch(`/web/bundle/${bundleName}`);
+    return await request.json();
+});
+
 const bundlesCache = {};
+
 /**
  * Loads a bundle.
  *
@@ -116,20 +136,35 @@ const bundlesCache = {};
  * @param {Bundle} options parts of the bundle to load (see Bundle typedef)
  * @returns {Promise<LoadedBundle>}
  */
-async function loadBundle(name, options) {
-    const { templates } = options;
+export async function loadBundle(name, options) {
+    const { templates, css, js } = options;
     if (!bundlesCache[name]) {
         bundlesCache[name] = { name };
     }
     if (templates && !bundlesCache[name].templates) {
         bundlesCache[name].templates = loadBundleTemplates(name);
     }
-    // TODO: if ("js/css") {...} to support lazy loading js/css from bundles
+
+    if (css && !bundlesCache[name].css || js && !bundlesCache[name].js) {
+        // we only load the bundle info (that is an RPC) if JS or CSS is requested on the bundle,
+        // and if it has not yet been requested.
+        /** @type BundleInfo[] */
+        const bundleInfo = await loadBundleDefinition(name);
+
+        if (options.js) {
+            bundlesCache[name].js = Promise.all(bundleInfo.filter((i) => i.type === "script").map((i) => loadJS(i.src)));
+        }
+
+        if (options.css) {
+            bundlesCache[name].css = Promise.all(bundleInfo.filter((i) => i.type === "link").map((i) => loadCSS(i.src)));
+        }
+    }
 
     // Wait only for the requested keys
     const entries = await Promise.all(
         Object.keys(options).map(async (key) => [key, await bundlesCache[name][key]])
     );
+
     return Object.fromEntries(entries);
 }
 
@@ -160,6 +195,7 @@ export function processTemplates(templates) {
     }
     return doc;
 }
+
 /**
  * Renders a public asset template and loads the libraries defined inside of it.
  * Only loads js and css, template declarations will be ignored. Only loads
@@ -179,6 +215,7 @@ export const loadPublicAsset = memoize(async function loadPublicAsset(xmlid, orm
         jsLibs: [...doc.querySelectorAll("script[src]")].map((node) => node.getAttribute("src")),
     });
 });
+
 /**
  * Loads the given assets. Currently, when passing bundles, only the templates
  * key is supported, as loading a bundle's JS/CSS asynchronously requires some
@@ -216,6 +253,7 @@ export async function loadAssets(assets) {
     await Promise.all(proms);
     return loadedAssets;
 }
+
 /**
  * Loads the given assets, and adds the loaded owl templates into the current
  * environment's qweb instance.

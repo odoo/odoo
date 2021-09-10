@@ -1022,6 +1022,18 @@ class WebClient(http.Controller):
     def benchmarks(self, mod=None, **kwargs):
         return request.render('web.benchmark_suite')
 
+    @http.route('/web/bundle/<string:bundle_name>', auth="user", methods=["GET"])
+    def bundle(self, bundle_name):
+        """
+        Request the definition of a bundle, including its javascript and css bundled assets
+        """
+        files = request.env["ir.qweb"]._get_asset_nodes(bundle_name, debug=request.session.debug, js=True, css=True)
+        data = json.dumps([{
+            "type": tag,
+            "src": attrs.get("src") or attrs.get('href'),
+        } for tag, attrs, _ in files])
+        return request.make_response(data, [('Content-Type', 'application/json')])
+
 
 class Proxy(http.Controller):
 
