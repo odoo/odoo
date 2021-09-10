@@ -53,7 +53,13 @@ const LinkPopoverWidget = Widget.extend({
             html: true,
             content: this.$el,
             placement: 'bottom',
-            trigger: 'click',
+            // We need the popover to:
+            // 1. Open when the link is clicked or double clicked
+            // 2. Remain open when the link is clicked again (which `trigger: 'click'` is not doing)
+            // 3. Remain open when the popover content is clicked..
+            // 4. ..except if it the click was on a button of the popover content
+            // 5. Close when the user click somewhere on the page (not being the link or the popover content)
+            trigger: 'focus',
             boundary: 'viewport',
         })
         .on('show.bs.popover.link_popover', () => {
@@ -162,7 +168,7 @@ const LinkPopoverWidget = Widget.extend({
     /**
      * Opens the Link Dialog.
      *
-     * TODO Call business methods once new editor is released instead of click
+     * TODO The editor instance should be reached a proper way
      *
      * @private
      * @param {Event} ev
