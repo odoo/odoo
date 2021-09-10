@@ -3169,8 +3169,8 @@ var SnippetsMenu = Widget.extend({
         const docSelection = document.getSelection();
         const $currentSelectionTarget = docSelection && docSelection.rangeCount > 0 ? $(docSelection.getRangeAt(0).commonAncestorContainer) : $();
         // Do not  toggle visibility if the target is inside the toolbar ( eg. during link edition).
-        if ($currentSelectionTarget.parents('#toolbar').length ||
-            (e && $(e.target).parents('#toolbar').length)
+        if ($currentSelectionTarget.closest('#o_we_editor_toolbar_container').length ||
+            (e && $(e.target).closest('#o_we_editor_toolbar_container').length)
         ) {
             return;
         }
