@@ -70,7 +70,7 @@ class StockMoveLine(models.Model):
                 qty = sum(lines.mapped('product_qty'))
                 new_move = move._split(qty)
                 new_move[0]['move_line_ids'] = [Command.set(move_lines.ids)]
-                picking_to_wave_vals['move_lines'] += [Command.create(new_move)]
+                picking_to_wave_vals['move_lines'] += [Command.create(new_move[0])]
 
             picking_to_wave_vals_list.append(picking_to_wave_vals)
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
@@ -196,3 +197,117 @@ class TestBatchPicking(TransactionCase):
         res = wizard.attach_pickings()
         self.assertEqual(set(res['context']['picking_to_wave']), set(self.all_pickings.ids))
         self.assertEqual(res['context']['active_wave_id'], wave.id)
+
+    def test_wave_split_picking(self):
+        lines = self.picking_client_1.move_lines.filtered(lambda m: m.product_id == self.productB).move_line_ids
+        move = lines.move_id
+        self.assertEqual(len(move), 1)
+        all_db_pickings = self.env['stock.picking'].search([])
+        res_dict = lines.action_open_add_to_wave()
+        res_dict['context'] = {'active_model': 'stock.move.line', 'active_ids': lines.ids}
+        self.assertEqual(res_dict.get('res_model'), 'stock.add.to.wave')
+        wizard_form = Form(self.env[res_dict['res_model']].with_context(res_dict['context']))
+        wizard_form.mode = 'new'
+        wizard_form.save().attach_pickings()
+
+        wave = self.env['stock.picking.batch'].search([
+            ('is_wave', '=', True)
+        ])
+        self.assertTrue(wave)
+
+        # Original picking lost a stock move
+        self.assertTrue(move.picking_id)
+        self.assertFalse(move.picking_id == self.picking_client_1)
+        self.assertTrue(self.picking_client_1.move_lines)
+        self.assertTrue(move.picking_id.batch_id == wave)
+        self.assertTrue(lines.batch_id == wave)
+        new_all_db_picking = self.env['stock.picking'].search([])
+        self.assertEqual(len(all_db_pickings) + 1, len(new_all_db_picking))
+
+    def test_wave_split_move(self):
+        lines = self.picking_client_1.move_lines.filtered(lambda m: m.product_id == self.productB).move_line_ids[0:2]
+        move = lines.move_id
+        all_db_pickings = self.env['stock.picking'].search([])
+        res_dict = lines.action_open_add_to_wave()
+        res_dict['context'] = {'active_model': 'stock.move.line', 'active_ids': lines.ids}
+        self.assertEqual(res_dict.get('res_model'), 'stock.add.to.wave')
+        wizard_form = Form(self.env[res_dict['res_model']].with_context(res_dict['context']))
+        wizard_form.mode = 'new'
+        wizard_form.save().attach_pickings()
+
+        wave = self.env['stock.picking.batch'].search([
+            ('is_wave', '=', True)
+        ])
+        self.assertTrue(wave)
+
+        # Original picking lost a stock move
+        self.assertTrue(move.picking_id)
+        self.assertTrue(move.picking_id == self.picking_client_1)
+        self.assertFalse(lines.move_id == move)
+        self.assertFalse(move.picking_id.batch_id)
+        new_move = lines.move_id
+        self.assertTrue(new_move.picking_id.batch_id == wave)
+        self.assertTrue(lines.batch_id == wave)
+        new_all_db_picking = self.env['stock.picking'].search([])
+        self.assertEqual(len(all_db_pickings) + 1, len(new_all_db_picking))
+
+    def test_wave_split_move_uom(self):
+        self.uom_dozen = self.env.ref('uom.product_uom_dozen')
+        sns = self.env['stock.production.lot'].create([{
+            'name': 'sn-' + str(i),
+            'product_id': self.productB.id,
+            'company_id': self.env.company.id
+        } for i in range(12)])
+
+        for i in range(12):
+            self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 1.0, lot_id=sns[i])
+
+        dozen_move = self.env['stock.move'].create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 1,
+            'product_uom': self.uom_dozen.id,
+            'picking_id': self.picking_client_1.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        dozen_move._action_confirm()
+        dozen_move._action_assign()
+        self.assertEqual(len(dozen_move.move_line_ids), 12)
+        self.assertEqual(dozen_move.move_line_ids.product_uom_id, self.env.ref('uom.product_uom_unit'))
+
+        lines = dozen_move.move_line_ids[0:5]
+        res_dict = lines.action_open_add_to_wave()
+        res_dict['context'] = {'active_model': 'stock.move.line', 'active_ids': lines.ids}
+        self.assertEqual(res_dict.get('res_model'), 'stock.add.to.wave')
+        wizard_form = Form(self.env[res_dict['res_model']].with_context(res_dict['context']))
+        wizard_form.mode = 'new'
+        wizard_form.save().attach_pickings()
+
+        wave = self.env['stock.picking.batch'].search([
+            ('is_wave', '=', True)
+        ])
+        self.assertFalse(lines.move_id == dozen_move)
+        self.assertEqual(lines.batch_id, wave)
+        self.assertEqual(dozen_move.product_uom_qty, 0.58)
+
+    def test_wave_trigger_errors(self):
+        with self.assertRaises(UserError):
+            lines = self.picking_client_1.move_line_ids
+            res_dict = lines.action_open_add_to_wave()
+            wizard_form = Form(self.env[res_dict['res_model']])
+            wizard_form.mode = 'new'
+            wizard = wizard_form.save()
+            wizard.attach_pickings()
+
+        with self.assertRaises(UserError):
+            companies = self.env['res.company'].search([])
+            self.picking_client_1.company_id = companies[0]
+            self.picking_client_2.company_id = companies[1]
+            lines = (self.picking_client_1 | self.picking_client_2).move_line_ids
+            res_dict = lines.action_open_add_to_wave()
+            res_dict['context'] = {'active_model': 'stock.move.line', 'active_ids': lines.ids}
+            wizard_form = Form(self.env[res_dict['res_model']].with_context(res_dict['context']))
+            wizard_form.mode = 'new'
+            wizard = wizard_form.save()
+            wizard.attach_pickings()
