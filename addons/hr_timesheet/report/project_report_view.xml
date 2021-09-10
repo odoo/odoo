@@ -39,7 +39,7 @@
                     <filter string="Tasks in Overtime" name="overtime" domain="[('task_id.overtime', '&gt;', 0)]"/>
                 </xpath>
                 <xpath expr="//filter[@name='my_tasks']" position="before">
-                    <filter string="My Team's Projects" name="my_team_projects"  domain="[('project_id.user_id.employee_id.parent_id.user_id', '=', uid), ('project_id.user_id', '!=', uid), ('user_id', '!=', uid), ('user_id', '!=', False)]"/>
+                    <filter string="My Team's Projects" name="my_team_projects"  domain="[('project_id.user_id.employee_id.parent_id.user_id', '=', uid), ('project_id.user_id', '!=', uid), ('user_ids', '!=', uid), ('user_ids', '!=', False)]"/>
                 </xpath>
                 <xpath expr="//filter[@name='my_tasks']" position="after">
                     <filter string="My Team's Tasks" name="my_team_tasks" domain="[('task_id.user_ids.employee_id.parent_id.user_id', '=', uid)]" />
@@ -52,7 +52,7 @@
             <field name="model">report.project.task.user</field>
             <field name="inherit_id" ref="project.report_project_task_user_view_tree"/>
             <field name="arch" type="xml">
-                <field name="user_id" position="after">
+                <field name="user_ids" position="after">
                     <field name="hours_effective" optional="hide" widget="float_time"/>
                     <field name="progress" optional="hide" widget="progressbar"/>
                 </field>

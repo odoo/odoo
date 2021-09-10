@@ -17,7 +17,7 @@
             <field name="arch" type="xml">
                 <graph string="Tasks Analysis" sample="1">
                      <field name="project_id"/>
-                     <field name="user_id"/>
+                     <field name="user_ids"/>
                      <field name="nbr" invisible="1"/>
                  </graph>
              </field>
@@ -31,7 +31,7 @@
                     <field name="name"/>
                     <field name="partner_id" optional="hide"/>
                     <field name="project_id" optional="show"/>
-                    <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                    <field name="user_ids" optional="show" widget="many2many_avatar_user"/>
                     <field name="stage_id" optional="show"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company"/>
                 </tree>
@@ -46,7 +46,7 @@
                     <field name="project_id"/>
                     <field name="name" />
                     <field name="stage_id"/>
-                    <field name="user_id"/>
+                    <field name="user_ids"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="name" string="Tags" filter_domain="[('task_id.tag_ids', 'ilike', self)]"/>
                     <field name="date_assign"/>
@@ -59,7 +59,7 @@
                     <filter string="Starred" name="starred" domain="[('task_id.priority', 'in', [0, 1])]"/>
                     <separator/>
                     <filter string="Tasks Late" name="late" domain="[('task_id.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Unassigned Tasks" name="unassigned" domain="[('user_id', '=', False)]"/>
+                    <filter string="Unassigned Tasks" name="unassigned" domain="[('user_ids', '=', False)]"/>
                     <filter string="Open tasks" name="open_tasks" domain="[('stage_id.fold', '=', False), ('stage_id.is_closed', '=', False)]"/>
                     <separator/>
                     <filter name="filter_date_deadline" date="date_deadline"/>
@@ -72,7 +72,7 @@
                     <group expand="1" string="Group By">
                         <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
                         <filter string="Stage" name="Stage" context="{'group_by': 'stage_id'}"/>
-                        <filter string="Assigned to" name="User" context="{'group_by': 'user_id'}"/>
+                        <filter string="Assigned to" name="User" context="{'group_by': 'user_ids'}"/>
                         <filter string="Customer" name="Customer" context="{'group_by': 'partner_id'}"/>
                         <filter string="Deadline" name="deadline" context="{'group_by': 'date_deadline'}"/>
                     </group>
