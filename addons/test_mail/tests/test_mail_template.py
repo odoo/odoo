@@ -4,15 +4,20 @@
 import base64
 
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
+from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
+@tagged('mail_template')
 class TestMailTemplate(TestMailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
         super(TestMailTemplate, cls).setUpClass()
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        cls.test_record = cls.env['mail.test.lang'].with_context(cls._test_context).create({
+            'email_from': 'ignasse@example.com',
+            'name': 'Test',
+        })
 
         cls.user_employee.write({
             'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
@@ -33,75 +38,73 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
         cls.email_1 = 'test1@example.com'
         cls.email_2 = 'test2@example.com'
         cls.email_3 = cls.partner_1.email
-        cls._create_template('mail.test.simple', {
+
+        # activate translations
+        cls.env['res.lang']._activate_lang('es_ES')
+        cls.env.ref('base.module_base')._update_translations(['es_ES'])
+
+        # create a complete test template
+        cls.test_template = cls._create_template('mail.test.lang', {
             'attachment_ids': [(0, 0, cls._attachments[0]), (0, 0, cls._attachments[1])],
-            'partner_to': '%s,%s' % (cls.partner_2.id, cls.user_admin.partner_id.id),
+            'body_html': '<p>English Body for ${object.name}</p>',
+            'lang': '${object.customer_id.lang or object.lang}',
             'email_to': '%s, %s' % (cls.email_1, cls.email_2),
             'email_cc': '%s' % cls.email_3,
+            'partner_to': '%s,%s' % (cls.partner_2.id, cls.user_admin.partner_id.id),
+            'subject': 'English for ${object.name}',
         })
 
-        # admin should receive emails
-        cls.user_admin.write({'notification_type': 'email'})
-        # Force the attachments of the template to be in the natural order.
-        cls.email_template.invalidate_cache(['attachment_ids'], ids=cls.email_template.ids)
-
-    @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_template_send_email(self):
-        mail_id = self.email_template.send_mail(self.test_record.id)
-        mail = self.env['mail.mail'].sudo().browse(mail_id)
-        self.assertEqual(mail.subject, 'About %s' % self.test_record.name)
-        self.assertEqual(mail.email_to, self.email_template.email_to)
-        self.assertEqual(mail.email_cc, self.email_template.email_cc)
-        self.assertEqual(mail.recipient_ids, self.partner_2 | self.user_admin.partner_id)
-
-    @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_template_translation(self):
-        self.env['res.lang']._activate_lang('es_ES')
-        self.env.ref('base.module_base')._update_translations(['es_ES'])
-
-        partner = self.env['res.partner'].create({'name': "test", 'lang': 'es_ES'})
-        email_template = self.env['mail.template'].create({
-            'name': 'TestTemplate',
-            'subject': 'English Subject',
-            'body_html': '<p>English Body</p>',
-            'model_id': self.env['ir.model']._get(partner._name).id,
-            'lang': '${object.lang}'
-        })
         # Make sure Spanish translations have not been altered
-        description_translations = self.env['ir.translation'].search([('module', '=', 'base'), ('src', '=', partner._description), ('lang', '=', 'es_ES')])
-        description_translations.update({'value': 'Spanish description'})
+        description_translations = cls.env['ir.translation'].search([
+            ('module', '=', 'test_mail'),
+            ('src', '=', cls.test_record._description),
+            ('lang', '=', 'es_ES')
+        ])
+        if description_translations:
+            description_translations.update({'value': 'Spanish description'})
+        else:
+            description_translations.create({
+                'type': 'model',
+                'name': 'ir.model,name',
+                'module': 'test_mail',
+                'lang': 'es_ES',
+                'res_id': cls.env['ir.model']._get_id('mail.test.lang'),
+                'src': cls.test_record._description,
+                'value': 'Spanish description',
+                'state': 'translated',
+            })
 
-        self.env['ir.translation'].create({
+        cls.env['ir.translation'].create({
             'type': 'model',
             'name': 'mail.template,subject',
             'module': 'mail',
             'lang': 'es_ES',
-            'res_id': email_template.id,
-            'value': 'Spanish Subject',
+            'res_id': cls.test_template.id,
+            'value': 'Spanish for ${object.name}',
             'state': 'translated',
         })
-        self.env['ir.translation'].create({
+        cls.env['ir.translation'].create({
             'type': 'model',
             'name': 'mail.template,body_html',
             'module': 'mail',
             'lang': 'es_ES',
-            'res_id': email_template.id,
-            'value': '<p>Spanish Body</p>',
+            'res_id': cls.test_template.id,
+            'value': '<p>Spanish Body for ${object.name}</p>',
             'state': 'translated',
         })
-        view = self.env['ir.ui.view'].create({
+        view = cls.env['ir.ui.view'].create({
             'name': 'test_layout',
             'key': 'test_layout',
             'type': 'qweb',
             'arch_db': '<body><t t-out="message.body"/> English Layout <t t-esc="model_description"/></body>'
         })
-        self.env['ir.model.data'].create({
+        cls.env['ir.model.data'].create({
             'name': 'test_layout',
             'module': 'test_mail',
             'model': 'ir.ui.view',
             'res_id': view.id
         })
-        self.env['ir.translation'].create({
+        cls.env['ir.translation'].create({
             'type': 'model_terms',
             'name': 'ir.ui.view,arch_db',
             'module': 'test_mail',
@@ -112,21 +115,63 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
             'state': 'translated',
         })
 
-        mail_id = email_template.send_mail(partner.id, notif_layout='test_mail.test_layout')
+        # admin should receive emails
+        cls.user_admin.write({'notification_type': 'email'})
+        # Force the attachments of the template to be in the natural order.
+        cls.test_template.invalidate_cache(['attachment_ids'], ids=cls.test_template.ids)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_template_send_email(self):
+        mail_id = self.test_template.send_mail(self.test_record.id)
         mail = self.env['mail.mail'].sudo().browse(mail_id)
-        self.assertEqual(mail.subject, 'Spanish Subject')
-        self.assertEqual(mail.body_html, '<body><p>Spanish Body</p> Spanish Layout Spanish description</body>')
+        self.assertEqual(mail.email_cc, self.test_template.email_cc)
+        self.assertEqual(mail.email_to, self.test_template.email_to)
+        self.assertEqual(mail.recipient_ids, self.partner_2 | self.user_admin.partner_id)
+        self.assertEqual(mail.subject, 'English for %s' % self.test_record.name)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_template_translation_lang(self):
+        test_record = self.env['mail.test.lang'].browse(self.test_record.ids)
+        test_record.write({
+            'lang': 'es_ES',
+        })
+        test_template = self.env['mail.template'].browse(self.test_template.ids)
+
+        mail_id = test_template.send_mail(test_record.id, notif_layout='test_mail.test_layout')
+        mail = self.env['mail.mail'].sudo().browse(mail_id)
+        self.assertEqual(mail.body_html,
+                         '<body><p>Spanish Body for %s</p> Spanish Layout Spanish description</body>' % self.test_record.name)
+        self.assertEqual(mail.subject, 'Spanish for %s' % self.test_record.name)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_template_translation_partner_lang(self):
+        test_record = self.env['mail.test.lang'].browse(self.test_record.ids)
+        customer = self.env['res.partner'].create({
+            'email': 'robert.carlos@test.example.com',
+            'lang': 'es_ES',
+            'name': 'Roberto Carlos',
+            })
+        test_record.write({
+            'customer_id': customer.id,
+        })
+        test_template = self.env['mail.template'].browse(self.test_template.ids)
+
+        mail_id = test_template.send_mail(test_record.id, notif_layout='test_mail.test_layout')
+        mail = self.env['mail.mail'].sudo().browse(mail_id)
+        self.assertEqual(mail.body_html,
+                         '<body><p>Spanish Body for %s</p> Spanish Layout Spanish description</body>' % self.test_record.name)
+        self.assertEqual(mail.subject, 'Spanish for %s' % self.test_record.name)
 
     def test_template_add_context_action(self):
-        self.email_template.create_action()
+        self.test_template.create_action()
 
         # check template act_window has been updated
-        self.assertTrue(bool(self.email_template.ref_ir_act_window))
+        self.assertTrue(bool(self.test_template.ref_ir_act_window))
 
         # check those records
-        action = self.email_template.ref_ir_act_window
-        self.assertEqual(action.name, 'Send Mail (%s)' % self.email_template.name)
-        self.assertEqual(action.binding_model_id.model, 'mail.test.simple')
+        action = self.test_template.ref_ir_act_window
+        self.assertEqual(action.name, 'Send Mail (%s)' % self.test_template.name)
+        self.assertEqual(action.binding_model_id.model, 'mail.test.lang')
 
     # def test_template_scheduled_date(self):
     #     from unittest.mock import patch
