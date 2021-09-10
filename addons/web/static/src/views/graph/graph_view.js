@@ -30,7 +30,6 @@ const KEYS = [
     "resModel",
     "stacked",
     "title",
-    "useSampleModel",
 ];
 
 export class GraphView extends Component {
@@ -38,8 +37,9 @@ export class GraphView extends Component {
         this.actionService = useService("action");
 
         let modelParams;
-        if (this.props.state) {
-            modelParams = this.props.state;
+        if (this.props.state && this.props.state.metaData) {
+            // check this (dashboard testss)
+            modelParams = this.props.state.metaData;
         } else {
             const { arch, fields } = this.props;
             const parser = new this.constructor.ArchParser();
@@ -53,7 +53,9 @@ export class GraphView extends Component {
         this.model = useModel(this.constructor.Model, modelParams);
 
         useSetupView({
-            exportLocalState: () => this.model.metaData,
+            exportLocalState: () => {
+                return { metaData: this.model.metaData };
+            },
             saveParams: () => this.saveParams(),
         });
     }
