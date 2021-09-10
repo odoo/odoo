@@ -796,6 +796,7 @@ const Wysiwyg = Widget.extend({
      * @param {boolean} [options.forceOpen] default: false
      * @param {boolean} [options.forceDialog] force to open the dialog
      * @param {boolean} [options.link] The anchor element to edit if it is known.
+     * @param {boolean} [options.noFocusUrl=false] Disable the automatic focusing of the URL field.
      */
     toggleLinkTools(options = {}) {
         if (this.snippetsMenu && !options.forceDialog) {
@@ -804,7 +805,7 @@ const Wysiwyg = Widget.extend({
             }
             if (options.forceOpen || !this.linkTools) {
                 const $btn = this.toolbar.$el.find('#create-link');
-                this.linkTools = new weWidgets.LinkTools(this, {wysiwyg: this}, this.odooEditor.editable, {}, $btn, options.link || this.lastMediaClicked);
+                this.linkTools = new weWidgets.LinkTools(this, {wysiwyg: this, noFocusUrl: options.noFocusUrl}, this.odooEditor.editable, {}, $btn, options.link || this.lastMediaClicked);
                 const _onMousedown = ev => {
                     if (!ev.target.closest('.oe-toolbar') && !ev.target.closest('.ui-autocomplete')) {
                         // Destroy the link tools on click anywhere outside the
