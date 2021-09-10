@@ -1405,7 +1405,7 @@ export class SearchModel extends EventBus {
      * @param {boolean} [params.raw=false]
      * @param {boolean} [params.withSearchPanel=true]
      * @param {boolean} [params.withGlobal=true]
-     * @returns {DomainListRepr | string} AST domain if 'raw', else the evaluated list domain
+     * @returns {DomainListRepr | Domain} Domain instance if 'raw', else the evaluated list domain
      */
     _getDomain(params = {}) {
         const withSearchPanel = "withSearchPanel" in params ? params.withSearchPanel : true;
@@ -1755,7 +1755,7 @@ export class SearchModel extends EventBus {
                 delete context[key];
             }
         }
-        const rawDomain = this._getDomain({ raw: true, withGlobal: false });
+        const domain = this._getDomain({ raw: true, withGlobal: false }).toString();
         const groupBys = this._getGroupBy();
         const comparison = this.getFullComparison();
         const orderBy = saveParams.orderBy ? saveParams.orderBy : this._getOrderBy() || [];
@@ -1764,7 +1764,7 @@ export class SearchModel extends EventBus {
         const preFavorite = {
             description,
             isDefault,
-            domain: rawDomain.toList(userContext),
+            domain,
             context,
             groupBys,
             orderBy,
@@ -1774,7 +1774,7 @@ export class SearchModel extends EventBus {
             name: description,
             action_id: this.action.id,
             model_id: this.resModel,
-            domain: rawDomain.toString(),
+            domain,
             is_default: isDefault,
             sort: JSON.stringify(orderBy.map((o) => `${o.name}${o.asc === false ? " desc" : ""}`)),
             user_id: userId,
