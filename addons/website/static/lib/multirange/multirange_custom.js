@@ -79,7 +79,7 @@ class Multirange {
 
         /* Wrap the input and add its ghost */
         this.rangeDiv = document.createElement("div");
-        this.rangeDiv.classList = "multirange-wrapper";
+        this.rangeDiv.classList.add("multirange-wrapper");
         this.input.parentNode.insertBefore(this.rangeDiv, this.input.nextSibling);
         this.rangeDiv.appendChild(this.input);
         this.ghost = this.input.cloneNode();
@@ -91,15 +91,15 @@ class Multirange {
         this.ghost.value = values[1] || this.max;
 
         this.inputTipLocator = document.createElement("div");
-        this.inputTipLocator.classList = "tip-locator";
+        this.inputTipLocator.classList.add("tip-locator");
         this.ghostTipLocator = document.createElement("div");
-        this.ghostTipLocator.classList = "tip-locator";
+        this.ghostTipLocator.classList.add("tip-locator");
         this.rangeDiv.insertBefore(this.ghostTipLocator, this.input.nextSibling);
         this.rangeDiv.insertBefore(this.inputTipLocator, this.ghost.nextSibling);
         this.leftCounter = document.createElement("span");
-        this.leftCounter.classList = "multirange-min";
+        this.leftCounter.classList.add("multirange-min");
         this.rightCounter = document.createElement("span");
-        this.rightCounter.classList = "multirange-max";
+        this.rightCounter.classList.add("multirange-max");
         this.tipLocatorOptions = {
             container: this.rangeDiv,
             html: true,
@@ -130,8 +130,8 @@ class Multirange {
             this.leftInput.step = this.step;
             this.rightInput = this.leftInput.cloneNode();
 
-            this.leftInput.classList = "multirange-min";
-            this.rightInput.classList = "multirange-max";
+            this.leftInput.classList.add("multirange-min");
+            this.rightInput.classList.add("multirange-max");
 
             this.leftCounter.parentNode.appendChild(this.leftInput);
             this.rightCounter.parentNode.appendChild(this.rightInput);
