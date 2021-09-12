@@ -35,7 +35,7 @@ def isdbaccessible(host_server,db_server,config_path=None):
         _logger.info("Remote Server not Reachable")
         raise e
 
-    _logger.info("Recieved Request %r"%locals())
+    _logger.info("Recieved Request")
     details = db_server
     try:
         psycopg2.connect(
