@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+
+        <record id="saas_plan_action" model="ir.actions.act_window">
+            <field name="name">SaaS Plans</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">saas.plan</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="saas_plan_tree_view" model="ir.ui.view">
+            <field name="name">Saas Plans</field>
+            <field name="model">saas.plan</field>
+            <field name="arch" type="xml">
+                <tree string="Plans">
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="saas_plan_form_view" model="ir.ui.view">
+            <field name="name">Saas Plans</field>
+            <field name="model">saas.plan</field>
+            <field name="arch" type="xml">
+                <form string="plans">
+                    <header>
+
+                        <button string="Create DB Template" name="create_db_template" type="object" icon="fa-play" class="oe_highlight" attrs="{'invisible':[('state','in',['confirm', 'cancel'])]}"/>
+
+                        <button string="Skip This Step" name="force_confirm" type="object" icon="fa-forward" class="oe_highlight" attrs="{'invisible':['|', ('state','in',['confirm', 'cancel']), ('db_template', '=', False)]}" help="Continue without creating new Db Template"/>
+
+                        <button type="action" name="odoo_saas_kit.action_wizard_contract_creation" string="Create Contract" help="Click to create a contract" icon="fa-play" class="oe_highlight" attrs="{'invisible':[('state','in',['draft', 'cancel'])]}"/>
+
+                        <button string="Login" name="login_to_db_template" type="object" icon="fa-sign-in" attrs="{'invisible':[('state','!=','confirm')]}"/>
+
+                        <button string="Restart" name="restart_db_template" type="object" icon="fa-refresh" attrs="{'invisible':[('state','!=','confirm')]}"/>
+
+                        <button string="Reset to draft" name="reset_to_draft" type="object" attrs="{'invisible':[('state','=','draft')]}"/>
+
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_contracts"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-pencil-square-o"
+                                attrs="{'invisible': [('contract_count', '=', 0)]}">
+                                <field name="contract_count" widget="statinfo" string="Contracts"/>
+                            </button>
+                        </div>
+                        <div class="oe_left" style="width: 500px;">
+                            <field name="image" widget="image" class="oe_avatar oe_left"/>
+                            <div class="oe_title" style="width: 390px;">
+                                <label class="oe_edit_only" for="name" string="Name"/>
+                                <h1><field name="name" class="oe_inline" attrs="{'readonly':[('state','=','confirm')]}"/></h1>
+                                <label class="oe_edit_only" for="summary" string="Summary"/>
+                                <field name="summary" attrs="{'readonly':[('state','=','confirm')]}"/>
+                            </div>
+                        </div>
+                        <group>
+                            <group string="SaaS Server">
+                                <field name="is_multi_server" invisible='1'/>
+                                <field name="server_id" options="{'no_create': True, 'no_create_edit':True}" required="1" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <label for="is_multi_server" />
+                                <div>
+                                    <field name="is_multi_server" class="oe_inline" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                </div>                                
+                                <label for="db_template"/>
+                                <div>
+                                    <span attrs="{'invisible':[('state','=','confirm')]}">template_</span><field class="oe_inline" name="db_template" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                </div>
+                            </group>
+                            <group attrs="{'invisible': [('is_multi_server', '=', False)]}">
+                            </group>
+                            <span class="text-muted" attrs="{'invisible': [('is_multi_server', '=', False)]}">Please Select the Servers in Remote Server Tab to Deploy the clients.</span>
+                            <group>    
+                            </group>
+                            <group>
+                                <field name="container_id" attrs="{'invisible':[('state','!=','confirm')], 'readonly':[('state','=','confirm')]}"/>
+                                <field name="use_specific_user_template" attrs="{'invisible':[('state','!=','confirm')]}"/>
+                                <field name="template_user_id" attrs="{'invisible':[('use_specific_user_template','=',False)], 'required': [('use_specific_user_template', '=', True)]}"/>
+                            </group>
+                        </group>
+                        <group attrs="{'invisible':['|', ('state','=','confirm'), ('db_template', '=', False)]}">
+                            <group attrs="{'invisible':['|', ('state','=','confirm'), ('db_template', '=', False)]}">
+                                <div attrs="{'invisible':['|', ('state','=','confirm'), ('db_template', '=', False)]}">
+                                    <span class="text-muted" attrs="{'invisible':['|', ('state','=','confirm'), ('db_template', '=', False)]}">Note : If you already have a template created and wants to skip db creation step, please click on "Skip this step".</span>
+                                </div>
+                            </group>
+                        </group>
+                        <group attrs="{'invisible':['|', ('state','=','draft'), ('use_specific_user_template','=',False)]}">
+                            <group attrs="{'invisible':['|', ('state','=','draft'), ('use_specific_user_template','=',False)]}">
+                                <div attrs="{'invisible':['|', ('state','=','draft'), ('use_specific_user_template','=',False)]}">
+                                    <span class="text-muted">Note: Enter the user_id of user (from DB tepmplate of this plan)in "Database Template User ID" whose permission you want to grant to the user of odoo instances which is going to be created by this plan.</span>
+                                </div>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Plan Settings">
+                                <label for="recurring_interval" />
+                                <div>
+                                    <span class="oe_inline">
+                                        Repeat Every
+                                    </span>
+                                    <field name="recurring_interval"
+                                        class="oe_inline"
+                                        required="True" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                    <field name="recurring_rule_type"
+                                        class="oe_inline"
+                                        required="True" readonly="True"/>
+                                </div>
+                                <field name="trial_period" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <label for="per_user_pricing" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <div>
+                                    <field class ="oe_inline" name="per_user_pricing" attrs="{'readonly':[('state','=','confirm')]}"/>                                    
+                                    <field class="oe_inline" name="user_cost" attrs="{'required':[('per_user_pricing', '=', True)], 'invisible':[('per_user_pricing', '=', False)], 'readonly':[('state','=','confirm')]}"/>
+                                    <span class="oe_inline" attrs="{'invisible':[('per_user_pricing', '=', False)]}">
+                                    PUPC(Per User Per Cycle)
+                                    </span>
+                                </div>
+                                <span class="text-muted" attrs="{'invisible': [('state', '!=', 'draft')]}">Note: Select user Based Pricing field to enable user based costing.</span>
+                                <field name="min_users" attrs="{'required':[('per_user_pricing', '=', True)], 'invisible':[('per_user_pricing', '=', False)], 'readonly':[('state','=','confirm')]}" />
+                                <field name="max_users" attrs="{'required':[('per_user_pricing', '=', True)], 'invisible':[('per_user_pricing', '=', False)], 'readonly':[('state','=','confirm')]}" />
+                                <label for="due_users_price" attrs="{'invisible':['|', ('per_user_pricing', '=', False), ('recurring_interval', '=', 1)]}"/>
+                                <div>
+                                    <field class ="oe_inline" name="due_users_price" attrs="{'invisible':['|', ('per_user_pricing', '=', False), ('recurring_interval', '=', 1)], 'readonly':[('state','=','confirm')]}" /><span class="oe_inline" attrs="{'invisible':['|', ('per_user_pricing', '=', False), ('recurring_interval', '=', 1)]}"> Per Month</span>
+                                </div>
+                                <field name="user_product" attrs="{'required':[('per_user_pricing', '=', True)], 'invisible':[('per_user_pricing', '=', False)]}" options="{'no_create': True, 'no_create_edit':True}"/>                                
+                                <span class="text-muted" attrs="{'invisible':['|', ('per_user_pricing', '=', False), ('state', '!=', 'draft')]}">Select a product to calculate user pricing in website whose "User pricing" must be checked and not related to any plan.</span><br/>
+                                <field name="saas_base_url" attrs="{'readonly':[('state','=','confirm')]}"/>
+                            </group>
+                            <br/><span class="text-muted" attrs="{'invisible':['|', ('per_user_pricing', '=', False), ('state', '!=', 'draft')]}">Notes:</span><br/>
+                            <span class="text-muted" attrs="{'invisible':['|', ('per_user_pricing', '=', False), ('state', '!=', 'draft')]}">1. Minimum numbers of user shows that client have to be charge for minimum user.</span><br/>
+                            <span class="text-muted" attrs="{'invisible':['|', ('per_user_pricing', '=', False), ('state', '!=', 'draft')]}">2. End user is not allowed to create users more than Max No. of users.</span><br/>
+                            <span class="text-muted" attrs="{'invisible':['|', ('per_user_pricing', '=', False), ('state', '!=', 'draft')]}">3. Enter -1 in Max. No. of users to let the end user create inifinite number of users.</span><br/>
+                            <span class="text-muted" attrs="{'invisible':['|', ('per_user_pricing', '=', False), ('state', '!=', 'draft')]}">4. Billing of extra users created in client's instance will be included in next month invoice.</span><br/>
+                        </group>
+                        <notebook>
+                            <page string="Related Modules">
+                                <field name="saas_module_ids" string="Related Modules" editable="bottom" attrs="{'readonly':[('state','=','confirm')]}">
+                                    <tree string="Related Modules">
+                                        <field name="name"/>
+                                        <field name="technical_name"/>
+                                        <field name="categ_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Remote Servers" name="server_page" attrs="{'invisible': [('is_multi_server', '=', False)]}">
+                                <group>
+                                    <group>
+                                        <field name="default_saas_servers_ids" widget="Many2many_tags" attrs="{'invisible': [('is_multi_server', '=', False)], 'required': [('is_multi_server', '=', True)]}">
+                                            <tree editable="bottom">
+                                                <field name="server_id" required="1" options="{'no_create': True, 'no_create_edit':True}"/>
+                                                <field name="priority" />
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Related Products">
+                                <field name="product_template_ids" readonly="1" string="Related Products">
+                                    <tree string="Related Products">
+                                        <field name="name" help="These products can be used to sell this plan."/>
+                                        <field name="default_code" help="These products can be used to sell this plan."/>
+                                        <field name="list_price" help="These products can be used to sell this plan."/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

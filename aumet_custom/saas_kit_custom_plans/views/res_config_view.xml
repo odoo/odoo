@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <record id="res_config_settings_inheri_view_form" model="ir.ui.view">
+        <field name="name">res.config.setting.inherit.form.custom.plan</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval='21'/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block saas_app_settings" data-string="Custom Plan Page" data-key="saas_kit_custom_plans" groups="">
+                    <h2>Configuration for Custom Plan Page</h2>
+
+                    <div class="row mt16 o_settings_container" id="custom_plan_config">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="is_odoo_version"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="is_odoo_version" string="Provider Version Selection"/>
+                                <div class="text-muted">
+                                    Provide Odoo version selection feature to customer
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="apps_view" string="Select apps view"/>                                
+                                <div class="text-muted">
+                                </div>
+                                <div class="mt8">
+                                    <field name="apps_view" class="o_light_label" widget="radio" required="True"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                            </div>
+                            <div class="o_setting_right_pane oe_inline">
+                                <div class="content-group" >
+                                    <div class="row">
+                                        <label for="addons_path" class="col-md-3 o_light_label"/>
+                                        <field name="addons_path" required="1"/>
+                                    </div>
+                                </div>  
+                                <div class="text-muted">
+                                    This Path should exist on every Saas Server.
+                                </div>  
+                            </div>
+                        </div>
+
+
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="is_users"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="is_users" string="Provider User Selection"/>
+                                <div class="text-muted">
+                                   Provide user selection feature to customer
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('is_users', '=', False)]}">
+                            <div class="o_setting_left_pane">
+                            </div>
+                            <div class="o_setting_right_pane o_form_label">
+                                <label for="costing_nature" string="Select Nature of Apps Costing"/>                                
+                                <div class="text-muted">
+                                </div>
+                                <div class="mt8">
+                                    <field name="costing_nature" class="o_light_label" widget="radio" required="True"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('is_users', '=', False)]}">
+                            <div class="o_setting_left_pane">
+                            </div>
+                            <div class="o_setting_right_pane oe_inline">
+                                <div class="content-group">
+                                    <div class="row">
+                                        <label for="max_users" class="col-md-3 o_light_label"/>
+                                        <field name="max_users"/>
+                                        <div class="text-muted">
+                                            Limit to purchase users, -1 shows customer can purchase unlimited users
+                                        </div>
+                                    </div>
+                                </div>    
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('is_users', '=', False)]}">
+                            <div class="o_setting_left_pane">
+                                <field name="is_free_users"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="is_free_users" string="Provider Free Users"/>
+                                <div class="text-muted">
+                                    Enable to provide Free users to your customer
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': ['|', ('is_free_users', '=', False), ('is_users', '=', False)]}">
+                            <div class="o_setting_left_pane">
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <div class="content-group" >
+                                    <div class="row">
+                                        <label for="free_users" class="col-md-3 o_light_label"/>
+                                        <field name="free_users"/>
+                                    </div>
+                                </div>                                    
+                            </div>
+                        </div>
+
+
+                        <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('is_users', '=', False)]}">
+                            <div class="o_setting_left_pane">
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <div class="content-group">
+                                    <div class="row">
+                                        <label for="user_cost" class="col-md-3 o_light_label"/>
+                                        <field name="user_cost"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('is_users', '=', False)]}">
+                            <div class="o_setting_left_pane">
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <div class="content-group">
+                                    <div class="row">
+                                        <label for="due_user_cost" class="col-md-3 o_light_label"/>
+                                        <field name="due_user_cost"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="saas_config_inherit_form" model="ir.ui.view">
+        <field name="name">Saas config Inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="odoo_saas_kit.res_config_settings_inheri_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='saas_kit_config']" position="after">
+                <div class="row mt16 o_settings_container" id="saas_kit_custom_config">
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field class="oe_inline" name="is_reminder_period"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <div>
+                                <label for="is_reminder_period" string="Enable Contract Expiry Reminder"/>                            
+                            </div>
+                            <div class="text-muted">
+                                Click to Enable/Disable Reminders
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('is_reminder_period', '=', False)]}">
+                        <div class="o_setting_left_pane">
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <div>
+                                <label for="reminder_period" string="Expiry Reminders starts before (days)"/>                            
+                                <field class="oe_inline" name="reminder_period" required="1"/>
+                            </div>
+                            <div class="text-muted">
+                                Contract Expiry mails will sent to Customer before mentioned days of contract expiration.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

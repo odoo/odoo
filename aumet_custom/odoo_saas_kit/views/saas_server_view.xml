@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+        <record id="saas_server_tree_view" model="ir.ui.view">
+            <field name="name">saas.server.tree.view</field>
+            <field name="model">saas.server</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="server_type"/>
+                    <field name="host_server"/>
+                    <field name="max_clients"/>
+                    <field name="total_clients"/>
+                    <field name="db_creation_scheme"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="saas_server_form_view" model="ir.ui.view">
+            <field name="name">Saas Server</field>
+            <field name="model">saas.server</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="SaaS Server">
+                    <header>
+                        <button string="Reset to draft" name="reset_to_draft" type="object" class="oe_highlight" attrs="{'invisible':[('state','=','draft')]}"/>
+                        <button string="Confirm" name="set_confirm" type="object" class="oe_highlight" attrs="{'invisible':[('state','!=','validated')]}"/>
+                        <button string="Validate" name="set_validated" type="object" class="oe_highlight" attrs="{'invisible':[('state','!=','draft')]}"/>                    
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_left" style="width: 500px;">
+                            <div class="oe_title" style="width: 390px;">
+                                <label class="oe_edit_only" for="name" string="Name"/>
+                                <h1><field name="name" class="oe_inline"/></h1>
+                            </div>
+                        </div>
+                        <group>
+                            <group string="SaaS Server Settings">
+                                <field name="server_type"/>
+                                <field name="host_server" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <field name="server_domain" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <field name="max_clients"/>
+                                <field name="total_clients"/>
+                            </group>
+
+                            <group string="Database Server Details">
+                                <!-- <field name="db_server" attrs="{'readonly':[('state','=','confirm')]}"/> -->
+                                <field name="db_host" required="1" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <field name="db_port" required="1" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <field name="db_user" password="1" required="1" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <label for="db_pass"/>
+                                <div>
+                                    <field name="db_pass" password="1" required="1" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                    <br/>
+                                    <button string="Test Connection" name="test_db_connection" type="object" class="oe_highlight"/>
+                                </div>
+                            </group>
+
+                            <group string="SSH Details" attrs="{'invisible':[('host_server','=','self')]}">
+                                <field name="sftp_host" attrs="{'required':[('host_server','=','remote')], 'readonly':[('state','=','confirm')]}"/>
+                                <field name="sftp_port" attrs="{'required':[('host_server','=','remote')], 'readonly':[('state','=','confirm')]}"/>
+                                <field name="sftp_user" password="1" attrs="{'required':[('host_server','=','remote')], 'readonly':[('state','=','confirm')]}"/>
+                                <label for="sftp_password"/>
+                                <div>
+                                    <field name="sftp_password" password="1" attrs="{'required':[('host_server','=','remote')], 'readonly':[('state','=','confirm')]}"/>
+                                    <br/>
+                                    <button string="Test Connection" name="test_host_connection" type="object" class="oe_highlight"/>
+                                </div>
+                            </group>
+                        </group>
+                    </sheet>
+                    
+                </form>
+            </field>
+        </record>
+
+        <record id="saas_server_action" model="ir.actions.act_window">
+            <field name="name">SaaS Server</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">saas.server</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="saas_server_tree_view" />
+        </record>
+    </data>
+</odoo>

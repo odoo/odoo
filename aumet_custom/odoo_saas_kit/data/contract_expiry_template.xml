@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data noupdate='1'>
+        <record id="odoo_saas_kit.contract_expiry_template" model="mail.template">
+            <field name="name">SaaS Contract Expiry Reminder</field>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="subject">${object.company_id.name} Contract (Ref ${object.name or 'n/a' })</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="model_id" ref="odoo_saas_kit.model_saas_contract"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+                <p>Dear ${object.partner_id.name}
+                % set access_url = object.get_subdomain_url() or ''
+                % set access_name = 'Create Your Domain Name'
+
+                % if object.partner_id.parent_id:
+                    (<i>${object.partner_id.parent_id.name}</i>)
+                % endif
+                ,</p>
+                
+                <p>We want to inform you that your Plan subscription for ${object.plan_id.name} is expired.</p>
+
+                <p>
+                    Please extend your contarct to continue services of plan. You can buy any number of cycles for the plan.
+                </p>                
+                <p>
+                    Please buy the subscription before ending of your plan's instance.
+                </p>
+                <p>
+                    Commencement Date: ${object.start_date}<br/>
+                    Expiry Date: ${object.next_invoice_date}<br/>
+                </p>
+                <p>
+                    If you have any queries or issues, please contact our support team.
+                </p>
+
+                <br/><br/>
+                <br/>
+
+                <p>Thank you,</p>
+
+                <p style="color:#888888;">
+                % if object.user_id and object.user_id.signature:
+                    ${object.user_id.signature | safe}
+                % endif
+                </p>
+                ]]></field>
+        </record>
+    </data>
+</odoo>

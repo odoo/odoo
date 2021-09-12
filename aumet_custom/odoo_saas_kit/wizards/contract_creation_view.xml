@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+        <record id="contract_creation_wizard_view" model="ir.ui.view">
+            <field name="name">contract.creation.wizard</field>
+            <field name="model">saas.contract.creation</field>
+            <field name="arch" type="xml">
+                <form string="Contract Creation">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="per_user_pricing" invisible='True'/>
+                                <label for="recurring_interval"/>
+                                <div>
+                                    <span class="oe_inline">
+                                        Repeat Every
+                                    </span>
+                                    <field name="recurring_interval"
+                                        class="oe_inline"
+                                        required="True"
+                                        />
+                                    <field name="recurring_rule_type"
+                                        class="oe_inline"
+                                        required="True"
+                                        />
+                                </div>
+                                <label for="contract_rate" />
+                                <div>
+                                    <field class="oe_inline" name="contract_rate" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" force_save="1"/><span class="oe_inline"> Per Cycle</span>
+                                </div>
+                                <label for="user_cost" attrs="{'invisible':[('per_user_pricing','=', False)]}"/>
+                                <div attrs="{'invisible':[('per_user_pricing','=', False)]}">
+                                    <field class="oe_inline" name="user_cost" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" force_save="1"/><span class="oe_inline"> PUPC</span>
+                                </div>
+                                <label for="saas_users" attrs="{'invisible':[('per_user_pricing','=', False)]}"/>
+                                <div attrs="{'invisible':[('per_user_pricing','=', False)]}">
+                                    <field class="oe_inline" name="saas_users" attrs="{'invisible':[('per_user_pricing','=', False)], 'required': [('per_user_pricing', '=', True)]}" force_save="1"/><span class="oe_inline"> In Range </span><field class="oe_inline" name="min_users" readonly="1" force_save="1"/><span class="oe_inline"> - </span><field class="oe_inline" name="max_users" readonly="1" force_save="1"/>
+                                </div>
+                                <field name="total_cycles" string="Purchase Cycles" required="1" force_save="1"/>
+                                <label for="due_users_price" attrs="{'invisible': ['|', ('per_user_pricing', '=', False), ('recurring_interval', '=', 1)]}"/>
+                                <div>
+                                    <field class="oe_inline" name="due_users_price" attrs="{'invisible': ['|', ('per_user_pricing', '=', False), ('recurring_interval', '=', 1)]}" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" string="Due User Price" /><span class="oe_inline" attrs="{'invisible': ['|', ('per_user_pricing', '=', False), ('recurring_interval', '=', 1)]}"> Per Month</span>
+
+                                </div>
+                                <field name="trial_period" required="1"/>
+                            </group>
+                            <group>
+                                <field name="plan_id" readonly="1" required="1"/>
+                                <field name="partner_id"/>
+                                <field name="invoice_product_id" options="{'no_create': True, 'no_create_edit':True}"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="start_date"/>
+                                <field name="auto_create_invoice"/>
+                                <label for="contract_price" />
+                                <div>
+                                    <div>
+                                        <span class="oe_inline">(Contract Rate)</span><span class="oe_inline"> * </span><span class="oe_inline">(Purchase Cycles)</span><br/>
+                                    </div>
+                                    <div>
+                                        <field class="oe_inline" name="contract_rate" readonly="1" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/><span class="oe_inline"> * </span><field class="oe_inline" name="total_cycles" readonly="1" /><span class="oe_inline"> = </span><field class="oe_inline" readonly="1" name="contract_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                    </div>
+                                </div>
+                                <label for="user_billing" attrs="{'invisible':[('per_user_pricing','=', False)]}"/>
+                                <div attrs="{'invisible':[('per_user_pricing','=', False)]}">
+                                    <div>
+                                        <span class="oe_inline">(No. of users)</span><span class="oe_inline"> * </span><span class="oe_inline">(Per user cost)</span><span class="oe_inline"> * </span><span class="oe_inline">(Purchase Cycles)</span>
+                                    </div>
+                                    <div> 
+                                        <field class="oe_inline" name="saas_users" readonly="1"/><span class="oe_inline"> * </span><field class="oe_inline" name="user_cost" readonly="1" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/><span class="oe_inline"> * </span><field class="oe_inline" name="total_cycles" readonly="1" force_save="1"/><span class="oe_inline"> = </span><field class="oe_inline" readonly="1" name="user_billing" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" force_save="1"/>
+                                    </div>
+                                </div>
+                                <label for="total_cost" />
+                                <div>
+                                    <div>
+                                        <span class="oe_inline">(Contract Price)</span><span attrs="{'invisible':[('per_user_pricing','=', False)]}" class="oe_inline"> + </span><span attrs="{'invisible':[('per_user_pricing','=', False)]}" class="oe_inline">(User Billing)</span>
+                                    </div>
+                                    <div>
+                                        <field class="oe_inline" name="contract_price" readonly='1' widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" force_save="1"/><span attrs="{'invisible':[('per_user_pricing','=', False)]}" class="oe_inline"> + </span><field class="oe_inline" name="user_billing" attrs="{'invisible':[('per_user_pricing','=', False)]}" readonly="1" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"  force_save="1"/><span attrs="{'invisible':[('per_user_pricing','=', False)]}" class="oe_inline"> = </span><field attrs="{'invisible':[('per_user_pricing','=', False)]}" class="oe_inline" readonly="1" name="total_cost" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"  force_save="1"/>
+                                    </div>
+                                </div>
+                                <field name="contract_rate" invisible="1" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                <field name="saas_users" invisible="1" />
+                                <field name="user_cost" invisible="1" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                <field name="total_cycles" invisible="1"/>
+                                <field name="user_billing" invisible="1" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                <field name="min_users" invisible="1"/>
+                                <field name="max_users" invisible="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string='Create' name="action_create_contract" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard_contract_creation" model="ir.actions.act_window">
+            <field name="name">SaaS Contract Creation</field>
+            <field name="res_model">saas.contract.creation</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="contract_creation_wizard_view"/>
+            <field name="context">{'default_plan_id': active_id}</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

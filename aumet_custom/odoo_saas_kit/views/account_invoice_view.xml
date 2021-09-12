@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <record id="invoice_form_inherit" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='fiscal_position_id']" position="after">
+                <field name="contract_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- <record id="invoice_supplier_tree_inherit" model="ir.ui.view">
+        <field name="name">account.invoice.supplier.tree.inherit</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='residual_signed']" position="after">
+                <field name="contract_id"/>
+            </xpath>
+        </field>
+    </record> -->
+
+    <!-- <record id="saas_account_invoice_search_view" model="ir.ui.view">
+        <field name="name">saas.invoices.search</field>
+        <field name="model">account.invoice</field>
+        <field name="arch" type="xml">
+            <search string="SaaS Invoices">
+                <field name="contract_id" filter_domain="[('contract_id', '=', raw_value)]"/>
+                <separator/>
+            </search>
+        </field>
+    </record> -->
+</odoo>

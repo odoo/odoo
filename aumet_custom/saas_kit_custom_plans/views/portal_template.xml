@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <template id="portal_contract_page_inherit_template" inherit_id="odoo_saas_kit.portal_contract_page">
+        <xpath expr="//t/div[hasclass('container')]/div[hasclass('panel')]/div[hasclass('panel-heading')]/div[hasclass('row')]/div[hasclass('justify-content-end')]/div/div[hasclass('card')]/div[hasclass('col-12')]/section/h3" position="after">
+            <t t-if="contract.is_custom_plan">
+                <h5 class="text-right">
+                    <a href="#" class="text-center" id="modal_for_apps"><strong>ADD APPS</strong></a>
+                </h5>
+                
+                <div class="modal fade" id="add_apps" >
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content" style="overflow: scroll;">
+                            <div class="modal-header" style="margin-top:1%;">
+                                <h4 class="modal-title">Add Desired apps to you Contracts
+                                </h4>
+                            </div>
+                            <section style="page-break-inside: auto;" class="mt32">
+                                <div class="dd_container_row container-fluid row" style="padding:2%;">
+                                <div class="d-flex align-content-start flex-wrap">                                
+                                    <t t-foreach="contract.update_saas_module_ids" t-as="app">
+                                        <div class="col-md-4 col-sm-12" style="height: 80px; margin-bottom: 2%;">
+                                            <div style="border-radius: 10px;border: 1px solid #E0E0E0;" class="oe-padded h-100 ml">
+                                                <div class="d-flex" style="margin: 2%;">
+                                                    <div style="width: 10%;">
+                                                        <div class="d-flex justify-content-center align-items-center" style="margin-top:22px;">
+                                                            <input type="checkbox" class="check_app"/>
+                                                        </div>
+                                                    </div>
+                                                    <div style="width: 90%;" class="product_div">
+                                                        <div style="margin-left: 4%;" class="product_name" t-att-data-value="app.technical_name">
+                                                            <span style="font-family: Montserrat;font-style: normal;font-weight: normal;font-size: 15px;line-height: 22px;color: #333333;"><b><t t-esc="app.name[0:15]" /></b></span>
+                                                        </div>
+                                                        <div style="margin-left: 4%;" >
+                                                            <span style="font-family: Montserrat;font-style: normal;font-weight: normal;font-size: 13px;line-height: 22px;color: #333333;">Category: <t t-esc="app.categ_id.name and app.categ_id.name[:8]" /></span>
+                                                        </div>
+                                                        <div style="margin-left: 4%;" class="product_price">
+                                                            <span style="font-family: Montserrat;font-style: normal;font-weight: normal;font-size: 13px;line-height: 22px;color: #333333;"><b><span class="price" style="white-space: nowrap;"><t t-esc="app.price" /> <span itemprop="priceCurrency" t-esc="contract.currency_id.name"/></span><t t-if="is_users"><t t-if="costing_nature == 'per_user'"> /per user</t><t t-else=""> /per month</t></t><t t-else=""><t t-if="is_fixed_users  and costing_nature == 'per_user'"> /per user</t><t t-else=""> /per month</t></t></b></span>
+                                                        </div>
+                                                    </div>
+                                                    <div style="width: 30%;">
+                                                        <div class="d-flex justify-content-center align-items-center" style="margin-top:2%;">
+                                                            <span t-field="app.image" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}" style="height: 50px; border-radius: 10px;"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                                </div>
+                            </section>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn" style="background-color:#304FE0; color: #FFFFFF !important;" id="add_apps_submit" t-att-value="contract.id">Add</button>
+                                <button type="button" class="btn mr-auto" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+
+        <xpath expr="//t/div[hasclass('container')]/div[hasclass('panel')]/div[hasclass('panel-heading')]/div[hasclass('row')]/div[hasclass('justify-content-end')]/div/div[hasclass('card')]/div[hasclass('col-12')]/section/table/thead/tr/th[3]" position="after">
+            <th class="text-right">
+                Status
+            </th>
+        </xpath>
+
+        <xpath expr="//t/div[hasclass('container')]/div[hasclass('panel')]/div[hasclass('panel-heading')]/div[hasclass('row')]/div[hasclass('justify-content-end')]/div/div[hasclass('card')]/div[hasclass('col-12')]/section/table/tbody/t/tr/th[3]" position="after">
+            <t t-set="status">to_be_installed</t>
+            <t t-foreach="contract.saas_client.saas_module_ids" t-as="client_module">
+                <t t-if="client_module.technical_name == module.technical_name">
+                    <t t-set="status" t-value="client_module.status" />                
+                </t>
+            </t>
+            <th class="text-right">
+                <span><t t-esc="status" /></span>
+            </th>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+        <record id="contract_from_inherit_view" model="ir.ui.view">
+            <field name="name">Contract Inherit</field>
+            <field name="model">saas.contract</field>
+            <field name="inherit_id" ref="odoo_saas_kit.saas_contract_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='cancel_contract']" position="before">
+                    <field name="sync_required" invisible="1" />
+                    <button name="sync_modules" string="Sync Modules" type="object" class="oe_highlight" icon="fa-refresh" attrs="{'invisible': ['|', ('sync_required', '=', False), ('saas_client', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

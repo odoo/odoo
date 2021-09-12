@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+        <record id="saas_client_action" model="ir.actions.act_window">
+            <field name="name">SaaS Clients</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">saas.client</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    
+        <record id="saas_client_tree_view" model="ir.ui.view">
+            <field name="name">SaaS Clients</field>
+            <field name="model">saas.client</field>
+            <field name="arch" type="xml">
+                <tree string="Clients" create="false">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="saas_contract_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="saas_client_form_view" model="ir.ui.view">
+            <field name="name">SaaS Clients</field>
+            <field name="model">saas.client</field>
+            <field name="arch" type="xml">
+                <form string="Clients" create="false">
+                    <header>
+                        <button string="Login" name="login_to_client_instance" type="object" icon="fa-sign-in" class="oe_highlight" attrs="{'invisible':[('state','!=','started')]}"/>
+
+                        <button string="Start" name="start_client" type="object" icon="fa-play-circle" class="oe_highlight" attrs="{'invisible':[('state','!=','stopped')]}"/>
+
+                        <button string="Restart" name="restart_client" type="object" icon="fa-refresh" class="oe_highlight" attrs="{'invisible':[('state','!=','started')]}"/>
+
+                        <button string="Stop" name="stop_client" type="object" icon="fa-stop-circle" class="oe_highlight" attrs="{'invisible':[('state','!=','started')]}"/>
+
+                        <button string="Create Client Instance" name="fetch_client_url" type="object" icon="fa-play" class="oe_highlight" attrs="{'invisible':['|', ('client_url','!=',False), ('state', '=', 'cancel')]}"/>
+                        
+                        <button string="Drop DB" name="odoo_saas_kit.action_drop_db_wizard" type="action" icon="fa-trash" class="oe_highlight" attrs="{'invisible':['|', ('state', '!=', 'inactive'), ('is_drop_db', '=', True)]}"/>
+                        
+                        <button string="Drop Container" name="odoo_saas_kit.action_drop_container_wizard" type="action" icon="fa-trash" class="oe_highlight" attrs="{'invisible':['|', ('state', '!=', 'inactive'), ('is_drop_container', '=', True)]}"/>
+                        
+                        <button string="Inactive Client" name="odoo_saas_kit.action_client_inactive_wizard_client" type="action" icon="fa-ban" class="oe_highlight" attrs="{'invisible':[('state', '!=', 'draft'), ('state', '!=', 'stopped')]}"/>
+
+                        <button string="Cancel" name="cancel_client" type="object" attrs="{'invisible':['|', ('state', '=', 'cancel'), ('state', '=', 'started')]}"/>
+
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_left" style="width: 500px;">
+                            <div class="oe_title" style="width: 390px;">
+                                <label class="oe_edit_only" for="name" string="Name"/>
+                                <h1><field name="name" class="oe_inline" readonly="1"/></h1>
+                            </div>
+                        </div>
+                        <group name="group_main">
+                            <group name="group_main_left">
+                                <field name="is_drop_db" invisible='1' />
+                                <field name="is_drop_container" invisible='1' />
+                                <field name="partner_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="database_name" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="saas_contract_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            </group>
+                            <group name="group_main_right">
+                                <field name="client_url" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="data_directory_path" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="addons_path"/>
+                                <field name="server_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="SaaS Modules">
+                                <field name="saas_module_ids" string="Related Modules" editable="bottom">
+                                    <tree string="Related Modules" decoration-danger="status=='uninstalled'" create="false">
+                                        <field name="client_id" invisible="1"/>
+                                        <field name="module_id"/>
+                                        <field name="technical_name"/>
+                                        <field name="status"/>
+                                    </tree>
+                                    <form string="SaaS Modules">
+                                        <group>
+                                            <group>
+                                                <field name="module_id" readonly="1"/>
+                                                <field name="technical_name" readonly="1"/>
+                                            </group>
+                                            <group>
+                                                <field name="status"/>
+                                                <div>
+                                                    <button string="Install" name="install_module" type="object" class="btn btn-primary" style="margin: 2px;" attrs="{'invisible': [('status', '!=', 'uninstalled')]}"/>
+                                                </div>
+                                            </group>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Container Details" attrs="{'invisible': [('client_url', '=', False)]}">
+                                <group>
+                                    <group>
+                                        <field name="container_id" readonly="1" invisible="1"/>
+                                        <field name="container_name" readonly="1"/>
+                                        <field name="containter_port" readonly="1"/>
+                                        <field name="containter_path" readonly="1"/>
+                                    </group>
+                                    <group></group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

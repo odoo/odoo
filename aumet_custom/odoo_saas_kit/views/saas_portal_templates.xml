@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <!-- <template id="portal_my_home_menu_saas" name="Portal layout : saas menu entries" inherit_id="portal.portal_layout" priority="20">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'contract' or saas_contract">
+                <a t-if="saas_contract" t-attf-href="/my/saas/contracts?{{ keep_query() }}">Contracts</a>
+                <t t-else="">Contracts</t>
+            </li>
+            <li t-if="saas_contract">
+                <t t-esc="saas_contract.name"/>
+            </li>
+        </xpath>
+    </template> -->
+
+
+    <template id="portal_my_home_menu_saas" name="Portal layout : saas menu entries" inherit_id="portal.portal_breadcrumbs" priority="20">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'contract' or saas_contract" t-attf-class="breadcrumb-item #{'active ' if not saas_contract else ''}">
+                <a t-if="saas_contract" t-attf-href="/my/saas/contracts?{{ keep_query() }}">Contracts</a>
+                <t t-else="">Contracts</t>
+            </li>
+
+            <li t-if="saas_contract" class="breadcrumb-item active">
+                <t t-esc="saas_contract.name"/>
+            </li>
+        </xpath>
+
+
+        <!-- <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'contract' or saas_contract">
+                <a t-if="saas_contract" t-attf-href="/my/saas/contracts?{{ keep_query() }}">Contracts</a>
+                <t t-else="">Contracts</t>
+            </li>
+            <li t-if="saas_contract">
+                <t t-esc="saas_contract.name"/>
+            </li>
+        </xpath> -->
+    </template>
+
+    <template id="portal_my_home_saas" name="Portal My Home : SaaS Contracts" inherit_id="portal.portal_my_home"
+        priority="20">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-if="saas_contract_count" t-call="portal.portal_docs_entry">
+                <t t-set="title">SaaS Contracts</t>
+                <t t-set="url" t-value="'/my/saas/contracts'"/>
+                <t t-set="count" t-value="saas_contract_count"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_saas_contracts" name="My Contracts">
+        <t t-call="portal.portal_layout">
+
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-set="contract_state" t-value="{'draft': 'Pending', 'open': 'Open', 'confirm': 'Confirmed', 'cancel': 'Cancelled', 'inactive': 'Inactive'}"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">SaaS Contracts</t>
+            </t>
+
+            <t t-if="not contracts">
+                <p>There are currently no SaaS Contracts for your account.</p>
+            </t>
+            <t t-if="contracts" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Contract #</th>
+                        <th>Purchase Date</th>
+                        <th>Next Invoice Date</th>
+                        <th>Contract Cost</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <t t-foreach="contracts" t-as="contract">
+                    <tr>
+                        <td>
+                            <a t-attf-href="/my/saas/contract/#{contract.id}?access_token=#{contract.token}#{keep_query()}">
+                                <t t-esc="contract.name" /></a>
+                        </td>
+                        <td><span t-field="contract.start_date" /></td>
+                        <td><span t-field="contract.next_invoice_date" /></td>
+                        <td><span t-field="contract.total_cost"
+                                t-options='{"widget": "monetary", "display_currency": contract.currency_id}' />
+                        </td>
+                        <td>
+                            <t t-esc="contract and contract_state[contract.state] or 'Waiting'"/>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_contract_error" name="Contract error/warning display">
+        <div class="row mr16">
+            <div t-attf-class="'col-md-12 mr16 ml16 alert alert-dismissable' #{'alert-danger' if error else 'alert-warning'}">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+                <t t-if="error == 'generic'" name="generic">
+                    There was an error processing this page.
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_contract_success" name="Contract success display">
+        <div class="row mr16">
+            <div class="col-md-12 mr16 ml16 alert alert-dismissable alert-success">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_contract_page" name="SaaS Contract">
+
+
+        <t t-call="portal.portal_layout">
+            <t t-set="saas_contract" t-value="contract" />
+            <t t-set="invoices" t-value="[i for i in contract.invoice_ids if i.state not in ['draft', 'cancel']]" />
+            <t t-set="invoices_amount" t-value="sum(i.amount_total for i in invoices)" />
+            <t t-set="server_type" t-value="{'containerized': 'Containerized Instance', 'same_odoo_server': 'Current Odoo Server', 'different_odoo_server': 'Different Odoo Server'}"/>
+            <div id="optional_placeholder"></div>
+            <span id="contract_id" t-att-value="contract.id"></span>
+            <div class="container mb64">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row mt16">
+                            <div class="col-lg-auto d-print-none" style="height:40%;">
+                                <t t-call='portal.portal_record_sidebar' >
+                                    <t t-if="contract.state == 'cancel'">
+                                        <t t-set="title">
+                                            <span><i class="fa fa-fw fa-check" />Cancel</span>
+                                        </t>
+                                    </t>
+                                    <t t-if="contract.state == 'open'">
+                                        <t t-set="title">
+                                            <span><i class="fa fa-fw fa-check" />Open</span>
+                                        </t>
+                                    </t>
+                                    <t t-if="contract.state == 'confirm'">
+                                        <t t-set="title">
+                                            <h2 class="mb0">
+                                                <span class="label label-success"><i class="fa fa-fw fa-check" />Confirmed</span>
+                                            </h2>
+                                        </t>
+                                    </t>
+                                    <t t-set="entries">
+                                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                                            <li class="list-group-item flex-grow-1">
+                                                <t t-if="contract.state == 'open' and not contract.saas_client.client_url">
+                                                    <p class="ml8 pull-right" style="margin-top: 10px;background: #337ab6;color: white;padding: 2px 5px;border-radius: 3px;">
+                                                        <i class="fa fa-arrow-circle-right"></i> Approval Pending.
+                                                    </p>
+                                                </t>
+                                                <t t-if="contract.state == 'open' and contract.saas_client.client_url">
+                                                    <p class="ml8 pull-right" style="margin-top: 10px;background: #337ab6;color: white;padding: 2px 5px;border-radius: 3px;">
+                                                        <i class="fa fa-arrow-circle-right"></i> You will soon receive your instance details on your registered email.
+                                                    </p>
+                                                </t>
+                                                <t t-if="contract.state == 'confirm' and contract.saas_client.client_url">
+                                                    <a class="btn btn-primary btn-block mb8" t-attf-title="Instance details sent to #{contract.partner_id.email}" t-att-href="contract.saas_client.client_url" target="_blank">
+                                                        <i class="fa fa-check-circle" /> Login
+                                                    </a>
+                                                </t>
+                                                <t t-if="contract.state == 'draft' and not contract.domain_name">
+                                                    <button type="button" class="btn btn-primary get_subdomain_email pull-right">Get Subdomain Email</button>
+                                                </t>
+                                            </li>
+                                            <li t-if="contract.company_id.partner_id" class="list-group-item flex-grow-1">
+                                                <div class="small mb-1"><strong class="text-muted">Salesperson</strong></div>
+                                                <div class="row flex-nowrap">
+                                                    <div class="col flex-grow-0 pr-2">
+                                                        <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="contract.company_id.partner_id.image_1024" t-att-src="image_data_uri(contract.company_id.partner_id.image_1024)" alt="Contact"/>
+                                                    </div>
+                                                    <div class="col pl-0" style="min-width: 150px">
+                                                        <span t-field="contract.company_id.partner_id" t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}' style="font-size:10px;    "/>
+                                                        <a href="#discussion" class="small"><i class="fa fa-comment"></i> Send message</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </t>
+                                </t>
+                            </div>
+                            <div class="col-12 col-lg justify-content-end">
+                                <div>
+                                    <div class="card " t-attf-class="card pb-5 #{'card-body bg-white' if report_type == 'html' else ''}">
+                                        <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
+                                        <div>
+                                            <div id="introduction" t-attf-class="pb-2 pt-3 card-header bg-white">
+                                                <h2 class=" my-0">
+                                                    <t t-esc="contract.name"/>
+                                                </h2>
+                                            </div>
+                                        </div>
+                                        <t t-if="error or warning" t-call="odoo_saas_kit.portal_contract_error" />
+                                        <t t-if="success and (not error and not warning)" t-call="odoo_saas_kit.portal_contract_success" />
+                                        <div class="mb-3 col-6" style="margin-top:2%;">
+                                            <strong>Purchase Date:</strong> <span t-field="contract.start_date" t-options='{"widget": "date"}' />
+                                        </div>
+                                        <div class="mb-3 col-6">
+                                            <strong>Next Invoice Date:</strong> <span t-field="contract.next_invoice_date"
+                                                t-options='{"widget": "date"}' />
+                                        </div>
+                                        <div class='row m-0'>
+                                            <div class="col-6 mb-0">
+                                                <div>
+                                                    <strong>Invoicing Address</strong>
+                                                </div>
+                                                <div>
+                                                    <address t-field="contract.partner_id"
+                                                        t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                                                </div>
+                                                <t t-if="invoices">
+                                                    <div>
+                                                        <strong>Invoices</strong>
+                                                    </div>
+                                                    <div>
+                                                        <t t-foreach="invoices" t-as="i">
+                                                            <t t-set="report_url"
+                                                                t-value="'/my/invoices/%s?%s' % (i.id, 'access_token=%s' % i.access_token if access_token else '')" />
+                                                            <div>
+                                                                <a t-att-href="report_url"><span class="fa fa-download" /></a>
+                                                                <a t-att-href="report_url"><span t-esc="i.name" /></a>
+                                                                <span class="text-muted" t-field="i.date" />
+                                                                <t t-if="i.state == 'paid'">
+                                                                    <span class="label label-success orders_label_text_align"><i
+                                                                            class="fa fa-fw fa-check" /> Paid</span>
+                                                                </t>
+                                                                <t t-if="i.state != 'paid'">
+                                                                    <span class="label label-info orders_label_text_align"><i
+                                                                            class="fa fa-fw fa-clock-o" /> Waiting</span>
+                                                                </t>
+                                                            </div>
+                                                        </t>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                            <div id="contract_details" class="col-6 mb-0">
+                                                <strong>Contract Cost:</strong> <span t-field="contract.total_cost" t-options='{"widget": "monetary", "display_currency": contract.currency_id}'/><br/>
+                                                <strong>Remaining Cycles:</strong> <span t-field="contract.remaining_cycles"/>/<span t-field="contract.total_cycles"/><br/>
+                                                <strong>SaaS Server:</strong> <span t-esc="contract.server_id and server_type[contract.server_id.server_type] or '--'"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <section style="page-break-inside: auto;" class="mt32">
+                                                <h3 id="details">Details</h3>
+                                                <table class="table table-sm" id="sales_order_table">
+                                                    <thead class="bg-100">
+                                                        <!-- <div class="row m-0"> -->
+                                                        <tr>
+                                                            <th class="text-left">
+                                                                Module
+                                                            </th>
+                                                            <th class="text-center">
+                                                                Technical Name
+                                                            </th>
+                                                            <th class="text-right">
+                                                                Category
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <t t-foreach="contract.saas_module_ids" t-as="module">
+                                                            <tr>
+                                                                <th id='module_name' class="text-left">
+                                                                    <span t-if="not request.env.user._is_public()">
+                                                                    <span t-field="module.image" t-options="{'widget': 'image', 'class': 'img-rounded', 'style':'width: 48px;height:48px'}"/>
+                                                                    </span><span t-esc="module.name" />
+                                                                </th>
+                                                                <th class="text-center">
+                                                                    <span t-field="module.technical_name"/>
+                                                                </th>
+                                                                <th class="text-right">
+                                                                    <span t-esc="module.categ_id and module.categ_id.name or '--'"/>
+                                                                </th>
+                                                            </tr>
+                                                        </t>
+                                                    </tbody>
+                                                </table>
+                                            </section>
+                                        </div>
+                                        <hr />
+                                        <div class="row m-0">
+                                            <div class="col-md-8">
+                                                <div>
+                                                    <strong>Contact</strong>
+                                                </div>
+                                                <div t-field="contract.company_id.partner_id"
+                                                    t-options='{"widget": "contact", "fields": ["email", "phone"]}' />
+                                                <br/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="row m-0">
+                                            <div class="col-11 w-100">
+                                                <div id="contract_communication" class="mt-4 w-100">
+                                                    <h2>Communication</h2>
+                                                    <t t-call="portal.message_thread">
+                                                        <t t-set="object" t-value="contract"/>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure mb32" />
+        </t>
+
+    </template>
+</odoo>

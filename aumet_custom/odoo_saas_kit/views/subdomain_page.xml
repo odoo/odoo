@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <template id="subdomain_page">
+        <t t-call="portal.portal_layout">
+            <t t-set="title">SaaS Domain</t>
+            <br/>
+            <h3>Choose Your Domain Name</h3>
+            <p>Choose a desired subdomain name for your SaaS instance.</p>
+            <p>Check its availibility and confirm.</p>
+
+            <form class="col-md-6 col-md-offset-3">
+                
+                <span id="contract_id" t-att-value="contract_id"></span>
+
+                <div class="input-group">
+                    <input id="subdomain_name" type="text" class="form-control" name="msg" placeholder="Subdomain name"/>
+                    <div class="input-group-addon">
+                        <span id="domain_name" class="input-group-text">.<t t-esc="base_url"/></span>
+                    </div>
+                </div>
+                <br/>
+                <button type="button" class="btn btn-primary confirm_domain">Confirm</button>
+                <span id="taken_warning" style="color: #ff0000; margin-left: 25px; display:none">Domain already taken. Plese enter some other domain name.</span>
+                <a id="status_link" style="display:none;" t-attf-href="/my/saas/contract/#{contract_id}">Click here to check the status of your contract</a>
+                <span id="taken_warning" style="color: #ff0000; margin-left: 25px; display:none">Domain already taken. Plese enter some other domain name.</span>
+            </form>
+        </t>
+    </template>
+    <template id="redirect_page">
+        <t t-call="portal.portal_layout">
+            <div class="text-center">
+                <br/>
+                <h3>Your Instance is Successfully Created</h3>
+                <p>We have sent you an E-Mail having url to reset password of your Instance. Kindly visit the url and reset your password.</p>
+                <p>If you did not received E-mail please go to your Account and post a message on the relative Contract.</p>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+        <record id="module_install_cron" model="ir.cron">
+            <field name="name">Module Installation Cron</field>
+            <field name="model_id" ref="model_saas_client" />
+            <field name="state">code</field>
+            <field name="code">model.module_installation_crone_action()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+    </data>
+</odoo>

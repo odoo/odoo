@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+        <record id="saas_client_inherit_form" model="ir.ui.view">
+            <field name="name">Saas Client</field>
+            <field name="model">saas.client</field>
+            <field name="inherit_id" ref="odoo_saas_kit.saas_client_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='cancel_client']" position="after">
+                    <field name="missed_modules" invisible="1" />
+                    <button string="Install Modules" name="install_modules" type="object" attrs="{'invisible': [('missed_modules', '=', False)]}" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

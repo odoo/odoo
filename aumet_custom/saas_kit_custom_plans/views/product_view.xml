@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+        <record id="saas_module_product__inherit_view_form" model="ir.ui.view">
+            <field name="name">Product Inherit Form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="odoo_saas_kit.product_normal_form_view_inherit" />
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='type']" position="after">
+                    <field name="is_saas_module" string="Is Saas Module" attrs="{'invisible': ['|', ('saas_plan_id', '!=', False), ('is_user_pricing', '=', True)]}" />
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

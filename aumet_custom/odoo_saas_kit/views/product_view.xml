@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+        <record id="product_template_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.template.common.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page name="saas_page" string="SaaS" attrs="{'invisible':[('type','!=','service')]}">
+                        <group string="Link this product to a SaaS Plan here.">
+                            <group>
+                                <field name="saas_plan_id"/>
+                            </group>
+                            <group></group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_normal_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.product.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@name='saas_page']" position="replace">
+                    <page string="SaaS" attrs="{'invisible':['|', ('type','!=','service'), ('is_user_pricing', '=', True)]}">
+                        <group string="Link this product to a SaaS Plan here.">
+                            <group>
+                                <field name="saas_plan_id" readonly="1"/>
+                                <field name="recurring_interval"/>
+                                <field name="per_user_pricing" />
+                                <label for="user_cost" attrs="{'invisible': [('per_user_pricing', '=', False)]}" />
+                                <div attrs="{'invisible': [('per_user_pricing', '=', False)]}">
+                                    <field class="oe_inline" name="user_cost"/><span class="oe_inline"> PUPC</span>
+                                </div>
+                            </group>
+                            <group></group>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='type']" position="after">
+                    <field name="is_user_pricing" string="User pricing" attrs="{'invisible': [('saas_plan_id', '!=', False)]}" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

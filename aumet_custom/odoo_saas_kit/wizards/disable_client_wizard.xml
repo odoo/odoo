@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+        <record id="client_inactive_wizard_view_client" model="ir.ui.view">
+            <field name="name">client.inactive.wizard</field>
+            <field name="model">saas.instance.inactive</field>
+            <field name="arch" type="xml">
+                <form>
+                    Are you sure you want to Inactive Client? It will stop the client instance for always!
+                    <footer>
+                        <button string='Yes' name="inactive_client" type="object" class="btn-primary"/>
+                        <button string="No" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="contract_hold_wizard_view" model="ir.ui.view">
+            <field name="name">contract.inactive.wizard</field>
+            <field name="model">saas.instance.inactive</field>
+            <field name="arch" type="xml">
+                <form>
+                    Are you sure you want to Put the contract on Hold?<br/>
+                    Hold contract will stop the related client.
+                    <footer>
+                        <button string='Yes' name="hold_contract" type="object" class="btn-primary"/>
+                        <button string="No" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="drop_db_wizard_view" model="ir.ui.view">
+            <field name="name">drop_db.wizard</field>
+            <field name="model">saas.instance.inactive</field>
+            <field name="arch" type="xml">
+                <form>
+                    Are you sure you want to Drop Database? It will delete the client's DB Permanentaly! 
+                    <footer>
+                        <button string='Yes' name="drop_db" type="object" class="btn-primary"/>
+                        <button string="No" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="drop_container_wizard_view" model="ir.ui.view">
+            <field name="name">drop_container.wizard</field>
+            <field name="model">saas.instance.inactive</field>
+            <field name="arch" type="xml">
+                <form>
+                    Are you sure you want to Drop Container? It will delete the client's Instance completely!  
+                    <footer>
+                        <button string='Yes' name="drop_container" type="object" class="btn-primary"/>
+                        <button string="No" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_client_inactive_wizard_client" model="ir.actions.act_window">
+            <field name="name">Inactive Clients</field>
+            <field name="res_model">saas.instance.inactive</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="client_inactive_wizard_view_client"/>
+            <field name="context">{'instance_id': active_id}</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_contract_hold_wizard" model="ir.actions.act_window">
+            <field name="name">Hold Contract</field>
+            <field name="res_model">saas.instance.inactive</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="contract_hold_wizard_view"/>
+            <field name="context">{'instance_id': active_id}</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_drop_db_wizard" model="ir.actions.act_window">
+            <field name="name">Drop DB</field>
+            <field name="res_model">saas.instance.inactive</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="drop_db_wizard_view"/>
+            <field name="context">{'instance_id': active_id}</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_drop_container_wizard" model="ir.actions.act_window">
+            <field name="name">Drop Container</field>
+            <field name="res_model">saas.instance.inactive</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="drop_container_wizard_view"/>
+            <field name="context">{'instance_id': active_id}</field>
+            <field name="target">new</field>
+        </record>
+
+
+    </data>
+</odoo>

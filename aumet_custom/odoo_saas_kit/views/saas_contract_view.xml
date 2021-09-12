@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+
+        <record id="action_invoice_all" model="ir.actions.act_window">
+            <field name="name">Contract Invoices</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="saas_contract_action" model="ir.actions.act_window">
+            <field name="name">SaaS Contracts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">saas.contract</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    
+        <record id="saas_contract_tree_view" model="ir.ui.view">
+            <field name="name">SaaS Contracts</field>
+            <field name="model">saas.contract</field>
+            <field name="arch" type="xml">
+                <tree string="Contracts" create="false">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="saas_contract_form_view" model="ir.ui.view">
+            <field name="name">SaaS Contracts</field>
+            <field name="model">saas.contract</field>
+            <field name="arch" type="xml">
+                <form string="Contracts" create="false">
+                    <header>
+
+                        <button string="Create &amp; Confirm Client" name="create_saas_client" type="object" icon="fa-play" class="oe_highlight" attrs="{'invisible':['|', ('saas_client','!=',False), ('state', '=', 'cancel')]}"/>
+
+                        <button string="Confirm And Share Credentials" name="send_credential_email" type="object" icon="fa-check" class="oe_highlight" attrs="{'invisible':['|', ('state','!=','open'), ('state', '=', 'cancel')]}"/>
+
+                        <button string="Mark As Confirmed" name="mark_confirmed" type="object" icon="fa-check" class="oe_highlight" attrs="{'invisible':['|', '|', ('state','!=','draft'), ('saas_client', '=', False), ('state', '=', 'cancel')]}"/>
+
+                        <button string="Set User Data" name="update_user_data" type="object" icon="fa-cog" class="oe_highlight" attrs="{'invisible':['|', '|', ('user_data_updated','=',True), ('state','!=','confirm'), ('state', '=', 'cancel')]}"/>
+
+                        <button string="Set User Data" name="update_user_data" type="object" icon="fa-cog" class="btn-danger" attrs="{'invisible':['|', '|', '|', ('user_data_updated','=',True), ('state','!=','confirm'), ('state', '=', 'cancel'), ('user_data_error', '=', False)]}"/>
+
+                        <button string="Send Invitation Mail" name="send_invitation_email" type="object" icon="fa-refresh" class="oe_highlight" attrs="{'invisible':['|', '|', '|', ('state','!=','confirm'), ('user_data_updated', '=', False), ('invitation_mail_sent', '=', True), ('state', '=', 'cancel')]}"/>
+
+                        <button string="Send Invitation Mail" name="send_invitation_email" type="object" icon="fa-refresh" attrs="{'invisible':['|', '|', '|', ('state','!=','confirm'), ('user_data_updated', '=', False), ('invitation_mail_sent', '=', False), ('state', '=', 'cancel')]}"/>
+
+                        <button string="Send Invitation Mail" name="send_invitation_email" type="object" icon="fa-refresh" class="btn-danger" attrs="{'invisible':['|', '|', '|', '|', ('state','!=','confirm'), ('user_data_updated', '=', False), ('invitation_mail_sent', '=', True), ('state', '=', 'cancel'), ('invitation_mail_error', '=', False)]}"/>
+
+                        <button string="Generate Next Invoice" name="generate_invoice" type="object" icon="fa-play" class="oe_highlight" attrs="{'invisible':['|', '|', ('state','!=','confirm'), ('remaining_cycles', '=', 0), ('state', '=', 'cancel')]}"/>
+
+                        <button string="Extend Contract" name="extend_contract" type="object" icon="fa-refresh" class="oe_highlight" attrs="{'invisible':['|', '|', ('state','!=','confirm'), ('remaining_cycles', '!=', 0), ('state', '=', 'cancel')]}"/>
+
+                        <button string="Resume Contract" name="resume_contract" type="object" icon="fa-play" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'expired')]}" />
+                                                
+                        <button string="Resume Contract" name="resume_hold_contract" type="object" icon="fa-play" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'hold')]}" />
+
+                        <button string="Send Expiry Mail" name="send_expiry_mail" type="object" icon="fa-refresh" class="oe_highlight" attrs="{'invisible':['|', ('state', '!=', 'expired'), ('is_contract_expiry_mail', '=', 2)]}"/>
+                        
+                        <button string="Send Expiry Mail" name="send_expiry_mail" type="object" icon="fa-refresh" attrs="{'invisible':['|', ('state','!=','expired'), ('is_contract_expiry_mail', '=', 1)]}"/>
+
+                        <button string="Hold Contract" name="odoo_saas_kit.action_contract_hold_wizard" type="action" icon="fa-ban" class="oe_highlight" attrs="{'invisible':[('state','!=','confirm')]}"/>
+
+                        <button string="Cancel" name="cancel_contract" type="object" class="btn btn-secondary" attrs="{'invisible':[('state', '=', 'cancel')]}"/>
+
+                        <field name="state" widget="statusbar"/>
+
+                    </header>
+                    <sheet>
+                        <field name="user_data_updated" invisible="1"/>
+                        <field name="client_state" invisible="1"/>
+                        <field name="invitation_mail_sent" invisible="1"/>
+                        <field name="subdomain_email_sent" invisible="1"/>
+                        <field name="user_data_error" invisible="1"/>
+                        <field name="invitation_mail_error" invisible="1"/>
+                        <field name="is_contract_expiry_mail" invisible="1"/>
+                        <field name="per_user_pricing" invisible="1"/>
+                        
+                        <div class="oe_left" style="width: 500px;">
+                            <div class="oe_title" style="width: 390px;">
+                                <label class="oe_edit_only" for="name" string="Name"/>
+                                <h1><field name="name" class="oe_inline" readonly="1"/></h1>
+                            </div>
+                        </div>
+                        <group name="group_main">
+                            <group name="group_main_left">
+                                <field name="journal_id" required="True" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <field name="currency_id" invisible="1" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <field name="pricelist_id" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <label for="contract_rate" />
+                                <div>
+                                    <field class="oe_inline" name="contract_rate" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly' :[('state', '=', 'confirm')]}" /><span class="oe_inline"> Per Cycle</span>
+                                </div>
+                                <label for="user_cost" attrs="{'invisible': [('per_user_pricing', '=', False)]}" />
+                                <div>
+                                    <field class="oe_inline" name="user_cost" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly' :[('state', '=', 'confirm')], 'invisible': [('per_user_pricing', '=', False)]}"/><span class="oe_inline" attrs="{'invisible': [('per_user_pricing', '=', False)]}" > PUPC (Per user Per cycle)</span>
+                                </div>
+                                <label for="due_users_price" attrs="{'invisible': ['|', ('per_user_pricing', '=', False), ('recurring_interval', '=', 1)]}"/>
+                                <div>
+                                    <field class="oe_inline" name="due_users_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': ['|', ('per_user_pricing', '=', False), ('recurring_interval', '=', 1)], 'readonly':[('state','=','cancel')]}" /><span class="oe_inline" attrs="{'invisible': ['|', ('per_user_pricing', '=', False), ('recurring_interval', '=', 1)]}"> Per Month</span>
+                                </div>                                
+                                <label for="total_cost" />
+                                <div>
+                                    <field class="oe_inline" name="contract_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                    <span class="oe_inline" attrs="{'invisible': [('per_user_pricing', '=', False)]}"> + </span>
+                                    <field class="oe_inline" name="user_billing" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly':[('state','=','confirm')], 'invisible':[('per_user_pricing', '=', False)]}"/>
+                                    <span class="oe_inline"> = </span>
+                                    <field class="oe_inline" name="total_cost" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly':[('state','=','confirm')]}"/><br/>
+                                    <span class="oe_inline">(Contract Price)</span>
+                                    <span class="oe_inline" attrs="{'invisible': [('per_user_pricing', '=', False)]}"> + (User Billing)</span>
+
+                                </div>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" attrs="{'readonly':[('state','=','confirm')]}"/>
+                            </group>
+                            <group name="group_main_right">
+                                <label for="recurring_interval" />
+                                <div>
+                                    <span class="oe_inline">
+                                        Repeat Every
+                                    </span>
+                                    <field name="recurring_interval"
+                                        class="oe_inline"
+                                        required="True" attrs="{'readonly':[('state','=','confirm')]}"
+                                        />
+                                    <field name="recurring_rule_type"
+                                        class="oe_inline"
+                                        required="True" readonly='1'
+                                        />
+                                    <field name='recurring_rule_type' invisible='1'/>    
+                                </div>
+                                <field name="start_date" required="True" attrs="{'readonly':[('state','=','confirm')]}"/>
+
+                                <label for="total_cycles" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <div>
+                                    <field name="remaining_cycles"
+                                        class="oe_inline"
+                                        required="True" 
+                                        attrs="{'readonly':[('state','=','confirm')]}"
+                                        />/
+                                    <field name="total_cycles"
+                                        class="oe_inline"
+                                        required="True"
+                                        attrs="{'readonly':[('state','=','confirm')]}"
+                                        />
+                                </div>
+                                <field name="trial_period" invisible="True" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <field name="saas_client" readonly="True" attrs="{'readonly':[('state','=','confirm')]}"/>
+                            </group>
+                        </group>
+                        <group name="group_invoice_lines" string="Recurring Invoice Settings">
+                            <group>
+                                <field name="partner_id" required="1" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <field name="invoice_product_id" required="1" attrs="{'readonly':[('state','=','confirm')]}"/>
+                            </group>
+                            <group>
+                                <field name="next_invoice_date" attrs="{'invisible':[('next_invoice_date','=',False)], 'readonly':[('state','=','confirm')]}"/>
+                                <field name="auto_create_invoice" attrs="{'readonly':[('state','=','confirm')]}"/>
+                            </group>
+                        </group>
+                        <group name="group_saas_server" string="SaaS Server">
+                            <group>
+                                <field name="is_multi_server" readonly='1'/>
+                                <field name="server_id" attrs="{'readonly':[('state','=','confirm')], 'required': [('is_multi_server', '=', False)]}"/>
+                                <field name="db_template" readonly="1"/>
+                                <field name="token" readonly="1"/>
+                            </group>
+                            <group>
+                                <label for="use_separate_domain" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <div attrs="{'readonly':[('state','=','confirm')]}">
+                                    <field name="use_separate_domain" />
+                                    <button name="odoo_saas_kit.custom_domain_wizard_action" type="action" string="Add SubDomain" attrs="{'invisible':[('state','!=','confirm')]}"/>
+                                </div>
+                                <label for="domain_name"/>
+                                <div>
+                                    <field class="oe_inline" name="domain_name" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                    <span attrs="{'invisible':[('use_separate_domain','=',True)]}">.<field class="oe_inline" name="saas_domain_url" readonly="1"/></span>
+                                    <br/>
+                                    <button string="Ask from customer" name="send_subdomain_email" type="object" icon="fa-envelope" class="oe_highlight" attrs="{'invisible':['|', '|', ('saas_client','!=',False), ('subdomain_email_sent', '=', True), ('state', '=', 'cancel')]}"/>
+
+                                    <button string="Ask from customer" name="send_subdomain_email" type="object" icon="fa-envelope" attrs="{'invisible':['|', '|', ('saas_client','!=',False), ('subdomain_email_sent', '=', False), ('state', '=', 'cancel')]}"/>
+                                </div>
+                                <label for="custom_domain_ids" />
+                                <div>
+                                    <field name="custom_domain_ids">
+                                        <tree>
+                                            <field name="name"/>
+                                            <field name="setup_date" />
+                                            <field name="revoke_date" />
+                                        </tree>
+                                    </field>
+                                    <button name="odoo_saas_kit.revoke_custom_domain_action" string="Revoke SubDomain" type="action" class="oe_highlight" attrs="{'invisible': [('custom_domain_ids', '=', False)]}" />
+                                </div>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="SaaS Modules">
+                                <field name="saas_module_ids" string="Related Modules" editable="bottom" attrs="{'readonly':[('state','=','confirm')]}">
+                                    <tree string="Related Modules">
+                                        <field name="name"/>
+                                        <field name="technical_name"/>
+                                        <field name="categ_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Invoices">
+                                <field name="invoice_ids" string="Invoices" readonly="1"/>
+                            </page>
+                            <page string="Users Billing History" attrs="{'invisible': [('per_user_pricing', '=', False)]}">
+                                <field name="user_billing_history_ids" string="Billing List" edit="False" create="False" attrs="{'readonly':[('state','=','confirm')]}">
+                                    <tree string="History">
+                                        <field name="cycle_number" />
+                                        <field name="date" />
+                                        <field name="puchased_users" />
+                                        <field name="due_users" />
+                                        <field name="puchase_users_price" />
+                                        <field name="due_users_price" />
+                                        <field name="is_invoiced" />
+                                        <field name="final_price" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

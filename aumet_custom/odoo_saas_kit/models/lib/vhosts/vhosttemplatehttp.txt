@@ -1,0 +1,38 @@
+server {
+   listen 80;
+   server_name DOMAIN_TO_BE_REPLACED;
+
+#################---Proxy Setting for Odoo backend-----------#################################
+ proxy_read_timeout 720s;
+ proxy_connect_timeout 720s;
+ proxy_send_timeout 720s;
+
+ # Add Headers for odoo proxy mode
+ proxy_set_header X-Forwarded-Host $host;
+ proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+ proxy_set_header X-Forwarded-Proto $scheme;
+ proxy_set_header X-Real-IP $remote_addr;
+
+###############------Log----------------------################################################
+ access_log /var/log/nginx/DOMAIN_TO_BE_REPLACED.access.log;
+ error_log /var/log/nginx/DOMAIN_TO_BE_REPLACED.error.log;
+ client_body_in_file_only on;
+ # Redirect longpoll requests to odoo longpolling port
+ location ^~ /.well-known/acme-challenge/ {
+    default_type "text/plain";
+}
+
+ location /longpolling {
+        proxy_pass http://LONG_BACKEND_TO_BE_REPLACED;  #LONGPOLLINGBACKEND
+ }
+
+
+  location / {
+        proxy_redirect off;
+        proxy_pass http://BACKEND_TO_BE_REPLACED;    #ODOOBACKEND
+    }
+ gzip_types text/css text/less text/plain text/xml application/xml application/json application/javascript;
+ gzip on;
+
+}
+

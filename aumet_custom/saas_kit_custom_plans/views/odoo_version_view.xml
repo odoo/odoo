@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+        <record id="odoo_version_form_view" model="ir.ui.view">
+            <field name="name">odoo.version.form.view</field>
+            <field name="model">saas.odoo.version</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="create_db_template" string="Create Template" type="object" class="oe_highlight" attrs="{'invisible': [('state', '=', 'confirm')]}" />
+                        <field name="state" widget="statusbar" />
+                        <button name="login_to_template" string="Login" type="object" icon="fa-sign-in" attrs="{'invisible': [('state', '!=', 'confirm')]}" />
+                    </header>
+                    <sheet>
+                        <group name="main_1">
+                            <group name="inner_1">
+                                <field name="name" required="1"/>
+                                <field name="code" required="1"/>
+                                <field name="db_template" />
+                                <field name="product_id" required="1" />
+                                <field name="use_specific_user_template" attrs="{'invisible':[('state','!=','confirm')]}"/>
+                                <field name="template_user_id" attrs="{'invisible':[('use_specific_user_template','=',False)], 'required': [('use_specific_user_template', '=', True)]}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="odoo_version_tree_view" model="ir.ui.view">
+            <field name="name">odoo.version.tree.view</field>
+            <field name="model">saas.odoo.version</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="code" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="odoo_version_action_view" model="ir.actions.act_window">
+            <field name="name">Odoo version</field>
+            <field name="res_model">saas.odoo.version</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="odoo_version_tree_view" />
+        </record>
+    
+    </data>
+</odoo>

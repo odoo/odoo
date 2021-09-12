@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <template id="plan_page" name="Custom Plan Page">
+        <t t-call="website.layout">
+            <t t-set="title">SaaS Apps</t>
+                <section class="custom_plan_section">
+                    <div class="container-fluid">
+                        <div class="d-flex flex-wrap">
+                            <div id="costing_nature" class="d-none"><t t-esc="costing_nature"></t></div>
+                            <div id="user_cost" class="d-none"><t t-esc="user_cost"></t></div>
+                            <div id="is_users" class="d-none"><t t-esc="is_users"></t></div>
+                            <div id="is_fixed_users" class="d-none"><t t-esc="is_fixed_users"></t></div>
+                            <div id="currency" class="d-none"><t t-esc="company.currency_id.name"></t></div>
+                            <div class="dd_container_row container-fluid row" style="padding-left:2%; padding-right:2%; padding-top:2%;">
+                                <div style="padding:2%;" class="col-lg-9 col-sm-12 col-md-12">
+                                    <h3><b>Select Apps</b></h3>
+                                    <h6>Select the apps as per your requirement and create your instance for selected apps</h6>
+                                </div>
+                                <div class="d-flex dropdown col-lg-3 col-sm-12 col-md-12 justify-content" style="margin-top:6%;">
+                                    <t t-if="is_odoo_version and odoo_version">
+                                        <div class="btn_div_lg dd_element_body upper_div" style="border-radius: 6px;border: 1px solid #333333;">
+                                            <div class="dropdown_menu_items">
+                                                <button class="btn dropdown-toggle btn-md btn2" type="button" id="dropdownmenu2" t-att-data-code="odoo_version[0].code" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <t t-esc="odoo_version[0].name" />
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownmenu2">
+                                                    <t t-foreach="odoo_version" t-as="version">
+                                                        <button class="dropdown-item btn-md version_button" t-att-data-code="version.code" type="button"><t t-esc="version.name" /></button>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="btn_div_lg dd_element_body upper_div" style="border-radius: 6px;border: 1px solid #333333;">
+                                            <div class="dropdown_menu_items">
+                                                <button class="btn btn-md btn2" type="button" id="dropdownmenu2" t-att-data-code="14.0" aria-haspopup="true" aria-expanded="false">
+                                                    Odoo 14
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </t>
+
+                                    <div class="btn_div_lg dd_element_body upper_div " style="margin-left: 18%; background-color: #333333; border-radius: 6px;border: 1px;">
+                                        <div class="dropdown_menu_items" style="">
+                                            <button style="color: #FFFFFF;" class="btn dropdown-toggle btn-md btn2" type="button" id="dropdownmenu3" t-att-data-code="monthly" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Monthly
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownmenu">
+                                                <button class="dropdown-item btn-md billing_cycle" t-att-data-code="monthly" type="button">Monthly</button>
+                                                <button class="dropdown-item btn-md billing_cycle" t-att-data-code="yearly" type="button">Yearly</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container-fluid">
+                        <div class="dd_container_row container-fluid row" style="padding:2%;">
+                        <t t-if="normal_view">
+                            <div id="wrap" class="js_sale d-flex col-lg-9 col-sm-12 col-md-12 align-content-start flex-wrap" style="border-radius: 10px; border: 1px solid #E0E0E0; flex-flow: row wrap; padding:2%;">
+                                <t t-foreach="modules" t-as="app">
+                                    <div class="col-md-4 col-sm-12" style="height: 80px; margin-bottom: 2%;">
+                                        <div style="border-radius: 10px;border: 1px solid #E0E0E0;" class="oe-padded h-100 ml">
+                                            <div class="d-flex" style="margin: 2%;">
+                                                <div style="width: 10%;">
+                                                    <div class="d-flex justify-content-center align-items-center" style="margin-top:22px;">
+                                                        <input type="checkbox" class="check_app"/>
+                                                    </div>
+                                                </div>
+                                                <div style="width: 90%;" class="product_div">
+                                                    <div style="margin-left: 4%;" class="product_name" t-att-data-value="app.technical_name">
+                                                        <span style="font-family: Montserrat;font-style: normal;font-weight: normal;font-size: 15px;line-height: 22px;color: #333333;"><b><t t-esc="app.name[0:15]" /></b></span>
+                                                    </div>
+                                                    <div style="margin-left: 4%;" >
+                                                        <span style="font-family: Montserrat;font-style: normal;font-weight: normal;font-size: 13px;line-height: 22px;color: #333333;">Category: <t t-esc="app.categ_id.name and app.categ_id.name[:8]" /></span>
+                                                    </div>
+                                                    <div style="margin-left: 4%;" class="product_price">
+                                                        <span style="font-family: Montserrat;font-style: normal;font-weight: normal;font-size: 13px;line-height: 22px;color: #333333;"><b><span class="price" style="white-space: nowrap;"><t t-esc="app.price" /> <span itemprop="priceCurrency" t-esc="company.currency_id.name"/></span><t t-if="is_users"><t t-if="costing_nature == 'per_user'"> /per user</t><t t-else=""> /per month</t></t><t t-else=""><t t-if="is_fixed_users  and costing_nature == 'per_user'"> /per user</t><t t-else=""> /per month</t></t></b></span>
+                                                    </div>
+                                                </div>
+                                                <div style="width: 30%;">
+                                                    <div class="d-flex justify-content-center align-items-center" style="margin-top:2%;">
+                                                        <span t-field="app.image" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}" style="height: 50px; border-radius: 10px;"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+                        <t t-if="categorical_view">
+                            <div class="js_sale d-flex col-lg-9 col-sm-12 col-md-12 align-content-start flex-wrap" style="border-radius: 10px; border: 1px solid #E0E0E0; flex-flow: row wrap; padding:2%;">
+                                <t t-foreach="categories" t-as="category">
+                                <div class="align-content-start col-sm-12 col-md-12">
+                                    <span style="margin-left: 20px;"><t t-esc="category" /></span>
+                                    <div class="js_sale d-flex align-content-start flex-wrap" style="flex-flow: row wrap; padding:2%;">                                                                        
+                                        <t t-foreach="categories[category]" t-as="app">
+                                            <div class="col-md-4 col-sm-12" style="height: 80px; margin-bottom: 2%;">
+                                                <div style="border-radius: 10px;border: 1px solid #E0E0E0;" class="oe-padded h-100 ml">
+                                                    <div class="d-flex" style="margin: 2%;">
+                                                        <div style="width: 10%;">
+                                                            <div class="d-flex justify-content-center align-items-center" style="margin-top:22px;">
+                                                                <input type="checkbox" class="check_app"/>
+                                                            </div>
+                                                        </div>
+                                                        <div style="width: 90%; margin-top:2%;" class="product_div">
+                                                            <div style="margin-left: 4%;" class="product_name" t-att-data-value="app.technical_name">
+                                                                <span style="font-family: Montserrat;font-style: normal;font-weight: normal;font-size: 15px;line-height: 22px;color: #333333;"><b><t t-esc="app.name[0:15]" /></b></span>
+                                                            </div>
+                                                            <div style="margin-left: 4%;" class="product_price">
+                                                                <span style="font-family: Montserrat;font-style: normal;font-weight: normal;font-size: 13px;line-height: 22px;color: #333333;"><b><span class="price"><t t-esc="app.price" /> <span itemprop="priceCurrency" t-esc="company.currency_id.name"/></span><t t-if="is_users"><t t-if="costing_nature == 'per_user'"> /per user</t><t t-else=""> /per month</t></t><t t-else=""><t t-if="is_fixed_users  and costing_nature == 'per_user'"> /per user</t><t t-else=""> /per month</t></t></b></span>
+                                                            </div>
+                                                        </div>
+                                                        <div style="width: 30%;">
+                                                            <div class="d-flex justify-content-center align-items-center" style="margin-top:2%;">
+                                                                <span t-field="app.image" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}" style="height: 50px; border-radius: 10px;"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>                                    
+                                </t>
+                                <!-- </t> -->
+                            </div>
+                        </t>
+                        <div class="d-flex justify-content-center col-lg-3 col-sm-12 col-md-12" id="right_block">
+                            <div style="border-radius: 10px; border: 1px solid #E0E0E0; flex-flow: row wrap; width:100%" class="product_title_head">
+                                    <div style="height: 55px;" class="d-flex">
+                                        <div style="width:70%; margin-top:4%; margin-left:8%; font-size: 20px;" class="d-flex fw-bold">
+                                            <b>SELECTED APPS</b>
+                                        </div>
+                                        <div style="background-color: #333333; top: 30%; width: 10%; height: 46%; text-align: center; font-weight: bold; border-radius: 10px; position: relative; display: flex; justify-content: center;" class="d-flex">
+                                            <p style="color: #FFFFFF;" id="total_apps_count">0</p>
+                                        </div>
+                                    </div>
+                                    <div style="border: 1px solid #E0E0E0; height:1px;" class=".bg-secondary">
+                                    </div>
+                                    <div id="product_title_head">
+
+                                        <div style="height: 40px;" class="d-flex product_items" id='costing'>
+                                            <div style="margin-left: 2%; margin-top:3%;font-size: 15px;" class="d-flex fw-bold">
+                                             App Cost : 
+                                            </div>
+                                            <div style="width:50%; margin-left: 3%; margin-top:2%; font-size: 18px;" class="d-flex fw-bold product_item_name">
+                                                <span id="app_cost" style="margin-right: 4%;">0</span> x <span style="margin-right: 4%; margin-left: 4%;" id="app_cost_number">1</span> = <span  style="margin-left: 4%;" id="app_total_cost">0 </span> <span style="margin-left:3%;" itemprop="priceCurrency" t-esc="company.currency_id.name"/>
+                                            </div>
+                                        </div>
+                                        <div id='border_cost' style="border: 1px solid #E0E0E0; height:1px;" class=".bg-secondary">
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    <t t-if="is_users">
+                                        <div style="width: 100%; background-color: #F8F8F8;" class="d-flex">
+                                            <div class="form-group" style="margin-left: 30px;">
+                                                <label for="number_of_users"><strong>Enter No. of Users: </strong></label>
+                                                <input class="form-control oe_inline" id="number_of_users" style="width:85%;" type="number" min="1" value="1"/>
+                                                            <!-- USD -->
+                                                <span style="font-size:15px;"><strong><t t-esc="user_cost" /> <span itemprop="priceCurrency" t-esc="company.currency_id.name"/></strong>/ user/ month</span>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    <t t-if="is_free_users">
+                                        <div style="height: 40px;" class="d-flex product_items" id='technical_name'>
+                                            <div style="width:100%; margin-top:2%; margin-left:8%; font-size: 17px;" class="d-flex fw-bold product_item_name">
+                                                <span id="free_users" style="margin-right:1%;"> <t t-esc="free_users"></t></span> users are Free ... !
+                                            </div>
+                                        </div>
+                                        <div id='border_name' style="border: 1px solid #E0E0E0; height:1px;" class=".bg-secondary">
+                                        </div>
+                                    </t>
+                                    <t t-if="is_users">
+                                        <div style="height: 40px;" class="d-flex product_items" id='costing'>
+                                                <div style="margin-left: 2%; margin-top:3%;font-size: 15px;" class="d-flex fw-bold">
+                                                 Users Cost : 
+                                                </div>
+                                                <div style="width:50%; margin-left: 3%; margin-top:2%; font-size: 18px;" class="d-flex fw-bold product_item_name">
+                                                    <span id="user_selected_1" style="margin-right: 3%;">1</span> x <span style="margin-right: 3%; margin-left: 3%;" id="number_users"><t t-esc="user_cost"></t> </span> = <span  style="margin-left: 4%;" id="prod_user"><t t-esc="user_cost"></t> </span> <span style="margin-left:3%;" itemprop="priceCurrency" t-esc="company.currency_id.name"/>
+                                                </div>
+                                            </div>
+                                            <div id='border_cost_u' style="border: 1px solid #E0E0E0; height:1px;" class=".bg-secondary">
+                                        </div>
+                                    </t>
+                                    <div style="width:100%;" class="d-flex justify-content-center">
+                                        <button id="create_request" type="submit" style="margin: 17px; width: 90%; background-color: #3930D8; height: 42px; font-size:19px; font-family: Montserrat; color: #FFFFFF;" name="create_request" class="btn ">PAY NOW</button>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>    
+    </template>
+</odoo> 

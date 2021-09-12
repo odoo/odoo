@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <template id="custom_plan_product_page_inherit" inherit_id="website_sale.product">
+        <xpath expr="//div[hasclass('js_product', 'js_main_product')]/t[1]" position="after">
+            <t t-if="product.saas_plan_id">
+                <a href="/custom/plan" class="text-center" id="">Choose you own Apps</a>
+            </t>
+        </xpath>
+    </template>
+</odoo>

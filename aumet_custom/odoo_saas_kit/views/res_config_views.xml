@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <record id="res_config_settings_inheri_view_form" model="ir.ui.view">
+        <field name="name">res.config.setting.inherit.form.saas</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval='20'/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block saas_app_settings" data-string="Odoo Saas KIT" data-key="odoo_saas_kit" groups="">
+                    <h2>Default Configuration for Odoo Saas KIT</h2>
+
+                    <div class="row mt16 o_settings_container" id="saas_kit_config">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="auto_create_client"/>
+                            </div>
+                            <label for="auto_create_client" string="Scheduled Client Creation"/>
+                            <div class="text-muted">
+                                Automatically create clients from contract via Scheduler.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

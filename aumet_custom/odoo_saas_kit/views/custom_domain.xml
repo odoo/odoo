@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+        <record id="custom_domain_form_view" model="ir.ui.view">
+            <field name="name">Custom Domain Form</field>
+            <field name="model">custom.domain</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group name="custom_domain_group_1">
+                            <group name="custom_domain_group_2">
+                                <field name="name"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="custom_domain_tree_view" model="ir.ui.view">
+            <field name="name">Custom Domain Tree</field>
+            <field name="model">custom.domain</field>
+            <field name="arch" type="xml">
+                <tree create="false" edit="false">
+                    <field name="name" />
+                    <field name="setup_date" />
+                    <field name="revoke_date" />
+                    <button name="revoke_subdomain" type="object" string="Revoke" attrs="{'invisible': [('revoke_date', '!=', False)]}"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="revoke_custom_domain_action" model="ir.actions.act_window">
+            <field name="name">Custom Domains</field>
+            <field name="res_model">custom.domain</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="custom_domain_tree_view"/>
+            <field name="target">new</field>
+            <field name="domain">[('contract_id' ,'=' ,active_id)]</field>
+        </record>
+
+    </data>
+</odoo>

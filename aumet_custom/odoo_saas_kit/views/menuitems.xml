@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+        <menuitem name="SaaS KIT" id="saas_root_menu" web_icon="odoo_saas_kit,static/description/icon.png" groups="base.group_user"  sequence="2" />
+        <menuitem name="SaaS" id="menu_saas" parent="odoo_saas_kit.saas_root_menu"/>
+        <menuitem name="Configuration" id="saas_config_menu" parent="odoo_saas_kit.saas_root_menu"/>
+        <menuitem action="odoo_saas_kit.saas_plan_action" sequence="1" id="menu_plan_menu" parent="odoo_saas_kit.menu_saas"/>
+        <menuitem action="odoo_saas_kit.saas_server_action" sequence="1" id="saas_server_action_menu" parent="odoo_saas_kit.saas_config_menu" />
+        <menuitem action="odoo_saas_kit.saas_module_category_action" sequence="2" id="saas_module_category_menu" parent="odoo_saas_kit.saas_config_menu"/>
+        <menuitem action="odoo_saas_kit.saas_module_action" id="saas_module_menu" parent="odoo_saas_kit.saas_config_menu"/>
+        <menuitem action="odoo_saas_kit.saas_contract_action" sequence="2" id="menu_contract_menu" parent="odoo_saas_kit.menu_saas"/>
+        <menuitem action="odoo_saas_kit.saas_client_action" sequence="3" id="menu_client_menu" parent="odoo_saas_kit.menu_saas"/>
+    </data>
+</odoo>

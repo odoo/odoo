@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+        <record id="saas_module_inherit_form" model="ir.ui.view">
+            <field name="name">saas.module.inherit.form</field>
+            <field name="model">saas.module</field>
+            <field name="inherit_id" ref="odoo_saas_kit.saas_module_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='image']" position="before">
+                    <field name="is_published" invisible="1" />
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_module_publish"
+                                attrs="{'invisible': [('is_published', '=', False)]}"
+                                class="oe_stat_button"
+                                type="object" icon="fa-stop">
+                            <div class="o_stat_info o_field_widget">
+                                <span class="o_warning_text">Un Publish</span>
+                            </div>
+                        </button>
+                        <button name="toggle_module_publish"
+                                attrs="{'invisible': [('is_published', '=', True)]}"
+                                class="oe_stat_button"
+                                type="object" icon="fa-play">
+                            <div class="o_stat_info o_field_widget">
+                                <span class="text-success">Publish</span>
+                            </div>
+                        </button>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='categ_id']" position="before">
+                    <field name="price" />
+                    <field name="auto_install" />
+                    <field name="addons_path" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

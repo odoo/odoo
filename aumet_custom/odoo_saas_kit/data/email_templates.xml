@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data noupdate="1">
+        <record id="odoo_saas_kit.client_credentials_template" model="mail.template">
+            <field name="name">Client SaaS Credentials</field>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="subject">Your SaaS Credentials</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="model_id" ref="odoo_saas_kit.model_saas_client"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+                Dear ${object.partner_id.name}<br/>
+
+                <p>Greetings of the Day.</p>
+                <p>Your Instance has been successfully created.</p>
+
+                <p>Kindly visit the following link to login to your Odoo Server. >> <a href="${object.client_url}">${object.client_url}</a></p>
+
+                <p>Please reset password using the following URL.<br/>
+                <a href="${object.invitation_url}">${object.invitation_url}</a>
+
+                <p>You can always check the details of your previous and current plans from your Website account. 
+                To manage your plans please go to the website account.
+                </p>
+
+                <p>Thank you</p>
+                <p style="color:#888888;">
+                % if object.user_id and object.user_id.signature:
+                    ${object.user_id.signature | safe}
+                % endif
+                </p>
+
+                ]]>
+            </field>
+        </record>
+
+        <record id="odoo_saas_kit.client_subdomain_template" model="mail.template">
+            <field name="name">SaaS Contract Subdomain Template</field>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="subject">${object.company_id.name} Contract (Ref ${object.name or 'n/a' })</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="model_id" ref="odoo_saas_kit.model_saas_contract"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+                <p>Dear ${object.partner_id.name}
+                % set access_url = object.get_subdomain_url() or ''
+                % set access_name = 'Create Your Domain Name'
+
+                % if object.partner_id.parent_id:
+                    (<i>${object.partner_id.parent_id.name}</i>)
+                % endif
+                ,</p>
+                
+                <p>We are glad to inform you that your order for the ${object.invoice_product_id.name} is confirmed.</p>
+                
+                <p>The plan you have opted for is ${object.plan_id.name} of the Pan.</p>
+                <p>
+                    It is a subscription based plan which means that the plan would remain active from the date of activation. <br/>
+                    Post the expiration of the plan the Instance will expire.<br/>
+                    To avoid this, please renew your plan before the expiration date.
+                </p>
+                <p>
+                    Commencement Date: ${object.start_date}<br/>
+                    Next Invoice Date: ${object.next_invoice_date}<br/>
+                    Total Number Of Billing Cycles: ${object.total_cycles}<br/>
+                    Trial period included: ${object.trial_period} days<br/> 
+                </p>
+                <p>
+                    If you have any queries or issues, please contact our support team.
+                </p>
+
+                <br/><br/>
+                <center>
+                    <a href="${access_url}" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">${access_name}</a>
+                    <br/><br/><br/>
+                </center>
+                <br/>
+                <p>
+                    Once the Domain is successfully created, you will receive the URL of your Odoo Instance along with the login Id and password via mail.
+                </p>
+                <p>If you have any query or issues please contact our Support Team.</p>
+
+                <p>Thank you,</p>
+
+                <p style="color:#888888;">
+                % if object.user_id and object.user_id.signature:
+                    ${object.user_id.signature | safe}
+                % endif
+                </p>
+                ]]></field>
+        </record>
+    </data>
+</odoo>

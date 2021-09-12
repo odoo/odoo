@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+        <record id="custom_domain_view_wizard" model="ir.ui.view">
+            <field name="name">Custom Domain Detail</field>
+            <field name="model">custom.domain.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <h3>Enter Subdomain !</h3>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="is_ssl_enable" />
+                            </group>
+                        </group>
+                        <h3 attrs="{'invisible': [('is_ssl_enable', '=', False)]}">Note:-DNS entries should be made to Point Custom Domain to the SubDomain provided by SAAS ki before enabling HTTPS here. !</h3>
+                    </sheet>
+                    <footer>
+                        <button name="save_domain" string="Create" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="custom_domain_wizard_action" model="ir.actions.act_window">
+            <field name="name">Enter Custom Domain</field>
+            <field name="res_model">custom.domain.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="custom_domain_view_wizard"/>
+            <field name="context">{'instance_id': active_id}</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

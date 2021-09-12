@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <data>
+        <record id="saas_contract_expiry_cron" model="ir.cron">
+            <field name="name">SaaS Contract Expiry Cron</field>
+            <field name="model_id" ref="model_saas_contract"/>
+            <field name="state">code</field>
+            <field name="code">model.check_contract_expiry()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+    </data>
+</odoo>

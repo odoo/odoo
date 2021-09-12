@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+    <record model="ir.module.category" id="module_category_odoo_saas_kit">
+        <field name="name">Odoo SaaS Kit</field>
+        <field name="description">Handles all the operations regarding Odoo SaaS.</field>
+        <field name="sequence">0</field>
+    </record>
+
+    <record model="res.groups" id="group_saas_user">
+        <field name="name">User</field>
+        <field name="category_id" ref="odoo_saas_kit.module_category_odoo_saas_kit" />
+        <field name="comment">the user will only read access to the SaaS configurations and records.</field>
+    </record>
+
+    <record model="res.groups" id="group_saas_manager">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="odoo_saas_kit.module_category_odoo_saas_kit" />
+        <field name="comment">the user will have an access to all the SaaS configurations and records.</field>
+        <field name="implied_ids" eval="[(4, ref('group_saas_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+</odoo>
