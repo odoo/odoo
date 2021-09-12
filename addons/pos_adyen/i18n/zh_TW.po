@@ -6,6 +6,7 @@
 # Martin Trigaux, 2020
 # gogobook <O968041428@gmail.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Benson White <Benson.Dr@Gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2019-12-16 11:07+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Last-Translator: Benson White <Benson.Dr@Gmail.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,8 @@ msgid ""
 "company-specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o mr8\" title=\"此處設定的值是特定於公司的。 \" aria-"
+"label=\"此處設定的值是特定於公司的。\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
@@ -37,7 +40,7 @@ msgstr "帳戶"
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
 msgid "Add tip through payment terminal (Adyen)"
-msgstr ""
+msgstr "通過支付終端添加小費 (Adyen)"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
@@ -47,7 +50,7 @@ msgstr "地址"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_key
 msgid "Adyen API key"
-msgstr ""
+msgstr "Adyen API 金鑰"
 
 #. module: pos_adyen
 #: model:ir.actions.server,name:pos_adyen.action_pos_adyen_account
@@ -57,44 +60,44 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__adyen_account_id
 #: model:ir.ui.menu,name:pos_adyen.menu_pos_adyen_account
 msgid "Adyen Account"
-msgstr ""
+msgstr "Adyen 帳號"
 
 #. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Adyen Error"
-msgstr ""
+msgstr "Adyen 錯誤"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
 msgid "Adyen Latest Diagnosis"
-msgstr ""
+msgstr "Adyen 最後診斷"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_response
 msgid "Adyen Latest Response"
-msgstr ""
+msgstr "Adyen 最後回應"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
 msgid "Adyen Store"
-msgstr ""
+msgstr "Adyen 商店"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_id
 msgid "Adyen Terminal"
-msgstr ""
+msgstr "Adyen 終端"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "Adyen Terminal Identifier"
-msgstr ""
+msgstr "Adyen 終端識別"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Adyen Test Mode"
-msgstr ""
+msgstr "Adyen 測試模式"
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_adyen_account
@@ -121,19 +124,19 @@ msgstr ""
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "An unexpected error occured. Message from Adyen: %s"
-msgstr ""
+msgstr "發生意外錯誤. 來自 Adyen 的訊息: %s"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Ask Customers For Tip"
-msgstr ""
+msgstr "向顧客詢問小費"
 
 #. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
-msgstr ""
+msgstr "驗證失敗. 請檢查您的 Adyen 憑證."
 
 #. module: pos_adyen
 #. openerp-web
@@ -185,7 +188,7 @@ msgstr "國家/地區代碼"
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
 msgid "Create an account in 1 minute"
-msgstr ""
+msgstr "在1分鐘內建立一個帳號"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__create_uid
@@ -208,12 +211,12 @@ msgstr "顯示名稱"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__house_number_or_name
 msgid "House Number Or Name"
-msgstr ""
+msgstr "房號或名稱"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
 msgid "House number or name"
-msgstr ""
+msgstr "房號或名稱"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__id
@@ -244,7 +247,7 @@ msgstr "最後更新於"
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Message from Adyen: %s"
-msgstr ""
+msgstr "來自 Adyen 的訊息: %s"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__name
@@ -259,7 +262,7 @@ msgstr "訂單"
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_account_view_form
 msgid "Order a Terminal"
-msgstr ""
+msgstr "訂購終端"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_transaction__pos_payment_id
@@ -281,13 +284,13 @@ msgstr "電話號碼"
 #, python-format
 msgid ""
 "Please configure a tip product for POS %s to support tipping with Adyen."
-msgstr ""
+msgstr "請為 POS %s 設定小費產品以支援使用 Adyen 支付小費."
 
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/adyen_account.py:0
 #, python-format
 msgid "Please create a store first."
-msgstr ""
+msgstr "請先建立營業點(商店)."
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_config
@@ -302,7 +305,7 @@ msgstr "POS付款方式"
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Prompt the customer to tip."
-msgstr ""
+msgstr "提示客戶給小費."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__store_reference
@@ -312,7 +315,7 @@ msgstr "編碼"
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Run transactions in the test environment."
-msgstr ""
+msgstr "在測試環境中執行事項."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__state_id
@@ -329,12 +332,12 @@ msgstr "州/省代碼"
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__store_ids
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__store_id
 msgid "Store"
-msgstr ""
+msgstr "商店"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_account_view_form
 msgid "Stores"
-msgstr ""
+msgstr "商店"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__street
@@ -347,28 +350,28 @@ msgstr "街道"
 msgid ""
 "Technical field used to buffer the latest asynchronous notification from "
 "Adyen."
-msgstr ""
+msgstr "用於緩衝來自 Adyen 的最新不同步通知的技術欄位."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
 msgid "Technical field used to determine if the terminal is still connected."
-msgstr ""
+msgstr "用於確定終端是否仍處於連接狀態的技術欄位."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__terminal_ids
 msgid "Terminal"
-msgstr ""
+msgstr "終端"
 
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used on payment method %s."
-msgstr ""
+msgstr "終端 %s 已用於付款方式 %s."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__terminal_uuid
 msgid "Terminal ID"
-msgstr ""
+msgstr "終端ID"
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_adyen_store__country_code
@@ -386,7 +389,7 @@ msgstr ""
 msgid ""
 "The connection to your payment terminal failed. Please check if it is still "
 "connected to the internet."
-msgstr ""
+msgstr "與您的支付終端的連接失敗. 請檢查它是否仍然連接到網際網路."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_adyen_store__state_code
@@ -404,6 +407,8 @@ msgid ""
 "Used when connecting to Adyen: https://docs.adyen.com/user-management/how-"
 "to-get-the-api-key/#description"
 msgstr ""
+"連接到 Adyen 時使用: https://docs.adyen.com/user-management/how-to-get-the-api-"
+"key/#description"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__zip
@@ -414,4 +419,4 @@ msgstr "郵遞區號"
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "[Terminal model]-[Serial number], for example: P400Plus-123456789"
-msgstr ""
+msgstr "【終端型號】-【序列號】, 例如: P400Plus-123456789"

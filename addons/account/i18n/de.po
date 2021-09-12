@@ -75,12 +75,12 @@
 # Felix Schubert <felix.schubert@go-erp.com>, 2021
 # Andreas Schmidt <schmigo@gmail.com>, 2021
 # Robert Förster <hello@suppliot.eu>, 2021
-# Kevin Harrings <kha@odoo.com>, 2021
 # Cornelius Kraus <odoo@clk-it.de>, 2021
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
 # Christopher Rogos <crogos@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Anja Funk <anja.funk@afimage.de>, 2021
+# Kevin Harrings <kha@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -88,7 +88,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Anja Funk <anja.funk@afimage.de>, 2021\n"
+"Last-Translator: Kevin Harrings <kha@odoo.com>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -159,7 +159,7 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note
 msgid "${object.company_id.name} Credit Note (Ref ${object.name or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Gutschrift (Ref ${object.name or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -182,7 +182,7 @@ msgstr "%(action)s für Journale %(journal)s"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "%<span class=\"px-3\"/>("
-msgstr ""
+msgstr "%<span class=\"px-3\"/>("
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -430,7 +430,7 @@ msgstr "<em>Rechnungsentwurf</em>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<i class=\"fa fa-arrow-right mr-1\"/>Back to settings"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Zurück zu den Einstellungen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -438,6 +438,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                                    Preview"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                                    Vorschau"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
@@ -747,6 +749,9 @@ msgid ""
 "                                        Taxes\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        Steuern\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -943,7 +948,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
-msgstr ""
+msgstr "<span>Dies ist eine Vorschau Ihrer AGBs.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1208,12 +1213,14 @@ msgid ""
 "A second payment has been created: <a href=# data-oe-model=account.payment "
 "data-oe-id=%d>%s</a>"
 msgstr ""
+"Eine zweite Zahlung wurde erstellt: <a href=# data-oe-model=account.payment "
+"data-oe-id=%d>%s</a>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid ""
 "A second payment will be created automatically in the destination journal."
-msgstr ""
+msgstr "Eine zweite Zahlung wird automatisch in das Ziel-Journal erstellt."
 
 #. module: account
 #: code:addons/account/models/account_account_tag.py:0

@@ -561,6 +561,8 @@ msgid ""
 "At the session closing: A picking is created for the entire session when it's closed\n"
 " In real time: Each order sent to the server create its own picking"
 msgstr ""
+"Під час закриття сесії: Комплектування створюється для всієї сесії, коли вона закрита \n"
+"У реальному часі: Кожне замовлення, що надсилається на сервер, створює власне комплектування"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_attachment_count
@@ -761,14 +763,14 @@ msgstr "Скасовано"
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/OrderManagementButton.js:0
 #, python-format
 msgid "Cannot access order management screen if offline."
-msgstr ""
+msgstr "Не можна отримати доступ до екрану керування замовленнями в офлайні."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/OrderManagementScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Cannot invoice order from closed session."
-msgstr ""
+msgstr "Не можна виставити рахунок на замовлення в закритій сесії."
 
 #. module: point_of_sale
 #. openerp-web
@@ -952,6 +954,8 @@ msgid ""
 "Check the internet connection then try to sync again by clicking on the red "
 "wifi button (upper right of the screen)."
 msgstr ""
+"Перевірте з'єднання з інтернетом, потім спробуйте з'єднатися знову, "
+"натиснувши на червону кнопку wifi (вверху справа)."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__child_id
@@ -1034,7 +1038,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Close Session & Post Entries"
-msgstr ""
+msgstr "Закрити сесію та опублікувати проведення"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_close_session_wizard
@@ -1104,7 +1108,7 @@ msgstr "Налаштування для журнальних записів за
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
 msgid "Configure at least one Point of Sale."
-msgstr ""
+msgstr "Налаштуйте принаймні одну точку продажу"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.closing_balance_confirm
@@ -1121,7 +1125,7 @@ msgstr "Підтвердити?"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices to your PoS directly without an IoT Box"
-msgstr ""
+msgstr "Підключіть пристрої до вашої точки продажу напряму без IoT Box"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
@@ -1131,7 +1135,7 @@ msgstr "Підключіть пристрої до вашої точки про�
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices using an IoT Box"
-msgstr ""
+msgstr "Підключіть пристрої за допомогою IoT Box"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1687,7 +1691,7 @@ msgstr "Завантажити помилку"
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderManagementControlPanel.xml:0
 #, python-format
 msgid "E.g. customer: Steward, date: 2020-05-09"
-msgstr ""
+msgstr "Напр., клієнт: Стюарт, дата: 2020-05-09"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1778,6 +1782,8 @@ msgstr "Включає створення рахунка-фактури з то�
 #, python-format
 msgid "Encountered error when loading image. Please try again."
 msgstr ""
+"Виникла помилка під час завантаження зображення. Будь ласка, спробуйте "
+"знову."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__end_date
@@ -1835,7 +1841,7 @@ msgstr "Додаткова інформація"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__failed_pickings
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__failed_pickings
 msgid "Failed Pickings"
-msgstr ""
+msgstr "Невдалі комплектування"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1866,7 +1872,7 @@ msgstr "Схеми оподаткування"
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Fiscal data module error"
-msgstr ""
+msgstr "Помилка модуля фіскальної дати"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_follower_ids
@@ -1917,7 +1923,7 @@ msgstr "Запуск виконано"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__full_product_name
 msgid "Full Product Name"
-msgstr ""
+msgstr "Повна назва товару"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2807,6 +2813,7 @@ msgstr ""
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported."
 msgstr ""
+"Лише формати зображення, що підтримуються у вебі, такі як .png або .jpeg."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3917,7 +3924,7 @@ msgstr "Залишилось"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Remaining unsynced orders"
-msgstr ""
+msgstr "Залишилися несинхронізовані замовлення"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3935,7 +3942,7 @@ msgstr "Звітність"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Reprint receipt, refund and exchange orders"
-msgstr ""
+msgstr "Роздрукувати повторно чек, повернення та замовлення на обмін "
 
 #. module: point_of_sale
 #. openerp-web
@@ -3969,7 +3976,7 @@ msgstr "Обмежити зміни цін для менеджерів"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limit_categories
 msgid "Restrict Product Categories"
-msgstr ""
+msgstr "Обмежити категорії товарів"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4053,7 +4060,7 @@ msgstr "Помилка округлення у рядках оплати"
 #: code:addons/point_of_sale/static/src/xml/debug_manager.xml:0
 #, python-format
 msgid "Run Point of Sale JS Tests"
-msgstr ""
+msgstr "Запустити тести JS точки продажу"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
@@ -4154,7 +4161,7 @@ msgstr "Пошук клієнтів"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidgetControlPanel.xml:0
 #, python-format
 msgid "Search Products..."
-msgstr ""
+msgstr "Пошук товарів..."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
@@ -4166,7 +4173,7 @@ msgstr "Пошук замовлення на продаж"
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #, python-format
 msgid "Search Tickets..."
-msgstr ""
+msgstr "Пошук квитків..."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4187,26 +4194,26 @@ msgstr "Обрати схему оподаткування"
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderDetails.xml:0
 #, python-format
 msgid "Select an order"
-msgstr ""
+msgstr "Оберіть замовлення"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Select product attributes"
-msgstr ""
+msgstr "Оберіть атрибути товару"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/HomeCategoryBreadcrumb.js:0
 #, python-format
 msgid "Select the category"
-msgstr ""
+msgstr "Оберіть категорію"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetPricelistButton.js:0
 #, python-format
 msgid "Select the pricelist"
-msgstr ""
+msgstr "Оберіть прайс-лист"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__selectable_categ_ids
@@ -4247,7 +4254,7 @@ msgstr "Відіслано по електронній пошті"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Sending email failed. Please try again."
-msgstr ""
+msgstr "Помилка надсилання електронного листа. Спробуйте ще раз."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -4315,7 +4322,7 @@ msgstr "ІD сесії:"
 #: code:addons/point_of_sale/static/src/js/Screens/OrderManagementScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Session is closed"
-msgstr ""
+msgstr "Сесія закрита"
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -4474,6 +4481,8 @@ msgid ""
 "Some Cash Registers are already posted. Please reset them to new in order to close the session.\n"
 "Cash Registers: %r"
 msgstr ""
+"Деякі каси вже опубліковано. Скиньте їх на нові, щоби закрити сесію.\n"
+"Касовий апарат: %r"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4602,7 +4611,7 @@ msgstr "Складське переміщення "
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
-msgstr ""
+msgstr "Склад оновиться при закритті"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4785,6 +4794,8 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
+"Точка продажу підтримує стратегію округлення лише \"додати рядок "
+"округлення\"."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4794,6 +4805,8 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
 msgstr ""
+"Сума рядків вашого платежу повинні бути округлені для підтвердження "
+"тразакції."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4816,6 +4829,7 @@ msgstr ""
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
 msgstr ""
+"Виникла помилка модуля фіскальної дати під час отриманн вашого замовлення."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -5012,6 +5026,8 @@ msgid ""
 "The transactions are processed by Six. Set the IP address of the terminal on"
 " the related payment method."
 msgstr ""
+"Транзакції обробляються через Six. Встановіть IP-адресутерміналу на "
+"пов'язаному методі оплати."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_mercury
@@ -5051,6 +5067,7 @@ msgstr ""
 #, python-format
 msgid "There are unsynced orders. Do you want to sync these orders?"
 msgstr ""
+"Є несинхронізовані замовлення. Ви хочете синхронізувати ці замовлення?"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -5738,13 +5755,15 @@ msgstr "Ви не можете створити сесію перед датою
 #, python-format
 msgid "You cannot delete a bank statement linked to Point of Sale session."
 msgstr ""
+"Ви не можете видалити банківську випискуЮ пов'язану до цієї сесії точки "
+"проадажу."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_category.py:0
 #, python-format
 msgid ""
 "You cannot delete a point of sale category while a session is still opened."
-msgstr ""
+msgstr "Ви не можете видалити категорію точки продажу поки сесія відкрита."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:0
@@ -5797,7 +5816,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "You have to round your payments lines. is not rounded."
-msgstr ""
+msgstr "Вам потрібно округлити рядки платежів. Не округлені."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -5837,12 +5856,14 @@ msgstr ""
 msgid ""
 "You must have at least one payment method configured to launch a session."
 msgstr ""
+"У вас повинен бути принаймні один спосіб оплати, який налаштовується при "
+"запуску сесії."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "You need a loss and profit account on your cash journal."
-msgstr ""
+msgstr "Вам потрібен рахунок доходів та витрат у вашому касовому журналі."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5865,6 +5886,8 @@ msgid ""
 "Your PoS Session is open since %(date)s, we advise you to close it and to "
 "create a new one."
 msgstr ""
+"Ваша сесія точки продажу відкрита з %(date)s, ми радимо закрити її та "
+"розпочати нову."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
