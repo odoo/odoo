@@ -1,4 +1,4 @@
-odoo.define("pos_limit_discount.models", function (require) {
+odoo.define("aumet_pos_limit_discount.models", function (require) {
 "use strict";
 
     const { Gui } = require('point_of_sale.Gui');
@@ -20,7 +20,7 @@ odoo.define("pos_limit_discount.models", function (require) {
             },
             play_wav: function() {
                 var src = '';
-                src = "/pos_limit_discount/static/src/sounds/zt.wav";
+                src = "/aumet_pos_limit_discount/static/src/sounds/zt.wav";
                 $('body').append('<audio src="'+src+'" autoplay="true"></audio>');
             },
 

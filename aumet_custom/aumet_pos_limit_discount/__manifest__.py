@@ -5,7 +5,6 @@
         """,
     'description': """
     """,
-    'author': "Ad Mk Joseph",
     'website': "",
     'category': 'Generic Modules',
     'version': '14.0.0.0',
