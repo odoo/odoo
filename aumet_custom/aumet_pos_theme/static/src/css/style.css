@@ -1,6 +1,307 @@
-@font-face {
-    font-family: Open Sans;
-    src: url(/aumet_pos_theme/static/src/fonts/OpenSans-Regular.ttf);
+.pos {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.pos .loader {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.pos .loader-feedback .progressbar {
+    background: #ffffff;
+    height: 3px;
+
+}
+
+.pos .loader-feedback .progressbar > .progress {
+    height: 100%;
+    background: #000000;
+}
+
+.pos .pos-topheader {
+    width: 100%;
+    height: 60px;
+    color: #ffffff;
+    background: #1FBBA6;
+}
+
+.pos .pos-topheader #wrapper {
+    min-width: 50px;
+    max-width: 50px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+    display: flex;
+    justify-content: space-between;
+    line-height: 100%;
+    font-size: 19px;
+}
+
+.pos .pos-topheader #wrapper > button {
+    font-size: 19px;
+}
+
+.pos .pos-branding {
+    min-width: 300px;
+    max-width: 300px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    line-height: 100%;
+    vertical-align: middle;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pos .pos-logo {
+    height: 35px;
+    margin-left: 10px;
+    margin-top: 15px;
+    vertical-align: middle;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pos .pos-rightheader {
+    flex-grow: 1;
+    flex-shrink: 1;
+    height: 100%;
+    overflow: hidden;
+    overflow-x: hidden;
+    padding-left: 200px;
+}
+
+.pos .pos-rightheader > * {
+    border-right: 0;
+    border-left: 0;
+}
+
+.pos .pos-rightheader .username {
+    float: left;
+    color: #ffffff;
+    font-size: 20px;
+    margin-right: 0;
+    line-height: 20px;
+    font-style: normal;
+    margin-left: 10px;
+    margin-top: 6px;
+    vertical-align: middle;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.pos .oe_status .oe_green,
+.pos .oe_icon.oe_green {
+    color: #ffffff;
+}
+
+.pos .pos-rightheader .header-button.lock-button {
+    width: 10%;
+    color: #ffffff !important;
+    font-size: 20px;
+    line-height: 60px;
+    font-style: normal;
+    margin: 0;
+    vertical-align: middle;
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    flex-shrink: 1;
+}
+
+.pos .pos-rightheader .header-button.lock-button:hover {
+    color: #ffffff !important;
+}
+
+.pos .pos-rightheader .header-button:last-child {
+    border-left: 0 !important;
+}
+
+.pos .pos-content {
+    width: 100%;
+    position: absolute;
+    top: 60px;
+    bottom: 0;
+    background: #ffffff;
+}
+
+/*  ********* Contains everything below the  bar ********* */
+
+
+.pos .leftpane {
+    background: #ffffff;
+}
+
+.pos .leftpane .pads {
+    border-top: 0;
+    width: 80% !important;
+    margin: auto;
+    padding-bottom: 10px !important;
+}
+
+
+.pos .leftpane .pads .subpads {
+    display: flex !important;
+    width: 100%;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+
+/*  ********* The control buttons ********* */
+.pos .control-buttons {
+    margin: 0 !important;
+    width: 100% !important;
+    padding-left: 0 !important;
+
+
+}
+
+.pos .control-button {
+    box-sizing: border-box;
+    margin-left: 0 !important;
+    margin-bottom: 0 !important;
+    border-radius: 10px 10px 0 0 !important;
+    background: #E2E2E2;
+}
+
+.pos .control-button:active {
+    background: #1FBBA6;
+    color: #ffffff;
+}
+
+.pos .control-button:hover {
+    background: #efefef;
+}
+
+/*  ********* The actionpad (payment, set customer) ********* */
+
+
+.pos .actionpad {
+    padding: 0 !important;
+    margin: auto !important;
+    width: 100%;
+    text-align: center;
+    vertical-align: top;
+    border: none !important;
+    border-radius: 0 !important;
+    flex-grow: 1;
+    display: flex;
+}
+
+
+.pos .actionpad .button:first-child {
+    border-radius: 0 0 0 10px !important;
+}
+
+.pos .actionpad .button:last-child {
+    border-radius: 0 0 10px 0 !important;
+
+}
+
+.pos .actionpad .button:hover {
+    background: #efefef;
+}
+
+.pos .pay {
+    color: #ffffff;
+    background-color: #1FBBA6;
+    border-radius: 10px 10px 10px 10px !important;
+    font-weight: 500;
+    font-size: 18px;
+    margin: auto;
+    margin-top: 10% !important;
+    height: 56px;
+    width: 100%;
+    max-width: 100%;
+}
+
+.pos .pay:hover {
+    opacity: 0.9;
+}
+
+@media screen and (max-width: 768px) {
+    .pos .actionpad .button.set-customer {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .pos .actionpad .button.set-customer.decentered {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+}
+
+/*  ********* The Numpad ********* */
+
+.pos .product-screen .numpad {
+    text-align: center;
+    border: 0 !important;
+    margin: auto !important;
+    width: 100% !important;
+    min-width: 100% !important;
+}
+
+.pos .product-screen .numpad button {
+    float: left;
+    height: 54px;
+    width: 25% !important;
+    font-weight: bold;
+    vertical-align: middle;
+    color: #5F5955;
+    border-radius: 0 !important;
+    background-color: #E2E2E2;
+}
+
+.pos .numpad button:hover {
+    background: #efefef;
+}
+
+.pos .numpad button:active {
+    background: #1FBBA6;
+    color: white;
+    border-color: transparent;
+}
+
+.pos .numpad .selected-mode {
+    color: #ffffff !important;
+    background: #1FBBA6 !important;
+}
+
+.pos .numpad .selected-mode:hover {
+    opacity: 0.8;
+}
+
+.pos .numpad button:nth-child(4) {
+    border-top-right-radius: 10px;
+}
+
+.pos .numpad button:nth-child(1) {
+    border-top-left-radius: 10px;
+}
+
+.pos .numpad button:nth-child(13) {
+    border-bottom-left-radius: 10px;
+}
+
+.pos .numpad button:last-child {
+    border-bottom-right-radius: 10px;
+}
+
+.pos .input-button {
+    font-size: 24px;
+}
+
+.pos .mode-button {
+    font-size: 14px;
 }
 
 .pos .green-border-bottom {
@@ -29,7 +330,6 @@
 
 .pos .rightpane-header {
     background-color: #606161 !important;
-
 }
 
 .pos .breadcrumb-button.breadcrumb-home {
@@ -49,7 +349,6 @@
 .product-item .product-item-img {
     height: 118px;
     background-color: #FFFFFF;
-
 }
 
 .product-item .product-item-img img {
@@ -62,7 +361,6 @@
     height: 25px;
     background: #1FBBA6;
     border-radius: 0 0 4px 4px;
-
 }
 
 .product-item span {
@@ -73,13 +371,11 @@
     display: block;
 }
 
-
 .product-item-name {
     width: 118px;
     height: 17px;
     padding-top: 7px;
     color: #000000;
-    font-family: Open Sans;
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
@@ -93,238 +389,6 @@
 .product-list {
     background: #FFFFFF;
 }
-
-.pos .leftpane {
-    background: #FFFFFF;
-}
-
-.product-screen .order-empty {
-    background: #FFFFFF;
-    margin: 48px 0 0 0 !important;
-}
-
-.product-screen .order-empty i {
-    color: rgba(95, 89, 85, 0.3);
-    font-size: 128px !important;
-
-}
-
-.product-screen .order-empty h1 {
-    color: #000000;
-    height: 50px;
-    font-family: Cairo;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 16px;
-    padding: 30px 58px 0 76px;
-
-}
-
-.product-screen .order-empty p {
-    color: #000000;
-    height: 64px;
-    font-family: Cairo;
-    font-style: normal;
-    font-size: 12px;
-    line-height: 34px;
-    padding: 0 58px 0 76px;
-}
-
-.product-screen .numpad {
-    width: 320px !important;
-    height: 220px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    border: none !important;
-}
-
-.product-screen .numpad button {
-    font-family: Cairo;
-
-    float: none !important;
-    width: 79px !important;
-    height: 55px !important;
-    color: #5F5955 !important;
-    background: #E2E2E2 !important;
-    font-style: normal;
-    text-align: center;
-}
-
-.pos .mode-button.selected-mode {
-    background: #1FBBA6 !important;
-    color: #FFFFFF !important;
-}
-
-button.pay {
-    width: 317px !important;
-    height: 51px !important;
-    margin: auto !important;
-    background: #1FBBA6 !important;
-    opacity: 0.6;
-    border-radius: 6px !important;
-    color: #ffffff !important;
-    font-size: 21px;
-    line-height: 39px;
-    font-style: normal;
-    font-weight: bold;
-
-}
-
-.order-container {
-    flex-grow: 0 !important;
-    height: 50% !important;
-}
-
-.pos .leftpane, .middel {
-    border-right: 1px solid #5F5955 !important;
-}
-
-.pos .middel {
-    background: #FFFFFF;
-    width: 5% !important;
-    max-width: 5% !important;
-}
-
-.pos .middel .middle-component {
-    overflow: visible !important;
-    align-content: center;
-    align-items: center;
-}
-
-.middle-component-buttons {
-
-    width: 100% !important;
-    margin: auto;
-}
-
-.pos .pos-content {
-    top: 65px !important;
-    background-color: #ffffff !important;
-}
-
-.pos .pos-topheader {
-    height: 65px !important;
-    background: #1FBBA6 !important;
-
-}
-
-.search-bar-portal .search-box .icon {
-
-    color: #1FBBA6 !important;
-
-}
-
-.search-bar-portal .search-box .clear-icon {
-    color: #1FBBA6 !important;
-
-}
-
-.pos-rightheader > * {
-    border-right: 0 !important;
-}
-
-.oe_status .username {
-    height: 25px;
-    font-family: Open Sans;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 25px;
-    text-align: center;
-    color: #FFFFFF;
-}
-
-.pos .oe_status .oe_green, .pos .oe_icon.oe_green {
-    color: #ffffff !important;
-}
-
-.pos .pos-rightheader .header-button:last-child {
-    border-left: 0 !important;
-}
-
-.pos .pos-rightheader .header-button {
-    border-right: 0 !important;
-}
-
-.pos .status-buttons, .pos-branding > img, #wrapper {
-    margin-top: 7px !important;
-}
-
-.ticket-button:hover {
-    background-color: #1FBBA6 !important;
-}
-
-.ticket-button.highlight {
-    background-color: #1FBBA6 !important;
-
-}
-
-.pos .status-buttons {
-    position: absolute;
-    right: 40px;
-}
-
-.pos .pos-rightheader .header-button.lock-button {
-    font-size: 20px;
-    color: #ffffff !important;
-    border-left: 1px solid rgba(0, 0, 0, 0.1);
-    width: 57px !important;
-}
-
-.pos .modal-dialog .popup {
-    width: 513px;
-    background: #FFFFFF;
-    border-radius: 9px;
-}
-
-.pos .popup.popup-selection .selection-item {
-    background: #FFFFFF !important;
-    border-radius: 9px !important;
-    text-align: center;
-    padding: 0 5px 0 5px;
-
-}
-
-.pos .popup.popup-selection .selection-item.selected {
-    background: #1FBBA6 !important;
-    color: #ffffff !important;
-    text-align: center;
-    margin: 0 15px 0 15px;
-}
-
-.pos .popup .footer {
-    margin-top: 10px !important;
-}
-
-
-.pos .actionpad {
-    padding-top: 0 !important;
-    padding: 0 !important;
-    display: inline-flex !important;
-    border-left: 0 !important;
-    width: 320px !important;
-    margin: auto !important;
-}
-
-.product-screen .actionpad .button.set-customer {
-    width: 160px !important;
-    border-top-left-radius: 0 !important;
-}
-
-.product-screen .leftpane .pads {
-    border-top: 0 !important;
-}
-
-.product-screen .control-buttons {
-    width: 320px !important;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.pos #wrapper button#slidemenubtn {
-    background-color: #04bca6 !important;
-}
-
 
 /*--------------------payment-screen---------------------------*/
 .payment-screen > .screen-content {
@@ -348,7 +412,6 @@ button.pay {
 }
 
 .payment-screen .top-content .back span.back_text {
-    font-family: Cairo;
     font-style: normal;
     font-weight: 600;
     font-size: 16px;
@@ -359,7 +422,6 @@ button.pay {
 }
 
 .payment-screen .top-content .top-content-center > h1 {
-    font-family: Cairo;
     font-style: normal;
     font-weight: bold;
     font-size: 34px;
@@ -380,7 +442,6 @@ button.pay {
 }
 
 .payment-screen .top-content .next span.next_text {
-    font-family: Cairo;
     font-style: normal;
     font-weight: 600;
     font-size: 25px;
@@ -394,7 +455,6 @@ button.pay {
 }
 
 .payment-screen .left-content .paymentmethods-container .toggle-serial-print .print-serial-label {
-    font-family: Cairo;
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
@@ -418,8 +478,6 @@ button.pay {
 }
 
 .paymentmethods .paymentmethod.button {
-    font-family: Cairo;
-    font-style: normal;
     font-weight: bold;
     font-size: 20px;
     line-height: 60px;
@@ -444,12 +502,9 @@ button.pay {
 .payment-screen .paymentlines {
     max-height: 250px;
     overflow-y: auto;
-
 }
 
 .payment-screen .paymentlines-empty .total {
-
-    font-family: Cairo;
     font-style: normal;
     font-weight: bold;
     font-size: 75px;
@@ -460,7 +515,6 @@ button.pay {
 }
 
 .payment-status-total-due .label, .payment-status-change .label, .payment-status-remaining .label {
-    font-family: Open Sans;
     font-style: normal;
     font-weight: normal;
     font-size: 17px;
@@ -469,7 +523,6 @@ button.pay {
 }
 
 .payment-status-change .amount, .payment-status-remaining .amount {
-    font-family: Cairo;
     font-style: normal;
     font-weight: 600;
     font-size: 25px;
@@ -479,7 +532,6 @@ button.pay {
 }
 
 .payment-status-total-due .total {
-    font-family: Cairo;
     font-style: normal;
     font-weight: bold;
     font-size: 60px !important;
@@ -489,11 +541,9 @@ button.pay {
 }
 
 .payment-numpad .numpad {
-
     width: 442px !important;
     height: 442px !important;
     box-sizing: border-box;
-    /*border-radius: 10px;*/
 }
 
 .payment-numpad .numpad .input-button {
@@ -524,7 +574,6 @@ button.pay {
     background: #12B9A9 !important;
     opacity: 1;
     color: #ffffff !important;
-
 }
 
 .pos .paymentline {
@@ -546,16 +595,13 @@ button.pay {
         padding: 0 !important;
         max-width: 100% !important;
         width: 100% !important;
-
     }
 
     .payment-screen .payment-numpad {
         padding-top: 0 !important;
     }
 }
-
 /*--------------------End-Payment-Screen---------------------------*/
-
 /*--------------------Receipt-Screen-------------------------------*/
 .pos .receipt-screen {
     background: #F0EEEE;
@@ -565,14 +611,12 @@ button.pay {
     border-left: 0 !important;
     border-right: 0 !important;
     max-width: 80%;
-
 }
 
 .pos .receipt-screen .top-content {
     min-width: 100%;
     border-bottom: 0 !important
 }
-
 
 .pos .receipt-screen .top-content .button {
     width: 135px;
@@ -588,7 +632,6 @@ button.pay {
     background: #12B9A9 !important;
     border-radius: 3px;
     justify-content: right;
-
 }
 
 .receipt-screen .default-view .actions h1 {
@@ -598,15 +641,12 @@ button.pay {
     line-height: 56px !important;
     text-align: center !important;
     color: #000000;
-
 }
 
 .receipt-screen .default-view .actions .buttons .button, .receipt-screen .default-view .actions .send-email {
     flex: none !important;
     margin: auto;
     width: 431px !important;
-
 }
 
 /*--------------------End-Receipt-Screen---------------------------*/
-
