@@ -498,7 +498,8 @@ class MailRenderMixin(models.AbstractModel):
         self.ensure_one()
 
         if self.env.context.get('template_preview_lang'):
-            return dict((res_id, self.env.context['template_preview_lang']) for res_id in res_ids)
+            lang = self.env.context['template_preview_lang']
+            return {lang: (self.with_context(lang=lang), res_ids)}
 
         lang_to_res_ids = {}
         for res_id, lang in self._render_lang(res_ids, engine=engine).items():
