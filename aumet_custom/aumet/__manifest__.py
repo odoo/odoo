@@ -23,7 +23,8 @@
     'data': [
         'security/ir.model.access.csv',
         'views/views.xml',
-        'views/res_company_views.xml'
+        'views/res_company_views.xml',
+        'views/assets.xml'
     ],
 
     'images': ['static/description/icon.png'],

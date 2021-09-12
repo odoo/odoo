@@ -5,11 +5,10 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-
-            <page name="general_info" position="inside">
-                    <field name="is_marketplace"/>is_marketplace
-                    <field name="marketplace_id" attrs="{'required': [('is_marketplace', '=', True)]}"/>
-            </page>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="is_in_marketplace"/>
+                <field name="marketplace_id" attrs="{'required': [('is_in_marketplace', '=', True)]}"/>
+            </xpath>
         </field>
     </record>
 </odoo>

@@ -99,4 +99,20 @@
     </record>
 
 
+    <record id="purchase_order_form_aumet" model="ir.ui.view">
+        <field name="name">purchase.order.inherited.aumet</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="button_marketplace" type="object" string="Lock" states="in marketplace"/>
+            </xpath>
+
+            <xpath expr="//field[@name='state']" position="replace">
+                <field name="state" widget="statusbar" statusbar_visible="draft,in marketplace,sent,purchase"
+                       readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

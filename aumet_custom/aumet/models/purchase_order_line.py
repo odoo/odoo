@@ -15,6 +15,8 @@ class PurchaseOrderLine(models.Model):
         'Unit Price', compute='_compute_standard_price', store=False)
 
     is_marketplace_order = fields.Boolean("Is in marketplace")
+    mp_added_to_cart = fields.Boolean('Added to cart', default=False)
+
 
     def _compute_standard_price(self):
         self.product_id.with_prefetch()
@@ -50,9 +52,12 @@ class PurchaseOrderLine(models.Model):
 
             if item_add_line_result:
                 self.order_id.with_prefetch()
+                self.mp_added_to_cart = True
+
+                result.order_id.action_added_to_cart()
                 self.order_id.state = "in marketplace"
 
-        return result
+        return super(PurchaseOrderLine, self).create(vals_list)
 
     def onchange(self, values, field_name, field_onchange):
         try:
