@@ -33,3 +33,13 @@ class IrActionsReport(models.Model):
             if attachment:
                 attachment.register_as_main_attachment(force=False)
         return res
+
+    @api.model
+    def render_qweb_pdf(self, res_ids=None, data=None):
+        if self.model == 'account.move' and (
+                self == self.env.ref("account.account_invoices_without_payment") or
+                self == self.env.ref("account.account_invoices")
+        ) and \
+                any(not m.is_invoice(include_receipts=True) for m in self.env[self.model].browse(res_ids)):
+            raise UserError(_("Only invoices could be printed."))
+        return super(IrActionsReport, self).render_qweb_pdf(res_ids, data)
