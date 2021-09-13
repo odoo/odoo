@@ -16,6 +16,10 @@ by sending an email to the target user. This email redirect him to :
         'data/mail_template_data.xml',
         'views/res_users_views.xml',
     ],
-    'assets': {},
+    'assets': {
+        'web.assets_tests': [
+            'auth_totp_mail/static/tests/**/*',
+        ],
+    },
     'license': 'LGPL-3',
 }
