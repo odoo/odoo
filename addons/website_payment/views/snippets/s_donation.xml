@@ -59,8 +59,7 @@
                     data-name="pre_filled_opt"
                     data-toggle-prefilled-options="true"
                     data-dependencies="!no_input_opt"
-                    data-no-preview="true"
-                    data-trigger="slider_opt">
+                    data-no-preview="true">
             </we-checkbox>
             <we-checkbox string="⌙ Descriptions"
                     data-toggle-option-description="true"
@@ -68,8 +67,8 @@
                     data-no-preview="true">
             </we-checkbox>
             <we-select string="Custom Amount" data-no-preview="true">
-                <we-button data-name="free_amount_opt" data-select-amount-input="freeAmount" data-dependencies="pre_filled_opt">Input</we-button>
-                <we-button data-name="slider_opt" data-select-amount-input="slider">Slider</we-button>
+                <we-button data-name="free_amount_opt" data-select-amount-input="freeAmount">Input</we-button>
+                <we-button data-name="slider_opt" data-select-amount-input="slider" data-dependencies="display_options_opt">Slider</we-button>
                 <we-button data-name="no_input_opt" data-select-amount-input="" data-dependencies="pre_filled_opt">None</we-button>
             </we-select>
             <we-input string="⌙ Minimum" data-step="1" data-set-minimum-amount="" data-dependencies="!no_input_opt"/>
