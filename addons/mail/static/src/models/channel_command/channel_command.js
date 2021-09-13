@@ -96,14 +96,14 @@ function factory(dependencies) {
          * @static
          * @param {Object} param0
          * @param {mail.thread} param0.channel
-         * @param {Object} [param0.postData={}]
+         * @param {Object} [param0.body='']
          */
-        async execute({ channel, postData = {} }) {
+        async execute({ channel, body = '' }) {
             return this.env.services.rpc({
                 model: 'mail.channel',
                 method: this.methodName,
                 args: [[channel.id]],
-                kwargs: postData,
+                kwargs: { body },
             });
         }
 
