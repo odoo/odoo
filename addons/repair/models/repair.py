@@ -618,6 +618,7 @@ class RepairLine(models.Model):
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_subtotal', store=True, digits=0)
+    price_total = fields.Float('Total', compute='_compute_price_total', compute_sudo=True, digits=0)
     tax_id = fields.Many2many(
         'account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes',
         domain="[('type_tax_use','=','sale'), ('company_id', '=', company_id)]", check_company=True)
@@ -661,6 +662,12 @@ class RepairLine(models.Model):
         for line in self:
             taxes = line.tax_id.compute_all(line.price_unit, line.repair_id.pricelist_id.currency_id, line.product_uom_qty, line.product_id, line.repair_id.partner_id)
             line.price_subtotal = taxes['total_excluded']
+
+    @api.depends('price_unit', 'repair_id', 'product_uom_qty', 'product_id', 'tax_id', 'repair_id.invoice_method')
+    def _compute_price_total(self):
+        for line in self:
+            taxes = line.tax_id.compute_all(line.price_unit, line.repair_id.pricelist_id.currency_id, line.product_uom_qty, line.product_id, line.repair_id.partner_id)
+            line.price_total = taxes['total_included']
 
     @api.onchange('type')
     def onchange_operation_type(self):
@@ -756,6 +763,7 @@ class RepairFee(models.Model):
     product_uom = fields.Many2one('uom.uom', 'Product Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_subtotal', store=True, digits=0)
+    price_total = fields.Float('Total', compute='_compute_price_total', compute_sudo=True, digits=0)
     tax_id = fields.Many2many(
         'account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes',
         domain="[('type_tax_use','=','sale'), ('company_id', '=', company_id)]", check_company=True)
@@ -767,6 +775,12 @@ class RepairFee(models.Model):
         for fee in self:
             taxes = fee.tax_id.compute_all(fee.price_unit, fee.repair_id.pricelist_id.currency_id, fee.product_uom_qty, fee.product_id, fee.repair_id.partner_id)
             fee.price_subtotal = taxes['total_excluded']
+
+    @api.depends('price_unit', 'repair_id', 'product_uom_qty', 'product_id', 'tax_id')
+    def _compute_price_total(self):
+        for fee in self:
+            taxes = fee.tax_id.compute_all(fee.price_unit, fee.repair_id.pricelist_id.currency_id, fee.product_uom_qty, fee.product_id, fee.repair_id.partner_id)
+            fee.price_total = taxes['total_included']
 
     @api.onchange('repair_id', 'product_id', 'product_uom_qty')
     def onchange_product_id(self):
