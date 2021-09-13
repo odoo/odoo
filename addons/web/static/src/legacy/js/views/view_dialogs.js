@@ -462,14 +462,9 @@ var SelectCreateDialog = ViewDialog.extend({
                 classes: 'btn-primary o_select_button',
                 disabled: true,
                 close: true,
-                click: function () {
-                    var records = this.viewController.getSelectedRecords();
-                    var values = _.map(records, function (record) {
-                        return {
-                            id: record.res_id,
-                            display_name: record.data.display_name,
-                        };
-                    });
+                click: async () => {
+                    const resIds = await this.viewController.getSelectedIdsWithDomain();
+                    const values = resIds.map(e => ({id: e}));
                     this.on_selected(values);
                 },
             });
