@@ -137,7 +137,19 @@ exports.PosModel = Backbone.Model.extend({
             searchTerm: '',
         };
     },
+    load_product_uom_unit: async function() {
+        const params = {
+            model: 'ir.model.data',
+            method:'check_object_reference',
+            args: ['uom', 'product_uom_unit'],
+        };
+
+        const uom_id = await this.rpc(params);
+        this.uom_unit_id = uom_id[1];
+    },
+
     after_load_server_data: async function(){
+        await this.load_product_uom_unit();
         await this.load_orders();
         this.set_start_order();
         if(this.config.use_proxy){
@@ -244,13 +256,6 @@ exports.PosModel = Backbone.Model.extend({
             _.each(units, function(unit){
                 self.units_by_id[unit.id] = unit;
             });
-        }
-    },{
-        model:  'ir.model.data',
-        fields: ['res_id'],
-        domain: function(){ return [['name', '=', 'product_uom_unit']]; },
-        loaded: function(self,unit){
-            self.uom_unit_id = unit[0].res_id;
         }
     },{
         model:  'res.country.state',
