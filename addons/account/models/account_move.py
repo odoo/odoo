@@ -3205,8 +3205,6 @@ class AccountMove(models.Model):
             move.write({'invoice_line_ids' : new_invoice_line_ids})
 
     def _get_report_base_filename(self):
-        if any(not move.is_invoice() for move in self):
-            raise UserError(_("Only invoices could be printed."))
         return self._get_move_display_name()
 
     def _get_name_invoice_report(self):
