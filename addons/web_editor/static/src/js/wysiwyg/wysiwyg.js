@@ -1,5 +1,7 @@
 odoo.define('web_editor.wysiwyg', function (require) {
 'use strict';
+
+const dom = require('web.dom');
 const core = require('web.core');
 const Widget = require('web.Widget');
 const Dialog = require('web.Dialog');
@@ -879,17 +881,12 @@ const Wysiwyg = Widget.extend({
                         $dropdown.children('.dropdown-toggle').dropdown('show');
                         const $colorpickerMenu = $dropdown.find('.colorpicker-menu');
                         const $colorpicker = $dropdown.find('.colorpicker');
-                        const colorpickerHeight = $colorpicker.outerHeight();
-                        const toolbarPos = this.toolbar.$el.offset();
-                        let top;
-                        if (colorpickerHeight < toolbarPos.top) {
-                            top = 'auto';
-                        } else {
-                            const colorpickerBottom = toolbarPos.top + this.toolbar.$el.outerHeight() + colorpickerHeight;
-                            const clientHeight = this.odooEditor.document.documentElement.clientHeight;
-                            top = colorpickerBottom > clientHeight ? colorpickerHeight - clientHeight : '';
-                        }
-                        $colorpickerMenu.css({top, height: $colorpicker.outerHeight() + 2});
+                        const colorpickerHeight = $colorpicker.outerHeight() + 2;
+                        const toolbarContainerTop = dom.closestScrollable(this.toolbar.el).getBoundingClientRect().top;
+                        const toolbarColorButtonEl = this.toolbar.el.querySelector('#colorInputButtonGroup');
+                        const toolbarColorButtonTop = (toolbarColorButtonEl || this.toolbar.el).getBoundingClientRect().top;
+                        const top = colorpickerHeight + toolbarContainerTop <= toolbarColorButtonTop ? 'auto' : '';
+                        $colorpickerMenu.css({top, height: colorpickerHeight});
                         manualOpening = false;
                     });
                 });
