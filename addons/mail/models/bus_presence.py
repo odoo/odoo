@@ -9,7 +9,6 @@ class BusPresence(models.Model):
     guest_id = fields.Many2one('mail.guest', 'Guest', ondelete='cascade')
 
     def init(self):
-        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS bus_presence_user_unique ON %s (user_id) WHERE user_id IS NOT NULL" % self._table)
         self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS bus_presence_guest_unique ON %s (guest_id) WHERE guest_id IS NOT NULL" % self._table)
 
     _sql_constraints = [
