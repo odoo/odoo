@@ -33,7 +33,7 @@ Here is how it works:
     'version': '11.0',
     'category': 'Accounting/Localizations/Account Charts',
 
-    'depends': ['account', 'l10n_multilang', 'base_iban'],
+    'depends': ['account', 'l10n_multilang', 'base_iban', 'l10n_din5008'],
 
     'data': [
         'data/l10n_ch_chart_data.xml',
