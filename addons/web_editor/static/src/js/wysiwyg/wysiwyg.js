@@ -49,6 +49,8 @@ const Wysiwyg = Widget.extend({
             ? this.options.autohideToolbar
             : !options.snippets;
         this.saving_mutex = new concurrency.Mutex();
+        // Keeps track of color palettes per event name.
+        this.colorpickers = {};
         this._onDocumentMousedown = this._onDocumentMousedown.bind(this);
         this._onBlur = this._onBlur.bind(this);
     },
@@ -1057,6 +1059,29 @@ const Wysiwyg = Widget.extend({
             }
         }, 0);
     },
+    /**
+     * @private
+     * @param {jQuery} $
+     * @param {String} eventName 'foreColor' or 'backColor'
+     * @returns {String} color
+     */
+    _getSelectedColor($, eventName) {
+        const selection = this.odooEditor.document.getSelection();
+        const range = selection.rangeCount && selection.getRangeAt(0);
+        const targetNode = range && range.startContainer;
+        const targetElement = targetNode && targetNode.nodeType === Node.ELEMENT_NODE
+            ? targetNode
+            : targetNode && targetNode.parentNode;
+        const backgroundImage = $(targetElement).css('background-image');
+        let backgroundGradient = false;
+        if (weUtils.isColorGradient(backgroundImage)) {
+            const textGradient = targetElement.classList.contains('text-gradient');
+            if (eventName === "foreColor" && textGradient || eventName !== "foreColor" && !textGradient) {
+                backgroundGradient = backgroundImage;
+            }
+        }
+        return backgroundGradient || $(targetElement).css(eventName === "foreColor" ? 'color' : 'backgroundColor');
+    },
     _createPalette() {
         const $dropdownContent = this.toolbar.$el.find('#colorInputButtonGroup .colorPalette');
         // The editor's root widget can be website or web's root widget and cannot be properly retrieved...
@@ -1081,38 +1106,24 @@ const Wysiwyg = Widget.extend({
                 mutex.exec(() => {
                     const oldColorpicker = colorpicker;
                     const hookEl = oldColorpicker ? oldColorpicker.el : elem;
-
+                    const selectedColor = this._getSelectedColor($, eventName);
                     const selection = this.odooEditor.document.getSelection();
                     const range = selection.rangeCount && selection.getRangeAt(0);
-                    const targetNode = range && range.startContainer;
-                    const targetElement = targetNode && targetNode.nodeType === Node.ELEMENT_NODE
-                        ? targetNode
-                        : targetNode && targetNode.parentNode;
-                    const backgroundImage = $(targetElement).css('background-image');
-                    let backgroundGradient = false;
-                    if (weUtils.isColorGradient(backgroundImage)) {
-                        const textGradient = targetElement.classList.contains('text-gradient');
-                        if (eventName === "foreColor" && textGradient || eventName !== "foreColor" && !textGradient) {
-                            backgroundGradient = backgroundImage;
-                        }
-                    }
                     const hadNonCollapsedSelection = range && !selection.isCollapsed;
                     colorpicker = new ColorPaletteWidget(this, {
                         excluded: ['transparent_grayscale'],
                         $editable: $(this.odooEditor.editable), // Our parent is the root widget, we can't retrieve the editable section from it...
-                        selectedColor: backgroundGradient || $(targetElement).css(eventName === "foreColor" ? 'color' : 'backgroundColor'),
-                        selectedTab: backgroundGradient ? 'gradients' : 'theme-colors',
+                        selectedColor: selectedColor,
+                        selectedTab: weUtils.isColorGradient(selectedColor) ? 'gradients' : 'theme-colors',
                         withGradients: true,
                     });
+                    this.colorpickers[eventName] = colorpicker;
                     colorpicker.on('custom_color_picked color_picked', null, ev => {
                         if (hadNonCollapsedSelection) {
                             this.odooEditor.historyResetLatestComputedSelection(true);
                         }
                         this._processAndApplyColor(eventName, ev.data.color);
-                        // If the palette was already opened (e.g. modifying a gradient), the new
-                        // DOM state must be reflected in the palette, but the tab selection must
-                        // not be impacted.
-                        colorpicker.setSelectedColor(null, ev.data.color, false);
+                        this._updateEditorUI();
                     });
                     colorpicker.on('color_hover color_leave', null, ev => {
                         if (hadNonCollapsedSelection) {
@@ -1313,6 +1324,15 @@ const Wysiwyg = Widget.extend({
                 $target.tooltip({title: _t('Double-click to edit'), trigger: 'manual', container: 'body'}).tooltip('show');
                 setTimeout(() => $target.tooltip('dispose'), 800);
             }, 400);
+        }
+        // Update color of already opened colorpickers.
+        for (let eventName in this.colorpickers) {
+            const selectedColor = this._getSelectedColor($, eventName);
+            if (selectedColor) {
+                // If the palette was already opened (e.g. modifying a gradient), the new DOM state
+                // must be reflected in the palette, but the tab selection must not be impacted.
+                this.colorpickers[eventName].setSelectedColor(null, selectedColor, false);
+            }
         }
     },
     _updateMediaJustifyButton: function (commandState) {
