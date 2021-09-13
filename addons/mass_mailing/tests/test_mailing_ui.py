@@ -20,4 +20,4 @@ class TestUi(HttpCaseWithUserDemo):
         # for email client compatibility should be saved in body_html. This
         # ensures both fields have different values.
         self.assertEqual(mail.body_arch, '<p><br></p>')
-        self.assertEqual(mail.body_html, '<p style="margin:0px 0 14px 0;box-sizing:border-box;"><br style="box-sizing:border-box;"></p>')
+        self.assertEqual(mail.body_html, '<p style="margin:0px 0 14px 0;box-sizing:border-box;font-family:Arial, sans-serif;"><br style="box-sizing:border-box;"></p>')
