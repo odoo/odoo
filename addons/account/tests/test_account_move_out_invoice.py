@@ -2931,3 +2931,33 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         with Form(self.invoice) as move_form:
             move_form.invoice_payment_term_id = self.pay_terms_b    # Switch to 30% in advance payment terms
             move_form.invoice_payment_term_id = self.pay_terms_a    # Back to immediate payment term
+
+    def test_out_invoice_copy_custom_date(self):
+        """ When creating a refund for a given invoice, the invoice is copied first. This test ensures the payment
+        terms are well recomputed in order to take the new date into account.
+        """
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2017-01-01',
+            'invoice_date_due': '2017-01-01',
+            'date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [
+                (0, None, {
+                    'product_id': self.product_a.id,
+                    'product_uom_id': self.product_a.uom_id.id,
+                    'quantity': 1.0,
+                    'price_unit': 1000.0,
+                    'tax_ids': [(6, 0, self.product_a.taxes_id.ids)],
+                }),
+            ]
+        })
+
+        copy_invoice = invoice.copy(default={'invoice_date_due': '2018-01-01'})
+        self.assertRecordValues(copy_invoice, [
+            {'invoice_date_due': fields.Date.from_string('2018-01-01')},
+        ])
+        self.assertRecordValues(copy_invoice.line_ids.filtered('date_maturity'), [
+            {'date_maturity': fields.Date.from_string('2018-01-01')},
+        ])
