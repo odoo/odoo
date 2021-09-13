@@ -69,4 +69,5 @@ GroupByMenu.components = { CustomGroupByItem };
 GroupByMenu.template = "web.GroupByMenu";
 GroupByMenu.defaultProps = {
     showActiveItems: true,
+    showCaretDown: false,
 };
