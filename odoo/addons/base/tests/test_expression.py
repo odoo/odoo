@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import unittest
+from unittest.mock import patch
 
 import psycopg2
 
@@ -672,13 +674,29 @@ class TestExpression(SavepointCaseWithUserDemo):
 
     def test_accent(self):
         if not self.registry.has_unaccent:
-            return
-        Company = self.env['res.company']
-        helene = Company.create({'name': u'Hélène'})
-        self.assertEqual(helene, Company.search([('name','ilike','Helene')]))
-        self.assertEqual(helene, Company.search([('name','ilike','hélène')]))
-        self.assertNotIn(helene, Company.search([('name','not ilike','Helene')]))
-        self.assertNotIn(helene, Company.search([('name','not ilike','hélène')]))
+            raise unittest.SkipTest("unaccent not enabled")
+
+        Model = self.env['res.partner.category']
+        helen = Model.create({'name': 'Hélène'})
+        self.assertEqual(helen, Model.search([('name', 'ilike', 'Helene')]))
+        self.assertEqual(helen, Model.search([('name', 'ilike', 'hélène')]))
+        self.assertNotIn(helen, Model.search([('name', 'not ilike', 'Helene')]))
+        self.assertNotIn(helen, Model.search([('name', 'not ilike', 'hélène')]))
+
+        hermione, nicostratus = Model.create([
+            {'name': 'Hermione', 'parent_id': helen.id},
+            {'name': 'Nicostratus', 'parent_id': helen.id}
+        ])
+        self.assertEqual(nicostratus.parent_path, f'{helen.id}/{nicostratus.id}/')
+
+        with patch('odoo.osv.expression.get_unaccent_wrapper') as w:
+            w().side_effect = lambda x: x
+            rs = Model.search([('parent_path', 'like', f'{helen.id}/%')], order='id asc')
+            self.assertEqual(rs, helen | hermione | nicostratus)
+            # the result of `get_unaccent_wrapper()` is the wrapper and that's
+            # what should not be called
+            w().assert_not_called()
+
 
     def test_pure_function(self):
         orig_false = expression.FALSE_DOMAIN.copy()
