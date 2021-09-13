@@ -54,6 +54,20 @@
             },
         });
 
+        const { patch } = odoo.__DEBUG__.services["@web/core/utils/patch"];
+        const { WithSearch } = odoo.__DEBUG__.services["@web/search/with_search/with_search"];
+
+        patch(WithSearch.prototype, "PatchedWithSearch", {
+            async willStart() {
+                await this._super(...arguments);
+                viewUpdateCount++;
+            },
+            async render() {
+                await this._super(...arguments);
+                viewUpdateCount++;
+            },
+        });
+
         // This test file is not respecting Odoo module dependencies.
         // The following module might not be loaded (eg. if mail is not installed).
         const DiscussWidgetModule = odoo.__DEBUG__.services["@mail/widgets/discuss/discuss"];
@@ -238,7 +252,7 @@
 
         for (const filter of filterMenuItems) {
             const currentViewCount = viewUpdateCount;
-            const filterLink = filter.querySelector("a");
+            const filterLink = filter.querySelector("a") || filter;
             await triggerClick(filterLink, `filter "${filter.innerText.trim()}"`);
             if (filterLink.classList.contains("o_menu_item_parent")) {
                 // If a fitler has options, it will simply unfold and show all options.
@@ -281,11 +295,7 @@
                     triggerClick(target, `${viewType} view switcher`);
                 }
             }, 250);
-            await waitForCondition(
-                () =>
-                    document.querySelector(".o_action_manager > .o_action.o_view_controller")
-                        .dataset.viewType === viewType
-            );
+            await waitForCondition(() => document.querySelector(`.o_${viewType}_view`) !== null);
             await testFilters();
         }
     }
