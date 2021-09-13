@@ -27,6 +27,7 @@
                 on_create="quick_create"
                 quick_create_view="project.project_sharing_quick_create_task_form"
                 archivable="0"
+                import="0"
             >
                 <field name="color"/>
                 <field name="priority"/>
@@ -115,7 +116,7 @@
         <field name="model">project.task</field>
         <field name="priority">999</field>
         <field name="arch" type="xml">
-            <tree string="Tasks" sample="1" delete="0">
+            <tree string="Tasks" sample="1" delete="0" import="0">
                 <field name="is_closed" invisible="1" />
                 <field name="allow_subtasks" invisible="1" />
                 <field name="sequence" invisible="1" readonly="1"/>
