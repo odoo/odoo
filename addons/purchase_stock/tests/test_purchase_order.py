@@ -330,3 +330,33 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         po_on_time_rate = po.on_time_rate
         # 4. Check both are equals.
         self.assertEqual(partner_on_time_rate, po_on_time_rate)
+
+    def test_04_multi_uom(self):
+        yards_uom = self.env['uom.uom'].create({
+            'category_id': self.env.ref('uom.uom_categ_length').id,
+            'name': 'Yards',
+            'factor_inv': 0.9144,
+            'uom_type': 'bigger',
+        })
+        self.product_id_2.write({
+            'uom_id': self.env.ref('uom.product_uom_meter').id,
+            'uom_po_id': yards_uom.id,
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product_id_2.name,
+                    'product_id': self.product_id_2.id,
+                    'product_qty': 4.0,
+                    'product_uom': self.product_id_2.uom_po_id.id,
+                    'price_unit': 1.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                })
+            ],
+        })
+        po.button_confirm()
+        picking = po.picking_ids[0]
+        picking.move_line_ids.write({'qty_done': 3.66})
+        picking.button_validate()
+        self.assertEqual(po.order_line.mapped('qty_received'), [4.0], 'Purchase: no conversion error on receipt in different uom"')

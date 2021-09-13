@@ -30,12 +30,15 @@
                     </div>
                 </xpath>
                 <xpath expr="//field[@name='journal_id']" position="after">
-                    <field name="edi_document_ids" invisible="1" />
                     <field name="edi_state" attrs="{'invisible': ['|', ('edi_state', '=', False), ('state', '=', 'draft')]}"/>
                 </xpath>
                 <xpath expr="//group[@name='group3']" position="after">
                     <group groups="base.group_no_one">
-                        <field name="edi_document_ids" string="EDI Documents" attrs="{'invisible': [('edi_document_ids', '=', [])]}">
+                        <field name="edi_document_ids"
+                               string="EDI Documents"
+                               groups="base.group_no_one"
+                               options="{'no_open': '1'}"
+                               attrs="{'invisible': [('edi_document_ids', '=', [])]}">
                             <tree create="false" delete="false" edit="false" decoration-danger="error">
                                 <field name="name"/>
                                 <field name="edi_format_name"/>

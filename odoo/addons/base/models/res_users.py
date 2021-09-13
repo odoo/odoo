@@ -1639,6 +1639,14 @@ class APIKeys(models.Model):
 
     @check_identity
     def remove(self):
+        return self._remove()
+
+    def _remove(self):
+        """Use the remove() method to remove an API Key. This method implement logic,
+        but won't check the identity (mainly used to remove trusted devices)"""
+        if not self:
+            return {'type': 'ir.actions.act_window_close'}
+
         if self.env.is_system() or self.mapped('user_id') == self.env.user:
             ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
             _logger.info("API key(s) removed: scope: <%s> for '%s' (#%s) from %s",
