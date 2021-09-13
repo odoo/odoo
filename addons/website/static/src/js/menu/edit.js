@@ -437,9 +437,6 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @param {OdooEvent} ev
      */
     _onEditionWasStopped: function (ev) {
-        this.trigger_up('widgets_start_request', {
-            $target: this._targetForEdition(),
-        });
         this.editModeEnable = false;
     },
     /**
