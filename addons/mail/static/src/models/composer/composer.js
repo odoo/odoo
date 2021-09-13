@@ -206,7 +206,10 @@ function factory(dependencies) {
             if (this.thread.model === 'mail.channel') {
                 const command = this._getCommandFromText(this.textInputContent);
                 if (command) {
-                    command.execute({ channel: this.thread, body: this.textInputContent });
+                    await command.execute({ channel: this.thread, body: this.textInputContent });
+                    if (this.exists()) {
+                        this._reset();
+                    }
                     return;
                 }
             }
