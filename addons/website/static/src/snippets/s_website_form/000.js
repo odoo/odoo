@@ -401,10 +401,18 @@
                             if (successPage.charAt(0) === "#") {
                                 const successAnchorEl = document.getElementById(successPage.substring(1));
                                 if (successAnchorEl) {
-                                    await dom.scrollTo(successAnchorEl, {
-                                        duration: 500,
-                                        extraOffset: 0,
-                                    });
+                                    // Check if the target of the link is a modal.
+                                    if (successAnchorEl.classList.contains("modal")) {
+                                        // Trigger a "hashChange" event to
+                                        // notify the popup widget to show the
+                                        // popup.
+                                        window.location.href = successPage;
+                                    } else {
+                                        await dom.scrollTo(successAnchorEl, {
+                                            duration: 500,
+                                            extraOffset: 0,
+                                        });
+                                    }
                                 }
                                 break;
                             }

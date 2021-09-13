@@ -22,7 +22,7 @@ function loadAnchors(url, body) {
             resolve();
         }
     }).then(function (response) {
-        const anchors = $(response).find('[id][data-anchor=true]').toArray().map((el) => {
+        const anchors = $(response).find('[id][data-anchor=true], .modal[id][data-display="onClick"]').toArray().map((el) => {
             return '#' + el.id;
         });
         // Always suggest the top and the bottom of the page as internal link

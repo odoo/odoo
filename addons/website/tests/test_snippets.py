@@ -74,3 +74,6 @@ class TestSnippets(HttpCase):
 
     def test_10_parallax(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'test_parallax', login='admin')
+
+    def test_11_snippet_popup_display_on_click(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_display_on_click', login='admin')
