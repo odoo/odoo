@@ -40,17 +40,16 @@
         }
 
         th, td {
-            border-color: gray('400');
-            border-width: 0 $border-width $border-width 0;
+            border-color: gray('200');
+            border-width: $border-width $border-width $border-width $border-width;
         }
 
         th {
             font-weight: $font-weight-normal;  // bootstrap override
-            background-color: $o-view-background-color;
+            background-color: gray('100');
         }
 
         @mixin o-pivot-header-cell {
-            background-color: gray('100');
             cursor: pointer;
             white-space: nowrap;
             user-select: none;
