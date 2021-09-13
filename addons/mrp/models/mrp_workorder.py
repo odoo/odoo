@@ -363,9 +363,9 @@ class MrpWorkorder(models.Model):
             self.name = self.operation_id.name
             self.workcenter_id = self.operation_id.workcenter_id.id
 
-    @api.onchange('date_planned_start', 'duration_expected')
+    @api.onchange('date_planned_start', 'duration_expected', 'workcenter_id')
     def _onchange_date_planned_start(self):
-        if self.date_planned_start and self.duration_expected:
+        if self.date_planned_start and self.duration_expected and self.workcenter_id:
             self.date_planned_finished = self.workcenter_id.resource_calendar_id.plan_hours(
                 self.duration_expected / 60.0, self.date_planned_start,
                 compute_leaves=True, domain=[('time_type', 'in', ['leave', 'other'])]

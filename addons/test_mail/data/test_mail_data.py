@@ -43,6 +43,50 @@ Content-Transfer-Encoding: quoted-printable
 ------=_Part_4200734_24778174.1344608186754--
 """
 
+MAIL_TEMPLATE_EXTRA_HTML = """Return-Path: <whatever-2a840@postmaster.twitter.com>
+To: {to}
+cc: {cc}
+Received: by mail1.openerp.com (Postfix, from userid 10002)
+    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+    boundary="----=_Part_4200734_24778174.1344608186754"
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+Message-ID: {msg_id}
+{extra}
+------=_Part_4200734_24778174.1344608186754
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Please call me as soon as possible this afternoon!
+
+--
+Sylvie
+------=_Part_4200734_24778174.1344608186754
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+ <head>=20
+  <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8" />
+ </head>=20
+ <body style=3D"margin: 0; padding: 0; background: #ffffff;-webkit-text-size-adjust: 100%;">=20
+
+  <p>Please call me as soon as possible this afternoon!</p>
+  {extra_html}
+
+  <p>--<br/>
+     Sylvie
+  <p>
+ </body>
+</html>
+------=_Part_4200734_24778174.1344608186754--
+"""
+
+
 MAIL_TEMPLATE_PLAINTEXT = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
 Received: by mail1.openerp.com (Postfix, from userid 10002)
@@ -883,3 +927,89 @@ OyI+T2RvbzwvYT4uCjwvcD4KPC9kaXY+CiAgICAgICAg
 
 --92726A5F09.1555335666/mail2.test.ironsky--
 """
+
+MAIL_NO_BODY = '''\
+Return-Path: <{email_from}>
+Delivered-To: catchall@xxxx.xxxx
+Received: from in66.mail.ovh.net (unknown [10.101.4.66])
+    by vr38.mail.ovh.net (Postfix) with ESMTP id 4GLCGr70Kyz1myr75
+    for <catchall@xxxx.xxxx>; Thu,  8 Jul 2021 10:30:12 +0000 (UTC)
+X-Comment: SPF check N/A for local connections - client-ip=213.186.33.59; helo=mail663.ha.ovh.net; envelope-from={email_from}; receiver=catchall@xxxx.xxxx 
+Authentication-Results: in66.mail.ovh.net; dkim=none; dkim-atps=neutral
+Delivered-To: xxxx.xxxx-{email_to}
+X-ME-Helo: opme11oxm23aub.bagnolet.francetelecom.fr
+X-ME-Auth: ZnJlZGVyaWMuYmxhY2hvbjA3QG9yYW5nZS5mcg==
+X-ME-Date: Thu, 08 Jul 2021 12:30:11 +0200
+X-ME-IP: 86.221.151.111
+Date: Thu, 8 Jul 2021 12:30:11 +0200 (CEST)
+From: =?UTF-8?Q?Fr=C3=A9d=C3=A9ric_BLACHON?= <{email_from}>
+Reply-To: 
+    =?UTF-8?Q?Fr=C3=A9d=C3=A9ric_BLACHON?= <{email_from}>
+To: {email_to}
+Message-ID: <1024471522.82574.1625740211606.JavaMail.open-xchange@opme11oxm23aub.bagnolet.francetelecom.fr>
+Subject: transport autorisation 19T
+MIME-Version: 1.0
+Content-Type: multipart/mixed; 
+    boundary="----=_Part_82573_178179506.1625740211587"
+
+------=_Part_82573_178179506.1625740211587
+MIME-Version: 1.0
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+ </head><body style="font-family: arial,helvetica,sans-serif; font-size: 13pt"></body></html>
+'''
+
+MAIL_NO_FINAL_RECIPIENT = """\
+Return-Path: <bounce-md_9656353.6125275c.v1-f28f7746389e45f0bfbf9faefe9e0dc8@mandrillapp.com>
+Delivered-To: catchall@xxxx.xxxx
+Received: from in58.mail.ovh.net (unknown [10.101.4.58])
+	by vr46.mail.ovh.net (Postfix) with ESMTP id 4GvFsq2QLYz1t0N7r
+	for <catchall@xxxx.xxxx>; Tue, 24 Aug 2021 17:07:43 +0000 (UTC)
+Received-SPF: Softfail (mailfrom) identity=mailfrom; client-ip=46.105.72.169; helo=40.mo36.mail-out.ovh.net; envelope-from=bounce-md_9656353.6125275c.v1-f28f7746389e45f0bfbf9faefe9e0dc8@mandrillapp.com; receiver=catchall@xxxx.xxxx 
+Authentication-Results: in58.mail.ovh.net;
+	dkim=pass (1024-bit key; unprotected) header.d=mandrillapp.com header.i=bounces-noreply@mandrillapp.com header.b="TDzUcdJs";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="MyjddTY5";
+	dkim-atps=neutral
+Delivered-To: xxxx.xxxx-{email_to}
+Authentication-Results: in62.mail.ovh.net;
+	dkim=pass (1024-bit key; unprotected) header.d=mandrillapp.com header.i=bounces-noreply@mandrillapp.com header.b="TDzUcdJs";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="MyjddTY5";
+	dkim-atps=neutral
+From: MAILER-DAEMON <bounces-noreply@mandrillapp.com>
+Subject: Undelivered Mail Returned to Sender
+To: {email_to}
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=9656353.f28f7746389e45f0bfbf9faefe9e0dc8
+X-Mandrill-User: md_9656353
+Feedback-ID: 9656353:9656353.20210824:md
+Message-Id: <9656353.20210824170740.6125275cf21879.17950539@mail9.us4.mandrillapp.com>
+Date: Tue, 24 Aug 2021 17:07:40 +0000
+MIME-Version: 1.0
+Content-Type: multipart/report; boundary="_av-UfLe6y6qxNo54-urtAxbJQ"
+
+--_av-UfLe6y6qxNo54-urtAxbJQ
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+    --- The following addresses had delivery problems ---
+
+<{email_from}>   (5.7.1 <{email_from}>: Recipient address rejected: Access denied)
+
+
+--_av-UfLe6y6qxNo54-urtAxbJQ
+Content-Type: message/delivery-status
+Content-Transfer-Encoding: 7bit
+
+Original-Recipient: <{email_from}>
+Action: failed
+Diagnostic-Code: smtp; 554 5.7.1 <{email_from}>: Recipient address rejected: Access denied
+Remote-MTA: 10.245.192.40
+
+
+
+--_av-UfLe6y6qxNo54-urtAxbJQ--"""

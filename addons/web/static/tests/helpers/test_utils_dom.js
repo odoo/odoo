@@ -22,15 +22,15 @@ odoo.define('web.test_utils_dom', function (require) {
     const mouseEventMapping = args => Object.assign({}, args, {
         bubbles: true,
         cancelable: true,
-        clientX: args ? args.pageX : undefined,
-        clientY: args ? args.pageY : undefined,
+        clientX: args ? args.clientX || args.pageX : undefined,
+        clientY: args ? args.clientY || args.pageY : undefined,
         view: window,
     });
     const mouseEventNoBubble = args => Object.assign({}, args, {
         bubbles: false,
         cancelable: false,
-        clientX: args ? args.pageX : undefined,
-        clientY: args ? args.pageY : undefined,
+        clientX: args ? args.clientX || args.pageX : undefined,
+        clientY: args ? args.clientY || args.pageY : undefined,
         view: window,
     });
     const noBubble = args => Object.assign({}, args, { bubbles: false });
@@ -497,14 +497,11 @@ odoo.define('web.test_utils_dom', function (require) {
             throw new Error(`no target found to trigger MouseEvent`);
         }
         const rect = el.getBoundingClientRect();
-        // little fix since it seems on chrome, it triggers 1px too on the left
-        const left = rect.x + 1;
-        const top = rect.y;
-        return triggerEvent($el, type, {
-            which: 1,
-            pageX: left, layerX: left, screenX: left,
-            pageY: top, layerY: top, screenY: top,
-        });
+        // try to click around the center of the element, biased to the bottom
+        // right as chrome  messes up when clicking on the top-left corner...
+        const left = rect.x + Math.ceil(rect.width / 2);
+        const top = rect.y + Math.ceil(rect.height / 2);
+        return triggerEvent(el, type, {which: 1, clientX: left, clientY: top});
     }
 
     /**
