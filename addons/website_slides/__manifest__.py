@@ -28,6 +28,7 @@ Featuring
     'data': [
         'security/website_slides_security.xml',
         'security/ir.model.access.csv',
+        'views/gamification_karma_tracking_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         'views/rating_rating_views.xml',
@@ -64,6 +65,7 @@ Featuring
         'data/slide_channel_demo.xml',
         'data/slide_slide_demo.xml',
         'data/slide_user_demo.xml',
+        'data/slide_user_gamification_demo.xml',
     ],
     'installable': True,
     'application': True,

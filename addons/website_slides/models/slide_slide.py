@@ -955,12 +955,16 @@ class Slide(models.Model):
                      slide.quiz_second_attempt_reward,
                      slide.quiz_third_attempt_reward,
                      slide.quiz_fourth_attempt_reward]
-            points += gains[user_membership_sudo.quiz_attempts_count - 1] if user_membership_sudo.quiz_attempts_count <= len(gains) else gains[-1]
+            points = gains[min(user_membership_sudo.quiz_attempts_count, len(gains)) - 1]
+            if points:
+                if completed:
+                    reason = _('Quiz Completed')
+                else:
+                    points *= -1
+                    reason = _('Quiz Set Uncompleted')
+                self.env.user.sudo()._add_karma(points, slide, reason)
 
-        if not completed:
-            points *= -1
-
-        return self.env.user.sudo().add_karma(points)
+        return True
 
     def action_view_embeds(self):
         self.ensure_one()

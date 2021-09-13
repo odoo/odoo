@@ -115,3 +115,47 @@ class TestKarmaGain(common.SlidesCase):
         computed_karma += self.channel.karma_gen_channel_finish + self.channel_2.karma_gen_channel_finish
         (self.slide | self.slide_2 | self.slide_3 | self.slide_2_0 | self.slide_2_1).with_user(user)._action_mark_completed()
         self.assertEqual(user.karma, computed_karma)
+
+    @mute_logger('odoo.models')
+    def test_karma_gain_multiple_course_multiple_users(self):
+        users = self.user_emp | self.user_portal
+        users.write({'karma': 0})
+
+        (self.channel | self.channel_2)._action_add_members(users.partner_id)
+        channel_partners = self.env['slide.channel.partner'].sudo().search([('partner_id', 'in', users.partner_id.ids)])
+        self.assertEqual(len(channel_partners), 4)
+
+        with self.assertQueryCount(53):
+            channel_partners._set_as_completed()
+
+        computed_karma = self.channel.karma_gen_channel_finish + self.channel_2.karma_gen_channel_finish
+
+        for user in users:
+            self.assertEqual(user.karma, computed_karma)
+            user_trackings = user.karma_tracking_ids
+            self.assertEqual(len(user_trackings), 2)
+
+            self.assertEqual(user_trackings[0].new_value, computed_karma)
+            self.assertEqual(user_trackings[0].old_value, self.channel_2.karma_gen_channel_finish)
+            self.assertEqual(user_trackings[0].origin_ref, self.channel_2)
+
+            self.assertEqual(user_trackings[1].new_value, self.channel.karma_gen_channel_finish)
+            self.assertEqual(user_trackings[1].old_value, 0)
+            self.assertEqual(user_trackings[1].origin_ref, self.channel)
+
+        # now, remove the membership in batch, on multiple users
+        with self.assertQueryCount(43):
+            (self.channel | self.channel_2)._remove_membership(users.partner_id.ids)
+
+        for user in users:
+            self.assertEqual(user.karma, 0)
+            user_trackings = user.karma_tracking_ids
+            self.assertEqual(len(user_trackings), 4)
+
+            self.assertEqual(user_trackings[0].new_value, 0)
+            self.assertEqual(user_trackings[0].old_value, self.channel.karma_gen_channel_finish)
+            self.assertEqual(user_trackings[0].origin_ref, self.channel_2)
+
+            self.assertEqual(user_trackings[1].new_value, self.channel.karma_gen_channel_finish)
+            self.assertEqual(user_trackings[1].old_value, computed_karma)
+            self.assertEqual(user_trackings[1].origin_ref, self.channel)
