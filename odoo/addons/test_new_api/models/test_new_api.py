@@ -17,7 +17,7 @@ class Category(models.Model):
     name = fields.Char(required=True)
     color = fields.Integer('Color Index')
     parent = fields.Many2one('test_new_api.category', ondelete='cascade')
-    parent_path = fields.Char(index=True)
+    parent_path = fields.Char(index=True, unaccent=False)
     root_categ = fields.Many2one(_name, compute='_compute_root_categ')
     display_name = fields.Char(compute='_compute_display_name', recursive=True,
                                inverse='_inverse_display_name')

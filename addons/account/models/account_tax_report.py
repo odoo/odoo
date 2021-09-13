@@ -105,7 +105,7 @@ class AccountTaxReportLine(models.Model):
     parent_id = fields.Many2one(string="Parent Line", comodel_name='account.tax.report.line')
     sequence = fields.Integer(string='Sequence', required=True,
         help="Sequence determining the order of the lines in the report (smaller ones come first). This order is applied locally per section (so, children of the same line are always rendered one after the other).")
-    parent_path = fields.Char(index=True)
+    parent_path = fields.Char(index=True, unaccent=False)
     report_id = fields.Many2one(string="Tax Report", required=True, comodel_name='account.tax.report', ondelete='cascade', help="The parent tax report of this line")
 
     # helper to create tags (positive and negative) on report line creation
