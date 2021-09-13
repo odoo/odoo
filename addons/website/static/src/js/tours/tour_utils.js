@@ -108,6 +108,7 @@ function changeOption(optionName, weName = '', optionTooltipLabel = '', position
         trigger: `${option_block} ${weName}, ${option_block} [title='${weName}']`,
         content: Markup(sprintf(_t("<b>Click</b> on this option to change the %s of the block."), optionTooltipLabel)),
         position: position,
+        in_modal: false,
         run: "click",
     };
 }

@@ -81,9 +81,21 @@ const PopupWidget = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        this._popupAlreadyShown = !!getCookie(this.$el.attr('id'));
-        if (!this._popupAlreadyShown) {
-            this._bindPopup();
+        this.modalShownOnClickEl = this.el.querySelector(".modal[data-display='onClick']");
+        if (this.modalShownOnClickEl) {
+            // We add a "hashchange" listener in case a button to open a popup
+            // is clicked.
+            this.__onHashChange = this._onHashChange.bind(this);
+            window.addEventListener('hashchange', this.__onHashChange);
+            // Check if a hash exists and if the modal needs to be opened when
+            // the page loads (e.g. The user has clicked a button on the
+            // "Contact us" page to open a popup on the homepage).
+            this._showPopupOnClick();
+        } else {
+            this._popupAlreadyShown = !!getCookie(this.$el.attr('id'));
+            if (!this._popupAlreadyShown) {
+                this._bindPopup();
+            }
         }
         return this._super(...arguments);
     },
@@ -95,6 +107,9 @@ const PopupWidget = publicWidget.Widget.extend({
         $(document).off('mouseleave.open_popup');
         this.$el.find('.modal').modal('hide');
         clearTimeout(this.timeout);
+        if (this.modalShownOnClickEl) {
+            window.removeEventListener('hashchange', this.__onHashChange);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -119,7 +134,7 @@ const PopupWidget = publicWidget.Widget.extend({
 
         if (display === 'afterDelay') {
             this.timeout = setTimeout(() => this._showPopup(), delay);
-        } else {
+        } else if (display === "mouseExit") {
             $(document).on('mouseleave.open_popup', () => this._showPopup());
         }
     },
@@ -144,6 +159,21 @@ const PopupWidget = publicWidget.Widget.extend({
         }
         this.$el.find('.modal').modal('show');
     },
+    /**
+     * @private
+     */
+    _showPopupOnClick() {
+        const hash = window.location.hash;
+        // If a hash exists in the URL and it corresponds to the ID of the modal,
+        // then we open the modal.
+        if (hash && hash.substring(1) === this.modalShownOnClickEl.id) {
+            // We remove the hash from the URL because otherwise the popup
+            // cannot open again after being closed.
+            const urlWithoutHash = window.location.href.replace(hash, '');
+            window.history.replaceState(null, null, urlWithoutHash);
+            this._showPopup();
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -161,7 +191,7 @@ const PopupWidget = publicWidget.Widget.extend({
     _onHideModal: function () {
         const nbDays = this.$el.find('.modal').data('consentsDuration');
         setCookie(this.el.id, this.cookieValue, nbDays * 24 * 60 * 60, 'required');
-        this._popupAlreadyShown = true;
+        this._popupAlreadyShown = true && !this.modalShownOnClickEl;
 
         this.$el.find('.media_iframe_video iframe').each((i, iframe) => {
             iframe.src = '';
@@ -175,6 +205,12 @@ const PopupWidget = publicWidget.Widget.extend({
             const iframe = media.querySelector('iframe');
             iframe.src = media.dataset.oeExpression || media.dataset.src; // TODO still oeExpression to remove someday
         });
+    },
+    /**
+     * @private
+     */
+    _onHashChange() {
+        this._showPopupOnClick();
     },
 });
 
