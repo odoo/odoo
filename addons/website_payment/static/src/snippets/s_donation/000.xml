@@ -10,7 +10,7 @@
                         t-esc="prefilled_button_value"/>
             </t>
             <button t-if="custom_input" type="button" class="s_donation_btn s_donation_custom_btn btn btn-outline-primary btn-lg mb-2 mr-1">
-                <input id="s_donation_amount_input" type="number" min="5" class="" placeholder="Custom Amount" aria-label="Amount"/>
+                <input id="s_donation_amount_input" type="number" t-att-min="minimum_amount" class="" placeholder="Custom Amount" aria-label="Amount"/>
             </button>
         </div>
     </t>
