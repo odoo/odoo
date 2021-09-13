@@ -233,6 +233,7 @@
                 <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', False)]"/>
                 <separator/>
                 <filter string="Starred" name="starred" domain="[('priority', 'in', [1, 2])]"/>
+                <separator/>
                 <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <separator/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
@@ -243,11 +244,13 @@
                     <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                     <!-- TODO: [XBO] remove me in master -->
                     <filter string="Assignees" name="user" context="{'group_by': 'user_ids'}" invisible="1"/>
-                    <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
+                    <!-- [XBO] TODO: remove me in master -->
+                    <filter string="Project" name="project" context="{'group_by': 'project_id'}" invisible="1"/>
                     <filter string="Customer" name="customer" context="{'group_by': 'partner_id'}"/>
                     <filter string="Kanban State" name="kanban_state" context="{'group_by': 'kanban_state'}"/>
                     <filter string="Deadline" name="date_deadline" context="{'group_by': 'date_deadline'}"/>
-                    <filter string="Creation Date" name="group_create_date" context="{'group_by': 'create_date'}"/>
+                    <!-- [XBO] TODO: remove me in master -->
+                    <filter string="Creation Date" name="group_create_date" context="{'group_by': 'create_date'}" invisible="1"/>
                 </group>
             </search>
         </field>
