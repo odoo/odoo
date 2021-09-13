@@ -2817,8 +2817,9 @@ class BaseModel(metaclass=MetaModel):
 
             if self._parent_store:
                 if not tools.column_exists(cr, self._table, 'parent_path'):
-                    self._create_parent_columns()
+                    tools.create_column(self._cr, self._table, 'parent_path', 'VARCHAR')
                     parent_path_compute = True
+                self._check_parent_path()
 
             if not must_create_table:
                 self._check_removed_columns(log=False)
@@ -2861,12 +2862,14 @@ class BaseModel(metaclass=MetaModel):
         """
         pass
 
-    def _create_parent_columns(self):
-        tools.create_column(self._cr, self._table, 'parent_path', 'VARCHAR')
-        if 'parent_path' not in self._fields:
-            _logger.error("add a field parent_path on model %s: parent_path = fields.Char(index=True)", self._name)
-        elif not self._fields['parent_path'].index:
-            _logger.error('parent_path field on model %s must be indexed! Add index=True to the field definition)', self._name)
+    def _check_parent_path(self):
+        field = self._fields.get('parent_path')
+        if field is None:
+            _logger.error("add a field parent_path on model %r: `parent_path = fields.Char(index=True, unaccent=False)`.", self._name)
+        elif not field.index:
+            _logger.error('parent_path field on model %r should be indexed! Add index=True to the field definition.', self._name)
+        elif field.unaccent:
+            _logger.warning("parent_path field on model %r should have unaccent disabled. Add `unaccent=False` to the field definition.", self._name)
 
     def _add_sql_constraints(self):
         """
