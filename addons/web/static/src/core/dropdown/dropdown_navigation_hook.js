@@ -2,6 +2,7 @@
 
 import { useEffect, useService } from "@web/core/utils/hooks";
 import { browser } from "../browser/browser";
+import { localization } from "@web/core/l10n/localization";
 import { scrollTo } from "../utils/scrolling";
 
 /**
@@ -182,6 +183,14 @@ export function useDropdownNavigation() {
 
     // Set up keyboard navigation ----------------------------------------------
     const hotkeyService = useService("hotkey");
+    const closeSubDropdown = comp.hasParentDropdown ? comp.close : () => {};
+    const openSubDropdown = () => {
+        const menuElement = getActiveMenuElement();
+        // Active menu element is a sub dropdown
+        if (menuElement && menuElement.isSubDropdown) {
+            menuElement.openSubDropdown(true);
+        }
+    };
     let hotkeyRemoves = [];
     const hotkeyCallbacks = {
         home: () => setActiveMenuElement("FIRST"),
@@ -190,18 +199,8 @@ export function useDropdownNavigation() {
         "shift+tab": () => setActiveMenuElement("PREV"),
         arrowdown: () => setActiveMenuElement("NEXT"),
         arrowup: () => setActiveMenuElement("PREV"),
-        arrowleft: () => {
-            if (comp.hasParentDropdown) {
-                comp.close();
-            }
-        },
-        arrowright: () => {
-            const menuElement = getActiveMenuElement();
-            // Active menu element is a sub dropdown
-            if (menuElement && menuElement.isSubDropdown) {
-                menuElement.openSubDropdown(true);
-            }
-        },
+        arrowleft: localization.direction === "rtl" ? openSubDropdown : closeSubDropdown,
+        arrowright: localization.direction === "rtl" ? closeSubDropdown : openSubDropdown,
         enter: () => {
             const menuElement = getActiveMenuElement();
             if (menuElement) {

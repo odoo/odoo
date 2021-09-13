@@ -9,6 +9,7 @@ import { MainComponentsContainer } from "../core/main_components_container";
 import { useOwnDebugContext } from "../core/debug/debug_context";
 import { registry } from "@web/core/registry";
 import { DebugMenu } from "@web/core/debug/debug_menu";
+import { localization } from "@web/core/l10n/localization";
 
 const { Component, hooks } = owl;
 const { useExternalListener } = hooks;
@@ -31,6 +32,7 @@ export class WebClient extends Component {
                 { sequence: 100 }
             );
         }
+        this.localization = localization;
         this.title.setParts({ zopenerp: "Odoo" }); // zopenerp is easy to grep
         useBus(this.env.bus, "ROUTE_CHANGE", this.loadRouterState);
         useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", (mode) => {
