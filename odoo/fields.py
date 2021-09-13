@@ -1536,6 +1536,7 @@ class _String(Field):
     """ Abstract class for string fields. """
     translate = False                   # whether the field is translated
     prefetch = None
+    unaccent = True
 
     def __init__(self, string=Default, **kwargs):
         # translate is either True, False, or a callable

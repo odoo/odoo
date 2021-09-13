@@ -436,7 +436,7 @@ class expression(object):
             :attr result: the result of the parsing, as a pair (query, params)
             :attr query: Query object holding the final result
         """
-        self._unaccent = get_unaccent_wrapper(model._cr)
+        self._unaccent_wrapper = get_unaccent_wrapper(model._cr)
         self.root_model = model
         self.root_alias = alias or model._table
 
@@ -448,6 +448,11 @@ class expression(object):
 
         # parse the domain expression
         self.parse()
+
+    def _unaccent(self, field, _id=lambda x: x):
+        if getattr(field, 'unaccent', False):
+            return self._unaccent_wrapper
+        return _id
 
     # ----------------------------------------
     # Leafs management
@@ -930,7 +935,7 @@ class expression(object):
                     if sql_operator in ('in', 'not in'):
                         right = tuple(right)
 
-                    unaccent = self._unaccent if sql_operator.endswith('like') else lambda x: x
+                    unaccent = self._unaccent(field) if sql_operator.endswith('like') else lambda x: x
 
                     left = unaccent(model._generate_translated_field(alias, left, self.query))
                     instr = unaccent('%s')
@@ -1043,16 +1048,18 @@ class expression(object):
                 query, params = self.__leaf_to_sql((left, '=', right), model, alias)
 
         else:
+            field = model._fields.get(left)
+            if field is None:
+                raise ValueError("Invalid field %r in domain term %r" % (left, leaf))
+
             need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
             sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
-            cast = '::text' if  sql_operator.endswith('like') else ''
+            cast = '::text' if sql_operator.endswith('like') else ''
 
-            if left not in model:
-                raise ValueError("Invalid field %r in domain term %r" % (left, leaf))
-            format = '%s' if need_wildcard else model._fields[left].column_format
-            unaccent = self._unaccent if sql_operator.endswith('like') else lambda x: x
+            column_format = '%s' if need_wildcard else field.column_format
+            unaccent = self._unaccent(field) if sql_operator.endswith('like') else lambda x: x
             column = '%s.%s' % (table_alias, _quote(left))
-            query = '(%s %s %s)' % (unaccent(column + cast), sql_operator, unaccent(format))
+            query = '(%s %s %s)' % (unaccent(column + cast), sql_operator, unaccent(column_format))
 
             if (need_wildcard and not right) or (right and operator in NEGATIVE_TERM_OPERATORS):
                 query = '(%s OR %s."%s" IS NULL)' % (query, table_alias, left)
@@ -1060,7 +1067,6 @@ class expression(object):
             if need_wildcard:
                 params = ['%%%s%%' % pycompat.to_text(right)]
             else:
-                field = model._fields[left]
                 params = [field.convert_to_column(right, model, validate=False)]
 
         return query, params
