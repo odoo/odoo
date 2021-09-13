@@ -5,6 +5,7 @@ import base64
 
 from unittest.mock import patch
 
+from odoo import tools
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE_PLAINTEXT
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
@@ -22,19 +23,53 @@ class TestMessagePost(TestMailCommon, TestRecipients):
     def setUpClass(cls):
         super(TestMessagePost, cls).setUpClass()
         cls._create_portal_user()
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({
+            'name': 'Test',
+            'email_from': 'ignasse@example.com'
+        })
         cls._reset_mail_context(cls.test_record)
+        cls.test_message = cls.env['mail.message'].create({
+            'author_id': cls.partner_employee.id,
+            'body': '<p>Notify Body <span>Woop Woop</span></p>',
+            'email_from': cls.partner_employee.email_formatted,
+            'is_internal': False,
+            'message_id': tools.generate_tracking_message_id('dummy-generate'),
+            'message_type': 'comment',
+            'model': cls.test_record._name,
+            'record_name': False,
+            'reply_to': 'wrong.alias@test.example.com',
+            'subtype_id': cls.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
+            'subject': 'Notify Test',
+        })
         cls.user_admin.write({'notification_type': 'email'})
 
-    # This method should be run inside a post_install class to ensure that all
-    # message_post overrides are tested.
-    def test_message_post_return(self):
-        test_channel = self.env['mail.channel'].create({
-            'name': 'Test',
-        })
-        # Use call_kw as shortcut to simulate a RPC call.
-        messageId = call_kw(self.env['mail.channel'], 'message_post', [test_channel.id], {'body': 'test'})
-        self.assertTrue(isinstance(messageId, int))
+    @users('employee')
+    def test_notify_email_layouts(self):
+        self.user_employee.write({'notification_type': 'email'})
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        test_message = self.env['mail.message'].browse(self.test_message.ids)
+
+        recipients_data = self._generate_notify_recipients(self.partner_1 + self.partner_2 + self.partner_employee)
+        for email_xmlid in ['mail.message_notification_email',
+                            'mail.mail_notification_borders',
+                            'mail.mail_notification_light',
+                            'mail.mail_notification_paynow']:
+            test_message.write({'email_layout_xmlid': email_xmlid})
+            with self.mock_mail_gateway():
+                test_record._notify_record_by_email(
+                    test_message,
+                    recipients_data,
+                    force_send=False
+                )
+            self.assertEqual(len(self._new_mails), 2, 'Should have 2 emails: one for customers, one for internal users')
+
+            # check customer email
+            customer_email = self._new_mails.filtered(lambda mail: mail.recipient_ids == self.partner_1 + self.partner_2)
+            self.assertTrue(customer_email)
+
+            # check internal user email
+            user_email = self._new_mails.filtered(lambda mail: mail.recipient_ids == self.partner_employee)
+            self.assertTrue(user_email)
 
     @users('employee')
     def test_notify_prepare_template_context_company_value(self):
@@ -432,3 +467,30 @@ class TestMessagePost(TestMailCommon, TestRecipients):
             subject='About %s' % test_record.name,
             body_content=test_record.name,
             attachments=[])
+
+
+@tagged('mail_post', 'post_install', '-at_install')
+class TestMessagePostGlobal(TestMailCommon, TestRecipients):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestMessagePostGlobal, cls).setUpClass()
+        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({
+            'email_from': 'ignasse@example.com',
+            'name': 'Test',
+        })
+        cls._reset_mail_context(cls.test_record)
+        cls.user_admin.write({'notification_type': 'email'})
+
+    @users('employee')
+    def test_message_post_return(self):
+        """ Ensures calling message_post through RPC always return an ID. """
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+
+        # Use call_kw as shortcut to simulate a RPC call.
+        message_id = call_kw(self.env['mail.test.simple'],
+                             'message_post',
+                             [test_record.id],
+                             {'body': 'test'}
+        )
+        self.assertTrue(isinstance(message_id, int))
