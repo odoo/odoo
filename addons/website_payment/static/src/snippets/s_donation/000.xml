@@ -9,9 +9,9 @@
                         t-att-data-donation-value="prefilled_button_value"
                         t-esc="prefilled_button_value"/>
             </t>
-            <button t-if="custom_input" type="button" class="s_donation_btn s_donation_custom_btn btn btn-outline-primary btn-lg mb-2 mr-1">
+            <span t-if="custom_input" class="s_donation_btn s_donation_custom_btn btn btn-outline-primary btn-lg mb-2 mr-1">
                 <input id="s_donation_amount_input" type="number" t-att-min="minimum_amount" class="" placeholder="Custom Amount" aria-label="Amount"/>
-            </button>
+            </span>
         </div>
     </t>
     <t t-name="website_payment.donation.prefilledButtonsDescriptions">
@@ -26,9 +26,9 @@
                 </div>
             </t>
             <div t-if="custom_input" class="d-sm-flex align-items-center my-3">
-                <button type="button" class="s_donation_btn s_donation_custom_btn btn btn-outline-primary btn-lg">
+                <span class="s_donation_btn s_donation_custom_btn btn btn-outline-primary btn-lg">
                     <input id="s_donation_amount_input" type="number" t-att-min="minimum_amount" placeholder="Custom Amount" aria-label="Amount"/>
-                </button>
+                </span>
             </div>
         </div>
     </t>
