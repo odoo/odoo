@@ -2,20 +2,20 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.WelcomeView" owl="1">
-        <div class="o_WelcomeView h-100 d-flex flex-column justify-content-center align-items-center bg-light">
-            <h1 class="font-weight-light">You've been invited to a meeting!</h1>
-            <h2 class="m-5" t-esc="messaging.companyName"/>
-            <div class="d-flex justify-content-center">
-                <MediaPreview class="mr-5" localId="welcomeView.mediaPreview.localId"/>
-                <div class="d-flex flex-column justify-content-center">
-                    <t t-if="messaging.currentGuest">
-                        <label class="o_WelcomeView_guestNameInputLabel text-center" t-att-for="welcomeView.guestNameInputUniqueId">What's your name?</label>
-                        <input class="form-control mb-3" type="text" placeholder="Your name" t-att-name="welcomeView.guestNameInputUniqueId" t-att-id="welcomeView.guestNameInputUniqueId" t-att-value="welcomeView.pendingGuestName" t-ref="guestNameInput" t-on-input="welcomeView.onInputGuestNameInput" t-on-keydown="welcomeView.onKeydownGuestNameInput"/>
-                    </t>
-                    <t t-if="messaging.currentUser">
-                        <p class="o_WelcomeView_loggedAsStatus">Logged as <span t-esc="messaging.currentUser.nameOrDisplayName"/></p>
-                    </t>
-                    <button class="o_WelcomeView_joinButton btn btn-success btn-lg align-self-end p-0 rounded-circle shadow fa fa-phone" title="Join Channel" t-att-disabled="welcomeView.isJoinButtonDisabled" t-on-click="welcomeView.onClickJoinButton"/>
+        <div class="o_WelcomeView d-flex flex-column align-items-center flex-grow-1 bg-light" t-att-class="{ 'justify-content-center': !messaging.device.isMobile }">
+            <h1 class="m-3 font-weight-light">You've been invited to a meeting!</h1>
+            <h2 class="m-3" t-att-class="{ 'mb-5': !messaging.device.isMobile }" t-esc="messaging.companyName"/>
+            <div class="d-flex justify-content-center flex-wrap" t-att-class="{ 'flex-grow-1': messaging.device.isMobile }">
+                <MediaPreview t-att-class="{ 'mr-5': !messaging.device.isMobile }" localId="welcomeView.mediaPreview.localId"/>
+                <div class="d-flex flex-column justify-content-between align-items-center flex-grow-1">
+                    <div class="d-flex flex-column justify-content-center align-items-center flex-grow-1" t-att-class="{ 'w-75': messaging.device.isMobile }">
+                        <t t-if="messaging.currentGuest">
+                            <label class="o_WelcomeView_guestNameInputLabel m-3" t-att-for="welcomeView.guestNameInputUniqueId">What's your name?</label>
+                            <input class="form-control mb-3" type="text" placeholder="Your name" t-att-name="welcomeView.guestNameInputUniqueId" t-att-id="welcomeView.guestNameInputUniqueId" t-att-value="welcomeView.pendingGuestName" t-ref="guestNameInput" t-on-input="welcomeView.onInputGuestNameInput" t-on-keydown="welcomeView.onKeydownGuestNameInput"/>
+                        </t>
+                        <p t-if="messaging.currentUser" class="o_WelcomeView_loggedAsStatus align-self-end m-3">Logged as <span t-esc="messaging.currentUser.nameOrDisplayName"/></p>
+                        <button class="o_WelcomeView_joinButton btn btn-success btn-lg align-self-end p-0 rounded-circle shadow fa fa-phone" title="Join Channel" t-att-disabled="welcomeView.isJoinButtonDisabled" t-on-click="welcomeView.onClickJoinButton"/>
+                    </div>
                 </div>
             </div>
         </div>

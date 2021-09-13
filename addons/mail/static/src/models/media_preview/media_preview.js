@@ -83,7 +83,7 @@ function factory(dependencies) {
             if (!this.doesBrowserSupportMediaDevices) {
                 return;
             }
-            const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const videoStream = await navigator.mediaDevices.getUserMedia({ video: this.messaging.mailRtc.videoConfig });
             this.update({ videoStream });
             this.videoRef.el.srcObject = this.videoStream;
         }
@@ -148,6 +148,29 @@ function factory(dependencies) {
             return this.videoStream !== null;
         }
 
+        /**
+         * @private
+         * @returns {number}
+         */
+        _computeVideoElementHeight() {
+            return Math.round(this.videoElementWidth / this.messaging.mailRtc.videoConfig.aspectRatio);
+        }
+
+        /**
+         * @private
+         * @returns {number}
+         */
+        _computeVideoElementWidth() {
+            const device = this.messaging && this.messaging.device;
+            if (!device) {
+                return 0;
+            }
+            if (device.isMobile) {
+                return device.globalWindowInnerWidth;
+            }
+            return Math.min(1080, Math.max(480, Math.round(device.globalWindowInnerWidth / 2.5)));
+        }
+
     }
 
     MediaPreview.fields = {
@@ -164,14 +187,38 @@ function factory(dependencies) {
         audioStream: attr({
             default: null,
         }),
+        /**
+         * States whether the browser has the APIs needed for basic video and
+         * microphone capture.
+         */
         doesBrowserSupportMediaDevices: attr({
             compute: '_computeDoesBrowserSupportMediaDevices',
         }),
+        /**
+         * States whether the user's microphone is recording.
+         */
         isMicrophoneEnabled: attr({
             compute: '_computeIsMicrophoneEnabled',
         }),
+        /**
+         * States whether the user's camera is recording.
+         */
         isVideoEnabled: attr({
             compute: '_computeIsVideoEnabled',
+        }),
+        /**
+         * Computes the height of the video element according to the width
+         * and the default ratio configured in mail.rtc.
+         */
+        videoElementHeight: attr({
+            compute: '_computeVideoElementHeight',
+        }),
+        /**
+         * Computes the width of the video element depending on the current
+         * device.
+         */
+        videoElementWidth: attr({
+            compute: '_computeVideoElementWidth',
         }),
         /**
          * Ref to the video element used for the video feedback.
