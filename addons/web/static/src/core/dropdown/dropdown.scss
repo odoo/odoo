@@ -75,7 +75,7 @@
       & > .o_dropdown_toggler {
         &:after {
           @include o-position-absolute($right: 0, $top: 0);
-          transform: translate(-.6em, .6em);
+          transform: translate(-.6em, .6em) #{"/*rtl:translate(.6em, .6em) scaleX(-1)*/"};
           font: .9em/1em FontAwesome;
           content: "\f0da";
         }

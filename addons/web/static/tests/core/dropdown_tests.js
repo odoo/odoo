@@ -3,9 +3,6 @@
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
-import { dialogService } from "@web/core/dialog/dialog_service";
-import { Dialog } from "@web/core/dialog/dialog";
-import { Dropdown } from "@web/core/dropdown/dropdown";
 import { makeTestEnv } from "../helpers/mock_env";
 import {
     click,
@@ -16,10 +13,10 @@ import {
     triggerHotkey,
 } from "../helpers/utils";
 import { registerCleanup } from "../helpers/cleanup";
+import { makeFakeLocalizationService } from "../helpers/mock_services";
 
 const { mount } = owl;
 const serviceRegistry = registry.category("services");
-const mainComponentsRegistry = registry.category("main_components");
 
 let env;
 let parent;
@@ -774,6 +771,48 @@ QUnit.module("Components", ({ beforeEach }) => {
             if (step.selected !== undefined) {
                 const verify = step.selected === false ? [] : [step.selected];
                 assert.verifySteps(verify, `step ${stepIndex}: selected item is correct`);
+            }
+        }
+    });
+
+    QUnit.test("multi-level dropdown: keynav when rtl direction", async (assert) => {
+        assert.expect(10);
+        class Parent extends owl.Component {}
+        Parent.template = owl.tags.xml`
+            <Dropdown class="first" hotkey="'1'">
+                <DropdownItem class="first-first">O</DropdownItem>
+                <Dropdown tag="'li'" class="second">
+                    <DropdownItem class="second-first">O</DropdownItem>
+                </Dropdown>
+            </Dropdown>
+        `;
+        serviceRegistry.add("localization", makeFakeLocalizationService({ direction: "rtl" }));
+        env = await makeTestEnv();
+        parent = await mount(Parent, { env, target });
+        assert.containsNone(parent.el, ".o_dropdown_menu", "menus are closed at start");
+
+        // Highlighting and selecting items
+        const scenarioSteps = [
+            { hotkey: "alt+1" },
+            { hotkey: "arrowdown", highlighted: ["first-first"] },
+            { hotkey: "arrowdown", highlighted: ["second"] },
+            { hotkey: "arrowleft", highlighted: ["second", "second-first"] },
+            { hotkey: "arrowright", highlighted: ["second"] },
+        ];
+
+        for (const [stepIndex, step] of scenarioSteps.entries()) {
+            triggerHotkey(step.hotkey);
+            await nextTick();
+            if (step.highlighted !== undefined) {
+                let index = 0;
+                const activeElements = parent.el.querySelectorAll(".focus");
+                assert.ok(
+                    activeElements.length === step.highlighted.length,
+                    `step ${stepIndex}: all active elements to check are found`
+                );
+                for (const element of activeElements) {
+                    assert.hasClass(element, step.highlighted[index++]);
+                }
             }
         }
     });

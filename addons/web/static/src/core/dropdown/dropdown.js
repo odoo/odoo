@@ -4,6 +4,7 @@ import { useBus, useEffect, useService } from "@web/core/utils/hooks";
 import { usePosition } from "../position/position_hook";
 import { useDropdownNavigation } from "./dropdown_navigation_hook";
 import { ParentClosingMode } from "./dropdown_item";
+import { localization } from "../l10n/localization";
 
 const { Component, core, hooks, useState, QWeb } = owl;
 const { EventBus } = core;
@@ -66,10 +67,21 @@ export class Dropdown extends Component {
         useDropdownNavigation();
 
         // Set up toggler and positioning --------------------------------------
+        /** @type {string} **/
+        let position =
+            this.props.position || (this.hasParentDropdown ? "right-start" : "bottom-start");
+        if (localization.direction === "rtl") {
+            let [direction, variant = "middle"] = position.split("-");
+            if (["bottom", "top"].includes(direction)) {
+                variant = variant === "start" ? "end" : "start";
+            } else {
+                direction = direction === "left" ? "right" : "left";
+            }
+            position = [direction, variant].join("-");
+        }
         const positioningOptions = {
             popper: "menuRef",
-            position:
-                this.props.position || (this.hasParentDropdown ? "right-start" : "bottom-start"),
+            position,
             directionFlipOrder: { right: "rl", bottom: "bt", top: "tb", left: "lr" },
         };
         if (this.props.toggler === "parent") {
