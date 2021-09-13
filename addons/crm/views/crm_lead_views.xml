@@ -113,6 +113,7 @@
                                         'default_user_id': user_id,
                                         'default_team_id': team_id,
                                         'default_website': website,
+                                        'default_lang': lang_code,
                                         'show_vat': True
                                     }" attrs="{'invisible': [('is_partner_visible', '=', False)]}"/>
                                 <field name="partner_name"/>
@@ -127,6 +128,7 @@
                                 </div>
                                 <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                                 <field name="lang_id"/>
+                                <field name="lang_code" invisible="1"/>
                             </group>
 
                             <group name="opportunity_partner" attrs="{'invisible': [('type', '=', 'lead')]}">
@@ -151,6 +153,7 @@
                                         'default_user_id': user_id,
                                         'default_team_id': team_id,
                                         'default_website': website,
+                                        'default_lang': lang_code,
                                         'show_vat': True,
                                     }"
                                 />

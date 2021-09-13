@@ -194,6 +194,7 @@ class Lead(models.Model):
         ('incorrect', 'Incorrect')], string='Email Quality', compute="_compute_email_state", store=True)
     website = fields.Char('Website', index=True, help="Website of the contact", compute="_compute_website", readonly=False, store=True)
     lang_id = fields.Many2one('res.lang', string='Language')
+    lang_code = fields.Char(related='lang_id.code')
     # Address fields
     street = fields.Char('Street', compute='_compute_partner_address_values', readonly=False, store=True)
     street2 = fields.Char('Street2', compute='_compute_partner_address_values', readonly=False, store=True)
@@ -1790,9 +1791,11 @@ class Lead(models.Model):
         try:
             for lead in self:
                 if lead.partner_id:
-                    lead._message_add_suggested_recipient(recipients, partner=lead.partner_id, reason=_('Customer'))
+                    lead._message_add_suggested_recipient(
+                        recipients, partner=lead.partner_id, lang=lead.lang_code, reason=_('Customer'))
                 elif lead.email_from:
-                    lead._message_add_suggested_recipient(recipients, email=lead.email_from, reason=_('Customer Email'))
+                    lead._message_add_suggested_recipient(
+                        recipients, email=lead.email_from, lang=lead.lang_code, reason=_('Customer Email'))
         except AccessError:  # no read access rights -> just ignore suggested recipients because this imply modifying followers
             pass
         return recipients
