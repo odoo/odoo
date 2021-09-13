@@ -2671,27 +2671,18 @@ options.registry.HideFooter = VisibilityPageOptionUpdate.extend({
 options.registry.anchor = options.Class.extend({
     isTopOption: true,
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
     /**
      * @override
      */
-    start: function () {
+    start() {
         // Generate anchor and copy it to clipboard on click, show the tooltip on success
-        this.$button = this.$el.find('we-button');
-        const clipboard = new ClipboardJS(this.$button[0], {text: () => this._getAnchorLink()});
-        clipboard.on('success', () => {
-            const message = sprintf(Markup(_t("Anchor copied to clipboard<br>Link: %s")), this._getAnchorLink());
-            this.displayNotification({
-              type: 'success',
-              message: message,
-              buttons: [{text: _t("Edit"), click: () => this.openAnchorDialog(), primary: true}],
-            });
-        });
+        const buttonEl = this.el.querySelector("we-button");
+        this.isModal = this.$target[0].classList.contains("modal");
+        if (buttonEl && !this.isModal) {
+            this._buildClipboard(buttonEl);
+        }
 
-        return this._super.apply(this, arguments);
+        return this._super(...arguments);
     },
     /**
      * @override
@@ -2702,12 +2693,44 @@ options.registry.anchor = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    notify(name, data) {
+        this._super(...arguments);
+        if (name === "modalAnchor") {
+            this._buildClipboard(data.buttonEl);
+        }
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
     /**
-     * @see this.selectClass for parameters
+     * @private
+     * @param {Element} buttonEl
      */
-    openAnchorDialog: function (previewMode, widgetValue, params) {
+    _buildClipboard(buttonEl) {
+        const clipboard = new ClipboardJS(buttonEl, {text: () => this._getAnchorLink()});
+        clipboard.on("success", () => {
+            const message = sprintf(Markup(_t("Anchor copied to clipboard<br>Link: %s")), this._getAnchorLink());
+            this.displayNotification({
+                type: "success",
+                message: message,
+                buttons: [{text: _t("Edit"), click: () => this._openAnchorDialog(buttonEl), primary: true}],
+            });
+        });
+    },
+    
+    /**
+     * @private
+     * @param {Element} buttonEl
+     */
+    _openAnchorDialog(buttonEl) {
         var self = this;
         var buttons = [{
             text: _t("Save & copy"),
@@ -2728,7 +2751,7 @@ options.registry.anchor = options.Class.extend({
                 if (!alreadyExists) {
                     self._setAnchorName(anchorName);
                     this.close();
-                    self.$button[0].click();
+                    buttonEl.click();
                 }
             },
         }, {
@@ -2760,10 +2783,10 @@ options.registry.anchor = options.Class.extend({
      */
     _setAnchorName: function (value) {
         if (value) {
-            this.$target.attr({
-                'id': value,
-                'data-anchor': true,
-            });
+            this.$target[0].id = value;
+            if (!this.isModal) {
+                this.$target[0].dataset.anchor = true;
+            }
         } else {
             this.$target.removeAttr('id data-anchor');
         }
@@ -2786,7 +2809,8 @@ options.registry.anchor = options.Class.extend({
             }
             this._setAnchorName(anchorName + n);
         }
-        return `${this.ownerDocument.location.pathname}#${this.$target[0].id}`;
+        const pathName = this.isModal ? "" : this.ownerDocument.location.pathname;
+        return `${pathName}#${this.$target[0].id}`;
     },
     /**
      * Creates a safe id/anchor from text.
