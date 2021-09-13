@@ -30,6 +30,9 @@ class BusPresence(models.Model):
     last_presence = fields.Datetime('Last Presence', default=lambda self: fields.Datetime.now())
     status = fields.Selection([('online', 'Online'), ('away', 'Away'), ('offline', 'Offline')], 'IM Status', default='offline')
 
+    def init(self):
+        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS bus_presence_user_unique ON %s (user_id) WHERE user_id IS NOT NULL" % self._table)
+
     @api.model
     def update(self, inactivity_period, identity_field, identity_value):
         """ Updates the last_poll and last_presence of the current user
