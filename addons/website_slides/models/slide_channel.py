@@ -4,7 +4,6 @@
 import logging
 import uuid
 from collections import defaultdict
-
 from dateutil.relativedelta import relativedelta
 import ast
 
@@ -104,24 +103,21 @@ class ChannelUsersRelation(models.Model):
             True if we make the slide as completed
             False if we remove user completion
         """
-        partner_karma = dict.fromkeys(self.mapped('partner_id').ids, 0)
-        for record in self:
-            record.completed = completed
-            partner_karma[record.partner_id.id] += record.channel_id.karma_gen_channel_finish
+        for channel, memberships in self.grouped("channel_id").items():
+            memberships.completed = completed
+            karma = channel.karma_gen_channel_finish
+            if karma <= 0:
+                continue
 
-        partner_karma = {
-            partner_id: karma_to_add
-            for partner_id, karma_to_add in partner_karma.items() if karma_to_add > 0
-        }
+            karma_per_users = {}
+            for user in memberships.sudo().partner_id.user_ids:
+                karma_per_users[user] = {
+                    'gain': karma if completed else karma * -1,
+                    'source': channel,
+                    'reason': _('Course Finished') if completed else _('Course Set Uncompleted'),
+                }
 
-        if partner_karma:
-            users = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_karma.keys()))])
-            for user in users:
-                karma = partner_karma[user.partner_id.id]
-                if not completed:
-                    # Mark the channel as not-completed, we remove the gained karma
-                    karma *= -1
-                users.add_karma(karma)
+            self.env['res.users']._add_karma_batch(karma_per_users)
 
     def _send_completed_mail(self):
         """ Send an email to the attendee when they have successfully completed a course. """
@@ -745,7 +741,7 @@ class Channel(models.Model):
         Warning: this count will not be accurate if the configuration has been
         modified after the completion of a course!
         """
-        total_karma = defaultdict(int)
+        total_karma = defaultdict(list)
 
         slide_completed = self.env['slide.slide.partner'].sudo().search([
             ('partner_id', 'in', partner_ids),
@@ -757,21 +753,29 @@ class Channel(models.Model):
             slide = partner_slide.slide_id
             if not slide.question_ids:
                 continue
-            gains = [slide.quiz_first_attempt_reward,
-                     slide.quiz_second_attempt_reward,
-                     slide.quiz_third_attempt_reward,
-                     slide.quiz_fourth_attempt_reward]
-            attempts = min(partner_slide.quiz_attempts_count - 1, 3)
-            total_karma[partner_slide.partner_id.id] += gains[attempts]
+            gains = [
+                slide.quiz_first_attempt_reward,
+                slide.quiz_second_attempt_reward,
+                slide.quiz_third_attempt_reward,
+                slide.quiz_fourth_attempt_reward,
+            ]
+            attempts = min(partner_slide.quiz_attempts_count, len(gains))
+            total_karma[partner_slide.partner_id.id].append({
+                'karma': gains[attempts - 1],
+                'channel_id': slide.channel_id,
+            })
 
         channel_completed = self.env['slide.channel.partner'].sudo().search([
             ('partner_id', 'in', partner_ids),
             ('channel_id', 'in', self.ids),
-            ('completed', '=', True)
+            ('completed', '=', True),
         ])
         for partner_channel in channel_completed:
             channel = partner_channel.channel_id
-            total_karma[partner_channel.partner_id.id] += channel.karma_gen_channel_finish
+            total_karma[partner_channel.partner_id.id].append({
+                'karma': channel.karma_gen_channel_finish,
+                'channel_id': channel,
+            })
 
         return total_karma
 
@@ -782,23 +786,29 @@ class Channel(models.Model):
         if not partner_ids:
             raise ValueError("Do not use this method with an empty partner_id recordset")
 
-        earned_karma = self._get_earned_karma(partner_ids)
-        users = self.env['res.users'].sudo().search([
-            ('partner_id', 'in', list(earned_karma)),
-        ])
-        for user in users:
-            if earned_karma[user.partner_id.id]:
-                user.add_karma(-1 * earned_karma[user.partner_id.id])
-
         removed_channel_partner_domain = []
         for channel in self:
+            earned_karma = channel._get_earned_karma(partner_ids)
+            users = self.env['res.users'].sudo().search([('partner_id', 'in', list(earned_karma))])
+
+            karma_values = {}
+            for user in users:
+                karma = sum(values['karma'] for values in earned_karma[user.partner_id.id])
+                if karma:
+                    karma_values[user] = {
+                        'gain': karma * -1,
+                        'source': channel,
+                        'reason': _('Membership Removed'),
+                    }
+            self.env['res.users']._add_karma_batch(karma_values)
+
             removed_channel_partner_domain = expression.OR([
                 removed_channel_partner_domain,
                 [('partner_id', 'in', partner_ids),
                  ('channel_id', '=', channel.id)]
             ])
-        self.message_unsubscribe(partner_ids=partner_ids)
 
+        self.message_unsubscribe(partner_ids=partner_ids)
         if removed_channel_partner_domain:
             self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
 

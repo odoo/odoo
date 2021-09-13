@@ -5,7 +5,7 @@ import werkzeug
 
 from werkzeug.exceptions import NotFound, Forbidden
 
-from odoo import http
+from odoo import http, _
 from odoo.http import request
 from odoo.addons.portal.controllers.mail import _check_special_access, PortalChatter
 from odoo.tools import plaintext2html, html2plaintext
@@ -28,7 +28,7 @@ class SlidesPortalChatter(PortalChatter):
             slide_channel = request.env[res_model].sudo().browse(int(res_id))
             if rating_value and slide_channel and request.env.user.partner_id.id == int(kw.get('pid')):
                 # apply karma gain rule only once
-                request.env.user.add_karma(slide_channel.karma_gen_channel_rank)
+                request.env.user._add_karma(slide_channel.karma_gen_channel_rank, slide_channel, _('Course Ranked'))
             result.update({
                 'default_rating_value': rating_value,
                 'rating_avg': slide_channel.rating_avg,

@@ -45,6 +45,7 @@ In simple words does Odoo became CMS+ERP platform?</p>]]></field>
 
         <!-- Answer -->
         <record id="answer_0" model="forum.post">
+            <field name="create_uid" ref="base.user_admin"/>
             <field name="forum_id" ref="website_forum.forum_help"/>
             <field name="name">Re: How to configure alerts for employee contract expiration</field>
             <field name="content"><![CDATA[<p>Just for posterity so other can see. Here are the steps to set automatic alerts on any contract.. i.e. HR Employee, or Fleet for example. I will use fleet as an example.</p>
@@ -57,6 +58,7 @@ In simple words does Odoo became CMS+ERP platform?</p>]]></field>
             <field name="parent_id" ref="question_0" />
         </record>
         <record id="answer_1" model="forum.post">
+            <field name="create_uid" ref="base.user_admin"/>
             <field name="forum_id" ref="website_forum.forum_help"/>
             <field name="name">Re: CMS replacement for ERP and eCommerce</field>
             <field name="content"><![CDATA[
@@ -69,11 +71,13 @@ The CMS editor in Odoo web is nice but I prefer Drupal for customization and the
         <!-- Post Vote  -->
         <record id="post_vote_0" model="forum.post.vote">
             <field name="post_id" ref="question_0"/>
+            <field name="create_uid" ref="base.user_admin"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="vote">1</field>
         </record>
         <record id="post_vote_1" model="forum.post.vote">
             <field name="post_id" ref="answer_0"/>
+            <field name="create_uid" ref="base.user_admin"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="vote">1</field>
         </record>
