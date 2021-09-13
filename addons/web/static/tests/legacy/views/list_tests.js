@@ -9895,7 +9895,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('grouped lists with expand attribute and a lot of groups', async function (assert) {
-        assert.expect(8);
+        assert.expect(10);
 
         for (var i = 0; i < 15; i++) {
             this.data.foo.records.push({foo: 'record ' + i, int_field: i});
@@ -9916,13 +9916,42 @@ QUnit.module('Views', {
         });
 
         assert.containsN(list, '.o_group_header', 10); // page 1
-        assert.containsN(list, '.o_data_row', 11); // one group contains two records
+        assert.containsN(list, '.o_data_row', 12); // two groups contains two records
         assert.containsOnce(list, '.o_pager'); // has a pager
+
+        assert.deepEqual(
+            [...list.el.querySelectorAll(".o_group_name")].map((el) => el.innerText),
+            [
+                "10 (2)",
+                "9 (2)",
+                "17 (1)",
+                "-4 (1)",
+                "0 (1)",
+                "1 (1)",
+                "2 (1)",
+                "3 (1)",
+                "4 (1)",
+                "5 (1)",
+            ]
+        );
 
         await cpHelpers.pagerNext(list); // switch to page 2
 
         assert.containsN(list, '.o_group_header', 7); // page 2
         assert.containsN(list, '.o_data_row', 7);
+
+        assert.deepEqual(
+            [...list.el.querySelectorAll(".o_group_name")].map((el) => el.innerText),
+            [
+                "6 (1)",
+                "7 (1)",
+                "8 (1)",
+                "11 (1)",
+                "12 (1)",
+                "13 (1)",
+                "14 (1)",
+            ]
+        );
 
         assert.verifySteps([
             'web_read_group', // read_group page 1

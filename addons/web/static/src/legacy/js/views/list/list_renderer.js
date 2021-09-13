@@ -714,11 +714,12 @@ var ListRenderer = BasicRenderer.extend({
     _renderGroupRow: function (group, groupLevel) {
         var cells = [];
 
-        var name = group.value === undefined ? _t('Undefined') : group.value;
-        var groupBy = this.state.groupedBy[groupLevel];
-        if (group.fields[groupBy.split(':')[0]].type !== 'boolean') {
-            name = name || _t('Undefined');
-        }
+        const groupBy = this.state.groupedBy[groupLevel];
+        const groupByFieldName = groupBy.split(':')[0];
+        const groupByField = group.fields[groupByFieldName];
+        const name = groupByField.type === "boolean"
+            ? (group.value === undefined ? _t('Undefined') : group.value)
+            : (group.value === undefined || group.value === false ? _t('Undefined') : group.value);
         var $th = $('<th>')
             .addClass('o_group_name')
             .attr('tabindex', -1)
