@@ -5,7 +5,7 @@ import { attr, one2one } from '@mail/model/model_field';
 
 function factory(dependencies) {
 
-    class AttachmentImage extends dependencies['mail.model'] {
+    class AttachmentlinkPreview extends dependencies['mail.model'] {
 
         /**
          * @override
@@ -14,7 +14,6 @@ function factory(dependencies) {
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
             this.onClickUnlink = this.onClickUnlink.bind(this);
             this.onDeleteConfirmDialogClosed = this.onDeleteConfirmDialogClosed.bind(this);
-            this.onClickImage = this.onClickImage.bind(this);
         }
 
         //----------------------------------------------------------------------
@@ -22,27 +21,11 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * Open the attachment viewer when clicking on viewable attachment.
-         *
-         * @param {String} attachmentlistLocalId
-         */
-        onClickImage() {
-            if (this.exists() && !this.attachment.isViewable) {
-                return;
-            }
-            this.messaging.models['mail.attachment'].view({
-                attachment: this.attachment,
-                attachments: this.attachmentList.viewableAttachments,
-            });
-        }
-
-        /**
          * Handles the click on delete attachment and open the confirm dialog.
          *
          * @param {MouseEvent} ev
          */
         onClickUnlink(ev) {
-            this.component.trigger('o-attachment-removed', { attachmentLocalId: this.attachment.localId });
             ev.stopPropagation();
             if (this.attachment) {
                 if (this.attachment.isLinkedToComposer) {
@@ -69,7 +52,7 @@ function factory(dependencies) {
 
     }
 
-    AttachmentImage.fields = {
+    AttachmentlinkPreview.fields = {
         /**
          * Determines the attachment of this card.
          */
@@ -90,9 +73,9 @@ function factory(dependencies) {
         }),
     };
 
-    AttachmentImage.modelName = 'mail.attachment_image';
+    AttachmentlinkPreview.modelName = 'mail.attachment_link_preview';
 
-    return AttachmentImage;
+    return AttachmentlinkPreview;
 }
 
-registerNewModel('mail.attachment_image', factory);
+registerNewModel('mail.attachment_link_preview', factory);

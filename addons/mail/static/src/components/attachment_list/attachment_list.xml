@@ -23,10 +23,10 @@
                 </t>
             </div>
             <div class="o_AttachmentList_partialList o_AttachmentList_preview">
-                <t t-foreach="previewAttachemnts" t-as="attachment" t-key="attachment.localId">
-                    <AttachmentPreview
+                <t t-foreach="attachmentList.attachmentLinkPreviews" t-as="attachment" t-key="attachment.localId">
+                    <AttachmentLinkPreview
                         class="o_AttachmentList_attachment o_AttachmentList_preview"
-                        attachmentLocalId="attachment.localId"
+                        attachmentLinkPreviewLocalId="attachment.localId"
                         isCompact="props.isCompact"
                     />
                 </t>

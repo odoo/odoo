@@ -1,31 +1,10 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import AttachmentDeleteConfirmDialog from '@mail/components/attachment_delete_confirm_dialog/attachment_delete_confirm_dialog';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const components = { AttachmentDeleteConfirmDialog };
-
-const { Component, useState } = owl;
+const { Component } = owl;
 
 class AttachmentLinkPreview extends Component {
-
-    /**
-     * @override
-     */
-    constructor(...args) {
-        super(...args);
-        useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const attachment = this.env.models['mail.attachment'].get(props.attachmentLocalId);
-            return {
-                attachment: attachment ? attachment.__state : undefined,
-            };
-        });
-        this.state = useState({
-            hasDeleteConfirmDialog: false,
-        });
-    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -33,47 +12,22 @@ class AttachmentLinkPreview extends Component {
     /**
      * @returns {mail.attachment}
      */
-    get attachment() {
-        return this.env.models['mail.attachment'].get(this.props.attachmentLocalId);
+    get attachmentLinkPreview() {
+        return this.messaging && this.messaging.models['mail.attachment_link_preview'].get(this.props.attachmentLinkPreviewLocalId);
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickUnlink(ev) {
-        ev.stopPropagation();
-        if (!this.attachment) {
-            return;
-        }
-        if (this.attachment.isLinkedToComposer) {
-            this.attachment.remove();
-            this.trigger('o-attachment-removed', { attachmentLocalId: this.props.attachmentLocalId });
-        } else {
-            this.state.hasDeleteConfirmDialog = true;
-        }
-    }
-
-   /**
-    * @private
-    */
-    _onDeleteConfirmDialogClosed() {
-        this.state.hasDeleteConfirmDialog = false;
+    mounted() {
+        console.log(this.attachmentLinkPreview);
     }
 
 }
 
 Object.assign(AttachmentLinkPreview, {
-    components,
     defaultProps: {
         isCompact: false,
     },
     props: {
-        attachmentLocalId: String,
+        attachmentLinkPreviewLocalId: String,
         isCompact: {
             type: Boolean,
             optional: true,
@@ -82,4 +36,4 @@ Object.assign(AttachmentLinkPreview, {
     template: 'mail.AttachmentLinkPreview',
 });
 
-export default AttachmentLinkPreview;
+registerMessagingComponent(AttachmentLinkPreview);

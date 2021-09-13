@@ -259,7 +259,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasLinkPreview() {
-            return this.url && this.linkPreview;
+            return !!this.url && !!this.linkPreview;
         }
 
         /**

@@ -53,6 +53,6 @@ class LinkPreviewController(Binary):
             filename_field=filename_field, download=download, mimetype=mimetype,
             default_mimetype='image/png', access_token=access_token)
 
-        return self._content_image_get_response(
-            status, headers, image_base64, model=model, id=res_id, field=field, download=download,
+        return request.env['ir.http']._content_image_get_response(
+            status, headers, image_base64, model=model, field=field, download=download,
             width=width, height=height, crop=crop, quality=quality)
