@@ -122,6 +122,9 @@ import traceback
 from functools import partial
 
 from datetime import date, datetime, time
+
+from psycopg2.sql import Composable, SQL
+
 import odoo.modules
 from odoo.osv.query import Query
 from odoo.tools import pycompat
@@ -401,9 +404,14 @@ def check_leaf(element, internal=False):
 # SQL utils
 # --------------------------------------------------
 
+def _unaccent_wrapper(x):
+    if isinstance(x, Composable):
+        return SQL('unaccent({})').format(x)
+    return 'unaccent({})'.format(x)
+
 def get_unaccent_wrapper(cr):
     if odoo.registry(cr.dbname).has_unaccent:
-        return lambda x: "unaccent(%s)" % (x,)
+        return _unaccent_wrapper
     return lambda x: x
 
 
