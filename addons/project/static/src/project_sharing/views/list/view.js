@@ -7,4 +7,8 @@ export default ListView.extend({
     config: Object.assign({}, ListView.prototype.config, {
         Controller,
     }),
+
+    init: function (viewInfo, params) {
+        return this._super(viewInfo, {...params, hasSelectors: false});
+    }
 });
