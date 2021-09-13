@@ -18,13 +18,13 @@ from werkzeug.exceptions import NotFound
 from odoo import api, fields, models, tools, http, release, registry
 from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.addons.website.tools import get_unaccent_sql_wrapper, similarity_score, text_from_html
+from odoo.addons.website.tools import similarity_score, text_from_html
 from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import UserError, AccessError
 from odoo.http import request
 from odoo.modules.module import get_resource_path
-from odoo.osv.expression import AND, OR, FALSE_DOMAIN
+from odoo.osv.expression import AND, OR, FALSE_DOMAIN, get_unaccent_wrapper
 from odoo.tools.translate import _
 from odoo.tools import escape_psql, pycompat
 
@@ -1614,7 +1614,7 @@ class Website(models.Model):
             domain = search_detail['base_domain'].copy()
             fields = set(fields).intersection(model._fields)
 
-            unaccent = get_unaccent_sql_wrapper(self.env.cr)
+            unaccent = get_unaccent_wrapper(self.env.cr)
             similarities = [sql.SQL("word_similarity({search}, {field})").format(
                 search=unaccent(sql.Placeholder('search')),
                 # Specific handling for website.page that inherits its arch_db and name fields

@@ -186,16 +186,3 @@ def text_from_html(html_fragment):
     # lxml requires one single root element
     tree = etree.fromstring('<p>%s</p>' % html_fragment, etree.XMLParser(recover=True))
     return ' '.join(tree.itertext())
-
-def get_unaccent_sql_wrapper(cr):
-    """
-    Returns a function that wraps SQL within unaccent if available
-    TODO remove when this tool becomes globally available
-
-    :param cr: cursor on which the wrapping is done
-
-    :return: function that wraps SQL with unaccent if available
-    """
-    if odoo.registry(cr.dbname).has_unaccent:
-        return lambda x: sql.SQL("unaccent({wrapped_sql})").format(wrapped_sql=x)
-    return lambda x: x
