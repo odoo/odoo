@@ -65,64 +65,6 @@
 </div>
         </template>
 
-        <template id="mail_notification_borders">
-<div>
-<table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed; border-collapse:separate;" summary="o_mail_notification">
-<tbody>
-    <!-- HEADER -->
-    <tr>
-        <td align="center" style="min-width: 590px;">
-            <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;">
-                <tr><td valign="middle">
-                    <span style="font-size:20px; color:white; font-weight: bold;">
-                        <t t-esc="message.record_name"/>
-                    </span>
-                </td><td valign="middle" align="right">
-                    <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="'%s' % company.name"/>
-                </td></tr>
-            </table>
-        </td>
-    </tr>
-    <!-- CONTENT -->
-    <tr>
-        <td align="center" style="min-width: 590px;">
-            <table width="590" border="0" cellpadding="0" bgcolor="#ffffff" style="min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;">
-                <tbody><td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;">
-                    <t t-out="message.body"/>
-                </td></tbody>
-            </table>
-        </td>
-    </tr>
-    <!-- FOOTER -->
-    <tr>
-        <td align="center" style="min-width: 590px;">
-            <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;">
-                <tr><td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
-                    <t t-esc="company.name"/><br/>
-                    <t t-esc="company.phone"/>
-                </td><td valign="middle" align="right" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
-                    <t t-if="company.email">
-                        <a t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: white;"><t t-esc="company.email"/></a><br/>
-                    </t>
-                    <t t-if="company.website">
-                        <a t-att-href="'%s' % company.website" style="text-decoration:none; color: white;">
-                            <t t-esc="company.website"/>
-                        </a>
-                    </t>
-                </td></tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td align="center" style="padding: 8px; font-size:11px;">
-            Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email">Odoo</a>.
-        </td>
-    </tr>
-</tbody>
-</table>
-</div>
-        </template>
-
         <template id="mail_notification_light">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
