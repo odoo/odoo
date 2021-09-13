@@ -449,10 +449,10 @@ class expression(object):
         # parse the domain expression
         self.parse()
 
-    def _unaccent(self, field, _id=lambda x: x):
+    def _unaccent(self, field):
         if getattr(field, 'unaccent', False):
             return self._unaccent_wrapper
-        return _id
+        return lambda x: x
 
     # ----------------------------------------
     # Leafs management

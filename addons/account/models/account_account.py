@@ -600,7 +600,7 @@ class AccountGroup(models.Model):
     _order = 'code_prefix_start'
 
     parent_id = fields.Many2one('account.group', index=True, ondelete='cascade', readonly=True)
-    parent_path = fields.Char(index=True)
+    parent_path = fields.Char(index=True, unaccent=False)
     name = fields.Char(required=True)
     code_prefix_start = fields.Char()
     code_prefix_end = fields.Char()

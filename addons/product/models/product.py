@@ -28,7 +28,7 @@ class ProductCategory(models.Model):
         'Complete Name', compute='_compute_complete_name', recursive=True,
         store=True)
     parent_id = fields.Many2one('product.category', 'Parent Category', index=True, ondelete='cascade')
-    parent_path = fields.Char(index=True)
+    parent_path = fields.Char(index=True, unaccent=False)
     child_id = fields.One2many('product.category', 'parent_id', 'Child Categories')
     product_count = fields.Integer(
         '# Products', compute='_compute_product_count',
