@@ -24,6 +24,7 @@
 
                 <t t-call-assets="mail.assets_common_discuss_public"/>
                 <t t-call-assets="mail.assets_discuss_public"/>
+                <t t-call-assets="mail.assets_discuss_public_test_tours" t-if="'tests' in debug or test_mode_enabled"/>
 
                 <t t-out="head or ''"/>
             </head>
