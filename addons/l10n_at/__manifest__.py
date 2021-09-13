@@ -32,6 +32,7 @@ Austrian charts of accounts (Einheitskontenrahmen 2010).
         "account",
         "base_iban",
         "base_vat",
+        "l10n_din5008",
     ],
     "data": [
         'data/res.country.state.csv',
