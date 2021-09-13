@@ -6647,7 +6647,7 @@ registry.SelectTemplate = SnippetOptionWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Changes the masonry snippet layout.
+     * Changes the snippet layout.
      *
      * @see this.selectClass for parameters
      */
