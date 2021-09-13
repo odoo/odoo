@@ -11,7 +11,7 @@ class ProductLabelLayout(models.TransientModel):
     move_line_ids = fields.Many2many('stock.move.line')
     picking_quantity = fields.Selection([
         ('picking', 'Transfer Quantities'),
-        ('custom', 'Custom')], string="Quantity to print", default='custom')
+        ('custom', 'Custom')], string="Quantity to print", required=True, default='custom')
     print_format = fields.Selection(selection_add=[
         ('zpl', 'ZPL Labels'),
         ('zplxprice', 'ZPL Labels with price')
