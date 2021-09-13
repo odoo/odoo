@@ -1114,3 +1114,125 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         income_aml_2 = amls_2.filtered(lambda aml: aml.account_id == self.company_data['default_account_revenue'])
         self.assertEqual(income_aml_2.debit, 0)
         self.assertEqual(income_aml_2.credit, 12)
+
+    def test_fifo_uom_computation(self):
+        self.env.company.anglo_saxon_accounting = True
+        self.product.categ_id.property_cost_method = 'fifo'
+        self.product.categ_id.property_valuation = 'real_time'
+        quantity = 50.0
+        self.product.list_price = 1.5
+        self.product.standard_price = 2.0
+        unit_12 = self.env['uom.uom'].create({
+            'name': 'Pack of 12 units',
+            'category_id': self.product.uom_id.category_id.id,
+            'uom_type': 'bigger',
+            'factor_inv': 12,
+            'rounding': 1,
+        })
+
+        # Create, confirm and deliver a sale order for 12@1.5 without reception with std_price = 2.0 (SO1)
+        so_1 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product.name,
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                    'product_uom': unit_12.id,
+                    'price_unit': 18,
+                    'tax_id': False,  # no love taxes amls
+                })],
+        })
+        so_1.action_confirm()
+        so_1.picking_ids.move_lines.quantity_done = 12
+        so_1.picking_ids.button_validate()
+
+        # Invoice the sale order.
+        invoice_1 = so_1._create_invoices()
+        invoice_1.action_post()
+        """
+        Invoice 1
+
+        Correct Journal Items
+
+        Name                            Debit       Credit
+
+        Product Sales                    0.00$      18.00$
+        Account Receivable              18.00$       0.00$
+        Default Account Stock Out        0.00$      24.00$
+        Expenses                        24.00$       0.00$
+        """
+        aml = invoice_1.line_ids
+        # Product Sales
+        self.assertEqual(aml[0].debit,   0,0)
+        self.assertEqual(aml[0].credit, 18,0)
+        # Account Receivable
+        self.assertEqual(aml[1].debit,  18,0)
+        self.assertEqual(aml[1].credit,  0,0)
+        # Default Account Stock Out
+        self.assertEqual(aml[2].debit,   0,0)
+        self.assertEqual(aml[2].credit, 24,0)
+        # Expenses
+        self.assertEqual(aml[3].debit,  24,0)
+        self.assertEqual(aml[3].credit,  0,0)
+
+        # Create stock move 1
+        in_move_1 = self.env['stock.move'].create({
+            'name': 'a',
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': quantity,
+            'price_unit': 1.0,
+        })
+        in_move_1._action_confirm()
+        in_move_1.quantity_done = quantity
+        in_move_1._action_done()
+
+        # Create, confirm and deliver a sale order for 12@1.5 with reception (50 * 1.0, 50 * 0.0)(SO2)
+        so_2 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product.name,
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                    'product_uom': unit_12.id,
+                    'price_unit': 18,
+                    'tax_id': False,  # no love taxes amls
+                })],
+        })
+        so_2.action_confirm()
+        so_2.picking_ids.move_lines.quantity_done = 12
+        so_2.picking_ids.button_validate()
+
+        # Invoice the sale order.
+        invoice_2 = so_2._create_invoices()
+        invoice_2.action_post()
+
+        """
+        Invoice 2
+
+        Correct Journal Items
+
+        Name                            Debit       Credit
+
+        Product Sales                    0.00$       18.0$
+        Account Receivable              18.00$        0.0$
+        Default Account Stock Out        0.00$       12.0$
+        Expenses                        12.00$        0.0$
+        """
+        aml = invoice_2.line_ids
+        # Product Sales
+        self.assertEqual(aml[0].debit,   0,0)
+        self.assertEqual(aml[0].credit, 18,0)
+        # Account Receivable
+        self.assertEqual(aml[1].debit,  18,0)
+        self.assertEqual(aml[1].credit,  0,0)
+        # Default Account Stock Out
+        self.assertEqual(aml[2].debit,   0,0)
+        self.assertEqual(aml[2].credit, 12,0)
+        # Expenses
+        self.assertEqual(aml[3].debit,  12,0)
+        self.assertEqual(aml[3].credit,  0,0)
