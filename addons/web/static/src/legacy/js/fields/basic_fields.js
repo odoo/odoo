@@ -3313,6 +3313,10 @@ var FieldToggleBoolean = AbstractField.extend({
         this.$('i')
             .toggleClass('o_toggle_button_success', !!this.value)
             .toggleClass('text-muted', !this.value);
+        const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly;
+        if (isReadonly) {
+            this.el.setAttribute('disabled', isReadonly);
+        }
         var title = this.value ? this.attrs.options.active : this.attrs.options.inactive;
         this.$el.attr('title', title);
         this.$el.attr('aria-pressed', this.value);
