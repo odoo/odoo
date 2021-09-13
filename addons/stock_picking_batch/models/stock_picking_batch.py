@@ -249,7 +249,7 @@ class StockPickingBatch(models.Model):
         return action
 
     def action_open_label_layout(self):
-        view = self.env.ref('product.product_label_layout_form')
+        view = self.env.ref('stock.product_label_layout_form_picking')
         return {
             'name': _('Choose Labels Layout'),
             'type': 'ir.actions.act_window',
@@ -259,7 +259,7 @@ class StockPickingBatch(models.Model):
             'view_id': view.id,
             'target': 'new',
             'context': {
-                'default_product_ids': self.move_lines.product_id.ids,
+                'default_product_ids': self.move_line_ids.product_id.ids,
                 'default_move_line_ids': self.move_line_ids.ids,
                 'default_picking_quantity': 'picking'},
         }
