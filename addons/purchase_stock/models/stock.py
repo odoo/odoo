@@ -249,6 +249,13 @@ class Orderpoint(models.Model):
             product_qty = qty_by_product_location.get((orderpoint.product_id.id, orderpoint.location_id.id), 0.0)
             product_uom_qty = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.product_uom, round=False)
             res[orderpoint.id] += product_uom_qty
+        groups = self.env['purchase.order.line'].read_group([('orderpoint_id', 'in', self.ids), ('state', '=', 'purchase')],
+                                                            ['product_qty', 'product_uom', 'orderpoint_id'],
+                                                            ['orderpoint_id', 'product_uom'], lazy=False)
+        for group in groups:
+            pol_uom = self.env['uom.uom'].browse(group['product_uom'][0])
+            orderpoint_uom_qty = pol_uom._compute_quantity(group['product_qty'], orderpoint.product_uom, round=False)
+            res[group['orderpoint_id'][0]] += orderpoint_uom_qty
         return res
 
     def _set_default_route_id(self):

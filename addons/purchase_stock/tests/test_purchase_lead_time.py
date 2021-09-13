@@ -339,3 +339,32 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(fields.Date.to_date(new_order.date_order), fields.Date.today() + timedelta(days=2))
         self.assertEqual(new_order.order_line.product_uom_qty, 5.0)
         self.patcher.stop()
+
+    def test_reschedule_receipt_date(self):
+        """ Basic stock configuration and a supplier with a lead time. Once the scheduler is executed,
+         the receipt date of the generated PO is postponed and the PO is confirmed. Running the scheduler
+         again should not generate a new PO"""
+        self.env['stock.warehouse.orderpoint'].search([]).unlink()
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = self.product_1
+        orderpoint_form.product_min_qty = 10
+        orderpoint_form.product_max_qty = 50
+        orderpoint = orderpoint_form.save()
+
+        self.env['product.supplierinfo'].search([('product_tmpl_id', '=', self.product_1.product_tmpl_id.id)]).unlink()
+        self.env['product.supplierinfo'].create({
+            'name': self.partner_1.id,
+            'delay': 7,
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+        })
+
+        self.env['procurement.group'].run_scheduler()
+        purchase_order01 = self.env['purchase.order'].search([('partner_id', '=', self.partner_1.id)])
+        po_form = Form(purchase_order01)
+        po_form.date_planned = purchase_order01.date_planned + timedelta(days=4)
+        po_form.save().button_confirm()
+
+        self.env['procurement.group'].run_scheduler()
+        purchase_order02 = self.env['purchase.order'].search([('partner_id', '=', self.partner_1.id)])
+        self.assertEqual(purchase_order02, purchase_order01)
+        self.assertEqual(purchase_order01.order_line.product_uom_qty, 50)
