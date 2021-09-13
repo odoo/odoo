@@ -57,9 +57,9 @@
     'installable': True,
     'application': True,
     'assets': {
+        # Custom bundle in case we want to remove things that are later added to web.assets_common
         'mail.assets_common_discuss_public': [
             ('include', 'web.assets_common'),
-            ('remove', 'web_tour/**'),
         ],
         'mail.assets_discuss_public': [
             # SCSS dependencies (the order is important)
@@ -80,7 +80,7 @@
             'mail/static/src/js/utils.js',
             'mail/static/src/model/*.js',
             'mail/static/src/models/*/*.js',
-            'mail/static/src/public/discuss_public_boot.js',
+            'mail/static/src/public/*',
             'mail/static/src/services/messaging/messaging.js',
             'mail/static/src/utils/*/*.js',
             'mail/static/src/utils/messaging_component.js',
@@ -117,6 +117,7 @@
             'web/static/src/legacy/js/widgets/domain_selector.js',
             'web/static/src/legacy/js/widgets/domain_selector_dialog.js',
             'web/static/src/legacy/js/widgets/model_field_selector.js',
+            'web/static/src/legacy/legacy_rpc_error_handler.js',
             'web/static/src/legacy/utils.js',
             'web/static/src/legacy/web_client.js',
             'web/static/src/legacy/xml/base.xml',
@@ -146,6 +147,9 @@
         ],
         'web.assets_backend_prod_only': [
             'mail/static/src/main.js',
+        ],
+        'mail.assets_discuss_public_test_tours': [
+            'mail/static/tests/tours/mail_channel_as_guest_tour.js',
         ],
         'web.assets_tests': [
             'mail/static/tests/tours/**/*',
