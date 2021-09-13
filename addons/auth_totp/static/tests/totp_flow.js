@@ -303,6 +303,6 @@ trigger: 'div:contains("enter your password")',
     trigger: "a.nav-link:contains(Account Security)",
 }, {
     content: "check that demo user has been de-totp'd",
-    trigger: "button:contains(Invite to use 2FA)",
+    trigger: "button[name=action_totp_enable_wizard]",
 }])
 });
