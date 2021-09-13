@@ -13,7 +13,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
-from odoo.tools.misc import OrderedSet
+from odoo.tools.misc import clean_context, OrderedSet
 
 PROCUREMENT_PRIORITIES = [('0', 'Normal'), ('1', 'Urgent')]
 
@@ -1188,7 +1188,7 @@ class StockMove(models.Model):
 
         # assign picking in batch for all confirmed move that share the same details
         for moves_ids in to_assign.values():
-            self.browse(moves_ids)._assign_picking()
+            self.browse(moves_ids).with_context(clean_context(self.env.context))._assign_picking()
         new_push_moves = self.filtered(lambda m: not m.picking_id.immediate_transfer)._push_apply()
         self._check_company()
         moves = self
