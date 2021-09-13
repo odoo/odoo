@@ -40,7 +40,7 @@ class Menu(models.Model):
     website_id = fields.Many2one('website', 'Website', ondelete='cascade')
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
-    parent_path = fields.Char(index=True)
+    parent_path = fields.Char(index=True, unaccent=False)
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
     group_ids = fields.Many2many('res.groups', string='Visible Groups',
                                  help="User need to be at least in one of these groups to see the menu")

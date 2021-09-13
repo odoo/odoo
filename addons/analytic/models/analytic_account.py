@@ -41,7 +41,7 @@ class AccountAnalyticGroup(models.Model):
     name = fields.Char(required=True)
     description = fields.Text(string='Description')
     parent_id = fields.Many2one('account.analytic.group', string="Parent", ondelete='cascade', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    parent_path = fields.Char(index=True)
+    parent_path = fields.Char(index=True, unaccent=False)
     children_ids = fields.One2many('account.analytic.group', 'parent_id', string="Childrens")
     complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
