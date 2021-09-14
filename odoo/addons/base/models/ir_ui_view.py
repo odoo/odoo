@@ -1310,6 +1310,19 @@ actual arch.
             if field_info:
                 transfer_field_to_modifiers(field_info, node_info['modifiers'], node_info['view_modifiers_from_model'])
 
+    def _postprocess_tag_button(self, node, _name_manager, _node_info):
+        if node.get('type') or node.get('special'):
+            return
+
+        xid = node.get('action')
+        if xid:
+            node.set('type', 'action')
+            node.set('name', xid)
+        method = node.get('method')
+        if method:
+            node.set('type', 'object')
+            node.set('name', method)
+
     def _postprocess_tag_form(self, node, name_manager, node_info):
         result = name_manager.model.view_header_get(False, node.tag)
         if result:
@@ -1592,19 +1605,35 @@ actual arch.
         name = node.get('name')
         special = node.get('special')
         type_ = node.get('type')
+
+        action = node.get('action')
+        method = node.get('method')
+        if action or method:
+            if action and method:
+                self._raise_view_error(_("A button can have either an action or a method, not both."), node)
+            if type_:
+                self._raise_view_error(_("A button can not have both a type and an action or a method, they are redundant."), node)
+            if name:
+                self._raise_view_error(_("A button with an action or method can not have a name."), node)
+
+            type_ = 'action' if action else 'object'
+            name = method or str(self.env.ref(action).id)
+
         if special:
+            if type_:
+                self._raise_view_error(_("A button can either be special or call an action or method"), node)
             if special not in ('cancel', 'save', 'add'):
                 self._raise_view_error(_("Invalid special '%(value)s' in button", value=special), node)
         elif type_:
             if type_ == 'edit': # list_renderer, used in kanban view
                 return
-            elif not name:
+            if not name:
                 self._raise_view_error(_("Button must have a name"), node)
             elif type_ == 'object':
                 func = getattr(type(name_manager.model), name, None)
                 if not func:
                     msg = _(
-                        "%(action_name)s is not a valid action on %(model_name)s",
+                        "%(action_name)s is not a valid method of %(model_name)s",
                         action_name=name, model_name=name_manager.model._name,
                     )
                     self._raise_view_error(msg, node)
@@ -2885,7 +2914,6 @@ class NameManager:
 
         for name, node in self.must_exist_actions.items():
             # logic mimics /web/action/load behaviour
-            action = False
             try:
                 action_id = int(name)
             except ValueError:

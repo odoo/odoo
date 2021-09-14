@@ -2999,7 +2999,7 @@ class TestViews(ViewCase):
         """
         self.assertValid(arch % 'action_archive', name='valid button name')
         self.assertInvalid(
-            arch % 'wtfzzz', 'wtfzzz is not a valid action on ir.ui.view',
+            arch % 'wtfzzz', 'wtfzzz is not a valid method of ir.ui.view',
             name='button name is not even a method',
         )
         self.assertInvalid(
