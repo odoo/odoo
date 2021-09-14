@@ -311,7 +311,7 @@ class CurrencyRate(models.Model):
     _order = "name desc"
 
     name = fields.Date(string='Date', required=True, index=True,
-                           default=lambda self: fields.Date.today())
+                           default=fields.Date.context_today)
     rate = fields.Float(
         digits=0,
         group_operator="avg",
