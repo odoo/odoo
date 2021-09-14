@@ -189,7 +189,7 @@ export function searchModelStateToLegacy(state) {
     return JSON.stringify(legacyState);
 }
 
-export function exportGlobalState(legacyControllerState) {
+export function getGlobalState(legacyControllerState) {
     const { resIds, searchModel, searchPanel } = legacyControllerState;
     const globalState = {};
     if (searchPanel) {
@@ -205,7 +205,7 @@ export function exportGlobalState(legacyControllerState) {
     return globalState;
 }
 
-export function exportLocalState(legacyControllerState) {
+export function getLocalState(legacyControllerState) {
     const state = Object.assign({}, legacyControllerState);
     delete state.searchModel;
     delete state.searchPanel;
@@ -226,7 +226,7 @@ export function mapDoActionOptionAPI(legacyOptions) {
         },
     });
     if (legacyOptions.controllerState) {
-        legacyOptions.props.globalState = exportGlobalState(legacyOptions.controllerState);
+        legacyOptions.props.globalState = getGlobalState(legacyOptions.controllerState);
     }
     delete legacyOptions.additional_context;
     delete legacyOptions.clear_breadcrumbs;

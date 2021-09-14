@@ -62,29 +62,29 @@ export function useSetupAction(params = {}) {
     const component = useComponent();
     const {
         __beforeLeave__,
-        __exportGlobalState__,
-        __exportLocalState__,
-        __saveParams__,
+        __getGlobalState__,
+        __getLocalState__,
+        __getContext__,
     } = component.env;
 
     if (__beforeLeave__ && params.beforeLeave) {
         useCallbackRecorder(__beforeLeave__, params.beforeLeave);
     }
-    if (__exportGlobalState__ && params.exportGlobalState) {
-        useCallbackRecorder(__exportGlobalState__, params.exportGlobalState);
+    if (__getGlobalState__ && params.getGlobalState) {
+        useCallbackRecorder(__getGlobalState__, params.getGlobalState);
     }
-    if (__exportLocalState__) {
-        useCallbackRecorder(__exportLocalState__, () => {
+    if (__getLocalState__) {
+        useCallbackRecorder(__getLocalState__, () => {
             const state = {};
             state[scrollSymbol] = getScrollPosition(component);
-            if (params.exportLocalState) {
-                Object.assign(state, params.exportLocalState());
+            if (params.getLocalState) {
+                Object.assign(state, params.getLocalState());
             }
             return state;
         });
     }
-    if (__saveParams__ && params.saveParams) {
-        useCallbackRecorder(__saveParams__, params.saveParams);
+    if (__getContext__ && params.getContext) {
+        useCallbackRecorder(__getContext__, params.getContext);
     }
 
     useEffect(
