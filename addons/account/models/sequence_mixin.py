@@ -3,8 +3,10 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_date
+from odoo.tools import frozendict
 
 import re
+from collections import defaultdict
 from psycopg2 import sql
 
 
@@ -245,6 +247,7 @@ class SequenceMixin(models.AbstractModel):
 
     def _is_last_from_seq_chain(self):
         """Tells whether or not this element is the last one of the sequence chain.
+
         :return: True if it is the last element of the chain.
         """
         last_sequence = self._get_last_sequence(with_prefix=self.sequence_prefix)
@@ -253,3 +256,29 @@ class SequenceMixin(models.AbstractModel):
         seq_format, seq_format_values = self._get_sequence_format_param(last_sequence)
         seq_format_values['seq'] += 1
         return seq_format.format(**seq_format_values) == self.name
+
+    def _is_end_of_seq_chain(self):
+        """Tells whether or not these elements are the last ones of the sequence chain.
+
+        :return: True if self are the last elements of the chain.
+        """
+        batched = defaultdict(lambda: {'last_rec': self.browse(), 'seq_list': []})
+        for record in self:
+            format, format_values = self._get_sequence_format_param(record[record._sequence_field])
+            seq = format_values.pop('seq')
+            batch = batched[(format, frozendict(format_values))]
+            batch['seq_list'].append(seq)
+            if batch['last_rec'].sequence_number < record.sequence_number:
+                batch['last_rec'] = record
+
+        for values in batched.values():
+            # The sequences we are deleting are not sequential
+            seq_list = values['seq_list']
+            if max(seq_list) - min(seq_list) != len(seq_list) - 1:
+                return False
+
+            # last_rec must have the highest number in the database
+            record = values['last_rec']
+            if not record._is_last_from_seq_chain():
+                return False
+        return True

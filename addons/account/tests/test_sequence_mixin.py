@@ -12,9 +12,7 @@ import json
 import psycopg2
 
 
-@tagged('post_install', '-at_install')
-class TestSequenceMixin(AccountTestInvoicingCommon):
-
+class TestSequenceMixinCommon(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
@@ -41,6 +39,9 @@ class TestSequenceMixin(AccountTestInvoicingCommon):
             move.action_post()
         return move
 
+
+@tagged('post_install', '-at_install')
+class TestSequenceMixin(TestSequenceMixinCommon):
     def test_sequence_change_date(self):
         """Change the sequence when we change the date iff it has never been posted."""
         # Check setup
@@ -394,36 +395,63 @@ class TestSequenceMixin(AccountTestInvoicingCommon):
             account.unlink()
             env0.cr.commit()
 
-    def test_sequence_deletion(self):
-        """The last element of a sequence chain should always be deletable if in draft state.
 
-        Trying to delete another part of the chain shouldn't work.
-        """
-        journal = self.env['account.journal'].create({
+@tagged('post_install', '-at_install')
+class TestSequenceMixinDeletion(TestSequenceMixinCommon):
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        journal = cls.env['account.journal'].create({
             'name': 'Test sequences - deletion',
             'code': 'SEQDEL',
             'type': 'general',
         })
 
-        move_1_1 = self.create_move('2021-01-01', journal, name='TOTO/2021/01/0001', post=True)
-        move_1_2 = self.create_move('2021-01-02', journal, post=True)
-        move_1_3 = self.create_move('2021-01-03', journal, post=True)
-        move_2_1 = self.create_move('2021-02-01', journal, post=True)
-        move_draft = self.create_move('2021-02-02', journal, post=False)
-        move_2_2 = self.create_move('2021-02-03', journal, post=True)
-        move_3_1 = self.create_move('2021-02-10', journal, name='TURLUTUTU/21/02/001', post=True)
+        cls.move_1_1 = cls.create_move('2021-01-01', journal, name='TOTO/2021/01/0001', post=True)
+        cls.move_1_2 = cls.create_move('2021-01-02', journal, post=True)
+        cls.move_1_3 = cls.create_move('2021-01-03', journal, post=True)
+        cls.move_2_1 = cls.create_move('2021-02-01', journal, post=True)
+        cls.move_draft = cls.create_move('2021-02-02', journal, post=False)
+        cls.move_2_2 = cls.create_move('2021-02-03', journal, post=True)
+        cls.move_3_1 = cls.create_move('2021-02-10', journal, name='TURLUTUTU/21/02/001', post=True)
+
+    def test_sequence_deletion_1(self):
+        """The last element of a sequence chain should always be deletable if in draft state.
+
+        Trying to delete another part of the chain shouldn't work.
+        """
 
         # A draft move without any name can always be deleted.
-        move_draft.unlink()
+        self.move_draft.unlink()
 
         # The moves that are not at the end of their sequence chain cannot be deleted
-        for move in (move_1_1, move_1_2, move_2_1):
+        for move in (self.move_1_1, self.move_1_2, self.move_2_1):
+            move.button_draft()
             with self.assertRaises(UserError):
-                move.button_draft()
                 move.unlink()
 
         # The last element of each sequence chain should allow deletion.
         # Everything should be deletable if we follow this order (a bit randomized on purpose)
-        for move in (move_1_3, move_1_2, move_3_1, move_2_2, move_2_1, move_1_1):
+        for move in (self.move_1_3, self.move_1_2, self.move_3_1, self.move_2_2, self.move_2_1, self.move_1_1):
             move.button_draft()
             move.unlink()
+
+    def test_sequence_deletion_2(self):
+        """Can delete in batch."""
+        all_moves = (self.move_1_3 + self.move_1_2 + self.move_3_1 + self.move_2_2 + self.move_2_1 + self.move_1_1)
+        all_moves.button_draft()
+        all_moves.unlink()
+
+    def test_sequence_deletion_3(self):
+        """Cannot delete non sequential batches."""
+        all_moves = (self.move_1_3 + self.move_3_1 + self.move_2_2 + self.move_2_1 + self.move_1_1)
+        all_moves.button_draft()
+        with self.assertRaises(UserError):
+            all_moves.unlink()
+
+    def test_sequence_deletion_4(self):
+        """Cannot delete batches not containing the last entry."""
+        all_moves = (self.move_1_2 + self.move_3_1 + self.move_2_2 + self.move_2_1 + self.move_1_1)
+        all_moves.button_draft()
+        with self.assertRaises(UserError):
+            all_moves.unlink()
