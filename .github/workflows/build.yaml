@@ -1,0 +1,43 @@
+name: Build Docker Image
+
+on:
+  push:
+    branches:
+      - 'jobrad-**'
+    tags:
+      - 'jobrad-**'
+
+jobs:
+
+  build-docker:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      IMAGE_NAME: ghcr.io/jobrad-gmbh/odoo
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create variables
+      shell: bash
+      run: |
+        echo "BRANCH_NAME=$(echo ${GITHUB_REF} | sed 's/refs\/heads\///'  | sed 's/refs\/tags\///' | sed 's/\//_/g')" >> $GITHUB_ENV
+        echo "SHORT_REV=$(echo ${{ github.sha }} | cut -c1-8)" >> $GITHUB_ENV
+
+    - name: Login to registry to use the cache for the build
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build the Docker image
+      run: |
+        docker pull ${IMAGE_NAME}:${SHORT_REV} || echo "Docker image tag ${SHORT_REV} doesn't exist yet"
+        docker build . -f docker/Dockerfile -t ${IMAGE_NAME}:${BRANCH_NAME} -t ${IMAGE_NAME}:${SHORT_REV} --cache-from=${IMAGE_NAME}:${SHORT_REV}
+
+    - name: Push Image
+      run: |
+        docker push ${IMAGE_NAME}:${SHORT_REV}
+        docker push ${IMAGE_NAME}:${BRANCH_NAME}
