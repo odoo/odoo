@@ -1,12 +1,6 @@
 /** @odoo-module **/
 
 import { click, patchDate } from "@web/../tests/helpers/utils";
-import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
-import { dialogService } from "@web/core/dialog/dialog_service";
-import { registry } from "@web/core/registry";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { FavoriteMenu } from "@web/search/favorite_menu/favorite_menu";
-import { SearchBar } from "@web/search/search_bar/search_bar";
 import {
     deleteFavorite,
     getFacetTexts,
@@ -17,7 +11,13 @@ import {
     toggleComparisonMenu,
     toggleFavoriteMenu,
     toggleMenuItem,
-} from "./helpers";
+} from "@web/../tests/search/helpers";
+import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { dialogService } from "@web/core/dialog/dialog_service";
+import { registry } from "@web/core/registry";
+import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { FavoriteMenu } from "@web/search/favorite_menu/favorite_menu";
+import { SearchBar } from "@web/search/search_bar/search_bar";
 
 const { Component, xml } = owl;
 const serviceRegistry = registry.category("services");
@@ -125,77 +125,75 @@ QUnit.module("Search", (hooks) => {
         assert.containsOnce(controlPanel, ".dropdown-menu .o_add_favorite");
     });
 
-    QUnit.test(
-        "delete an active favorite remove it both in list of favorite and in search bar",
-        async function (assert) {
-            assert.expect(7);
+    QUnit.test("delete an active favorite", async function (assert) {
+        assert.expect(11);
 
-            class ToyView extends Component {
-                setup() {
-                    assert.deepEqual(this.props.domain, [["foo", "=", "qsdf"]]);
-                }
-                willUpdateProps(nextProps) {
-                    assert.deepEqual(nextProps.domain, []);
-                }
+        class ToyView extends Component {
+            setup() {
+                assert.deepEqual(this.props.domain, [["foo", "=", "qsdf"]]);
             }
-            ToyView.components = { FavoriteMenu, SearchBar };
-            ToyView.template = xml`
+            willUpdateProps(nextProps) {
+                assert.deepEqual(nextProps.domain, []);
+            }
+        }
+        ToyView.components = { FavoriteMenu, SearchBar };
+        ToyView.template = xml`
                 <div>
                     <SearchBar/>
                     <FavoriteMenu/>
                 </div>
             `;
-            ToyView.type = "toy";
-            ToyView.display_name = "";
+        ToyView.type = "toy";
+        ToyView.display_name = "Toy";
 
-            viewRegistry.add("toy", ToyView);
+        viewRegistry.add("toy", ToyView);
 
-            serverData.views["foo,false,toy"] = `<toy/>`;
+        serverData.views["foo,false,toy"] = `<toy />`;
+        serverData.models.foo.filters = [
+            {
+                context: "{}",
+                domain: "[['foo', '=', 'qsdf']]",
+                id: 7,
+                is_default: true,
+                name: "My favorite",
+                sort: "[]",
+                user_id: [2, "Mitchell Admin"],
+            },
+        ];
 
-            serverData.models.foo.filters = [
-                {
-                    context: "{}",
-                    domain: "[['foo', '=', 'qsdf']]",
-                    id: 7,
-                    is_default: true,
-                    name: "My favorite",
-                    sort: "[]",
-                    user_id: [2, "Mitchell Admin"],
-                },
-            ];
+        const webClient = await createWebClient({
+            serverData,
+            mockRPC: async (_, args) => {
+                if (args.model === "ir.filters" && args.method === "unlink") {
+                    assert.step("deleteFavorite");
+                    return { result: true }; // mocked unlink result
+                }
+            },
+        });
+        webClient.env.bus.on("CLEAR-CACHES", webClient, () => assert.step("CLEAR-CACHES"));
+        await doAction(webClient, {
+            name: "Action",
+            res_model: "foo",
+            type: "ir.actions.act_window",
+            views: [[false, "toy"]],
+        });
 
-            const webClient = await createWebClient({
-                serverData,
-                mockRPC: async (_, args) => {
-                    if (args.model === "ir.filters" && args.method === "unlink") {
-                        return { result: true }; // mocked unlink result
-                    }
-                },
-            });
-            await doAction(webClient, {
-                name: "Action",
-                res_model: "foo",
-                type: "ir.actions.act_window",
-                views: [[false, "toy"]],
-            });
+        await toggleFavoriteMenu(webClient);
 
-            await toggleFavoriteMenu(webClient);
+        assert.deepEqual(getFacetTexts(webClient), ["My favorite"]);
+        assert.hasClass(webClient.el.querySelector(".o_favorite_menu .o_menu_item"), "selected");
 
-            assert.deepEqual(getFacetTexts(webClient), ["My favorite"]);
-            assert.hasClass(
-                webClient.el.querySelector(".o_favorite_menu .o_menu_item"),
-                "selected"
-            );
+        await deleteFavorite(webClient, 0);
 
-            await deleteFavorite(webClient, 0);
+        assert.verifySteps([]);
 
-            await click(document.querySelector("div.o_dialog footer button"));
+        await click(document.querySelector("div.o_dialog footer button"));
 
-            assert.deepEqual(getFacetTexts(webClient), []);
-            assert.containsNone(webClient, ".o_favorite_menu .o_menu_item");
-            assert.containsOnce(webClient, ".o_favorite_menu .o_add_favorite");
-        }
-    );
+        assert.deepEqual(getFacetTexts(webClient), []);
+        assert.containsNone(webClient, ".o_favorite_menu .o_menu_item");
+        assert.containsOnce(webClient, ".o_favorite_menu .o_add_favorite");
+        assert.verifySteps(["deleteFavorite", "CLEAR-CACHES"]);
+    });
 
     QUnit.test(
         "default favorite is not activated if activateFavorite is set to false",
