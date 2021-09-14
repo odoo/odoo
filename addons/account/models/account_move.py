@@ -2269,7 +2269,7 @@ class AccountMove(models.Model):
         If they are not, deleting them would create a gap. If the user really wants to do this, he still can
         explicitly empty the 'name' field of the move; but we discourage that practice.
         """
-        if not self._context.get('force_delete') and any(move.name != '/' and not move._is_last_from_seq_chain() for move in self):
+        if not self._context.get('force_delete') and not self.filtered(lambda move: move.name != '/')._is_end_of_seq_chain():
             raise UserError(_("You cannot delete this entry, as it has already consumed a sequence number and is not the last one in the chain. Probably you should revert it instead."))
 
     def unlink(self):
