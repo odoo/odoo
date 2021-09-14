@@ -3,8 +3,8 @@
 // TODO: add this in info props description
 
 // breadcrumbs: { type: Array, optional: 1 },
-// __exportLocalState__: { type: CallbackRecorder, optional: 1 },
-// __saveParams__: { type: CallbackRecorder, optional: 1 },
+// __getLocalState__: { type: CallbackRecorder, optional: 1 },
+// __getContext__: { type: CallbackRecorder, optional: 1 },
 // display: { type: Object, optional: 1 },
 // displayName: { type: String, optional: 1 },
 // noContentHelp: { type: String, optional: 1 },

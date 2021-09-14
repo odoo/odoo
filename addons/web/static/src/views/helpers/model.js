@@ -123,7 +123,7 @@ export function useModel(ModelClass, params, options = {}) {
     });
 
     useSetupView({
-        exportGlobalState() {
+        getGlobalState() {
             return {
                 sampleORM,
                 useSampleModel: model.useSampleModel,

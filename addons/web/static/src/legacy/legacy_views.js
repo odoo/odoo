@@ -8,8 +8,8 @@ import { ViewAdapter } from "./action_adapters";
 import Widget from "web.Widget";
 import {
     breadcrumbsToLegacy,
-    exportGlobalState,
-    exportLocalState,
+    getGlobalState,
+    getLocalState,
     searchModelStateToLegacy,
 } from "./backend_utils";
 import { setScrollPosition } from "../core/utils/scrolling";
@@ -83,8 +83,8 @@ function registerView(name, LegacyView) {
                 this.props.state && this.props.state.__on_reverse_breadcrumb__;
             useSetupAction({
                 beforeLeave: () => this.controllerRef.comp.__widget.canBeRemoved(),
-                exportGlobalState: () => exportGlobalState(this.controllerRef.comp.exportState()),
-                exportLocalState: () => exportLocalState(this.controllerRef.comp.exportState()),
+                getGlobalState: () => getGlobalState(this.controllerRef.comp.exportState()),
+                getLocalState: () => getLocalState(this.controllerRef.comp.exportState()),
             });
             this.onScrollTo = (ev) => {
                 setScrollPosition(this, { left: ev.detail.left, top: ev.detail.top });

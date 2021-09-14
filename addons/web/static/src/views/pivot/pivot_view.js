@@ -53,23 +53,21 @@ export class PivotView extends Component {
         this.model = useModel(this.constructor.Model, modelParams);
 
         useSetupView({
-            exportLocalState: () => {
+            getLocalState: () => {
                 const { data, metaData } = this.model;
                 return { data, metaData };
             },
-            saveParams: () => this.saveParams(), // FIXME: rename this
+            getContext: () => this.getContext(),
         });
     }
     /**
      * @returns {Object}
      */
-    saveParams() {
+    getContext() {
         return {
-            context: {
-                pivot_measures: this.model.metaData.activeMeasures,
-                pivot_column_groupby: this.model.metaData.fullColGroupBys,
-                pivot_row_groupby: this.model.metaData.fullRowGroupBys,
-            },
+            pivot_measures: this.model.metaData.activeMeasures,
+            pivot_column_groupby: this.model.metaData.fullColGroupBys,
+            pivot_row_groupby: this.model.metaData.fullRowGroupBys,
         };
     }
 

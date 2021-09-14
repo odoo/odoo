@@ -641,7 +641,7 @@ QUnit.module("ActionManager", (hooks) => {
                 this.id = id++;
                 assert.step(JSON.stringify(this.props.state || "no state"));
                 useSetupView({
-                    exportLocalState: () => {
+                    getLocalState: () => {
                         return { fromId: this.id };
                     },
                 });

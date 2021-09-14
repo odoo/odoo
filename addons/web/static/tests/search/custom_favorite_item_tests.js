@@ -153,13 +153,8 @@ QUnit.module("Search", (hooks) => {
         class TestComponent extends owl.Component {
             setup() {
                 useSetupAction({
-                    saveParams: () => {
-                        return {
-                            orderBy: [
-                                { asc: true, name: "foo" },
-                                { asc: false, name: "bar" },
-                            ],
-                        };
+                    getContext: () => {
+                        return { someKey: "foo" };
                     },
                 });
             }
@@ -172,7 +167,7 @@ QUnit.module("Search", (hooks) => {
             mockRPC: (_, args) => {
                 if (args.model === "ir.filters" && args.method === "create_or_replace") {
                     const irFilter = args.args[0];
-                    assert.deepEqual(irFilter.sort, '["foo","bar desc"]');
+                    assert.deepEqual(irFilter.context, { group_by: [], someKey: "foo" });
                     return 7; // fake serverSideId
                 }
             },
