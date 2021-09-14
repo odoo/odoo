@@ -656,9 +656,6 @@ var FieldDateRange = InputField.extend({
         '/web/static/lib/daterangepicker/daterangepicker.js',
         '/web/static/src/legacy/js/libs/daterangepicker.js',
     ],
-    cssLibs: [
-        '/web/static/lib/daterangepicker/daterangepicker.css',
-    ],
     supportedFieldTypes: ['date', 'datetime'],
     isQuickEditable: true,
     /**
