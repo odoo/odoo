@@ -32,42 +32,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * @static
-         * @param {Object} data
-         * @return {Object}
-         */
-        static convertData(data) {
-            const data2 = {};
-            if ('id' in data) {
-                data2.id = data.id;
-            }
-            if ('is_camera_on' in data) {
-                data2.isCameraOn = data.is_camera_on;
-            }
-            if ('is_deaf' in data) {
-                data2.isDeaf = data.is_deaf;
-            }
-            if ('is_muted' in data) {
-                data2.isMuted = data.is_muted;
-            }
-            if ('is_screen_sharing_on' in data) {
-                data2.isScreenSharingOn = data.is_screen_sharing_on;
-            }
-
-            // relations
-            if ('partner' in data) {
-                data2.partner = insert(data.partner);
-            }
-            if ('guest' in data) {
-                data2.guest = insert(data.guest);
-            }
-            if ('channel' in data) {
-                data2.channel = insert(data.channel);
-            }
-            return data2;
-        }
-
-        /**
          * restores the session to its default values
          */
         reset() {

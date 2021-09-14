@@ -335,13 +335,14 @@ export class ModelManager {
      * @param {Listener} listener
      */
     removeListener(listener) {
+        this._listeners.delete(listener);
         this._listenersToNotifyInUpdateCycle.delete(listener);
         this._listenersToNotifyAfterUpdateCycle.delete(listener);
         for (const localId of this._localIdsObservedByListener.get(listener) || []) {
             this._listenersObservingLocalId.get(localId).delete(listener);
             if (this._listenersObservingFieldOfLocalId.has(localId)) {
-                for (const [, componentsUsingField] of this._listenersObservingFieldOfLocalId.get(localId)) {
-                    componentsUsingField.delete(listener);
+                for (const [, listenersUsingField] of this._listenersObservingFieldOfLocalId.get(localId)) {
+                    listenersUsingField.delete(listener);
                 }
             }
         }
@@ -794,7 +795,6 @@ export class ModelManager {
         this._createdRecords.delete(record);
         for (const listener of this._listenersObservingLocalId.get(record.localId)) {
             this._markListenerToNotify(listener);
-            this._localIdsObservedByListener.get(listener).delete(record.localId);
         }
         for (const listener of this._listenersObservingAllByModel.get(Model)) {
             this._markListenerToNotify(listener);

@@ -2,7 +2,6 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
-import { unlink } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -33,10 +32,11 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         async onClick(ev) {
-            if (!this.invitedPartner || this.invitedGuest) {
+            if (!this.invitedPartner && !this.invitedGuest) {
                 return;
             }
-            await this.env.services.rpc(({
+            const channel = this.channel;
+            const channelData = await this.env.services.rpc(({
                 route: '/mail/rtc/channel/cancel_call_invitation',
                 params: {
                     channel_id: this.channel.id,
@@ -44,10 +44,10 @@ function factory(dependencies) {
                     guest_ids: this.invitedGuest && [this.invitedGuest.id],
                 },
             }));
-            this.channel.update({
-                invitedGuests: this.invitedGuest && unlink(this.invitedGuest),
-                invitedPartners: this.invitedPartner && unlink(this.invitedPartner),
-            });
+            if (!channel.exists()) {
+                return;
+            }
+            channel.update(channelData);
         }
 
         /**

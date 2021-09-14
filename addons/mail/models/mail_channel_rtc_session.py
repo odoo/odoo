@@ -27,6 +27,35 @@ class MailRtcSession(models.Model):
          'There can only be one rtc session per channel partner')
     ]
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        rtc_sessions = super().create(vals_list)
+        self.env['bus.bus'].sendmany([((self._cr.dbname, 'mail.channel', channel.id), {
+            'type': 'rtc_sessions_update',
+            'payload': {
+                'id': channel.id,
+                'rtcSessions': [('insert', sessions_data)],
+            },
+        }) for channel, sessions_data in rtc_sessions._mail_rtc_session_format_by_channel().items()])
+        return rtc_sessions
+
+    def unlink(self):
+        channels = self.channel_id
+        for channel in channels:
+            if channel.rtc_session_ids and len(channel.rtc_session_ids - self) == 0:
+                # If there is no member left in the RTC call, all invitations are cancelled.
+                # Note: invitation depends on field `rtc_inviting_session_id` so the cancel must be
+                # done before the delete to be able to know who was invited.
+                channel._rtc_cancel_invitations()
+        self.env['bus.bus'].sendmany([((self._cr.dbname, 'mail.channel', channel.id), {
+            'type': 'rtc_sessions_update',
+            'payload': {
+                'id': channel.id,
+                'rtcSessions': [('insert-and-unlink', [{'id': session_data['id']} for session_data in sessions_data])],
+            },
+        }) for channel, sessions_data in self._mail_rtc_session_format_by_channel().items()])
+        return super().unlink()
+
     def _update_and_broadcast(self, values):
         """ Updates the session and notifies all members of the channel
             of the change.
@@ -35,10 +64,8 @@ class MailRtcSession(models.Model):
         self.write({key: values[key] for key in valid_values if key in valid_values})
         session_data = self._mail_rtc_session_format()
         self.env['bus.bus'].sendone((self._cr.dbname, 'mail.channel', self.channel_id.id), {
-            'type': 'rtc_session_data_update',
-            'payload': {
-                'rtcSession': session_data,
-            },
+            'type': 'mail.rtc_session_update',
+            'payload': session_data,
         })
 
     @api.autovacuum
@@ -47,34 +74,25 @@ class MailRtcSession(models.Model):
             this can happen when the server or the user's browser crash
             or when the user's odoo session ends.
         """
-        sessions = self.search([
-            ('write_date', '<', fields.Datetime.now() - relativedelta(days=1))
-        ])
-        if not sessions:
-            return
-        channel_ids = sessions.channel_id
-        sessions.unlink()
-        channel_ids._notify_rtc_sessions_change()
+        rtc_sessions = self.search([('write_date', '<', fields.Datetime.now() - relativedelta(days=1))])
+        rtc_sessions._disconnect()
 
     def action_disconnect(self):
-        channels = self.channel_id
         self._disconnect()
-        if channels:
-            channels._notify_rtc_sessions_change()
 
     def _disconnect(self):
         """ Unlinks the sessions and notifies the associated partners/guests that
             their session ended.
         """
         notifications = []
-        for record in self:
-            model, record_id = ('mail.guest', record.guest_id.id) if record.guest_id else ('res.partner', record.partner_id.id)
+        for rtc_session in self:
+            model_name, record_id = ('mail.guest', rtc_session.guest_id.id) if rtc_session.guest_id else ('res.partner', rtc_session.partner_id.id)
             notifications.append([
-                (self._cr.dbname, model, record_id),
+                (self._cr.dbname, model_name, record_id),
                 {
                     'type': 'rtc_session_ended',
                     'payload': {
-                        'sessionId': record.id,
+                        'sessionId': rtc_session.id,
                     },
                 },
             ])
@@ -105,27 +123,28 @@ class MailRtcSession(models.Model):
         return self.env['bus.bus'].sendmany(notifications)
 
     def _mail_rtc_session_format(self):
+        self.ensure_one()
         vals = {
             'id': self.id,
-            'is_screen_sharing_on': self.is_screen_sharing_on,
-            'is_muted': self.is_muted,
-            'is_deaf': self.is_deaf,
-            'is_camera_on': self.is_camera_on,
+            'isCameraOn': self.is_camera_on,
+            'isDeaf': self.is_deaf,
+            'isMuted': self.is_muted,
+            'isScreenSharingOn': self.is_screen_sharing_on,
         }
         if self.guest_id:
-            vals['guest'] = {
+            vals['guest'] = [('insert', {
                 'id': self.guest_id.id,
                 'name': self.guest_id.name,
-            }
+            })]
         else:
-            vals['partner'] = {
+            vals['partner'] = [('insert', {
                 'id': self.partner_id.id,
                 'name': self.partner_id.name,
-            }
+            })]
         return vals
 
     def _mail_rtc_session_format_by_channel(self):
         data = {}
-        for record in self:
-            data.setdefault(record.channel_id.id, []).append(record._mail_rtc_session_format())
+        for rtc_session in self:
+            data.setdefault(rtc_session.channel_id, []).append(rtc_session._mail_rtc_session_format())
         return data

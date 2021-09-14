@@ -101,16 +101,15 @@ function factory(dependencies) {
          */
         async filterCallees(currentSessions) {
             const currentSessionsTokens = new Set(currentSessions.map(session => session.peerToken));
-            if (this.currentRtcSession && !currentSessionsTokens.has(this.currentRtcSession.peerToken)) {
-                // if the current RTC session is not in the channel sessions, this call is no longer valid.
-                this.channel && this.channel.endCall();
-                return;
-            }
             for (const token of Object.keys(this._peerConnections)) {
                 if (!currentSessionsTokens.has(token)) {
                     this._addLogEntry(token, 'session removed from the server');
                     this._removePeer(token);
                 }
+            }
+            if (this.channel && this.currentRtcSession && !currentSessionsTokens.has(this.currentRtcSession.peerToken)) {
+                // if the current RTC session is not in the channel sessions, this call is no longer valid.
+                this.channel.endCall();
             }
         }
 

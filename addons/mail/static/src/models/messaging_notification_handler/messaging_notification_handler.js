@@ -93,20 +93,18 @@ function factory(dependencies) {
                             return this.messaging.models['mail.guest'].insert(message.payload);
                         case 'mail.message_update':
                             return this.messaging.models['mail.message'].insert(message.payload);
+                        case 'mail.rtc_session_update':
+                            return this.messaging.models['mail.rtc_session'].insert(message.payload);
                         case 'res.users_settings_changed':
                             return this._handleNotificationResUsersSettings(message.payload);
                         case 'rtc_peer_notification':
                             return this._handleNotificationRtcPeerToPeer(message.payload);
                         case 'rtc_incoming_invitation_update':
                             return this._handleNotificationRtcInvitation(message.payload);
-                        case 'rtc_outgoing_invitation_ended':
-                            return this._handleNotificationRtcInvitationEnded(message.payload);
                         case 'rtc_sessions_update':
                             return this._handleNotificationRtcSessionUpdate(message.payload);
                         case 'rtc_session_ended':
                             return this._handleNotificationRtcSessionEnded(message.payload);
-                        case 'rtc_session_data_update':
-                            return this._handleNotificationRtcSessionDataUpdate(message.payload);
                         case 'res_users_settings_volumes_update':
                             return this._handleNotificationVolumeSettingUpdate(message.payload);
                     }
@@ -548,40 +546,11 @@ function factory(dependencies) {
         /**
          * @private
          * @param {Object} data
-         * @param {number} [data.channelId]
-         * @param {number} [data.partnerId]
-         */
-        async _handleNotificationRtcInvitationEnded({ channelId, partnerId, guestId }) {
-            const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({ id: channelId, model: 'mail.channel' });
-            if (!channel) {
-                return;
-            }
-            const partner = partnerId && this.messaging.models['mail.partner'].findFromIdentifyingData({ id: partnerId });
-            const guest = guestId && this.messaging.models['mail.guest'].findFromIdentifyingData({ id: guestId });
-            channel.update({
-                invitedPartners: partner && unlink(partner),
-                invitedGuests: guest && unlink(guest),
-            });
-        }
-
-        /**
-         * @private
-         * @param {Object} data
          * @param {string} [data.sender]
          * @param {string} [data.content]
          */
         _handleNotificationRtcPeerToPeer({ sender, content }) {
             this.messaging.mailRtc.handleNotification(sender, content);
-        }
-
-        /**
-         * @private
-         * @param {Object} data
-         * @param {Object} [data.rtcSession]
-         */
-        async _handleNotificationRtcSessionDataUpdate({ rtcSession }) {
-            const rtcSessionModel = this.messaging.models['mail.rtc_session'];
-            rtcSessionModel.insert(rtcSessionModel.convertData(rtcSession));
         }
 
         /**
@@ -614,11 +583,11 @@ function factory(dependencies) {
         /**
          * @private
          * @param {Object} data
-         * @param {string} [data.channelId]
+         * @param {string} [data.id]
          * @param {Object} [data.rtcSessions]
          */
-        async _handleNotificationRtcSessionUpdate({ channelId, rtcSessions }) {
-            const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({ id: channelId, model: 'mail.channel' });
+        async _handleNotificationRtcSessionUpdate({ id, rtcSessions }) {
+            const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({ id, model: 'mail.channel' });
             if (!channel) {
                 return;
             }
