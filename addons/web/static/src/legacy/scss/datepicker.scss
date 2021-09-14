@@ -81,12 +81,13 @@ div.dropdown-menu.bootstrap-datetimepicker-widget {
     td {
         font-size: ($font-size-base + $font-size-sm) * .5;
 
-        &.today:before {
+        &.today:not(.active):before {
             border-bottom-color: $o-brand-primary;
         }
 
         &.active {
             border-bottom-color: $bs-datetimepicker-active-color;
+            color: $bs-datetimepicker-active-color;
         }
     }
 }
