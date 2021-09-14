@@ -15,6 +15,7 @@ class TestOnchangeProductId(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         cls.fiscal_position_model = cls.env['account.fiscal.position']
         cls.fiscal_position_tax_model = cls.env['account.fiscal.position.tax']
         cls.tax_model = cls.env['account.tax']

@@ -9,6 +9,8 @@ class TestMultiCompany(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestMultiCompany, cls).setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+
         group_user = cls.env.ref('base.group_user')
         group_stock_manager = cls.env.ref('stock.group_stock_manager')
 

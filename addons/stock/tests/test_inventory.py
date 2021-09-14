@@ -10,6 +10,8 @@ class TestInventory(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestInventory, cls).setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.pack_location = cls.env.ref('stock.location_pack_zone')
         cls.pack_location.active = True

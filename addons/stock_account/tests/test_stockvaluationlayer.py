@@ -12,6 +12,7 @@ class TestStockValuationCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestStockValuationCommon, cls).setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')

@@ -10,6 +10,8 @@ class StockMove(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(StockMove, cls).setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+
         group_stock_multi_locations = cls.env.ref('stock.group_stock_multi_locations')
         cls.env.user.write({'groups_id': [(4, group_stock_multi_locations.id, 0)]})
         cls.stock_location = cls.env.ref('stock.stock_location_stock')

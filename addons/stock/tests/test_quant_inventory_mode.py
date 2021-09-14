@@ -10,6 +10,7 @@ class TestEditableQuant(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestEditableQuant, cls).setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
         # Shortcut to call `stock.quant` with `inventory mode` set in the context
         cls.Quant = cls.env['stock.quant'].with_context(inventory_mode=True)

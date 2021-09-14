@@ -11,6 +11,8 @@ class TestPackingCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestPackingCommon, cls).setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.warehouse = cls.env['stock.warehouse'].search([('lot_stock_id', '=', cls.stock_location.id)], limit=1)
         cls.warehouse.write({'delivery_steps': 'pick_pack_ship'})

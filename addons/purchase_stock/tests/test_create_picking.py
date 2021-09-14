@@ -14,6 +14,7 @@ class TestCreatePicking(common.TestProductCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         cls.partner_id = cls.env['res.partner'].create({'name': 'Wood Corner Partner'})
         cls.product_id_1 = cls.env['product.product'].create({'name': 'Large Desk'})
         cls.product_id_2 = cls.env['product.product'].create({'name': 'Conference Chair'})

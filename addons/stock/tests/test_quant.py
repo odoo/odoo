@@ -14,6 +14,7 @@ class StockQuant(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(StockQuant, cls).setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         cls.demo_user = mail_new_test_user(
             cls.env,
             name='Pauline Poivraisselle',
@@ -687,3 +688,23 @@ class StockQuant(TransactionCase):
         self.assertEqual(quants[0][0].reserved_quantity, 2)
         # The last one should then be taken in stock_location/subloc3 since the first location doesn't have enough products
         self.assertEqual(quants[1][0].reserved_quantity, 1)
+
+    def test_merge_quant(self):
+        """ Check that duplicated quants are correctly update.
+        """
+        vals = {
+            'product_id': self.product.id,
+            'location_id': self.stock_location.id,
+            'quantity': 1,
+        }
+        self.env['stock.quant'].create(vals)
+        self.env['stock.quant'].create(vals)
+        self.assertEqual(len(self.env['stock.quant']._gather(self.product, self.stock_location)), 2.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 2.0)
+        self.env['stock.quant']._quant_tasks()
+        quant = self.env['stock.quant'].search([
+            ('location_id', '=', self.stock_location.id),
+            ('product_id', '=', self.product.id)
+        ])
+        self.assertEqual(len(quant), 1)
+        self.assertEqual(quant.quantity, 2)

@@ -10,6 +10,7 @@ class TestStockCommon(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestStockCommon, cls).setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
         cls.ProductObj = cls.env['product.product']
         cls.UomObj = cls.env['uom.uom']
@@ -114,6 +115,7 @@ class TestStockCommon2(TestProductCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
         # User Data: stock user and stock manager
         cls.user_stock_user = mail_new_test_user(

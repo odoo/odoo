@@ -10,6 +10,8 @@ class TestStockFlow(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super(TestStockFlow, cls).setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+
         decimal_product_uom = cls.env.ref('product.decimal_product_uom')
         decimal_product_uom.digits = 3
         cls.partner_company2 = cls.env['res.partner'].create({

@@ -10,6 +10,7 @@ class TestMrpByProduct(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestMrpByProduct, cls).setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         cls.MrpBom = cls.env['mrp.bom']
         cls.warehouse = cls.env.ref('stock.warehouse0')
         route_manufacture = cls.warehouse.manufacture_pull_id.route_id.id

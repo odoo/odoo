@@ -10,6 +10,8 @@ class TestReportsCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+
         cls.partner = cls.env['res.partner'].create({'name': 'Partner'})
         cls.ModelDataObj = cls.env['ir.model.data']
         cls.picking_type_in = cls.env['stock.picking.type'].browse(cls.ModelDataObj._xmlid_to_res_id('stock.picking_type_in'))

@@ -12,6 +12,8 @@ class TestVirtualAvailable(TestStockCommon2):
     @classmethod
     def setUpClass(cls):
         super(TestVirtualAvailable, cls).setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+
 
         # Make `product3` a storable product for this test. Indeed, creating quants
         # and playing with owners is not possible for consumables.

@@ -50,6 +50,7 @@ class TestStockValuation(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestStockValuation, cls).setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         cls.env.ref('base.EUR').active = True
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.customer_location = cls.env.ref('stock.stock_location_customers')

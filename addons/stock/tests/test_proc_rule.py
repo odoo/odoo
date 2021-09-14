@@ -12,7 +12,7 @@ class TestProcRule(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.product = cls.env['product.product'].create({
             'name': 'Desk Combination',

@@ -9,6 +9,8 @@ class StockGenerate(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(StockGenerate, cls).setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+
         Product = cls.env['product.product']
         cls.product_serial = Product.create({
             'name': 'Tracked by SN',

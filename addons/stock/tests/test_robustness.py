@@ -9,6 +9,8 @@ class TestRobustness(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestRobustness, cls).setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')

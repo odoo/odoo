@@ -7,6 +7,8 @@ class TestStockLocationSearch(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+
         cls.location = cls.env['stock.location']
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.sublocation = cls.env['stock.location'].create({

@@ -11,7 +11,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         uom_unit = cls.env.ref('uom.product_uom_unit')
         product = cls.env['product.product'].create({
             'name': "Product",
