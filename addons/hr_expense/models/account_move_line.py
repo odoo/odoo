@@ -14,7 +14,10 @@ class AccountMoveLine(models.Model):
         not_paid_expenses = self.expense_id.filtered(lambda expense: expense.state != 'done')
         not_paid_expense_sheets = not_paid_expenses.sheet_id
         res = super().reconcile()
-        paid_expenses = not_paid_expenses.filtered(lambda expense: expense.currency_id.is_zero(expense.amount_residual))
+        paid_expenses = not_paid_expenses.filtered(lambda expense:
+            expense.currency_id.is_zero(expense.amount_residual) and
+            expense.currency_id.is_zero(expense.sheet_id.amount_residual)
+        )        
         paid_expenses.write({'state': 'done'})
         not_paid_expense_sheets.filtered(lambda sheet: all(expense.state == 'done' for expense in sheet.expense_line_ids)).set_to_paid()
         return res
