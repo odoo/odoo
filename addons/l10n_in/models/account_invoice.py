@@ -57,7 +57,7 @@ class AccountMove(models.Model):
         res = super()._get_tax_grouping_key_from_tax_line(tax_line)
         if tax_line.move_id.journal_id.company_id.account_fiscal_country_id.code == 'IN':
             res['product_id'] = tax_line.product_id.id
-            res['product_uom_id'] = tax_line.product_uom_id
+            res['product_uom_id'] = tax_line.product_uom_id.id
         return res
 
     @api.model
@@ -66,7 +66,7 @@ class AccountMove(models.Model):
         res = super()._get_tax_grouping_key_from_base_line(base_line, tax_vals)
         if base_line.move_id.journal_id.company_id.account_fiscal_country_id.code == 'IN':
             res['product_id'] = base_line.product_id.id
-            res['product_uom_id'] = base_line.product_uom_id
+            res['product_uom_id'] = base_line.product_uom_id.id
         return res
 
     @api.model
@@ -76,7 +76,7 @@ class AccountMove(models.Model):
 
         tax_key += [
             line.product_id.id,
-            line.product_uom_id,
+            line.product_uom_id.id,
         ]
         return tax_key
 
