@@ -48,6 +48,17 @@ class Website(models.Model):
     shop_ppg = fields.Integer(default=20, string="Number of products in the grid on the shop")
     shop_ppr = fields.Integer(default=4, string="Number of grid columns on the shop")
 
+    @staticmethod
+    def _get_product_sort_mapping():
+        return [
+            ('website_sequence asc', 'Featured'),
+            ('create_date desc', 'Newest Arrivals'),
+            ('name asc', 'Name (A-Z)'),
+            ('list_price asc', 'Price - Low to High'),
+            ('list_price desc', 'Price - High to Low'),
+        ]
+    shop_default_sort = fields.Selection(selection='_get_product_sort_mapping', default='website_sequence asc', required=True)
+
     shop_extra_field_ids = fields.One2many('website.sale.extra.field', 'website_id', string='E-Commerce Extra Fields')
 
     cart_add_on_page = fields.Boolean("Stay on page after adding to cart", default=True)
