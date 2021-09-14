@@ -59,7 +59,9 @@
                     <filter string="Starred" name="starred" domain="[('task_id.priority', 'in', [0, 1])]"/>
                     <separator/>
                     <filter string="Tasks Late" name="late" domain="[('task_id.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <separator/>
                     <filter string="Unassigned Tasks" name="unassigned" domain="[('user_ids', '=', False)]"/>
+                    <separator/>
                     <filter string="Open tasks" name="open_tasks" domain="[('stage_id.fold', '=', False), ('stage_id.is_closed', '=', False)]"/>
                     <separator/>
                     <filter name="filter_date_deadline" date="date_deadline"/>
