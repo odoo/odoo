@@ -291,6 +291,8 @@ class HolidaysType(models.Model):
                 'max_leaves': ('%.2f' % self.max_leaves).rstrip('0').rstrip('.'),
                 'leaves_taken': ('%.2f' % self.leaves_taken).rstrip('0').rstrip('.'),
                 'virtual_leaves_taken': ('%.2f' % self.virtual_leaves_taken).rstrip('0').rstrip('.'),
+                'leaves_requested': ('%.2f' % (self.max_leaves - self.virtual_remaining_leaves - self.leaves_taken)).rstrip('0').rstrip('.'),
+                'leaves_approved': ('%.2f' % self.leaves_taken).rstrip('0').rstrip('.'),
                 'request_unit': self.request_unit,
                 'icon': self.sudo().icon_id.url,
                 }, self.requires_allocation, self.id)

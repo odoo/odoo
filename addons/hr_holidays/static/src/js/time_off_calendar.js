@@ -208,6 +208,27 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
                             timeoffs: result,
                         });
                         self.$el.before(elem);
+
+                        //add popover to the information tags
+                        _.each(self.$el.parent().find('.fa-question-circle-o'), function(popup){
+                            $(popup).popover({
+                                trigger: 'hover',
+                                html: true,
+                                delay: {show: 300, hide: 0},
+                                content: function () {
+                                    var data = {
+                                        allocated: popup.dataset.allocated,
+                                        approved: popup.dataset.approved,
+                                        planned: popup.dataset.planned,
+                                        left: popup.dataset.left
+                                    };
+                                    var elem_popover = QWeb.render('hr_holidays.dashboard_calendar_header_leave_type_popover', {
+                                        data: data,
+                                    });
+                                    return elem_popover
+                                },
+                            });
+                        });
                     }
                 }
             });
