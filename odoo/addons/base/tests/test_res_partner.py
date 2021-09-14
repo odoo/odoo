@@ -146,4 +146,8 @@ class TestPartner(TransactionCase):
 
         partner_merge_wizard = self.env['base.partner.merge.automatic.wizard'].with_context(
             {'partner_show_db_id': True, 'default_dst_partner_id': test_partner}).new()
-        self.assertEqual(partner_merge_wizard.dst_partner_id.display_name, expected_partner_name, "'Destination Contact' name should contain db ID in brackets")
+        self.assertEqual(
+            partner_merge_wizard.dst_partner_id.name_get(),
+            [(test_partner.id, expected_partner_name)],
+            "'Destination Contact' name should contain db ID in brackets"
+        )
