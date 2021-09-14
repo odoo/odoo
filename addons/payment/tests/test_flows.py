@@ -59,12 +59,17 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         self.assertEqual(tx_sudo.currency_id.id, self.currency.id)
         self.assertEqual(tx_sudo.partner_id.id, self.partner.id)
         self.assertEqual(tx_sudo.reference, self.reference)
+
         # processing_values == given values
         self.assertEqual(processing_values['acquirer_id'], self.acquirer.id)
         self.assertEqual(processing_values['amount'], self.amount)
         self.assertEqual(processing_values['currency_id'], self.currency.id)
         self.assertEqual(processing_values['partner_id'], self.partner.id)
         self.assertEqual(processing_values['reference'], self.reference)
+
+        # Verify computed values not provided, but added during the flow
+        self.assertIn("tx_id=", tx_sudo.landing_route)
+        self.assertIn("access_token=", tx_sudo.landing_route)
 
         if flow == 'redirect':
             # In redirect flow, we verify the rendering of the dummy test form
