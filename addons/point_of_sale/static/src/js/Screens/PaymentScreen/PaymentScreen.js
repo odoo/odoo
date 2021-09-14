@@ -145,6 +145,18 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             NumberBuffer.reset();
             this.render();
         }
+        /**
+         * Returns false if the current order is empty and has no payments.
+         * @returns {boolean}
+         */
+        _isValidEmptyOrder() {
+            const order = this.currentOrder;
+            if (order.get_orderlines().length == 0) {
+                return order.get_paymentlines().length != 0;
+            } else {
+                return true;
+            }
+        }
         async validateOrder(isForceValidate) {
             if(this.env.pos.config.cash_rounding) {
                 if(!this.env.pos.get_order().check_paymentlines_rounding()) {
@@ -348,6 +360,8 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 });
                 return false;
             }
+
+            if (!this._isValidEmptyOrder()) return false;
 
             return true;
         }

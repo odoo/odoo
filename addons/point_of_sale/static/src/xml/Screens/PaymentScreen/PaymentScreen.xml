@@ -12,7 +12,7 @@
                             <span class="back_text">Back</span>
                         </div>
                         <div class="top-content-center"><h1>Payment</h1></div>
-                        <div class="button next" t-att-class="{ highlight: currentOrder.is_paid() }"
+                        <div class="button next" t-att-class="{ highlight: currentOrder.is_paid() and _isValidEmptyOrder() }"
                               t-on-click="validateOrder(false)">
                             <span class="next_text">Validate</span>
                             <i class="fa fa-angle-double-right fa-fw"></i>
@@ -89,7 +89,7 @@
                 </div>
                 <t t-if="env.isMobile">
                     <div class="switchpane">
-                        <button class="btn-switchpane" t-att-class="{ secondary: !currentOrder.is_paid() }" t-on-click="validateOrder(false)">
+                        <button class="btn-switchpane" t-att-class="{ secondary: !(currentOrder.is_paid() and _isValidEmptyOrder()) }" t-on-click="validateOrder(false)">
                             <h1>Validate</h1>
                         </button>
                         <button class="btn-switchpane secondary" t-on-click="showScreen('ProductScreen', {mobile_pane: 'left'})">
