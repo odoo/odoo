@@ -549,6 +549,7 @@ export class SearchModel extends EventBus {
     async createNewFavorite(params) {
         const { preFavorite, irFilter } = this._getIrFilterDescription(params);
         const serverSideId = await this.orm.call("ir.filters", "create_or_replace", [irFilter]);
+        this.env.bus.trigger("CLEAR-CACHES");
 
         // before the filter cache was cleared!
         this.blockNotification = true;
@@ -658,9 +659,8 @@ export class SearchModel extends EventBus {
             return;
         }
         const { serverSideId } = searchItem;
-        await this.orm.unlink("ir.filters", [
-            serverSideId,
-        ]); /** @todo we should maybe expose some method in view_manager: before, the filter cache was invalidated */
+        await this.orm.unlink("ir.filters", [serverSideId]);
+        this.env.bus.trigger("CLEAR-CACHES");
         const index = this.query.findIndex((queryElem) => queryElem.searchItemId === favoriteId);
         delete this.searchItems[favoriteId];
         if (index >= 0) {
