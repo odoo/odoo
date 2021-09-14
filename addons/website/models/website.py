@@ -17,7 +17,7 @@ from functools import reduce
 from lxml import etree, html
 from psycopg2 import sql
 from werkzeug import urls
-from werkzeug.datastructures import OrderedMultiDict
+from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import NotFound
 from markupsafe import Markup
 
@@ -1400,10 +1400,10 @@ class Website(models.Model):
     def _is_canonical_url(self, canonical_params):
         """Returns whether the current request URL is canonical."""
         self.ensure_one()
-        # Compare OrderedMultiDict because the order is important, there must be
+        # Compare MultiDict (ordered) because the order is important, there must be
         # only one canonical and not params permutations.
         params = request.httprequest.args
-        canonical_params = canonical_params or OrderedMultiDict()
+        canonical_params = canonical_params or MultiDict()
         if params != canonical_params:
             return False
         # Compare URL at the first routing iteration because it's the one with

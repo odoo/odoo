@@ -86,6 +86,7 @@ import {
     ZERO_WIDTH_CHARS_REGEX,
     getAdjacentCharacter,
     isLinkEligibleForZwnbsp,
+    buildLinkUrl,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -4778,7 +4779,7 @@ export class OdooEditor extends EventTarget {
             }
             if (splitAroundUrl.length === 3 && !splitAroundUrl[0] && !splitAroundUrl[2] && !isSelectionInsidePre) {
                 // Pasted content is a single URL.
-                const url = /^https?:\/\//i.test(text) ? text : 'https://' + text;
+                const url = buildLinkUrl(text);
                 const youtubeUrl = this.options.allowCommandVideo && YOUTUBE_URL_GET_VIDEO_ID.exec(url);
                 const urlFileExtention = url.split('.').pop();
                 const isImageUrl = ['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(urlFileExtention.toLowerCase());
@@ -4870,9 +4871,7 @@ export class OdooEditor extends EventTarget {
             } else {
                 this.historyPauseSteps();
                 for (let i = 0; i < splitAroundUrl.length; i++) {
-                    const url = /^https?:\/\//gi.test(splitAroundUrl[i])
-                        ? splitAroundUrl[i]
-                        : 'https://' + splitAroundUrl[i];
+                    const url = buildLinkUrl(splitAroundUrl[i]);
                     // Even indexes will always be plain text, and odd indexes will always be URL.
                     // A url cannot be transformed inside an existing link.
                     if (i % 2 && !selectionIsInsideALink && !isSelectionInsidePre) {

@@ -1787,6 +1787,37 @@ export function makeContentsInline(node) {
 }
 
 /**
+ * Prepends mailto: or https:// if the string matches
+ * the URL regex. Returns the original string if the
+ * the regex does not match or the original string
+ * already contains mailto: or https://.
+ *
+ * If there is already a regex match for the string,
+ * it should be passed here to avoid infinite looping.
+ *
+ * @param {String} string
+ * @param {String} match (optional)
+ * @returns {String}
+ */
+export function buildLinkUrl(string, match) {
+    match = match || URL_REGEX_WITH_INFOS.exec(string);
+    if (!match) {
+        return string;
+    }
+    const matchedString = match[0];
+    const schema = match[2];
+    const isEmail = !schema && matchedString.includes('@');
+    let prefix = '';
+    if (isEmail && !matchedString.startsWith('mailto:')) {
+        prefix = 'mailto:';
+    }
+    if (!isEmail && !schema) {
+        prefix = 'https://';
+    }
+    return prefix + matchedString;
+}
+
+/**
  * Returns an array of url infos for url matched in the given string.
  *
  * @param {String} string
@@ -1797,7 +1828,7 @@ export function getUrlsInfosInString(string) {
         match;
     while ((match = URL_REGEX_WITH_INFOS.exec(string))) {
         infos.push({
-            url: match[2] ? match[0] : 'https://' + match[0],
+            url: buildLinkUrl(string, match),
             label: match[0],
             index: match.index,
             length: match[0].length,

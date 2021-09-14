@@ -2,6 +2,7 @@ import datetime
 import logging
 import pytz
 from unittest.mock import patch
+from freezegun import freeze_time
 
 from odoo.tests.common import TransactionCase
 from odoo.tools._monkeypatches_pytz import _tz_mapping
@@ -55,6 +56,7 @@ class TestTZ(TransactionCase):
             with self.assertRaises(ValueError):
                 self.env.user.tz = "US/Eastern"
 
+    @freeze_time('2024-06-09')
     def test_partner_with_old_tz(self):
         # this test makes sence after ubuntu noble without tzdata-legacy installed
         partner = self.env['res.partner'].create({'name': 'test', 'tz': 'UTC'})

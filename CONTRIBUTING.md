@@ -1,14 +1,14 @@
-Contributing to Odoo
-====================
+# Contributing to JobRad Odoo
 
-[Full contribution guidelines](https://github.com/odoo/odoo/wiki/Contributing)
+We modify our base Odoo fork only when necessary (e.g. migration, security patches, critical fixes).
 
-TL;DR
+**Branching:**
 
-* If you [make a pull request](https://github.com/odoo/odoo/wiki/Contributing#making-pull-requests),
-  do not create an issue! Use the PR description for that
-* Issues are handled with a much lower priority than pull requests
-* Use this [template](https://github.com/odoo/odoo/tree/16.0/.github/ISSUE_TEMPLATE.md)
-  when reporting issues. Please search for duplicates first!
-* Pull requests must be made against the [correct version](https://github.com/odoo/odoo/wiki/Contributing#against-which-version-should-i-submit-a-patch)
-* There are restrictions on the kind of [changes allowed in stable series](https://github.com/odoo/odoo/wiki/Contributing#what-does-stable-mean)
+|               Branch                | Purpose                                                                                                                                                         |
+|:-----------------------------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `jobrad-15.0-develop`</br>(default) | • Development branch for changes targeting the next major release.<br/>• Merged into `jobrad-15.0` before major releases - if there are Odoo changes to deploy. |
+|            `jobrad-15.0`            | • Main branch, reflects production state.<br/>• Hotfixes and urgent patches target `jobrad-15.0` directly.                                                      |
+
+The Odoo fork is versioned independently from `odoo-addons-jobrad`.
+
+Pull requests to the base Odoo fork are approved by team CoreERP.

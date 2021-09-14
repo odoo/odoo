@@ -42,6 +42,7 @@ from collections.abc import MutableMapping
 from contextlib import closing
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
+from typing import Union, Literal, List, Tuple
 
 import babel.dates
 import dateutil.relativedelta
@@ -439,6 +440,9 @@ class BaseModel(metaclass=MetaModel):
     """
     __slots__ = ['env', '_ids', '_prefetch_ids']
 
+    env: api.Environment
+    id: Union[int, str, NewId, Literal[False]]
+
     _auto = False
     """Whether a database table should be created.
     If set to ``False``, override :meth:`~odoo.models.BaseModel.init`
@@ -462,12 +466,12 @@ class BaseModel(metaclass=MetaModel):
     .. seealso:: :class:`TransientModel`
     """
 
-    _name = None                #: the model name (in dot-notation, module namespace)
-    _description = None         #: the model's informal name
-    _module = None              #: the model's module (in the Odoo sense)
-    _custom = False             #: should be True for custom models only
+    _name: Union[str, None] = None          #: the model name (in dot-notation, module namespace)
+    _description: Union[str, None] = None   #: the model's informal name
+    _module = None                          #: the model's module (in the Odoo sense)
+    _custom = False                         #: should be True for custom models only
 
-    _inherit = ()
+    _inherit: Union[str, List[str], Tuple[str, ...]] = ()
     """Python-inherited models:
 
     :type: str or list(str)

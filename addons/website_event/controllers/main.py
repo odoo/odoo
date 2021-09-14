@@ -10,7 +10,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
-from werkzeug.datastructures import OrderedMultiDict
+from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
@@ -132,7 +132,7 @@ class WebsiteEventController(http.Controller):
 
         if searches['date'] == 'old':
             # the only way to display this content is to set date=old so it must be canonical
-            values['canonical_params'] = OrderedMultiDict([('date', 'old')])
+            values['canonical_params'] = MultiDict([('date', 'old')])
 
         return request.render("website_event.index", values)
 

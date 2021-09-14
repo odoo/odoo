@@ -22,6 +22,7 @@ from contextlib import contextmanager
 from inspect import signature
 from pprint import pformat
 from weakref import WeakSet
+from typing import TYPE_CHECKING
 
 try:
     from decorator import decoratorx as decorator
@@ -31,6 +32,10 @@ except ImportError:
 from .exceptions import AccessError, CacheMiss
 from .tools import classproperty, frozendict, lazy_property, OrderedSet, Query, StackMap
 from .tools.translate import _
+
+if TYPE_CHECKING:
+    from odoo.modules.registry import Registry
+    from .sql_db import Cursor
 
 _logger = logging.getLogger(__name__)
 
@@ -498,6 +503,12 @@ class Environment(Mapping):
     names to models. It also holds a cache for records, and a data
     structure to manage recomputations.
     """
+    cr: "Cursor"
+    uid: int
+    context: frozendict
+    su: bool
+    registry: "Registry"
+
     @classproperty
     def envs(cls):
         raise NotImplementedError(

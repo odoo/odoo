@@ -1,0 +1,51 @@
+name: OWASP Dependency Check
+
+on:
+  schedule:
+    - cron: '00 4 * * *'
+  workflow_dispatch:
+    # Inputs when the workflow is triggered manually.
+    inputs:
+      scan_path:
+          description: 'Path to scan'
+          default: '.'
+          required: true
+          type: string
+      format:
+        description: 'Report format'
+        default: 'HTML'
+        required: true
+        type: choice
+        options:
+          - HTML
+          - XML
+          - CSV
+          - JSON
+          - JUNIT
+          - SARIF
+          - JENKINS
+          - GITLAB
+          - ALL
+
+jobs:
+  depchecktest:
+    runs-on: ubuntu-latest
+    name: depecheck_test
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Depcheck
+        uses: dependency-check/Dependency-Check_Action@main
+        id: Depcheck
+        with:
+          project: 'Odoo'
+          path: ${{ inputs.scan_path || '.' }}
+          format: ${{ inputs.format || 'HTML' }}     
+          out: 'reports'
+          args: >
+            --enableExperimental
+      - name: Upload Test results
+        uses: actions/upload-artifact@master
+        with:
+           name: Depcheck report
+           path: ${{github.workspace}}/reports

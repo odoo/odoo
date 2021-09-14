@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:17.6
+    environment:
+      POSTGRES_USER: &pguser odoo
+      POSTGRES_PASSWORD: &pgpassword odoo
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  odoo:
+    image: ${ODOO_IMAGE:-ghcr.io/jobrad-gmbh/odoo:jobrad-15.0}
+    tty: True
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGHOST: postgres
+      PGUSER: *pguser
+      PGPASSWORD: *pgpassword

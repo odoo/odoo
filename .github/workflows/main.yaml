@@ -1,0 +1,168 @@
+name: Build and Test
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'workflow_dispatch' }}
+
+on:
+  push:
+    branches:
+      - 'jobrad-**'
+    tags:
+      - 'jobrad-**'
+  pull_request:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+jobs:
+
+  build-docker:
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            platform: linux/amd64
+            suffix: amd64
+          - runner: Linux-ARM64-2C-8GB
+            platform: linux/arm64
+            suffix: arm64
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+      packages: write
+    env:
+      IMAGE_NAME: ghcr.io/jobrad-gmbh/odoo
+    outputs:
+      IMAGE: ${{ steps.set-env-docker.outputs.IMAGE }}
+      IMAGE_BRANCH: ${{ steps.set-env-docker.outputs.IMAGE_BRANCH }}
+    steps:
+    - name: Clone
+      uses: actions/checkout@v4
+
+    - name: Clone enterprise addons
+      uses: actions/checkout@v4
+      with:
+        repository: jobrad-gmbh/odoo-addons-enterprise
+        ref: 15.0.1
+        token: ${{ secrets.ODOO_REPO_TOKEN }}
+        path: addons_enterprise
+        fetch-depth: 1
+
+    - name: Create variables (push or workflow dispatch)
+      id: set-env-push
+      if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+      shell: bash
+      run: |
+        echo "BRANCH_NAME=$(echo ${GITHUB_REF_NAME} | sed 's/[^A-Za-z0-9.-]/_/g')" >> $GITHUB_OUTPUT
+        echo "SHORT_REV=${{ github.sha }}" >> $GITHUB_OUTPUT
+
+    - name: Create variables (pull-request)
+      id: set-env-pr
+      if: ${{ github.event_name == 'pull_request' }}
+      shell: bash
+      run: |
+        echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF} | sed 's/[^A-Za-z0-9.-]/_/g')" >> $GITHUB_OUTPUT
+        echo "SHORT_REV=${{ github.event.pull_request.head.sha }}" >> $GITHUB_OUTPUT
+
+    - name: Create Docker variables
+      id: set-env-docker
+      run: |
+        SHORT_REV=${{ steps.set-env-push.outputs.SHORT_REV || steps.set-env-pr.outputs.SHORT_REV }}
+        BRANCH_NAME=${{ steps.set-env-push.outputs.BRANCH_NAME || steps.set-env-pr.outputs.BRANCH_NAME }}
+
+        IMAGE=${{ env.IMAGE_NAME }}:${SHORT_REV}
+        echo "IMAGE=$IMAGE" >> $GITHUB_OUTPUT
+
+        IMAGE_BRANCH=${{ env.IMAGE_NAME }}:${BRANCH_NAME}
+        echo "IMAGE_BRANCH=$IMAGE_BRANCH" >> $GITHUB_OUTPUT
+
+    - name: Login to ghcr registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      with:
+        platforms: ${{ matrix.platform }}
+        driver-opts: |
+          image=moby/buildkit:buildx-stable-1
+          network=host
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        file: docker/Dockerfile
+        platforms: ${{ matrix.platform }}
+        push: true
+        tags: |
+          ${{ steps.set-env-docker.outputs.IMAGE }}-${{ matrix.suffix }}
+        cache-from: |
+          type=gha,scope=image-${{ matrix.suffix }}
+        cache-to: |
+          type=gha,scope=image-${{ matrix.suffix }},mode=max
+        provenance: false
+
+  combine-docker:
+    runs-on: ubuntu-24.04
+    needs: [build-docker]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Login to ghcr registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to artifactory registry
+        uses: docker/login-action@v3
+        with:
+          registry: artifactory.service.jobrad.org
+          username: github_runner
+          password: ${{ secrets.ARTIFACTORY_TOKEN }}
+
+      # TODO Push to artifactory
+      - name: Combine Docker images
+        uses: int128/docker-manifest-create-action@v2
+        with:
+          tags: |
+            ${{ needs.build-docker.outputs.IMAGE }}
+            ${{ needs.build-docker.outputs.IMAGE_BRANCH }}
+          sources: |
+            ${{ needs.build-docker.outputs.IMAGE }}-amd64
+            ${{ needs.build-docker.outputs.IMAGE }}-arm64
+          push: true
+
+  test:
+    runs-on: ubuntu-24.04
+    needs: [build-docker, combine-docker]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run base Odoo tests
+        run: |
+          export ODOO_IMAGE=${{ needs.build-docker.outputs.IMAGE }}
+          if [ -z "$ODOO_IMAGE" ]; then
+            echo "ODOO_IMAGE is empty!"
+            exit 1
+          fi
+          ./tests/run_tests.sh tests/modules
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker compose -f tests/docker-compose.yml down -v
