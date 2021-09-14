@@ -5,6 +5,7 @@
     'name': 'Mollie Payment Acquirer',
     'version': '1.0',
     'category': 'Accounting/Payment Acquirers',
+    'sequence': 356,
     'summary': 'Payment Acquirer: Mollie Implementation',
     'description': """Mollie Payment Acquirer""",
 
