@@ -167,7 +167,7 @@ class WebsiteSale(http.Controller):
     def _get_search_order(self, post):
         # OrderBy will be parsed in orm and so no direct sql injection
         # id is added to be sure that order is a unique sort key
-        order = post.get('order') or 'website_sequence ASC'
+        order = post.get('order') or request.env['website'].get_current_website().shop_default_sort
         return 'is_published desc, %s, id desc' % order
 
     def _get_search_domain(self, search, category, attrib_values, search_in_description=True):
@@ -1125,30 +1125,37 @@ class WebsiteSale(http.Controller):
         })
         return "%s?enable_editor=1" % product.product_tmpl_id.website_url
 
-    @http.route(['/shop/change_sequence'], type='json', auth='user')
-    def change_sequence(self, id, sequence):
-        product_tmpl = request.env['product.template'].browse(id)
-        if sequence == "top":
-            product_tmpl.set_sequence_top()
-        elif sequence == "bottom":
-            product_tmpl.set_sequence_bottom()
-        elif sequence == "up":
-            product_tmpl.set_sequence_up()
-        elif sequence == "down":
-            product_tmpl.set_sequence_down()
+    @http.route(['/shop/config/product'], type='json', auth='user')
+    def change_product_config(self, product_id, **options):
+        if not request.env.user.has_group('website.group_website_publisher'):
+            raise NotFound()
 
-    @http.route(['/shop/change_size'], type='json', auth='user')
-    def change_size(self, id, x, y):
-        product = request.env['product.template'].browse(id)
-        return product.write({'website_size_x': x, 'website_size_y': y})
+        product = request.env['product.template'].browse(product_id)
+        if "sequence" in options:
+            sequence = options["sequence"]
+            if sequence == "top":
+                product.set_sequence_top()
+            elif sequence == "bottom":
+                product.set_sequence_bottom()
+            elif sequence == "up":
+                product.set_sequence_up()
+            elif sequence == "down":
+                product.set_sequence_down()
+        if {"x", "y"} <= set(options):
+            product.write({'website_size_x': options["x"], 'website_size_y': options["y"]})
 
-    @http.route(['/shop/change_ppg'], type='json', auth='user')
-    def change_ppg(self, ppg):
-        request.env['website'].get_current_website().shop_ppg = ppg
+    @http.route(['/shop/config/website'], type='json', auth='user')
+    def _change_website_config(self, **options):
+        if not request.env.user.has_group('website.group_website_publisher'):
+            raise NotFound()
 
-    @http.route(['/shop/change_ppr'], type='json', auth='user')
-    def change_ppr(self, ppr):
-        request.env['website'].get_current_website().shop_ppr = ppr
+        current_website = request.env['website'].get_current_website()
+        if "ppg" in options:
+            current_website.shop_ppg = options["ppg"] or 1
+        if "ppr" in options:
+            current_website.shop_ppr = options["ppr"]
+        if "default_sort" in options:
+            current_website.shop_default_sort = options["default_sort"]
 
     def order_lines_2_google_api(self, order_lines):
         """ Transforms a list of order lines into a dict for google analytics """

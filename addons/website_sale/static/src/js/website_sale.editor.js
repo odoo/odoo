@@ -285,6 +285,7 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     start: function () {
         this.ppg = parseInt(this.$target.closest('[data-ppg]').data('ppg'));
         this.ppr = parseInt(this.$target.closest('[data-ppr]').data('ppr'));
+        this.default_sort = this.$target.closest('[data-default-sort]').data('default-sort');
         return this._super.apply(this, arguments);
     },
     /**
@@ -309,7 +310,7 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
         }
         this.ppg = ppg;
         return this._rpc({
-            route: '/shop/change_ppg',
+            route: '/shop/config/website',
             params: {
                 'ppg': ppg,
             },
@@ -321,9 +322,21 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     setPpr: function (previewMode, widgetValue, params) {
         this.ppr = parseInt(widgetValue);
         this._rpc({
-            route: '/shop/change_ppr',
+            route: '/shop/config/website',
             params: {
                 'ppr': this.ppr,
+            },
+        }).then(reload);
+    },
+    /**
+     * @see this.selectClass for params
+     */
+    setDefaultSort: function (previewMode, widgetValue, params) {
+        this.default_sort = widgetValue;
+        this._rpc({
+            route: '/shop/config/website',
+            params: {
+                'default_sort': this.default_sort,
             },
         }).then(reload);
     },
@@ -342,6 +355,9 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
             }
             case 'setPpr': {
                 return this.ppr;
+            }
+            case 'setDefaultSort': {
+                return this.default_sort;
             }
         }
         return this._super(...arguments);
@@ -518,9 +534,9 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      */
     changeSequence: function (previewMode, widgetValue, params) {
         this._rpc({
-            route: '/shop/change_sequence',
+            route: '/shop/config/product',
             params: {
-                id: this.productTemplateID,
+                product_id: this.productTemplateID,
                 sequence: widgetValue,
             },
         }).then(reload);
@@ -690,9 +706,9 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         var x = $td.index() + 1;
         var y = $td.parent().index() + 1;
         this._rpc({
-            route: '/shop/change_size',
+            route: '/shop/config/product',
             params: {
-                id: this.productTemplateID,
+                product_id: this.productTemplateID,
                 x: x,
                 y: y,
             },

@@ -18,6 +18,11 @@
                 <we-button data-set-ppr="3">3</we-button>
                 <we-button data-set-ppr="4">4</we-button>
             </we-select>
+            <we-select string="Default Sort" class="o_wsale_sort_submenu" data-no-preview="true">
+                <t t-foreach="request.env['website']._get_product_sort_mapping()" t-as="query_and_label">
+                    <we-button t-att-data-set-default-sort="query_and_label[0]"><t t-esc="query_and_label[1]"/></we-button>
+                </t>
+            </we-select>
         </div>
 
         <div data-js="WebsiteSaleProductsItem"
@@ -96,9 +101,10 @@
         <we-button data-set-search-type="products" data-select-data-attribute="products" data-name="search_products_opt" data-form-action="/shop">Products</we-button>
     </xpath>
     <xpath expr="//div[@data-js='SearchBar']/we-select[@data-name='order_opt']" position="inside">
-        <we-button data-set-order-by="list_price asc" data-select-data-attribute="list_price asc" data-dependencies="search_products_opt" data-name="order_price_asc_opt">Price (low to high)</we-button>
-        <we-button data-set-order-by="list_price desc" data-select-data-attribute="list_price desc" data-dependencies="search_products_opt" data-name="order_price_desc_opt">Price (high to low)</we-button>
-        <we-button data-set-order-by="website_sequence asc" data-select-data-attribute="website_sequence asc" data-dependencies="search_products_opt" data-name="order_sequence_asc_opt">Sequence</we-button>
+        <t t-foreach="request.env['website']._get_product_sort_mapping()" t-as="query_and_label">
+            <!-- name asc is already part of the general sorting methods of this snippet. -->
+            <we-button t-if="query_and_label[0] != 'name asc'" t-att-data-set-order-by="query_and_label[0]" t-att-data-select-data-attribute="query_and_label[0]" data-dependencies="search_products_opt"><t t-out="query_and_label[1]"/></we-button>
+        </t>
     </xpath>
     <xpath expr="//div[@data-js='SearchBar']/div[@data-dependencies='limit_opt']" position="inside">
         <we-checkbox string="Description" data-dependencies="search_products_opt" data-select-data-attribute="true" data-attribute-name="displayDescription"
