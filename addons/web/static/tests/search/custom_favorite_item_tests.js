@@ -158,7 +158,7 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test("save filter", async function (assert) {
-        assert.expect(1);
+        assert.expect(4);
 
         class TestComponent extends Component {
             setup() {
@@ -186,11 +186,16 @@ QUnit.module("Search", (hooks) => {
             Component: TestComponent,
             searchViewId: false,
         });
+        comp.env.bus.on("CLEAR-CACHES", comp, () => assert.step("CLEAR-CACHES"));
+
+        assert.verifySteps([]);
 
         await toggleFavoriteMenu(comp);
         await toggleSaveFavorite(comp);
         await editFavoriteName(comp, "aaa");
         await saveFavorite(comp);
+
+        assert.verifySteps(["CLEAR-CACHES"]);
     });
 
     QUnit.test("dynamic filters are saved dynamic", async function (assert) {
