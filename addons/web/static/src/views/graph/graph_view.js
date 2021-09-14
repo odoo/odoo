@@ -53,11 +53,24 @@ export class GraphView extends Component {
         this.model = useModel(this.constructor.Model, modelParams);
 
         useSetupView({
-            exportLocalState: () => {
+            getLocalState: () => {
                 return { metaData: this.model.metaData };
             },
-            saveParams: () => this.saveParams(),
+            getContext: () => this.getContext(),
         });
+    }
+
+    /**
+     * @returns {Object}
+     */
+    getContext() {
+        // expand context object? change keys?
+        const { measure, groupBy, mode } = this.model.metaData;
+        return {
+            graph_measure: measure,
+            graph_mode: mode,
+            graph_groupbys: groupBy.map((gb) => gb.spec),
+        };
     }
 
     /**
@@ -105,21 +118,6 @@ export class GraphView extends Component {
      */
     onModeSelected(mode) {
         this.model.updateMetaData({ mode });
-    }
-
-    /**
-     * @returns {Object}
-     */
-    saveParams() {
-        // expand context object? change keys?
-        const { measure, groupBy, mode } = this.model.metaData;
-        return {
-            context: {
-                graph_measure: measure,
-                graph_mode: mode,
-                graph_groupbys: groupBy.map((gb) => gb.spec),
-            },
-        };
     }
 
     /**
