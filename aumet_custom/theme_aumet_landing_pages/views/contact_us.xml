@@ -1,0 +1,24 @@
+<odoo>
+    <template id="contact_us" inherit_id="website.contactus" active="True"
+              name="Contact 1">
+        <xpath expr="//div[hasclass('oe_structure')]" position="replace">
+            <section class="banner_about">
+                <div class="container">
+                    <h3 class="b_head">
+                        Contact Us
+                    </h3>
+                </div>
+            </section>
+        </xpath>
+        <xpath expr="//section[hasclass('banner_about')]" position="replace">
+            <div class="text-center header p-4">
+                <h1 class="header">Contact Us</h1>
+                <p class="content">Want to talk to us? We want to talk to you!</p>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('oe_structure')]" position="replace">
+            <h4 class="text-center">Contact Us</h4>
+        </xpath>
+    </template>
+</odoo>
+

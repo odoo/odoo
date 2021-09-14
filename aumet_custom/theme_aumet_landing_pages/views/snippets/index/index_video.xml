@@ -1,0 +1,23 @@
+<odoo>
+    <template id="index_video" inherit_id="website.snippets"
+              name="index_tab">
+        <xpath expr="//div[@id='snippet_feature']/div[hasclass('o_panel_body')]"
+               position="inside">
+            <t t-snippet="theme_aumet_landing_pages.video"
+               t-thumbnail="/theme_aumet_landing_pages/static/src/images/snippets/video.png"
+            />
+        </xpath>
+    </template>
+    <template id="video" name="vedio snippet">
+        <section class="video">
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <img class="video-src"
+                             src="/theme_aumet_landing_pages/static/src/images/snippets/video.png"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

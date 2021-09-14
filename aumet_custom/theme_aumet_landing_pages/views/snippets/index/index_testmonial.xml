@@ -1,0 +1,40 @@
+<odoo>
+    <template id="index_testmonial_snippet" inherit_id="website.snippets"
+              name="index_testmonial">
+        <xpath expr="//div[@id='snippet_feature']/div[hasclass('o_panel_body')]"
+               position="inside">
+            <t t-snippet="theme_aumet_landing_pages.index_testmonial"
+               t-thumbnail="/theme_aumet_landing_pages/static/src/images/snippets/testimonials.png"
+
+            />
+        </xpath>
+    </template>
+    <template id="index_testmonial" name="Index Testimonial snippet">
+        <section class="testmonial">
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="header">Testimonials</h1>
+
+                        <img class="placeholder"
+                             src="/theme_aumet_landing_pages/static/src/images/testimonial/placeholder.png"/>
+
+                        <p class="content">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla pulvinar dapibus erat,
+                            sit amet viverra leo consectetur sit amet
+                        </p>
+
+                        <div class="user d-flex justify-content-center">
+                            <img src="/theme_aumet_landing_pages/static/src/images/testimonial/user.png"
+                                 class="rounded-circle"/>
+                            <div class="pl-3">
+                                <p>Person Name</p>
+                                <p>Job Role</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

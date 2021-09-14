@@ -1,0 +1,22 @@
+<odoo>
+    <template id="index_partner_snippet" inherit_id="website.snippets"
+              name="index_partner">
+        <xpath expr="//div[@id='snippet_feature']/div[hasclass('o_panel_body')]"
+               position="inside">
+            <t t-snippet="theme_aumet_landing_pages.index_partner"
+               t-thumbnail="/theme_aumet_landing_pages/static/src/images/snippets/suppliers-block.png"
+            />
+        </xpath>
+    </template>
+    <template id="index_partner" name="Index Partner snippet">
+        <section class="partner">
+            <div class="container-fluid text-center">
+                <h1 class="header">
+                    Trusted by
+                </h1>
+                <p class="content">Aumet pharmacy is used and trusted by Pharmacies across UAE and Jordan</p>
+            </div>
+            <t t-call="theme_aumet_landing_pages.index_partner_item"/>
+        </section>
+    </template>
+</odoo>
