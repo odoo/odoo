@@ -157,7 +157,7 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test("save filter", async function (assert) {
-        assert.expect(1);
+        assert.expect(4);
 
         class TestComponent extends Component {
             setup() {
@@ -171,7 +171,7 @@ QUnit.module("Search", (hooks) => {
         TestComponent.components = { FavoriteMenu };
         TestComponent.template = xml`<div><FavoriteMenu/></div>`;
 
-        await makeWithSearch({
+        const comp = await makeWithSearch({
             serverData,
             mockRPC: (_, args) => {
                 if (args.model === "ir.filters" && args.method === "create_or_replace") {
@@ -185,11 +185,16 @@ QUnit.module("Search", (hooks) => {
             Component: TestComponent,
             searchViewId: false,
         });
+        comp.env.bus.on("CLEAR-CACHES", comp, () => assert.step("CLEAR-CACHES"));
+
+        assert.verifySteps([]);
 
         await toggleFavoriteMenu(target);
         await toggleSaveFavorite(target);
         await editFavoriteName(target, "aaa");
         await saveFavorite(target);
+
+        assert.verifySteps(["CLEAR-CACHES"]);
     });
 
     QUnit.test("dynamic filters are saved dynamic", async function (assert) {

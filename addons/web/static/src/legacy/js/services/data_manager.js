@@ -22,10 +22,15 @@ return core.Class.extend({
     },
 
     /**
-     * Invalidates the whole cache
+     * Invalidates the whole cache. Only works when not triggered by itself.
      * Suggestion: could be refined to invalidate some part of the cache
+     *
+     * @param {Object} [dataManager]
      */
-    invalidate: function () {
+    invalidate: function (dataManager) {
+        if (dataManager === this) {
+            return;
+        }
         session.invalidateCacheKey('load_menus');
         this._init_cache();
     },
@@ -203,6 +208,7 @@ return core.Class.extend({
      * @param {string} key
      */
     _invalidate(section, key) {
+        core.bus.trigger("clear_cache", this);
         if (key) {
             delete this._cache[section][key];
         } else {
