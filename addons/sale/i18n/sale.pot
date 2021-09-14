@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2021-09-14 10:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,20 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: sale
+#. openerp-web
+#: code:addons/sale/static/src/js/sale.js:0
+#, python-format
+msgid " / Month"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
+msgid "# Sale Orders"
 msgstr ""
 
 #. module: sale
@@ -57,12 +69,6 @@ msgid "&amp;nbsp;"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
-msgid "&amp;nbsp;<span>on</span>&amp;nbsp;"
-msgstr ""
-
-#. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
 msgstr ""
@@ -72,6 +78,12 @@ msgstr ""
 msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
+msgstr ""
+
+#. module: sale
+#: model:product.product,description_sale:sale.product_product_4e
+#: model:product.product,description_sale:sale.product_product_4f
+msgid "160x80cm, with large legs."
 msgstr ""
 
 #. module: sale
@@ -418,6 +430,11 @@ msgid "<span class=\"o_stat_text\">Sold</span>"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
+msgid "<span class=\"oe_read_only\">/ Month</span>"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
@@ -544,12 +561,6 @@ msgid "<strong>Signature</strong>"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
-msgid "<strong>Subtotal</strong>"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>Thank You!</strong><br/>"
 msgstr ""
@@ -562,12 +573,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been canceled.</strong>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
-msgid "<strong>Total</strong>"
 msgstr ""
 
 #. module: sale
@@ -633,6 +638,11 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_account_id
 msgid "Account used for deposits"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
+msgid "Accrued Revenue Entry"
 msgstr ""
 
 #. module: sale
@@ -994,8 +1004,8 @@ msgid "Confirm"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__confirmation_template_id
-msgid "Confirmation Email"
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__confirmation_mail_template_id
+msgid "Confirmation Email Template"
 msgstr ""
 
 #. module: sale
@@ -1007,6 +1017,12 @@ msgstr ""
 #: model:ir.model,name:sale.model_res_partner
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Contact"
+msgstr ""
+
+#. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid "Contact Us"
 msgstr ""
 
 #. module: sale
@@ -1034,6 +1050,11 @@ msgid "Create Invoice"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
+msgid "Create a customer invoice"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
 msgid "Create a new product"
 msgstr ""
@@ -1057,6 +1078,13 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Create invoices"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
+msgid ""
+"Create invoices, register payments and keep track of the discussions with "
+"your customers."
 msgstr ""
 
 #. module: sale
@@ -1105,6 +1133,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__currency_rate
 msgid "Currency Rate"
+msgstr ""
+
+#. module: sale
+#: model:product.attribute.value,name:sale.product_attribute_value_7
+#: model:product.template.attribute.value,name:sale.product_4_attribute_1_value_3
+msgid "Custom"
 msgstr ""
 
 #. module: sale
@@ -1176,6 +1210,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.menu,name:sale.res_partner_menu
 msgid "Customers"
+msgstr ""
+
+#. module: sale
+#: model:product.product,name:sale.product_product_4e
+#: model:product.product,name:sale.product_product_4f
+msgid "Customizable Desk"
 msgstr ""
 
 #. module: sale
@@ -1315,6 +1355,12 @@ msgid ""
 "lead time of the order lines in case of Service products. In case of "
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
+msgstr ""
+
+#. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
 msgstr ""
 
 #. module: sale
@@ -1479,19 +1525,19 @@ msgid "Email"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__template_id
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Email Template"
-msgstr ""
-
-#. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_res_config_settings__confirmation_template_id
+#: model:ir.model.fields,help:sale.field_res_config_settings__confirmation_mail_template_id
 msgid "Email sent to the customer once the order is paid."
+msgstr ""
+
+#. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid "Ergonomic"
 msgstr ""
 
 #. module: sale
@@ -1539,7 +1585,7 @@ msgstr ""
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
-msgid "Extra line with %s "
+msgid "Extra line with %s"
 msgstr ""
 
 #. module: sale
@@ -1784,6 +1830,11 @@ msgid "Invoice Created"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__invoice_mail_template_id
+msgid "Invoice Email Template"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_lines
 msgid "Invoice Lines"
 msgstr ""
@@ -1797,6 +1848,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_status
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_status
 msgid "Invoice Status"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_template_sale_form_view
+msgid "Invoice after delivery, based on quantities delivered, not ordered."
 msgstr ""
 
 #. module: sale
@@ -1865,7 +1921,6 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
-#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_invoice_policy
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
@@ -2011,6 +2066,12 @@ msgid "Lets keep electronic signature for now."
 msgstr ""
 
 #. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid "Locally handmade"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
 msgid "Lock"
 msgstr ""
@@ -2024,6 +2085,14 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__done
 msgid "Locked"
+msgstr ""
+
+#. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid ""
+"Looking for a custom bamboo stain to match existing furniture? Contact us "
+"for a quote."
 msgstr ""
 
 #. module: sale
@@ -2595,6 +2664,14 @@ msgid "Portal Access URL"
 msgstr ""
 
 #. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid ""
+"Press a button and watch your desk glide effortlessly from sitting to "
+"standing height in seconds."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce
 msgid "Price Reduce"
 msgstr ""
@@ -2758,6 +2835,11 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
 msgid "Qty Ordered"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
+msgid "Qty To Deliver"
 msgstr ""
 
 #. module: sale
@@ -3023,6 +3105,11 @@ msgid "Sale Payment acquire onboarding wizard"
 msgstr ""
 
 #. module: sale
+#: model:utm.source,name:sale.utm_source_sale_order_0
+msgid "Sale Promotion 1"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sale Warnings"
 msgstr ""
@@ -3049,10 +3136,11 @@ msgid "Sales Advance Payment Invoice"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sales_team.py:0
+#: code:addons/sale/models/crm_team.py:0
 #: model:ir.actions.act_window,name:sale.action_order_report_all
 #: model:ir.actions.act_window,name:sale.action_order_report_so_salesteam
 #: model:ir.actions.act_window,name:sale.report_all_channels_sales_action
+#: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_graph
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_pivot
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -3201,7 +3289,7 @@ msgid "Sales price"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sales_team.py:0
+#: code:addons/sale/models/crm_team.py:0
 #, python-format
 msgid "Sales: Untaxed Total"
 msgstr ""
@@ -3521,6 +3609,16 @@ msgid "Subtotal"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+msgid "Sum of Total"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+msgid "Sum of Untaxed Total"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
 #: model:ir.ui.menu,name:sale.menu_tag_config
 msgid "Tags"
@@ -3533,8 +3631,8 @@ msgid "Tax Total"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__amount_by_group
-msgid "Tax amount by group"
+#: model:ir.model.fields,field_description:sale.field_sale_order__tax_totals_json
+msgid "Tax Totals Json"
 msgstr ""
 
 #. module: sale
@@ -3547,6 +3645,14 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_taxes_id
 msgid "Taxes used for deposits"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/crm_team.py:0
+#, python-format
+msgid ""
+"Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
+"canceling them or archiving the team instead."
 msgstr ""
 
 #. module: sale
@@ -3668,6 +3774,14 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid ""
+"The minimum height is 65 cm, and for standing work the maximum height "
+"position is 125 cm."
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
@@ -3752,8 +3866,7 @@ msgid ""
 "\n"
 "Reason(s) of this behavior could be:\n"
 "- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
-"- You should modify the invoicing policy of your product: Open the product, go to the \"Sales tab\" and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\".\n"
-"        "
+"- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
 
 #. module: sale
@@ -3965,6 +4078,14 @@ msgid "Unit of Measure"
 msgstr ""
 
 #. module: sale
+#: model:product.product,uom_name:sale.advance_product_0
+#: model:product.product,uom_name:sale.product_product_4e
+#: model:product.product,uom_name:sale.product_product_4f
+#: model:product.template,uom_name:sale.advance_product_0_product_template
+msgid "Units"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
 #: model:ir.ui.menu,name:sale.next_id_16
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4078,6 +4199,7 @@ msgid "Warning"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Warning for %s"
@@ -4095,6 +4217,14 @@ msgid "Warning when Selling this Product"
 msgstr ""
 
 #. module: sale
+#: model_terms:product.product,website_description:sale.product_product_4e
+#: model_terms:product.product,website_description:sale.product_product_4f
+msgid ""
+"We pay special attention to detail, which is why our desks are of a superior"
+" quality."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
 msgid "Website Messages"
 msgstr ""
@@ -4109,6 +4239,11 @@ msgstr ""
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Write a company name to create one, or see suggestions."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_template_sale_form_view
+msgid "You can invoice them before they are delivered."
 msgstr ""
 
 #. module: sale
@@ -4210,9 +4345,4 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "sale order"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__amount_by_group
-msgid "type: [(name, amount, base, formated amount, formated base)]"
 msgstr ""

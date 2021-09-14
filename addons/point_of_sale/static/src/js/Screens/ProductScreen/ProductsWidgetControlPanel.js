@@ -52,7 +52,7 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
                 });
                 if(!ProductIds.length) {
                     this.showPopup('ErrorPopup', {
-                        title: this.env._t(''),
+                        title: '',
                         body: this.env._t("No product found"),
                     });
                 } else {
