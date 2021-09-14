@@ -14,9 +14,9 @@ export class WithSearch extends Component {
     setup() {
         this.Component = this.props.Component;
 
-        if (!this.env.__saveParams__) {
+        if (!this.env.__getContext__) {
             useSubEnv({
-                __saveParams__: new CallbackRecorder(),
+                __getContext__: new CallbackRecorder(),
             });
         }
 
@@ -32,7 +32,7 @@ export class WithSearch extends Component {
         });
 
         useSetupAction({
-            exportGlobalState: () => {
+            getGlobalState: () => {
                 return {
                     searchModel: JSON.stringify(this.searchModel.exportState()),
                 };

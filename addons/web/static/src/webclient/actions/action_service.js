@@ -509,16 +509,16 @@ function makeActionManager(env) {
                 useDebugCategory("action", { action });
                 if (action.target !== "new") {
                     this.__beforeLeave__ = new CallbackRecorder();
-                    this.__exportGlobalState__ = new CallbackRecorder();
-                    this.__exportLocalState__ = new CallbackRecorder();
+                    this.__getGlobalState__ = new CallbackRecorder();
+                    this.__getLocalState__ = new CallbackRecorder();
                     useBus(env.bus, "CLEAR-UNCOMMITTED-CHANGES", (callbacks) => {
                         const beforeLeaveFns = this.__beforeLeave__.callbacks;
                         callbacks.push(...beforeLeaveFns);
                     });
                     useSubEnv({
                         __beforeLeave__: this.__beforeLeave__,
-                        __exportGlobalState__: this.__exportGlobalState__,
-                        __exportLocalState__: this.__exportLocalState__,
+                        __getGlobalState__: this.__getGlobalState__,
+                        __getLocalState__: this.__getLocalState__,
                     });
                 }
             }
@@ -560,13 +560,13 @@ function makeActionManager(env) {
                     dialog = nextDialog;
                 } else {
                     controller.getGlobalState = () => {
-                        const exportFns = this.__exportGlobalState__.callbacks;
+                        const exportFns = this.__getGlobalState__.callbacks;
                         if (exportFns.length) {
                             return Object.assign({}, ...exportFns.map((fn) => fn()));
                         }
                     };
                     controller.getLocalState = () => {
-                        const exportFns = this.__exportLocalState__.callbacks;
+                        const exportFns = this.__getLocalState__.callbacks;
                         if (exportFns.length) {
                             return Object.assign({}, ...exportFns.map((fn) => fn()));
                         }

@@ -45,8 +45,8 @@ export class AddToBoard extends Component {
         } = this.env.searchModel;
 
         // Retrieves view context
-        const fns = this.env.__saveParams__.callbacks;
-        const { context: viewContext } = Object.assign({}, ...fns.map((fn) => fn()));
+        const fns = this.env.__getContext__.callbacks;
+        const viewContext = Object.assign({}, ...fns.map((fn) => fn()));
 
         const contextToSave = {
             ...context,
