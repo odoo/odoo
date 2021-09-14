@@ -1832,13 +1832,18 @@ class BaseModel(metaclass=MetaModel):
             record.display_name = names.get(record.id, False)
 
     def name_get(self):
-        """ name_get() -> [(id, name), ...]
+        """Returns a textual representation for the records in ``self``, with
+        one item output per input record, in the same order.
 
-        Returns a textual representation for the records in ``self``.
-        By default this is the value of the ``display_name`` field.
+        .. warning::
+
+            Although :meth:`~.name_get` can use context data for richer
+            contextual formatting, as it is the default implementation for
+            :attr:`~.display_name` it is important that it resets to the
+            "default" behaviour if the context keys are empty / missing.
 
         :return: list of pairs ``(id, text_repr)`` for each records
-        :rtype: list(tuple)
+        :rtype: list[(int, str)]
         """
         result = []
         name = self._rec_name
