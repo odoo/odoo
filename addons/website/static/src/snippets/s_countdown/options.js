@@ -13,6 +13,12 @@ options.registry.countdown = options.Class.extend({
     }),
 
     /**
+     * @override
+     */
+    onBuilt() {
+        this._updateMinHeight();
+    },
+    /**
      * Remove any preview classes, if present.
      *
      * @override
@@ -75,6 +81,16 @@ options.registry.countdown = options.Class.extend({
                 break;
         }
         this.$target[0].dataset.layout = widgetValue;
+        this._updateMinHeight();
+    },
+    /**
+    * Changes the countdown size.
+    *
+    * @see this.selectClass for parameters
+    */
+    size: function (previewMode, widgetValue, params) {
+        this.$target[0].dataset.size = widgetValue;
+        this._updateMinHeight();
     },
 
     //--------------------------------------------------------------------------
@@ -116,6 +132,7 @@ options.registry.countdown = options.Class.extend({
         switch (methodName) {
             case 'endAction':
             case 'layout':
+            case 'size':
                 return this.$target[0].dataset[methodName];
 
             case 'selectDataAttribute': {
@@ -129,6 +146,13 @@ options.registry.countdown = options.Class.extend({
             }
         }
         return this._super(...arguments);
+    },
+    /**
+     * @private
+     */
+    _updateMinHeight: function () {
+        const height = this.$target[0].dataset.layout === 'text' ? '' : `${this.$target[0].dataset.size}px`;
+        this.$target.find('.s_countdown_canvas_wrapper').css('min-height', height);
     },
 
     //--------------------------------------------------------------------------

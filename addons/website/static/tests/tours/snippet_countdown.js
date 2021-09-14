@@ -8,6 +8,14 @@ tour.register('snippet_countdown', {
     url: '/?enable_editor=1',
 }, [
     wTourUtils.dragNDrop({id: 's_countdown', name: 'Countdown'}),
+    {
+        trigger: '.s_countdown .s_countdown_canvas_wrapper:has(canvas)',
+        run: function () {
+            if (this.$anchor.css('min-height') !== '175px') {
+                console.error("The min-height property on the canvas wrapper wasn't set");
+            }
+        },
+    },
     wTourUtils.clickOnSnippet({id: 's_countdown', name: 'Countdown'}),
     wTourUtils.changeOption('countdown', 'we-select:has([data-end-action]) we-toggler', 'end action'),
     wTourUtils.changeOption('countdown', 'we-button[data-end-action="message"]', 'end action'),
