@@ -7,6 +7,7 @@
                 'o_Message_active': isActive,
                 'o-clicked': state.isClicked,
                 'o-discussion': message and (message.is_discussion or message.is_notification),
+                'o-editing': message.isEditing,
                 'o-has-message-selection': threadView and threadView.threadViewer and threadView.threadViewer.selectedMessage,
                 'o-highlighted': message and message.isHighlighted,
                 'o-mobile': messaging and messaging.device.isMobile,
@@ -117,7 +118,22 @@
                         <p class="o_Message_subject mx-2 mb-1">Subject: <t t-esc="message.subject"/></p>
                     </t>
                     <div class="o_Message_content mx-2" t-ref="content">
-                        <div class="o_Message_prettyBody" t-ref="prettyBody"/><!-- message.prettyBody is inserted here from _update() -->
+                        <t t-if="!message.isEditing or !message.composerInEditing">
+                            <div class="o_Message_prettyBody" t-ref="prettyBody"/><!-- message.prettyBody is inserted here from _update() -->
+                        </t>
+                        <t t-if="message.isEditing and message.composerInEditing" >
+                            <Composer
+                                class="o_Message_composer mb-1"
+                                composerLocalId="message.composerInEditing.localId"
+                                hasCurrentPartnerAvatar="false"
+                                hasDiscardButton="false"
+                                hasMentionSuggestionsBelowPosition="false"
+                                hasSendButton="false"
+                                isCompact="true"
+                                textInputSendShortcuts="['enter']"
+                                t-ref="composer"
+                            />
+                        </t>
                         <t t-if="message.subtype_description and !message.isBodyEqualSubtypeDescription">
                             <p t-esc="message.subtype_description"/>
                         </t>
