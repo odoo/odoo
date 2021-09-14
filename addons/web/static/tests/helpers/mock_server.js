@@ -167,7 +167,7 @@ var MockServer = Class.extend({
             var event = result && result.event;
             var errorString = JSON.stringify(message || false);
             console.warn('%c[rpc] response (error) ' + route, 'color: orange; font-weight: bold;', JSON.parse(errorString));
-            return Promise.reject({message: errorString, event: event || $.Event()});
+            return Promise.reject({message, event: event || $.Event()});
         });
 
         def.abort = abort;
