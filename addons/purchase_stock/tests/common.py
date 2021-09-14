@@ -2,12 +2,12 @@
 from datetime import timedelta
 
 from odoo import fields
-from odoo.addons.stock.tests.common2 import TestStockCommon
+from odoo.addons.stock.tests.common import TestStockCommon2
 from odoo import tools
 from odoo.modules.module import get_module_resource
 
 
-class PurchaseTestCommon(TestStockCommon):
+class PurchaseTestCommon(TestStockCommon2):
 
     def _create_make_procurement(self, product, product_qty, date_planned=False):
         ProcurementGroup = self.env['procurement.group']

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from odoo.addons.stock.tests.common2 import TestStockCommon
+from odoo.addons.stock.tests.common import TestStockCommon2
 from odoo.tests import Form
 from odoo.exceptions import UserError
 from odoo.tools import mute_logger
 
 
-class TestWarehouse(TestStockCommon):
+class TestWarehouse(TestStockCommon2):
 
     @classmethod
     def setUpClass(cls):

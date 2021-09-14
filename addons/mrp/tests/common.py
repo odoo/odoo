@@ -2,10 +2,10 @@
 
 from odoo.tests import Form
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.stock.tests import common2
+from odoo.addons.stock.tests import common
 
 
-class TestMrpCommon(common2.TestStockCommon):
+class TestMrpCommon(common.TestStockCommon2):
 
     @classmethod
     def generate_mo(self, tracking_final='none', tracking_base_1='none', tracking_base_2='none', qty_final=5, qty_base_1=4, qty_base_2=1, picking_type_id=False, consumption=False):

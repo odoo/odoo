@@ -4,11 +4,11 @@
 # Author: Leonardo Pistone
 # Copyright 2015 Camptocamp SA
 
-from odoo.addons.stock.tests.common2 import TestStockCommon
+from odoo.addons.stock.tests.common import TestStockCommon2
 from odoo.tests.common import Form
 
 
-class TestVirtualAvailable(TestStockCommon):
+class TestVirtualAvailable(TestStockCommon2):
     @classmethod
     def setUpClass(cls):
         super(TestVirtualAvailable, cls).setUpClass()

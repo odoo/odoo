@@ -4,12 +4,12 @@
 from datetime import timedelta
 
 from odoo import fields
-from odoo.addons.stock.tests.common2 import TestStockCommon
+from odoo.addons.stock.tests.common import TestStockCommon2
 
 from odoo.tests import Form
 
 
-class TestSaleMrpLeadTime(TestStockCommon):
+class TestSaleMrpLeadTime(TestStockCommon2):
 
     @classmethod
     def setUpClass(cls):
