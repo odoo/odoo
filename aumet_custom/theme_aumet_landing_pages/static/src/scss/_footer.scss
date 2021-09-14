@@ -1,0 +1,65 @@
+$footer-color: #FFFFFF;
+$footer-bg: #2A3544;
+$p-color: #979797;
+
+.footer {
+  display: flex;
+  flex-flow: row wrap;
+  padding: 50px;
+  color: $footer-color;
+  background-color: $footer-bg;
+
+  h4 {
+    font-weight: 700;
+    font-size: 15px;
+    text-align: center;
+
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+
+  li {
+    line-height: 2em;
+    text-align: center;
+
+  }
+
+  a {
+    text-decoration: none;
+    font-size: 16px;
+    line-height: 30px;
+    color: $footer-color;
+    font-weight: 400;
+
+  }
+
+  a:hover {
+    color: $footer-color;
+    text-decoration: none;
+
+  }
+
+  .social-icon a {
+    padding-left: 20px;
+  }
+
+
+}
+
+.footer_bottom {
+  border-top: 1px solid $p-color;
+
+  p {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 28px;
+    color: $footer-color;
+    mix-blend-mode: normal;
+    opacity: 0.6;
+  }
+}

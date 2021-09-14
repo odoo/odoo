@@ -1,0 +1,80 @@
+<odoo>
+    <template id="header_splash" inherit_id="website.layout" active="True" name="Header">
+        <xpath expr="//header//nav" position="replace">
+            <header>
+                <section class="navigation">
+                    <!--Navbar-->
+                    <div class="nav-wrapper">
+                        <nav class="navbar navbar-expand-lg navbar-dark scrolling-navbar"
+                             id="new">
+
+                            <!-- Navbar brand -->
+                            <a class="navbar-brand">
+                                <t t-call="website.placeholder_header_brand">
+                                    <t t-set="_link_class" t-value="'mr-auto'"/>
+                                </t>
+                            </a>
+
+                            <!-- Collapse button -->
+                            <button class="navbar-toggler" type="button"
+                                    data-toggle="collapse"
+                                    data-target="#basicExampleNav"
+                                    aria-controls="basicExampleNav"
+                                    aria-expanded="false"
+                                    aria-label="Toggle navigation">
+                                <span class=" fa fa-bars"></span>
+                                <span></span>
+                            </button>
+
+                            <!-- Collapsible content -->
+                            <div class="collapse navbar-collapse"
+                                 id="basicExampleNav">
+
+                                <!-- Links -->
+                                <ul class="navbar-nav mr-auto">
+                                    <t t-foreach="website.menu_id.child_id"
+                                       t-as="submenu">
+                                        <li class="nav-item active"
+                                            t-call="website.submenu">
+                                            <a class="nav-link"
+                                               t-set="item_class"
+                                               t-value="'nav-item'"/>
+                                            <span class="sr-only">(current)
+                                            </span>
+                                            <a t-set="link_class"
+                                               t-value="'nav-link'"/>
+                                        </li>
+                                    </t>
+                                </ul>
+                                <!-- Links -->
+                                <div class="nav navbar-nav navbar-expand">
+                                    <!-- Sign In -->
+                                    <t t-call="portal.placeholder_user_sign_in">
+                                        <t t-set="_item_class"
+                                           t-value="'nav-item ml-lg-3'"/>
+                                        <t t-set="_link_class"
+                                           t-value="'nav-link'"/>
+                                    </t>
+                                    <!-- User Dropdown -->
+                                    <t t-call="portal.user_dropdown">
+                                        <t t-set="_user_name" t-value="True"/>
+                                        <t t-set="_item_class"
+                                           t-value="'nav-item dropdown ml-lg-3'"/>
+                                        <t t-set="_link_class"
+                                           t-value="'nav-link font-weight-bold'"/>
+                                    </t>
+                                </div>
+
+                                <div class="quote">
+                                    <a href="/contactus" >
+                                        Contact Us
+                                    </a>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                </section>
+            </header>
+        </xpath>
+    </template>
+</odoo>

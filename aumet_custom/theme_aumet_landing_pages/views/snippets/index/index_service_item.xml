@@ -1,0 +1,52 @@
+<odoo>
+    <template id="index_service_item_snippet" inherit_id="website.snippets"
+              name="index_partner_item">
+        <xpath expr="//div[@id='snippet_feature']/div[hasclass('o_panel_body')]"
+               position="inside">
+            <t t-snippet="theme_aumet_landing_pages.index_service_item"
+               t-thumbnail="/theme_aumet_landing_pages/static/src/images/snippets/suppliers-block.png"
+            />
+        </xpath>
+    </template>
+    <template id="index_service_item" name="Index Service Item">
+        <section class="features_list">
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+                        <img class="item-img" src="/theme_aumet_landing_pages/static/src/images/Services/vector1.png"/>
+                        <p class="item-header">Feature 1</p>
+                        <p class="item-content">Lorem ipsum dolor
+                            sit amet, consectetur
+                            adipiscing elit.
+                        </p>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+                        <img class="item-img" src="/theme_aumet_landing_pages/static/src/images/Services/vector3.png"/>
+                        <p class="item-header">Feature 2</p>
+                        <p class="item-content">Lorem ipsum dolor
+                            sit amet, consectetur
+                            adipiscing elit.
+                        </p>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+                        <img class="item-img" src="/theme_aumet_landing_pages/static/src/images/Services/vector1.png"/>
+
+                        <p class="item-header">Feature 3</p>
+                        <p class="item-content">Lorem ipsum dolor
+                            sit amet, consectetur
+                            adipiscing elit.
+                        </p>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+                        <img class="item-img" src="/theme_aumet_landing_pages/static/src/images/Services/vector2.png"/>
+                        <p class="item-header">Feature 4</p>
+                        <p class="item-content">Lorem ipsum dolor
+                            sit amet, consectetur
+                            adipiscing elit.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

@@ -1,0 +1,33 @@
+<odoo>
+    <template id="index_header_snippet" inherit_id="website.snippets"
+              name="index_tab">
+        <xpath expr="//div[@id='snippet_feature']/div[hasclass('o_panel_body')]"
+               position="inside">
+            <t t-snippet="theme_aumet_landing_pages.index_header"
+               t-thumbnail="/theme_aumet_landing_pages/static/src/images/snippets/highlight-banner-block.png"
+            />
+        </xpath>
+    </template>
+    <template id="index_header" name="Index Banner snippet">
+        <section class="banner">
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <h1 class="header">
+                            Aumet Pharmacy does
+                            the hard work for you
+                        </h1>
+                        <p class="content">
+                            Aumet Phamracy POS system can
+                            revolutionise your pharmacy
+                        </p>
+
+                        <a href="#" class="btn btn-headline">
+                            Watch the demo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

@@ -1,0 +1,33 @@
+<odoo>
+    <template id="index_partner_item_snippet" inherit_id="website.snippets"
+              name="index_partner_item">
+        <xpath expr="//div[@id='snippet_feature']/div[hasclass('o_panel_body')]"
+               position="inside">
+            <t t-snippet="theme_aumet_landing_pages.index_partner_item"
+               t-thumbnail="/theme_aumet_landing_pages/static/src/images/snippets/suppliers-block.png"
+            />
+        </xpath>
+    </template>
+    <template id="index_partner_item" name="Index Partner Item">
+        <section class="partner-list container text-center">
+            <div class="row">
+                <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+                    <p class="partner-list-header">Client Name</p>
+                    <img class="partner-list-img" src="/theme_aumet_landing_pages/static/src/images/partner/logo1.png"/>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+                    <p class="partner-list-header">Client Name</p>
+                    <img class="partner-list-img" src="/theme_aumet_landing_pages/static/src/images/partner/logo1.png"/>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+                    <p class="partner-list-header">Client Name</p>
+                    <img class="partner-list-img" src="/theme_aumet_landing_pages/static/src/images/partner/logo1.png"/>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+                    <p class="partner-list-header">Client Name</p>
+                    <img class="partner-list-img" src="/theme_aumet_landing_pages/static/src/images/partner/logo1.png"/>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

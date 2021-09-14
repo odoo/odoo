@@ -1,0 +1,39 @@
+<odoo>
+    <template id="index_headline_snippet" inherit_id="website.snippets"
+              name="index_tab">
+        <xpath expr="//div[@id='snippet_feature']/div[hasclass('o_panel_body')]"
+               position="inside">
+            <t t-snippet="theme_aumet_landing_pages.index_headline"
+               t-thumbnail="/theme_aumet_landing_pages/static/src/images/snippets/services-block.png"
+            />
+        </xpath>
+    </template>
+    <template id="index_headline" name="Index Headline snippet">
+        <section class="headline">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <h1 class="header">
+                            Headline
+                        </h1>
+                        <p class="content">
+                            Lorem ipsum dolor sit amet,
+                            consectetur adipiscing elit.
+                            Nulla pulvinar dapibus erat, sit
+                            amet viverra leo consectetur sit amet
+                        </p>
+
+                        <a href="#" class="btn btn-headline">
+                            Book a demo
+                        </a>
+
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <img class="headline-img"
+                             src="/theme_aumet_landing_pages/static/src/images/index_headline/macbook_pro.png"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>
