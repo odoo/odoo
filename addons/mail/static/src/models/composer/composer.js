@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
-import { clear, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, create, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import emojis from '@mail/js/emojis';
 import {
@@ -803,6 +803,16 @@ function factory(dependencies) {
         }),
         attachments: many2many('mail.attachment', {
             inverse: 'composers',
+        }),
+        /**
+         * Determines the attachment list that will be used to display the attachments.
+         */
+        attachmentList: one2one('mail.attachment_list', {
+            default: create(),
+            inverse: 'composer',
+            isCausal: true,
+            readonly: true,
+            required: true,
         }),
         canPostMessage: attr({
             compute: '_computeCanPostMessage',

@@ -928,7 +928,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     });
     assert.containsNone(
         document.body,
-        '.o_Composer .o_Attachment',
+        '.o_Composer .o_AttachmentCard',
         "composer should have no attachment initially"
     );
     // Set attachments of the composer
@@ -957,7 +957,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     );
     assert.containsN(
         document.body,
-        '.o_Composer .o_Attachment',
+        '.o_Composer .o_AttachmentCard',
         2,
         "composer should have 2 total attachments after adding 2 attachments"
     );
@@ -973,7 +973,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     );
     assert.containsN(
         document.body,
-        '.o_Composer .o_Attachment',
+        '.o_Composer .o_AttachmentCard',
         2,
         "Chat window composer should have 2 attachments after closing discuss"
     );
@@ -1900,51 +1900,49 @@ QUnit.test('chat window: post message on non-mailing channel with "CTRL-Enter" k
     );
 });
 
-QUnit.test('chat window: composer state conservation on toggle discuss when folded', async function (assert) {
-    assert.expect(5);
+QUnit.test('chat window with a thread: keep scroll position in message list on toggle discuss when folded', async function (assert) {
+    assert.expect(2);
 
-    this.data['mail.channel'].records.push({});
+    // channel that is expected to be found in the messaging menu
+    // with random unique id, needed to link messages
+    this.data['mail.channel'].records.push({ id: 20 });
+    for (let i = 0; i < 10; i++) {
+        this.data['mail.message'].records.push({
+            body: "not empty",
+            model: "mail.channel",
+            res_id: 20,
+        });
+    }
     await this.start();
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
-    await afterNextRender(() =>
-        document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
-    );
-    // Set content of the composer of the chat window
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, 'XDU for the win !');
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => document.querySelector('.o_NotificationList_preview').click(),
+        message: "should wait until channel 20 scrolled to its last message after opening it from the messaging menu",
+        predicate: ({ scrollTop, thread }) => {
+            const messageList = document.querySelector('.o_ThreadView_messageList');
+            return (
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
+                scrollTop === messageList.scrollHeight - messageList.clientHeight
+            );
+        },
     });
-    // Set attachments of the composer
-    const files = [
-        await createFile({
-            name: 'text state conservation on toggle home menu.txt',
-            content: 'hello, world',
-            contentType: 'text/plain',
-        }),
-        await createFile({
-            name: 'text2 state conservation on toggle home menu.txt',
-            content: 'hello, xdu is da best man',
-            contentType: 'text/plain',
-        })
-    ];
-    await afterNextRender(() =>
-        inputFiles(
-            document.querySelector('.o_FileUploader_input'),
-            files
-        )
-    );
-    assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
-        "XDU for the win !",
-        "verify chat window composer initial html input"
-    );
-    assert.containsN(
-        document.body,
-        '.o_Composer .o_Attachment',
-        2,
-        "verify chat window composer initial attachment count"
-    );
-
+    // Set a scroll position to chat window
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142,
+        message: "should wait until channel 20 scrolled to 142 after setting this value manually",
+        predicate: ({ scrollTop, thread }) => {
+            return (
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
+                scrollTop === 142
+            );
+        },
+    });
     // fold chat window
     await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
     await afterNextRender(() => this.messaging.discuss.update({ isOpen: true }));
@@ -1952,17 +1950,23 @@ QUnit.test('chat window: composer state conservation on toggle discuss when fold
 
     await afterNextRender(() => this.messaging.discuss.update({ isOpen: false }));
     // unfold chat window
-    await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => document.querySelector('.o_ChatWindow_header').click(),
+        message: "should wait until channel 20 restored its scroll position to the last saved value (142)",
+        predicate: ({ scrollTop, thread }) => {
+            return (
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
+                scrollTop === 142
+            );
+        },
+    });
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
-        "XDU for the win !",
-        "chat window composer should still have the same input after closing discuss"
-    );
-    assert.containsN(
-        document.body,
-        '.o_Composer .o_Attachment',
-        2,
-        "Chat window composer should have 2 attachments after closing discuss"
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
+        142,
+        "chat window scrollTop should still be the same after closing discuss"
     );
 });
 

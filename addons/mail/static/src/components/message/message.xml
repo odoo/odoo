@@ -144,10 +144,8 @@
                         <div class="o_Message_footer">
                             <AttachmentList
                                 class="o_Message_attachmentList"
-                                areAttachmentsDownloadable="true"
                                 areAttachmentsEditable="message.author === messaging.currentPartner"
-                                attachmentLocalIds="message.attachments.map(attachment => attachment.localId)"
-                                attachmentsDetailsMode="props.attachmentsDetailsMode"
+                                attachmentListLocalId="message.attachmentList.localId"
                             />
                         </div>
                     </t>

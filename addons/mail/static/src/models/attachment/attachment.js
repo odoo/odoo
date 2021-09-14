@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2many, many2one } from '@mail/model/model_field';
+import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
 import { clear, insert, link, replace } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
@@ -13,6 +13,32 @@ function factory(dependencies) {
         return id;
     }
     class Attachment extends dependencies['mail.model'] {
+
+        /**
+         * @override
+         */
+        _created() {
+            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
+            this.onClickDownload = this.onClickDownload.bind(this);
+
+            /**
+             * Reconciliation between uploading attachment and real attachment.
+             */
+            if (this.isUploading) {
+                return;
+            }
+            const relatedUploadingAttachment = this.messaging.models['mail.attachment']
+                .find(attachment =>
+                    attachment.filename === this.filename &&
+                    attachment.isUploading
+                );
+            if (relatedUploadingAttachment) {
+                const composers = relatedUploadingAttachment.composers;
+                relatedUploadingAttachment.delete();
+                this.update({ composers: replace(composers) });
+            }
+        }
+
 
         //----------------------------------------------------------------------
         // Public
@@ -61,6 +87,23 @@ function factory(dependencies) {
                 }
             }
             return super.create(...arguments);
+        }
+
+        /**
+         * Send the attachment for the browser to download.
+         */
+        download() {
+            this.env.services.navigate(`/web/content/ir.attachment/${this.id}/datas`, { download: true });
+        }
+
+        /**
+         * Handles click on download icon.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickDownload(ev) {
+            ev.stopPropagation();
+            this.download();
         }
 
         /**
@@ -130,42 +173,17 @@ function factory(dependencies) {
         }
 
         /**
-         * Reconciliation between uploading attachment and real attachment.
-         *
-         * @private
-         */
-        _created() {
-            if (this.isUploading) {
-                return;
-            }
-            const relatedUploadingAttachment = this.messaging.models['mail.attachment']
-                .find(attachment =>
-                    attachment.filename === this.filename &&
-                    attachment.isUploading
-                );
-            if (relatedUploadingAttachment) {
-                const composers = relatedUploadingAttachment.composers;
-                relatedUploadingAttachment.delete();
-                this.update({ composers: replace(composers) });
-            }
-        }
-
-        /**
          * @private
          * @returns {string|undefined}
          */
         _computeDefaultSource() {
-            if (this.fileType === 'image') {
-                const unique = this.checksum ? `?unique=${this.checksum}` : '';
-                return `/web/image/${this.id}${unique}`;
+            if (this.isImage) {
+                return `/web/image/${this.id}?signature=${this.checksum}`;
             }
-            if (this.fileType === 'application/pdf') {
+            if (this.isPdf) {
                 return `/web/static/lib/pdfjs/web/viewer.html?file=/web/content/${this.id}`;
             }
-            if (this.fileType && this.fileType.includes('text')) {
-                return `/web/content/${this.id}`;
-            }
-            if (this.fileType === 'youtu') {
+            if (this.isUrlYoutube) {
                 const urlArr = this.url.split('/');
                 let token = urlArr[urlArr.length - 1];
                 if (token.includes('watch')) {
@@ -177,10 +195,7 @@ function factory(dependencies) {
                 }
                 return `https://www.youtube.com/embed/${token}`;
             }
-            if (this.fileType === 'video') {
-                return `/web/content/${this.id}?model=ir.attachment`;
-            }
-            return clear();
+            return `/web/content/${this.id}`;
         }
 
         /**
@@ -221,95 +236,64 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {string|undefined}
+         * @returns {boolean}
          */
-        _computeFileType() {
-            if (this.type === 'url' && !this.url) {
-                return clear();
-            } else if (!this.mimetype) {
-                return clear();
-            }
-            switch (this.mimetype) {
-                case 'application/pdf':
-                    return 'application/pdf';
-                case 'image/bmp':
-                case 'image/gif':
-                case 'image/jpeg':
-                case 'image/png':
-                case 'image/svg+xml':
-                case 'image/tiff':
-                case 'image/x-icon':
-                    return 'image';
-                case 'application/javascript':
-                case 'application/json':
-                case 'text/css':
-                case 'text/html':
-                case 'text/plain':
-                    return 'text';
-                case 'audio/mpeg':
-                case 'video/x-matroska':
-                case 'video/mp4':
-                case 'video/webm':
-                    return 'video';
-            }
-            if (!this.url) {
-                return clear();
-            }
-            if (this.url.match('(.png|.jpg|.gif)')) {
-                return 'image';
-            }
-            if (this.url.includes('youtu')) {
-                return 'youtu';
-            }
-            return clear();
+        _computeIsPdf() {
+            return this.mimetype === 'application/pdf';
         }
 
         /**
          * @private
-         * @returns {string}
+         * @returns {boolean}
          */
-        _computeImageLargeUrl() {
-            if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
-                return `/mail/channel/${this.originThread.id}/image/${this.id}/400x400`;
-            }
-            const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : '';
-            return `/web/image/${this.id}/400x400${accessToken}`;
+        _computeIsImage() {
+            const imageMimetypes = [
+                'image/bmp',
+                'image/gif',
+                'image/jpeg',
+                'image/png',
+                'image/svg+xml',
+                'image/tiff',
+                'image/x-icon',
+            ];
+            return imageMimetypes.includes(this.mimetype);
         }
 
         /**
          * @private
-         * @returns {string}
+         * @returns {boolean}
          */
-        _computeImageMediumUrl() {
-            if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
-                return `/mail/channel/${this.originThread.id}/image/${this.id}/200x200`;
-            }
-            const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : '';
-            return `/web/image/${this.id}/200x200${accessToken}`;
+        _computeIsText() {
+            const textMimeType = [
+                'application/javascript',
+                'application/json',
+                'text/css',
+                'text/html',
+                'text/plain',
+            ];
+            return textMimeType.includes(this.mimetype);
         }
 
         /**
          * @private
-         * @returns {string}
+         * @returns {boolean}
          */
-        _computeImageSmallUrl() {
-            if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
-                return `/mail/channel/${this.originThread.id}/image/${this.id}/100x100`;
-            }
-            const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : '';
-            return `/web/image/${this.id}/100x100${accessToken}`;
+        _computeIsVideo() {
+            const videoMimeTypes = [
+                'audio/mpeg',
+                'video/x-matroska',
+                'video/mp4',
+                'video/webm',
+            ];
+            return videoMimeTypes.includes(this.mimetype);
         }
 
         /**
          * @private
-         * @returns {string}
+         * @returns {boolean}
          */
-        _computeImageTinyUrl() {
-            if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
-                return `/mail/channel/${this.originThread.id}/image/${this.id}/38x38`;
-            }
-            const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : '';
-            return `/web/image/${this.id}/38x38${accessToken}`;
+        _computeIsUrl() {
+            return this.type === 'url' && this.url;
         }
 
         /**
@@ -324,40 +308,16 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
-        _computeIsTextFile() {
-            if (!this.fileType) {
-                return false;
-            }
-            return this.fileType === 'text';
+        _computeIsViewable() {
+            return this.isText || this.isImage || this.isVideo || this.isPdf || this.isUrlYoutube;
         }
 
         /**
          * @private
          * @returns {boolean}
          */
-        _computeIsViewable() {
-            switch (this.mimetype) {
-                case 'application/javascript':
-                case 'application/json':
-                case 'application/pdf':
-                case 'audio/mpeg':
-                case 'image/bmp':
-                case 'image/gif':
-                case 'image/jpeg':
-                case 'image/png':
-                case 'image/svg+xml':
-                case 'image/tiff':
-                case 'image/x-icon':
-                case 'text/css':
-                case 'text/html':
-                case 'text/plain':
-                case 'video/x-matroska':
-                case 'video/mp4':
-                case 'video/webm':
-                    return true;
-                default:
-                    return false;
-            }
+        _computeIsUrlYoutube() {
+            return !!this.url && this.url.includes('youtu');
         }
 
         /**
@@ -395,6 +355,26 @@ function factory(dependencies) {
         activities: many2many('mail.activity', {
             inverse: 'attachments',
         }),
+        /**
+         * States the attachment cards that are displaying this attachment.
+         */
+        attachmentCards: one2many('mail.attachment_card', {
+            inverse: 'attachment',
+            isCausal: true,
+        }),
+        /**
+         * States the attachment images that are displaying this attachment.
+         */
+        attachmentImages: one2many('mail.attachment_image', {
+            inverse: 'attachment',
+            isCausal: true,
+        }),
+        /**
+         * States the attachment lists that are displaying this attachment.
+         */
+        attachmentList: many2many('mail.attachment_list', {
+            inverse: 'attachments'
+        }),
         attachmentViewer: many2many('mail.attachment_viewer', {
             inverse: 'attachments',
         }),
@@ -405,6 +385,10 @@ function factory(dependencies) {
         defaultSource: attr({
             compute: '_computeDefaultSource',
         }),
+        /**
+         * States the OWL ref of the "dialog" window.
+         */
+        dialogRef: attr(),
         displayName: attr({
             compute: '_computeDisplayName',
         }),
@@ -415,29 +399,29 @@ function factory(dependencies) {
             compute: '_computeExtension',
         }),
         filename: attr(),
-        fileType: attr({
-            compute: '_computeFileType',
-        }),
         id: attr({
             required: true,
         }),
-        imageLargeUrl: attr({
-            compute: '_computeImageLargeUrl',
-        }),
-        imageMediumUrl: attr({
-            compute: '_computeImageMediumUrl',
-        }),
-        imageSmallUrl: attr({
-            compute: '_computeImageSmallUrl',
-        }),
-        imageTinyUrl: attr({
-            compute: '_computeImageTinyUrl',
+        /**
+         * States id the attachment is an image.
+         */
+        isImage: attr({
+            compute: '_computeIsImage',
         }),
         isLinkedToComposer: attr({
             compute: '_computeIsLinkedToComposer',
         }),
-        isTextFile: attr({
-            compute: '_computeIsTextFile',
+        /**
+         * States if the attachment is a PDF file.
+         */
+        isPdf: attr({
+            compute: '_computeIsPdf',
+        }),
+        /**
+         * States if the attachment is a text file.
+         */
+        isText: attr({
+            compute: '_computeIsText',
         }),
         /**
          * True if an unlink RPC is pending, used to prevent multiple unlink attempts.
@@ -447,6 +431,24 @@ function factory(dependencies) {
         }),
         isUploading: attr({
             default: false,
+        }),
+        /**
+         * States if the attachment is an url.
+         */
+        isUrl: attr({
+            compute: '_computeIsUrl',
+        }),
+        /**
+         * Determines if the attachment is a youtube url.
+         */
+        isUrlYoutube: attr({
+            compute: '_computeIsUrlYoutube',
+        }),
+        /**
+         * States if the attachment is a video.
+         */
+        isVideo: attr({
+            compute: '_computeIsVideo',
         }),
         isViewable: attr({
             compute: '_computeIsViewable',
