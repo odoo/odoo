@@ -221,8 +221,8 @@ class IrActionsActWindow(models.Model):
     name = fields.Char(string='Action Name', translate=True)
     type = fields.Char(default="ir.actions.act_window")
     view_id = fields.Many2one('ir.ui.view', string='View Ref.', ondelete='set null')
-    domain = fields.Char(string='Domain Value',
-                         help="Optional domain filtering of the destination data, as a Python expression")
+    domain = fields.Domain("res_model", string='Domain Value',
+                           help="Optional domain filtering of the destination data, as a Python expression")
     context = fields.Char(string='Context Value', default={}, required=True,
                           help="Context dictionary as Python expression, empty by default (Default: {})")
     res_id = fields.Integer(string='Record ID', help="Database ID of record to open in form view, when ``view_mode`` is set to 'form' only")

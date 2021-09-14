@@ -487,9 +487,10 @@ class IrModelFields(models.Model):
     state = fields.Selection([('manual', 'Custom Field'), ('base', 'Base Field')], string='Type', default='manual', required=True, readonly=True, index=True)
     on_delete = fields.Selection([('cascade', 'Cascade'), ('set null', 'Set NULL'), ('restrict', 'Restrict')],
                                  string='On Delete', default='set null', help='On delete property for many2one fields')
-    domain = fields.Char(default="[]", help="The optional domain to restrict possible values for relationship fields, "
-                                            "specified as a Python expression defining a list of triplets. "
-                                            "For example: [('color','=','red')]")
+    domain = fields.Domain("relation",
+                           help="The optional domain to restrict possible values for relationship fields, "
+                                "specified as a Python expression defining a list of triplets. "
+                                "For example: [('color','=','red')]")
     groups = fields.Many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id') # CLEANME unimplemented field (empty table)
     group_expand = fields.Boolean(string="Expand Groups",
                                   help="If checked, all the records of the target model will be included\n"
@@ -511,6 +512,9 @@ class IrModelFields(models.Model):
                                                       "a list of comma-separated field names, like\n\n"
                                                       "    name, partner_id.name")
     store = fields.Boolean(string='Stored', default=True, help="Whether the value is stored in the database.")
+
+    domain_model = fields.Char(help="For Domain fields, the model on which it apply")
+    domain_model_field = fields.Char(help="For Domain fields, The field that contain the domain on which it apply.")
 
     @api.depends('relation', 'relation_field')
     def _compute_relation_field_id(self):
@@ -631,6 +635,14 @@ class IrModelFields(models.Model):
                     if index < last and not field.relational:
                         raise UserError(_("Non-relational field %r in dependency %r") % (name, seq.strip()))
                     model = model[name]
+
+    @api.constrains("ttype", "domain_model_field", "domain_model")
+    def _check_domain_model(self):
+        for record in self:
+            if record.ttype != "domain":
+                continue
+            if not (bool(record.domain_model) ^ bool(record.domain_model_name)):
+                raise ValidationError(_("Domain field %r should either have a domain_model_field or a domain_model", record))
 
     @api.onchange('compute')
     def _onchange_compute(self):
@@ -1013,6 +1025,8 @@ class IrModelFields(models.Model):
             'relation_table': field.relation if field.type == 'many2many' else None,
             'column1': field.column1 if field.type == 'many2many' else None,
             'column2': field.column2 if field.type == 'many2many' else None,
+            'domain_model': field.domain_model if field.type == "domain" else None,
+            'domain_model_field': field.model_field if field.type == "domain" else None,
         }
 
     def _reflect_fields(self, model_names):
@@ -1114,6 +1128,9 @@ class IrModelFields(models.Model):
                 attrs['size'] = field_data['size'] or None
         elif field_data['ttype'] in ('selection', 'reference'):
             attrs['selection'] = self.env['ir.model.fields.selection']._get_selection_data(field_data['id'])
+        elif field_data['ttype'] == "domain":
+            attrs["model_field"] = field_data["domain_model_field"]
+            attrs["domain_model_name"] = field_data["domain_model_name"]
         elif field_data['ttype'] == 'many2one':
             if not self.pool.loaded and field_data['relation'] not in self.env:
                 return

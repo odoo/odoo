@@ -242,7 +242,7 @@ class IrFieldsConverter(models.AbstractModel):
     def _str_id(self, model, field, value):
         return value, []
 
-    _str_to_reference = _str_to_char = _str_to_text = _str_to_binary = _str_to_html = _str_id
+    _str_to_reference = _str_to_char = _str_to_text = _str_to_binary = _str_to_html = _str_to_domain = _str_id
 
     @api.model
     def _str_to_date(self, model, field, value):

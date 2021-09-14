@@ -18,6 +18,7 @@ from markupsafe import Markup
 import psycopg2
 import pytz
 
+from .osv import expression
 from .tools import (
     float_repr, float_round, float_compare, float_is_zero, html_sanitize, human_size,
     pg_varchar, ustr, OrderedSet, pycompat, sql, date_utils, unique, IterableGenerator,
@@ -27,6 +28,7 @@ from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
 from .tools.mimetypes import guess_mimetype
+from .tools.safe_eval import safe_eval
 
 from odoo.exceptions import CacheMiss
 
@@ -2582,6 +2584,64 @@ class Reference(Selection):
     def convert_to_display_name(self, value, record):
         return ustr(value and value.display_name)
 
+
+class Domain(Field):
+    """
+    Field that contain a domain on a given model
+
+    :param str domain_model: name of the model on which the domain apply.
+    :param str model_field: name of the :Class:`Char`, :class:Selection, or :class:`Many2one` where the model name is stored.
+    """
+
+    type = 'domain'
+    column_type = ('varchar', pg_varchar())
+    column_cast_from = ('text',)
+
+    default = "[]"
+    validate = True
+
+    domain_model = None
+    model_field = None
+
+    _description_domain_model = property(attrgetter('domain_model'))
+    _description_model_field = property(attrgetter('model_field'))
+
+    def __init__(self, model_field=Default, string=Default, **kwargs):
+        super().__init__(model_field=model_field, string=string, **kwargs)
+
+    def setup_nonrelated(self, model):
+        super().setup_nonrelated(model)
+        assert bool(self.domain_model) ^ bool(self.model_field), "Field %s should define either `domain_model` or `model_field`" % self
+
+        if self.domain_model:
+            model.env[self.domain_model]
+        else:
+            field = model._fields[self.model_field]
+            if isinstance(field, Many2one):
+                if field.comodel_name != "ir.model":
+                    raise ValueError("Attribute `model_field` of field %r doesn't point to `ir.model`" % self)
+            elif not isinstance(field, (Char, Selection)):
+                raise ValueError("Attribute `model_field` of field %r should point to either a Char field, a Selection Field, or a Many2one to `ir.model`." % self)
+
+    def convert_to_cache(self, value, record, validate=True):
+        if value is None or value is False:
+            return None
+
+        if validate:
+            eval_ctx = dict(
+                uid=record.env.user.id,
+                user=record.env.user,
+                company_ids=record.env.companies.ids,
+                active_id=record.id,
+                active_ids=record.ids,
+            )
+            domain = value if not isinstance(value, str) else safe_eval(value, eval_ctx)
+            model_name = self.domain_model if self.domain_model else record[self.model_field]
+            if isinstance(model_name, type(record.env["ir.model"])):
+                model_name = model_name.model
+            expression.expression(domain, record.env[model_name])
+
+        return ustr(value).strip()
 
 class _Relational(Field):
     """ Abstract class for relational fields. """

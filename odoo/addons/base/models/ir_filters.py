@@ -15,7 +15,7 @@ class IrFilters(models.Model):
     user_id = fields.Many2one('res.users', string='User', ondelete='cascade',
                               help="The user this filter is private to. When left empty the filter is public "
                                    "and available to all users.")
-    domain = fields.Text(default='[]', required=True)
+    domain = fields.Domain("model_id", required=True)
     context = fields.Text(default='{}', required=True)
     sort = fields.Text(default='[]', required=True)
     model_id = fields.Selection(selection='_list_all_models', string='Model', required=True)

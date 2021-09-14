@@ -3505,6 +3505,7 @@ var FieldDomain = AbstractField.extend({
      * field must work with.
      */
     specialData: "_fetchSpecialDomain",
+    supportedFieldTypes: ['char', 'domain'],
 
     events: _.extend({}, AbstractField.prototype.events, {
         "click .o_domain_show_selection_button": "_onShowSelectionButtonClick",
