@@ -827,10 +827,10 @@
                     </div>
                     <group>
                         <group>
-                            <label for="project_id" class="oe_read_only"/>
+                            <label for="project_id" attrs="{'invisible': [('parent_id', '!=', False)]}" class="oe_read_only"/>
                             <div colspan="1" class="oe_read_only">
                                 <i class="o_project_task_project_field text-danger" attrs="{'invisible': [('project_id', '!=', False)]}">Private</i>
-                                <field name="project_id" attrs="{'invisible': [('project_id', '=', False)]}" nolabel="1"/>
+                                <field name="project_id" attrs="{'invisible': ['|', ('parent_id', '!=', False), ('project_id', '=', False)]}" nolabel="1"/>
                             </div>
                             <field name="project_id" attrs="{'invisible': [('parent_id', '!=', False)]}" domain="[('active', '=', True), ('company_id', '=', company_id)]"
                                 placeholder="Private" class="o_project_task_project_field oe_edit_only"/>
