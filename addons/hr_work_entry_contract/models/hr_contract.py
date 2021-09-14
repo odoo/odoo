@@ -3,7 +3,9 @@
 
 from collections import defaultdict
 from datetime import datetime, date
-from odoo import fields, models
+from dateutil.relativedelta import relativedelta
+
+from odoo import api, fields, models
 from odoo.addons.resource.models.resource import datetime_to_string, string_to_datetime, Intervals
 from odoo.osv import expression
 
@@ -277,3 +279,28 @@ class HrContract(models.Model):
     def _get_fields_that_recompute_we(self):
         # Returns the fields that should recompute the work entries
         return ['resource_calendar_id']
+
+    @api.model
+    def _cron_generate_missing_work_entries(self):
+        # retrieve contracts for the current month
+        today = fields.Date.today()
+        start = today + relativedelta(day=1)
+        stop = today + relativedelta(day=31)
+        contracts = self.env['hr.employee']._get_all_contracts(
+            start, stop, states=['open', 'close'])
+        # determine contracts to do (the ones without work entries this month)
+        work_entry_groups = self.env['hr.work.entry'].read_group([
+            ('date_start', '<=', stop),
+            ('date_stop', '>=', start),
+            ('contract_id', 'in', contracts.ids)
+            ], ['contract_id'], ['contract_id'])
+        contracts_done = self.browse(group['contract_id'][0] for group in work_entry_groups)
+        contracts_todo = contracts - contracts_done
+        if not contracts_todo:
+            return
+        # generate a batch of work entries
+        BATCH_SIZE = 100
+        contracts_todo[:BATCH_SIZE]._generate_work_entries(start, stop, False)
+        # if necessary, retrigger the cron to generate more work entries
+        if len(contracts_todo) > BATCH_SIZE:
+            self.env.ref('hr_work_entry_contract.ir_cron_generate_missing_work_entries')._trigger()
