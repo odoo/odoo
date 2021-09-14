@@ -101,7 +101,7 @@ const makeTestComponent = ({ onWillStart, onWillUpdateProps } = {}) => {
     TestComponent.components = { FilterMenu, GroupByMenu, SearchPanel };
     TestComponent.template = xml`
         <div class="o_test_component">
-            <SearchPanel />
+            <SearchPanel t-if="env.searchModel.display.searchPanel" />
             <FilterMenu />
             <GroupByMenu />
         </div>`;
@@ -282,7 +282,29 @@ QUnit.module("Search", (hooks) => {
             searchViewId: false,
             display: { searchPanel: false },
         });
-        assert.doesNotHaveClass(comp.el, "o_component_with_search_panel");
+        assert.containsNone(comp, ".o_search_panel");
+        assert.deepEqual(getDomain(), []); // initial domain
+    });
+
+    QUnit.test("basic rendering of a component with empty search panel", async (assert) => {
+        assert.expect(2);
+
+        serverData.views["partner,false,search"] = `<search><searchpanel /></search>`;
+
+        const { TestComponent, getDomain } = makeTestComponent();
+        const comp = await makeWithSearch({
+            serverData,
+            async mockRPC(route, { method, model }) {
+                if (/search_panel_/.test(method || route)) {
+                    assert.step(`${method || route} on ${model}`);
+                }
+            },
+            Component: TestComponent,
+            resModel: "partner",
+            searchViewId: false,
+        });
+
+        assert.containsNone(comp, ".o_search_panel");
         assert.deepEqual(getDomain(), []); // initial domain
     });
 
@@ -299,7 +321,6 @@ QUnit.module("Search", (hooks) => {
             Component: TestComponent,
             resModel: "partner",
             searchViewId: false,
-            view: { type: "kanban" },
         });
 
         assert.containsOnce(comp, ".o_search_panel");

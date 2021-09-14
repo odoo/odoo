@@ -1384,6 +1384,7 @@ export class SearchModel extends EventBus {
         return {
             controlPanel: "controlPanel" in display ? display.controlPanel : {},
             searchPanel:
+                this.sections.size &&
                 (!this.view.type || viewTypes.includes(this.view.type)) &&
                 ("searchPanel" in display ? display.searchPanel : true),
         };
