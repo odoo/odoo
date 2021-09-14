@@ -14,9 +14,6 @@ var EventCreateDialog = Dialog.extend({
         'change select[name="event_location"]': '_onLocationChanged',
         'click .input-group-append': '_onDatetimeClicked',
     }),
-    cssLibs: [
-        '/web/static/lib/daterangepicker/daterangepicker.css',
-    ],
     jsLibs: [
         '/web/static/lib/daterangepicker/daterangepicker.js',
         '/web/static/src/legacy/js/libs/daterangepicker.js',
