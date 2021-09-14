@@ -165,6 +165,87 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(purchase_order.picking_ids.move_lines[-1].product_qty, 5)
         self.assertEqual(purchase_order.picking_ids.move_lines[-1].location_dest_id, warehouse_1.lot_stock_id)
 
+    def test_reordering_rule_3(self):
+        """
+            trigger a reordering rule with a route to a location without warehouse
+        """
+        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+
+        outside_loc = self.env['stock.location'].create({
+            'name': 'outside',
+            'usage': 'internal',
+            'location_id': self.env.ref('stock.stock_location_locations').id,
+        })
+        route = self.env['stock.location.route'].create({
+            'name': 'resupply outside',
+            'rule_ids': [
+                (0, False, {
+                    'name': 'Buy',
+                    'location_id': warehouse_1.lot_stock_id.id,
+                    'company_id': self.env.company.id,
+                    'action': 'buy',
+                    'sequence': 2,
+                    'procure_method': 'make_to_stock',
+                    'picking_type_id': self.env.ref('stock.picking_type_in').id,
+                }),
+                (0, False, {
+                    'name': 'ressuply from stock',
+                    'location_src_id': warehouse_1.lot_stock_id.id,
+                    'location_id': outside_loc.id,
+                    'company_id': self.env.company.id,
+                    'action': 'pull',
+                    'procure_method': 'mts_else_mto',
+                    'sequence': 1,
+                    'picking_type_id': self.env.ref('stock.picking_type_out').id,
+                }),
+            ],
+        })
+        vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
+        supplier_info1 = self.env['product.supplierinfo'].create({
+            'name': vendor1.id,
+            'price': 50,
+        })
+        product = self.env['product.product'].create({
+            'name': 'product_rr_3',
+            'type': 'product',
+            'route_ids': [(4, route.id)],
+            'seller_ids': [(6, 0, [supplier_info1.id])],
+        })
+
+        # create reordering rules
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'].with_user(2))
+        orderpoint_form.warehouse_id = warehouse_1
+        orderpoint_form.location_id = outside_loc
+        orderpoint_form.product_id = product
+        orderpoint_form.product_min_qty = 0.000
+        orderpoint_form.product_max_qty = 0.000
+        order_point_1 = orderpoint_form.save()
+        order_point_1.route_id = route
+        order_point_1.trigger = 'manual'
+
+        # Create move out of 10 product
+        move = self.env['stock.move'].create({
+            'name': 'move out',
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 10,
+            'location_id': outside_loc.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        move._action_confirm()
+
+        # Forecast on the order point should be -10
+        self.assertEqual(order_point_1.qty_forecast, -10)
+
+        order_point_1.action_replenish()
+
+        # Check purchase order created or not
+        purchase_order = self.env['purchase.order.line'].search([('product_id', '=', product.id)]).order_id
+        self.assertTrue(purchase_order, 'No purchase order created.')
+        self.assertEqual(len(purchase_order.order_line), 1, 'Not enough purchase order lines created.')
+        purchase_order.button_confirm()
+
     def test_replenish_report_1(self):
         """Tests the auto generation of manual orderpoints.
 
