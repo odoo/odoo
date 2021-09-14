@@ -208,9 +208,7 @@ class PaymentPortal(portal.CustomerPortal):
         tx_sudo = self._create_transaction(
             amount=amount, currency_id=currency_id, partner_id=partner_id, **kwargs
         )
-        if tx_sudo.operation == 'validation':
-            # The amount and currency have been chosen for the validation, recompute the access token
-            self._update_landing_route(tx_sudo)
+        self._update_landing_route(tx_sudo, access_token)  # Add the required parameters to the route
         return tx_sudo._get_processing_values()
 
     def _create_transaction(
@@ -305,20 +303,22 @@ class PaymentPortal(portal.CustomerPortal):
         return tx_sudo
 
     @staticmethod
-    def _update_landing_route(tx_sudo):
-        """ Recompute the access token stored in the landing route of validation transactions.
+    def _update_landing_route(tx_sudo, access_token):
+        """ Add the mandatory parameters to the route and recompute the access token if needed.
 
-        The generic landing route require the tx id and access token to be provided, since there is
+        The generic landing route requires the tx id and access token to be provided since there is
         no document to rely on. The access token is recomputed in case we are dealing with a
         validation transaction (acquirer-specific amount and currency).
 
         :param recordset tx_sudo: The transaction whose landing routes to update, as a
                                   `payment.transaction` record.
+        :param str access_token: The access token used to authenticate the partner
         :return: None
         """
-        access_token = payment_utils.generate_access_token(
-            tx_sudo.partner_id.id, tx_sudo.amount, tx_sudo.currency_id.id
-        )
+        if tx_sudo.operation == 'validation':
+            access_token = payment_utils.generate_access_token(
+                tx_sudo.partner_id.id, tx_sudo.amount, tx_sudo.currency_id.id
+            )
         tx_sudo.landing_route = f'{tx_sudo.landing_route}' \
                                 f'?tx_id={tx_sudo.id}&access_token={access_token}'
 
