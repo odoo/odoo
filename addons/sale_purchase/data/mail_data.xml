@@ -25,6 +25,28 @@
     </div>
 </template>
 
+<template id="exception_sale_on_purchase_quantity_decreased" name="Message: Alert on sale orders when ordered quantity decreased on Purchase Orders">
+    <div class="alert alert-warning" role="alert">
+        <p>
+            Exception(s) occured on the purchase order(s):
+            <t t-foreach="purchase_orders" t-as="purchase_order">
+                <a href="#" data-oe-model="purchase.order" t-att-data-oe-id="purchase_order.id"><t t-esc="purchase_order.name"/></a>.
+            </t>
+            Manual actions may be needed.
+        </p>
+        <div class="mt16">
+            <p>Exception(s):</p>
+            <ul t-foreach="purchase_lines" t-as="purchase_line">
+                <li>
+                    <t t-set="unit" t-value="purchase_line.product_uom.name"/>
+                    <a href="#" data-oe-model="purchase.order" t-att-data-oe-id="purchase_line.order_id.id"><t t-esc="purchase_line.order_id.name"/></a>:
+                    <t t-esc="new_quantity"/> <t t-esc="unit"/> of <t t-esc="purchase_line.product_id.name"/> ordered instead of <t t-esc="purchase_line.product_qty"/> <t t-esc="unit"/>.
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+
 <template id="exception_purchase_on_sale_cancellation" name="Message: Alert on purchase orders when sales orders are cancelled">
     <div>
         <p>

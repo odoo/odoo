@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_compare
-from datetime import date
 from collections import defaultdict
 
 class PurchaseOrder(models.Model):
@@ -85,17 +84,22 @@ class PurchaseOrderLine(models.Model):
         sales_to_nofify = defaultdict(lambda: self.env['purchase.order.line'])
         for purchase_line in self:
             # Notify related SO if quantity has been decreased in PO
-            if float_compare(purchase_line.product_qty, vals['product_qty'], precision_rounding=purchase_line.product_uom.rounding) > 0:
+            if float_compare(purchase_line.product_qty, vals.get('product_qty'), precision_rounding=purchase_line.product_uom.rounding) > 0:
                 related_sale_orders = purchase_line._get_sale_orders()
                 for sale_order in related_sale_orders:
                     sales_to_nofify[sale_order] |= purchase_line
 
         for sale_order, purchase_lines in sales_to_nofify.items():
-            sale_order.activity_schedule(
+            render_context = {
+                'purchase_lines': purchase_lines,
+                'purchase_orders': purchase_lines.mapped('order_id'),
+                'new_quantity': vals.get('product_qty')
+            }
+            sale_order._activity_schedule_with_view(
                 'mail.mail_activity_data_warning',
-                date.today(),
-                note="Something happened in the PO",
-                user_id=sale_order.user_id.id or SUPERUSER_ID
+                user_id=sale_order.user_id.id or SUPERUSER_ID,
+                views_or_xmlid='sale_purchase.exception_sale_on_purchase_quantity_decreased',
+                render_context=render_context
             )
 
         return super().write(vals)
