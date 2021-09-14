@@ -16,6 +16,7 @@ function factory(dependencies) {
             this.onClick = this.onClick.bind(this);
             this.onClickConfirmDelete = this.onClickConfirmDelete.bind(this);
             this.onClickDelete = this.onClickDelete.bind(this);
+            this.onClickEdit = this.onClickEdit.bind(this);
             this.onClickMarkAsRead = this.onClickMarkAsRead.bind(this);
             this.onReactionPopoverOpened = this.onReactionPopoverOpened.bind(this);
             this.onReactionPopoverClosed = this.onReactionPopoverClosed.bind(this);
@@ -38,7 +39,10 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         onClickConfirmDelete(ev) {
-            this.message.updateContent({ body: '' });
+            this.message.updateContent({
+                body: '',
+                attachment_ids: [],
+            });
         }
 
         /**
@@ -47,6 +51,14 @@ function factory(dependencies) {
          */
         onClickDelete(ev) {
             this.update({ showDeleteConfirm: true });
+        }
+
+        /**
+         * @private
+         * @param {MouseEvent} ev
+         */
+         onClickEdit(ev) {
+            this.message.startEditing();
         }
 
         /**
