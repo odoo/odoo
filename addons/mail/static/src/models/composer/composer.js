@@ -36,6 +36,14 @@ function factory(dependencies) {
         /**
          * @override
          */
+         _created() {
+            this.onClickCancelLink = this.onClickCancelLink.bind(this);
+            this.onClickSaveLink = this.onClickSaveLink.bind(this);
+        }
+
+        /**
+         * @override
+         */
         _willDelete() {
             // Clears the mention queue on deleting the record to prevent
             // unnecessary RPC.
@@ -59,6 +67,12 @@ function factory(dependencies) {
          * currently used as a Discuss Inbox reply composer.
          */
         discard() {
+            if (this.messageInEditing) {
+                this.messageInEditing.update({ isEditing: false });
+                if (this.messageInEditing.originThread && this.messageInEditing.originThread.composer) {
+                    this.messageInEditing.originThread.composer.update({ doFocus: true });
+                }
+            }
             if (this.discussAsReplying) {
                 this.discussAsReplying.clearReplyingToMessage();
             }
@@ -153,14 +167,47 @@ function factory(dependencies) {
          */
         _computeRecipients() {
             const recipients = [...this.mentionedPartners];
-            if (this.thread && !this.isLog) {
-                for (const recipient of this.thread.suggestedRecipientInfoList) {
+            if (this.activeThread && !this.isLog) {
+                for (const recipient of this.activeThread.suggestedRecipientInfoList) {
                     if (recipient.partner && recipient.isSelected) {
                         recipients.push(recipient.partner);
                     }
                 }
             }
             return replace(recipients);
+        }
+
+        /**
+         * Handles click on the cancel link.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickCancelLink(ev) {
+            ev.preventDefault();
+            this.discard();
+        }
+
+        /**
+         * Handles click on the save link.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickSaveLink(ev) {
+            ev.preventDefault();
+            if (!this.canPostMessage) {
+                if (this.hasUploadingAttachment) {
+                    this.env.services['notification'].notify({
+                        message: this.env._t("Please wait while the file is uploading."),
+                        type: 'warning',
+                    });
+                }
+                return;
+            }
+            if (this.messageInEditing && this.messageInEditing.isEditing) {
+                this.updateMessage();
+                return;
+            }
+            this.postMessage();
         }
 
         /**
@@ -173,9 +220,9 @@ function factory(dependencies) {
                 default_attachment_ids: attachmentIds,
                 default_body: escapeAndCompactTextContent(this.textInputContent),
                 default_is_log: this.isLog,
-                default_model: this.thread.model,
+                default_model: this.activeThread.model,
                 default_partner_ids: this.recipients.map(partner => partner.id),
-                default_res_id: this.thread.id,
+                default_res_id: this.activeThread.id,
                 mail_post_autofollow: true,
             };
 
@@ -193,7 +240,7 @@ function factory(dependencies) {
                         return;
                     }
                     this._reset();
-                    this.thread.loadNewMessages();
+                    this.activeThread.loadNewMessages();
                 },
             };
             await this.env.bus.trigger('do-action', { action, options });
@@ -203,10 +250,10 @@ function factory(dependencies) {
          * Post a message in provided composer's thread based on current composer fields values.
          */
         async postMessage() {
-            if (this.thread.model === 'mail.channel') {
+            if (this.activeThread.model === 'mail.channel') {
                 const command = this._getCommandFromText(this.textInputContent);
                 if (command) {
-                    await command.execute({ channel: this.thread, body: this.textInputContent });
+                    await command.execute({ channel: this.activeThread, body: this.textInputContent });
                     if (this.exists()) {
                         this._reset();
                     }
@@ -214,7 +261,7 @@ function factory(dependencies) {
                 }
             }
             if (this.messaging.currentPartner) {
-                this.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
+                this.activeThread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
             }
             const escapedAndCompactContent = escapeAndCompactTextContent(this.textInputContent);
             let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
@@ -235,12 +282,12 @@ function factory(dependencies) {
             };
             const params = {
                 'post_data': postData,
-                'thread_id': this.thread.id,
-                'thread_model': this.thread.model,
+                'thread_id': this.activeThread.id,
+                'thread_model': this.activeThread.model,
             };
             try {
                 this.update({ isPostingMessage: true });
-                if (this.thread.model === 'mail.channel') {
+                if (this.activeThread.model === 'mail.channel') {
                     Object.assign(postData, {
                         subtype_xmlid: 'mail.mt_comment',
                     });
@@ -276,12 +323,46 @@ function factory(dependencies) {
         }
 
         /**
+         * Update a posted message when the message is ready.
+         */
+         async updateMessage() {
+            if (this.messageInEditing.originThread) {
+                if (this.messaging.currentPartner) {
+                    this.messageInEditing.originThread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
+                }
+            }
+            const escapedAndCompactContent = escapeAndCompactTextContent(this.textInputContent);
+            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
+            body = this._generateMentionsLinks(body);
+            body = parseAndTransform(body, addLink);
+            body = this._generateEmojisOnHtml(body);
+            let data = {
+                body: body,
+                attachment_ids: this.messageInEditing.attachments.concat(this.attachments).map(attachment => attachment.id),
+            };
+            try {
+                this.update({ isPostingMessage: true });
+                await this.messageInEditing.updateContent(data);
+                if (this.messageInEditing.originThread.model !== 'mail.channel') {
+                    this.messageInEditing.originThread.refreshFollowers();
+                    this.messageInEditing.originThread.fetchAndUpdateSuggestedRecipients();
+                }
+                this._reset();
+            } finally {
+                this.update({ isPostingMessage: false });
+                this.messageInEditing.update({ isEditing: false });
+                if (this.messageInEditing.originThread && this.messageInEditing.originThread.composer) {
+                    this.messageInEditing.originThread.composer.update({ doFocus: true });
+                }
+            }
+        }
+        /**
          * Called when current partner is inserting some input in composer.
          * Useful to notify current partner is currently typing something in the
          * composer of this thread to all other members.
          */
         handleCurrentPartnerIsTyping() {
-            if (!this.thread) {
+            if (!this.activeThread) {
                 return;
             }
             if (!this.messaging.currentPartner) {
@@ -293,10 +374,10 @@ function factory(dependencies) {
             ) {
                 return;
             }
-            if (this.thread.typingMembers.includes(this.messaging.currentPartner)) {
-                this.thread.refreshCurrentPartnerIsTyping();
+            if (this.activeThread.typingMembers.includes(this.messaging.currentPartner)) {
+                this.activeThread.refreshCurrentPartnerIsTyping();
             } else {
-                this.thread.registerCurrentPartnerIsTyping();
+                this.activeThread.registerCurrentPartnerIsTyping();
             }
         }
 
@@ -383,6 +464,20 @@ function factory(dependencies) {
             const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
             const firstRecord = suggestedRecords[0];
             return link(firstRecord);
+        }
+
+        /**
+         * @private
+         * @returns {mail.thread}
+         */
+        _computeActiveThread() {
+            if (this.messageInEditing && this.messageInEditing.originThread) {
+                return replace(this.messageInEditing.originThread);
+            }
+            if (this.thread) {
+                return replace(this.thread);
+            }
+            return clear();
         }
 
         /**
@@ -648,7 +743,7 @@ function factory(dependencies) {
                         return false;
                     }
                     if (command.channel_types) {
-                        return command.channel_types.includes(this.thread.channel_type);
+                        return command.channel_types.includes(this.activeThread.channel_type);
                     }
                     return true;
                 });
@@ -723,7 +818,7 @@ function factory(dependencies) {
                 }
                 const Model = this.messaging.models[this.suggestionModelName];
                 const searchTerm = this.suggestionSearchTerm;
-                await this.async(() => Model.fetchSuggestions(searchTerm, { thread: this.thread }));
+                await this.async(() => Model.fetchSuggestions(searchTerm, { thread: this.activeThread }));
                 this._updateSuggestionList();
                 if (
                     this.suggestionSearchTerm &&
@@ -774,8 +869,8 @@ function factory(dependencies) {
             const [
                 mainSuggestedRecords,
                 extraSuggestedRecords = [],
-            ] = Model.searchSuggestions(this.suggestionSearchTerm, { thread: this.thread });
-            const sortFunction = Model.getSuggestionSortFunction(this.suggestionSearchTerm, { thread: this.thread });
+            ] = Model.searchSuggestions(this.suggestionSearchTerm, { thread: this.activeThread });
+            const sortFunction = Model.getSuggestionSortFunction(this.suggestionSearchTerm, { thread: this.activeThread });
             mainSuggestedRecords.sort(sortFunction);
             extraSuggestedRecords.sort(sortFunction);
             // arbitrary limit to avoid displaying too many elements at once
@@ -800,6 +895,9 @@ function factory(dependencies) {
          */
         activeSuggestedRecord: many2one('mail.model', {
             compute: '_computeActiveSuggestedRecord',
+        }),
+        activeThread: many2one('mail.thread', {
+            compute: '_computeActiveThread',
         }),
         attachments: many2many('mail.attachment', {
             inverse: 'composers',
@@ -826,6 +924,10 @@ function factory(dependencies) {
         discussAsReplying: one2one('mail.discuss', {
             inverse: 'replyingToMessageOriginThreadComposer',
         }),
+        /**
+         * Determines whether this composer should be focused at next render.
+         */
+        doFocus: attr(),
         /**
          * Determines the extra records that are currently suggested.
          * Allows to have different model types of mentions through a dynamic
@@ -898,7 +1000,7 @@ function factory(dependencies) {
         /**
          * Determines the extra `mail.partner` (on top of existing followers)
          * that will receive the message being composed by `this`, and that will
-         * also be added as follower of `this.thread`.
+         * also be added as follower of `this.activeThread`.
          */
         recipients: many2many('mail.partner', {
             compute: '_computeRecipients',
@@ -947,7 +1049,9 @@ function factory(dependencies) {
         }),
         thread: one2one('mail.thread', {
             inverse: 'composer',
-            required: true,
+        }),
+        messageInEditing: one2one('mail.message', {
+            inverse: 'composerInEditing',
         }),
     };
     Composer.onChanges = [

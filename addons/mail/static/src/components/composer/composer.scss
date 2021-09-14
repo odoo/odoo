@@ -170,7 +170,9 @@
 }
 
 .o_Composer {
-    background-color: gray('100');
+    &:not(.o-messaging-in-editing) {
+        background-color: gray('100');
+    }
 }
 
 .o_Composer_actionButton.o-last.o-has-current-partner-avatar.o-composer-is-compact {
@@ -191,6 +193,10 @@
 
 .o_Composer_buttons {
     border: 0;
+
+    &.o-messaging-in-editing {
+        border-right: $border-width solid $border-color;
+    }
 }
 
 .o_Composer_coreMain:not(.o-composer-is-compact) {

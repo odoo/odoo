@@ -144,6 +144,10 @@ export class ComposerTextInput extends Component {
         if (!this.composer) {
             return;
         }
+        if (this.composer.doFocus) {
+            this.focus();
+            this.composer.update({ doFocus: false });
+        }
         if (this.composer.isLastStateChangeProgrammatic) {
             this._textareaRef.el.value = this.composer.textInputContent;
             if (this.composer.hasFocus) {
@@ -306,6 +310,10 @@ export class ComposerTextInput extends Component {
                 break;
             case 'ArrowUp':
             case 'PageUp':
+                if (ev.key === 'ArrowUp' && !this.composer.hasSuggestions && !this.composer.textInputContent && this.composer.thread) {
+                    this.composer.thread.startEditingLastMessageFromCurrentUser();
+                    break;
+                }
                 if (this.composer.hasSuggestions) {
                     this.composer.setPreviousSuggestionActive();
                     this.composer.update({ hasToScrollToActiveSuggestion: true });
@@ -313,6 +321,10 @@ export class ComposerTextInput extends Component {
                 break;
             case 'ArrowDown':
             case 'PageDown':
+                if (ev.key === 'ArrowDown' && !this.composer.hasSuggestions && !this.composer.textInputContent && this.composer.thread) {
+                    this.composer.thread.startEditingLastMessageFromCurrentUser();
+                    break;
+                }
                 if (this.composer.hasSuggestions) {
                     this.composer.setNextSuggestionActive();
                     this.composer.update({ hasToScrollToActiveSuggestion: true });

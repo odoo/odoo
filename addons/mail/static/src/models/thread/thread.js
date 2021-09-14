@@ -702,9 +702,7 @@ function factory(dependencies) {
                 orderBy: [{ name: 'id', asc: false }],
             }, { shadow: true }));
             this.update({
-                originThreadAttachments: insertAndReplace(attachmentsData.map(data =>
-                    this.messaging.models['mail.attachment'].convertData(data)
-                )),
+                originThreadAttachments: insertAndReplace(attachmentsData),
             });
             this.update({ areAttachmentsLoaded: true });
         }
@@ -1187,6 +1185,20 @@ function factory(dependencies) {
                 args: [this.id],
                 kwargs: { name: newName },
             });
+        }
+
+        /**
+         * Starts editing the last message of this thread from the current user.
+         */
+        startEditingLastMessageFromCurrentUser() {
+            for (const threadView of this.threadViews) {
+                const messages = threadView.threadCache.orderedMessages;
+                messages.reverse();
+                const message = messages.find(message => message.isCurrentUserOrGuestAuthor && message.canBeDeleted);
+                if (message) {
+                    message.startEditing();
+                }
+            }
         }
 
         /**

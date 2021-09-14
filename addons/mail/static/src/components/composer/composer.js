@@ -118,6 +118,7 @@ export class Composer extends Component {
         return (
             this.props.hasThreadTyping ||
             this.composer.attachments.length > 0 ||
+            this.composer.messageInEditing ||
             !this.props.isCompact
         );
     }
@@ -166,6 +167,10 @@ export class Composer extends Component {
                     type: 'warning',
                 });
             }
+            return;
+        }
+        if (this.composer.messageInEditing && this.composer.messageInEditing.isEditing) {
+            await this.composer.updateMessage();
             return;
         }
         await this.composer.postMessage();

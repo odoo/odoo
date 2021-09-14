@@ -613,6 +613,7 @@ class Channel(models.Model):
             'payload': {
                 'id': message.id,
                 'body': message.body,
+                'attachments': [('insert-and-replace', message.attachment_ids._attachment_format(commands=True))],
             },
         })
         return super()._message_update_content_after_hook(message=message)
