@@ -1,5 +1,5 @@
 
-from odoo import http, _
+from odoo import Command, http, _
 from odoo.http import request
 
 
@@ -39,7 +39,7 @@ class ProjectClient(http.Controller):
             'partner_id': partner_id,
             'description': email_body,
             'project_id': project_id,
-            'user_id': request.env.uid,
+            'user_ids': [Command.link(request.env.uid)],
         })
 
         return {'task_id': record.id, 'name': record.name}
