@@ -1745,9 +1745,9 @@ export class SearchModel extends EventBus {
      */
     _getIrFilterDescription(params = {}) {
         const { description, isDefault, isShared } = params;
-        const fns = this.env.__saveParams__.callbacks;
-        const saveParams = Object.assign({}, ...fns.map((fn) => fn()));
-        const context = makeContext(this._getContext(), saveParams.context);
+        const fns = this.env.__getContext__.callbacks;
+        const localContext = Object.assign({}, ...fns.map((fn) => fn()));
+        const context = makeContext(this._getContext(), localContext);
         const userContext = this.userService.context;
         for (const key in context) {
             if (key in userContext || /^search(panel)?_default_/.test(key)) {
@@ -1758,7 +1758,7 @@ export class SearchModel extends EventBus {
         const domain = this._getDomain({ raw: true, withGlobal: false }).toString();
         const groupBys = this._getGroupBy();
         const comparison = this.getFullComparison();
-        const orderBy = saveParams.orderBy ? saveParams.orderBy : this._getOrderBy() || [];
+        const orderBy = this._getOrderBy();
         const userId = isShared ? false : this.userService.userId;
 
         const preFavorite = {
