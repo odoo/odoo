@@ -70,6 +70,33 @@ class StockRule(models.Model):
                                                       subtype_id=self.env.ref('mail.mt_note').id)
         return True
 
+<<<<<<< HEAD
+=======
+    @api.model
+    def _run_pull(self, procurements):
+        # Override to correctly assign the move generated from the pull
+        # in its production order (pbm_sam only)
+        for procurement, rule in procurements:
+            warehouse_id = rule.warehouse_id
+            if not warehouse_id:
+                warehouse_id = rule.location_id.get_warehouse()
+            if rule.picking_type_id == warehouse_id.sam_type_id:
+                manu_type_id = warehouse_id.manu_type_id
+                if manu_type_id:
+                    name = manu_type_id.sequence_id.next_by_id()
+                else:
+                    name = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
+                # Create now the procurement group that will be assigned to the new MO
+                # This ensure that the outgoing move PostProduction -> Stock is linked to its MO
+                # rather than the original record (MO or SO)
+                group = procurement.values.get('group_id')
+                if group:
+                    procurement.values['group_id'] = group.copy({'name': name})
+                else:
+                    procurement.values['group_id'] = self.env["procurement.group"].create({'name': name})
+        return super()._run_pull(procurements)
+
+>>>>>>> a8cc007acc3... temp
     def _get_custom_move_fields(self):
         fields = super(StockRule, self)._get_custom_move_fields()
         fields += ['bom_line_id']

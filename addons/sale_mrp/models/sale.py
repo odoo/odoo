@@ -14,12 +14,16 @@ class SaleOrder(models.Model):
 
     @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_count(self):
+        data = self.env['procurement.group'].read_group([('sale_id', 'in', self.ids), ('mrp_production_ids', '!=', False)], ['id'], ['sale_id'])
+        mrp_count = dict()
+        for item in data:
+            mrp_count[item['sale_id'][0]] = item['sale_id_count']
         for sale in self:
-            sale.mrp_production_count = len(sale.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids)
+            sale.mrp_production_count = mrp_count.get(sale.id)
 
     def action_view_mrp_production(self):
         self.ensure_one()
-        mrp_production_ids = self.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids.ids
+        mrp_production_ids = self.env['mrp.production'].search([('procurement_group_id.sale_id', '=', self.id)]).ids
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
