@@ -141,7 +141,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
      * @private
      */
     _updateMainPaddingTop: function () {
-        this.headerHeight = this.$el.outerHeight();
+        this.headerHeight = this.el.classList.contains('o_header_sidebar') ? 0 : this.$el.outerHeight();
         this.topGap = this._computeTopGap();
 
         if (this.isOverlayHeader) {
