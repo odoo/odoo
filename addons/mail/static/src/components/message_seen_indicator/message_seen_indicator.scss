@@ -9,6 +9,8 @@
 }
 
 .o_MessageSeenIndicator_icon {
+    // fa icons have a line height of 1 by default which breaks alignment
+    line-height: 1.5;
 
     &.o-first {
         padding-left: map-get($spacers, 1);
