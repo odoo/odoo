@@ -41,6 +41,9 @@ class TestSwissQR(AccountTestInvoicingCommon):
                 "country_id": self.env.ref('base.ch').id,
             }
         )
+        self.product = self.env['product.product'].create({
+            'name': 'Customizable Desk',
+        })
         self.invoice1 = self.create_invoice('base.CHF')
         sale_journal = self.env['account.journal'].search([("type", "=", "sale")])
         sale_journal.invoice_reference_model = "ch"
@@ -48,7 +51,6 @@ class TestSwissQR(AccountTestInvoicingCommon):
     def create_invoice(self, currency_to_use='base.CHF'):
         """ Generates a test invoice """
 
-        product = self.env.ref("product.product_product_4")
         acc_type = self.env.ref('account.data_account_type_current_assets')
         account = self.env['account.account'].search(
             [('user_type_id', '=', acc_type.id)], limit=1
@@ -66,8 +68,8 @@ class TestSwissQR(AccountTestInvoicingCommon):
                             0,
                             0,
                             {
-                                'name': product.name,
-                                'product_id': product.id,
+                                'name': self.product.name,
+                                'product_id': self.product.id,
                                 'account_id': account.id,
                                 'quantity': 1,
                                 'price_unit': 42.0,
