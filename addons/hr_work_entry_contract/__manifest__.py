@@ -16,6 +16,7 @@
         'security/hr_work_entry_security.xml',
         'security/ir.model.access.csv',
         'data/hr_work_entry_data.xml',
+        'data/ir_cron_data.xml',
         'views/hr_work_entry_views.xml',
         'wizard/hr_work_entry_regeneration_wizard_views.xml',
     ],
