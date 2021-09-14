@@ -289,7 +289,7 @@ function factory(dependencies) {
 
         /**
          * Updates the message's content.
-         * 
+         *
          * @param {Object} param0
          * @param {string} param0.body the new body of the message
          */
@@ -534,6 +534,16 @@ function factory(dependencies) {
         }),
         attachments: many2many('mail.attachment', {
             inverse: 'messages',
+        }),
+        /**
+         * Determines the attachment list that will be used to display the attachments.
+         */
+        attachmentList: one2one('mail.attachment_list', {
+            default: create(),
+            inverse: 'message',
+            isCausal: true,
+            readonly: true,
+            required: true,
         }),
         author: many2one('mail.partner', {
             inverse: 'messagesAsAuthor',

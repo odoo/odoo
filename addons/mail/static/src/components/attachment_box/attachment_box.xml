@@ -21,11 +21,7 @@
                 <t t-if="thread and thread.allAttachments.length > 0">
                     <AttachmentList
                         class="o_attachmentBox_attachmentList"
-                        areAttachmentsDownloadable="true"
-                        attachmentLocalIds="thread.allAttachments.map(attachment => attachment.localId)"
-                        attachmentsDetailsMode="'hover'"
-                        attachmentsImageSize="'small'"
-                        showAttachmentsFilenames="true"
+                        attachmentListLocalId="thread.attachmentList.localId"
                         t-on-o-attachment-removed="_onAttachmentRemoved"
                     />
                 </t>
