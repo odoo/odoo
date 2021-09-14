@@ -3,8 +3,8 @@
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_compare
-from datetime import date
 from collections import defaultdict
+from datetime import date
 
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
@@ -25,18 +25,25 @@ class MrpProduction(models.Model):
 
         sales_to_nofify = defaultdict(lambda: self.env['mrp.production'])
         for manufacturing_order in self:
-            # Notify related SO if quantity has been decreased in MO
-            if float_compare(manufacturing_order.product_qty, vals['product_qty'], precision_rounding=manufacturing_order.product_uom_id.rounding) > 0:
+            # Notify related Sale Orders if quantity to produce is now under total quantity asked in related Sale Orders.
+            related_sale_orders = manufacturing_order.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id
+            total_qty = sum(related_sale_orders.order_line.filtered(lambda ol: ol.product_id.id == manufacturing_order.product_id.id).mapped('product_uom_qty'))
+            if float_compare(total_qty, vals['product_qty'], precision_rounding=manufacturing_order.product_uom_id.rounding) > 0:
                 related_sale_orders = manufacturing_order.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id
                 for sale_order in related_sale_orders:
                     sales_to_nofify[sale_order] |= manufacturing_order
 
-        for sale_order, manufacturing_order in sales_to_nofify.items():
-            sale_order.activity_schedule(
+        for sale_order, manufacturing_orders in sales_to_nofify.items():
+            render_context = {
+                'manufacturing_orders': manufacturing_orders,
+                'new_quantity': vals.get('product_qty')
+            }
+            sale_order._activity_schedule_with_view(
                 'mail.mail_activity_data_warning',
                 date.today(),
-                note="Something happened in the MO",
-                user_id=sale_order.user_id.id or SUPERUSER_ID
+                user_id=sale_order.user_id.id or SUPERUSER_ID,
+                views_or_xmlid='sale_mrp.exception_sale_on_manufacture_quantity_decreased',
+                render_context=render_context
             )
 
         return super().write(vals)
