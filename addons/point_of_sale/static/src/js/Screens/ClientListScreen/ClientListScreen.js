@@ -180,7 +180,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             this.env.pos.db.add_partners(result);
             if(!result.length) {
                 await this.showPopup('ErrorPopup', {
-                    title: this.env._t(''),
+                    title: '',
                     body: this.env._t('No customer found'),
                 });
             }

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
-"PO-Revision-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 10:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,16 +31,16 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
-"<span name=\"failed_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=',"
-" 'sms')]}\">SMS Text Message could not be sent.</span>"
+"<span name=\"canceled_text_sms\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">SMS Text Message have been canceled and will not be "
+"sent.</span>"
 msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
-"<span name=\"ignored_text_sms\" attrs=\"{'invisible': [('mailing_type', "
-"'!=', 'sms')]}\">SMS Text Message have been ignored and will not be "
-"sent.</span>"
+"<span name=\"failed_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=',"
+" 'sms')]}\">SMS Text Message could not be sent.</span>"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -62,6 +62,11 @@ msgstr ""
 msgid ""
 "<span name=\"sent_sms\" attrs=\"{'invisible': [('mailing_type', '!=', "
 "'sms')]}\">SMS Text Message have been sent.</span>"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
+msgid "<span widget=\"statinfo\">Open Recipient</span>"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -96,6 +101,12 @@ msgid "<strong>This number appears to be invalid.</strong>"
 msgstr ""
 
 #. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "A/B Test: %s"
+msgstr ""
+
+#. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_needaction
 msgid "Action Needed"
 msgstr ""
@@ -109,6 +120,11 @@ msgstr ""
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "BOUNCED (%i)"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model:utm.tag,name:mass_mailing_sms.mailing_tag_0
+msgid "Bioutifoul SMS"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -171,40 +187,29 @@ msgid "Code"
 msgstr ""
 
 #. module: mass_mailing_sms
+#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_trace_report_action_sms
+msgid ""
+"Come back once some SMS Mailings are sent to check out aggregated results."
+msgstr ""
+
+#. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_configuration
 msgid "Configuration"
 msgstr ""
 
 #. module: mass_mailing_sms
-#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_list_action_sms
-msgid "Contact Lists"
-msgstr ""
-
-#. module: mass_mailing_sms
-#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_contact_action_sms
-#: model:ir.ui.menu,name:mass_mailing_sms.mailing_contact_menu_sms
-msgid "Contacts"
-msgstr ""
-
-#. module: mass_mailing_sms
-#: model:ir.ui.menu,name:mass_mailing_sms.mailing_list_menu_sms
-#: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_contacts
-msgid "Contacts Lists"
+#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
+msgid "Create a Mailing List"
 msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
-msgid "Create a new SMS Marketing"
+msgid "Create a SMS Marketing Mailing"
 msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_contact_action_sms
-msgid "Create a new contact"
-msgstr ""
-
-#. module: mass_mailing_sms
-#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
-msgid "Create a new contacts list"
+msgid "Create a mailing contact"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -237,6 +242,13 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_search
 msgid "Exclude Blacklisted Phone"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model:mailing.mailing,name:mass_mailing_sms.mailing_sms_1
+#: model:mailing.mailing,sms_subject:mass_mailing_sms.mailing_sms_1
+#: model:utm.source,name:mass_mailing_sms.mailing_sms_1_utm_source
+msgid "Extra Promo"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -278,6 +290,11 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__has_message
 msgid "Has Message"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__utm_campaign__ab_testing_sms_winner_selection__clicks_ratio
+msgid "Highest Click Rate"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -384,6 +401,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__mailing_id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__mailing_id
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "Mailing"
 msgstr ""
 
@@ -398,6 +416,19 @@ msgid "Mailing List"
 msgstr ""
 
 #. module: mass_mailing_sms
+#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_contact_action_sms
+#: model:ir.ui.menu,name:mass_mailing_sms.mailing_contact_menu_sms
+msgid "Mailing List Contacts"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_list_action_sms
+#: model:ir.ui.menu,name:mass_mailing_sms.mailing_list_menu_sms
+#: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_contacts
+msgid "Mailing Lists"
+msgstr ""
+
+#. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_trace
 msgid "Mailing Statistics"
 msgstr ""
@@ -408,8 +439,25 @@ msgid "Mailing Type"
 msgstr ""
 
 #. module: mass_mailing_sms
+#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_contact_action_sms
+msgid ""
+"Mailing contacts allow you to separate your marketing audience from your "
+"contact directory."
+msgstr ""
+
+#. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_main_attachment_id
 msgid "Main Attachment"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__utm_campaign__ab_testing_sms_winner_selection__manual
+msgid "Manual"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
+msgid "Marketing"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -446,6 +494,18 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_search_sms
 msgid "My SMS Marketing"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_trace_report_action_sms
+msgid "No data yet!"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
+msgid ""
+"No need to import mailing lists, you can send SMS Text Messages to contacts "
+"saved in other Odoo apps."
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -493,6 +553,16 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__numbers
 msgid "Number(s)"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_tree_sms
+msgid "Open Recipient"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_optout
+msgid "Opted Out"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -568,6 +638,7 @@ msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "SMS ID"
 msgstr ""
 
@@ -589,13 +660,6 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_trace_report_action_sms
 msgid "SMS Marketing Analysis"
-msgstr ""
-
-#. module: mass_mailing_sms
-#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_trace_report_action_sms
-msgid ""
-"SMS Marketing Statistics allows you to check different mailing related information like number of sent SMS or bounced SMS.\n"
-"                You can sort out your analysis by different groups to get accurate grained analysis."
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -623,6 +687,12 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_tree_sms
 msgid "SMS Traces"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__ab_testing_sms_winner_selection
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__ab_testing_sms_winner_selection
+msgid "SMS Winner Selection"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -685,13 +755,13 @@ msgid "Server Error"
 msgstr ""
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "Skip Queue"
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_sms__mailing_trace_ids
+msgid "Statistics"
 msgstr ""
 
 #. module: mass_mailing_sms
-#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_sms__mailing_trace_ids
-msgid "Statistics"
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
+msgid "Status"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -833,20 +903,28 @@ msgid "Website communication history"
 msgstr ""
 
 #. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid "Winner Selection"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
+msgid ""
+"Write an appealing SMS Text Message, define recipients and track its "
+"results."
+msgstr ""
+
+#. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_format
 msgid "Wrong Number Format"
 msgstr ""
 
 #. module: mass_mailing_sms
-#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
-msgid "You can easily send SMS to any contact saved in other Odoo apps."
-msgstr ""
-
-#. module: mass_mailing_sms
-#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
-msgid ""
-"You don't need to import your contacts lists, you can easily\n"
-"            send SMS to any contact saved in other Odoo apps."
+#: model:mailing.mailing,name:mass_mailing_sms.mailing_sms_0
+#: model:mailing.mailing,sms_subject:mass_mailing_sms.mailing_sms_0
+#: model:utm.campaign,name:mass_mailing_sms.utm_campaign_0
+#: model:utm.source,name:mass_mailing_sms.mailing_sms_0_utm_source
+msgid "XMas Promo"
 msgstr ""
 
 #. module: mass_mailing_sms

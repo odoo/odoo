@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
-"PO-Revision-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 10:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "% endif"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid "1 Meeting"
 msgstr ""
 
 #. module: hr_recruitment
@@ -80,6 +86,18 @@ msgid "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
 msgstr ""
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
+msgid ""
+"<span attrs=\"{'invisible': [('is_warning_visible', '=', False)]}\">\n"
+"                            <span class=\"fa fa-exclamation-triangle text-danger pl-3\">\n"
+"                            </span>\n"
+"                            <span class=\"text-danger\">\n"
+"                                All applications will lose their hired date and hired status.\n"
+"                            </span>\n"
+"                        </span>"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid ""
 "<span attrs=\"{'invisible':[('salary_expected_extra','=',False)]}\"> + "
@@ -98,6 +116,11 @@ msgstr ""
 msgid ""
 "<span class=\"badge badge-pill badge-danger pull-right mr-4\" "
 "attrs=\"{'invisible': [('active', '=', True)]}\">Refused</span>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "<span class=\"bg-success\">Hired</span>"
 msgstr ""
 
 #. module: hr_recruitment
@@ -132,7 +155,7 @@ msgid ""
 "                We will come back to you shortly.\n"
 "\n"
 "                % if 'website_url' in object.job_id and object.job_id.website_url:\n"
-"                    <div style=\"margin: 16px 8px 16px 8px;\">\n"
+"                    <div style=\"padding: 16px 8px 16px 8px;\">\n"
 "                        <a href=\"${object.job_id.website_url}\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Job Description</a>\n"
 "                    </div>\n"
 "                % endif\n"
@@ -216,7 +239,7 @@ msgid ""
 "                call or an interview.\n"
 "                <br/><br/>\n"
 "                % if 'website_url' in object.job_id and object.job_id.website_url:\n"
-"                    <div style=\"margin: 16px 8px 16px 8px;\">\n"
+"                    <div style=\"padding: 16px 8px 16px 8px;\">\n"
 "                        <a href=\"${object.job_id.website_url}\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Job Description</a>\n"
 "                    </div>\n"
 "                % endif\n"
@@ -292,6 +315,37 @@ msgid ""
 "        </td>\n"
 "    </tr>\n"
 "</table>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_not_interested
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                Dear,<br/><br/>\n"
+"                We would like to thank you for your interest and your time.<br/>\n"
+"                We wish you all the best in your future endeavors.\n"
+"                <br/><br/>\n"
+"                Best<br/>\n"
+"                <div style=\"font-size: 11px; color: grey;\">\n"
+"                    % if object.user_id:\n"
+"                        -- <br/>\n"
+"                        <strong>${object.user_id.name}</strong><br/>\n"
+"                        Email: ${object.user_id.email or ''}<br/>\n"
+"                        Phone: ${object.user_id.phone or ''}\n"
+"                    % else:\n"
+"                        -- <br/>\n"
+"                        ${object.company_id.name}<br/>\n"
+"                        The HR Team<br/>\n"
+"                    % endif\n"
+"                </div>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
 msgstr ""
 
 #. module: hr_recruitment
@@ -472,6 +526,11 @@ msgid "Applicant Stage Changed"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
+msgid "Applicant created"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_from
 msgid "Applicant email"
 msgstr ""
@@ -492,6 +551,11 @@ msgid "Applicant's Name"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_without_email
+msgid "Applicant(s) not having email"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Applicant: Acknowledgement"
 msgstr ""
@@ -499,6 +563,11 @@ msgstr ""
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_interest
 msgid "Applicant: Interest"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.template,name:hr_recruitment.email_template_data_applicant_not_interested
+msgid "Applicant: Not interested anymore"
 msgstr ""
 
 #. module: hr_recruitment
@@ -556,6 +625,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_applications
 #: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Applications"
 msgstr ""
@@ -563,6 +633,11 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
 msgid "Applications with the same email"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Applications<br/>"
 msgstr ""
 
 #. module: hr_recruitment
@@ -619,6 +694,23 @@ msgstr ""
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_advertisement
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev1
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev2
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev3
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_financejob0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_financejob1
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_fresher0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_marketingjob0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_mkt0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_mkt1
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_programmer
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_salesman0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_salesman1
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_traineemca0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_traineemca1
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job3
@@ -687,11 +779,6 @@ msgstr ""
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Choose an application email."
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_closed
-msgid "Closed"
 msgstr ""
 
 #. module: hr_recruitment
@@ -979,6 +1066,8 @@ msgid "Email Alias"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__template_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__template_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__template_id
 msgid "Email Template"
 msgstr ""
@@ -996,8 +1085,20 @@ msgid "Email cc"
 msgstr ""
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
+#, python-format
+msgid "Email of the applicant is not set, email won't be sent."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__name
 msgid "Email subject for applications sent via email"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
+#, python-format
+msgid "Email template must be selected to send a mail"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1059,11 +1160,6 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__favorite_user_ids
 msgid "Favorite User"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-msgid "Feedback of interviews..."
 msgstr ""
 
 #. module: hr_recruitment
@@ -1164,6 +1260,21 @@ msgid "Has Message"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_closed
+msgid "Hire Date"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+msgid "Hired"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__hired_stage
+msgid "Hired Stage"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__id
@@ -1204,6 +1315,12 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__hired_stage
+msgid ""
+"If checked, this stage is used to determine the hire date of an applicant"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__template_id
 msgid ""
 "If set, a message is posted on the applicant using the template when the "
@@ -1226,6 +1343,23 @@ msgstr ""
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_advertisement
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev1
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev2
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev3
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_financejob0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_financejob1
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_fresher0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_marketingjob0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_mkt0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_mkt1
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_programmer
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_salesman0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_salesman1
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_traineemca0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_traineemca1
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job3
@@ -1242,7 +1376,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_hr_recruitment_survey
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Interview Forms"
 msgstr ""
 
@@ -1254,6 +1387,11 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_is_follower
 msgid "Is Follower"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__is_warning_visible
+msgid "Is Warning Visible"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1357,6 +1495,12 @@ msgid "Kpi Hr Recruitment New Colleagues Value"
 msgstr ""
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid "Last Meeting"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason____last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant____last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category____last_update
@@ -1456,6 +1600,17 @@ msgid "Let’s go back to the dashboard."
 msgstr ""
 
 #. module: hr_recruitment
+#: model:hr.recruitment.source,name:hr_recruitment.hr_recruitment_linkedin_ceo
+#: model:hr.recruitment.source,name:hr_recruitment.hr_recruitment_linkedin_consultant
+#: model:hr.recruitment.source,name:hr_recruitment.hr_recruitment_linkedin_cto
+#: model:hr.recruitment.source,name:hr_recruitment.hr_recruitment_linkedin_developer
+#: model:hr.recruitment.source,name:hr_recruitment.hr_recruitment_linkedin_hrm
+#: model:hr.recruitment.source,name:hr_recruitment.hr_recruitment_linkedin_marketing
+#: model:hr.recruitment.source,name:hr_recruitment.hr_recruitment_linkedin_trainee
+msgid "LinkedIn"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_cc
 msgid "List of cc from incoming emails."
 msgstr ""
@@ -1476,13 +1631,17 @@ msgid "Medium"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_count
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__meeting_count
-msgid "Meeting Count"
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_display_date
+msgid "Meeting Display Date"
 msgstr ""
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_display_text
+msgid "Meeting Display Text"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_ids
 msgid "Meetings"
 msgstr ""
 
@@ -1499,6 +1658,11 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_mobile
 msgid "Mobile"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+msgid "Motivations..."
 msgstr ""
 
 #. module: hr_recruitment
@@ -1529,6 +1693,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__new_applicant_count
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_new
+#: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_new
 msgid "New Applicant"
 msgstr ""
 
@@ -1545,12 +1710,8 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_from_department
-msgid "New Applications"
-msgstr ""
-
-#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
-msgid "New Applications <br/>"
+msgid "New Applications"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1596,6 +1757,18 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_type_id
 msgid "Next Activity Type"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid "Next Meeting"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid "No Meeting"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1690,6 +1863,11 @@ msgid "Officer"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__old_application_count
+msgid "Old Application"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Ongoing"
 msgstr ""
@@ -1713,11 +1891,6 @@ msgstr ""
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Or talk about this applicant privately with your colleagues."
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-msgid "Other Applications"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1784,6 +1957,23 @@ msgstr ""
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_advertisement
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev1
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev2
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev3
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_financejob0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_financejob1
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_fresher0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_marketingjob0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_mkt0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_mkt1
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_programmer
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_salesman0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_salesman1
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_traineemca0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_traineemca1
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job3
@@ -1964,11 +2154,6 @@ msgid "Schedule Interview"
 msgstr ""
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-msgid "Schedule interview with this applicant"
-msgstr ""
-
-#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Search Applicants"
 msgstr ""
@@ -1981,6 +2166,23 @@ msgstr ""
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
 msgid "Second Interview"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__send_mail
+msgid "Send Email"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "Send Interview Survey"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid ""
+"Send an Interview Survey to the applicant during\n"
+"                                        the recruitment process"
 msgstr ""
 
 #. module: hr_recruitment
@@ -2123,6 +2325,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Tags"
 msgstr ""
 
@@ -2139,6 +2342,14 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
 msgid "The date at which the applicant will be available to start working"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
+#, python-format
+msgid ""
+"The email will not be sent to the following applicant(s) as they don't have "
+"email address."
 msgstr ""
 
 #. module: hr_recruitment
@@ -2251,11 +2462,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
-msgid "Use interview forms during recruitment process"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid ""
 "Use interview forms tailored to each job position during the recruitment "
 "process. Select the form to use in the job position detail form. This relies"
@@ -2310,6 +2516,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_interest
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_not_interested
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Your Job Application: ${object.job_id.name | safe}"
 msgstr ""
@@ -2322,6 +2529,11 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. Sales Manager"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+msgid "e.g. Sales Manager 2 year experience"
 msgstr ""
 
 #. module: hr_recruitment
