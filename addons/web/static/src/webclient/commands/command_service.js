@@ -50,7 +50,7 @@ export const commandService = {
         let nextToken = 0;
         let isPaletteOpened = false;
 
-        hotkeyService.add("control+m", openMainPalette, {
+        hotkeyService.add("control+k", openMainPalette, {
             global: true,
         });
 
