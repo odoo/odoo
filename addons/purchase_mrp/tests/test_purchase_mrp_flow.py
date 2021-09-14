@@ -410,3 +410,79 @@ class TestSaleMrpFlow(TransactionCase):
         # Check the components quantities that backorder_4 should have
         for move in backorder_4.move_lines:
             self.assertEqual(move.product_qty, 1)
+
+    def test_concurent_procurements(self):
+        """ Check a production created to fulfill a procurement will not
+        replenish more that needed if others procurements have the same products
+        than the production component. """
+
+        warehouse = self.env.ref('stock.warehouse0')
+        buy_route = warehouse.buy_pull_id.route_id
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+
+        vendor1 = self.env['res.partner'].create({'name': 'aaa', 'email': 'from.test@example.com'})
+        supplier_info1 = self.env['product.supplierinfo'].create({
+            'name': vendor1.id,
+            'price': 50,
+        })
+
+        component = self.env['product.product'].create({
+            'name': 'component',
+            'type': 'product',
+            'route_ids': [(4, buy_route.id)],
+            'seller_ids': [(6, 0, [supplier_info1.id])],
+        })
+        finished = self.env['product.product'].create({
+            'name': 'finished',
+            'type': 'product',
+            'route_ids': [(4, manufacture_route.id)],
+        })
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'A RR',
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': component.id,
+            'route_id': buy_route.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+        })
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'A RR',
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': finished.id,
+            'route_id': manufacture_route.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': finished.id,
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'consumption': 'flexible',
+            'operation_ids': [
+            ],
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1}),
+            ]})
+
+        # Delivery to trigger replenishment
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = warehouse.out_type_id
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = finished
+            move.product_uom_qty = 3
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = component
+            move.product_uom_qty = 2
+        picking = picking_form.save()
+        picking.action_confirm()
+
+        # Find PO
+        purchase = self.env['purchase.order.line'].search([
+            ('product_id', '=', component.id),
+        ]).order_id
+        self.assertTrue(purchase)
+        self.assertEqual(purchase.order_line.product_qty, 5)
+
