@@ -37,7 +37,6 @@ function factory(dependencies) {
             if ('name' in data) {
                 data2.name = data.name;
             }
-
             // relation
             if ('res_id' in data && 'res_model' in data) {
                 data2.originThread = insert({
@@ -45,7 +44,9 @@ function factory(dependencies) {
                     model: data.res_model,
                 });
             }
-
+            if ('originThread' in data) {
+                data2.originThread = data.originThread;
+            }
             return data2;
         }
 
@@ -398,7 +399,7 @@ function factory(dependencies) {
         attachmentViewer: many2many('mail.attachment_viewer', {
             inverse: 'attachments',
         }),
-        checkSum: attr(),
+        checksum: attr(),
         composers: many2many('mail.composer', {
             inverse: 'attachments',
         }),
@@ -433,6 +434,7 @@ function factory(dependencies) {
         imageTinyUrl: attr({
             compute: '_computeImageTinyUrl',
         }),
+        is_main: attr(),
         isLinkedToComposer: attr({
             compute: '_computeIsLinkedToComposer',
         }),

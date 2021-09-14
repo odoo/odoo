@@ -36,14 +36,26 @@ class IrAttachment(models.Model):
                 except AccessError:
                     pass
 
-    def _attachment_format(self):
+    def _attachment_format(self, commands=False):
         safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'
-        return [{
-            'checksum': attachment.checksum,
-            'id': attachment.id,
-            'filename': attachment.name,
-            'name': attachment.name,
-            'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
-            'res_id': attachment.res_id,
-            'res_model': attachment.res_model,
-        } for attachment in self]
+        res_list = []
+        for attachment in self:
+            res = {
+                'checksum': attachment.checksum,
+                'id': attachment.id,
+                'filename': attachment.name,
+                'name': attachment.name,
+                'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
+            }
+            if commands:
+                res['originThread'] = [('insert', {
+                    'id': attachment.res_id,
+                    'model': attachment.res_model,
+                })]
+            else:
+                res.update({
+                    'res_id': attachment.res_id,
+                    'res_model': attachment.res_model,
+                })
+            res_list.append(res)
+        return res_list
