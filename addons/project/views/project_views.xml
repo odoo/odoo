@@ -1211,11 +1211,15 @@
                 <activity string="Project Tasks" js_class="project_activity">
                     <field name="user_ids"/>
                     <templates>
-                        <div t-name="activity-box">
+                        <div class="justify-content-between" t-name="activity-box">
                             <field name="user_ids" widget="many2many_avatar_user"/>
-                            <div>
-                                <field name="name" display="full"/>
-                                <field name="project_id" muted="1" display="full" invisible="context.get('default_project_id', False)"/>
+                            <div class="text-right">
+                                <span t-att-title="record.name.value">
+                                    <field name="name" display="full"/>
+                                </span>
+                                <span t-att-title="record.project_id.value">
+                                    <field name="project_id" muted="1" display="full" invisible="context.get('default_project_id', False)"/>
+                                </span>
                             </div>
                         </div>
                     </templates>
