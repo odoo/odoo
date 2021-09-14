@@ -5,18 +5,18 @@
         <div class="o_AttachmentViewer" t-on-click="_onClick" t-on-keydown="_onKeydown" tabindex="0">
             <t t-if="attachmentViewer">
                 <div class="o_AttachmentViewer_header" t-on-click="_onClickHeader">
-                    <t t-if="attachmentViewer.attachment.fileType">
+                    <t t-if="attachmentViewer.attachment.isViewable">
                         <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_icon">
-                            <t t-if="attachmentViewer.attachment.fileType === 'image'">
+                            <t t-if="attachmentViewer.attachment.isImage">
                                 <i class="fa fa-picture-o" role="img" title="Image"/>
                             </t>
-                            <t t-if="attachmentViewer.attachment.fileType === 'application/pdf'">
+                            <t t-if="attachmentViewer.attachment.isPdf">
                                 <i class="fa fa-file-text" role="img" title="PDF file"/>
                             </t>
-                            <t t-if="attachmentViewer.attachment.isTextFile">
+                            <t t-if="attachmentViewer.attachment.isText">
                                 <i class="fa fa-file-text" role="img" title="Text file"/>
                             </t>
-                            <t t-if="attachmentViewer.attachment.fileType === 'video'">
+                            <t t-if="attachmentViewer.attachment.isVideo">
                                 <i class="fa fa-video-camera" role="img" title="Video"/>
                             </t>
                         </div>
@@ -35,8 +35,8 @@
                         <i class="fa fa-fw fa-times" role="img"/>
                     </div>
                 </div>
-                <div class="o_AttachmentViewer_main" t-att-class="{ o_with_img: attachmentViewer.attachment.fileType === 'image' }" t-on-mousemove="_onMousemoveView">
-                    <t t-if="attachmentViewer.attachment.fileType === 'image'">
+                <div class="o_AttachmentViewer_main" t-att-class="{ o_with_img: attachmentViewer.attachment.isImage }" t-on-mousemove="_onMousemoveView">
+                    <t t-if="attachmentViewer.attachment.isImage">
                         <div class="o_AttachmentViewer_zoomer" t-ref="zoomer">
                             <t t-if="attachmentViewer.isImageLoading">
                                 <div class="o_AttachmentViewer_loading">
@@ -46,22 +46,22 @@
                             <img class="o_AttachmentViewer_view o_AttachmentViewer_viewImage" t-on-click="_onClickImage" t-on-mousedown="_onMousedownImage" t-on-wheel="_onWheelImage" t-on-load="_onLoadImage" t-att-src="attachmentViewer.attachment.defaultSource" t-att-style="imageStyle" draggable="false" alt="Viewer" t-key="'image_' + attachmentViewer.attachment.id" t-ref="image_{{ attachmentViewer.attachment.id }}"/>
                         </div>
                     </t>
-                    <t t-if="attachmentViewer.attachment.fileType === 'application/pdf'">
+                    <t t-if="attachmentViewer.attachment.isPdf">
                         <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_viewPdf" t-ref="iframeViewerPdf" t-att-class="{ 'o-isMobile': messaging.device.isMobile }" t-att-src="attachmentViewer.attachment.defaultSource"/>
                     </t>
-                    <t t-if="attachmentViewer.attachment.isTextFile">
+                    <t t-if="attachmentViewer.attachment.isText">
                         <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_text" t-att-src="attachmentViewer.attachment.defaultSource"/>
                     </t>
-                    <t t-if="attachmentViewer.attachment.fileType === 'youtu'">
+                    <t t-if="attachmentViewer.attachment.isUrlYoutube">
                         <iframe allow="autoplay; encrypted-media" class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_youtube" t-att-src="attachmentViewer.attachment.defaultSource" height="315" width="560"/>
                     </t>
-                    <t t-if="attachmentViewer.attachment.fileType === 'video'">
+                    <t t-if="attachmentViewer.attachment.isVideo">
                         <video class="o_AttachmentViewer_view o_AttachmentViewer_viewVideo" t-att-class="{ 'o-isMobile': messaging.device.isMobile }" t-on-click="_onClickVideo" controls="controls">
                             <source t-att-data-type="attachmentViewer.attachment.mimetype" t-att-src="attachmentViewer.attachment.defaultSource"/>
                         </video>
                     </t>
                 </div>
-                <t t-if="attachmentViewer.attachment.fileType === 'image'">
+                <t t-if="attachmentViewer.attachment.isImage">
                     <div class="o_AttachmentViewer_toolbar" role="toolbar">
                         <div class="o_AttachmentViewer_toolbarButton" t-on-click="_onClickZoomIn" title="Zoom In (+)" role="button">
                             <i class="fa fa-fw fa-plus" role="img"/>

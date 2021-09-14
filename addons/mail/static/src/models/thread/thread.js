@@ -1975,6 +1975,16 @@ function factory(dependencies) {
         allAttachments: many2many('mail.attachment', {
             compute: '_computeAllAttachments',
         }),
+        /**
+         * Determines the attachment list that will be used to display the attachments.
+         */
+        attachmentList: one2one('mail.attachment_list', {
+            default: create(),
+            inverse: 'thread',
+            isCausal: true,
+            readonly: true,
+            required: true,
+        }),
         areAttachmentsLoaded: attr({
             default: false,
         }),

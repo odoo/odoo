@@ -85,13 +85,15 @@ export class FileUploader extends Component {
                     {
                         filename: file.name,
                         isUploading: true,
-                        name: file.name
+                        name: file.name,
+                        mimetype: file.type,
                     },
                     this.props.newAttachmentExtraData
                 ),
             );
         }
     }
+
     /**
      * @private
      * @param {FileList|Array} files

@@ -68,7 +68,7 @@ QUnit.test('base empty rendering', async function (assert) {
         "should have a file input"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_Attachment`).length,
+        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
         0,
         "should not have any attachment"
     );
@@ -162,7 +162,7 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
         "should have a drop zone"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_Attachment`).length,
+        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
         0,
         "should have no attachment before files are dropped"
     );
@@ -173,8 +173,9 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
             files
         )
     );
+
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_Attachment`).length,
+        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
         1,
         "should have 1 attachment in the box after files dropped"
     );
@@ -199,7 +200,7 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
         )
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_Attachment`).length,
+        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
         3,
         "should have 3 attachments in the box after files dropped"
     );
@@ -232,8 +233,8 @@ QUnit.test('view attachments', async function (assert) {
 
     await afterNextRender(() =>
         document.querySelector(`
-            .o_Attachment[data-attachment-local-id="${firstAttachment.localId}"]
-            .o_Attachment_image
+            .o_AttachmentCard[data-id="${firstAttachment.localId}"]
+            .o_AttachmentCard_image
         `).click()
     );
     assert.containsOnce(
@@ -297,16 +298,16 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
     await this.createAttachmentBoxComponent(thread);
     assert.containsOnce(
         document.body,
-        '.o_Attachment',
+        '.o_AttachmentCard',
         "should have an attachment",
     );
     assert.containsOnce(
         document.body,
-        '.o_Attachment_asideItemUnlink',
+        '.o_AttachmentCard_asideItemUnlink',
         "attachment should have a delete button"
     );
 
-    await afterNextRender(() => document.querySelector('.o_Attachment_asideItemUnlink').click());
+    await afterNextRender(() => document.querySelector('.o_AttachmentCard_asideItemUnlink').click());
     assert.containsOnce(
         document.body,
         '.o_AttachmentDeleteConfirmDialog',
@@ -322,7 +323,7 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
     await afterNextRender(() => document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click());
     assert.containsNone(
         document.body,
-        '.o_Attachment',
+        '.o_AttachmentCard',
         "should no longer have an attachment",
     );
 });

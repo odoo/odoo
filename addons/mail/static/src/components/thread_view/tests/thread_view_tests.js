@@ -1024,9 +1024,9 @@ QUnit.test("delete all attachments of message without content should no longer d
     );
 
     await afterNextRender(() => {
-        document.querySelector(`.o_Attachment[data-attachment-local-id="${
+        document.querySelector(`.o_AttachmentCard[data-id="${
             this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 143 }).localId
-        }"] .o_Attachment_asideItemUnlink`).click();
+        }"] .o_AttachmentCard_asideItemUnlink`).click();
     });
     await afterNextRender(() =>
         document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click()
@@ -1083,9 +1083,9 @@ QUnit.test('delete all attachments of a message with some text content should st
     );
 
     await afterNextRender(() => {
-        document.querySelector(`.o_Attachment[data-attachment-local-id="${
+        document.querySelector(`.o_AttachmentCard[data-id="${
             this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 143 }).localId
-        }"] .o_Attachment_asideItemUnlink`).click();
+        }"] .o_AttachmentCard_asideItemUnlink`).click();
     });
     await afterNextRender(() =>
         document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click()
@@ -1149,9 +1149,9 @@ QUnit.test('delete all attachments of a message with tracking fields should stil
     );
 
     await afterNextRender(() => {
-        document.querySelector(`.o_Attachment[data-attachment-local-id="${
+        document.querySelector(`.o_AttachmentCard[data-id="${
             this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 143 }).localId
-        }"] .o_Attachment_asideItemUnlink`).click();
+        }"] .o_AttachmentCard_asideItemUnlink`).click();
     });
     await afterNextRender(() =>
         document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click()

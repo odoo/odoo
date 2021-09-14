@@ -153,7 +153,7 @@ export class AttachmentViewer extends Component {
         const refs = this._getRefs();
         const image = refs[`image_${this.attachmentViewer.attachment.id}`];
         if (
-            this.attachmentViewer.attachment.fileType === 'image' &&
+            this.attachmentViewer.attachment.isImage &&
             (!image || !image.complete)
         ) {
             this.attachmentViewer.update({ isImageLoading: true });

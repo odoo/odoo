@@ -671,6 +671,7 @@ QUnit.test('allow attachment delete on authored message', async function (assert
             filename: "BLAH.jpg",
             id: 10,
             name: "BLAH",
+            mimetype: 'image/jpeg',
         }),
         author: link(this.messaging.currentPartner),
         body: "<p>Test</p>",
@@ -680,16 +681,16 @@ QUnit.test('allow attachment delete on authored message', async function (assert
 
     assert.containsOnce(
         document.body,
-        '.o_Attachment',
+        '.o_AttachmentImage',
         "should have an attachment",
     );
     assert.containsOnce(
         document.body,
-        '.o_Attachment_asideItemUnlink',
+        '.o_AttachmentImage_actionUnlink',
         "should have delete attachment button"
     );
 
-    await afterNextRender(() => document.querySelector('.o_Attachment_asideItemUnlink').click());
+    await afterNextRender(() => document.querySelector('.o_AttachmentImage_actionUnlink').click());
     assert.containsOnce(
         document.body,
         '.o_AttachmentDeleteConfirmDialog',
@@ -706,7 +707,7 @@ QUnit.test('allow attachment delete on authored message', async function (assert
     );
     assert.containsNone(
         document.body,
-        '.o_Attachment',
+        '.o_AttachmentCard',
         "should no longer have an attachment",
     );
 });
@@ -720,6 +721,7 @@ QUnit.test('prevent attachment delete on non-authored message', async function (
             filename: "BLAH.jpg",
             id: 10,
             name: "BLAH",
+            mimetype: 'image/jpeg',
         }),
         author: insert({ id: 11, display_name: "Guy" }),
         body: "<p>Test</p>",
@@ -729,12 +731,12 @@ QUnit.test('prevent attachment delete on non-authored message', async function (
 
     assert.containsOnce(
         document.body,
-        '.o_Attachment',
+        '.o_AttachmentImage',
         "should have an attachment",
     );
     assert.containsNone(
         document.body,
-        '.o_Attachment_asideItemUnlink',
+        '.o_AttachmentImage_actionUnlink',
         "delete attachment button should not be printed"
     );
 });
