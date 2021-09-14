@@ -450,13 +450,20 @@ class Website(models.Model):
                 except Exception as e:
                     logger.warning("Failed to download image: %s.\n%s", url, e)
                 else:
-                    self.env['ir.attachment'].create({
+                    attachment = self.env['ir.attachment'].create({
                         'name': name,
                         'website_id': website.id,
                         'key': name,
                         'type': 'binary',
                         'raw': response.content,
                         'public': True,
+                    })
+                    self.env['ir.model.data'].create({
+                        'name': 'configurator_%s_%s' % (website.id, name.split('.')[1]),
+                        'module': 'website',
+                        'model': 'ir.attachment',
+                        'res_id': attachment.id,
+                        'noupdate': True,
                     })
 
         website = self.get_current_website()
