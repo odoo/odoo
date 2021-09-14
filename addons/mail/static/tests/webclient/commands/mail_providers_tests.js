@@ -46,7 +46,7 @@ QUnit.module('mail', {}, function () {
                 hasChatWindow: true,
                 hasWebClient: true,
             });
-        triggerHotkey("control+m");
+        triggerHotkey("control+k");
         await nextTick();
 
         // Switch to partners
@@ -85,7 +85,7 @@ QUnit.module('mail', {}, function () {
                 hasChatWindow: true,
                 hasWebClient: true,
             });
-        triggerHotkey("control+m");
+        triggerHotkey("control+k");
         await nextTick();
 
         // Switch to channels
