@@ -265,6 +265,7 @@ class Survey(http.Controller):
 
         if not answer_sudo.is_session_answer and survey_sudo.is_time_limited and answer_sudo.start_datetime:
             data.update({
+                'server_time': fields.Datetime.now(),
                 'timer_start': answer_sudo.start_datetime.isoformat(),
                 'time_limit_minutes': survey_sudo.time_limit
             })
