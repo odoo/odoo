@@ -418,7 +418,7 @@ class DiscussController(http.Controller):
             :param int channel_id: id of the channel to join
         """
         channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
-        return channel_partner_sudo.channel_id._join_call()
+        return channel_partner_sudo._rtc_join_call()
 
     @http.route('/mail/rtc/channel/leave_call', methods=['POST'], type="json", auth="public")
     def channel_call_leave(self, channel_id):
@@ -426,7 +426,7 @@ class DiscussController(http.Controller):
             :param int channel_id: id of the channel from which to disconnect
         """
         channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
-        channel_partner_sudo.channel_id._leave_call()
+        return channel_partner_sudo._rtc_leave_call()
 
     @http.route('/mail/rtc/channel/cancel_call_invitation', methods=['POST'], type="json", auth="public")
     def channel_call_cancel_invitation(self, channel_id, partner_ids=None, guest_ids=None):
@@ -437,7 +437,7 @@ class DiscussController(http.Controller):
             if either partner_ids or guest_ids is set, only the specified ids will be invited.
         """
         channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
-        channel_partner_sudo.channel_id._cancel_rtc_invitations(partner_ids=partner_ids, guest_ids=guest_ids, inviting_member=channel_partner_sudo)
+        return channel_partner_sudo.channel_id._rtc_cancel_invitations(partner_ids=partner_ids, guest_ids=guest_ids)
 
     @http.route('/mail/rtc/audio_worklet_processor', methods=['GET'], type='http', auth='public')
     def audio_worklet_processor(self):
