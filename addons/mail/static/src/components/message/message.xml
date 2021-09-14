@@ -2,8 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Message" owl="1">
-        <div class="o_Message"
+        <div class="o_Message position-relative pt-1"
             t-att-class="{
+                'o_Message_active': isActive,
                 'o-clicked': state.isClicked,
                 'o-discussion': message and (message.is_discussion or message.is_notification),
                 'o-has-message-selection': threadView and threadView.threadViewer and threadView.threadViewer.selectedMessage,
@@ -14,9 +15,13 @@
                 'o-selected': isSelected,
                 'o-squashed': props.isSquashed,
                 'o-starred': message and message.isStarred,
+                'mt-3': !props.isSquashed,
             }" t-on-click="_onClick" t-on-mouseenter="state.isHovered = true" t-on-mouseleave="state.isHovered = false" t-att-data-message-local-id="message and message.localId"
         >
             <t t-if="message" name="rootCondition">
+                <div t-if="(isActive or message.actionList.showDeleteConfirm) and props.showActions"  class="o_Message_actionListContainer pl-5 pr-3" t-att-class="{ 'o-squashed': props.isSquashed }">
+                    <MessageActionList actionListLocalId="message.actionList.localId" hasReplyIcon="props.hasReplyIcon" hasMarkAsReadIcon="props.hasMarkAsReadIcon"/>
+                </div>
                 <div class="o_Message_highlightIndicator" t-att-class="{ 'o-active': message.isHighlighted }"/>
                 <div class="o_Message_sidebar" t-att-class="{ 'o-message-squashed align-items-start': props.isSquashed }">
                     <t t-if="!props.isSquashed">
@@ -37,7 +42,7 @@
                     </t>
                     <t t-else="">
                         <t t-if="isActive and message.date">
-                            <div class="o_Message_date o_Message_sidebarItem d-flex" t-att-class="{ 'o-message-selected': isSelected }">
+                            <div class="o_Message_date o_Message_sidebarItem mt-1" t-att-class="{ 'o-message-selected': isSelected }">
                                 <t t-esc="shortTime"/>
                             </div>
                         </t>
@@ -108,55 +113,47 @@
                             </t>
                         </div>
                     </t>
-                    <div class="o_Message_contentWrapper position-relative" t-att-class="{ 'o_Message_contentWrapper_active': isActive and props.showActions }">
-                        <MessageActionList
-                            t-if="(isActive or message.actionList.showDeleteConfirm) and props.showActions"
-                            actionListLocalId="message.actionList.localId"
-                            hasReplyIcon="props.hasReplyIcon"
-                            hasMarkAsReadIcon="props.hasMarkAsReadIcon"
-                        />
-                        <div class="o_Message_content m-2" t-ref="content">
-                            <div class="o_Message_prettyBody" t-ref="prettyBody"/><!-- message.prettyBody is inserted here from _update() -->
-                            <t t-if="message.subtype_description and !message.isBodyEqualSubtypeDescription">
-                                <p t-esc="message.subtype_description"/>
-                            </t>
-                            <t t-if="trackingValues.length > 0">
-                                <ul class="o_Message_trackingValues">
-                                    <t t-foreach="trackingValues" t-as="value" t-key="value.id">
-                                        <li>
-                                            <div class="o_Message_trackingValue">
-                                                <div class="o_Message_trackingValueFieldName o_Message_trackingValueItem" t-esc="value.changed_field"/>
-                                                <t t-if="value.old_value">
-                                                    <div class="o_Message_trackingValueOldValue o_Message_trackingValueItem" t-esc="value.old_value"/>
-                                                </t>
-                                                <div class="o_Message_trackingValueSeparator o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img"/>
-                                                <t t-if="value.new_value">
-                                                    <div class="o_Message_trackingValueNewValue o_Message_trackingValueItem" t-esc="value.new_value"/>
-                                                </t>
-                                            </div>
-                                        </li>
-                                    </t>
-                                </ul>
-                            </t>
-                        </div>
-                        <div class="d-flex flex-wrap ml-2">
-                            <t t-foreach="message.messageReactionGroups" t-as="messageReactionGroup" t-key="messageReactionGroup.localId">
-                                <MessageReactionGroup messageReactionGroupLocalId="messageReactionGroup.localId"/>
-                            </t>
-                        </div>
-                        <t t-if="message.subject and !message.isSubjectSimilarToOriginThreadName">
-                            <p class="o_Message_subject m-2 mt-0">Subject: <t t-esc="message.subject"/></p>
+                    <t t-if="message.subject and !message.isSubjectSimilarToOriginThreadName">
+                        <p class="o_Message_subject mx-2 mb-1">Subject: <t t-esc="message.subject"/></p>
+                    </t>
+                    <div class="o_Message_content mx-2" t-ref="content">
+                        <div class="o_Message_prettyBody" t-ref="prettyBody"/><!-- message.prettyBody is inserted here from _update() -->
+                        <t t-if="message.subtype_description and !message.isBodyEqualSubtypeDescription">
+                            <p t-esc="message.subtype_description"/>
                         </t>
-                        <t t-if="message.attachments and message.attachments.length > 0">
-                            <div class="o_Message_footer">
-                                <AttachmentList
-                                    class="o_Message_attachmentList"
-                                    areAttachmentsDownloadable="true"
-                                    areAttachmentsEditable="message.author === messaging.currentPartner"
-                                    attachmentLocalIds="message.attachments.map(attachment => attachment.localId)"
-                                    attachmentsDetailsMode="props.attachmentsDetailsMode"
-                                />
-                            </div>
+                        <t t-if="trackingValues.length > 0">
+                            <ul class="o_Message_trackingValues">
+                                <t t-foreach="trackingValues" t-as="value" t-key="value.id">
+                                    <li>
+                                        <div class="o_Message_trackingValue">
+                                            <div class="o_Message_trackingValueFieldName o_Message_trackingValueItem" t-esc="value.changed_field"/>
+                                            <t t-if="value.old_value">
+                                                <div class="o_Message_trackingValueOldValue o_Message_trackingValueItem" t-esc="value.old_value"/>
+                                            </t>
+                                            <div class="o_Message_trackingValueSeparator o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img"/>
+                                            <t t-if="value.new_value">
+                                                <div class="o_Message_trackingValueNewValue o_Message_trackingValueItem" t-esc="value.new_value"/>
+                                            </t>
+                                        </div>
+                                    </li>
+                                </t>
+                            </ul>
+                        </t>
+                    </div>
+                    <t t-if="message.attachments and message.attachments.length > 0">
+                        <div class="o_Message_footer">
+                            <AttachmentList
+                                class="o_Message_attachmentList"
+                                areAttachmentsDownloadable="true"
+                                areAttachmentsEditable="message.author === messaging.currentPartner"
+                                attachmentLocalIds="message.attachments.map(attachment => attachment.localId)"
+                                attachmentsDetailsMode="props.attachmentsDetailsMode"
+                            />
+                        </div>
+                    </t>
+                    <div t-if="message.messageReactionGroups.length > 0" class="d-flex flex-wrap ml-2">
+                        <t t-foreach="message.messageReactionGroups" t-as="messageReactionGroup" t-key="messageReactionGroup.localId">
+                            <MessageReactionGroup class="mr-1 mb-1" messageReactionGroupLocalId="messageReactionGroup.localId"/>
                         </t>
                     </div>
                 </div>
