@@ -54,7 +54,7 @@ class TestLeadAssignCommon(TestLeadConvertCommon):
         self.assertEqual(self.sales_team_convert_m2.lead_month_count, 0)
 
 
-@tagged('lead_assign')
+@tagged('lead_assign', '-standard')
 class TestLeadAssign(TestLeadAssignCommon):
     """ Test lead assignment feature added in saas-14.2 """
 
