@@ -5,9 +5,13 @@
 .o_Message {
     display: flex;
     flex: 0 0 auto;
+}
 
-    &:not(:first-child) {
-        margin-top: map-get($spacers, 1);
+.o_Message_actionListContainer {
+    @include o-position-absolute($top: - map-get($spacers, 3), $right: 0);
+
+    &.o-squashed {
+        @include o-position-absolute($top: - map-get($spacers, 4), $right: 0);
     }
 }
 
@@ -54,8 +58,6 @@
 
 .o_Message_core {
     min-width: 0; // allows this flex child to shrink more than its content
-    margin-top: map-get($spacers, 1);
-    margin-bottom: map-get($spacers, 1);
     margin-inline-end: map-get($spacers, 4);
 }
 
@@ -92,7 +94,7 @@
 
 .o_Message_prettyBody {
 
-    > p:last-of-type {
+    > p {
         margin-bottom: 0;
     }
 
@@ -110,7 +112,6 @@
     flex: 0 0 $o-mail-message-sidebar-width;
     max-width: $o-mail-message-sidebar-width;
     display: flex;
-    margin-top: map-get($spacers, 2);
     justify-content: center;
 }
 
@@ -147,6 +148,10 @@
     &.o-not-discussion {
         background-color: gray('100');
 
+        &.o_Message_active {
+            background-color: mix(gray('100'), gray('200'));
+        }
+
         .o_Message_partnerImStatusIcon {
             color: gray('100'); // same color as background of parent
         }
@@ -171,6 +176,10 @@
     &.o-highlighted {
         background-color: rgba($o-brand-primary, .1);
     }
+
+    &.o_Message_active {
+        background-color: gray('100');
+    }
 }
 
 .o_Message_authorName {
@@ -191,20 +200,11 @@
 }
 
 .o_Message_date {
+    font-size: 0.8em;
     color: gray('500');
 
     &.o-message-selected {
         color: gray('600');
-    }
-}
-
-.o_Message_contentWrapper {
-    // transparent border to avoid layout moving around when it becomes active
-    border: $border-width solid transparent;
-    border-radius: $o-mail-rounded-rectangle-border-radius-sm;
-
-    &.o_Message_contentWrapper_active {
-        border: $border-width solid $border-color;
     }
 }
 

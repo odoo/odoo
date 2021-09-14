@@ -44,6 +44,7 @@
                 <t t-elif="props.order === 'asc' and orderedMessages.length > 0">
                     <t t-call="mail.MessageList.loadMore"/>
                 </t>
+                <div t-if="props.order === 'asc' and threadView.nonEmptyMessages.length !== 0" class="flex-grow-1"/>
                 <!-- MESSAGES -->
                 <t t-set="current_day" t-value="0"/>
                 <t t-set="prev_message" t-value="0"/>
@@ -56,7 +57,7 @@
                     <t t-if="!message.isEmpty">
                         <t t-set="message_day" t-value="getDateDay(message)"/>
                         <t t-if="current_day !== message_day">
-                            <div class="o_MessageList_separator o_MessageList_separatorDate o_MessageList_item">
+                            <div class="o_MessageList_separator o_MessageList_separatorDate o_MessageList_item pt-4">
                                 <hr class="o_MessageList_separatorLine"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelDate"><t t-esc="message_day"/></span><hr class="o_MessageList_separatorLine"/>
                                 <t t-set="current_day" t-value="message_day"/>
                                 <t t-set="isMessageSquashed" t-value="false"/>
