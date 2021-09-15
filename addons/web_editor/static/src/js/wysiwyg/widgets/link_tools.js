@@ -33,6 +33,8 @@ const LinkTools = Link.extend({
         }
         const link = node || this.getOrCreateLink(editable);
         this._super(parent, options, editable, data, $button, link);
+        // Keep track of each colorpicker.
+        this.colorpickers = {};
     },
     /**
      * @override
@@ -142,7 +144,8 @@ const LinkTools = Link.extend({
      * @override
      */
     _getLinkCustomFill: function () {
-        return this.$('we-selection-items[name="link-custom-color-fill"] .o_we_color_preview').css('background-color') || '';
+        const $colorPreview = this.$('we-selection-items[name="link-custom-color-fill"] .o_we_color_preview');
+        return $colorPreview.css('background-image') || $colorPreview.css('background-color') || '';
     },
     /**
      * @override
@@ -175,10 +178,19 @@ const LinkTools = Link.extend({
             if (el.dataset.value === 'custom') {
                 const textColor = this.$link[0].style['color'];
                 this.$('.link-custom-color-text .o_we_color_preview').css('background-color', textColor);
+                if (this.colorpickers['color'] && textColor && textColor !== 'false') {
+                    // Keep currently selected tab when setting color.
+                    this.colorpickers['color'].setSelectedColor(null, textColor, false);
+                }
                 const backgroundColor = this.$link[0].style['background-color'];
                 this.$('.link-custom-color-fill .o_we_color_preview').css('background-color', backgroundColor);
                 const backgroundImage = this.$link[0].style['background-image'];
                 this.$('.link-custom-color-fill .o_we_color_preview').css('background-image', backgroundImage);
+                const backgroundFill = (backgroundImage !== 'false' && backgroundImage) || backgroundColor;
+                if (this.colorpickers['background-color'] && backgroundFill && backgroundFill !== 'false') {
+                    // Keep currently selected tab when setting color.
+                    this.colorpickers['background-color'].setSelectedColor(null, backgroundFill, false);
+                }
                 const borderWidth = this.$link[0].style['border-width'];
                 const numberAndUnit = getNumericAndUnit(borderWidth);
                 this.$('.link-custom-color-border input').val(numberAndUnit ? numberAndUnit[0] : "1");
@@ -194,6 +206,10 @@ const LinkTools = Link.extend({
                 $activeBorderStyleButton.find('div').clone().appendTo($activeBorderStyleToggler);
                 const borderColor = this.$link[0].style['border-color'];
                 this.$('.link-custom-color-border .o_we_color_preview').css('background-color', borderColor);
+                if (this.colorpickers['border-color'] && borderColor && borderColor !== 'false') {
+                    // Keep currently selected tab when setting color.
+                    this.colorpickers['border-color'].setSelectedColor(null, borderColor, false);
+                }
             }
         }
     },
@@ -239,6 +255,7 @@ const LinkTools = Link.extend({
             selectedColor: color,
             withGradients: cssProperty === 'background-color',
         });
+        this.colorpickers[cssProperty] = colorpicker;
         colorpicker.appendTo($(ev.target).closest('.dropdown').find('.dropdown-menu'));
         colorpicker.on('custom_color_picked color_picked color_hover color_leave', this, (ev) => {
             let color = ev.data.color;
@@ -256,6 +273,7 @@ const LinkTools = Link.extend({
                 $colorPreview.css('background-color', color);
                 $colorPreview.css('background-image', gradientColor);
                 this.options.wysiwyg.odooEditor.historyStep();
+                this._updateOptionsUI();
             }
         });
     },

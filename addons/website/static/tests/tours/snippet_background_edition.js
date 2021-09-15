@@ -15,6 +15,43 @@ const gradients = [
     'linear-gradient(135deg, rgb(255, 222, 202) 0%, rgb(202, 115, 69) 100%)',
 ];
 
+function typeToName(xType) {
+    return xType === 'cc' ? 'color combinations' : xType === 'bg' ? 'background colors' : 'gradients';
+}
+
+function switchTo(type, _name) {
+    const target = type === 'cc' ? 'color-combinations' : type === 'bg' ? 'custom-colors' : 'gradients';
+    const name = _name || typeToName(type);
+    return {
+        trigger: `.o_we_colorpicker_switch_pane_btn[data-target="${target}"]`,
+        content: `Switch to ${name}`,
+    };
+}
+
+function addCheck(steps, checkX, checkNoX, xType, noSwitch = false) {
+    if (!checkX && !checkNoX) {
+        return;
+    }
+
+    const name = typeToName(xType);
+    const selectorCheckX = checkX && `.o_we_color_btn[data-color="${checkX}"].selected`;
+    const selectorCheckNoX = checkNoX && `.o_we_color_btn[data-color="${checkNoX}"]:not(.selected)`;
+    const step = {
+        trigger: selectorCheckX || selectorCheckNoX,
+        content: `The correct ${name} is marked as selected`,
+        position: 'bottom',
+        run: () => null,
+    };
+    if (!selectorCheckX && selectorCheckNoX) {
+        step.extra_trigger = selectorCheckNoX;
+    }
+
+    if (!noSwitch) {
+        steps.push(switchTo(xType, name));
+    }
+    steps.push(step);
+}
+
 function checkAndUpdateBackgroundColor({
     checkCC, checkNoCC,
     checkBg, checkNoBg,
@@ -26,49 +63,12 @@ function checkAndUpdateBackgroundColor({
         wTourUtils.changeBackgroundColor(),
     ];
 
-    function typeToName(xType) {
-        return xType === 'cc' ? 'color combinations' : xType === 'bg' ? 'background colors' : 'gradients';
-    }
-
-    function switchTo(type, _name) {
-        const target = type === 'cc' ? 'color-combinations' : type === 'bg' ? 'custom-colors' : 'gradients';
-        const name = _name || typeToName(type);
-        steps.push({
-            trigger: `.o_we_colorpicker_switch_pane_btn[data-target="${target}"]`,
-            content: `Switch to ${name}`,
-        });
-    }
-
-    function check(checkX, checkNoX, xType, noSwitch = false) {
-        if (!checkX && !checkNoX) {
-            return;
-        }
-
-        const name = typeToName(xType);
-        const selectorCheckX = checkX && `.o_we_color_btn[data-color="${checkX}"].selected`;
-        const selectorCheckNoX = checkNoX && `.o_we_color_btn[data-color="${checkNoX}"]:not(.selected)`;
-        const step = {
-            trigger: selectorCheckX || selectorCheckNoX,
-            content: `The correct ${name} is marked as selected`,
-            position: 'bottom',
-            run: () => null,
-        };
-        if (!selectorCheckX && selectorCheckNoX) {
-            step.extra_trigger = selectorCheckNoX;
-        }
-
-        if (!noSwitch) {
-            switchTo(xType, name);
-        }
-        steps.push(step);
-    }
-
-    check(checkCC, checkNoCC, 'cc', true);
-    check(checkBg, checkNoBg, 'bg');
-    check(checkGradient, checkNoGradient, 'gradient');
+    addCheck(steps, checkCC, checkNoCC, 'cc', true);
+    addCheck(steps, checkBg, checkNoBg, 'bg');
+    addCheck(steps, checkGradient, checkNoGradient, 'gradient');
 
     if (changeType) {
-        switchTo(changeType);
+        steps.push(switchTo(changeType));
         steps.push(wTourUtils.changeOption('ColoredLevelBackground', `.o_we_color_btn[data-color="${change}"]`));
         steps.push({
             trigger: finalSelector,
@@ -78,6 +78,16 @@ function checkAndUpdateBackgroundColor({
         });
     }
 
+    return steps;
+}
+
+function updateAndCheckCustomGradient({updateStep, checkGradient}) {
+    const steps = [updateStep, {
+        trigger: `#wrapwrap section.${snippets[0].id}.o_cc1`,
+        content: 'Color combination 1 still selected',
+        run: () => null,
+    }];
+    addCheck(steps, checkGradient, checkGradient !== gradients[0] && gradients[0], 'gradient', true);
     return steps;
 }
 
@@ -207,6 +217,96 @@ wTourUtils.changeOption('ColoredLevelBackground', '[data-name="bg_image_toggle_o
         }
     },
 }),
+
+// Customize gradient
+wTourUtils.changeBackgroundColor(),
+switchTo('gradient'),
+// Avoid navigating across tabs to maintain current editor state
+// Step colors
+...updateAndCheckCustomGradient({
+    updateStep: {
+        trigger: '.colorpicker .o_custom_gradient_scale',
+        content: 'Add step',
+        run: 'click',
+    },
+    checkGradient: 'linear-gradient(135deg, rgb(203, 94, 238) 0%, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%)',
+}),
+...updateAndCheckCustomGradient({
+    updateStep: {
+        trigger: '.colorpicker .o_slider_multi input.active',
+        content: 'Move step',
+        run: () => {
+            const slider = $('.colorpicker .o_slider_multi input.active');
+            slider.val(45);
+            slider.trigger('click');
+        },
+    },
+    checkGradient: 'linear-gradient(135deg, rgb(203, 94, 238) 0%, rgb(203, 94, 238) 45%, rgb(75, 225, 236) 100%)',
+}),
+...updateAndCheckCustomGradient({
+    updateStep: {
+        trigger: '.colorpicker .o_color_picker_inputs .o_hex_div input',
+        content: 'Pick step color',
+        run: 'text #FF0000',
+    },
+    checkGradient: 'linear-gradient(135deg, rgb(203, 94, 238) 0%, rgb(255, 0, 0) 45%, rgb(75, 225, 236) 100%)',
+}),
+...updateAndCheckCustomGradient({
+    updateStep: {
+        trigger: '.colorpicker .o_remove_color',
+        content: 'Delete step',
+        run: 'click',
+    },
+    checkGradient: 'linear-gradient(135deg, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%)',
+}),
+// Linear
+...updateAndCheckCustomGradient({
+    updateStep: {
+        trigger: '.colorpicker input[data-name="angle"]',
+        content: 'Change angle',
+        run: 'text_blur 50',
+    },
+    checkGradient: 'linear-gradient(50deg, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%)',
+}),
+// Radial
+...updateAndCheckCustomGradient({
+    updateStep: {
+        trigger: '.colorpicker we-button[data-gradient-type="radial-gradient"]',
+        content: 'Switch to Radial',
+        run: 'click',
+    },
+    checkGradient: 'radial-gradient(circle farthest-side at 25% 25%, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%)',
+}),
+...updateAndCheckCustomGradient({
+    updateStep: {
+        trigger: '.colorpicker input[data-name="positionX"]',
+        content: 'Change X position',
+        run: 'text_blur 33',
+    },
+    checkGradient: 'radial-gradient(circle farthest-side at 33% 25%, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%)',
+}),
+...updateAndCheckCustomGradient({
+    updateStep: {
+        trigger: '.colorpicker input[data-name="positionY"]',
+        content: 'Change Y position',
+        run: 'text_blur 75',
+    },
+    checkGradient: 'radial-gradient(circle farthest-side at 33% 75%, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%)',
+}),
+...updateAndCheckCustomGradient({
+    updateStep: {
+        trigger: '.colorpicker we-button[data-gradient-size="closest-side"]',
+        content: 'Change color spread size',
+        run: 'click',
+    },
+    checkGradient: 'radial-gradient(circle closest-side at 33% 75%, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%)',
+}),
+// Revert to predefined gradient
+{
+    trigger: `.o_we_color_btn[data-color="${gradients[0]}"]`,
+    content: `Revert to predefiend gradient ${gradients[0]}`,
+    run: 'click',
+},
 
 // Replace the gradient by a bg color
 ...checkAndUpdateBackgroundColor({

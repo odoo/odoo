@@ -1453,6 +1453,11 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
                 this.colorPreviewEl.style.backgroundImage = this._value;
             }
         }
+        // If the palette was already opened (e.g. modifying a gradient), the new DOM state must be
+        // reflected in the palette, but the tab selection must not be impacted.
+        if (this.colorPalette.setSelectedColor) {
+            this.colorPalette.setSelectedColor(this._ccValue, this._value, false);
+        }
     },
 
     //--------------------------------------------------------------------------
