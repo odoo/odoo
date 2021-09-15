@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 import psycopg2
@@ -14,6 +15,8 @@ headers = {
     'Cookie': 'PHPSESSID=adl0oj5l20ufa78t4ij2s7nl91',
     "x-access-token": config.get("marketplace_token")
 }
+
+_logger = logging.getLogger(__name__)
 
 
 def get_all_product_details(items_count, offset):
@@ -35,39 +38,41 @@ def get_all_dist_count(items_count, offset):
 
 
 class ProductSync(Command):
-    conn = psycopg2.connect(
-        host=config.get("db_host"),
-        database="postgres",
-        user=config.get("db_user"),
-        password=config.get("db_password"))
+    def __init__(self, database_name):
+        self.conn = psycopg2.connect(
+            host=config.get("db_host"),
+            database=database_name,
+            user=config.get("db_user"),
+            password=config.get("db_password"))
 
-    @classmethod
-    def handle_vendors(cls):
+    def handle_vendors(self):
         "id, country_id, name, marketplace_id"
         count = get_all_dist_count(1, 0)
-        for i in range(0, count, 1000):
-            distributors = get_all_dist(1000, i)["data"]["data"]
-            cur = cls.conn.cursor()
+        insert_into_marketplace_dists = """INSERT INTO aumet_marketplace_distributor
+                                    (name, country_id, id,
+                                     create_uid, create_date, write_uid, write_date) 
+                                    VALUES(%s, %s, %s, %s, %s, %s, %s);
+                                    """
+        update_marketplace_dists = """UPDATE aumet_marketplace_distributor
+                                    SET "name"=%s, country_id=%s, write_uid=2,
+                                      write_date=%s WHERE id=%s;"""
 
-            insert_into_marketplace_dists = """INSERT INTO aumet_marketplace_distributor
-                            (name, country_id, marketplace_id,
-                             create_uid, create_date, write_uid, write_date) 
-                            VALUES(%s, %s, %s, %s, %s, %s, %s);
-                            """
+        for j in range(0, count, 1000):
+            distributors = get_all_dist(1000, j)["data"]["data"]
+            cur = self.conn.cursor()
 
             for i in distributors:
-                print(i)
+                try:
+                    cur.execute(insert_into_marketplace_dists, (i["name"], i["countryId"],
+                                                                i["id"], 1, datetime.now(), 1, datetime.now()))
+                except psycopg2.errors.UniqueViolation:
+                    self.conn.rollback()
+                    cur.execute(update_marketplace_dists, (i["name"], i["countryId"],
+                                                           datetime.now(), i["id"]))
 
-                print(i["name"], i["countryId"],
-                      i["id"],1, datetime.now(), 1, datetime.now())
-                cur.execute(insert_into_marketplace_dists, (i["name"], i["countryId"],
-                                                            i["id"], 1, datetime.now(), 1, datetime.now()))
-            cls.conn.commit()
+            self.conn.commit()
 
-
-
-    @classmethod
-    def handle_payment_methods(cls):
+    def handle_payment_methods(self):
         payment_methods = [(1, "Cheque on delivery"),
                            (2, "Cash on delivery"),
                            (3, "Cash Collection"),
@@ -76,39 +81,76 @@ class ProductSync(Command):
                            (6, "Managed by Seller")]
 
         insert_payment_query = """INSERT INTO aumet_payment_method (marketplace_payment_method_id, 
-                                    name, create_uid, create_date, write_uid, write_date) VALUES """
+                                    name, create_uid, create_date, write_uid, write_date) 
+                                    VALUES (%s,%s,%s,%s,%s,%s)"""
 
-        cur = cls.conn.cursor()
+        update_query = """UPDATE public.aumet_payment_method
+                        SET "name"=%s, write_date=%s
+                        WHERE marketplace_payment_method_id=%s;"""
+
+        cur = self.conn.cursor()
         for i in range(len(payment_methods)):
-            val = f"""({payment_methods[i][0]}, '{payment_methods[i][1]}', 1, '{datetime.now()}', 1, '{datetime.now()}')"""
-            insert_payment_query += (val + ",") if i != len(payment_methods) - 1 else val
+            try:
+                cur.execute(insert_payment_query, (payment_methods[i][0], payment_methods[i][1],  1, datetime.now(), 1, datetime.now()))
+            except psycopg2.errors.UniqueViolation:
+                self.conn.rollback()
+                cur.execute(update_query, (payment_methods[i][1], datetime.now(),payment_methods[i][0]))
+            self.conn.commit()
 
-        cur.execute(insert_payment_query)
-        cls.conn.commit()
-
-    @classmethod
-    def handle_products(cls):
+    def handle_products(self):
         count = get_items_count()
-        for i in range(0, count, 1000):
-            products = get_all_product_details(1000, i)["data"]["data"]
-            cur = cls.conn.cursor()
 
-            insert_into_marketplace_products = """INSERT INTO aumet_marketplace_product
-                        (name, unit_price, marketplace_seller_id, is_archived, is_locked,
-                         marketplace_id, create_uid, create_date, write_uid, write_date) 
-                        VALUES(%s,%s,%s, %s, %s, %s, %s, %s, %s, %s);
-                        """
+        update_statement = """UPDATE public.aumet_marketplace_product
+                                SET "name"=%s, unit_price=%s, marketplace_distributor=%s,
+                                is_archived=%s, is_locked=%s, create_uid=1, write_date=%s
+                                WHERE id=%s;"""
+
+        insert_into_marketplace_products = """INSERT INTO aumet_marketplace_product
+                                (name, unit_price, marketplace_distributor, is_archived, is_locked,
+                                 id, create_uid, create_date, write_uid, write_date) 
+                                VALUES(%s,%s,%s, %s, %s, %s, %s, %s, %s, %s);
+                                """
+
+        for j in range(0, count, 1000):
+            products = get_all_product_details(1000, j)["data"]["data"]
+            cur = self.conn.cursor()
 
             for i in products:
-                cur.execute(insert_into_marketplace_products, (i["productName_en"], i["unitPrice"],
-                                                               i["entityId"],
-                                                               bool(i["isArchived"]), bool(i["is_product_locked"]),
-                                                               i['id'],
-                                                               1, datetime.now(), 1, datetime.now()))
-                cls.conn.commit()
+                try:
+                    cur.execute(insert_into_marketplace_products, (i["productName_en"], i["unitPrice"],
+                                                                   i["entityId"],
+                                                                   bool(i["isArchived"]), bool(i["is_product_locked"]),
+                                                                   i['id'],
+                                                                   1, datetime.now(), 1, datetime.now()))
+                    self.conn.commit()
+                except psycopg2.errors.UniqueViolation:
+                    self.conn.rollback()
+                    _logger.error("found a duplicate product, trying to update")
+                    """UPDATE public.aumet_marketplace_product
+                                                    SET "name"=%s, unit_price=%s, marketplace_distributor=%s,
+                                                    is_archived=%s, is_locked=%s, write_date=%s
+                                                    WHERE id=%s;"""
+                    cur.execute(update_statement, (i["productName_en"], i["unitPrice"],
+                                                   i["entityId"],
+                                                   bool(i["isArchived"]), bool(i["is_product_locked"]),
+                                                   datetime.now(), i['id']))
+                    self.conn.commit()
 
 
 if __name__ == "__main__":
-    # ProductSync.handle_products()
-    # ProductSync.handle_payment_methods()
-    ProductSync.handle_vendors()
+    temp_connection = psycopg2.connect(
+        host=config.get("db_host"),
+        database="postgres",
+        user=config.get("db_user"),
+        password=config.get("db_password"))
+
+    cursor = temp_connection.cursor()
+    cursor.execute("""SELECT datname FROM pg_database WHERE datistemplate = false;""")
+    databases = cursor.fetchall()
+
+    for database in databases:
+        _logger.info(f"WORKING ON DATABASE {database[0]}")
+        target_db_connection = ProductSync(database[0])
+        target_db_connection.handle_vendors()
+        target_db_connection.handle_products()
+        target_db_connection.handle_payment_methods()

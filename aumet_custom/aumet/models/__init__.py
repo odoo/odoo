@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from . import company_marketplace
+from . import marketplace_company
 from . import marketplace_product
 from . import marketplace_distributor
 from . import payment_methods
 from . import product
+from . import purchase
 from . import purchase_order_line
-from . import purchase_order
-# from . import res_partner
+from . import marketplace_user
+
+from . import res_partner

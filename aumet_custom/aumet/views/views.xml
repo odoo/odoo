@@ -8,6 +8,7 @@
 
             <xpath expr="//field[@name='price_unit']" position="after">
                 <field name="bonus"/>
+                <field name="is_marketplace_order" readonly="1"/>
             </xpath>
         </field>
     </record>
@@ -69,11 +70,8 @@
             <tree string="Marketplace Products">
                 <field name="name"/>
                 <field name="unit_price"/>
-                <field name="marketplace_seller_id"/>
-                <field name="is_archived"/>
-                <field name="is_locked"/>
-                <field name="marketplace_id"/>
-                <field name="uom"/>
+                <field name="marketplace_distributor"/>
+<!--                <field name="uom"/>-->
             </tree>
         </field>
     </record>

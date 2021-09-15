@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_marketplace_product_search" model="ir.ui.view">
+        <field name="name">marketplace.product.search</field>
+        <field name="model">marketplace.product</field>
+        <field name="arch" type="xml">
+            <search string="Marketplace Product">
+                <field name="name" string="Product Name"/>
+                <field name="subtitle_en" string="Subtitle Name"/>
+                <field name="category_name" string="Category Name"/>
+                <field name="product_barcode" string="Product Barcode"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_marketplace_product_tree" model="ir.ui.view">
+        <field name="name">marketplace.product.tree</field>
+        <field name="model">marketplace.product</field>
+        <field name="arch" type="xml">
+            <tree string="Marketplace Products">
+                <field name="name"/>
+                <field name="subtitle_en"/>
+                <field name="scientific_name"/>
+                <field name="product_barcode"/>
+                <field name="category_name"/>
+                <field name="unit_price"/>
+                <field name="retail_selling_price"/>
+                <field name="currency"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_marketplace_product_form" model="ir.ui.view">
+        <field name="name">marketplace.product.form</field>
+        <field name="model">marketplace.product</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Market Place Product">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
+
+                    <div class="oe_title">
+                        <field name="active" invisible="1"/>
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="Name" readonly="1"/>
+                            <field name="name_ar" default_focus="1" placeholder="Name (AR)" readonly="1"/>
+                        </h1>
+                        <h3>
+                            <field name="subtitle_en" default_focus="1" readonly="1"/>
+                            <field name="subtitle_ar" default_focus="1" readonly="1"/>
+                        </h3>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="product_id" readonly="1"/>
+                            <field name="scientific_name" readonly="1"/>
+                            <field name="product_barcode" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="General Information">
+                            <group>
+                                <group>
+                                    <field name="category_id"/>
+                                    <field name="category_name"/>
+                                    <field name="category_name_ar"/>
+                                </group>
+                                <group>
+                                    <field name="made_in_country_name_en"/>
+                                    <field name="made_in_country_name_ar"/>
+                                    <field name="is_archived"/>
+                                    <field name="is_product_locked"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Purchasing">
+                            <group>
+                                <group>
+                                    <field name="unit_price"/>
+                                    <field name="retail_selling_price"/>
+                                </group>
+                                <group>
+                                    <field name="discount"/>
+                                    <field name="vat"/>
+                                    <field name="currency"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Stock">
+                            <group>
+                                <group>
+                                    <field name="stock_status_name_en"/>
+                                    <field name="stock_status_name_ar"/>
+                                    <field name="stock"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Payment Methods">
+                            <field name="aumet_payment_method_ids" nolabel="1" readonly="1"/>
+                        </page>
+                    </notebook>
+                    <separator string="Description"/>
+                    <field name="description"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_marketplace_product" model="ir.actions.act_window">
+        <field name="name">Marketplace Product</field>
+        <field name="res_model">marketplace.product</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_marketplace_product_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aumet Marketplace Products
+            </p>
+            <p>
+                This screen holds all the products that came
+                from Aumet Marketplace Integration. the products
+                will be added/updated cautiously.
+            </p>
+        </field>
+    </record>
+    <menuitem name="Aumet Products" id="menu_marketplace_products" sequence="0"
+              parent="point_of_sale.pos_config_menu_catalog"
+              action="action_marketplace_product"/>
+
+    <menuitem name="Aumet Products" id="menu_marketplace_products_purchase" sequence="30"
+              parent="purchase.menu_purchase_products"
+              action="action_marketplace_product"/>
+</odoo>

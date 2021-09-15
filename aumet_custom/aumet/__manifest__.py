@@ -3,23 +3,28 @@
     'name': "Aumet",
 
     'summary': """
-    Custom Module for Aumet's POS
-        Includes POS Scientific names and seed command for pre-defined scientific names""",
+                Marketplace Integration""",
 
     'description': """
-        Long description of module's purpose
+        Aumet marketplace integration 
+        - Authentication
+        - Sync Products
+        - Sync distributors
+        - add products to car
     """,
 
-    'author': "Aumet",
+    'author': "Ahmad Da'na",
     'website': "http://www.aumet.com",
-    'category': 'Aumet',
+    'category': 'Apps',
     'version': '0.1',
 
     'depends': ['base', 'product', 'base_setup', 'point_of_sale', 'purchase'],
 
     'data': [
-        'views/views.xml'
-
+        'security/ir.model.access.csv',
+        'views/views.xml',
+        'views/res_company_views.xml',
+        'views/assets.xml'
     ],
 
     'images': ['static/description/icon.png'],
@@ -29,6 +34,5 @@
     ],
 
     'installable': True,
-    'application': True,
-    # 'post_init_hook': 'listener'
+    'application': True
 }

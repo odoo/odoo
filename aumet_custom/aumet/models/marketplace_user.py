@@ -1,7 +1,7 @@
 import logging
 
 from odoo.exceptions import ValidationError
-from odoo import fields, models, api
+from odoo import fields, models
 from ..marketplace_apis.profile import ProfileAPI
 
 _logger = logging.getLogger(__name__)
