@@ -3,12 +3,12 @@
 import { browser } from "../browser/browser";
 
 /**
- * Returns a function, that, as long as it continues to be invoked, will not
- * be triggered. The function will be called after it stops being called for
- * N milliseconds. If `immediate` is passed, trigger the function on the
- * leading edge, instead of the trailing.
- *
- * Inspired by https://davidwalsh.name/javascript-debounce-function
+ * Creates and returns a new debounced version of the passed function (func)
+ * which will postpone its execution until after wait milliseconds
+ * have elapsed since the last time it was invoked. The debounced function
+ * will return a Promise that will be resolved when the function (func)
+ * has been fully executed. If `immediate` is passed, trigger the function
+ * on the leading edge, instead of the trailing.
  * @param {Function} func
  * @param {number} wait
  * @param {boolean} [immediate=false]
@@ -20,46 +20,22 @@ export function debounce(func, wait, immediate = false) {
     return {
         [funcName](...args) {
             const context = this;
+            let resolve;
+            const prom = new Promise((r) => {
+                resolve = r;
+            });
             function later() {
                 if (!immediate) {
-                    func.apply(context, args);
+                    Promise.resolve(func.apply(context, args)).then(resolve);
                 }
             }
             const callNow = immediate && !timeout;
             browser.clearTimeout(timeout);
             timeout = browser.setTimeout(later, wait);
             if (callNow) {
-                func.apply(context, args);
+                Promise.resolve(func.apply(context, args)).then(resolve);
             }
-        },
-    }[funcName];
-}
-
-/**
- * Returns a function which returns a Promise, that, as long as it continues
- * to be invoked, will not be triggered. The function (func) will be called
- * after it stops being called for N milliseconds and the Promise will be resolved.
- *
- * @param {Function} func
- * @param {number} wait
- * @returns {Function}
- */
-export function debouncePromise(func, wait) {
-    let resolver;
-    const funcName = func.name ? func.name + " (promise)" : "promise";
-    const obj = {
-        [funcName]: (...args) => {
-            func.apply(this, args);
-            resolver();
-        },
-    };
-    const debouncedFunc = debounce(obj[funcName], wait);
-    return {
-        [funcName](...args) {
-            return new Promise((resolve) => {
-                resolver = resolve;
-                debouncedFunc.apply(this, args);
-            });
+            return prom;
         },
     }[funcName];
 }
