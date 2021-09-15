@@ -476,6 +476,18 @@ class Project(models.Model):
                 project.message_subscribe(project.partner_id.ids)
         if vals.get('privacy_visibility'):
             self._change_privacy_visibility()
+        if 'name' in vals and self.analytic_account_id:
+            projects_read_group = self.env['project.project'].read_group(
+                [('analytic_account_id', 'in', self.analytic_account_id.ids)],
+                ['analytic_account_id'],
+                ['analytic_account_id']
+            )
+            analytic_account_to_update = self.env['account.analytic.account'].browse([
+                res['analytic_account_id'][0]
+                for res in projects_read_group
+                if res['analytic_account_id'] and res['analytic_account_id_count'] == 1
+            ])
+            analytic_account_to_update.write({'name': self.name})
         return res
 
     def action_unlink(self):
@@ -628,16 +640,8 @@ class Project(models.Model):
         }
 
     def action_view_kanban_project(self):
-        self.ensure_one()
-        return {
-            'res_model': 'project.project',
-            'type': 'ir.actions.act_window',
-            'name': _("Project"),
-            'res_id': self.id,
-            'views': [(self.env.ref('project.edit_project').id, 'form')],
-            'view_mode': 'form',
-            'context': {'form_view_initial_mode': 'readonly'}
-        }
+        # [XBO] TODO: remove me in master
+        return
 
     # ---------------------------------------------
     #  PROJECT UPDATES
@@ -1020,6 +1024,7 @@ class Task(models.Model):
     dependent_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="depends_on_id",
                                      column2="task_id", string="Block",
                                      domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
+    dependent_tasks_count = fields.Integer(string="Dependent Tasks", compute='_compute_dependent_tasks_count')
 
     # recurrence fields
     allow_recurring_tasks = fields.Boolean(related='project_id.allow_recurring_tasks')
@@ -1274,6 +1279,21 @@ class Task(models.Model):
         tasks_count = {c.get('recurrence_id')[0]: c.get('recurrence_id_count') for c in count}
         for task in recurring_tasks:
             task.recurring_count = tasks_count.get(task.recurrence_id.id, 0)
+
+    @api.depends('dependent_ids')
+    def _compute_dependent_tasks_count(self):
+        tasks_with_dependency = self.filtered('allow_task_dependencies')
+        (self - tasks_with_dependency).dependent_tasks_count = 0
+        if tasks_with_dependency:
+            group_dependent = self.env['project.task'].read_group([
+                ('depend_on_ids', 'in', tasks_with_dependency.ids),
+            ], ['depend_on_ids'], ['depend_on_ids'])
+            dependent_tasks_count_dict = {
+                group['depend_on_ids'][0]: group['depend_on_ids_count']
+                for group in group_dependent
+            }
+            for task in tasks_with_dependency:
+                task.dependent_tasks_count = dependent_tasks_count_dict.get(task.id, 0)
 
     @api.depends('partner_id.email')
     def _compute_partner_email(self):
@@ -2008,6 +2028,22 @@ class Task(models.Model):
             'type': 'ir.actions.act_window',
             'context': self._context
         }
+
+    def action_dependent_tasks(self):
+        self.ensure_one()
+        action = {
+            'res_model': 'project.task',
+            'type': 'ir.actions.act_window',
+            'context': {**self._context, 'default_depend_on_ids': [Command.link(self.id)]},
+        }
+        if self.dependent_tasks_count == 1:
+            action['view_mode'] = 'form'
+            action['res_id'] = self.dependent_ids.id
+        else:
+            action['name'] = _('Dependent Tasks')
+            action['view_mode'] = 'tree,form,kanban,calendar,pivot,graph,gantt,activity,map'
+            action['domain'] = [('depend_on_ids', '=', self.id)]
+        return action
 
     def action_recurring_tasks(self):
         return {

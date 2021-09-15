@@ -19,7 +19,7 @@ STATUS_COLOR = {
 class ProjectUpdate(models.Model):
     _name = 'project.update'
     _description = 'Project Update'
-    _order = 'create_date desc'
+    _order = 'date desc'
     _inherit = ['mail.thread.cc', 'mail.activity.mixin']
 
     def default_get(self, fields):

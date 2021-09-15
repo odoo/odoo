@@ -676,7 +676,8 @@
                                             </div>
                                             <div role="menuitem" class="col-4">
                                                 <a t-if="record.privacy_visibility.raw_value == 'portal'" class="dropdown-item" role="menuitem" name="%(project.project_share_wizard_action)d" type="action">Share</a>
-                                                <a class="dropdown-item" role="menuitem" type="object" name="action_view_kanban_project">See More</a>
+                                                <!-- [XBO] TODO: remove the name attribute in this a tag in master -->
+                                                <a class="dropdown-item" role="menuitem" type="edit" name="action_view_kanban_project">Edit</a>
                                             </div>
                                         </div>
                                     </div>
@@ -804,6 +805,15 @@
                                     Tasks
                                 </span>
                                 <span class="o_stat_text">in Recurrence</span>
+                            </div>
+                        </button>
+                        <button name="action_dependent_tasks" type="object" attrs="{'invisible': [('dependent_tasks_count', '=', 0)]}" class="oe_stat_button" icon="fa-tasks" groups="project.group_project_task_dependencies">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Blocking</span>
+                                <span class="o_stat_value ">
+                                    <field name="dependent_tasks_count" widget="statinfo" nolabel="1" />
+                                    Tasks
+                                </span>
                             </div>
                         </button>
                     </div>
