@@ -118,10 +118,10 @@
                         <p class="o_Message_subject mx-2 mb-1">Subject: <t t-esc="message.subject"/></p>
                     </t>
                     <div class="o_Message_content mx-2" t-ref="content">
-                        <t t-if="!message.isEditing or !message.composerInEditing">
+                        <t t-if="message.actionList.showDeleteConfirm or !message.isEditing or !message.composerInEditing">
                             <div class="o_Message_prettyBody" t-ref="prettyBody"/><!-- message.prettyBody is inserted here from _update() -->
                         </t>
-                        <t t-if="message.isEditing and message.composerInEditing" >
+                        <t t-if="!message.actionList.showDeleteConfirm and message.isEditing and message.composerInEditing" >
                             <Composer
                                 class="o_Message_composer mb-1"
                                 composerLocalId="message.composerInEditing.localId"
