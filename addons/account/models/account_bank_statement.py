@@ -703,7 +703,7 @@ class AccountBankStatementLine(models.Model):
         if foreign_currency != company_currency and self.foreign_currency_id:
             amount_currency = amounts[foreign_currency.id]
             currency_id = foreign_currency.id
-        elif journal_currency != company_currency and not self.foreign_currency_id:
+        elif journal_currency != company_currency and (not self.foreign_currency_id or self.foreign_currency_id == company_currency):
             amount_currency = amounts[journal_currency.id]
             currency_id = journal_currency.id
         else:

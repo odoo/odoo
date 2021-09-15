@@ -31,6 +31,7 @@ class TestAccountBankStatementCommon(AccountTestInvoicingCommon):
         cls.bank_journal_1 = cls.company_data['default_journal_bank']
         cls.bank_journal_2 = cls.bank_journal_1.copy()
         cls.bank_journal_3 = cls.bank_journal_2.copy()
+        cls.bank_journal_4 = cls.bank_journal_3.copy()
         cls.currency_1 = cls.company_data['currency']
         cls.currency_2 = cls.currency_data['currency']
         cls.currency_3 = cls.currency_data_2['currency']
@@ -1592,3 +1593,24 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
         self.assertRecordValues(statement_line.line_ids.analytic_line_ids, [
             {'amount': 100.0, 'account_id': analytic_account.id},
         ])
+
+    def test_currency_suspense_account(self):
+        self.bank_journal_4.currency_id = self.currency_2
+        self.bank_journal_4.default_account_id.currency_id = self.currency_2
+        self.bank_journal_4.suspense_account_id.currency_id = self.currency_2
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2021-09-01',
+            'journal_id': self.bank_journal_4.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2021-09-01',
+                    'payment_ref': 'line',
+                    'partner_id': False,
+                    'foreign_currency_id': self.company_data['currency'].id,
+                    'amount': 125.0,
+                    'amount_currency': 250.0,
+                }),
+            ],
+        })
