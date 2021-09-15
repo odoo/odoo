@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import ActionModel from "@web/legacy/js/views/action_model";
+import { makeContext } from "@web/core/context";
 
 /**
  * @param {string} state
@@ -165,6 +166,12 @@ export function searchModelStateToLegacy(state) {
                 filter.orderedBy = item.orderBy;
                 delete filter.orderBy;
                 break;
+            case "filter":
+                let context = item.context;
+                try {
+                    context = makeContext(context);
+                } catch (e) {}
+                filter.context = context;
         }
         filters[item.id] = filter;
     }
