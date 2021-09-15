@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+<<<<<<< HEAD
 from odoo.tests import tagged
+=======
+>>>>>>> 88cb241ef6a... temp
 from odoo.tests.common import Form, TransactionCase
 
 
@@ -18,7 +21,15 @@ class TestOnchangePostal(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
-        cls.partner = cls.env.ref('base.res_partner_12')
+
+        cls.partner = cls.env['res.partner'].create({
+            'name': 'Swiss Company',
+            'street': 'Route de Berne 41',
+            'zip': '1000',
+            'city': 'Lausanne',
+            'is_company': 1,
+            'country_id': cls.env.ref('base.ch').id,
+        })
         cls.ch_bank = cls.env['res.bank'].create({
             'name': 'Alternative Bank Schweiz AG',
             'bic': 'ALSWCH21XXX',

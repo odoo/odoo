@@ -2,54 +2,8 @@
 <odoo>
 <!--    Detraction can be understood here:-->
 <!--    http://orientacion.sunat.gob.pe/index.php/empresas-menu/regimen-de-detracciones-del-igv-empresas/como-funcionan-las-detracciones/3141-02-en-la-venta-de-bienes-empresas-->
-    <!-- ACCOUNT TAX GROUP -->
-    <!-- TODO AFFECT SUBSEQUENT -->
-    <record id="tax_group_igv" model="account.tax.group">
-        <field name="name">IGV</field>
-        <field name="sequence">0</field>
-        <field name="country_id" ref="base.pe"/>
-    </record>
-    <record id="tax_group_ivap" model="account.tax.group">
-        <field name="name">IVAP</field>
-        <field name="sequence">0</field>
-        <field name="country_id" ref="base.pe"/>
-    </record>
-    <record id="tax_group_isc" model="account.tax.group">
-        <field name="name">ISC</field>
-        <field name="sequence">0</field>
-        <field name="country_id" ref="base.pe"/>
-    </record>
-    <record id="tax_group_exp" model="account.tax.group">
-        <field name="name">EXP</field>
-        <field name="sequence">0</field>
-        <field name="country_id" ref="base.pe"/>
-    </record>
-    <record id="tax_group_gra" model="account.tax.group">
-        <field name="name">GRA</field>
-        <field name="sequence">0</field>
-        <field name="country_id" ref="base.pe"/>
-    </record>
-    <record id="tax_group_exo" model="account.tax.group">
-        <field name="name">EXO</field>
-        <field name="sequence">0</field>
-        <field name="country_id" ref="base.pe"/>
-    </record>
-    <record id="tax_group_ina" model="account.tax.group">
-        <field name="name">INA</field>
-        <field name="sequence">0</field>
-        <field name="country_id" ref="base.pe"/>
-    </record>
-    <record id="tax_group_other" model="account.tax.group">
-        <field name="name">OTROS</field>
-        <field name="sequence">0</field>
-        <field name="country_id" ref="base.pe"/>
-    </record>
-    <record id="tax_group_det" model="account.tax.group">
-        <field name="name">DET</field>
-        <field name="sequence">100</field>
-        <field name="country_id" ref="base.pe"/>
-    </record>
     
+    <!-- TODO AFFECT SUBSEQUENT -->
     <!-- VAT for sales -->
     <record id="sale_tax_igv_18" model="account.tax.template">
         <field name="chart_template_id" ref="pe_chart_template"/>
