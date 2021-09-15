@@ -13,7 +13,8 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         computeGroups() {
-            if (!this.messaging.currentPartner) {
+            // not supported for guests
+            if (this.messaging.isCurrentUserGuest) {
                 return;
             }
             for (const group of this.groups) {
