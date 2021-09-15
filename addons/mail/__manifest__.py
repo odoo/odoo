@@ -70,6 +70,7 @@
             'web/static/src/legacy/scss/bootstrap_review.scss',
             'web/static/src/webclient/webclient.scss',
             'web/static/src/webclient/webclient_extra.scss',
+            'web/static/src/core/utils/*.scss',
             # Dependency of notification_group, notification_request, thread_needaction_preview and thread_preview
             'mail/static/src/components/notification_list/notification_list_item.scss',
             'mail/static/src/component_hooks/*/*.js',
@@ -90,7 +91,7 @@
             'bus/static/src/js/services/bus_service.js',
             'web/static/lib/luxon/luxon.js',
             'web/static/lib/py.js/lib/py.js',
-            'web/static/src/core/**/*.js',
+            'web/static/src/core/**/*',
             ('remove', 'web/static/src/core/debug/**/*.[js][scss]'),
             'web/static/src/env.js',
             'web/static/src/legacy/js/_deprecated/basic_fields.js',
