@@ -5,7 +5,7 @@
 {
     'name': 'Project Sales Accounting',
     'version': '1.0',
-    'category': 'Project/account',
+    'category': 'Services/account',
     'summary': 'Project sales accounting',
     'description': 'Bridge created to add the number of vendor bills linked to an AA to a project form',
     'depends': ['sale_timesheet', 'account'],

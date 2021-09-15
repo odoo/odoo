@@ -5,7 +5,7 @@
 {
     'name': 'Project Accounting',
     'version': '1.0',
-    'category': 'Project/account',
+    'category': 'Services/account',
     'summary': 'Project accounting',
     'description': 'Bridge created to remove the profitability setting if the account module is installed',
     'depends': ['project', 'account'],
