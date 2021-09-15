@@ -208,7 +208,7 @@
                                            attrs="{'readonly': [('parent.state', '!=', 'open')]}"
                                            domain="['|', ('parent_id','=', False), ('is_company','=',True)]"/>
                                     <field name="ref" optional="hidden"/>
-                                    <field name="narration" optional="hidden"/>
+                                    <field name="narration" string="Notes" optional="hidden"/>
                                     <field name="transaction_type" optional="hidden"/>
                                     <field name="amount_currency" optional="hidden" groups="base.group_multi_currency"
                                            attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
@@ -286,7 +286,7 @@
                     <field name="partner_id"/>
                     <field name="date"/>
                     <field name="journal_id" domain="[('type', 'in', ('bank', 'cash'))]" />
-                    <field name="narration"/>
+                    <field name="narration" string="Notes"/>
                     <field name="transaction_type"/>
                     <field name="move_id"/>
                     <field name="amount"/>
@@ -315,7 +315,7 @@
                             <field name="partner_id" attrs="{'readonly': [('state', '!=', 'open')]}"/>
                             <field name="amount" attrs="{'readonly': [('state', '!=', 'open')]}"/>
                             <field name="sequence" attrs="{'readonly': [('state', '!=', 'open')]}"/>
-                            <field name="narration" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="narration" string="Notes" attrs="{'readonly': [('state', '!=', 'open')]}"/>
                             <field name="transaction_type" attrs="{'readonly': [('state', '!=', 'open')]}"/>
                             <field name="move_id" attrs="{'readonly': [('state', '!=', 'open')]}"/>
                         </group>
@@ -345,7 +345,7 @@
                     <field name="payment_ref"/>
                     <field name="partner_id"/>
                     <field name="ref" groups="base.group_no_one" optional="hidden"/>
-                    <field name="narration" optional="hidden"/>
+                    <field name="narration" string="Notes" optional="hidden"/>
                     <field name="transaction_type" optional="hidden"/>
                     <field name="amount_currency" optional="hidden" groups="base.group_multi_currency"/>
                     <field name="foreign_currency_id" optional="hidden" groups="base.group_multi_currency"/>
