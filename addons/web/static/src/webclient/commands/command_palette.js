@@ -5,7 +5,7 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
-import { debouncePromise } from "@web/core/utils/timing";
+import { debounce } from "@web/core/utils/timing";
 import { _lt } from "@web/core/l10n/translation";
 
 const { Component, hooks } = owl;
@@ -69,7 +69,7 @@ export class CommandPalette extends Component {
         this.keepLast = new KeepLast();
         this.DefaultCommandItem = DefaultCommandItem;
         this.activeElement = useService("ui").activeElement;
-        const onDebouncedSearchInput = debouncePromise.apply(this, [this.onSearchInput, 250]);
+        const onDebouncedSearchInput = debounce.apply(this, [this.onSearchInput, 200]);
         this.onDebouncedSearchInput = (...args) => {
             this.inputPromise = onDebouncedSearchInput.apply(this, args).catch(() => {
                 this.inputPromise = null;
@@ -258,7 +258,7 @@ export class CommandPalette extends Component {
             namespace = searchValue[0];
             searchValue = searchValue.slice(1);
         }
-        this.setCommands(namespace, {
+        await this.setCommands(namespace, {
             searchValue,
             activeElement: this.activeElement,
         });
