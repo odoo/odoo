@@ -33,8 +33,8 @@ class PaymentTransaction(models.Model):
                 'comment': comment,
             }, engine='ir.qweb', minimal_qcontext=True)
             self.env.ref('website_payment.mail_template_donation').send_mail(
-                self.id, notif_layout="mail.mail_notification_light",
-                force_send=True,
+                self.id,
+                email_layout_xmlid="mail.mail_notification_light",
                 email_values={
                     'email_to': recipient_email if is_internal_notification else self.partner_email,
                     'email_from': self.company_id.email_formatted,
@@ -42,4 +42,5 @@ class PaymentTransaction(models.Model):
                     'subject': subject,
                     'body_html': body,
                 },
+                force_send=True,
             )

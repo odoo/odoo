@@ -29,7 +29,7 @@ class Users(models.Model):
                 'author_id': self.env.user.partner_id.id,
             }
             invite_template.send_mail(user.id, force_send=True, email_values=email_values,
-                                      notif_layout='mail.mail_notification_light')
+                                      email_layout_xmlid='mail.mail_notification_light')
 
         # Display a confirmation toaster
         return {
