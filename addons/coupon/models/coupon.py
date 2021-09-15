@@ -65,7 +65,7 @@ class Coupon(models.Model):
             default_use_template=bool(default_template),
             default_template_id=default_template and default_template.id,
             default_composition_mode='comment',
-            custom_layout='mail.mail_notification_light',
+            default_email_layout_xmlid='mail.mail_notification_light',
             mark_coupon_as_sent=True,
             force_email=True,
         )
