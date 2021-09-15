@@ -1487,7 +1487,8 @@ actual arch.
                     self._raise_view_error(msg, node)
 
             name_manager.has_action(name)
-        elif node.get('icon'):
+
+        if node.get('icon'):
             description = 'A button with icon attribute (%s)' % node.get('icon')
             self._validate_fa_class_accessibility(node, description)
 
