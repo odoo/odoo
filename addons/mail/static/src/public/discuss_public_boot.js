@@ -5,6 +5,7 @@ import { MessagingService } from '@mail/services/messaging/messaging';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 
 import { processTemplates } from '@web/core/assets';
+import { MainComponentsContainer } from '@web/core/main_components_container';
 import { registry } from '@web/core/registry';
 import { makeEnv, startServices } from '@web/env';
 import { session } from '@web/session';
@@ -58,6 +59,7 @@ export async function boot() {
             autofetchPartnerImStatus: false,
         },
     }));
+    await owl.mount(MainComponentsContainer, { env, target: document.body });
 
     async function createThreadViewFromChannelData(channelData) {
         const messaging = await owl.Component.env.services.messaging.get();
