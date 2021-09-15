@@ -50,7 +50,7 @@ class SurveyUserInput(models.Model):
                         continue
 
                     self.env.ref('website_slides_survey.mail_template_user_input_certification_failed').send_mail(
-                        user_input.id, notif_layout="mail.mail_notification_light"
+                        user_input.id, email_layout_xmlid="mail.mail_notification_light"
                     )
 
                     removed_memberships = removed_memberships_per_partner.get(

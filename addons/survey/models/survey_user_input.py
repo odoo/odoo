@@ -216,7 +216,7 @@ class SurveyUserInput(models.Model):
         for user_input in self:
             if user_input.survey_id.certification and user_input.scoring_success:
                 if user_input.survey_id.certification_mail_template_id and not user_input.test_entry:
-                    user_input.survey_id.certification_mail_template_id.send_mail(user_input.id, notif_layout="mail.mail_notification_light")
+                    user_input.survey_id.certification_mail_template_id.send_mail(user_input.id, email_layout_xmlid="mail.mail_notification_light")
                 if user_input.survey_id.certification_give_badge:
                     badge_ids.append(user_input.survey_id.certification_badge_id.id)
 

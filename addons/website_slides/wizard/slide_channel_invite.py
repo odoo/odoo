@@ -91,13 +91,13 @@ class SlideChannelInvite(models.TransientModel):
             'recipient_ids': [(4, slide_channel_partner.partner_id.id)]
         }
 
-        # optional support of notif_layout in context
-        notif_layout = self.env.context.get('notif_layout', self.env.context.get('custom_layout'))
-        if notif_layout:
+        # optional support of default_email_layout_xmlid in context
+        email_layout_xmlid = self.env.context.get('default_email_layout_xmlid', self.env.context.get('notif_layout'))
+        if email_layout_xmlid:
             try:
-                template = self.env.ref(notif_layout, raise_if_not_found=True)
+                template = self.env.ref(email_layout_xmlid, raise_if_not_found=True)
             except ValueError:
-                _logger.warning('QWeb template %s not found when sending slide channel mails. Sending without layouting.' % (notif_layout))
+                _logger.warning('QWeb template %s not found when sending slide channel mails. Sending without layouting.' % (email_layout_xmlid))
             else:
                 # could be great to use _notify_prepare_template_context someday
                 template_ctx = {

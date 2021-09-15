@@ -212,13 +212,13 @@ class SurveyInvite(models.TransientModel):
         else:
             mail_values['email_to'] = answer.email
 
-        # optional support of notif_layout in context
-        notif_layout = self.env.context.get('notif_layout', self.env.context.get('custom_layout'))
-        if notif_layout:
+        # optional support of default_email_layout_xmlid in context
+        email_layout_xmlid = self.env.context.get('default_email_layout_xmlid', self.env.context.get('notif_layout'))
+        if email_layout_xmlid:
             try:
-                template = self.env.ref(notif_layout, raise_if_not_found=True)
+                template = self.env.ref(email_layout_xmlid, raise_if_not_found=True)
             except ValueError:
-                _logger.warning('QWeb template %s not found when sending survey mails. Sending without layouting.' % (notif_layout))
+                _logger.warning('QWeb template %s not found when sending survey mails. Sending without layouting.' % (email_layout_xmlid))
             else:
                 template_ctx = {
                     'message': self.env['mail.message'].sudo().new(dict(body=mail_values['body_html'], record_name=self.survey_id.title)),

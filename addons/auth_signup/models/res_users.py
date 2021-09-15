@@ -221,7 +221,7 @@ class ResUsers(models.Model):
         # For sending mail to all the invitors about their invited users
         for user in invited_users:
             template = self.env.ref('auth_signup.mail_template_data_unregistered_users').with_context(dbname=self._cr.dbname, invited_users=invited_users[user])
-            template.send_mail(user, notif_layout='mail.mail_notification_light', force_send=False)
+            template.send_mail(user, email_layout_xmlid='mail.mail_notification_light', force_send=False)
 
     @api.model
     def web_create_users(self, emails):
