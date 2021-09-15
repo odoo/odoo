@@ -57,6 +57,6 @@ class Project(models.Model):
                 'action_type': 'object',
                 'action': 'action_open_project_purchase_orders',
                 'show': self.purchase_orders_count > 0,
-                'sequence': 13,
+                'sequence': 36,
             })
         return buttons

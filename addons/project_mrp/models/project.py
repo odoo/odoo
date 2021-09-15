@@ -46,7 +46,7 @@ class Project(models.Model):
                 'action_type': 'object',
                 'action': 'action_view_mrp_production',
                 'show': self.production_count > 0,
-                'sequence': 19,
+                'sequence': 39,
             },
             {
                 'icon': 'cog',
@@ -55,7 +55,7 @@ class Project(models.Model):
                 'action_type': 'object',
                 'action': 'action_view_workorder',
                 'show': self.workorder_count > 0,
-                'sequence': 20,
+                'sequence': 42,
             },
             {
                 'icon': 'flask',
@@ -64,6 +64,6 @@ class Project(models.Model):
                 'action_type': 'object',
                 'action': 'action_view_mrp_bom',
                 'show': self.bom_count > 0,
-                'sequence': 21,
+                'sequence': 45,
             }])
         return buttons

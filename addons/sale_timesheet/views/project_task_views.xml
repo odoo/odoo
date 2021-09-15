@@ -15,7 +15,7 @@
             <xpath expr="//button[@name='action_view_sos']" position="attributes">
                 <attribute name="attrs">{'invisible': ['|', ('allow_billable', '=', False), ('sale_order_count', '=', 0)]}</attribute>
             </xpath>
-            <xpath expr="//button[@name='%(project.action_project_task_burndown_chart_report)d']" position="after">
+            <xpath expr="//button[@name='action_show_timesheets_by_employee_invoice_type']" position="after">
                 <button name="action_billable_time_button" type="object" class="oe_stat_button" icon="fa-clock-o" attrs="{'invisible': ['|', ('allow_timesheets', '=', False), ('analytic_account_id', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_approver">
                     <div class="o_field_widget o_stat_info">
                         <div class="oe_inline">
@@ -28,10 +28,6 @@
                         </span>
                     </div>
                 </button>
-            </xpath>
-            <xpath expr="//header" position="inside">
-                <!-- To be removed in master -->
-                <button name="action_make_billable" string="Create Sales Order" type="object" groups="sales_team.group_sale_salesman" invisible="1"/>
             </xpath>
             <xpath expr="//page[@name='settings']" position="after">
                 <page name="billing_employee_rate" string="Invoicing" attrs="{'invisible': ['|', ('allow_billable', '=', False), ('partner_id', '=', False)]}">

@@ -5,8 +5,9 @@
         <field name="name">project.project.form.inherit</field>
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
+        <field name="priority">50</field>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='%(project.action_project_task_burndown_chart_report)d']" position="after">
+            <xpath expr="//button[@name='action_view_analytic_account_entries']" position="after">
                 <button name="action_open_project_invoices" type="object" class="oe_stat_button" icon="fa-pencil-square-o"
                         attrs="{'invisible': ['|', ('invoice_count', '=', 0), ('analytic_account_id', '=', False)]}"
                         groups="account.group_account_readonly">

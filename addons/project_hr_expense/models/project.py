@@ -54,6 +54,6 @@ class Project(models.Model):
                 'action_type': 'object',
                 'action': 'action_open_project_expenses',
                 'show': self.expenses_count > 0,
-                'sequence': 10,
+                'sequence': 33,
             })
         return buttons

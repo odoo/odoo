@@ -22,6 +22,6 @@ class Project(models.Model):
                 'action_type': 'object',
                 'action': 'action_open_project_invoices',
                 'show': bool(self.analytic_account_id) and self.invoice_count > 0,
-                'sequence': 11,
+                'sequence': 30,
             })
         return buttons
