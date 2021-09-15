@@ -1114,6 +1114,8 @@ class IrModelFields(models.Model):
                 attrs['size'] = field_data['size'] or None
         elif field_data['ttype'] in ('selection', 'reference'):
             attrs['selection'] = self.env['ir.model.fields.selection']._get_selection_data(field_data['id'])
+            if field_data['ttype'] == 'selection':
+                attrs['group_expand'] = field_data['group_expand']
         elif field_data['ttype'] == 'many2one':
             if not self.pool.loaded and field_data['relation'] not in self.env:
                 return
