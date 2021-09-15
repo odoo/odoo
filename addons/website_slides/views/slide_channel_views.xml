@@ -103,6 +103,7 @@
                                         <field name="enroll" widget="radio" options="{'horizontal': true}"/>
                                         <field name="upload_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
                                         <field name="enroll_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
+                                        <field name="enroll_msg" attrs="{'invisible': [('enroll', '!=', 'invite')]}"/>
                                     </group>
                                 </group>
                                 <group>
@@ -124,10 +125,6 @@
                                                domain="[('channel_id', '=', active_id), ('is_category', '=', False)]"/>
                                     </group>
                                 </group>
-                                <div attrs="{'invisible': [('enroll', '!=', 'invite')]}">
-                                    <label for="enroll_msg"/>
-                                    <field name="enroll_msg" colspan="4" nolabel="1"/>
-                                </div>
                             </page>
                             <page string="Karma" name="karma_rules">
                                 <group>
@@ -158,14 +155,14 @@
             <field name="name">slide.channel.view.tree</field>
             <field name="model">slide.channel</field>
             <field name="arch" type="xml">
-                <tree string="Courses" sample="1">
+                <tree string="Courses" sample="1" multi_edit="1">
                     <field name="sequence" widget="handle"/>
-                    <field name="name"/>
-                    <field name="channel_type"/>
-                    <field name="visibility"/>
-                    <field name="enroll" widget="badge" decoration-success="enroll == 'public'" decoration-info="enroll == 'invite'" decoration-warning="enroll == 'payment'"/>
+                    <field name="name" readonly="1"/>
                     <field name="user_id" widget="many2one_avatar_user"/>
                     <field name="website_id" groups="website.group_multi_website"/>
+                    <field name="channel_type" string="Course Type"/>
+                    <field name="visibility"/>
+                    <field name="enroll" widget="badge" decoration-success="enroll == 'public'" decoration-info="enroll == 'invite'" decoration-warning="enroll == 'payment'"/>
                     <field name="active" invisible="1"/>
                 </tree>
             </field>
