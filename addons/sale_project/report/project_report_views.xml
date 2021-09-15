@@ -11,5 +11,16 @@
                 </xpath>
              </field>
         </record>
+
+        <record id="view_task_project_user_form_inherited" model="ir.ui.view">
+            <field name="name">report.project.task.user.form.inherited</field>
+            <field name="model">report.project.task.user</field>
+            <field name="inherit_id" ref="project.report_project_task_user_view_form" />
+            <field name="arch" type="xml">
+                <field name="task_id" position="after">
+                    <field name="sale_order_id"/>
+                </field>
+             </field>
+        </record>
     </data>
 </odoo>
