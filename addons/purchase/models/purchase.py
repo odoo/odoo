@@ -372,7 +372,7 @@ class PurchaseOrder(models.Model):
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
-            'custom_layout': "mail.mail_notification_paynow",
+            'default_email_layout_xmlid': "mail.mail_notification_paynow",
             'force_email': True,
             'mark_rfq_as_sent': True,
         })
@@ -735,7 +735,7 @@ class PurchaseOrder(models.Model):
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
-            'custom_layout': "mail.mail_notification_paynow",
+            'default_email_layout_xmlid': "mail.mail_notification_paynow",
             'force_email': True,
             'mark_rfq_as_sent': True,
         })

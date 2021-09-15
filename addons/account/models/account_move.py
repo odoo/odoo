@@ -3091,6 +3091,7 @@ class AccountMove(models.Model):
             'res_model': 'account.invoice.send',
             'view_mode': 'form',
             'context': {
+                'default_email_layout_xmlid': 'mail.mail_notification_paynow',
                 'default_template_id': self.env.ref(self._get_mail_template()).id,
                 'mark_invoice_as_sent': True,
                 'active_model': 'account.move',
@@ -3098,7 +3099,6 @@ class AccountMove(models.Model):
                 # ir.actions.act_window works
                 'active_id': self.ids[0],
                 'active_ids': self.ids,
-                'custom_layout': 'mail.mail_notification_paynow',
             },
             'target': 'new',
             'type': 'ir.actions.act_window',
@@ -3127,7 +3127,7 @@ class AccountMove(models.Model):
             default_template_id=template and template.id or False,
             default_composition_mode='comment',
             mark_invoice_as_sent=True,
-            custom_layout="mail.mail_notification_paynow",
+            default_email_layout_xmlid="mail.mail_notification_paynow",
             model_description=self.with_context(lang=lang).type_name,
             force_email=True,
             wizard_opened=True
