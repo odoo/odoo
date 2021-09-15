@@ -41,7 +41,6 @@ class ForecastModelExtension extends ActionModel.Extension {
         super.prepareState(...arguments);
         Object.assign(this.state, {
             forecastField: null,  // {string} forecast_field from the context (name)
-            forecastFieldType: null,  // {string} forecast_field type (date or datetime)
             forecastFilter: null,  // {boolean} if the "Forecast" filter is active
             forecastStart: null,  // {string} limiting bound of the filter (if active)
                                   // -> starting date before which records are filtered out
@@ -55,6 +54,8 @@ class ForecastModelExtension extends ActionModel.Extension {
      * @returns {Promise}
      */
     callLoad() {
+        // this is bad to do this always: if a state has been received and the view is loaded the
+        // first time, the state won't be used! to fix!
         this._computeState();
         return super.callLoad(...arguments);
     }
@@ -111,6 +112,6 @@ class ForecastModelExtension extends ActionModel.Extension {
     }
 }
 
-ActionModel.registry.add("Forecast", ForecastModelExtension, 20);
+ActionModel.registry.add("forecast", ForecastModelExtension, 20);
 
 export default ForecastModelExtension;
