@@ -716,8 +716,9 @@ class PurchaseOrder(models.Model):
                 self.id,
                 force_send=True,
                 raise_exception=False,
+                email_layout_xmlid="mail.mail_notification_paynow",
                 email_values={'email_to': self.env.user.email, 'recipient_ids': []},
-                notif_layout="mail.mail_notification_paynow")
+            )
             return {'toast_message': escape(_("A sample email has been sent to %s.", self.env.user.email))}
 
     def _send_reminder_open_composer(self,template_id):

@@ -166,19 +166,20 @@ class RatingMixin(models.AbstractModel):
             rating = ratings[0]
         return rating.access_token
 
-    def rating_send_request(self, template, lang=False, subtype_id=False, force_send=True, composition_mode='comment', notif_layout=None):
+    def rating_send_request(self, template, lang=False, subtype_id=False, force_send=True, composition_mode='comment',
+                            email_layout_xmlid=None):
         """ This method send rating request by email, using a template given
         in parameter.
 
-         :param template: a mail.template record used to compute the message body;
-         :param lang: optional lang; it can also be specified directly on the template
+         :param record template: a mail.template record used to compute the message body;
+         :param str lang: optional lang; it can also be specified directly on the template
            itself in the lang field;
-         :param subtype_id: optional subtype to use when creating the message; is
+         :param int subtype_id: optional subtype to use when creating the message; is
            a note by default to avoid spamming followers;
-         :param force_send: whether to send the request directly or use the mail
+         :param bool force_send: whether to send the request directly or use the mail
            queue cron (preferred option);
-         :param composition_mode: comment (message_post) or mass_mail (template.send_mail);
-         :param notif_layout: layout used to encapsulate the content when sending email;
+         :param str composition_mode: comment (message_post) or mass_mail (template.send_mail);
+         :param str email_layout_xmlid: layout used to encapsulate the content when sending email;
         """
         if lang:
             template = template.with_context(lang=lang)
@@ -190,7 +191,7 @@ class RatingMixin(models.AbstractModel):
             record.message_post_with_template(
                 template.id,
                 composition_mode=composition_mode,
-                email_layout_xmlid=notif_layout if notif_layout is not None else 'mail.mail_notification_light',
+                email_layout_xmlid=email_layout_xmlid if email_layout_xmlid is not None else 'mail.mail_notification_light',
                 subtype_id=subtype_id
             )
 

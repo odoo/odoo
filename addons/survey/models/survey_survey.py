@@ -846,7 +846,7 @@ class Survey(models.Model):
             default_survey_id=self.id,
             default_use_template=bool(template),
             default_template_id=template and template.id or False,
-            notif_layout='mail.mail_notification_light',
+            default_email_layout_xmlid='mail.mail_notification_light',
         )
         return {
             'type': 'ir.actions.act_window',

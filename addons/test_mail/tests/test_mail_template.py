@@ -137,7 +137,7 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
         })
         test_template = self.env['mail.template'].browse(self.test_template.ids)
 
-        mail_id = test_template.send_mail(test_record.id, notif_layout='test_mail.test_layout')
+        mail_id = test_template.send_mail(test_record.id, email_layout_xmlid='test_mail.test_layout')
         mail = self.env['mail.mail'].sudo().browse(mail_id)
         self.assertEqual(mail.body_html,
                          '<body><p>Spanish Body for %s</p> Spanish Layout Spanish description</body>' % self.test_record.name)
@@ -156,7 +156,7 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
         })
         test_template = self.env['mail.template'].browse(self.test_template.ids)
 
-        mail_id = test_template.send_mail(test_record.id, notif_layout='test_mail.test_layout')
+        mail_id = test_template.send_mail(test_record.id, email_layout_xmlid='test_mail.test_layout')
         mail = self.env['mail.mail'].sudo().browse(mail_id)
         self.assertEqual(mail.body_html,
                          '<body><p>Spanish Body for %s</p> Spanish Layout Spanish description</body>' % self.test_record.name)

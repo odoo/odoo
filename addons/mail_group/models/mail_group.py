@@ -589,7 +589,7 @@ class MailGroup(models.Model):
         template = self.env.ref('mail_group.mail_template_list_subscribe')
         template.with_context(token_url=confirm_action_url).send_mail(
             self.id,
-            force_send=True,
+            email_layout_xmlid='mail.mail_notification_light',
             email_values={
                 'author_id': self.create_uid.partner_id.id,
                 'auto_delete': True,
@@ -597,7 +597,7 @@ class MailGroup(models.Model):
                 'email_to': email,
                 'message_type': 'user_notification',
             },
-            notif_layout='mail.mail_notification_light',
+            force_send=True,
         )
         _logger.info('Subscription email sent to %s.', email)
 
@@ -609,7 +609,7 @@ class MailGroup(models.Model):
         template = self.env.ref('mail_group.mail_template_list_unsubscribe')
         template.with_context(token_url=confirm_action_url).send_mail(
             self.id,
-            force_send=True,
+            email_layout_xmlid='mail.mail_notification_light',
             email_values={
                 'author_id': self.create_uid.partner_id.id,
                 'auto_delete': True,
@@ -617,7 +617,7 @@ class MailGroup(models.Model):
                 'email_to': email,
                 'message_type': 'user_notification',
             },
-            notif_layout='mail.mail_notification_light',
+            force_send=True,
         )
         _logger.info('Unsubscription email sent to %s.', email)
 
