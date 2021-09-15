@@ -268,6 +268,12 @@ class SurveyUserInput(models.Model):
     def _save_line_choice(self, question, old_answers, answers, comment):
         if not (isinstance(answers, list)):
             answers = [answers]
+
+        if not answers:
+            # add a False answer to force saving a skipped line
+            # this will make this question correctly considered as skipped in statistics
+            answers = [False]
+
         vals_list = []
 
         if question.question_type == 'simple_choice':
@@ -284,6 +290,11 @@ class SurveyUserInput(models.Model):
 
     def _save_line_matrix(self, question, old_answers, answers, comment):
         vals_list = []
+
+        if not answers and question.matrix_row_ids:
+            # add a False answer to force saving a skipped line
+            # this will make this question correctly considered as skipped in statistics
+            answers = {question.matrix_row_ids[0].id: [False]}
 
         if answers:
             for row_key, row_answer in answers.items():
