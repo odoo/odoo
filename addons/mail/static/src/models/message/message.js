@@ -361,7 +361,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeCanStarBeToggled() {
-            return !this.isTemporary && !this.isTransient;
+            return !this.messaging.isCurrentUserGuest && !this.isTemporary && !this.isTransient;
         }
 
         /**
