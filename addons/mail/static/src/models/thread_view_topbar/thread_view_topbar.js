@@ -95,6 +95,10 @@ function factory(dependencies) {
             if (!this.thread || !this.thread.isChannelRenamable) {
                 return;
             }
+            // Guests cannot edit thread name
+            if (this.messaging.isCurrentUserGuest) {
+                return;
+            }
             const selection = window.getSelection();
             this.update({
                 doFocusOnThreadNameInput: true,
@@ -114,6 +118,10 @@ function factory(dependencies) {
          */
         onClickTopbarThreadDescription(ev) {
             if (!this.thread || !this.thread.isChannelDescriptionChangeable) {
+                return;
+            }
+            // Guests cannot edit description
+            if (this.messaging.isCurrentUserGuest) {
                 return;
             }
             const selection = window.getSelection();

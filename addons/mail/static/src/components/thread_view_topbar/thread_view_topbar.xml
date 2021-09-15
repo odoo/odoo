@@ -10,7 +10,7 @@
                 <div class="o_ThreadViewTopbar_title d-flex flex-grow-1 align-self-center align-items-center">
                     <t t-if="threadViewTopBar.thread">
                         <t t-if="!threadViewTopBar.isEditingThreadName">
-                            <div class="o_ThreadViewTopbar_threadName flex-shrink-0 px-1 text-truncate lead font-weight-bold" t-att-title="threadViewTopBar.thread.displayName" t-on-click="threadViewTopBar.onClickTopbarThreadName" t-on-mouseenter="threadViewTopBar.onMouseEnterTopBarThreadName" t-on-mouseleave="threadViewTopBar.onMouseLeaveTopBarThreadName" t-att-class="{ 'o-isMouseOverThreadName': threadViewTopBar.isMouseOverThreadName }">
+                            <div class="o_ThreadViewTopbar_threadName flex-shrink-0 px-1 text-truncate lead font-weight-bold" t-att-title="threadViewTopBar.thread.displayName" t-on-click="threadViewTopBar.onClickTopbarThreadName" t-on-mouseenter="threadViewTopBar.onMouseEnterTopBarThreadName" t-on-mouseleave="threadViewTopBar.onMouseLeaveTopBarThreadName" t-att-class="{ 'o-threadNameEditable': threadViewTopBar.isMouseOverThreadName and !messaging.isCurrentUserGuest }">
                                 <t t-esc="threadViewTopBar.thread.displayName"/>
                             </div>
                         </t>
@@ -27,7 +27,7 @@
                         <div class="o_ThreadViewTopbar_threadDescriptionSeparator flex-shrink-0 mx-2"/>
                         <t t-if="!threadViewTopBar.isEditingThreadDescription">
                             <t t-if="threadViewTopBar.thread.description">
-                                <div class="o_ThreadViewTopbar_threadDescription text-truncate px-1" t-att-title="threadViewTopBar.thread.description" t-on-click="threadViewTopBar.onClickTopbarThreadDescription" t-on-mouseenter="threadViewTopBar.onMouseEnterTopBarThreadDescription" t-on-mouseleave="threadViewTopBar.onMouseLeaveTopBarThreadDescription" t-att-class="{ 'o-isMouseOverThreadDescription': threadViewTopBar.isMouseOverThreadDescription }">
+                                <div class="o_ThreadViewTopbar_threadDescription text-truncate px-1" t-att-title="threadViewTopBar.thread.description" t-on-click="threadViewTopBar.onClickTopbarThreadDescription" t-on-mouseenter="threadViewTopBar.onMouseEnterTopBarThreadDescription" t-on-mouseleave="threadViewTopBar.onMouseLeaveTopBarThreadDescription" t-att-class="{ 'o-threadDescriptionEditable': threadViewTopBar.isMouseOverThreadDescription and !messaging.isCurrentUserGuest }">
                                     <t t-esc="threadViewTopBar.thread.description"/>
                                 </div>
                             </t>
