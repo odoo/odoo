@@ -69,7 +69,7 @@ class LinkTracker(models.Model):
     @api.depends('code')
     def _compute_short_url(self):
         for tracker in self:
-            tracker.short_url = urls.url_join(tracker.get_base_url(), '/r/%(code)s' % {'code': tracker.code})
+            tracker.short_url = urls.url_join(tracker.short_url_host, '%(code)s' % {'code': tracker.code})
 
     def _compute_short_url_host(self):
         for tracker in self:
