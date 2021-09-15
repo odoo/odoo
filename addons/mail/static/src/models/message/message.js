@@ -351,6 +351,9 @@ function factory(dependencies) {
             if (!this.originThread) {
                 return false;
             }
+            if (this.tracking_value_ids.length > 0) {
+                return false;
+            }
             if (this.originThread.model === 'mail.channel') {
                 return this.message_type === 'comment';
             }
