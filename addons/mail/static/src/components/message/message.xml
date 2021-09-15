@@ -7,7 +7,7 @@
                 'o_Message_active': isActive,
                 'o-clicked': state.isClicked,
                 'o-discussion': message and (message.is_discussion or message.is_notification),
-                'o-editing': message.isEditing,
+                'o-editing': message and message.isEditing,
                 'o-has-message-selection': threadView and threadView.threadViewer and threadView.threadViewer.selectedMessage,
                 'o-highlighted': message and message.isHighlighted,
                 'o-mobile': messaging and messaging.device.isMobile,
