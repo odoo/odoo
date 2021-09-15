@@ -365,7 +365,8 @@ function factory(dependencies) {
             if (!this.activeThread) {
                 return;
             }
-            if (!this.messaging.currentPartner) {
+            // not supported for guests
+            if (this.messaging.isCurrentUserGuest) {
                 return;
             }
             if (
