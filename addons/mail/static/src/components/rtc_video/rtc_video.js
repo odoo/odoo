@@ -69,7 +69,7 @@ export class RtcVideo extends Component {
     async _onVideoLoadedMetaData(ev) {
         try {
             await ev.target.play();
-        } catch (error)  {
+        } catch (error) {
             if (typeof error === 'object' && error.name === 'NotAllowedError') {
                 // Ignored as some browsers may reject play() calls that do not
                 // originate from a user input.
