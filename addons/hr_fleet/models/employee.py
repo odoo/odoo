@@ -17,29 +17,23 @@ class Employee(models.Model):
 
     def action_open_employee_cars(self):
         self.ensure_one()
-        cars = self.env['fleet.vehicle.assignation.log'].search([
-            ('driver_id', 'in', (self.user_id.partner_id | self.sudo().address_home_id).ids)]).mapped('vehicle_id')
 
         return {
             "type": "ir.actions.act_window",
-            "res_model": "fleet.vehicle",
-            "views": [[False, "kanban"], [False, "form"], [False, "tree"]],
-            "domain": [("id", "in", cars.ids)],
+            "res_model": "fleet.vehicle.assignation.log",
+            "views": [[False, "tree"], [False, "form"]],
+            "domain": [("driver_employee_id", "in", self.ids)],
             "context": dict(self._context, create=False),
             "name": "History Employee Cars",
         }
 
     def _compute_employee_cars_count(self):
+        rg = self.env['fleet.vehicle.assignation.log'].read_group([
+            ('driver_employee_id', 'in', self.ids),
+        ], ['driver_employee_id'], ['driver_employee_id'])
+        cars_count = {r['driver_employee_id'][0]: r['driver_employee_id_count'] for r in rg}
         for employee in self:
-            employee.employee_cars_count = len(employee.car_ids)
-
-    def action_get_claim_report(self):
-        self.ensure_one()
-        return {
-            'name': 'Claim Report',
-            'type': 'ir.actions.act_url',
-            'url': '/fleet/print_claim_report/%(employee_id)s' % {'employee_id': self.id},
-        }
+            employee.employee_cars_count = cars_count.get(employee.id, 0)
 
     @api.constrains('address_home_id')
     def _check_address_home_id(self):

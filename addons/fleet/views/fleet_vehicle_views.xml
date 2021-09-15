@@ -532,10 +532,11 @@
         <field name="model">fleet.vehicle.assignation.log</field>
         <field name="arch" type="xml">
             <tree string="Assignment Logs" editable="bottom">
-                <field name="vehicle_id" invisible="1"/>
-                <field name="driver_id" widget="many2one_avatar"/>
+                <field name="vehicle_id" />
                 <field name="date_start"/>
                 <field name="date_end"/>
+                <field name="driver_id" widget="many2one_avatar" string="Current Driver" />
+                <button name="action_open_vehicle" type="object" string="Vehicle Details" class="btn-primary" />
             </tree>
         </field>
     </record>
