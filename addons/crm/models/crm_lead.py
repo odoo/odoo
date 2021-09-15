@@ -146,14 +146,12 @@ class Lead(models.Model):
     # Revenues
     expected_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
     prorated_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_prorated_revenue")
-    recurring_revenue = fields.Monetary('Recurring Revenues', currency_field='company_currency', groups="crm.group_use_recurring_revenues", tracking=True)
-    recurring_plan = fields.Many2one('crm.recurring.plan', string="Recurring Plan", groups="crm.group_use_recurring_revenues")
+    recurring_revenue = fields.Monetary('Recurring Revenues', currency_field='company_currency', tracking=True)
+    recurring_plan = fields.Many2one('crm.recurring.plan', string="Recurring Plan")
     recurring_revenue_monthly = fields.Monetary('Expected MRR', currency_field='company_currency', store=True,
-                                               compute="_compute_recurring_revenue_monthly",
-                                               groups="crm.group_use_recurring_revenues")
+                                                compute="_compute_recurring_revenue_monthly")
     recurring_revenue_monthly_prorated = fields.Monetary('Prorated MRR', currency_field='company_currency', store=True,
-                                               compute="_compute_recurring_revenue_monthly_prorated",
-                                               groups="crm.group_use_recurring_revenues")
+                                                         compute="_compute_recurring_revenue_monthly_prorated")
     company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True)
     # Dates
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
