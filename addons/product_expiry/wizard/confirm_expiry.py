@@ -35,8 +35,10 @@ class ConfirmExpiry(models.TransientModel):
     def process(self):
         picking_to_validate = self.env.context.get('button_validate_picking_ids')
         if picking_to_validate:
-            picking_to_validate = self.env['stock.picking'].browse(picking_to_validate).with_context(skip_expired=True)
-            return picking_to_validate.button_validate()
+            picking_to_validate = self.env['stock.picking'].browse(picking_to_validate)
+            ctx = dict(self.env.context, skip_expired=True)
+            ctx.pop('default_lot_ids')
+            return picking_to_validate.with_context(ctx).button_validate()
         return True
 
     def process_no_expired(self):
