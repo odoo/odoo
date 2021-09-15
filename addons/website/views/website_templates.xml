@@ -1114,6 +1114,7 @@
         <!-- Topbar -->
         <div class="oe_structure oe_structure_solo" id="oe_structure_header_magazine_1"/>
         <t t-call="website.navbar">
+            <t t-set="_navbar_expand_class" t-value="''"/>
             <div id="top_menu_container" class="container">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>
@@ -1138,6 +1139,8 @@
                             <!-- Language Selector -->
                             <t t-call="website.placeholder_header_language_selector"/>
                         </li>
+                        <!-- Call To Action -->
+                        <t t-call="website.placeholder_header_call_to_action"/>
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in">
                             <t t-set="_item_class" t-valuef="nav-item"/>
@@ -1161,9 +1164,9 @@
         <div class="oe_structure oe_structure_solo" id="oe_structure_header_magazine_1">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
-                    <div class="row align-items-center">
+                    <div class="row align-items-center text-center text-md-left">
                         <div class="col-lg-8 pt16">
-                            <p class="mb-0 text-center"><small>We help you grow your business</small></p>
+                            <p class="mb-0"><small>We help you grow your business</small></p>
                         </div>
                         <div class="col-lg-4 text-lg-right pt16">
                             <div class="s_share no_icon_color" data-snippet="s_share" data-name="Social Media">
