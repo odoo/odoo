@@ -541,7 +541,8 @@ class ResourceCalendar(models.Model):
             resources_list = [resources]
         else:
             resources_list = list(resources)
-
+        if tz is None and 'tz' in self.env.context:
+            tz = timezone(self.env.context['tz'])
         resources_work_intervals = self._work_intervals_batch(start_dt, end_dt, resources, domain, tz)
         result = {}
         for resource in resources_list:
