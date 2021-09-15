@@ -108,7 +108,10 @@ function factory(dependencies) {
             }
             // various suggestions in no particular order
             this._initCannedResponses(shortcodes);
-            this._initCommands();
+            // FIXME: guests should have (at least some) commands available
+            if (!this.messaging.isCurrentUserGuest) {
+                this._initCommands();
+            }
             // channels when the rest of messaging is ready
             await this.async(() => this._initChannels(channels));
             // failures after channels
