@@ -181,6 +181,14 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeIsCurrentUserGuest() {
+            return Boolean(!this.currentPartner && this.currentGuest);
+        }
+
+        /**
+         * @private
          * @returns {owl.EventBus}
          */
         _computeMessagingBus() {
@@ -309,6 +317,9 @@ function factory(dependencies) {
             default: create(),
             isCausal: true,
             readonly: true,
+        }),
+        isCurrentUserGuest: attr({
+            compute: '_computeIsCurrentUserGuest',
         }),
         isInitialized: attr({
             default: false,
