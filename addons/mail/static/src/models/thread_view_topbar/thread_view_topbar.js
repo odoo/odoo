@@ -73,8 +73,10 @@ function factory(dependencies) {
             if (this.threadView.channelInvitationForm.component) {
                 return;
             }
-            this.threadView.channelInvitationForm.update({ doFocusOnSearchInput: true });
-            this.threadView.channelInvitationForm.searchPartnersToInvite();
+            if (!this.messaging.isCurrentUserGuest) {
+                this.threadView.channelInvitationForm.update({ doFocusOnSearchInput: true });
+                this.threadView.channelInvitationForm.searchPartnersToInvite();
+            }
         }
 
         /**
