@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { makeDeferred } from "@mail/utils/deferred/deferred";
 import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
@@ -364,6 +365,49 @@ QUnit.test("multi provider with the same namespace", async (assert) => {
         [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
         ["Command1", "Command2", "Command3", "Command4"]
     );
+});
+
+QUnit.test("check the concurrency during a research", async (assert) => {
+    testComponent = await mount(TestComponent, { env, target });
+    const imSearchDef = makeDeferred();
+    const provide = async (env, options) => {
+        if (options.searchValue) {
+            await imSearchDef;
+        }
+        return [
+            {
+                name: "a",
+                action: () => {
+                    assert.step("a");
+                },
+            },
+            {
+                name: "b",
+                action: () => {
+                    assert.step("b");
+                },
+            },
+        ];
+    };
+    const providers = [{ namespace: "default", provide }];
+    const config = {
+        providers,
+    };
+    env.services.dialog.add(CommandPaletteDialog, {
+        config,
+    });
+    await nextTick();
+    assert.containsOnce(target, ".o_command_palette");
+    assert.containsN(target, ".o_command", 2);
+
+    await editSearchBar("b");
+    triggerHotkey("enter");
+    await nextTick();
+    assert.verifySteps([]);
+
+    imSearchDef.resolve();
+    await nextTick();
+    assert.verifySteps(["b"]);
 });
 
 QUnit.test("open the command palette with a namespace already in the searchbar", async (assert) => {
