@@ -103,7 +103,7 @@ function factory(dependencies) {
          * Handles OWL update on this channel invitation form component.
          */
         onComponentUpdate() {
-            if (this.doFocusOnSearchInput) {
+            if (this.doFocusOnSearchInput && this.searchInputRef.el) {
                 this.searchInputRef.el.focus();
                 this.searchInputRef.el.setSelectionRange(this.searchTerm.length, this.searchTerm.length);
                 this.update({ doFocusOnSearchInput: clear() });
