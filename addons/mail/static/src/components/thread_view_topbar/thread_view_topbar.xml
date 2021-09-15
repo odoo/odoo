@@ -67,7 +67,8 @@
                             </t>
                         </Popover>
                     </t>
-                    <t t-if="threadViewTopBar.thread and threadViewTopBar.thread.hasMemberListFeature and threadViewTopBar.threadView.hasMemberList and !threadViewTopBar.threadView.isMemberListOpened">
+                    <!-- FIXME: guests should be able to see members but there currently is no route for it, so hide it for now -->
+                    <t t-if="!messaging.isCurrentUserGuest and threadViewTopBar.thread and threadViewTopBar.thread.hasMemberListFeature and threadViewTopBar.threadView.hasMemberList and !threadViewTopBar.threadView.isMemberListOpened">
                         <button class="o_ThreadViewTopbar_showMemberListButton o_ThreadViewTopbar_button" title="Show Member List" t-on-click="threadViewTopBar.onClickShowMemberList">
                             <i class="fa fa-lg fa-users"/>
                         </button>
