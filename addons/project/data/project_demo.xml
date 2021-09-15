@@ -33,6 +33,20 @@
             <field name="name">External</field>
         </record>
 
+        <!-- Analytic Accounts -->
+        <!-- Needed so that we can have the same analytic accounts on hr_timesheet and project_account_budget -->
+        <record id="analytic_office_design" model="account.analytic.account">
+            <field name="name">Office Design</field>
+        </record>
+
+        <record id="analytic_research_development" model="account.analytic.account">
+            <field name="name">Research &amp; Development</field>
+        </record>
+
+        <record id="analytic_renovations" model="account.analytic.account">
+            <field name="name">Renovations</field>
+        </record>
+
         <!-- Task Stages -->
         <record id="project_stage_0" model="project.task.type">
             <field name="sequence">1</field>
@@ -71,6 +85,7 @@
             <field name="favorite_user_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="tag_ids" eval="[(4, ref('project.project_tags_05'))]"/>
             <field name="stage_id" ref="project.project_project_stage_1"/>
+            <field name="analytic_account_id" ref="project.analytic_office_design"/>
         </record>
 
         <record id="project_project_2" model="project.project">
@@ -81,6 +96,7 @@
             <field name="favorite_user_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="tag_ids" eval="[(4, ref('project.project_tags_04'))]"/>
             <field name="stage_id" ref="project.project_project_stage_1"/>
+            <field name="analytic_account_id" ref="project.analytic_research_development"/>
         </record>
 
         <record id="project_project_3" model="project.project">
@@ -92,6 +108,7 @@
             <field name="favorite_user_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="tag_ids" eval="[(4, ref('project_tags_04')), (4, ref('project_tags_02'))]"/>
             <field name="stage_id" ref="project.project_project_stage_2"/>
+            <field name="analytic_account_id" ref="project.analytic_renovations"/>
         </record>
 
         <!-- Personal Stages: Mitchell Admin-->

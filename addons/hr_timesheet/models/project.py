@@ -224,7 +224,7 @@ class Project(models.Model):
                 'action_type': 'object',
                 'action': 'action_show_timesheets_by_employee_invoice_type',
                 'show': self.allow_timesheets,
-                'sequence': 4,
+                'sequence': 6,
             })
         return buttons
 

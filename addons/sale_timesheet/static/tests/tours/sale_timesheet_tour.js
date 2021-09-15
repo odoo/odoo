@@ -294,8 +294,8 @@ tour.register('sale_timesheet_tour', {
     content: 'Check the user sees Total Sold section',
     run: function () {},
 }, {
-    trigger: ".oe_button_box .o_stat_text:contains('Sales Order')",
-    content: 'Check the user sees Sales Order Stat Button',
+    trigger: ".oe_button_box .o_stat_text:contains('Sales Orders')",
+    content: 'Check the user sees Sales Orders Stat Button',
     run: function () {},
 }, {
     trigger: ".o_rightpanel_header:eq(1) .o_rightpanel_right_col:contains('Hours')",

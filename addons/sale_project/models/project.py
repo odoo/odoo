@@ -18,6 +18,7 @@ class Project(models.Model):
     sale_order_id = fields.Many2one(string='Sales Order', related='sale_line_id.order_id', help="Sales order to which the project is linked.")
     has_any_so_to_invoice = fields.Boolean('Has SO to Invoice', compute='_compute_has_any_so_to_invoice')
     sale_order_count = fields.Integer(compute='_compute_sale_order_count')
+    has_any_so_with_nothing_to_invoice = fields.Boolean('Has a SO with an invoice status of No', compute='_compute_has_any_so_with_nothing_to_invoice')
 
     @api.model
     def _map_tasks_default_valeus(self, task, project):
@@ -56,7 +57,6 @@ class Project(models.Model):
             project.sale_order_count = len(project._get_all_sales_orders())
 
     def action_view_sos(self):
-        # Opens all the sales orders linked to the project and the project's tasks
         self.ensure_one()
         all_sale_orders = self._get_all_sales_orders()
         action_window = {
@@ -78,15 +78,27 @@ class Project(models.Model):
             })
         return action_window
 
+    @api.depends('sale_order_id.invoice_status', 'tasks.sale_order_id.invoice_status')
+    def _compute_has_any_so_with_nothing_to_invoice(self):
+        """Has any Sale Order whose invoice_status is set as No"""
+        project_nothing_to_invoice = self.env['project.project'].search([
+            '|',
+                ('sale_order_id.invoice_status', '=', 'no'),
+                ('tasks.sale_order_id.invoice_status', '=', 'no'),
+            ('id', 'in', self.ids)
+        ])
+        project_nothing_to_invoice.has_any_so_with_nothing_to_invoice = True
+        (self - project_nothing_to_invoice).has_any_so_with_nothing_to_invoice = False
+
     def action_create_invoice(self):
-        if not self.has_any_so_to_invoice:
-            raise UserError(_("There is nothing to invoice in this project."))
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_view_sale_advance_payment_inv")
         so_ids = (self.sale_order_id | self.task_ids.sale_order_id).filtered(lambda so: so.invoice_status == 'to invoice').ids
         action['context'] = {
             'active_id': so_ids[0] if len(so_ids) == 1 else False,
             'active_ids': so_ids
         }
+        if not self.has_any_so_to_invoice:
+            action['context']['default_advance_payment_method'] = 'percentage'
         return action
 
     # ----------------------------
