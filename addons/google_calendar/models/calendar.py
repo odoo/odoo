@@ -203,9 +203,8 @@ class Meeting(models.Model):
             start = {'date': self.start_date.isoformat()}
             end = {'date': (self.stop_date + relativedelta(days=1)).isoformat()}
         else:
-            event_tz = self.event_tz or 'Etc/UTC'
-            start = {'dateTime': self.start.isoformat(), 'timeZone': event_tz}
-            end = {'dateTime': self.stop.isoformat(), 'timeZone': event_tz}
+            start = {'dateTime': pytz.utc.localize(self.start).isoformat()}
+            end = {'dateTime': pytz.utc.localize(self.stop).isoformat()}
         reminders = [{
             'method': "email" if alarm.alarm_type == "email" else "popup",
             'minutes': alarm.duration_minutes
