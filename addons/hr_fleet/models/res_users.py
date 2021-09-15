@@ -13,8 +13,5 @@ class User(models.Model):
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS + ['employee_cars_count']
 
-    def action_get_claim_report(self):
-        return self.employee_id.action_get_claim_report()
-
     def action_open_employee_cars(self):
         return self.employee_id.action_open_employee_cars()

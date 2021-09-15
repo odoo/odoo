@@ -13,3 +13,13 @@ class FleetVehicleAssignationLog(models.Model):
     driver_id = fields.Many2one('res.partner', string="Driver", required=True)
     date_start = fields.Date(string="Start Date")
     date_end = fields.Date(string="End Date")
+
+    def action_open_vehicle(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'fleet.vehicle',
+            'res_id': self.vehicle_id.id,
+            'view_mode': 'form',
+            'context': dict(self.env.context, create=False),
+        }
