@@ -43,6 +43,6 @@ class Project(models.Model):
                 'action_type': 'object',
                 'action': 'action_open_project_vendor_bills',
                 'show': self.vendor_bill_count > 0,
-                'sequence': 14,
+                'sequence': 48,
             })
         return buttons

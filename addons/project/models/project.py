@@ -703,7 +703,7 @@ class Project(models.Model):
                 'active_id': self.id,
             }),
             'show': True,
-            'sequence': 2,
+            'sequence': 3,
         }]
         if self.user_has_groups('project.group_project_rating'):
             buttons.append({
@@ -713,7 +713,7 @@ class Project(models.Model):
                 'action_type': 'object',
                 'action': 'action_view_all_rating',
                 'show': self.rating_active and self.rating_percentage_satisfaction > -1,
-                'sequence': 5,
+                'sequence': 15,
             })
         if self.user_has_groups('project.group_project_manager'):
             buttons.append({
@@ -725,7 +725,7 @@ class Project(models.Model):
                     'active_id': self.id,
                 }),
                 'show': True,
-                'sequence': 7,
+                'sequence': 60,
             })
             buttons.append({
                 'icon': 'users',
@@ -737,7 +737,7 @@ class Project(models.Model):
                     'active_id': self.id,
                 }),
                 'show': True,
-                'sequence': 23,
+                'sequence': 66,
             })
         if self.user_has_groups('analytic.group_analytic_accounting'):
             buttons.append({
@@ -747,7 +747,7 @@ class Project(models.Model):
                 'action_type': 'object',
                 'action': 'action_view_analytic_account_entries',
                 'show': True,
-                'sequence': 18,
+                'sequence': 24,
             })
         return buttons
 
