@@ -462,7 +462,7 @@
                             <field name="expected_revenue" class="oe_inline mr-5" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                             <field name="priority" class="oe_inline" nolabel="1" widget="priority"/>
                         </div>
-                        <div class="o_row">
+                        <div class="o_row" groups="crm.group_use_recurring_revenues">
                             <field name="recurring_revenue" class="oe_inline pr-4" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                             <field name="recurring_plan" class="oe_inline" placeholder="E.g. Monthly"
                                    attrs="{'required': [('recurring_revenue', '!=', 0)]}" options="{'no_create': True, 'no_open': True}"/>
@@ -559,11 +559,11 @@
                                     <div class="o_kanban_record_subtitle">
                                         <t t-if="record.expected_revenue.raw_value">
                                             <field name="expected_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                                            <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value"> + </span>
+                                            <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value" groups="crm.group_use_recurring_revenues"> + </span>
                                         </t>
                                         <t t-if="record.recurring_revenue and record.recurring_revenue.raw_value">
-                                            <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                                            <field name="recurring_plan"/>
+                                            <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
+                                            <field name="recurring_plan" groups="crm.group_use_recurring_revenues"/>
                                         </t>
                                     </div>
                                     <div>
@@ -634,11 +634,11 @@
                     <div class="o_kanban_record_subtitle">
                         <t t-if="record.prorated_revenue.raw_value">
                             <field name="prorated_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                            <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value"> + </span>
+                            <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value" groups="crm.group_use_recurring_revenues"> + </span>
                         </t>
                         <t t-if="record.recurring_revenue and record.recurring_revenue.raw_value">
-                            <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                            <field name="recurring_plan"/>
+                            <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
+                            <field name="recurring_plan" groups="crm.group_use_recurring_revenues"/>
                         </t>
                     </div>
                 </xpath>
@@ -772,9 +772,11 @@
                     <field name="source_id" optional="hide"/>
                     <field name="company_currency" invisible="1"/>
                     <field name="expected_revenue" sum="Expected Revenues" optional="show" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                    <field name="recurring_revenue_monthly" sum="Expected MRR" optional="show" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                    <field name="recurring_revenue" sum="Recurring Revenue" optional="hide" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                    <field name="recurring_plan" optional="hide"/>
+                    <field name="recurring_revenue_monthly" sum="Expected MRR" optional="show" widget="monetary"
+                        options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
+                    <field name="recurring_revenue" sum="Recurring Revenue" optional="hide" widget="monetary"
+                        options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
+                    <field name="recurring_plan" optional="hide" groups="crm.group_use_recurring_revenues"/>
                     <field name="stage_id" optional="show" decoration-bf="1"/>
                     <field name="active" invisible="1"/>
                     <field name="probability" string="Probability (%)" optional="hide"/>
@@ -896,7 +898,7 @@
                     <field name="create_date" interval="month" type="row"/>
                     <field name="stage_id" type="col"/>
                     <field name="expected_revenue" type="measure"/>
-                    <field name="recurring_revenue_monthly" type="measure"/>
+                    <field name="recurring_revenue_monthly" type="measure" groups="crm.group_use_recurring_revenues"/>
                     <field name="color" invisible="1"/>
                 </pivot>
             </field>
