@@ -75,6 +75,7 @@ export async function boot() {
             composerAttachmentsDetailsMode: 'card',
             hasComposer: true,
             hasComposerThreadTyping: true,
+            hasSquashCloseMessages: true,
             threadViewLocalId: threadViewer.threadView.localId,
         });
         await threadViewComponent.mount(document.body);
