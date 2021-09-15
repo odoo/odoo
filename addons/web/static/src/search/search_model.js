@@ -219,11 +219,7 @@ export class SearchModel extends EventBus {
         this.view = view || { id: false };
 
         // used to avoid useless recomputations
-        // this._comparison is left undefined (we have to distinguish it from null)
-        this._context = null;
-        this._domain = null;
-        this._groupBy = null;
-        this._orderBy = null;
+        this._reset();
 
         const { comparison, context, domain, groupBy, orderBy } = config;
 
@@ -391,12 +387,7 @@ export class SearchModel extends EventBus {
      * @param {string[]} [config.orderBy=[]]
      */
     async reload(config = {}) {
-        // used to avoid useless recomputations
-        delete this._comparison;
-        this._context = null;
-        this._domain = null;
-        this._groupBy = null;
-        this._orderBy = null;
+        this._reset();
 
         const { comparison, context, domain, groupBy, orderBy } = config;
 
@@ -2015,11 +2006,8 @@ export class SearchModel extends EventBus {
         if (this.blockNotification) {
             return;
         }
-        delete this._comparison;
-        this._context = null;
-        this._domain = null;
-        this._groupBy = null;
-        this._orderBy = null;
+
+        this._reset();
 
         await this._reloadSections();
 
@@ -2064,6 +2052,14 @@ export class SearchModel extends EventBus {
         }
 
         this.blockNotification = false;
+    }
+
+    _reset() {
+        delete this._comparison;
+        this._context = null;
+        this._domain = null;
+        this._groupBy = null;
+        this._orderBy = null;
     }
 
     /**
