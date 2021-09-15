@@ -276,7 +276,7 @@ export class MessageList extends Component {
         if (prevMessage.message_type !== 'comment' || message.message_type !== 'comment') {
             return false;
         }
-        if (prevMessage.author !== message.author) {
+        if (prevMessage.author !== message.author || prevMessage.guestAuthor !== message.guestAuthor) {
             // from a different author
             return false;
         }
