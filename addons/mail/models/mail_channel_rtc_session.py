@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
@@ -99,28 +100,24 @@ class MailRtcSession(models.Model):
         self.unlink()
         self.env['bus.bus'].sendmany(notifications)
 
-    def _notify_peers(self, target_session_ids, content):
+    def _notify_peers(self, notifications):
         """ Used for peer-to-peer communication,
             guarantees that the sender is the current guest or partner.
 
-            :param target_session_ids: a list of mail.channel.rtc.session ids
-            :param content: a dict with the content to be sent to the targets
+            :param notifications: list of tuple with the following elements:
+                - target_session_ids: a list of mail.channel.rtc.session ids
+                - content: a string with the content to be sent to the targets
         """
-        notifications = []
-        target_sessions = self.search([('id', 'in', [int(target) for target in target_session_ids]), ('channel_id', '=', self.channel_id.id)])
-        for session in target_sessions:
-            model, record_id = ('mail.guest', session.guest_id.id) if session.guest_id else ('res.partner', session.partner_id.id)
-            notifications.append([
-                (self._cr.dbname, model, record_id),
-                {
-                    'type': 'rtc_peer_notification',
-                    'payload': {
-                        'sender': self.id,
-                        'content': content,
-                    },
-                },
-            ])
-        return self.env['bus.bus'].sendmany(notifications)
+        self.ensure_one()
+        payload_by_target = defaultdict(lambda: {'sender': self.id, 'notifications': []})
+        for target_session_ids, content in notifications:
+            for target_session in self.env['mail.channel.rtc.session'].browse(target_session_ids).exists():
+                model, record_id = ('mail.guest', target_session.guest_id.id) if target_session.guest_id else ('res.partner', target_session.partner_id.id)
+                payload_by_target[(self._cr.dbname, model, record_id)]['notifications'].append(content)
+        return self.env['bus.bus'].sendmany([(target, {
+            'type': 'rtc_peer_notification',
+            'payload': payload,
+        }) for target, payload in payload_by_target.items()])
 
     def _mail_rtc_session_format(self):
         self.ensure_one()

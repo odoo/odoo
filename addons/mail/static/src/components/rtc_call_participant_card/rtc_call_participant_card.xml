@@ -60,6 +60,11 @@
                                     <i class="fa fa-deaf"/>
                                 </span>
                             </t>
+                            <t t-if="callParticipantCard.rtcSession.channel.mailRtc and callParticipantCard.rtcSession.isAudioInError">
+                                <span class="o_RtcCallParticipantCard_overlayTop_element text-danger" title="Issue with audio">
+                                    <i class="fa fa-exclamation-triangle"/>
+                                </span>
+                            </t>
                             <t t-if="callParticipantCard.rtcSession.channel.mailRtc and !callParticipantCard.rtcSession.mailRtc and !['connected', 'completed'].includes(callParticipantCard.rtcSession.connectionState)">
                                 <span class="o_RtcCallParticipantCard_overlayTop_element" t-att-title="callParticipantCard.rtcSession.connectionState">
                                     <i class="fa fa-lg fa-signal o_RtcCallParticipantCard_connectionState"/>
