@@ -42,8 +42,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
             'id': False,
-            'start': {'dateTime': '2020-01-15T08:00:00', 'timeZone': 'Etc/UTC'},
-            'end': {'dateTime': '2020-01-15T18:00:00', 'timeZone': 'Etc/UTC'},
+            'start': {'dateTime': '2020-01-15T08:00:00+00:00'},
+            'end': {'dateTime': '2020-01-15T18:00:00+00:00'},
             'summary': 'Event',
             'description': '',
             'location': '',
@@ -338,8 +338,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         user.with_user(user).restart_google_synchronization()
         self.assertGoogleEventPatched(event.google_id, {
             'id': event.google_id,
-            'start': {'dateTime': '2020-01-15T08:00:00', 'timeZone': 'Etc/UTC'},
-            'end': {'dateTime': '2020-01-15T18:00:00', 'timeZone': 'Etc/UTC'},
+            'start': {'dateTime': '2020-01-15T08:00:00+00:00'},
+            'end': {'dateTime': '2020-01-15T18:00:00+00:00'},
             'summary': 'Event',
             'description': '',
             'location': '',
@@ -516,3 +516,40 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'reminders': {'overrides': [], 'useDefault': False},
             'visibility': 'public',
         })
+
+
+    @patch_api
+    def test_all_event_with_tz_updated(self):
+        google_id = 'aaaaaaaaa'
+        event = self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 9, 0),
+            'need_sync': False,
+        })
+        recurrence = self.env['calendar.recurrence'].create({
+            'google_id': google_id,
+            'rrule': 'FREQ=WEEKLY;COUNT=2;BYDAY=WE',
+            'base_event_id': event.id,
+            'need_sync': False,
+        })
+        recurrence._apply_recurrence()
+        event.write({
+            'name': 'New name',
+            'recurrence_update': 'all_events',
+        })
+        self.assertGoogleEventPatched(recurrence.google_id, {
+            'id': recurrence.google_id,
+            'start': {'dateTime': "2020-01-15T08:00:00+00:00", 'timeZone': 'Europe/Brussels'},
+            'end': {'dateTime': "2020-01-15T09:00:00+00:00", 'timeZone': 'Europe/Brussels'},
+            'summary': 'New name',
+            'description': '',
+            'location': '',
+            'guestsCanModify': True,
+            'organizer': {'email': 'odoobot@example.com', 'self': True},
+            'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
+            'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=2;BYDAY=WE'],
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: recurrence.id}},
+            'reminders': {'overrides': [], 'useDefault': False},
+            'visibility': 'public',
+        }, timeout=3)
