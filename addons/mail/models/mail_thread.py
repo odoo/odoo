@@ -1221,8 +1221,8 @@ class MailThread(models.AbstractModel):
         Indeed those aspects should be covered by the html_sanitize method
         located in tools. """
         body, attachments = payload_dict['body'], payload_dict['attachments']
-        if not body:
-            return payload_dict
+        if not body.strip():
+            return {'body': body, 'attachments': attachments}
         try:
             root = lxml.html.fromstring(body)
         except ValueError:
@@ -1343,7 +1343,9 @@ class MailThread(models.AbstractModel):
         if dsn_part and len(dsn_part.get_payload()) > 1:
             dsn = dsn_part.get_payload()[1]
             final_recipient_data = tools.decode_message_header(dsn, 'Final-Recipient')
-            bounced_email = tools.email_normalize(final_recipient_data.split(';', 1)[1].strip())
+            # old servers may hold void or invalid Final-Recipient header
+            if final_recipient_data and ";" in final_recipient_data:
+                bounced_email = tools.email_normalize(final_recipient_data.split(';', 1)[1].strip())
             if bounced_email:
                 bounced_partner = self.env['res.partner'].sudo().search([('email_normalized', '=', bounced_email)])
 

@@ -312,6 +312,24 @@ class TestMrpProductionBackorder(TestMrpCommon):
             self.assertEqual(new_backorder.name, initial_mo_name + "-" + str(seq + 1))
             backorder = new_backorder
 
+    def test_backorder_name_without_procurement_group(self):
+        production = self.generate_mo(qty_final=5)[0]
+        mo_form = Form(production)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+
+        # Remove pg to trigger fallback on backorder name
+        mo.procurement_group_id = False
+        action = mo.button_mark_done()
+        backorder_form = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder_form.save().action_backorder()
+
+        # The pg is back
+        self.assertTrue(production.procurement_group_id)
+        backorder_ids = production.procurement_group_id.mrp_production_ids[1]
+        self.assertEqual(production.name.split('-')[0], backorder_ids.name.split('-')[0])
+        self.assertEqual(int(production.name.split('-')[1]) + 1, int(backorder_ids.name.split('-')[1]))
+
 
 class TestMrpWorkorderBackorder(SavepointCase):
     @classmethod

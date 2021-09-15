@@ -1,7 +1,8 @@
 // Change address font-size if needed
 document.addEventListener('DOMContentLoaded', function (evt) {
-    var recipientAddress = document.getElementsByClassName('address row')[0].getElementsByTagName('address')[0];
-    var height = parseFloat(window.getComputedStyle(recipientAddress, null).getPropertyValue('height'));
-    var fontSize = parseFloat(window.getComputedStyle(recipientAddress, null).getPropertyValue('font-size'));
-    recipientAddress.style.fontSize = (85/height) * fontSize + 'px';
+    var recipientAddress = document.querySelector(".address.row > div[name='address'] > div")
+    var style = window.getComputedStyle(recipientAddress, null); 
+    var height = parseFloat(style.getPropertyValue('height'));
+    var fontSize = parseFloat(style.getPropertyValue('font-size'));
+    recipientAddress.style.fontSize = (85 / (height / fontSize)) + 'px';   
 });
