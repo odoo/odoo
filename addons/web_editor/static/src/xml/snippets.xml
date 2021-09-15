@@ -58,7 +58,7 @@
             </button>
             <t t-if="widget.resetButton">
                 <t t-set="trash_title"><t t-if="widget.withCombinations">None</t><t t-else="">Reset</t></t>
-                <button type="button" class="my-1 ml-5 py-0 o_we_color_btn o_colorpicker_reset" t-att-title="trash_title">
+                <button type="button" class="my-1 ml-5 py-0 o_we_color_btn o_colorpicker_reset o_we_hover_danger" t-att-title="trash_title">
                     <i class="fa fa-trash"/>
                 </button>
             </t>

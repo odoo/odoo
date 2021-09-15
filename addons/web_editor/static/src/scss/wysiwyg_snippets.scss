@@ -1709,6 +1709,8 @@ body.editor_enable.editor_has_snippets {
     }
     .o_colorpicker_reset {
         @extend %we-generic-button;
+        border: 0;
+        background-color: transparent;
     }
 
     .o_colorpicker_sections {
@@ -1748,6 +1750,97 @@ body.editor_enable.editor_has_snippets {
                 // compensate a 1px gap between the flex container and the
                 // absolute positioned pseudo-element that generates the bg.
                 bottom: -1px;
+            }
+        }
+        .o_custom_gradient_editor {
+            font-size: 12px;
+
+            .o_custom_gradient_btn {
+                color: #ffffff;
+                background-color: $o-we-sidebar-content-field-colorpicker-dropdown-bg;
+                // Needed when nested inside toolbar.
+                float: none;
+                box-sizing: border-box;
+            }
+            span.o_custom_gradient_input {
+                border: 1px solid black;
+                input {
+                    outline: none;
+                }
+                &:focus-within {
+                    border-color: $o-we-sidebar-content-field-input-border-color;
+                }
+            }
+            .o_custom_gradient_scale {
+                @extend %o-preview-alpha-background;
+                cursor: copy;
+                div {
+                    height: 20px;
+                }
+            }
+            .o_slider_multi {
+                display: grid;
+
+                input[type=range] {
+                    pointer-events: none;
+                    focusable: false;
+                    grid-column: 1/span 2;
+                    grid-row: 3;
+                    background: none;
+                    -webkit-appearance: none;
+                    cursor: ew-resize;
+                    @supports (-moz-appearance:none) {
+                        margin-top: 2px;
+                    }
+
+                    &::-webkit-slider-thumb {
+                        pointer-events: auto;
+                        border: 1.5px solid rgba(255, 255, 255, 0.8);
+                        background: currentColor;
+                        -webkit-appearance: none;
+                        box-shadow: 0px 0px 0px #000000;
+                        height: 20px;
+                        width: 12px;
+                        border-radius: 5px;
+                    }
+
+                    &.active::-webkit-slider-thumb {
+                        border-color: $o-we-accent;
+                    }
+
+                    &::-moz-range-thumb {
+                        pointer-events: auto;
+                        border: 1.5px solid rgba(255, 255, 255, 0.8);
+                        background: currentColor;
+                        box-shadow: 0px 0px 0px #000000;
+                        height: 18px;
+                        width: 10px;
+                        border-radius: 5px;
+                        margin-top: 3px;
+                    }
+
+                    &.active::-moz-range-thumb {
+                        border-color: $o-we-accent;
+                    }
+
+                    &::-ms-thumb {
+                        pointer-events: auto;
+                        border: 1.5px solid rgba(255, 255, 255, 0.8);
+                        background: currentColor;
+                        box-shadow: 0px 0px 0px #000000;
+                        height: 20px;
+                        width: 12px;
+                        border-radius: 5px;
+                    }
+
+                    &.active::-ms-thumb {
+                        border-color: $o-we-accent;
+                    }
+                }
+            }
+            .o_remove_color {
+                font-size: 14px !important;
+                text-align: center !important;
             }
         }
     }
