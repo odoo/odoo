@@ -71,7 +71,12 @@ function factory(dependencies) {
         async setAudio({ audioStream, isMuted, isTalking }) {
             this._removeAudio();
             const audioElement = this.audioElement || new window.Audio();
-            audioElement.srcObject = audioStream;
+            try {
+                audioElement.srcObject = audioStream;
+            } catch (error) {
+                this.update({ isAudioInError: true });
+                console.error(error);
+            }
             audioElement.load();
             audioElement.volume = this.partner && this.partner.volumeSetting ? this.partner.volumeSetting.volume : this.volume;
             audioElement.muted = this.messaging.mailRtc.currentRtcSession.isDeaf;
@@ -86,13 +91,20 @@ function factory(dependencies) {
             });
             try {
                 await audioElement.play();
-            } catch (error)  {
+                if (!this.exists()) {
+                    return;
+                }
+                this.update({ isAudioInError: false });
+            } catch (error) {
                 if (typeof error === 'object' && error.name === 'NotAllowedError') {
                     // Ignored as some browsers may reject play() calls that do not
                     // originate from a user input.
                     return;
                 }
-                throw error;
+                if (this.exists()) {
+                    this.update({ isAudioInError: true });
+                }
+                console.error(error);
             }
         }
 
@@ -284,10 +296,15 @@ function factory(dependencies) {
             }
             if (this.audioElement) {
                 this.audioElement.pause();
-                this.audioElement.srcObject = undefined;
+                try {
+                    this.audioElement.srcObject = undefined;
+                } catch (error) {
+                    // ignore error during remove, the value will be overwritten at next usage anyway
+                }
             }
             this.update({
                 audioStream: clear(),
+                isAudioInError: false,
             });
         }
 
@@ -344,6 +361,12 @@ function factory(dependencies) {
          */
         calledChannels: one2many('mail.thread', {
             inverse: 'rtcInvitingSession',
+        }),
+        /**
+         * States whether there is currently an error with the audio element.
+         */
+        isAudioInError: attr({
+            default: false,
         }),
         /**
          * Determines if the user is broadcasting a video from a user device (camera).

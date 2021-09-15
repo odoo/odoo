@@ -546,11 +546,13 @@ function factory(dependencies) {
         /**
          * @private
          * @param {Object} data
-         * @param {string} [data.sender]
-         * @param {string} [data.content]
+         * @param {string} data.sender
+         * @param {string[]} data.notifications
          */
-        _handleNotificationRtcPeerToPeer({ sender, content }) {
-            this.messaging.mailRtc.handleNotification(sender, content);
+        _handleNotificationRtcPeerToPeer({ sender, notifications }) {
+            for (const content of notifications) {
+                this.messaging.mailRtc.handleNotification(sender, content);
+            }
         }
 
         /**
