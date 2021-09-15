@@ -232,6 +232,9 @@ class AccountPartialReconcile(models.Model):
         account = base_line.company_id.account_cash_basis_base_account_id or base_line.account_id
         tax_ids = base_line.tax_ids.filtered(lambda x: x.tax_exigibility == 'on_payment')
         is_refund = base_line.belongs_to_refund()
+        tax_tags = tax_ids.get_tax_tags(is_refund, 'base')
+        product_tags = base_line.tax_tag_ids.filtered(lambda x: x.applicability == 'products')
+        all_tags = tax_tags + product_tags
 
         return {
             'name': base_line.move_id.name,
@@ -242,7 +245,7 @@ class AccountPartialReconcile(models.Model):
             'partner_id': base_line.partner_id.id,
             'account_id': account.id,
             'tax_ids': [Command.set(tax_ids.ids)],
-            'tax_tag_ids': [Command.set(tax_ids.get_tax_tags(is_refund, 'base').ids)],
+            'tax_tag_ids': [Command.set(all_tags.ids)],
             'tax_tag_invert': base_line.tax_tag_invert,
         }
 
@@ -277,7 +280,8 @@ class AccountPartialReconcile(models.Model):
         '''
         tax_ids = tax_line.tax_ids.filtered(lambda x: x.tax_exigibility == 'on_payment')
         base_tags = tax_ids.get_tax_tags(tax_line.tax_repartition_line_id.refund_tax_id, 'base')
-        all_tags = base_tags + tax_line.tax_repartition_line_id.tag_ids
+        product_tags = tax_line.tax_tag_ids.filtered(lambda x: x.applicability == 'products')
+        all_tags = base_tags + tax_line.tax_repartition_line_id.tag_ids + product_tags
 
         return {
             'name': tax_line.name,

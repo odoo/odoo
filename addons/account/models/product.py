@@ -39,7 +39,7 @@ class ProductTemplate(models.Model):
     account_tag_ids = fields.Many2many(
         string="Account Tags",
         comodel_name='account.account.tag',
-        domain="[('tax_report_line_ids', '=', False), ('applicability', '=', 'taxes')]",
+        domain="[('applicability', '=', 'products')]",
         help="Tags to be set on the base and tax journal items created for this product.")
 
     def _get_product_accounts(self):

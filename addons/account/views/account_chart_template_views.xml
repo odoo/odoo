@@ -86,7 +86,7 @@
                         <newline/>
                         <field name="user_type_id" widget="account_hierarchy_selection"/>
                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
-                        <field name="tag_ids" domain="[('applicability', '!=', 'taxes')]" widget="many2many_tags" context="{'default_applicability': 'accounts'}"/>
+                        <field name="tag_ids" domain="[('applicability', '=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'accounts'}"/>
                         <field name="reconcile"/>
                         <field name="chart_template_id"/>
                     </group>
