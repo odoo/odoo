@@ -177,11 +177,10 @@ class AccountMove(models.Model):
         for rec in ar_invoices:
             rec.l10n_ar_afip_responsibility_type_id = rec.commercial_partner_id.l10n_ar_afip_responsibility_type_id.id
             if rec.company_id.currency_id == rec.currency_id:
-                l10n_ar_currency_rate = 1.0
-            else:
-                l10n_ar_currency_rate = rec.currency_id._convert(
+                rec.l10n_ar_currency_rate = 1.0
+            elif not rec.l10n_ar_currency_rate:
+                rec.l10n_ar_currency_rate = rec.currency_id._convert(
                     1.0, rec.company_id.currency_id, rec.company_id, rec.invoice_date or fields.Date.today(), round=False)
-            rec.l10n_ar_currency_rate = l10n_ar_currency_rate
 
         # We make validations here and not with a constraint because we want validation before sending electronic
         # data on l10n_ar_edi
