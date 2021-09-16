@@ -107,6 +107,7 @@ class HolidaysRequest(models.Model):
             new_values['request_unit_custom'] = True
         return new_values
 
+    active = fields.Boolean(default=True)
     # description
     name = fields.Char('Description', compute='_compute_description', inverse='_inverse_description', search='_search_description', compute_sudo=False)
     private_name = fields.Char('Time Off Description', groups='hr_holidays.group_hr_holidays_user')
@@ -140,7 +141,7 @@ class HolidaysRequest(models.Model):
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]},
         tracking=True)
     employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True, store=True)
-    active_employee = fields.Boolean(related='employee_id.active', readonly=True)
+    active_employee = fields.Boolean(related='employee_id.active', string='Employee Active', readonly=True)
     tz_mismatch = fields.Boolean(compute='_compute_tz_mismatch')
     tz = fields.Selection(_tz_get, compute='_compute_tz')
     department_id = fields.Many2one(
@@ -198,6 +199,7 @@ class HolidaysRequest(models.Model):
         help='This area is automatically filled by the user who validate the time off with second level (If time off type need second validation)')
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
+    can_cancel = fields.Boolean('Can Cancel', compute='_compute_can_cancel')
 
     attachment_ids = fields.One2many('ir.attachment', 'res_id', string="Attachments")
     # To display in form view
@@ -621,6 +623,13 @@ class HolidaysRequest(models.Model):
             else:
                 holiday.can_approve = True
 
+    @api.depends_context('uid')
+    @api.depends('state', 'employee_id')
+    def _compute_can_cancel(self):
+        today = fields.Datetime.today()
+        for leave in self:
+            leave.can_cancel = leave.id and leave.employee_id.user_id == self.env.user and leave.state == 'validate' and leave.date_from and leave.date_from > today
+
     @api.depends('state')
     def _compute_is_hatched(self):
         for holiday in self:
@@ -897,8 +906,10 @@ class HolidaysRequest(models.Model):
         return holidays
 
     def write(self, values):
-        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
+        if 'active' in values and not values['active'] and not self.env.context.get('from_cancel_wizard'):
+            raise UserError(_("You can't manually archive a time off."))
 
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
         if not is_officer:
             if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user for hol in self):
                 raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
@@ -1044,6 +1055,21 @@ class HolidaysRequest(models.Model):
             'employee_ids': employee,
             'state': 'validate',
         } for employee in employees if work_days_data[employee.id]['days']]
+
+    def action_cancel(self):
+        self.ensure_one()
+
+        return {
+            'name': _('Cancel Time Off'),
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_model': 'hr.holidays.cancel.leave',
+            'view_mode': 'form',
+            'views': [[False, 'form']],
+            'context': {
+                'default_leave_id': self.id,
+            }
+        }
 
     def action_draft(self):
         if any(holiday.state not in ['confirm', 'refuse'] for holiday in self):
