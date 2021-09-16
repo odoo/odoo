@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lunch_confirm_reception_wizard_view_form" model="ir.ui.view">
+        <field name="name">lunch.confirm.order.wizard.view.form</field>
+        <field name="model">lunch.confirm.order.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Vendors Selection">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="vendor_ids" widget="many2many_checkboxes"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button special="cancel" data-hotkey="z" string="Close" type="object" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="lunch_confirm_reception_wizard_action" model="ir.actions.act_window">
+        <field name="name">Confirm Reception</field>
+        <field name="res_model">lunch.confirm.order.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
