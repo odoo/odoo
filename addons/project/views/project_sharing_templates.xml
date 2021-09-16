@@ -24,6 +24,7 @@
                 <t t-call-assets="project.webclient" t-js="false"/>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="project.webclient" t-css="false"/>
+                <t t-call="web.conditional_assets_tests"/>
             </t>
             <t t-set="head" t-value="head_project_sharing + (head or '')"/>
             <t t-set="body_classname" t-value="'o_web_client'"/>
