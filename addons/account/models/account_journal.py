@@ -323,6 +323,7 @@ class AccountJournal(models.Model):
             else:
                 journal.suspense_account_id = False
 
+    @api.depends('name')
     def _compute_alias_domain(self):
         self.alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
 
