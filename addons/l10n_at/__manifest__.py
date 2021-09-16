@@ -44,5 +44,8 @@ Austrian charts of accounts (Einheitskontenrahmen 2010).
         'data/account_fiscal_position_template.xml',
         'data/account_chart_template_configure_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
     'license': 'LGPL-3',
 }
