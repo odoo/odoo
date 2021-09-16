@@ -44,4 +44,4 @@ class IrActionsReport(models.Model):
                 if any(not move.is_invoice(include_receipts=True) for move in moves):
                     raise UserError(_("Only invoices could be printed."))
 
-        return super().render_qweb_pdf(res_ids=res_ids, data=None)
+        return super().render_qweb_pdf(res_ids=res_ids, data=data)
