@@ -168,7 +168,7 @@ class AccountInvoiceReport(models.Model):
         # self._table = account_invoice_report
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""CREATE or REPLACE VIEW %s as (
-            WITH currency_rate AS (%s)
+            WITH currency_rate AS {} (%s)
             %s
             FROM (
                 %s %s WHERE ail.account_id IS NOT NULL %s
@@ -178,7 +178,7 @@ class AccountInvoiceReport(models.Model):
                  cr.company_id = sub.company_id AND
                  cr.date_start <= COALESCE(sub.date, NOW()) AND
                  (cr.date_end IS NULL OR cr.date_end > COALESCE(sub.date, NOW())))
-        )""" % (
+        )""".format("MATERIALIZED" if self._cr._cnx.server_version >= 120000 else "") % (
                     self._table, self.env['res.currency']._select_companies_rates(),
                     self._select(), self._sub_select(), self._from(), self._group_by()))
 
