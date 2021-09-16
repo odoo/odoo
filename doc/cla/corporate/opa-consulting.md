@@ -9,8 +9,11 @@ declaration.
 Signed,
 
 Guenael Labois  glabois@opa-consulting.com https://github.com/Stentor
+Christopher Ormaza cormaza@opa-consulting.com https://github.com/opa-cormaza
 
 List of contributors:
 
-Guenael Labois  glabois@opa-consulting.com https://github.com/Stentor
-Guenael Labois  glabois@h4o-studio.com https://github.com/Stentor
+Guenael Labois  glabois@opa-consulting.com https://github.com/Stentor - until 2021-07-31
+Guenael Labois  glabois@h4o-studio.com https://github.com/Stentor - until 2021-07-31
+
+Christopher Ormaza cormaza@opa-consulting.com https://github.com/opa-cormaza
