@@ -65,6 +65,13 @@ QUnit.module("py", {}, () => {
             );
         });
 
+        QUnit.test("datetime.datetime.toJSON", (assert) => {
+            assert.strictEqual(
+                JSON.stringify(evaluateExpr("datetime.datetime(day=3,month=4,year=2001,hour=10)")),
+                `"2001-04-03 10:00:00"`
+            );
+        });
+
         // datetime.datetime.combine(context_today(), datetime.time(23,59,59))
         QUnit.module("datetime.date");
 
@@ -77,6 +84,13 @@ QUnit.module("py", {}, () => {
             assert.strictEqual(evaluateExpr(expr1), "2001-04-03");
             const expr2 = "datetime.date(2001, 4, 3).strftime('%Y-%m-%d')";
             assert.strictEqual(evaluateExpr(expr2), "2001-04-03");
+        });
+
+        QUnit.test("datetime.date.toJSON", (assert) => {
+            assert.strictEqual(
+                JSON.stringify(evaluateExpr("datetime.date(year=1997,month=5,day=18)")),
+                `"1997-05-18"`
+            );
         });
 
         QUnit.module("datetime.time");
@@ -93,6 +107,13 @@ QUnit.module("py", {}, () => {
             assert.strictEqual(evaluateExpr(expr2), 2);
             const expr3 = "datetime.time(hour=3,minute=2. second=1).second";
             assert.strictEqual(evaluateExpr(expr3), 1);
+        });
+
+        QUnit.test("datetime.time.toJSON", (assert) => {
+            assert.strictEqual(
+                JSON.stringify(evaluateExpr("datetime.time(hour=11,minute=45,second=15)")),
+                `"11:45:15"`
+            );
         });
 
         QUnit.module("relativedelta");

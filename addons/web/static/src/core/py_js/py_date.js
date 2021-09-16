@@ -263,6 +263,10 @@ export class PyDate {
             throw new ValueError(`No known conversion for ${m}`);
         });
     }
+
+    toJSON() {
+        return this.strftime("%Y-%m-%d");
+    }
 }
 
 export class PyDateTime {
@@ -354,6 +358,10 @@ export class PyDateTime {
             throw new ValueError(`No known conversion for ${m}`);
         });
     }
+
+    toJSON() {
+        return this.strftime("%Y-%m-%d %H:%M:%S");
+    }
 }
 
 export class PyTime extends PyDate {
@@ -402,6 +410,10 @@ export class PyTime extends PyDate {
             }
             throw new ValueError(`No known conversion for ${m}`);
         });
+    }
+
+    toJSON() {
+        return this.strftime("%H:%M:%S");
     }
 }
 
