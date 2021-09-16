@@ -2637,10 +2637,11 @@ class Domain(Field):
                 context=record.env.context,
             )
             domain = value if not isinstance(value, str) else safe_eval(value, eval_ctx)
-            model_name = self.domain_model if self.domain_model else record[self.model_field]
-            if isinstance(model_name, type(record.env["ir.model"])):
-                model_name = model_name.model
-            expression.expression(domain, record.env[model_name])
+            if domain:
+                model_name = self.domain_model if self.domain_model else record[self.model_field]
+                if isinstance(model_name, type(record.env["ir.model"])):
+                    model_name = model_name.model
+                expression.expression(domain, record.env[model_name])
 
         return ustr(value).strip()
 
