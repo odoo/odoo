@@ -8,7 +8,7 @@ import { uiService } from "@web/core/ui/ui_service";
 import { legacyServiceProvider } from "@web/legacy/legacy_service_provider";
 import { actionService } from "@web/webclient/actions/action_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
-import { menuService } from "@web/webclient/menu_service";
+import { menuService } from "@web/webclient/menus/menu_service";
 import { WebClient } from "@web/webclient/webclient";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
 import { fakeTitleService } from "../helpers/mock_services";

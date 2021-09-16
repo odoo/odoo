@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { browser } from "../core/browser/browser";
-import { registry } from "../core/registry";
+import { browser } from "../../core/browser/browser";
+import { registry } from "../../core/registry";
 import { session } from "@web/session";
 
 const loadMenusUrl = `/web/webclient/load_menus`;

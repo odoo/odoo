@@ -2,13 +2,13 @@
 
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { browser } from "@web/core/browser/browser";
+import { useCommand } from "@web/core/commands/command_hook";
+import { commandService } from "@web/core/commands/command_service";
+import { HotkeyCommandItem } from "@web/core/commands/default_providers";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registry } from "@web/core/registry";
 import { uiService, useActiveElement } from "@web/core/ui/ui_service";
-import { useCommand } from "@web/webclient/commands/command_hook";
-import { commandService } from "@web/webclient/commands/command_service";
-import { HotkeyCommandItem } from "@web/webclient/commands/default_providers";
 import testUtils from "web.test_utils";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { click, getFixture, nextTick, patchWithCleanup, triggerHotkey } from "../../helpers/utils";
