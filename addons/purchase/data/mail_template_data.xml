@@ -4,7 +4,7 @@
         <record id="email_template_edi_purchase" model="mail.template">
             <field name="name">Purchase Order: Send RFQ</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
-            <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
+            <field name="subject">${object.company_id.name} RFQ (Ref ${object.name or 'n/a' })</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
