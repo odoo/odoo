@@ -999,9 +999,9 @@ class BaseModel(metaclass=MetaModel):
 
                             if name == 'id':
                                 xml_ids = [xid for _, xid in value.__ensure_xml_id()]
-                                current[index] = ','.join(xml_ids) or False
+                                current[index] = ','.join(xml_ids)
                             else:
-                                current[index] = field.convert_to_export(value, record) or False
+                                current[index] = field.convert_to_export(value, record)
                             continue
 
                         lines2 = value._export_rows(fields2, _is_toplevel_call=False)
@@ -1013,7 +1013,7 @@ class BaseModel(metaclass=MetaModel):
                             # append the other lines at the end
                             lines += lines2[1:]
                         else:
-                            current[i] = False
+                            current[i] = ''
 
         # if any xid should be exported, only do so at toplevel
         if _is_toplevel_call and any(f[-1] == 'id' for f in fields):
