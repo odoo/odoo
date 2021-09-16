@@ -101,8 +101,7 @@
         ],
         'project.webclient': [
             ('include', 'web.assets_backend'),
-            ('remove', 'web/static/src/webclient/menu_service.js'),
-            ('remove', 'web/static/src/webclient/commands/menu_providers.js'),
+            ('remove', 'web/static/src/webclient/menus/*.js'),
 
             # Remove Longpolling bus and packages needed this bus
             ('remove', 'bus/static/src/js/services/assets_watchdog_service.js'),
