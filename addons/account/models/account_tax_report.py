@@ -134,8 +134,12 @@ class AccountTaxReportLine(models.Model):
     parent_path = fields.Char(index=True, unaccent=False)
     report_id = fields.Many2one(
         string="Tax Report",
-        required=True,
         comodel_name="account.tax.report",
+        compute='_compute_report_id',
+        required=True,
+        store=True,
+        readonly=False,
+        recursive=True,
         ondelete="cascade",
         help="The parent tax report of this line",
     )
@@ -201,24 +205,32 @@ class AccountTaxReportLine(models.Model):
              "This means that the carryover could affect other lines if they are using this one in their computation."
     )
 
-    @api.model
-    def create(self, vals):
-        # Manage tags
-        tag_name = vals.get('tag_name', '')
-        if tag_name and vals.get('report_id'):
-            report = self.env['account.tax.report'].browse(vals['report_id'])
-            country = report.country_id
+    @api.depends('parent_id.report_id')
+    def _compute_report_id(self):
+        for record in self:
+            record.report_id = record.parent_id.report_id
 
-            existing_tags = self.env['account.account.tag']._get_tax_tags(tag_name, country.id)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('report_id'):  # computed but required in db
+                vals['report_id'] = self.browse(vals['parent_id']).report_id.id
+            # Manage tags
+            tag_name = vals.get('tag_name', '')
+            if tag_name:
+                report = self.env['account.tax.report'].browse(vals['report_id'])
+                country = report.country_id
 
-            if existing_tags:
-                # We connect the new report line to the already existing tags
-                vals['tag_ids'] = [(6, 0, existing_tags.ids)]
-            else:
-                # We create new ones
-                vals['tag_ids'] = self._get_tags_create_vals(tag_name, country.id)
+                existing_tags = self.env['account.account.tag']._get_tax_tags(tag_name, country.id)
 
-        return super(AccountTaxReportLine, self).create(vals)
+                if existing_tags:
+                    # We connect the new report line to the already existing tags
+                    vals['tag_ids'] = [(6, 0, existing_tags.ids)]
+                else:
+                    # We create new ones
+                    vals['tag_ids'] = self._get_tags_create_vals(tag_name, country.id)
+
+        return super().create(vals_list)
 
     @api.model
     def _get_tags_create_vals(self, tag_name, country_id):
