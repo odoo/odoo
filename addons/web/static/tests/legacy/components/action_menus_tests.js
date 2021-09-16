@@ -6,7 +6,6 @@ odoo.define('web.action_menus_tests', function (require) {
     const testUtils = require('web.test_utils');
 
     const { Component } = owl;
-    const cpHelpers = testUtils.controlPanel;
     const { createComponent } = testUtils;
 
     QUnit.module('Components', {
@@ -63,7 +62,7 @@ odoo.define('web.action_menus_tests', function (require) {
             assert.strictEqual(dropdowns[1].querySelector('.o_dropdown_title').innerText.trim(), "Action");
             assert.containsNone(actionMenus, '.o_dropdown_menu');
 
-            await cpHelpers.toggleActionMenu(actionMenus, "Action");
+            await testUtils.controlPanel.toggleActionMenu(actionMenus, "Action");
 
             assert.containsOnce(actionMenus, '.o_dropdown_menu');
             assert.containsN(actionMenus, '.o_dropdown_menu .o_menu_item', 4);
@@ -75,12 +74,12 @@ odoo.define('web.action_menus_tests', function (require) {
                 "What's taters, precious ?",
             ], "callbacks should appear before actions");
 
-            await cpHelpers.toggleActionMenu(actionMenus, "Print");
+            await testUtils.controlPanel.toggleActionMenu(actionMenus, "Print");
 
             assert.containsOnce(actionMenus, '.o_dropdown_menu');
             assert.containsN(actionMenus, '.o_dropdown_menu .o_menu_item', 1);
 
-            await cpHelpers.toggleActionMenu(actionMenus, "Print");
+            await testUtils.controlPanel.toggleActionMenu(actionMenus, "Print");
 
             assert.containsNone(actionMenus, '.o_dropdown_menu');
 
@@ -136,8 +135,8 @@ odoo.define('web.action_menus_tests', function (require) {
                 },
             });
 
-            await cpHelpers.toggleActionMenu(actionMenus, "Action");
-            await cpHelpers.toggleMenuItem(actionMenus, "What's taters, precious ?");
+            await testUtils.controlPanel.toggleActionMenu(actionMenus, "Action");
+            await testUtils.controlPanel.toggleMenuItem(actionMenus, "What's taters, precious ?");
 
             assert.verifySteps(['load-action', 'do-action']);
 
@@ -170,8 +169,8 @@ odoo.define('web.action_menus_tests', function (require) {
                 },
             });
 
-            await cpHelpers.toggleActionMenu(actionMenus, "Action");
-            await cpHelpers.toggleMenuItem(actionMenus, "Boil'em");
+            await testUtils.controlPanel.toggleActionMenu(actionMenus, "Action");
+            await testUtils.controlPanel.toggleMenuItem(actionMenus, "Boil'em");
 
             await callbackPromise;
 
@@ -208,8 +207,8 @@ odoo.define('web.action_menus_tests', function (require) {
                 },
             });
 
-            await cpHelpers.toggleActionMenu(actionMenus, "Print");
-            await cpHelpers.toggleMenuItem(actionMenus, "Po-ta-toes");
+            await testUtils.controlPanel.toggleActionMenu(actionMenus, "Print");
+            await testUtils.controlPanel.toggleMenuItem(actionMenus, "Po-ta-toes");
 
             assert.verifySteps(['load-action', 'do-action']);
 
@@ -240,8 +239,8 @@ odoo.define('web.action_menus_tests', function (require) {
                 },
             });
 
-            await cpHelpers.toggleActionMenu(actionMenus, "Action");
-            await cpHelpers.toggleMenuItem(actionMenus, "Stick'em in a stew");
+            await testUtils.controlPanel.toggleActionMenu(actionMenus, "Action");
+            await testUtils.controlPanel.toggleMenuItem(actionMenus, "Stick'em in a stew");
 
             assert.verifySteps(['#stew']);
 

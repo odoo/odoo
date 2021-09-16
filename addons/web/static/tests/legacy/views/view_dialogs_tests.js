@@ -7,7 +7,7 @@ var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 var FormView = require('web.FormView');
 
-const cpHelpers = testUtils.controlPanel;
+const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 
 async function createParent(params) {
@@ -207,8 +207,9 @@ QUnit.module('Views', {
             dialog = result;
         });
         await testUtils.nextTick();
-        await cpHelpers.removeFacet('.modal', "Bar");
-        await cpHelpers.removeFacet('.modal');
+        const modal = document.body.querySelector(".modal");
+        await cpHelpers.removeFacet(modal, "Bar");
+        await cpHelpers.removeFacet(modal);
 
         parent.destroy();
     });
@@ -567,16 +568,17 @@ QUnit.module('Views', {
         assert.containsN(dialog, '.o_data_row', 3, "should contain 3 records");
 
         // filter on bar
-        await cpHelpers.toggleFilterMenu('.modal');
-        await cpHelpers.toggleMenuItem('.modal', "Bar");
+        const modal = document.body.querySelector(".modal");
+        await cpHelpers.toggleFilterMenu(modal);
+        await cpHelpers.toggleMenuItem(modal, "Bar");
 
         assert.containsN(dialog, '.o_data_row', 2, "should contain 2 records");
 
         // save filter
-        await cpHelpers.toggleFavoriteMenu('.modal');
-        await cpHelpers.toggleSaveFavorite('.modal');
-        await cpHelpers.editFavoriteName('.modal', "some name");
-        await cpHelpers.saveFavorite('.modal');
+        await cpHelpers.toggleFavoriteMenu(modal);
+        await cpHelpers.toggleSaveFavorite(modal);
+        await cpHelpers.editFavoriteName(modal, "some name");
+        await cpHelpers.saveFavorite(modal);
 
         testUtils.mock.unpatch(ListController);
         parent.destroy();

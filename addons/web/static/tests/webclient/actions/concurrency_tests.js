@@ -8,19 +8,14 @@ import { legacyExtraNextTick, nextTick } from "../../helpers/utils";
 import { registry } from "@web/core/registry";
 import testUtils from "web.test_utils";
 import { useSetupView } from "@web/views/helpers/view_hook";
+import * as cpHelpers from "@web/../tests/search/helpers";
 
 const { Component, tags } = owl;
 const actionRegistry = registry.category("actions");
 
 let serverData;
-// legacy stuff
-let cpHelpers;
 
 QUnit.module("ActionManager", (hooks) => {
-    hooks.before(() => {
-        cpHelpers = testUtils.controlPanel;
-    });
-
     hooks.beforeEach(() => {
         serverData = getActionManagerServerData();
     });

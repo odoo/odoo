@@ -12,6 +12,7 @@ import {
     getFacetTexts,
     makeWithSearch,
     saveFavorite,
+    setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
     toggleFavoriteMenu,
     toggleSaveFavorite,
@@ -58,6 +59,7 @@ QUnit.module("Search", (hooks) => {
                 "foo,false,search": `<search/>`,
             },
         };
+        setupControlPanelFavoriteMenuRegistry();
         setupControlPanelServiceRegistry();
         serviceRegistry.add("dialog", dialogService);
     });
