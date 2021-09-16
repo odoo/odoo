@@ -206,8 +206,8 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(webClient, ".o_switch_view.o_legacy_toy.active");
 
             await cpHelpers.toggleGroupByMenu(webClient);
-            await cpHelpers.toggleMenuItem(webClient, "Date Field");
-            await cpHelpers.toggleMenuItemOption(webClient, "Date Field", "Year");
+            await toggleMenuItem(webClient, "Date Field");
+            await toggleMenuItemOption(webClient, "Date Field", "Year");
 
             await switchView(webClient, "graph");
 
@@ -233,8 +233,8 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(webClient, ".o_switch_view.o_legacy_toy.active");
 
             await cpHelpers.toggleGroupByMenu(webClient);
-            await cpHelpers.toggleMenuItem(webClient, "Date Field");
-            await cpHelpers.toggleMenuItemOption(webClient, "Date Field", "Quarter");
+            await toggleMenuItem(webClient, "Date Field");
+            await toggleMenuItemOption(webClient, "Date Field", "Quarter");
 
             await switchView(webClient, "graph");
 

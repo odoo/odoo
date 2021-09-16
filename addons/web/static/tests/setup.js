@@ -9,6 +9,7 @@ import { legacyProm } from "web.test_legacy";
 import { registerCleanup } from "./helpers/cleanup";
 import { prepareRegistriesWithCleanup } from "./helpers/mock_env";
 import { session as sessionInfo } from "@web/session";
+import { prepareLegacyRegistriesWithCleanup } from "./helpers/legacy_env_utils";
 
 const { whenReady, loadFile } = owl.utils;
 
@@ -193,6 +194,7 @@ export async function setupTests() {
     QUnit.testStart(() => {
         checkGlobalObjectsIntegrity();
         prepareRegistriesWithCleanup();
+        prepareLegacyRegistriesWithCleanup();
         forceLocaleAndTimezoneWithCleanup();
         patchBrowserWithCleanup();
         patchLegacyCoreBus();

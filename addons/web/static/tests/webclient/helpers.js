@@ -44,19 +44,33 @@ import { userService } from "@web/core/user_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { ClientActionAdapter, ViewAdapter } from "@web/legacy/action_adapters";
 import { commandService } from "@web/core/commands/command_service";
+import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
 
 const { Component, mount, tags } = owl;
 
 const actionRegistry = registry.category("actions");
 const serviceRegistry = registry.category("services");
+const favoriteMenuRegistry = registry.category("favoriteMenu");
 
 /**
- * Builds the service registry for tests using a WebClient with a default version
- * of each required service. If the registry already contains one of those
- * services, the existing one is kept (it means it has been added in the test
- * directly, e.g. to have a custom version of the service).
+ * Builds the required registries for tests using a WebClient.
+ * We use a default version of each required registry item.
+ * If the registry already contains one of those items,
+ * the existing one is kept (it means it has been added in the test
+ * directly, e.g. to have a custom version of the item).
  */
-export function setupWebClientServiceRegistry() {
+export function setupWebClientRegistries() {
+    const favoriveMenuItems = {
+        "custom-favorite-item": {
+            value: { Component: CustomFavoriteItem, groupNumber: 3 },
+            options: { sequence: 0 },
+        },
+    };
+    for (let [key, { value, options }] of Object.entries(favoriveMenuItems)) {
+        if (!favoriteMenuRegistry.contains(key)) {
+            favoriteMenuRegistry.add(key, value, options);
+        }
+    }
     const services = {
         action: () => actionService,
         command: () => commandService,
@@ -168,7 +182,6 @@ export function addLegacyMockEnvironment(env, legacyParams = {}) {
     // deploy the legacyActionManagerService (in Wowl env)
     const legacyActionManagerService = makeLegacyActionManagerService(legacyEnv);
     serviceRegistry.add("legacy_action_manager", legacyActionManagerService);
-
     serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
     // patch DebouncedField delay
     const debouncedField = basicFields.DebouncedField;
@@ -206,7 +219,7 @@ export function addLegacyMockEnvironment(env, legacyParams = {}) {
  * @param {*} params
  */
 export async function createWebClient(params) {
-    setupWebClientServiceRegistry();
+    setupWebClientRegistries();
 
     // With the compatibility layer, the action manager keeps legacy alive if they
     // are still acessible from the breacrumbs. They are manually destroyed as soon

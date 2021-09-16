@@ -23,17 +23,12 @@ import { RPCError } from "@web/core/network/rpc_service";
 import { registerCleanup } from "../../helpers/cleanup";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
+import * as cpHelpers from "@web/../tests/search/helpers";
 
 let serverData;
 const serviceRegistry = registry.category("services");
 
-// legacy stuff
-let cpHelpers;
-
 QUnit.module("ActionManager", (hooks) => {
-    hooks.before(() => {
-        cpHelpers = testUtils.controlPanel;
-    });
     hooks.beforeEach(() => {
         serverData = getActionManagerServerData();
     });
@@ -1149,13 +1144,9 @@ QUnit.module("ActionManager", (hooks) => {
             "list view is not grouped"
         );
         // open group by dropdown
-        await testUtils.dom.click(
-            $(webClient.el).find(".o_control_panel .o_cp_bottom_right button:contains(Group By)")
-        );
-        // click on first link
-        await testUtils.dom.click(
-            $(webClient.el).find(".o_control_panel .o_group_by_menu a:first")
-        );
+        await cpHelpers.toggleGroupByMenu(webClient);
+        // click on foo link
+        await cpHelpers.toggleMenuItem(webClient.el, "foo");
         await legacyExtraNextTick();
         assert.hasClass(
             $(webClient.el).find(".o_list_table")[0],
@@ -1365,7 +1356,7 @@ QUnit.module("ActionManager", (hooks) => {
             $(webClient.el).find(".o_control_panel .o_cp_bottom_right button:contains(Group By)")
         );
         await testUtils.dom.click(
-            $(webClient.el).find(".o_control_panel .o_group_by_menu a:first")
+            $(webClient.el).find(".o_control_panel .o_group_by_menu li:first")
         );
         await legacyExtraNextTick();
         assert.containsN(
@@ -1793,8 +1784,8 @@ QUnit.module("ActionManager", (hooks) => {
         await legacyExtraNextTick();
         assert.containsOnce(webClient, ".o_form_view");
         // execute the custom action from the action menu
-        await cpHelpers.toggleActionMenu(webClient.el);
-        await cpHelpers.toggleMenuItem(webClient.el, "Favorite Ponies");
+        await testUtils.controlPanel.toggleActionMenu(webClient.el);
+        await testUtils.controlPanel.toggleMenuItem(webClient.el, "Favorite Ponies");
         await legacyExtraNextTick();
         assert.containsOnce(webClient, ".o_list_view");
     });

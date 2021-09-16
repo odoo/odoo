@@ -12,7 +12,7 @@ var testUtils = require('web.test_utils');
 
 const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy_env_utils');
 
-const cpHelpers = testUtils.controlPanel;
+const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 
 QUnit.module('fields', {}, function () {
@@ -211,8 +211,9 @@ QUnit.module('relational_fields', {
         assert.strictEqual($('.o_pager_value').text(), "181-160", "should display the second page");
         assert.strictEqual($('tr.o_data_row').length, 80, "should display 80 record");
 
-        await cpHelpers.editSearch('.modal', "first");
-        await cpHelpers.validateSearch('.modal');
+        const modal = document.body.querySelector(".modal");
+        await cpHelpers.editSearch(modal, "first");
+        await cpHelpers.validateSearch(modal);
 
         assert.strictEqual($('.o_pager_limit').text(), "11", "there should be 1 record");
         assert.strictEqual($('.o_pager_value').text(), "11-1", "should display the first page");
@@ -1742,8 +1743,9 @@ QUnit.module('relational_fields', {
         });
         await testUtils.fields.many2one.clickOpenDropdown('trululu');
         await testUtils.fields.many2one.clickItem('trululu', 'Search');
-        await cpHelpers.toggleGroupByMenu('.modal');
-        await cpHelpers.toggleMenuItem('.modal', "Bar");
+        const modal = document.body.querySelector(".modal");
+        await cpHelpers.toggleGroupByMenu(modal);
+        await cpHelpers.toggleMenuItem(modal, "Bar");
 
         await testUtils.dom.click($('.modal .o_group_header:first'));
 
