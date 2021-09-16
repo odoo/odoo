@@ -38,7 +38,7 @@
             }),
         ]"/>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="account.tax_group_taxes"/>
+        <field name="tax_group_id" ref="l10n_ar.tax_group_otros_impuestos"/>
         <field name="company_id" ref="l10n_ar.company_ri"/>
     </record>
 
@@ -80,7 +80,7 @@
             }),
         ]"/>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_group_id" ref="account.tax_group_taxes"/>
+        <field name="tax_group_id" ref="l10n_ar.tax_group_otros_impuestos"/>
         <field name="company_id" ref="l10n_ar.company_ri"/>
     </record>
 
@@ -94,7 +94,7 @@
              ref('tax_group_percepcion_iibb_ba'),
              ref('tax_group_percepcion_iibb_co'),
              ref('tax_group_percepcion_iibb_sf'),
-             ref('account.tax_group_taxes')]
+             ref('l10n_ar.tax_group_otros_impuestos')]
         )]).ids"/>
         <value eval="{'amount': 0.1, 'active': True}"/>
     </function>
