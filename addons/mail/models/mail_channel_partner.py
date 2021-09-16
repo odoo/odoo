@@ -65,6 +65,10 @@ class ChannelPartner(models.Model):
                     raise AccessError(_('You can not write on %(field_name)s.', field_name=field_name))
         return super(ChannelPartner, self).write(vals)
 
+    def unlink(self):
+        self.sudo().rtc_session_ids.unlink()
+        return super().unlink()
+
     @api.model
     def _get_as_sudo_from_request_or_raise(self, request, channel_id):
         channel_partner = self._get_as_sudo_from_request(request=request, channel_id=channel_id)
