@@ -1,12 +1,4 @@
 <templates>
-    <t t-name="base_import.ImportMenu" owl="1">
-        <li class="o_menu_item o_import_menu" role="menuitem">
-            <button type="button" class="dropdown-item" t-on-click="_onImportClick">
-                Import records
-            </button>
-        </li>
-    </t>
-
     <t t-name="ImportView">
         <t t-set="_id" t-value="_.uniqueId('export')"/>
         <form action="" method="post" enctype="multipart/form-data" class="oe_import">

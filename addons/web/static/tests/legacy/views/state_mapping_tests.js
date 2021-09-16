@@ -5,6 +5,7 @@ import {
     getFacetTexts,
     removeFacet,
     saveFavorite,
+    setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
     switchView,
     toggleFavoriteMenu,
@@ -68,6 +69,7 @@ QUnit.module("Views", (hooks) => {
                 `,
             },
         };
+        setupControlPanelFavoriteMenuRegistry();
         setupControlPanelServiceRegistry();
         serviceRegistry.add("dialog", dialogService);
 

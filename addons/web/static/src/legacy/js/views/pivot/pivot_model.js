@@ -1119,6 +1119,7 @@ var PivotModel = AbstractModel.extend({
                 groupId: groupId,
                 height: isLeaf ? (colGroupBys.length + 1 - rowIndex) : 1,
                 isLeaf: isLeaf,
+                isFolded: isLeaf && colGroupBys.length > group.values.length,
                 label: rowIndex === 0 ? undefined : fields[colGroupBys[rowIndex - 1].split(':')[0]].string,
                 title: group.labels[group.labels.length - 1] || _t('Total'),
                 width: leafCount * measureCount * (2 * originCount - 1),
@@ -1202,6 +1203,7 @@ var PivotModel = AbstractModel.extend({
             groupId: rowGroupId,
             indent: indent,
             isLeaf: isLeaf,
+            isFolded: isLeaf && rowGroupBys.length > group.values.length,
             subGroupMeasurements: subGroupMeasurements
         });
 

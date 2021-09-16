@@ -21,7 +21,7 @@ import {
     doAction,
     getActionManagerServerData,
     loadState,
-    setupWebClientServiceRegistry,
+    setupWebClientRegistries,
 } from "./../helpers";
 import { errorService } from "@web/core/errors/error_service";
 
@@ -79,7 +79,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(4);
         const hash = "#action=1001";
         Object.assign(browser.location, { hash });
-        setupWebClientServiceRegistry();
+        setupWebClientRegistries();
 
         const mockRPC = (route) => assert.step(route);
         const env = await makeTestEnv({ serverData, mockRPC });
@@ -96,7 +96,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(3);
         const hash = "#action=__test__client__action__";
         Object.assign(browser.location, { hash });
-        setupWebClientServiceRegistry();
+        setupWebClientRegistries();
 
         const mockRPC = (route) => assert.step(route);
         const env = await makeTestEnv({ serverData, mockRPC });

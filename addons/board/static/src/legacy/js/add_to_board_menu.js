@@ -3,12 +3,11 @@ odoo.define('board.AddToBoardMenu', function (require) {
 
     const Context = require('web.Context');
     const Domain = require('web.Domain');
-    const DropdownMenuItem = require('web.DropdownMenuItem');
     const FavoriteMenu = require('web.FavoriteMenu');
     const { sprintf } = require('web.utils');
     const { useAutofocus } = require('web.custom_hooks');
 
-    const { useState } = owl.hooks;
+    const { Component, useState } = owl;
 
     /**
      * 'Add to board' menu
@@ -21,9 +20,8 @@ odoo.define('board.AddToBoardMenu', function (require) {
      * properties to the server to add the current view (and its context) to the
      * user's dashboard.
      * This component is only available in actions of type 'ir.actions.act_window'.
-     * @extends DropdownMenuItem
      */
-    class AddToBoardMenu extends DropdownMenuItem {
+    class AddToBoardMenu extends Component {
         constructor() {
             super(...arguments);
 
@@ -46,7 +44,7 @@ odoo.define('board.AddToBoardMenu', function (require) {
          * information.
          * @private
          */
-        async _addToBoard() {
+        async addToBoard() {
             const searchQuery = this.env.searchModel.get('query');
             const context = new Context(this.env.action.context);
             context.add(searchQuery.context);
@@ -116,7 +114,7 @@ odoo.define('board.AddToBoardMenu', function (require) {
          * @private
          * @param {KeyboardEvent} ev
          */
-        _onInputKeydown(ev) {
+        onInputKeydown(ev) {
             switch (ev.key) {
                 case 'Enter':
                     ev.preventDefault();
@@ -144,7 +142,7 @@ odoo.define('board.AddToBoardMenu', function (require) {
     }
 
     AddToBoardMenu.props = {};
-    AddToBoardMenu.template = 'AddToBoardMenu';
+    AddToBoardMenu.template = 'board.AddToBoard';
 
     FavoriteMenu.registry.add('add-to-board-menu', AddToBoardMenu, 10);
 

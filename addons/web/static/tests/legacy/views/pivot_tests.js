@@ -12,7 +12,7 @@ const legacyViewRegistry = require('web.view_registry');
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 
 var _t = core._t;
-const cpHelpers = testUtils.controlPanel;
+const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 var patchDate = testUtils.mock.patchDate;
 
@@ -485,8 +485,8 @@ QUnit.module('Views', {
             },
         });
 
-        await cpHelpers.toggleComparisonMenu(pivot);
-        await cpHelpers.toggleMenuItem(pivot, 'Date: Previous period');
+        await cpHelpers.toggleComparisonMenu(pivot.el);
+        await cpHelpers.toggleMenuItem(pivot.el, 'Date: Previous period');
 
         assert.hasClass(pivot.$('table'), 'o_enable_linking',
             "root node should have classname 'o_enable_linking'");
@@ -616,21 +616,32 @@ QUnit.module('Views', {
             "should have 3 rows: 1 for the opened header, and 2 for data");
 
         // click on the opened header to close it
-        await testUtils.dom.click(pivot.$('.o_pivot_header_cell_opened'));
+        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_header_cell_opened'));
 
         assert.containsOnce(pivot, 'tbody tr', "should have 1 row");
 
         // click on closed header to open dropdown
-        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed'));
-        assert.containsN(pivot, '.o_pivot_field_menu .dropdown-item[data-field="date"]', 6,
-            "should have the date field as proposition (Date, Day, Week, Month, Quarter and Year)");
-        assert.containsOnce(pivot, '.o_pivot_field_menu .dropdown-item[data-field="product_id"]',
-            "should have the product_id field as proposition");
-        assert.containsNone(pivot, '.o_pivot_field_menu .dropdown-item[data-field="non_stored_m2o"]',
-            "should not have the non_stored_m2o field as proposition");
+        await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_closed'));
+        assert.containsOnce(pivot, ".o_pivot .o_dropdown_menu");
+        assert.strictEqual(
+            pivot.el.querySelector(".o_pivot .o_dropdown_menu").innerText.replace(/\s/g, ""),
+            "CompanyTypeCustomerDateOtherProductProductbar"
+        );
 
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"]:first'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"][role="menuitem"]:contains(Month)'));
+        // open the Date sub dropdown
+        await testUtils.dom.click(pivot.el.querySelector(".o_pivot .o_dropdown_menu .o_dropdown_toggler.o_menu_item"));
+        assert.strictEqual(
+            pivot.el
+                .querySelector(".o_pivot .o_dropdown_menu .o_dropdown_menu")
+                .innerText.replace(/\s/g, ""),
+            "YearQuarterMonthWeekDay"
+        );
+
+        await testUtils.dom.click(
+            pivot.el.querySelectorAll(
+                ".o_pivot .o_dropdown_menu .o_dropdown_menu .o_dropdown_item"
+            )[2]
+        );
 
         assert.containsN(pivot, 'tbody tr', 4,
             "should have 4 rows: one for header, 3 for data");
@@ -654,14 +665,15 @@ QUnit.module('Views', {
         });
 
         // open dropdown to zoom into first row
-        await testUtils.dom.clickFirst(pivot.$('tbody .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
         // click on date by day
-        pivot.$('.dropdown-menu.show .o_inline_dropdown .dropdown-menu').toggle(); // unfold inline dropdown
-        await testUtils.nextTick();
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"]:contains("Day")'));
+        await testUtils.dom.click(pivot.el.querySelector("tbody .o_dropdown_menu .o_dropdown_toggler"));
+        await testUtils.dom.click(
+            pivot.el.querySelector("tbody .o_dropdown_menu .o_dropdown_menu li:nth-child(5)")
+        );
 
         // open dropdown to zoom into second row
-        await testUtils.dom.clickLast(pivot.$('tbody th.o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelectorAll("tbody th.o_pivot_header_cell_closed")[1]);
 
         assert.containsN(pivot, 'tbody tr', 7,
             "should have 7 rows (1 for total, 1 for xphone, 1 for xpad, 4 for data)");
@@ -690,7 +702,7 @@ QUnit.module('Views', {
 
         // unfold it
         await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="product_id"]'));
+        await testUtils.dom.click(pivot.el.querySelector(".o_dropdown_menu li:nth-child(5)"));
         assert.containsN(pivot, 'thead tr', 3);
 
         pivot.destroy();
@@ -715,7 +727,7 @@ QUnit.module('Views', {
 
         // unfold it
         await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed:nth(1)'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="company_type"]'));
+        await testUtils.dom.click(pivot.el.querySelector(".o_dropdown_menu li:nth-child(1)"));
         assert.containsN(pivot, 'thead tr', 4);
         values = ['12', '3', '17', '32'];
         assert.strictEqual(getCurrentValues(pivot), values.join(','));
@@ -748,23 +760,23 @@ QUnit.module('Views', {
         });
 
         // open group by dropdown
-        await cpHelpers.toggleGroupByMenu(pivot);
+        await cpHelpers.toggleGroupByMenu(pivot.el);
         assert.containsN(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item', 3,
             "should have 2 dropdown items in searchview groupby");
-        assert.containsOnce(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_generator_menu',
+        assert.containsOnce(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_add_custom_group_menu',
             "should have custom group generator in searchview groupby");
 
         // click on closed header to open dropdown
-        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed:nth(1)'));
-        assert.containsN(pivot, '.o_pivot_field_menu > .dropdown-item', 3,
+        await testUtils.dom.click(pivot.el.querySelector('tbody  tr:last-child .o_pivot_header_cell_closed'));
+        assert.containsN(pivot, '.o_pivot_field_menu .dropdown-item', 3,
             "should have 3 dropdown items same as searchview groupby");
-        assert.containsOnce(pivot, '.o_pivot_field_menu .o_generator_menu',
+        assert.containsOnce(pivot, '.o_pivot_field_menu .o_add_custom_group_menu',
             "should have custom group generator same as searchview groupby");
         // check custom groupby selection has groupable fields only
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu .o_add_custom_group_by'));
-        assert.containsN(pivot, '.o_pivot_field_menu .o_generator_menu .o_group_by_selector option', 6,
-            "should have 3 fields in custom groupby");
-        const optionDescriptions = [...pivot.$('.o_pivot_field_menu .o_generator_menu .o_group_by_selector option')]
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_add_custom_group_menu .o_dropdown_toggler'));
+        assert.containsN(pivot, '.o_pivot_field_menu .o_add_custom_group_menu .o_dropdown_menu option', 6,
+            "should have 6 fields in custom groupby");
+        const optionDescriptions = [...pivot.$('.o_pivot_field_menu .o_add_custom_group_menu .o_dropdown_menu option')]
             .map(option => option.innerText.trim());
         assert.deepEqual(
             optionDescriptions,
@@ -782,6 +794,71 @@ QUnit.module('Views', {
     });
 
     QUnit.test('pivot group dropdown sync with search groupby dropdown', async function (assert) {
+        assert.expect(6);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <pivot>
+                    <field name="product_id" type="row"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
+                        <filter name="product_id" string="product" context="{'group_by': 'product_id'}"/>
+                    </search>
+                `,
+            },
+        });
+
+        // open group by dropdown
+        await cpHelpers.toggleGroupByMenu(pivot.el);
+        assert.containsN(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item', 2,
+            "should have 2 dropdown items in searchview groupby");
+
+        // click on closed header to open dropdown
+        await testUtils.dom.click(pivot.el.querySelector('tbody tr:last-child .o_pivot_header_cell_closed'));
+        assert.containsN(
+            pivot.el,
+            ".o_dropdown_menu .o_menu_item",
+            2,
+            "should have 2 dropdown items in pivot groupby"
+        );
+
+        await cpHelpers.toggleGroupByMenu(pivot.el);
+        await cpHelpers.toggleAddCustomGroup(pivot.el);
+        await cpHelpers.applyGroup(pivot.el);
+        assert.containsN(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item', 3,
+            "should have 3 dropdown items in searchview groupby now");
+
+        // click on closed header to open dropdown
+        await testUtils.dom.click(pivot.el.querySelector('tbody tr:last-child .o_pivot_header_cell_closed'));
+        // applying groupby/custom groupby will update pivot groupby dropdown while reverse is not true
+        assert.containsN(pivot, '.o_pivot_field_menu .dropdown-item', 3,
+            "should have 3 dropdown items same as searchview groupby");
+
+        // add a custom group in pivot groupby
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_add_custom_group_menu .o_dropdown_toggler'));
+        await testUtils.fields.editSelect(pivot.$('.o_pivot_field_menu .o_add_custom_group_menu select'), 'date');
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_add_custom_group_menu .o_dropdown_menu button'));
+        // click on closed header to open groupby selection dropdown
+        await testUtils.dom.click(pivot.el.querySelector('tbody tr:last-child .o_pivot_header_cell_closed'));
+        assert.containsN(pivot, '.o_pivot_field_menu .o_menu_item', 4,
+            "should have 4 dropdown items pivot groupby dropdown");
+
+        // applying custom groupby in pivot groupby dropdown will not update search dropdown
+        await cpHelpers.toggleGroupByMenu(pivot.el);
+        assert.containsN(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item', 3,
+            "should have 3 dropdown items in searchview groupby dropdown");
+
+        pivot.destroy();
+    });
+
+    QUnit.test('pivot groupby dropdown renders custom search at the end with separator', async function (assert) {
         assert.expect(5);
 
         const pivot = await createView({
@@ -804,81 +881,28 @@ QUnit.module('Views', {
         });
 
         // open group by dropdown
-        await cpHelpers.toggleGroupByMenu(pivot);
+        await cpHelpers.toggleGroupByMenu(pivot.el);
         assert.containsN(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item', 2,
             "should have 2 dropdown items in searchview groupby");
-
-        await cpHelpers.toggleMenuItem(pivot, "bar");
-        // click on closed header to open dropdown
-        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed:nth(1)'));
-
-        await cpHelpers.toggleGroupByMenu(pivot);
-        await cpHelpers.toggleAddCustomGroup(pivot);
-        await cpHelpers.applyGroup(pivot);
+        await cpHelpers.toggleAddCustomGroup(pivot.el);
+        await cpHelpers.applyGroup(pivot.el);
         assert.containsN(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item', 3,
             "should have 3 dropdown items in searchview groupby now");
 
         // click on closed header to open dropdown
-        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed:nth(1)'));
-        // applying groupby/custom groupby will update pivot groupby dropdown while reverse is not true
-        assert.containsN(pivot, '.o_pivot_field_menu > .dropdown-item', 3,
-            "should have 3 dropdown items same as searchview groupby");
-
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu .o_add_custom_group_by'));
-        await testUtils.fields.editSelect(pivot.$('.o_pivot_field_menu .o_generator_menu .o_group_by_selector'), 'date');
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu button.o_apply_group_by'));
-        // click on closed header to open groupby selection dropdown
-        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed:nth(1)'));
-        assert.containsN(pivot, '.o_pivot_field_menu > [role="menuitem"]', 4,
-            "should have 4 dropdown items pivot groupby dropdown");
-
-        // applying custom groupby in pivot groupby dropdown will not update search dropdown
-        await cpHelpers.toggleGroupByMenu(pivot);
-        assert.containsN(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item', 3,
-            "should have 3 dropdown items in searchview groupby dropdown");
-
-        pivot.destroy();
-    });
-
-    QUnit.test('pivot groupby dropdown renders custom search at the end with separator', async function (assert) {
-        assert.expect(4);
-
-        const pivot = await createView({
-            View: PivotView,
-            model: "partner",
-            data: this.data,
-            arch: `
-                <pivot>
-                    <field name="product_id" type="row"/>
-                    <field name="foo" type="measure"/>
-                </pivot>`,
-            archs: {
-                'partner,false,search': `
-                    <search>
-                        <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
-                        <filter name="product_id" string="product" context="{'group_by': 'product_id'}"/>
-                    </search>
-                `,
-            },
-        });
-
-        // open group by dropdown
-        await cpHelpers.toggleGroupByMenu(pivot);
-        assert.containsN(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item', 2,
-            "should have 2 dropdown items in searchview groupby");
-        await cpHelpers.toggleAddCustomGroup(pivot);
-        await cpHelpers.applyGroup(pivot);
-        assert.containsN(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item', 3,
-            "should have 3 dropdown items in searchview groupby now");
-
-        // click on closed header to open dropdown
-        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed:nth(1)'));
-        assert.deepEqual(pivot.$(".o_pivot_field_menu > .dropdown-item:last"),
-            pivot.$(".o_pivot_field_menu > .dropdown-item[data-field='company_type']"),
-            "custom group should be last item");
-        assert.strictEqual(pivot.$(".o_pivot_field_menu > .dropdown-item[data-field='company_type']").prev().attr('role'),
-            "separator",
-            "custom group should be separated by separator");
+        await testUtils.dom.click(pivot.el.querySelector('tbody tr:last-child .o_pivot_header_cell_closed'));
+        const items = pivot.el.querySelectorAll(".o_menu_item");
+        assert.deepEqual([...items].map((el) => el.innerText), ["bar", "product", "Company Type"]);
+        assert.containsN(
+            pivot,
+            "tbody .o_dropdown_menu .dropdown-divider", 2,
+            "pivot groupby menu should have two separators"
+        );
+        assert.hasClass(
+            items[items.length - 1].nextSibling,
+            "dropdown-divider",
+            "pivot groupby menu separator is placed after all menu items"
+        );
 
         pivot.destroy();
     });
@@ -916,10 +940,10 @@ QUnit.module('Views', {
 
         // click on closed header to open dropdown and apply groupby on date field
         await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu .o_add_custom_group_by'));
-        await testUtils.fields.editSelect(pivot.$('.o_pivot_field_menu .o_generator_menu .o_group_by_selector'), 'date');
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_add_custom_group_menu .o_dropdown_toggler'));
+        await testUtils.fields.editSelect(pivot.$('.o_pivot_field_menu .o_add_custom_group_menu select'), 'date');
         checkReadGroup = true;
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu button.o_apply_group_by'));
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_add_custom_group_menu .btn-primary'));
 
         pivot.destroy();
     });
@@ -942,14 +966,14 @@ QUnit.module('Views', {
         });
 
         // open group by dropdown
-        await cpHelpers.toggleGroupByMenu(pivot);
+        await cpHelpers.toggleGroupByMenu(pivot.el);
         assert.containsNone(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item',
             "should not have any dropdown item in searchview groupby");
         // click on closed header to open dropdown
-        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed:nth(1)'));
-        assert.containsN(pivot, '.o_pivot_field_menu > [role="menuitem"]', 6,
+        await testUtils.dom.click(pivot.el.querySelector('tbody tr:last-child .o_pivot_header_cell_closed'));
+        assert.containsN(pivot, '.o_pivot_field_menu .o_menu_item', 6,
             "should have 6 dropdown items i.e. all groupable fields available");
-        assert.containsNone(pivot, '.o_pivot_field_menu .o_generator_menu',
+        assert.containsNone(pivot, '.o_pivot_field_menu .o_add_custom_group_menu',
             "should not have custom group generator in groupby dropdown");
 
         pivot.destroy();
@@ -988,23 +1012,23 @@ QUnit.module('Views', {
         });
 
         // open group by dropdown
-        await cpHelpers.toggleGroupByMenu(pivot);
+        await cpHelpers.toggleGroupByMenu(pivot.el);
         assert.containsOnce(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item',
             "should have 1 dropdown item in searchview groupby");
-        assert.containsNone(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_generator_menu',
+        assert.containsNone(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_add_custom_group_menu',
             "should not have custom group generator in searchview groupby");
 
         // click on closed header to open dropdown
-        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed'));
-        assert.containsOnce(pivot, '.o_pivot_field_menu > [role="menuitem"]',
+        await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_closed'));
+        assert.containsOnce(pivot, '.o_pivot_field_menu .o_menu_item',
             "should have 1 dropdown items");
-        assert.containsNone(pivot, '.o_pivot_field_menu .o_generator_menu',
+        assert.containsNone(pivot, '.o_pivot_field_menu .o_add_custom_group_menu',
             "should not have custom group generator in groupby dropdown");
 
         pivot.destroy();
     });
 
-    QUnit.test('pivot custom groupby: grouping on date field use default interval month', async function (assert) {
+    QUnit.test('pivot custom groupby: adding a custom group close the pivot groupby menu', async function (assert) {
         assert.expect(2);
 
         const pivot = await createView({
@@ -1027,13 +1051,13 @@ QUnit.module('Views', {
 
         // click on closed header to open dropdown and apply groupby on date field
         await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu .o_add_custom_group_by'));
-        assert.containsOnce(pivot, '.o_pivot_field_menu .o_generator_menu',
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_add_custom_group_menu .o_dropdown_toggler'));
+        assert.containsOnce(pivot, '.o_pivot_field_menu .o_add_custom_group_menu',
             "should have custom group generator in groupby dropdown");
 
         // click on apply button should close dropdown
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu button.o_apply_group_by'));
-        assert.containsNone(pivot, '.o_pivot_field_menu .o_generator_menu',
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_add_custom_group_menu button.btn-primary'));
+        assert.containsNone(pivot, '.o_pivot_field_menu .o_add_custom_group_menu',
             "should not have custom group generator in groupby dropdown");
 
         pivot.destroy();
@@ -1179,7 +1203,7 @@ QUnit.module('Views', {
         // tries to open a field selection menu, to make sure it was not
         // removed from the dom.
         await testUtils.dom.clickFirst(pivot.$('.o_pivot_header_cell_closed'));
-        assert.containsOnce(pivot, '.o_pivot_field_menu',
+        assert.containsOnce(pivot, '.o_dropdown_menu',
             "the field selector menu exists");
         pivot.destroy();
     });
@@ -1464,7 +1488,7 @@ QUnit.module('Views', {
 
         // expand header on field customer
         await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed:nth(1)'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="customer"]:first'));
+        await testUtils.dom.click(pivot.el.querySelectorAll("thead .o_dropdown_menu .o_dropdown_item")[1]);
         assert.deepEqual(pivot.getOwnedQueryParams(), {
             context: {
                 pivot_column_groupby: ['date:day', 'customer'],
@@ -1474,8 +1498,8 @@ QUnit.module('Views', {
         }, "context should be correct");
 
         // expand row on field product_id
-        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="product_id"]:first'));
+        await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelectorAll("tbody .o_dropdown_menu .o_dropdown_item")[4]);
         assert.deepEqual(pivot.getOwnedQueryParams(), {
             context: {
                 pivot_column_groupby: ['date:day', 'customer'],
@@ -1546,8 +1570,8 @@ QUnit.module('Views', {
             },
         }, "context should be correct");
 
-        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="product_id"]:first'));
+        await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.$('.o_dropdown_menu li:nth-child(5)'));
 
         assert.deepEqual(pivot.getOwnedQueryParams(), {
             context: {
@@ -1558,7 +1582,7 @@ QUnit.module('Views', {
         }, "context should be correct");
 
         await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="customer"]:first'));
+        await testUtils.dom.click(pivot.$('.o_dropdown_menu li:nth-child(2)'));
 
         assert.deepEqual(pivot.getOwnedQueryParams(), {
             context: {
@@ -1613,7 +1637,7 @@ QUnit.module('Views', {
         await pivot.reload(reloadParams);
         // collapse all headers
         await testUtils.dom.click(pivot.$('.o_pivot_header_cell_opened:first'));
-        await testUtils.dom.click(pivot.$('.o_pivot_header_cell_opened'));
+        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_header_cell_opened'));
 
         // Check Columns
         assert.strictEqual(pivot.$('thead .o_pivot_header_cell_closed').length, 1,
@@ -1672,7 +1696,7 @@ QUnit.module('Views', {
 
         // Set a column groupby
         await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field=customer]'));
+        await testUtils.dom.click(pivot.el.querySelectorAll("thead .o_dropdown_menu .o_dropdown_item")[1]);
 
         // Set a domain
         await pivot.update({domain: [['product_id', '=', 37]], groupBy: [], context: {}});
@@ -1687,7 +1711,7 @@ QUnit.module('Views', {
 
         // Set a column groupby
         await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field=product_id]'));
+        await testUtils.dom.click(pivot.el.querySelectorAll("thead .o_dropdown_menu .o_dropdown_item")[4]);
 
         // Set a domain
         await pivot.update({domain: [['product_id', '=', 41]], groupBy: [], context: {}});
@@ -1725,7 +1749,7 @@ QUnit.module('Views', {
 
         // expand a col group
         await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed:nth(1)'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="customer"]'));
+        await testUtils.dom.click(pivot.el.querySelectorAll("thead .o_dropdown_menu .o_dropdown_item")[1]);
 
         values = [
             "29", "1", "2", "32",
@@ -1735,8 +1759,8 @@ QUnit.module('Views', {
         assert.strictEqual(getCurrentValues(pivot), values.join(','));
 
         // expand a row group
-        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed:nth(1)'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="other_product_id"]'));
+        await testUtils.dom.click(pivot.el.querySelector('tbody tr:last-child .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelectorAll("tbody .o_dropdown_menu .o_dropdown_item")[3]);
 
         values = [
             "29", "1", "2", "32",
@@ -1779,7 +1803,7 @@ QUnit.module('Views', {
 
         // Set a column groupby
         await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field=customer]'));
+        await testUtils.dom.click(pivot.el.querySelectorAll("thead .o_dropdown_menu .o_dropdown_item")[1]);
 
         // Set a domain for empty results
         await pivot.update({domain: [['id', '=', false]]});
@@ -1853,21 +1877,21 @@ QUnit.module('Views', {
         });
 
         await testUtils.dom.click(pivot.el.querySelector('thead .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.el.querySelectorAll('.o_pivot_field_menu .dropdown-item[data-field="date"]')[0]);
-        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_field_menu .dropdown-item[data-field="date"][role="menuitem"]:nth-of-type(3)'));
+        await testUtils.dom.click(pivot.el.querySelector('thead .o_dropdown_menu .o_dropdown_toggler'));
+        await testUtils.dom.click(pivot.el.querySelectorAll("thead .o_dropdown_menu .o_dropdown_menu .o_dropdown_item")[3]);
 
         // close and reopen row groupings after changing value
         this.data.partner.records.find(r => r.product_id === 37).date = '2016-10-27';
         await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_opened'));
         await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_field_menu .dropdown-item[data-field="product_id"]'));
+        await testUtils.dom.click(pivot.el.querySelectorAll("tbody .o_dropdown_menu .o_dropdown_item")[4]);
         assert.strictEqual(pivot.el.querySelectorAll('.o_pivot_cell_value')[4].innerText, ''); // xphone December 2016
 
         // invert axis, and reopen column groupings
         await testUtils.dom.click(pivot.el.querySelector('.o_cp_buttons .o_pivot_flip_button'));
         await testUtils.dom.click(pivot.el.querySelector('thead .o_pivot_header_cell_opened'));
         await testUtils.dom.click(pivot.el.querySelector('thead .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_field_menu .dropdown-item[data-field="product_id"]'));
+        await testUtils.dom.click(pivot.el.querySelectorAll("thead .o_dropdown_menu .o_dropdown_item")[4]);
         assert.strictEqual(pivot.el.querySelectorAll('.o_pivot_cell_value')[3].innerText, ''); // December 2016 xphone
 
         pivot.destroy();
@@ -2095,8 +2119,8 @@ QUnit.module('Views', {
         );
 
         // select filter "Bayou" in control panel
-        await cpHelpers.toggleFilterMenu(pivot);
-        await cpHelpers.toggleMenuItem(pivot, "Bayou");
+        await cpHelpers.toggleFilterMenu(pivot.el);
+        await cpHelpers.toggleMenuItem(pivot.el, "Bayou");
         await testUtils.nextTick();
 
         assert.deepEqual(
@@ -2354,10 +2378,12 @@ QUnit.module('Views', {
                         '<field name="product_id" type="measure"/>' +
                 '</pivot>',
         });
-        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_closed'));
         // click on date by month
-        pivot.$('.dropdown-menu.show .o_inline_dropdown .dropdown-menu').toggle(); // unfold inline dropdown
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"]:contains("Month")'));
+        await testUtils.dom.click(pivot.el.querySelector("tbody .o_dropdown_menu .o_dropdown_toggler"));
+        await testUtils.dom.click(
+            pivot.el.querySelectorAll("tbody .o_dropdown_menu .o_dropdown_menu .o_dropdown_item")[3]
+        );
 
         assert.strictEqual(pivot.$('.o_pivot_cell_value').text(), '2211',
             'should have loaded the proper data');
@@ -2398,9 +2424,9 @@ QUnit.module('Views', {
                 '</pivot>',
         });
 
-        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_closed'));
 
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="product_id"]:first'));
+        await testUtils.dom.click(pivot.el.querySelectorAll("tbody .o_dropdown_item")[4]);
 
         assert.strictEqual(pivot.$('.o_pivot_cell_value').text(), '211',
             'should have loaded the proper data');
@@ -2421,11 +2447,11 @@ QUnit.module('Views', {
 
         // Set a column groupby
         await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field=customer]:first'));
+        await testUtils.dom.click(pivot.el.querySelectorAll("thead .o_dropdown_item")[1]);
 
         // Set a Row groupby
-        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field=product_id]:first'));
+        await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelectorAll("tbody .o_dropdown_item")[4]);
 
         // Set a domain
         await testUtils.pivot.reload(pivot, {domain: [['product_id', '=', 41]]});
@@ -2442,12 +2468,16 @@ QUnit.module('Views', {
         assert.deepEqual(pivot.getOwnedQueryParams(), expectedContext,
             'The pivot view should have the right context');
 
-        var $xpadHeader = pivot.$('tbody .o_pivot_header_cell_closed[data-original-title=Product]');
-        assert.equal($xpadHeader.length, 1,
-            'There should be only one product line because of the domain');
-
-        assert.equal($xpadHeader.text(), 'xpad',
-            'The product should be the right one');
+        assert.containsOnce(
+            pivot,
+            "tbody .o_pivot_header_cell_closed",
+            "There should be only one product line because of the domain"
+        );
+        assert.strictEqual(
+            pivot.el.querySelector("tbody .o_pivot_header_cell_closed").innerText,
+            "xpad",
+            "The product should be the right one"
+        );
 
         pivot.destroy();
     });
@@ -2631,16 +2661,16 @@ QUnit.module('Views', {
         });
 
         // with no data
-        await cpHelpers.toggleComparisonMenu(pivot);
-        await cpHelpers.toggleMenuItem(pivot, 'Date: Previous period');
+        await cpHelpers.toggleComparisonMenu(pivot.el);
+        await cpHelpers.toggleMenuItem(pivot.el, 'Date: Previous period');
 
         assert.strictEqual(pivot.$('.o_pivot p.o_view_nocontent_empty_folder').length, 1);
 
-        await cpHelpers.toggleFilterMenu(pivot);
-        await cpHelpers.toggleMenuItem(pivot, 'Date');
-        await cpHelpers.toggleMenuItemOption(pivot, 'Date', 'December');
-        await cpHelpers.toggleMenuItemOption(pivot, 'Date', '2016');
-        await cpHelpers.toggleMenuItemOption(pivot, 'Date', '2015');
+        await cpHelpers.toggleFilterMenu(pivot.el);
+        await cpHelpers.toggleMenuItem(pivot.el, 'Date');
+        await cpHelpers.toggleMenuItemOption(pivot.el, 'Date', 'December');
+        await cpHelpers.toggleMenuItemOption(pivot.el, 'Date', '2016');
+        await cpHelpers.toggleMenuItemOption(pivot.el, 'Date', '2015');
 
         assert.containsN(pivot, '.o_pivot thead tr:last th', 9,
             "last header row should contains 9 cells (3*[December 2016, November 2016, Variation]");
@@ -2651,7 +2681,7 @@ QUnit.module('Views', {
 
         // with data, with row groupby
         await testUtils.dom.click(pivot.$('.o_pivot .o_pivot_header_cell_closed').eq(2));
-        await testUtils.dom.click(pivot.$('.o_pivot .o_pivot_field_menu a[data-field="product_id"]'));
+        await testUtils.dom.click(pivot.el.querySelectorAll("tbody .o_dropdown_menu .o_dropdown_item")[4]);
         values = [
             "19", "0", "-100%", "0", "13", "100%", "19", "13", "-31.58%",
             "19", "0", "-100%", "0", "1" , "100%", "19", "1", "-94.74%",
@@ -2686,10 +2716,10 @@ QUnit.module('Views', {
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
-        await cpHelpers.toggleFavoriteMenu(pivot);
-        await cpHelpers.toggleSaveFavorite(pivot);
-        await cpHelpers.editFavoriteName(pivot, 'Fav');
-        await cpHelpers.saveFavorite(pivot);
+        await cpHelpers.toggleFavoriteMenu(pivot.el);
+        await cpHelpers.toggleSaveFavorite(pivot.el);
+        await cpHelpers.editFavoriteName(pivot.el, 'Fav');
+        await cpHelpers.saveFavorite(pivot.el);
 
         unpatchDate();
         pivot.destroy();
@@ -2754,9 +2784,9 @@ QUnit.module('Views', {
         });
 
         // open comparison menu
-        await cpHelpers.toggleComparisonMenu(pivot);
+        await cpHelpers.toggleComparisonMenu(pivot.el);
         // compare October 2016 to September 2016
-        await cpHelpers.toggleMenuItem(pivot, 'Date: Previous period');
+        await cpHelpers.toggleMenuItem(pivot.el, 'Date: Previous period');
 
         // With the data above, the time ranges contain no record.
         assert.strictEqual(pivot.$('.o_pivot p.o_view_nocontent_empty_folder').length, 1, "there should be no data");
@@ -2764,10 +2794,10 @@ QUnit.module('Views', {
         // are deactivated (exception: the 'Measures' button).
         assert.ok(pivot.$('.o_control_panel button.o_pivot_download').prop('disabled'));
 
-        await cpHelpers.toggleFilterMenu(pivot);
-        await cpHelpers.toggleMenuItem(pivot, 'Date');
-        await cpHelpers.toggleMenuItemOption(pivot, 'Date', 'December');
-        await cpHelpers.toggleMenuItemOption(pivot, 'Date', 'October');
+        await cpHelpers.toggleFilterMenu(pivot.el);
+        await cpHelpers.toggleMenuItem(pivot.el, 'Date');
+        await cpHelpers.toggleMenuItemOption(pivot.el, 'Date', 'December');
+        await cpHelpers.toggleMenuItemOption(pivot.el, 'Date', 'October');
 
         // With the data above, the time ranges contain some records.
         // export data. Should execute 'get_file'
@@ -2840,8 +2870,8 @@ QUnit.module('Views', {
         mockMock = true;
 
         // compare December 2016 to November 2016
-        await cpHelpers.toggleComparisonMenu(pivot);
-        await cpHelpers.toggleMenuItem(pivot, 'Date: Previous period');
+        await cpHelpers.toggleComparisonMenu(pivot.el);
+        await cpHelpers.toggleMenuItem(pivot.el, 'Date: Previous period');
 
         var values = [
             "0", "4", "100%",
@@ -2888,8 +2918,8 @@ QUnit.module('Views', {
         });
 
         // compare December 2016 to November 2016
-        await cpHelpers.toggleComparisonMenu(pivot);
-        await cpHelpers.toggleMenuItem(pivot, 'Date: Previous period');
+        await cpHelpers.toggleComparisonMenu(pivot.el);
+        await cpHelpers.toggleMenuItem(pivot.el, 'Date: Previous period');
 
         // initial sanity check
         var values = [
@@ -3023,8 +3053,8 @@ QUnit.module('Views', {
         });
 
         // compare December 2016 to November 2016
-        await cpHelpers.toggleComparisonMenu(pivot);
-        await cpHelpers.toggleMenuItem(pivot, 'Date: Previous period');
+        await cpHelpers.toggleComparisonMenu(pivot.el);
+        await cpHelpers.toggleMenuItem(pivot.el, 'Date: Previous period');
 
         // initial sanity check
         var values = [
@@ -3126,13 +3156,13 @@ QUnit.module('Views', {
         );
 
         // Filter on December 2016
-        await cpHelpers.toggleFilterMenu(pivot);
-        await cpHelpers.toggleMenuItem(pivot, 'Date');
-        await cpHelpers.toggleMenuItemOption(pivot, 'Date', 'December');
+        await cpHelpers.toggleFilterMenu(pivot.el);
+        await cpHelpers.toggleMenuItem(pivot.el, 'Date');
+        await cpHelpers.toggleMenuItemOption(pivot.el, 'Date', 'December');
 
         // compare December 2016 to November 2016
-        await cpHelpers.toggleComparisonMenu(pivot);
-        await cpHelpers.toggleMenuItem(pivot, 'Date: Previous period');
+        await cpHelpers.toggleComparisonMenu(pivot.el);
+        await cpHelpers.toggleMenuItem(pivot.el, 'Date: Previous period');
 
         assert.strictEqual(
             pivot.$('th').slice(0, 7).text(),
@@ -3256,9 +3286,9 @@ QUnit.module('Views', {
 
 
         // open group by menu and add new groupby
-        await cpHelpers.toggleGroupByMenu(pivot);
-        await cpHelpers.toggleAddCustomGroup(pivot);
-        await cpHelpers.applyGroup(pivot);
+        await cpHelpers.toggleGroupByMenu(pivot.el);
+        await cpHelpers.toggleAddCustomGroup(pivot.el);
+        await cpHelpers.applyGroup(pivot.el);
 
         assert.strictEqual(
             pivot.$('th').slice(0, 2).text(),
@@ -3278,8 +3308,8 @@ QUnit.module('Views', {
         );
 
         // Set a Row groupby
-        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed').eq(0));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field=product_id]:first'));
+        await testUtils.dom.click(pivot.el.querySelector('tbody tr:nth-child(2) .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelectorAll("tbody .o_dropdown_item")[4]);
 
         assert.strictEqual(
             pivot.$('th').slice(0, 2).text(),
@@ -3301,10 +3331,10 @@ QUnit.module('Views', {
         );
 
         // open groupby menu generator and add a new groupby
-        await cpHelpers.toggleGroupByMenu(pivot);
-        await cpHelpers.toggleAddCustomGroup(pivot);
-        await cpHelpers.selectGroup(pivot, 'bar');
-        await cpHelpers.applyGroup(pivot);
+        await cpHelpers.toggleGroupByMenu(pivot.el);
+        await cpHelpers.toggleAddCustomGroup(pivot.el);
+        await cpHelpers.selectGroup(pivot.el, 'bar');
+        await cpHelpers.applyGroup(pivot.el);
 
         assert.strictEqual(
             pivot.$('th').slice(0, 2).text(),
@@ -3343,14 +3373,14 @@ QUnit.module('Views', {
                 additionalMeasures: ['product_id'],
             },
         });
-        await testUtils.dom.clickFirst(pivot.$('th.o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field=product_id]:first'));
+        await testUtils.dom.click(pivot.el.querySelector("thead th.o_pivot_header_cell_closed"));
+        await testUtils.dom.click(pivot.el.querySelectorAll("thead .o_dropdown_menu .o_dropdown_item")[5]);
 
         // Click on the two dropdown
-        await testUtils.dom.click(pivot.$('th.o_pivot_header_cell_closed')[0]);
-        await testUtils.dom.click(pivot.$('th.o_pivot_header_cell_closed')[1]);
+        await testUtils.dom.click(pivot.el.querySelectorAll("thead th.o_pivot_header_cell_closed")[0]);
+        await testUtils.dom.click(pivot.el.querySelectorAll("thead th.o_pivot_header_cell_closed")[1]);
 
-        assert.containsOnce(pivot, '.o_pivot_field_menu', 'Only one dropdown should be displayed at a time');
+        assert.containsOnce(pivot, 'thead .o_dropdown_menu', 'Only one dropdown should be displayed at a time');
 
         pivot.destroy();
     });

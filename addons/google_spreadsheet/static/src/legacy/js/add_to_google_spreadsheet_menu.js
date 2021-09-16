@@ -2,8 +2,9 @@ odoo.define('board.AddToGoogleSpreadsheetMenu', function (require) {
     "use strict";
 
     const Domain = require('web.Domain');
-    const DropdownMenuItem = require('web.DropdownMenuItem');
     const FavoriteMenu = require('web.FavoriteMenu');
+
+    const { Component } = owl;
 
     /**
      * 'Add to Google spreadsheet' menu
@@ -11,9 +12,8 @@ odoo.define('board.AddToGoogleSpreadsheetMenu', function (require) {
      * Component consisting only of a button calling the server to add the current
      * view to the user's spreadsheet configuration.
      * This component is only available in actions of type 'ir.actions.act_window'.
-     * @extends DropdownMenuItem
      */
-    class AddToGoogleSpreadsheetMenu extends DropdownMenuItem {
+    class AddToGoogleSpreadsheetMenu extends Component {
 
         //---------------------------------------------------------------------
         // Handlers
@@ -22,7 +22,7 @@ odoo.define('board.AddToGoogleSpreadsheetMenu', function (require) {
         /**
          * @private
          */
-        async _onAddToSpreadsheet() {
+        async addToGoogleSpreadsheet() {
             const searchQuery = this.env.searchModel.get('query');
             const listView = this.env.action.views.find(view => view.type === 'list');
             const modelName = this.env.action.res_model;
@@ -55,7 +55,7 @@ odoo.define('board.AddToGoogleSpreadsheetMenu', function (require) {
     }
 
     AddToGoogleSpreadsheetMenu.props = {};
-    AddToGoogleSpreadsheetMenu.template = 'AddToGoogleSpreadsheetMenu';
+    AddToGoogleSpreadsheetMenu.template = "google_spreadsheet.AddToGoogleSpreadsheet";
 
     FavoriteMenu.registry.add('add-to-google-spreadsheet-menu', AddToGoogleSpreadsheetMenu, 20);
 

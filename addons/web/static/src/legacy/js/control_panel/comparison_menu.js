@@ -1,32 +1,16 @@
 odoo.define("web.ComparisonMenu", function (require) {
     "use strict";
 
-    const DropdownMenu = require("web.DropdownMenu");
     const { FACET_ICONS } = require("web.searchUtils");
     const { useModel } = require("web.Model");
 
-    /**
-     * "Comparison" menu
-     *
-     * Displays a set of comparison options related to the currently selected
-     * date filters.
-     * @extends DropdownMenu
-     */
-    class ComparisonMenu extends DropdownMenu {
+    const { Component } = owl;
+
+    class ComparisonMenu extends Component {
         constructor() {
             super(...arguments);
+            this.icon = FACET_ICONS.comparison;
             this.model = useModel('searchModel');
-        }
-
-        //---------------------------------------------------------------------
-        // Getters
-        //---------------------------------------------------------------------
-
-        /**
-         * @override
-         */
-        get icon() {
-            return FACET_ICONS.comparison;
         }
 
         /**
@@ -37,27 +21,15 @@ odoo.define("web.ComparisonMenu", function (require) {
         }
 
         /**
-         * @override
-         */
-        get title() {
-            return this.env._t("Comparison");
-        }
-
-        //---------------------------------------------------------------------
-        // Handlers
-        //---------------------------------------------------------------------
-
-        /**
          * @private
          * @param {OwlEvent} ev
          */
-        _onItemSelected(ev) {
-            ev.stopPropagation();
-            const { item } = ev.detail;
-            this.model.dispatch("toggleComparison", item.id);
+        onComparisonSelected(ev) {
+            const { itemId } = ev.detail.payload;
+            this.model.dispatch("toggleComparison", itemId);
         }
-
     }
+    ComparisonMenu.template = "web.ComparisonMenu";
 
     return ComparisonMenu;
 });

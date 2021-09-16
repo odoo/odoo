@@ -3,7 +3,7 @@ odoo.define('web.control_panel_tests', function (require) {
 
     const testUtils = require('web.test_utils');
 
-    const cpHelpers = testUtils.controlPanel;
+    const cpHelpers = require('@web/../tests/search/helpers');
     const { createControlPanel } = testUtils;
 
     QUnit.module('ControlPanel', {
@@ -167,14 +167,14 @@ odoo.define('web.control_panel_tests', function (require) {
 
             await cpHelpers.toggleFilterMenu(controlPanel);
 
-            selectorContainsValue('.o_menu_item a', "FA", true);
-            selectorContainsValue('.o_menu_item a', "FB", false);
-            selectorContainsValue('.o_menu_item a', "FC", true);
+            selectorContainsValue('.o_menu_item', "FA", true);
+            selectorContainsValue('.o_menu_item', "FB", false);
+            selectorContainsValue('.o_menu_item', "FC", true);
 
             await cpHelpers.toggleGroupByMenu(controlPanel);
 
-            selectorContainsValue('.o_menu_item a', "GA", true);
-            selectorContainsValue('.o_menu_item a', "GB", false);
+            selectorContainsValue('.o_menu_item', "GA", true);
+            selectorContainsValue('.o_menu_item', "GB", false);
 
             // 'a' to filter nothing on bar
             await cpHelpers.editSearch(controlPanel, 'a');
@@ -187,14 +187,14 @@ odoo.define('web.control_panel_tests', function (require) {
             // The items in the Filters menu and the Group By menu should be the same as before
             await cpHelpers.toggleFilterMenu(controlPanel);
 
-            selectorContainsValue('.o_menu_item a', "FA", true);
-            selectorContainsValue('.o_menu_item a', "FB", false);
-            selectorContainsValue('.o_menu_item a', "FC", true);
+            selectorContainsValue('.o_menu_item', "FA", true);
+            selectorContainsValue('.o_menu_item', "FB", false);
+            selectorContainsValue('.o_menu_item', "FC", true);
 
             await cpHelpers.toggleGroupByMenu(controlPanel);
 
-            selectorContainsValue('.o_menu_item a', "GA", true);
-            selectorContainsValue('.o_menu_item a', "GB", false);
+            selectorContainsValue('.o_menu_item', "GA", true);
+            selectorContainsValue('.o_menu_item', "GB", false);
 
             controlPanel.destroy();
         });

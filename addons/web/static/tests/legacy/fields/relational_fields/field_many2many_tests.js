@@ -4,7 +4,7 @@ odoo.define('web.field_many_to_many_tests', function (require) {
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
 
-const cpHelpers = testUtils.controlPanel;
+const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 
 QUnit.module('fields', {}, function () {
@@ -637,12 +637,12 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
-        QUnit.test('many2many: create & delete attributes', async function (assert) {
-            assert.expect(4);
+        QUnit.test('many2many: create & delete attributes (both true)', async function (assert) {
+            assert.expect(2);
 
             this.data.partner.records[0].timmy = [12, 14];
 
-            var form = await createView({
+            const form = await createView({
                 View: FormView,
                 model: 'partner',
                 data: this.data,
@@ -662,8 +662,14 @@ QUnit.module('fields', {}, function () {
             assert.containsN(form, '.o_list_record_remove', 2, "should have the 'Add an item' link");
 
             form.destroy();
+        });
 
-            form = await createView({
+        QUnit.test('many2many: create & delete attributes (both false)', async function (assert) {
+            assert.expect(2);
+
+            this.data.partner.records[0].timmy = [12, 14];
+
+            const form = await createView({
                 View: FormView,
                 model: 'partner',
                 data: this.data,
@@ -1211,8 +1217,9 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual($('.modal .o_data_row').length, 1,
                 "should contain only one row (gold)");
 
-            await cpHelpers.editSearch('.modal', 's');
-            await cpHelpers.validateSearch('.modal');
+            const modal = document.body.querySelector(".modal");
+            await cpHelpers.editSearch(modal, 's');
+            await cpHelpers.validateSearch(modal);
 
             assert.strictEqual($('.modal .o_data_row').length, 0, "should contain no row");
 

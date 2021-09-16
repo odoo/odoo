@@ -2,10 +2,10 @@ odoo.define('web.FavoriteMenu', function (require) {
     "use strict";
 
     const Dialog = require('web.OwlDialog');
-    const DropdownMenu = require('web.DropdownMenu');
     const { FACET_ICONS } = require("web.searchUtils");
     const Registry = require('web.Registry');
     const { useModel } = require('web.Model');
+    const { Component, useState } = owl;
 
     /**
      * 'Favorites' menu
@@ -15,27 +15,18 @@ odoo.define('web.FavoriteMenu', function (require) {
      * with the addition of a submenu registry used to display additional components.
      * Only the favorite generator (@see CustomFavoriteItem) is registered in
      * the `web` module.
-     * @see DropdownMenu for additional details.
-     * @extends DropdownMenu
      */
-    class FavoriteMenu extends DropdownMenu {
+    class FavoriteMenu extends Component {
         constructor() {
             super(...arguments);
-
+            this.icon = FACET_ICONS.favorite;
             this.model = useModel('searchModel');
-            this.state.deletedFavorite = false;
+            this.state = useState({ deletedFavorite: false });
         }
 
         //---------------------------------------------------------------------
         // Getters
         //---------------------------------------------------------------------
-
-        /**
-         * @override
-         */
-        get icon() {
-            return FACET_ICONS.favorite;
-        }
 
         /**
          * @override
@@ -58,23 +49,16 @@ odoo.define('web.FavoriteMenu', function (require) {
             return [...favorites, ...registryMenus];
         }
 
-        /**
-         * @override
-         */
-        get title() {
-            return this.env._t("Favorites");
-        }
-
         //---------------------------------------------------------------------
         // Handlers
         //---------------------------------------------------------------------
 
         /**
          * @private
-         * @param {OwlEvent} ev
+         * @param {int} id
          */
-        _onItemRemoved(ev) {
-            const favorite = this.items.find(fav => fav.id === ev.detail.item.id);
+        openConfirmationDialog(id) {
+            const favorite = this.items.find(fav => fav.id === id);
             this.state.deletedFavorite = favorite;
         }
 
@@ -82,9 +66,9 @@ odoo.define('web.FavoriteMenu', function (require) {
          * @private
          * @param {OwlEvent} ev
          */
-        _onItemSelected(ev) {
+        onFavoriteSelected(ev) {
             ev.stopPropagation();
-            this.model.dispatch('toggleFilter', ev.detail.item.id);
+            this.model.dispatch('toggleFilter', ev.detail.payload.itemId);
         }
 
         /**
@@ -97,10 +81,7 @@ odoo.define('web.FavoriteMenu', function (require) {
     }
 
     FavoriteMenu.registry = new Registry();
-
-    FavoriteMenu.components = Object.assign({}, DropdownMenu.components, {
-        Dialog,
-    });
+    FavoriteMenu.components = { Dialog };
     FavoriteMenu.template = 'web.Legacy.FavoriteMenu';
 
     return FavoriteMenu;

@@ -1,8 +1,8 @@
 odoo.define('web.comparison_menu_tests', function (require) {
     "use strict";
 
+    const cpHelpers = require('@web/../tests/search/helpers');
     const {
-        controlPanel: cpHelpers,
         createControlPanel,
         mock,
     } = require('web.test_utils');

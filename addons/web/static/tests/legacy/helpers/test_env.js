@@ -76,6 +76,8 @@ odoo.define('web.test_env', async function (require) {
                     return env.session.rpc(query.route, query.params, options);
                 },
                 notification: { notify() { } },
+                hotkey: { add: () => () => {} }, // fake service
+                ui: { activeElement: document }, // fake service
             }, env.services),
             session: Object.assign({
                 rpc(route, params, options) {

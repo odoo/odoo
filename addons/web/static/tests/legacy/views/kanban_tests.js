@@ -17,7 +17,7 @@ const {Markup} = require('web.utils');
 
 var makeTestPromise = testUtils.makeTestPromise;
 var nextTick = testUtils.nextTick;
-const cpHelpers = testUtils.controlPanel;
+ const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 
 QUnit.module('Views', {
@@ -435,7 +435,7 @@ QUnit.module('Views', {
         });
 
         assert.containsOnce(kanban, '.o_pager');
-        assert.strictEqual(cpHelpers.getPagerSize(kanban), "4", "pager's size should be 4");
+        assert.strictEqual(testUtils.controlPanel.getPagerSize(kanban), "4", "pager's size should be 4");
         kanban.destroy();
     });
 
@@ -459,8 +459,8 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(cpHelpers.getPagerValue(kanban), "1-2", "pager's limit should be 2");
-        assert.strictEqual(cpHelpers.getPagerSize(kanban), "4", "pager's size should be 4");
+        assert.strictEqual(testUtils.controlPanel.getPagerValue(kanban), "1-2", "pager's limit should be 2");
+        assert.strictEqual(testUtils.controlPanel.getPagerSize(kanban), "4", "pager's size should be 4");
         kanban.destroy();
     });
 
@@ -485,8 +485,8 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(cpHelpers.getPagerValue(kanban), "1-3", "pager's limit should be 3");
-        assert.strictEqual(cpHelpers.getPagerSize(kanban), "4", "pager's size should be 4");
+        assert.strictEqual(testUtils.controlPanel.getPagerValue(kanban), "1-3", "pager's limit should be 3");
+        assert.strictEqual(testUtils.controlPanel.getPagerSize(kanban), "4", "pager's size should be 4");
         kanban.destroy();
     });
 
@@ -510,22 +510,22 @@ QUnit.module('Views', {
                 </kanban>`,
         });
 
-        assert.strictEqual(cpHelpers.getPagerValue(kanban), "1-3",
+        assert.strictEqual(testUtils.controlPanel.getPagerValue(kanban), "1-3",
             "should have 3 records on current page");
-        assert.strictEqual(cpHelpers.getPagerSize(kanban), "4",
+        assert.strictEqual(testUtils.controlPanel.getPagerSize(kanban), "4",
             "should have 4 records");
 
         // move to next page
-        await cpHelpers.pagerNext(kanban);
-        assert.strictEqual(cpHelpers.getPagerValue(kanban), "4-4",
+        await testUtils.controlPanel.pagerNext(kanban);
+        assert.strictEqual(testUtils.controlPanel.getPagerValue(kanban), "4-4",
             "should be on second page");
 
         // delete a record
         await testUtils.dom.click(kanban.$('.o_kanban_record:first a:first'));
         await testUtils.dom.click($('.modal-footer button:first'));
-        assert.strictEqual(cpHelpers.getPagerValue(kanban), "1-3",
+        assert.strictEqual(testUtils.controlPanel.getPagerValue(kanban), "1-3",
             "should have 1 page only");
-        assert.strictEqual(cpHelpers.getPagerSize(kanban), "3",
+        assert.strictEqual(testUtils.controlPanel.getPagerSize(kanban), "3",
             "should have 4 records");
 
         kanban.destroy();
@@ -3505,7 +3505,7 @@ QUnit.module('Views', {
 
         assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'o_kanban_grouped');
         assert.containsNone(kanban, '.o_control_panel div.o_search_options div.o_group_by_menu');
-        assert.deepEqual(cpHelpers.getFacetTexts(kanban), []);
+        assert.deepEqual(cpHelpers.getFacetTexts(kanban.el), []);
 
         kanban.destroy();
         KanbanView.prototype.searchMenuTypes = searchMenuTypesOriginal;

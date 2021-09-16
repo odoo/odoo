@@ -1,12 +1,12 @@
 odoo.define('web.CustomFavoriteItem', function (require) {
     "use strict";
 
-    const DropdownMenuItem = require('web.DropdownMenuItem');
     const FavoriteMenu = require('web.FavoriteMenu');
     const { useAutofocus } = require('web.custom_hooks');
     const { useModel } = require('web.Model');
 
-    const { useRef } = owl.hooks;
+    const { Component, hooks, useState } = owl;
+    const { useRef } = hooks;
 
     let favoriteId = 0;
 
@@ -28,9 +28,8 @@ odoo.define('web.CustomFavoriteItem', function (require) {
      *                                    by default' checkbox.
      * Finally, there is a 'Save' button used to apply the current configuration
      * and save the context to a new filter.
-     * @extends DropdownMenuItem
      */
-    class CustomFavoriteItem extends DropdownMenuItem {
+    class CustomFavoriteItem extends Component {
         constructor() {
             super(...arguments);
 
@@ -41,7 +40,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
             this.descriptionRef = useRef('description');
             this.model = useModel('searchModel');
             this.interactive = true;
-            Object.assign(this.state, {
+            this.state = useState({
                 description: this.env.action.name || "",
                 isDefault: false,
                 isShared: false,
@@ -57,7 +56,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
         /**
          * @private
          */
-        _saveFavorite() {
+        saveFavorite() {
             if (!this.state.description.length) {
                 this.env.services.notification.notify({
                     message: this.env._t("A name for your favorite filter is required."),
@@ -96,18 +95,23 @@ odoo.define('web.CustomFavoriteItem', function (require) {
          * @private
          * @param {Event} ev change Event
          */
-        _onCheckboxChange(ev) {
-            const { checked, id } = ev.target;
-            if (this.useByDefaultId === id) {
-                this.state.isDefault = checked;
-                if (checked) {
-                    this.state.isShared = false;
-                }
-            } else {
-                this.state.isShared = checked;
-                if (checked) {
-                    this.state.isDefault = false;
-                }
+        onDefaultCheckboxChange(ev) {
+            const { checked } = ev.target;
+            this.state.isDefault = checked;
+            if (checked) {
+                this.state.isShared = false;
+            }
+        }
+
+        /**
+         * @private
+         * @param {Event} ev change Event
+         */
+        onShareCheckboxChange(ev) {
+            const { checked } = ev.target;
+            this.state.isShared = checked;
+            if (checked) {
+                this.state.isDefault = false;
             }
         }
 
@@ -115,11 +119,11 @@ odoo.define('web.CustomFavoriteItem', function (require) {
          * @private
          * @param {jQueryEvent} ev
          */
-        _onInputKeydown(ev) {
+        onInputKeydown(ev) {
             switch (ev.key) {
                 case 'Enter':
                     ev.preventDefault();
-                    this._saveFavorite();
+                    this.saveFavorite();
                     break;
                 case 'Escape':
                     // Gives the focus back to the component.
@@ -143,7 +147,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
     }
 
     CustomFavoriteItem.props = {};
-    CustomFavoriteItem.template = 'web.Legacy.CustomFavoriteItem';
+    CustomFavoriteItem.template = "web.CustomFavoriteItem";
     CustomFavoriteItem.groupNumber = 3; // have 'Save Current Search' in its own group
 
     FavoriteMenu.registry.add('favorite-generator-menu', CustomFavoriteItem, 0);

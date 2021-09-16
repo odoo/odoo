@@ -18,20 +18,16 @@ import {
     createWebClient,
     doAction,
     getActionManagerServerData,
-    setupWebClientServiceRegistry,
+    setupWebClientRegistries,
 } from "./../helpers";
+import * as cpHelpers from "@web/../tests/search/helpers";
 
 let serverData;
 // legacy stuff
-let cpHelpers;
 const actionRegistry = registry.category("actions");
 const actionHandlersRegistry = registry.category("action_handlers");
 
 QUnit.module("ActionManager", (hooks) => {
-    hooks.before(() => {
-        cpHelpers = testUtils.controlPanel;
-    });
-
     hooks.beforeEach(() => {
         serverData = getActionManagerServerData();
     });
@@ -54,7 +50,7 @@ QUnit.module("ActionManager", (hooks) => {
             .add("client_action_by_db_id", () => assert.step("client_action_db_id"))
             .add("client_action_by_xml_id", () => assert.step("client_action_xml_id"))
             .add("client_action_by_object", () => assert.step("client_action_object"));
-        setupWebClientServiceRegistry();
+        setupWebClientRegistries();
         const env = await makeTestEnv({ serverData });
         await doAction(env, 1);
         assert.verifySteps(["client_action_db_id"]);
@@ -70,7 +66,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("action doesn't exists", async (assert) => {
         assert.expect(1);
-        setupWebClientServiceRegistry();
+        setupWebClientRegistries();
         const env = await makeTestEnv({ serverData });
         try {
             await doAction(env, {
@@ -88,7 +84,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("action in handler registry", async (assert) => {
         assert.expect(2);
-        setupWebClientServiceRegistry();
+        setupWebClientRegistries();
         const env = await makeTestEnv({ serverData });
         actionHandlersRegistry.add("ir.action_in_handler_registry", ({ action }) =>
             assert.step(action.type)
@@ -123,7 +119,7 @@ QUnit.module("ActionManager", (hooks) => {
             }
         };
 
-        setupWebClientServiceRegistry();
+        setupWebClientRegistries();
         const env = await makeTestEnv({ serverData, mockRPC });
 
         const loadAction = env.services.action.loadAction;
@@ -180,7 +176,7 @@ QUnit.module("ActionManager", (hooks) => {
             }
         };
 
-        setupWebClientServiceRegistry();
+        setupWebClientRegistries();
         const env = await makeTestEnv({ serverData, mockRPC });
         const { loadAction } = env.services.action;
         const actionParams = {

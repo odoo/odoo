@@ -6,12 +6,15 @@ const FormView = require('web.FormView');
 const ListView = require('web.ListView');
 const PivotView = require('web.PivotView');
 const testUtils = require('web.test_utils');
+const FavoriteMenu = require("web.FavoriteMenu");
+const ImportMenu = require("base_import.ImportMenu");
 
-const cpHelpers = testUtils.controlPanel;
+const cpHelpers = require('@web/../tests/search/helpers');
 const createView = testUtils.createView;
 
 QUnit.module('Base Import Tests', {
     beforeEach: function () {
+        FavoriteMenu.registry.add("import-menu", ImportMenu, 1);
         this.data = {
             foo: {
                 fields: {
@@ -42,7 +45,7 @@ QUnit.test('import in favorite dropdown in list', async function (assert) {
     await testUtils.dom.click(list.$('.o_favorite_menu button'));
     assert.containsOnce(list, '.o_import_menu');
 
-    await testUtils.dom.click(list.$('.o_import_menu button'));
+    await testUtils.dom.click(list.$('.o_import_menu'));
 
     list.destroy();
 });
@@ -102,7 +105,7 @@ QUnit.test('import in favorite dropdown in kanban', async function (assert) {
     await testUtils.dom.click(kanban.$('.o_favorite_menu button'));
     assert.containsOnce(kanban, '.o_import_menu');
 
-    await testUtils.dom.click(kanban.$('.o_import_menu button'));
+    await testUtils.dom.click(kanban.$('.o_import_menu'));
 
     kanban.destroy();
 });
@@ -198,8 +201,9 @@ QUnit.test('import should not be available in favorite dropdown in dialog view',
         item: 'Search More',
         search: '',
     });
-    await cpHelpers.toggleFavoriteMenu('.modal');
-    assert.containsNone(document.querySelector('.modal'), '.o_import_menu',
+    const modal = document.querySelector('.modal');
+    await cpHelpers.toggleFavoriteMenu(modal);
+    assert.containsNone(modal, '.o_import_menu',
         "Import menu should not be available");
 
     form.destroy();

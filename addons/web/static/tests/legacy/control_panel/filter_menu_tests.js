@@ -3,7 +3,8 @@ odoo.define('web.filter_menu_tests', function (require) {
 
     const testUtils = require('web.test_utils');
 
-    const { controlPanel: cpHelpers, createControlPanel, mock } = testUtils;
+    const cpHelpers = require('@web/../tests/search/helpers');
+    const { createControlPanel, mock } = testUtils;
     const { patchDate } = mock;
 
     const searchMenuTypes = ['filter'];
@@ -30,7 +31,7 @@ odoo.define('web.filter_menu_tests', function (require) {
 
             await cpHelpers.toggleFilterMenu(controlPanel);
             assert.containsNone(controlPanel, '.o_menu_item, .dropdown-divider');
-            assert.containsOnce(controlPanel, 'div.o_generator_menu');
+            assert.containsOnce(controlPanel, '.o_add_custom_filter_menu');
 
             controlPanel.destroy();
         });
@@ -51,7 +52,7 @@ odoo.define('web.filter_menu_tests', function (require) {
             await cpHelpers.toggleFilterMenu(controlPanel);
             assert.containsOnce(controlPanel, '.o_menu_item');
             assert.containsOnce(controlPanel, '.dropdown-divider');
-            assert.containsOnce(controlPanel, 'div.o_generator_menu');
+            assert.containsOnce(controlPanel, 'li.o_add_custom_filter_menu');
 
             controlPanel.destroy();
         });
@@ -67,7 +68,7 @@ odoo.define('web.filter_menu_tests', function (require) {
 
             await cpHelpers.toggleFilterMenu(controlPanel);
             await cpHelpers.toggleAddCustomFilter(controlPanel);
-            const optionEls = controlPanel.el.querySelectorAll('div.o_filter_condition select.o_generator_menu_field option');
+            const optionEls = controlPanel.el.querySelectorAll('.o_filter_condition select.o_generator_menu_field option');
             assert.strictEqual(optionEls[0].innerText.trim(), 'Date');
             assert.strictEqual(optionEls[1].innerText.trim(), 'ID');
 
@@ -126,11 +127,8 @@ odoo.define('web.filter_menu_tests', function (require) {
             await cpHelpers.toggleFilterMenu(controlPanel);
             await cpHelpers.toggleAddCustomFilter(controlPanel);
             // choose ID field in 'Add Custome filter' menu and value 1
-            await testUtils.fields.editSelect(
-                controlPanel.el.querySelector('div.o_filter_condition select.o_generator_menu_field'), 'id');
-            await testUtils.fields.editInput(
-                controlPanel.el.querySelector('div.o_filter_condition span.o_generator_menu_value > input'), 1);
-
+            await cpHelpers.editConditionField(controlPanel, 0, 'id');
+            await cpHelpers.editConditionValue(controlPanel, 0, 1);
             await cpHelpers.applyFilter(controlPanel);
 
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), ['ID is "1"']);
@@ -227,7 +225,7 @@ odoo.define('web.filter_menu_tests', function (require) {
             await cpHelpers.toggleFilterMenu(controlPanel);
             await cpHelpers.toggleMenuItem(controlPanel, "Date");
 
-            const optionEls = controlPanel.el.querySelectorAll('ul.o_menu_item_options > li.o_item_option > a');
+            const optionEls = controlPanel.el.querySelectorAll('li.o_item_option');
 
             // default filter should be activated with the global default period 'this_month'
             const { domain } = controlPanel.getQuery();

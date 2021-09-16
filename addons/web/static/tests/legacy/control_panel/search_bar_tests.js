@@ -7,16 +7,10 @@ import { Model } from "web.Model";
 import Registry from "web.Registry";
 import SearchBar from "web.SearchBar";
 import { registry } from "@web/core/registry";
+import * as cpHelpers from "@web/../tests/search/helpers";
 
 let serverData;
-
-// legacy stuff
-let cpHelpers;
-
 QUnit.module("Search Bar (legacy)", (hooks) => {
-    hooks.before(() => {
-        cpHelpers = testUtils.controlPanel;
-    });
     hooks.beforeEach(() => {
         serverData = {
             models: {
@@ -199,7 +193,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
 
             assert.containsNone(searchBar, '.o_searchview_autocomplete');
 
-            await cpHelpers.editSearch(searchBar, "Hello there");
+            await testUtils.controlPanel.editSearch(searchBar, "Hello there");
 
             assert.strictEqual(input.value, "Hello there", "input value should be updated");
             assert.containsOnce(searchBar, '.o_searchview_autocomplete');
@@ -209,7 +203,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             assert.strictEqual(input.value, "", "input value should be empty");
             assert.containsNone(searchBar, '.o_searchview_autocomplete');
 
-            await cpHelpers.editSearch(searchBar, "General Kenobi");
+            await testUtils.controlPanel.editSearch(searchBar, "General Kenobi");
 
             assert.strictEqual(input.value, "General Kenobi", "input value should be updated");
             assert.containsOnce(searchBar, '.o_searchview_autocomplete');
@@ -481,12 +475,12 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             });
             await doAction(webClient, 1);
 
-            await cpHelpers.editSearch(webClient, "rec");
+            await testUtils.controlPanel.editSearch(webClient, "rec");
             await testUtils.dom.click(webClient.el.querySelector('.o_searchview_autocomplete li:last-child'));
 
             await cpHelpers.removeFacet(webClient, 0);
 
-            await cpHelpers.editSearch(webClient, "rec");
+            await testUtils.controlPanel.editSearch(webClient, "rec");
             await testUtils.dom.click(webClient.el.querySelector('.o_expand'));
             await testUtils.dom.click(webClient.el.querySelector('.o_searchview_autocomplete li.o_menu_item.o_indent'));
 
@@ -512,7 +506,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             });
             await doAction(webClient, 1);
 
-            await cpHelpers.editSearch(webClient, "null");
+            await testUtils.controlPanel.editSearch(webClient, "null");
 
             assert.strictEqual(
                 webClient.el.querySelector('.o_searchview_autocomplete .o_selection_focus').innerText,
@@ -545,7 +539,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             });
             await doAction(webClient, 1);
 
-            await cpHelpers.editSearch(webClient, "y");
+            await testUtils.controlPanel.editSearch(webClient, "y");
 
             assert.containsOnce(webClient, '.o_searchview_autocomplete li');
             assert.strictEqual(webClient.el.querySelector('.o_searchview_autocomplete li').innerText, "Search Bool: Yes");
@@ -556,7 +550,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
 
             await cpHelpers.removeFacet(webClient, 0);
 
-            await cpHelpers.editSearch(webClient, "No");
+            await testUtils.controlPanel.editSearch(webClient, "No");
 
             assert.containsOnce(webClient, '.o_searchview_autocomplete li');
             assert.strictEqual(webClient.el.querySelector('.o_searchview_autocomplete li').innerText, "Search Bool: No");
@@ -583,7 +577,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 1);
 
-            await cpHelpers.editSearch(webClient, "n");
+            await testUtils.controlPanel.editSearch(webClient, "n");
 
             assert.containsN(webClient, '.o_searchview_autocomplete li', 2);
             assert.strictEqual(webClient.el.querySelector('.o_searchview_autocomplete li:first-child').innerText, "Search Status: New");
@@ -617,13 +611,13 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             });
             await doAction(webClient, 1);
 
-            await cpHelpers.editSearch(webClient, "ref");
+            await testUtils.controlPanel.editSearch(webClient, "ref");
             await cpHelpers.validateSearch(webClient);
 
             assert.containsN(webClient, ".o_data_row", 5);
 
             await cpHelpers.removeFacet(webClient, 0);
-            await cpHelpers.editSearch(webClient, "ref002");
+            await testUtils.controlPanel.editSearch(webClient, "ref002");
             await cpHelpers.validateSearch(webClient);
 
             assert.containsOnce(webClient, ".o_data_row");

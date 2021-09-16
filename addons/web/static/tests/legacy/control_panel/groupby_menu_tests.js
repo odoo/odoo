@@ -3,7 +3,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
 
     const testUtils = require('web.test_utils');
 
-    const cpHelpers = testUtils.controlPanel;
+    const cpHelpers = require('@web/../tests/search/helpers');
     const { createControlPanel } = testUtils;
 
     const searchMenuTypes = ['groupBy'];
@@ -32,7 +32,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
             };
             const controlPanel = await createControlPanel(params);
 
-            assert.containsNone(controlPanel, '.o_menu_item, .dropdown-divider, div.o_generator_menu');
+            assert.containsNone(controlPanel, '.o_menu_item, .dropdown-divider, .o_add_custom_group_menu');
 
             controlPanel.destroy();
         });
@@ -48,11 +48,11 @@ odoo.define('web.groupby_menu_tests', function (require) {
 
             await cpHelpers.toggleGroupByMenu(controlPanel);
             assert.containsNone(controlPanel, '.o_menu_item, .dropdown-divider');
-            assert.containsOnce(controlPanel, 'div.o_generator_menu');
+            assert.containsOnce(controlPanel, '.o_add_custom_group_menu');
 
             await cpHelpers.toggleAddCustomGroup(controlPanel);
 
-            const optionEls = controlPanel.el.querySelectorAll('div.o_generator_menu select.o_group_by_selector option');
+            const optionEls = controlPanel.el.querySelectorAll('.o_add_custom_group_menu select option');
             assert.strictEqual(optionEls[0].innerText.trim(), 'Birthday');
             assert.strictEqual(optionEls[1].innerText.trim(), 'Date');
             assert.strictEqual(optionEls[2].innerText.trim(), 'Foo');
@@ -78,7 +78,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
             assert.containsOnce(controlPanel, '.o_menu_item');
             assert.strictEqual(controlPanel.el.querySelector('.o_menu_item').innerText.trim(), "Groupby Foo");
             assert.containsOnce(controlPanel, '.dropdown-divider');
-            assert.containsOnce(controlPanel, 'div.o_generator_menu');
+            assert.containsOnce(controlPanel, '.o_add_custom_group_menu');
 
             controlPanel.destroy();
         });
@@ -210,7 +210,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
             await cpHelpers.toggleGroupByMenu(controlPanel);
             await cpHelpers.toggleMenuItem(controlPanel, 0);
 
-            const optionEls = controlPanel.el.querySelectorAll('ul.o_menu_item_options > li.o_item_option > a');
+            const optionEls = controlPanel.el.querySelectorAll('li.o_item_option');
 
             // default groupby should be activated with the  default inteval 'week'
             const { groupBy } = controlPanel.getQuery();
@@ -322,7 +322,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
             await cpHelpers.toggleGroupByMenu(controlPanel);
             await cpHelpers.toggleAddCustomGroup(controlPanel);
 
-            const optionEls = controlPanel.el.querySelectorAll('div.o_generator_menu select.o_group_by_selector option');
+            const optionEls = controlPanel.el.querySelectorAll('.o_add_custom_group_menu select option');
             assert.strictEqual(optionEls.length, 1);
             assert.strictEqual(optionEls[0].innerText.trim(), "Foo");
 

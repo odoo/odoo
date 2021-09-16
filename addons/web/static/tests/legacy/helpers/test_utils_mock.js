@@ -426,7 +426,7 @@ async function addMockEnvironmentOwl(Component, params, mockServer) {
     function cleanUp() {
         env.bus.destroy();
         Object.keys(env.services).forEach(function (s) {
-            var service = env.services[s];
+            var service = env.services[s] || {};
             if (service.destroy && !service.isDestroyed()) {
                 service.destroy();
             }

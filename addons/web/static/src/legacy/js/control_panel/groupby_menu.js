@@ -2,23 +2,16 @@ odoo.define('web.GroupByMenu', function (require) {
     "use strict";
 
     const CustomGroupByItem = require('web.CustomGroupByItem');
-    const DropdownMenu = require('web.DropdownMenu');
     const { FACET_ICONS, GROUPABLE_TYPES } = require('web.searchUtils');
     const { useModel } = require('web.Model');
 
-    /**
-     * 'Group by' menu
-     *
-     * Simple rendering of the filters of type `groupBy` given by the control panel
-     * model. It uses most of the behaviours implemented by the dropdown menu Component,
-     * with the addition of a groupBy filter generator (@see CustomGroupByItem).
-     * @see DropdownMenu for additional details.
-     * @extends DropdownMenu
-     */
-    class GroupByMenu extends DropdownMenu {
+    const { Component } = owl;
+
+    class GroupByMenu extends Component {
 
         constructor() {
             super(...arguments);
+            this.icon = FACET_ICONS.groupBy;
 
             this.fields = Object.values(this.props.fields)
                 .filter(field => this._validateField(field))
@@ -34,22 +27,8 @@ odoo.define('web.GroupByMenu', function (require) {
         /**
          * @override
          */
-        get icon() {
-            return FACET_ICONS.groupBy;
-        }
-
-        /**
-         * @override
-         */
         get items() {
             return this.model.get('filters', f => f.type === 'groupBy');
-        }
-
-        /**
-         * @override
-         */
-        get title() {
-            return this.env._t("Group By");
         }
 
         //---------------------------------------------------------------------
@@ -77,24 +56,20 @@ odoo.define('web.GroupByMenu', function (require) {
          * @private
          * @param {OwlEvent} ev
          */
-        _onItemSelected(ev) {
+        onGroupBySelected(ev) {
             ev.stopPropagation();
-            const { item, option } = ev.detail;
-            if (option) {
-                this.model.dispatch('toggleFilterWithOptions', item.id, option.id);
+            const { itemId, optionId } = ev.detail.payload;
+            if (optionId) {
+                this.model.dispatch('toggleFilterWithOptions', itemId, optionId);
             } else {
-                this.model.dispatch('toggleFilter', item.id);
+                this.model.dispatch('toggleFilter', itemId);
             }
         }
     }
 
-    GroupByMenu.components = Object.assign({}, DropdownMenu.components, {
-        CustomGroupByItem,
-    });
-    GroupByMenu.props = Object.assign({}, DropdownMenu.props, {
-        fields: Object,
-    });
-    GroupByMenu.template = 'web.Legacy.GroupByMenu';
+    GroupByMenu.components = { CustomGroupByItem };
+    GroupByMenu.props = { fields: Object };
+    GroupByMenu.template = "web.GroupByMenu";
 
     return GroupByMenu;
 });

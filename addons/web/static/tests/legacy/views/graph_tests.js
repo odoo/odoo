@@ -11,7 +11,7 @@ const legacyViewRegistry = require("web.view_registry");
 const { registry } = require("@web/core/registry");
 
 const { createView } = testUtils;
-const cpHelpers = testUtils.controlPanel;
+const cpHelpers = require('@web/../tests/search/helpers');
 const patchDate = testUtils.mock.patchDate;
 
 const viewRegistry = registry.category("views");
@@ -331,8 +331,8 @@ QUnit.module('Views', {
                 return this._super(route, args);
             },
         });
-        await cpHelpers.toggleMenu(graph, "Measures");
-        await cpHelpers.toggleMenuItem(graph, "Foo");
+        await testUtils.controlPanel.toggleMenu(graph, "Measures");
+        await testUtils.controlPanel.toggleMenuItem(graph, "Foo");
 
         checkLegend(assert, graph, 'Foo');
         assert.strictEqual(rpcCount, 2, "should have done 2 rpcs (2 readgroups)");
@@ -414,8 +414,8 @@ QUnit.module('Views', {
             },
         });
 
-        await cpHelpers.toggleComparisonMenu(graph);
-        await cpHelpers.toggleMenuItem(graph, 'Date: Previous period');
+        await cpHelpers.toggleComparisonMenu(graph.el);
+        await cpHelpers.toggleMenuItem(graph.el, 'Date: Previous period');
 
         assert.containsNone(graph, 'div.o_view_nocontent',
             "should not display the no content helper");
@@ -496,8 +496,8 @@ QUnit.module('Views', {
             }
         }, "context should be correct");
 
-        await cpHelpers.toggleMenu(graph, "Measures");
-        await cpHelpers.toggleMenuItem(graph, "Foo");
+        await testUtils.controlPanel.toggleMenu(graph, "Measures");
+        await testUtils.controlPanel.toggleMenuItem(graph, "Foo");
 
         assert.deepEqual(graph.getOwnedQueryParams(), {
             context: {
@@ -774,8 +774,8 @@ QUnit.module('Views', {
 
         // need to set the measure this way because it cannot be set in the
         // arch.
-        await cpHelpers.toggleMenu(graph, "Measures");
-        await cpHelpers.toggleMenuItem(graph, "Product");
+        await testUtils.controlPanel.toggleMenu(graph, "Measures");
+        await testUtils.controlPanel.toggleMenuItem(graph, "Product");
 
         checkLabels(assert, graph, [['xphone'], ['xpad']]);
         checkLegend(assert, graph, 'Product');
@@ -901,7 +901,7 @@ QUnit.module('Views', {
                 </graph>`,
         });
 
-        await cpHelpers.toggleMenu(graph, "Measures");
+        await testUtils.controlPanel.toggleMenu(graph, "Measures");
         assert.strictEqual(graph.$buttons.find('.o_graph_measures_list .dropdown-item:first').text(), 'bouh',
             "Bouh should be the first measure");
         assert.strictEqual(graph.$buttons.find('.o_graph_measures_list .dropdown-item:last').text(), 'Count',
@@ -929,8 +929,8 @@ QUnit.module('Views', {
         let yAxisLabel = chart.config.options.scales.yAxes[0].scaleLabel.labelString;
         assert.strictEqual(yAxisLabel, "Foo");
 
-        await cpHelpers.toggleMenu(graph, "Measures");
-        await cpHelpers.toggleMenuItem(graph, "Jethalal");
+        await testUtils.controlPanel.toggleMenu(graph, "Measures");
+        await testUtils.controlPanel.toggleMenuItem(graph, "Jethalal");
         checkLegend(assert, graph, 'Jethalal');
 
         chart = graph.renderer.componentRef.comp.chart;
@@ -1683,53 +1683,53 @@ QUnit.module('Views', {
                 const facetEls = graph.el.querySelectorAll('.o_searchview_facet');
                 const facetIndex = [...facetEls].findIndex(el => !!el.querySelector('span.fa-filter'));
                 if (facetIndex > -1) {
-                    await cpHelpers.removeFacet(graph, facetIndex);
+                    await cpHelpers.removeFacet(graph.el, facetIndex);
                 }
                 const [yearId, otherId] = basicDomainId.split('__');
-                await cpHelpers.toggleFilterMenu(graph);
-                await cpHelpers.toggleMenuItem(graph, 'Date Filter');
-                await cpHelpers.toggleMenuItemOption(graph, 'Date Filter', GENERATOR_INDEXES[yearId]);
+                await cpHelpers.toggleFilterMenu(graph.el);
+                await cpHelpers.toggleMenuItem(graph.el, 'Date Filter');
+                await cpHelpers.toggleMenuItemOption(graph.el, 'Date Filter', GENERATOR_INDEXES[yearId]);
                 if (otherId) {
-                    await cpHelpers.toggleMenuItemOption(graph, 'Date Filter', GENERATOR_INDEXES[otherId]);
+                    await cpHelpers.toggleMenuItemOption(graph.el, 'Date Filter', GENERATOR_INDEXES[otherId]);
                 }
                 const itemIndex = COMPARISON_OPTION_INDEXES[comparisonOptionId];
-                await cpHelpers.toggleComparisonMenu(graph);
-                await cpHelpers.toggleMenuItem(graph, itemIndex);
+                await cpHelpers.toggleComparisonMenu(graph.el);
+                await cpHelpers.toggleMenuItem(graph.el, itemIndex);
             };
 
             // groupby menu is assumed to be closed
             this.selectDateIntervalOption = async (intervalOption) => {
-                await cpHelpers.toggleGroupByMenu(graph);
-                const productWasSelected = cpHelpers.isItemSelected(graph, 'Product');
+                await cpHelpers.toggleGroupByMenu(graph.el);
+                const productWasSelected = cpHelpers.isItemSelected(graph.el, 'Product');
 
                 const facetEls = graph.el.querySelectorAll('.o_searchview_facet');
                 const facetIndex = [...facetEls].findIndex(el => !!el.querySelector('span.fa-bars'));
                 if (facetIndex > -1) {
-                    await cpHelpers.removeFacet(graph, facetIndex);
-                    await cpHelpers.toggleGroupByMenu(graph);
+                    await cpHelpers.removeFacet(graph.el, facetIndex);
+                    await cpHelpers.toggleGroupByMenu(graph.el);
                 }
 
                 if (productWasSelected && !this.keepDateFirst) {
-                    await cpHelpers.toggleMenuItem(graph, 'Product');
+                    await cpHelpers.toggleMenuItem(graph.el, 'Product');
                 }
 
                 const optionIndex = INTERVAL_OPTION_IDS.indexOf(intervalOption);
-                await cpHelpers.toggleMenuItem(graph, 'Date');
-                await cpHelpers.toggleMenuItemOption(graph, 'Date', optionIndex);
+                await cpHelpers.toggleMenuItem(graph.el, 'Date');
+                await cpHelpers.toggleMenuItemOption(graph.el, 'Date', optionIndex);
 
                 if (productWasSelected && this.keepDateFirst) {
-                    await cpHelpers.toggleMenuItem(graph, 'Product');
+                    await cpHelpers.toggleMenuItem(graph.el, 'Product');
                 }
-                await cpHelpers.toggleGroupByMenu(graph);
+                await cpHelpers.toggleGroupByMenu(graph.el);
             };
 
             // groupby menu is assumed to be closed
             this.selectGroupBy = async (groupByName) => {
-                await cpHelpers.toggleGroupByMenu(graph);
-                if (!cpHelpers.isItemSelected(graph, groupByName)) {
-                    await cpHelpers.toggleMenuItem(graph, groupByName);
+                await cpHelpers.toggleGroupByMenu(graph.el);
+                if (!cpHelpers.isItemSelected(graph.el, groupByName)) {
+                    await cpHelpers.toggleMenuItem(graph.el, groupByName);
                 }
-                await cpHelpers.toggleGroupByMenu(graph);
+                await cpHelpers.toggleGroupByMenu(graph.el);
             };
 
             this.setConfig = async (combination) => {

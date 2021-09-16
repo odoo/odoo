@@ -42,6 +42,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/**/*.xml',
             ('remove', 'web/static/src/legacy/**/*.xml'),
             'web/static/src/legacy/xml/base.xml',
+            'web/static/src/legacy/xml/control_panel.xml',
             'web/static/src/legacy/xml/chart.xml',
             'web/static/src/legacy/xml/fields.xml',
             'web/static/src/legacy/xml/file_upload_progress_bar.xml',

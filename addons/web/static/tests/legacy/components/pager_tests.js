@@ -4,7 +4,6 @@ odoo.define('web.pager_tests', function (require) {
     const Pager = require('web.Pager');
     const testUtils = require('web.test_utils');
 
-    const cpHelpers = testUtils.controlPanel;
     const { createComponent } = testUtils;
 
     QUnit.module('Components', {}, function () {
@@ -27,12 +26,12 @@ odoo.define('web.pager_tests', function (require) {
                 },
             });
 
-            assert.strictEqual(cpHelpers.getPagerValue(pager), "1-4",
+            assert.strictEqual(testUtils.controlPanel.getPagerValue(pager), "1-4",
                 "currentMinimum should be set to 1");
 
-            await cpHelpers.pagerNext(pager);
+            await testUtils.controlPanel.pagerNext(pager);
 
-            assert.strictEqual(cpHelpers.getPagerValue(pager), "5-8",
+            assert.strictEqual(testUtils.controlPanel.getPagerValue(pager), "5-8",
                 "currentMinimum should now be 5");
 
             pager.destroy();
@@ -58,15 +57,15 @@ odoo.define('web.pager_tests', function (require) {
 
             assert.containsOnce(pager, 'input',
                 "the pager should contain an input");
-            assert.strictEqual(cpHelpers.getPagerValue(pager), "1-4",
+            assert.strictEqual(testUtils.controlPanel.getPagerValue(pager), "1-4",
                 "the input should have correct value");
 
             // change the limit
-            await cpHelpers.setPagerValue(pager, "1-6");
+            await testUtils.controlPanel.setPagerValue(pager, "1-6");
 
             assert.containsNone(pager, 'input',
                 "the pager should not contain an input anymore");
-            assert.strictEqual(cpHelpers.getPagerValue(pager), "1-6",
+            assert.strictEqual(testUtils.controlPanel.getPagerValue(pager), "1-6",
                 "the limit should have been updated");
 
             pager.destroy();
@@ -90,14 +89,14 @@ odoo.define('web.pager_tests', function (require) {
             await testUtils.dom.click(pager.el.querySelector('.o_pager_value'));
 
             assert.containsOnce(pager, "input");
-            assert.strictEqual(cpHelpers.getPagerValue(pager), "1-4");
+            assert.strictEqual(testUtils.controlPanel.getPagerValue(pager), "1-4");
             assert.verifySteps([]);
 
             // Exit edit mode
             await testUtils.dom.triggerEvent(pager.el.querySelector('input'), "keydown", { key: "Enter" });
 
             assert.containsNone(pager, "input");
-            assert.strictEqual(cpHelpers.getPagerValue(pager), "1-4");
+            assert.strictEqual(testUtils.controlPanel.getPagerValue(pager), "1-4");
             assert.verifySteps(["pager-changed"]);
 
             pager.destroy();
@@ -119,11 +118,11 @@ odoo.define('web.pager_tests', function (require) {
                 },
             });
 
-            assert.strictEqual(cpHelpers.getPagerValue(pager), "1-4", "Initial value should be correct");
+            assert.strictEqual(testUtils.controlPanel.getPagerValue(pager), "1-4", "Initial value should be correct");
 
             async function inputAndAssert(input, expected, reason) {
-                await cpHelpers.setPagerValue(pager, input);
-                assert.strictEqual(cpHelpers.getPagerValue(pager), expected,
+                await testUtils.controlPanel.setPagerValue(pager, input);
+                assert.strictEqual(testUtils.controlPanel.getPagerValue(pager), expected,
                     `Pager value should be "${expected}" when given "${input}": ${reason}`);
             }
 
@@ -163,8 +162,8 @@ odoo.define('web.pager_tests', function (require) {
             const pagerButtons = pager.el.querySelectorAll('button');
 
             // Click twice
-            await cpHelpers.pagerNext(pager);
-            await cpHelpers.pagerNext(pager);
+            await testUtils.controlPanel.pagerNext(pager);
+            await testUtils.controlPanel.pagerNext(pager);
             // Try to edit the pager value
             await testUtils.dom.click(pager.el.querySelector('.o_pager_value'));
 
@@ -181,7 +180,7 @@ odoo.define('web.pager_tests', function (require) {
             assert.strictEqual(pagerButtons.length, 2, "the two buttons should be displayed");
             assert.notOk(pagerButtons[0].disabled, "'previous' is enabled");
             assert.notOk(pagerButtons[1].disabled, "'next' is enabled");
-            assert.strictEqual(cpHelpers.getPagerValue(pager), "5-8", "value has been updated");
+            assert.strictEqual(testUtils.controlPanel.getPagerValue(pager), "5-8", "value has been updated");
 
             await testUtils.dom.click(pager.el.querySelector('.o_pager_value'));
 
