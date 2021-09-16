@@ -402,7 +402,7 @@ class StockMove(models.Model):
     @api.model
     def _prepare_merge_move_sort_method(self, move):
         keys_sorted = super()._prepare_merge_move_sort_method(move)
-        keys_sorted.append(move.created_production_id.id)
+        keys_sorted += [move.created_production_id.id, move.cost_share]
         return keys_sorted
 
     def _compute_kit_quantities(self, product_id, kit_qty, kit_bom, filters):
