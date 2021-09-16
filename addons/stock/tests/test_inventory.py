@@ -305,12 +305,22 @@ class TestInventory(TransactionCase):
             'location_id': self.stock_location.id,
             'inventory_quantity': 42,
         })
-        # Generate new inventory, its line must have a theoretical
-        # quantity of 42 and a counted quantity to 0.
+        # Applies the change, the quant must have a quantity of 42 and a inventory quantity to 0.
         inventory_quant.action_apply_inventory()
         self.assertEqual(len(inventory_quant), 1)
         self.assertEqual(inventory_quant.inventory_quantity, 0)
         self.assertEqual(inventory_quant.quantity, 42)
+
+        # Checks we can write on `inventory_quantity_set` even if we write on
+        # `inventory_quantity` at the same time.
+        self.assertEqual(inventory_quant.inventory_quantity_set, False)
+        inventory_quant.write({'inventory_quantity': 5})
+        self.assertEqual(inventory_quant.inventory_quantity_set, True)
+        inventory_quant.write({
+            'inventory_quantity': 12,
+            'inventory_quantity_set': False,
+        })
+        self.assertEqual(inventory_quant.inventory_quantity_set, False)
 
     def test_inventory_outdate_1(self):
         """ Checks that applying an inventory adjustment that is outdated due to
