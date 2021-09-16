@@ -1254,7 +1254,7 @@ class HolidaysRequest(models.Model):
     def get_unusual_days(self, date_from, date_to=None):
         # Checking the calendar directly allows to not grey out the leaves taken
         # by the employee
-        calendar = self.env.user.employee_id.resource_calendar_id
+        calendar = self.env.user.employee_id.resource_calendar_id or self.env.company.resource_calendar_id
         if not calendar:
             return {}
         dfrom = datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=UTC)
