@@ -8,7 +8,7 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 from odoo.tests import Form, tagged
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'guva')
 class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
     @classmethod
@@ -17,6 +17,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         cls.product_id_1 = cls.env['product.product'].create({'name': 'Large Desk', 'purchase_method': 'purchase'})
         cls.product_id_2 = cls.env['product.product'].create({'name': 'Conference Chair', 'purchase_method': 'purchase'})
+        cls.product_deliver = cls.env['product.product'].create({'name': 'Switch, 24 ports', 'purchase_method': 'receive'})
 
         cls.po_vals = {
             'partner_id': cls.partner_a.id,
@@ -360,3 +361,57 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         picking.move_line_ids.write({'qty_done': 3.66})
         picking.button_validate()
         self.assertEqual(po.order_line.mapped('qty_received'), [4.0], 'Purchase: no conversion error on receipt in different uom"')
+
+    def test_07_billing_state_with_backorder(self):
+        """Test if a order of product invoiced by delivered quantity can be
+        correctly invoiced where there is a backorder."""
+        purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+        })
+        PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
+        pol_prod_deliver = PurchaseOrderLine.create({
+            'name': self.product_deliver.name,
+            'product_id': self.product_deliver.id,
+            'product_qty': 10.0,
+            'product_uom': self.product_deliver.uom_id.id,
+            'price_unit': self.product_deliver.list_price,
+            'order_id': purchase_order.id,
+            'taxes_id': False,
+        })
+
+        purchase_order.button_confirm()
+
+        self.assertEqual(purchase_order.invoice_status, "no")
+        for line in purchase_order.order_line:
+            self.assertEqual(line.qty_to_invoice, 0.0)
+            self.assertEqual(line.qty_invoiced, 0.0)
+
+        purchase_order.order_line.qty_received = 5
+        picking = purchase_order.picking_ids[0]
+        picking.move_line_ids.write({'qty_done': 5})
+        res_dict = picking.button_validate()
+        self.env['stock.backorder.confirmation'].with_context(res_dict['context']).process()
+        self.assertEqual(purchase_order.invoice_status, "to invoice")
+        for line in purchase_order.order_line:
+            self.assertEqual(line.qty_to_invoice, 5)
+            self.assertEqual(line.qty_invoiced, 0.0)
+
+        purchase_order.action_create_invoice()
+        self.assertEqual(purchase_order.invoice_status, "to invoice")
+        for line in purchase_order.order_line:
+            self.assertEqual(line.qty_to_invoice, 0)
+            self.assertEqual(line.qty_invoiced, 5)
+
+        picking = purchase_order.picking_ids[1]
+        picking.move_line_ids.write({'qty_done': 5})
+        picking.button_validate()
+        self.assertEqual(purchase_order.invoice_status, "to invoice")
+        for line in purchase_order.order_line:
+            self.assertEqual(line.qty_to_invoice, 5)
+            self.assertEqual(line.qty_invoiced, 5)
+
+        purchase_order.action_create_invoice()
+        self.assertEqual(purchase_order.invoice_status, "invoiced")
+        for line in purchase_order.order_line:
+            self.assertEqual(line.qty_to_invoice, 0)
+            self.assertEqual(line.qty_invoiced, 10)

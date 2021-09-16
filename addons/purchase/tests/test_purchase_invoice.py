@@ -5,7 +5,7 @@ from odoo.tests import tagged
 from odoo.tests.common import Form
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'guva')
 class TestPurchaseToInvoice(AccountTestInvoicingCommon):
 
     @classmethod

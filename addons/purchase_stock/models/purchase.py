@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.tools.float_utils import float_compare, float_round
+from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
@@ -51,6 +51,25 @@ class PurchaseOrder(models.Model):
                 order.is_shipped = True
             else:
                 order.is_shipped = False
+
+    @api.depends('state', 'order_line.qty_to_invoice')
+    def _get_invoiced(self):
+        super()._get_invoiced()
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for order in self:
+            moves_state = order.order_line.filtered(lambda l: not l.display_type).mapped('move_ids').mapped('state')
+
+            if (
+                all(
+                    float_is_zero(line.qty_to_invoice, precision_digits=precision)
+                    for line in order.order_line.filtered(lambda l: not l.display_type)
+                )
+                and order.invoice_ids
+            ):
+                if all(move in ('done', 'cancel') for move in moves_state):
+                    order.invoice_status = 'invoiced'
+                else:
+                    order.invoice_status = 'to invoice'
 
     @api.onchange('picking_type_id')
     def _onchange_picking_type_id(self):
