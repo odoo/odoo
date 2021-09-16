@@ -178,6 +178,7 @@ var FieldOrgChart = AbstractField.extend({
                     args: [employee_id],
                 }).then(function(action) {
                     action = _.extend(action, {
+                        'name': _t('Team'),
                         'view_mode': 'kanban,list,form',
                         'views':  [[false, 'kanban'], [false, 'list'], [false, 'form']],
                         'domain': domain,
