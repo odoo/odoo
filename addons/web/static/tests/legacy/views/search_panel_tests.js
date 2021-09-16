@@ -7,7 +7,6 @@ const ListView = require('web.ListView');
 const testUtils = require('web.test_utils');
 const SearchPanel = require("web.searchPanel");
 
-const cpHelpers = testUtils.controlPanel;
 const createView = testUtils.createView;
 
 const { makeFakeUserService } = require("@web/../tests/helpers/mock_services");
@@ -15,6 +14,12 @@ const { createWebClient, doAction } = require('@web/../tests/webclient/helpers')
 const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
 const { registry } = require("@web/core/registry");
 const { PivotView } = require("@web/views/pivot/pivot_view");
+
+const {
+    switchView,
+    toggleFilterMenu,
+    toggleMenuItem,
+} = require("@web/../tests/search/helpers");
 
 /**
  * Return the list of counters displayed in the search panel (if any).
@@ -1052,8 +1057,8 @@ QUnit.module('Views', {
         // Case 2: search domain changed so we wait for the search panel once again
         prom = testUtils.makeTestPromise();
 
-        await testUtils.controlPanel.toggleFilterMenu(kanban);
-        await testUtils.controlPanel.toggleMenuItem(kanban, 0);
+        await toggleFilterMenu(kanban.$el[0]);
+        await toggleMenuItem(kanban.$el[0], 0);
 
         assert.verifySteps([]);
 
@@ -1298,8 +1303,8 @@ QUnit.module('Views', {
 
         // trigger a reload and delay the get_filter
         def = testUtils.makeTestPromise();
-        await cpHelpers.toggleFilterMenu(kanban);
-        await cpHelpers.toggleMenuItem(kanban, 0);
+        await toggleFilterMenu(kanban.$el[0]);
+        await toggleMenuItem(kanban.$el[0], 0);
         await testUtils.nextTick();
 
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 4);
@@ -1568,13 +1573,13 @@ QUnit.module('Views', {
         ]);
 
         // go to page 2 (the domain doesn't change, so the filters should not be reloaded)
-        await cpHelpers.pagerNext(kanban);
+        await testUtils.controlPanel.pagerNext(kanban);
 
         assert.verifySteps([]);
 
         // reload with another domain, so the filters should be reloaded
-        await cpHelpers.toggleFilterMenu(kanban);
-        await cpHelpers.toggleMenuItem(kanban, 0);
+        await toggleFilterMenu(kanban.$el[0]);
+        await toggleMenuItem(kanban.$el[0], 0);
 
         assert.verifySteps([
             'search_panel_select_multi_range',
@@ -1634,13 +1639,13 @@ QUnit.module('Views', {
         ]);
 
         // go to page 2 (the domain doesn't change, so the filters should not be reloaded)
-        await cpHelpers.pagerNext(kanban);
+        await testUtils.controlPanel.pagerNext(kanban);
 
         assert.verifySteps([]);
 
         // reload with another domain, so the filters should be reloaded
-        await cpHelpers.toggleFilterMenu(kanban);
-        await cpHelpers.toggleMenuItem(kanban, 0);
+        await toggleFilterMenu(kanban.$el[0]);
+        await toggleMenuItem(kanban.$el[0], 0);
 
         assert.verifySteps([
             'search_panel_select_multi_range',
@@ -1712,7 +1717,7 @@ QUnit.module('Views', {
         );
 
         // go to page 2 (the domain doesn't change, so the categories should not be reloaded)
-        await cpHelpers.pagerNext(kanban);
+        await testUtils.controlPanel.pagerNext(kanban);
 
         assert.verifySteps([]);
 
@@ -1724,8 +1729,8 @@ QUnit.module('Views', {
         );
 
         // reload with another domain, so the categories 'state' and 'company_id' should be reloaded
-        await cpHelpers.toggleFilterMenu(kanban);
-        await cpHelpers.toggleMenuItem(kanban, 0);
+        await toggleFilterMenu(kanban.$el[0]);
+        await toggleMenuItem(kanban.$el[0], 0);
 
         assert.verifySteps([
             'search_panel_select_range',
@@ -1810,7 +1815,7 @@ QUnit.module('Views', {
         );
 
         // go to page 2 (the domain doesn't change, so the categories should not be reloaded)
-        await cpHelpers.pagerNext(kanban);
+        await testUtils.controlPanel.pagerNext(kanban);
 
         assert.verifySteps([]);
 
@@ -1822,8 +1827,8 @@ QUnit.module('Views', {
         );
 
         // reload with another domain, so the category 'state' should be reloaded
-        await cpHelpers.toggleFilterMenu(kanban);
-        await cpHelpers.toggleMenuItem(kanban, 0);
+        await toggleFilterMenu(kanban.$el[0]);
+        await toggleMenuItem(kanban.$el[0], 0);
 
         assert.verifySteps([]);
 
@@ -2347,12 +2352,12 @@ QUnit.module('Views', {
         assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_kanban_view');
         assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_search_panel');
 
-        await cpHelpers.switchView(webClient, 'pivot');
+        await switchView(webClient, 'pivot');
         await testUtils.nextTick();
         assert.containsOnce(webClient, '.o_content .o_pivot');
         assert.containsNone(webClient, '.o_content .o_search_panel');
 
-        await cpHelpers.switchView(webClient, 'list');
+        await switchView(webClient, 'list');
         await legacyExtraNextTick();
         assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_list_view');
         assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_search_panel');
@@ -2382,12 +2387,12 @@ QUnit.module('Views', {
         assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_kanban_view');
         assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_search_panel');
 
-        await cpHelpers.switchView(webClient, 'list');
+        await switchView(webClient, 'list');
         await legacyExtraNextTick();
         assert.containsOnce(webClient, '.o_content .o_list_view');
         assert.containsNone(webClient, '.o_content .o_search_panel');
 
-        await cpHelpers.switchView(webClient, 'pivot');
+        await switchView(webClient, 'pivot');
         assert.containsOnce(webClient, '.o_content.o_component_with_search_panel .o_pivot');
         assert.containsOnce(webClient, '.o_content.o_component_with_search_panel .o_search_panel');
     });
@@ -2414,7 +2419,7 @@ QUnit.module('Views', {
         assert.hasClass($(webClient.el).find('.o_search_panel_category_value:nth(1) header'), 'active');
         assert.containsN(webClient, '.o_kanban_record:not(.o_kanban_ghost)', 2);
 
-        await cpHelpers.switchView(webClient, 'list');
+        await switchView(webClient, 'list');
         await legacyExtraNextTick();
         assert.hasClass($(webClient.el).find('.o_search_panel_category_value:nth(1) header'), 'active');
         assert.containsN(webClient, '.o_data_row', 2);
@@ -2425,7 +2430,7 @@ QUnit.module('Views', {
         assert.hasClass($(webClient.el).find('.o_search_panel_category_value:nth(2) header'), 'active');
         assert.containsN(webClient, '.o_data_row', 2);
 
-        await cpHelpers.switchView(webClient, 'kanban');
+        await switchView(webClient, 'kanban');
         await legacyExtraNextTick();
         assert.hasClass($(webClient.el).find('.o_search_panel_category_value:nth(2) header'), 'active');
         assert.containsN(webClient, '.o_kanban_record:not(.o_kanban_ghost)', 2);
@@ -2460,7 +2465,7 @@ QUnit.module('Views', {
         assert.containsOnce(webClient, '.o_search_panel_filter_value input:checked');
         assert.containsN(webClient, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
-        await cpHelpers.switchView(webClient, 'list');
+        await switchView(webClient, 'list');
         await legacyExtraNextTick();
         assert.containsOnce(webClient, '.o_search_panel_filter_value input:checked');
         assert.containsN(webClient, '.o_data_row', 1);
@@ -2471,7 +2476,7 @@ QUnit.module('Views', {
         assert.containsN(webClient, '.o_search_panel_filter_value input:checked', 2);
         assert.containsN(webClient, '.o_data_row', 4);
 
-        await cpHelpers.switchView(webClient, 'kanban');
+        await switchView(webClient, 'kanban');
         await legacyExtraNextTick();
         assert.containsN(webClient, '.o_search_panel_filter_value input:checked', 2);
         assert.containsN(webClient, '.o_kanban_record:not(.o_kanban_ghost)', 4);
@@ -2510,14 +2515,14 @@ QUnit.module('Views', {
         assert.containsN(webClient, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
         // switch to pivot
-        await cpHelpers.switchView(webClient, 'pivot');
+        await switchView(webClient, 'pivot');
         await legacyExtraNextTick();
         assert.containsOnce(webClient, '.o_content .o_pivot');
         assert.containsNone(webClient, '.o_content .o_search_panel');
         assert.strictEqual($(webClient.el).find('.o_pivot_cell_value').text(), '15');
 
         // switch to list
-        await cpHelpers.switchView(webClient, 'list');
+        await switchView(webClient, 'list');
         await legacyExtraNextTick();
         assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_list_view');
         assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_search_panel');
@@ -2567,9 +2572,9 @@ QUnit.module('Views', {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 1);
 
-        await cpHelpers.switchView(webClient, 'list');
+        await switchView(webClient, 'list');
         await legacyExtraNextTick();
-        await cpHelpers.switchView(webClient, 'kanban');
+        await switchView(webClient, 'kanban');
         await legacyExtraNextTick();
 
         assert.verifySteps([
@@ -2603,14 +2608,14 @@ QUnit.module('Views', {
 
         // simulate a scroll in the search panel and switch into list
         await scroll(50);
-        await cpHelpers.switchView(webClient, 'list');
+        await switchView(webClient, 'list');
         await legacyExtraNextTick();
         assert.containsOnce(webClient, '.o_content .o_list_view');
         assert.strictEqual($(webClient.el).find('.o_search_panel').scrollTop(), 50);
 
         // simulate another scroll and switch back to kanban
         await scroll(30);
-        await cpHelpers.switchView(webClient, 'kanban');
+        await switchView(webClient, 'kanban');
         await legacyExtraNextTick();
         assert.containsOnce(webClient, '.o_content .o_kanban_view');
         assert.strictEqual($(webClient.el).find('.o_search_panel').scrollTop(), 30);
@@ -4047,8 +4052,8 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.el.querySelector('.o_kanban_record span').innerText, 'yop' );
 
         // select DEF in filter menu
-        await testUtils.controlPanel.toggleFilterMenu(kanban);
-        await testUtils.controlPanel.toggleMenuItem(kanban, 'DEF');
+        await toggleFilterMenu(kanban.$el[0]);
+        await toggleMenuItem(kanban.$el[0], 'DEF');
 
         assert.verifySteps([
             'search_panel_select_range',
@@ -4118,8 +4123,8 @@ QUnit.module('Views', {
         );
 
         // select DEF in filter menu --> the external domain changes --> the values should be updated
-        await testUtils.controlPanel.toggleFilterMenu(kanban);
-        await testUtils.controlPanel.toggleMenuItem(kanban, 'DEF');
+        await toggleFilterMenu(kanban.$el[0]);
+        await toggleMenuItem(kanban.$el[0], 'DEF');
 
         assert.verifySteps([
             'search_panel_select_range',

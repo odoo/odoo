@@ -1,19 +1,18 @@
 /** @odoo-module alias=web.PivotRenderer **/
 
     import { useEffect } from "@web/core/utils/hooks";
-    import DropdownMenu from 'web.DropdownMenu';
-    import DropdownMenuItem from 'web.DropdownMenuItem';
     import OwlAbstractRenderer from '../abstract_renderer_owl';
     import field_utils from 'web.field_utils';
-    import { DEFAULT_INTERVAL, INTERVAL_OPTIONS } from 'web.searchUtils';
+    import { DEFAULT_INTERVAL, INTERVAL_OPTIONS, getIntervalOptions } from 'web.searchUtils';
 
-    const { useExternalListener, useState } = owl.hooks;
+    const { Component, hooks } = owl;
+    const { useExternalListener, useState } = hooks;
 
-    class PivotCustomGroupByItem extends DropdownMenuItem {
+    class PivotCustomGroupByItem extends Component {
         constructor() {
             super(...arguments);
             this.canBeOpened = true;
-            this.state.fieldName = this.props.fields[0].name;
+            this.state = useState({ fieldName: this.props.fields[0].name });
         }
 
         //---------------------------------------------------------------------
@@ -23,7 +22,7 @@
         /**
          * @private
          */
-        _onApply() {
+        onApply() {
             const { fieldName } = this.state;
             const { type } = this.props.fields.find(f => f.name === fieldName);
             let interval = null;
@@ -33,26 +32,12 @@
             this.trigger('groupby-menu-selection', { fieldName, interval, custom: true });
             this.state.open = false;
         }
-
-        /**
-         * Stops propagation of click event if custom groupby menu is toggled.
-         * Propagates click event when Apply button is clicked to close dropdown
-         * @param {OwlEvent} ev
-         */
-        _onToggleCustomGroupbyItem(ev) {
-            if (
-                !ev.target.classList.contains('o_apply_group_by') &&
-                (this.el.contains(ev.target) || this.el.contains(document.activeElement))
-            ) {
-                ev.stopPropagation();
-            }
-        }
     }
 
-    PivotCustomGroupByItem.template = "web.legacy.PivotCustomGroupByItem";
+    PivotCustomGroupByItem.template = "web.CustomGroupByItem";
     PivotCustomGroupByItem.props = { fields: Array };
 
-    export class PivotGroupByMenu extends DropdownMenu {
+    export class PivotGroupByMenu extends Component {
 
         constructor() {
             super(...arguments);
@@ -68,16 +53,26 @@
          * @override
          */
         get items() {
+            let items = this.props.fields;
             if (this.props.hasSearchArchGroupBys) {
-                const groupBys = this.props.searchModel.get('filters', f => f.type === 'groupBy');
-                let groupNumber = 1 + Math.max(...groupBys.map(g => g.groupNumber), 0);
+                items = this.props.searchModel.get('filters', f => f.type === 'groupBy');
+                let groupNumber = 1 + Math.max(...items.map(g => g.groupNumber), 0);
                 for (const [_, customGroupBy] of this.props.customGroupBys) {
                     customGroupBy.groupNumber = groupNumber++;
-                    groupBys.push(customGroupBy);
+                    items.push(customGroupBy);
                 }
-                return groupBys;
             }
-            return this.props.fields;
+            return items.map((item) => ({
+                ...item,
+                id: item.id || item.name,
+                fieldName: item.fieldName || item.name,
+                description: item.description || item.string,
+                isActive: false,
+                options:
+                    item.options || ["date", "datetime"].includes(item.type)
+                        ? getIntervalOptions()
+                        : undefined,
+            }));
         }
 
         //---------------------------------------------------------------------
@@ -101,7 +96,6 @@
     PivotGroupByMenu.template = "web.legacy.PivotGroupByMenu";
     PivotGroupByMenu.components = { PivotCustomGroupByItem };
     PivotGroupByMenu.props = {
-        ...DropdownMenu.props,
         customGroupBys: Map,
         fields: Object,
         hasSearchArchGroupBys: Boolean,
@@ -196,18 +190,6 @@
          */
         _getPadding(cell) {
             return 5 + cell.indent * 30;
-        }
-
-        /**
-         * Compute if a cell is active (with its groupId)
-         *
-         * @private
-         * @param {Array} groupId GroupId of a cell
-         * @param {Boolean} isXAxis true if the cell is on the x axis
-         * @returns {Boolean} true if the cell is active
-         */
-        _isClicked(groupId, isXAxis) {
-            return _.isEqual(groupId, this.state.activeNodeHeader.groupId) && this.state.activeNodeHeader.isXAxis === isXAxis;
         }
 
         /**

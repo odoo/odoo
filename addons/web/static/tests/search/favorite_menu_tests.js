@@ -12,6 +12,7 @@ import {
     getFacetTexts,
     isItemSelected,
     makeWithSearch,
+    setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
     toggleComparisonMenu,
     toggleFavoriteMenu,
@@ -20,6 +21,7 @@ import {
 
 const serviceRegistry = registry.category("services");
 const viewRegistry = registry.category("views");
+const favoriteMenuRegistry = registry.category("favoriteMenu");
 
 function getDomain(comp) {
     return comp.env.searchModel.domain;
@@ -45,11 +47,47 @@ QUnit.module("Search", (hooks) => {
                 "foo,false,search": `<search/>`,
             },
         };
+        setupControlPanelFavoriteMenuRegistry();
         setupControlPanelServiceRegistry();
         serviceRegistry.add("dialog", dialogService);
     });
 
     QUnit.module("FavoriteMenu");
+
+    QUnit.test(
+        "simple rendering with no favorite (without ability to save)",
+        async function (assert) {
+            assert.expect(4);
+
+            favoriteMenuRegistry.remove("custom-favorite-item");
+
+            const controlPanel = await makeWithSearch({
+                serverData,
+                resModel: "foo",
+                Component: ControlPanel,
+                searchMenuTypes: ["favorite"],
+                searchViewId: false,
+                displayName: "Action Name",
+            });
+
+            assert.containsOnce(controlPanel, "div.o_favorite_menu > button i.fa.fa-star");
+            assert.strictEqual(
+                controlPanel.el
+                    .querySelector("div.o_favorite_menu > button span")
+                    .innerText.trim()
+                    .toUpperCase(),
+                "FAVORITES"
+            );
+
+            await toggleFavoriteMenu(controlPanel);
+            assert.containsOnce(
+                controlPanel,
+                "div.o_favorite_menu > .o_dropdown_menu",
+                "the menu should be opened"
+            );
+            assert.containsNone(controlPanel, ".o_dropdown_menu *", "the menu should be empty");
+        }
+    );
 
     QUnit.test("simple rendering with no favorite", async function (assert) {
         assert.expect(5);
@@ -73,12 +111,13 @@ QUnit.module("Search", (hooks) => {
         );
 
         await toggleFavoriteMenu(controlPanel);
-        assert.containsNone(controlPanel, ".dropdown-divider");
-        assert.containsOnce(controlPanel, ".o_add_favorite");
-        assert.strictEqual(
-            controlPanel.el.querySelector(".o_add_favorite > button").innerText.trim(),
-            "Save current search"
+        assert.containsOnce(
+            controlPanel,
+            "div.o_favorite_menu > .o_dropdown_menu",
+            "the menu should be opened"
         );
+        assert.containsNone(controlPanel, ".o_dropdown_menu .dropdown-divider");
+        assert.containsOnce(controlPanel, ".o_dropdown_menu .o_add_favorite");
     });
 
     QUnit.test(

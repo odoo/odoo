@@ -2,9 +2,10 @@ odoo.define('web.FilterMenu', function (require) {
     "use strict";
 
     const CustomFilterItem = require('web.CustomFilterItem');
-    const DropdownMenu = require('web.DropdownMenu');
     const { FACET_ICONS } = require("web.searchUtils");
     const { useModel } = require('web.Model');
+
+    const { Component } = owl;
 
     /**
      * 'Filters' menu
@@ -12,14 +13,12 @@ odoo.define('web.FilterMenu', function (require) {
      * Simple rendering of the filters of type `filter` given by the control panel
      * model. It uses most of the behaviours implemented by the dropdown menu Component,
      * with the addition of a filter generator (@see CustomFilterItem).
-     * @see DropdownMenu for additional details.
-     * @extends DropdownMenu
      */
-    class FilterMenu extends DropdownMenu {
+    class FilterMenu extends Component {
 
         constructor() {
             super(...arguments);
-
+            this.icon = FACET_ICONS.filter;
             this.model = useModel('searchModel');
         }
 
@@ -30,22 +29,8 @@ odoo.define('web.FilterMenu', function (require) {
         /**
          * @override
          */
-        get icon() {
-            return FACET_ICONS.filter;
-        }
-
-        /**
-         * @override
-         */
         get items() {
             return this.model.get('filters', f => f.type === 'filter');
-        }
-
-        /**
-         * @override
-         */
-        get title() {
-            return this.env._t("Filters");
         }
 
         //---------------------------------------------------------------------
@@ -56,24 +41,20 @@ odoo.define('web.FilterMenu', function (require) {
          * @private
          * @param {OwlEvent} ev
          */
-        _onItemSelected(ev) {
+        onFilterSelected(ev) {
             ev.stopPropagation();
-            const { item, option } = ev.detail;
-            if (option) {
-                this.model.dispatch('toggleFilterWithOptions', item.id, option.id);
+            const { itemId, optionId } = ev.detail.payload;
+            if (optionId) {
+                this.model.dispatch('toggleFilterWithOptions', itemId, optionId);
             } else {
-                this.model.dispatch('toggleFilter', item.id);
+                this.model.dispatch('toggleFilter', itemId);
             }
         }
     }
 
-    FilterMenu.components = Object.assign({}, DropdownMenu.components, {
-        CustomFilterItem,
-    });
-    FilterMenu.props = Object.assign({}, DropdownMenu.props, {
-        fields: Object,
-    });
-    FilterMenu.template = 'web.Legacy.FilterMenu';
+    FilterMenu.components = { CustomFilterItem };
+    FilterMenu.props = { fields: Object };
+    FilterMenu.template = "web.legacy.FilterMenu";
 
     return FilterMenu;
 });

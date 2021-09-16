@@ -22,7 +22,7 @@ var Widget = require('web.Widget');
 
 
 var _t = core._t;
-const cpHelpers = testUtils.controlPanel;
+const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 
 const { click, legacyExtraNextTick } = require("@web/../tests/helpers/utils");
@@ -277,8 +277,8 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(list.$('tbody td.o_list_record_selector:first input'));
         assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
-        await cpHelpers.toggleActionMenu(list);
-        assert.deepEqual(cpHelpers.getMenuItemTexts(list), ['Delete'],
+        await testUtils.controlPanel.toggleActionMenu(list);
+        assert.deepEqual(testUtils.controlPanel.getMenuItemTexts(list), ['Delete'],
             'action menu should not contain the Export button');
 
         list.destroy();
@@ -309,9 +309,9 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(list.$('tbody td.o_list_record_selector:first input'));
         assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
-        await cpHelpers.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleActionMenu(list);
         assert.deepEqual(
-            cpHelpers.getMenuItemTexts(list),
+            testUtils.controlPanel.getMenuItemTexts(list),
             ['Export', 'Delete'],
             'action menu should have Export button'
         );
@@ -544,7 +544,7 @@ QUnit.module('Views', {
                     <field name="foo" />
                 </tree>`,
         });
-        let cpButtons = cpHelpers.getButtons(list);
+        let cpButtons = testUtils.controlPanel.getButtons(list);
         assert.containsNone(cpButtons[0], 'button[name="x"]');
         assert.containsNone(cpButtons[0], '.o_list_selection_box');
         assert.containsNone(cpButtons[0], 'button[name="y"]');
@@ -552,7 +552,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(
             list.el.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]')
         );
-        cpButtons = cpHelpers.getButtons(list);
+        cpButtons = testUtils.controlPanel.getButtons(list);
         assert.containsOnce(cpButtons[0], 'button[name="x"]');
         assert.hasClass(cpButtons[0].querySelector('button[name="x"]'), 'btn btn-secondary');
         assert.containsOnce(cpButtons[0], '.o_list_selection_box');
@@ -565,7 +565,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(
             list.el.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]')
         );
-        cpButtons = cpHelpers.getButtons(list);
+        cpButtons = testUtils.controlPanel.getButtons(list);
         assert.containsNone(cpButtons[0], 'button[name="x"]');
         assert.containsNone(cpButtons[0], '.o_list_selection_box');
         assert.containsNone(cpButtons[0], 'button[name="y"]');
@@ -599,7 +599,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(
             list.el.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]')
         );
-        const cpButtons = cpHelpers.getButtons(list);
+        const cpButtons = testUtils.controlPanel.getButtons(list);
         assert.ok(
             Array.from(cpButtons[0].querySelectorAll('button')).every(btn => !btn.disabled)
         );
@@ -697,7 +697,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(
             list.el.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]')
         );
-        const cpButtons = cpHelpers.getButtons(list);
+        const cpButtons = testUtils.controlPanel.getButtons(list);
         await testUtils.dom.click(cpButtons[0].querySelector('button[name="x"]'));
         list.destroy();
     });
@@ -756,7 +756,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(
             list.el.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]')
         );
-        const cpButtons = cpHelpers.getButtons(list);
+        const cpButtons = testUtils.controlPanel.getButtons(list);
 
         await testUtils.dom.click(cpButtons[0].querySelector('.o_list_select_domain'));
         assert.verifySteps([]);
@@ -1592,8 +1592,8 @@ QUnit.module('Views', {
         });
 
 
-        await cpHelpers.toggleFavoriteMenu(list);
-        await cpHelpers.toggleMenuItem(list, "My second favorite");
+        await cpHelpers.toggleFavoriteMenu(list.el);
+        await cpHelpers.toggleMenuItem(list.el, "My second favorite");
 
         list.destroy();
     });
@@ -1866,7 +1866,7 @@ QUnit.module('Views', {
         assert.containsOnce(list, '.o_data_row',
             "list should contain one record (and thus 3 empty rows)");
 
-        assert.strictEqual(cpHelpers.getPagerValue(list), '1-1',
+        assert.strictEqual(testUtils.controlPanel.getPagerValue(list), '1-1',
             "pager should be correct");
 
         await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
@@ -1875,7 +1875,7 @@ QUnit.module('Views', {
             "list should still contain 4 rows");
         assert.containsN(list, '.o_data_row', 2,
             "list should contain two record (and thus 2 empty rows)");
-        assert.strictEqual(cpHelpers.getPagerValue(list), '1-2',
+        assert.strictEqual(testUtils.controlPanel.getPagerValue(list), '1-2',
             "pager should be correct");
 
         await testUtils.dom.click(list.$buttons.find('.o_list_button_discard'));
@@ -1884,7 +1884,7 @@ QUnit.module('Views', {
             "list should still contain 4 rows");
         assert.containsOnce(list, '.o_data_row',
             "list should contain one record (and thus 3 empty rows)");
-        assert.strictEqual(cpHelpers.getPagerValue(list), '1-1',
+        assert.strictEqual(testUtils.controlPanel.getPagerValue(list), '1-1',
             "pager should be correct");
         assert.verifySteps(['destroy'],
             "should have destroyed the widget of the removed line");
@@ -2008,7 +2008,7 @@ QUnit.module('Views', {
         assert.isVisible($(webClient.el).find('.o_list_button_save'), "save button should be visible");
 
         await testUtils.dom.click($(webClient.el).find('.o_dropdown_toggler:contains("Group By")'));
-        await testUtils.dom.click($(webClient.el).find('.o_group_by_menu .o_menu_item a:contains("candle")'));
+        await testUtils.dom.click($(webClient.el).find('.o_group_by_menu .o_menu_item:contains("candle")'));
 
         assert.isNotVisible($(webClient.el).find('.o_list_button_add'), "create button should be invisible");
         assert.isNotVisible($(webClient.el).find('.o_list_button_save'),
@@ -2049,7 +2049,7 @@ QUnit.module('Views', {
 
         assert.containsNone(list, '.o_control_panel div.o_search_options div.o_group_by_menu',
         "there should not be groupby menu");
-        assert.deepEqual(cpHelpers.getFacetTexts(list), []);
+        assert.deepEqual(cpHelpers.getFacetTexts(list.el), []);
 
         list.destroy();
         ListView.prototype.searchMenuTypes = searchMenuTypesOriginal;
@@ -2633,7 +2633,7 @@ QUnit.module('Views', {
         });
         var widthPage1 = list.$(`th[data-name=foo]`)[0].offsetWidth;
 
-        await cpHelpers.pagerNext(list);
+        await testUtils.controlPanel.pagerNext(list);
 
         var widthPage2 = list.$(`th[data-name=foo]`)[0].offsetWidth;
         assert.ok(widthPage1 > widthPage2,
@@ -3615,8 +3615,8 @@ QUnit.module('Views', {
 
         assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
 
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Delete");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Delete");
         assert.hasClass($('body'),'modal-open', 'body should have modal-open clsss');
 
         await testUtils.dom.click($('body .modal button span:contains(Ok)'));
@@ -3646,8 +3646,8 @@ QUnit.module('Views', {
 
         assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
 
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Delete");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Delete");
         assert.containsOnce(document.body, '.modal', 'should have open the confirmation dialog');
 
         await testUtils.dom.click($('body .modal button span:contains(Ok)'));
@@ -3694,8 +3694,8 @@ QUnit.module('Views', {
         assert.containsOnce(list, '.o_list_selection_box .o_list_select_domain');
 
         await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Delete");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Delete");
 
         assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
         await testUtils.dom.click($('.modal-footer .btn-primary'));
@@ -3746,8 +3746,8 @@ QUnit.module('Views', {
         assert.containsOnce(list, '.o_list_selection_box .o_list_select_domain');
 
         await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Delete");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Delete");
 
         assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
         await testUtils.dom.click($('.modal-footer .btn-primary'));
@@ -3788,14 +3788,14 @@ QUnit.module('Views', {
         assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
 
         assert.verifySteps(['/web/dataset/search_read']);
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Archive");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Archive");
         assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
         await testUtils.dom.click($('.modal-footer .btn-secondary'));
         assert.containsN(list, 'tbody td.o_list_record_selector', 4, "still should have 4 records");
 
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Archive");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Archive");
         assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
         await testUtils.dom.click($('.modal-footer .btn-primary'));
         assert.containsN(list, 'tbody td.o_list_record_selector', 3, "should have 3 records");
@@ -3844,8 +3844,8 @@ QUnit.module('Views', {
         assert.containsOnce(list, '.o_list_selection_box .o_list_select_domain');
 
         await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Archive");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Archive");
 
         assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
         await testUtils.dom.click($('.modal-footer .btn-primary'));
@@ -3899,8 +3899,8 @@ QUnit.module('Views', {
         assert.containsOnce(list, '.o_list_selection_box .o_list_select_domain');
 
         await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Archive");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Archive");
 
         assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
         await testUtils.dom.click($('.modal-footer .btn-primary'));
@@ -3988,9 +3988,9 @@ QUnit.module('Views', {
         });
 
         assert.containsOnce(list.el, 'div.o_control_panel .o_cp_pager');
-        assert.strictEqual(cpHelpers.getPagerSize(list), "4", "pager's size should be 4");
+        assert.strictEqual(testUtils.controlPanel.getPagerSize(list), "4", "pager's size should be 4");
         await list.update({ groupBy: ['bar']});
-        assert.strictEqual(cpHelpers.getPagerSize(list), "2", "pager's size should be 2");
+        assert.strictEqual(testUtils.controlPanel.getPagerSize(list), "2", "pager's size should be 2");
         list.destroy();
     });
 
@@ -4264,7 +4264,7 @@ QUnit.module('Views', {
             res_id: 1,
         });
 
-        await cpHelpers.pagerNext('.o_field_widget[name=o2m]');
+        await testUtils.controlPanel.pagerNext('.o_field_widget[name=o2m]');
         assert.strictEqual(form.$('tbody tr:first').text(), 'Value 44',
             "record 44 should be first");
         assert.strictEqual(form.$('tbody tr:eq(4)').text(), 'Value 48',
@@ -4815,8 +4815,8 @@ QUnit.module('Views', {
 
         // Delete all records
         await testUtils.dom.click(list.el.querySelector('thead .o_list_record_selector input'));
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Delete");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Delete");
         await testUtils.dom.click($('.modal-footer .btn-primary'));
 
         // Final state: no more sample data, but nocontent helper displayed
@@ -4916,8 +4916,8 @@ QUnit.module('Views', {
 
         // Delete newly created record
         await testUtils.dom.click(list.el.querySelector('.o_data_row input'));
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Delete");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Delete");
         await testUtils.dom.click($('.modal-footer .btn-primary'));
 
         // Final state: there should be no table, but the no content helper
@@ -5775,14 +5775,14 @@ QUnit.module('Views', {
         assert.hasClass(list.$('.o_group_header th:eq(1) > nav'), 'o_pager',
             "last cell of open group header should have classname 'o_pager'");
 
-        assert.strictEqual(cpHelpers.getPagerValue('.o_group_header'), '1-3',
+        assert.strictEqual(testUtils.controlPanel.getPagerValue('.o_group_header'), '1-3',
             "pager's value should be correct");
         assert.containsN(list, '.o_data_row', 3,
             "open group should display 3 records");
 
         // go to next page
-        await cpHelpers.pagerNext('.o_group_header');
-        assert.strictEqual(cpHelpers.getPagerValue('.o_group_header'), '4-4',
+        await testUtils.controlPanel.pagerNext('.o_group_header');
+        assert.strictEqual(testUtils.controlPanel.getPagerValue('.o_group_header'), '4-4',
             "pager's value should be correct");
         assert.containsOnce(list, '.o_data_row',
             "open group should display 1 record");
@@ -6257,8 +6257,8 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(list.$('.o_list_record_selector:first input'));
 
-        await cpHelpers.toggleActionMenu(list);
-        assert.deepEqual(cpHelpers.getMenuItemTexts(list), ['Delete', 'Action event']);
+        await testUtils.controlPanel.toggleActionMenu(list);
+        assert.deepEqual(testUtils.controlPanel.getMenuItemTexts(list), ['Delete', 'Action event']);
 
         list.destroy();
     });
@@ -6301,14 +6301,14 @@ QUnit.module('Views', {
 
         assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
 
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Custom Action");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Custom Action");
 
         // unselect first record (will unselect the thead checkbox as well)
         await testUtils.dom.click(list.$('tbody .o_list_record_selector:first input'));
         assert.containsN(list, '.o_list_record_selector input:checked', 3);
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Custom Action");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Custom Action");
 
         // add a domain and select first two records
         await list.reload({ domain: [['bar', '=', true]] });
@@ -6319,8 +6319,8 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('tbody .o_list_record_selector:nth(1) input'));
         assert.containsN(list, '.o_list_record_selector input:checked', 2);
 
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Custom Action");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Custom Action");
 
         assert.verifySteps([
             '{"action_id":44,"context":{"active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}',
@@ -6368,15 +6368,15 @@ QUnit.module('Views', {
         assert.containsOnce(list, '.o_list_selection_box .o_list_select_domain');
         assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
 
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Custom Action");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Custom Action");
 
         // select all domain
         await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
         assert.containsN(list, '.o_list_record_selector input:checked', 3);
 
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Custom Action");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Custom Action");
 
         // add a domain
         await list.reload({ domain: [['bar', '=', true]] });
@@ -6388,8 +6388,8 @@ QUnit.module('Views', {
         assert.containsN(list, '.o_list_record_selector input:checked', 3);
         assert.containsNone(list, '.o_list_selection_box .o_list_select_domain');
 
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Custom Action");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Custom Action");
 
         assert.verifySteps([
             '{"action_id":44,"context":{"active_id":1,"active_ids":[1,2],"active_model":"foo","active_domain":[]}}',
@@ -7065,7 +7065,7 @@ QUnit.module('Views', {
 
         await testUtils.dom.click($('body .modal-content button:contains(Group By)'));
 
-        await testUtils.dom.click($('body .modal-content .o_menu_item a:contains(cornichon)'));
+        await testUtils.dom.click($('body .modal-content .o_menu_item:contains(cornichon)'));
 
         await testUtils.dom.click($('body .modal-content .o_group_header'));
 
@@ -9304,8 +9304,8 @@ QUnit.module('Views', {
         });
 
 
-        assert.strictEqual(cpHelpers.getPagerValue(list), '1-2');
-        assert.strictEqual(cpHelpers.getPagerSize(list), '4');
+        assert.strictEqual(testUtils.controlPanel.getPagerValue(list), '1-2');
+        assert.strictEqual(testUtils.controlPanel.getPagerSize(list), '4');
 
         assert.containsN(list, '.o_data_row', 2,
             'should display 2 data rows');
@@ -9444,8 +9444,8 @@ QUnit.module('Views', {
 
         // delete a record
         await testUtils.dom.click(list.$('.o_data_row:first .o_list_record_selector input'));
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, "Delete");
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, "Delete");
         await testUtils.dom.click($('.modal-footer .btn-primary'));
 
         assert.verifySteps([
@@ -9631,19 +9631,19 @@ QUnit.module('Views', {
 
 
         // switch pages (should ask to scroll)
-        await cpHelpers.pagerNext(list);
-        await cpHelpers.pagerPrevious(list);
+        await testUtils.controlPanel.pagerNext(list);
+        await testUtils.controlPanel.pagerPrevious(list);
         assert.verifySteps(['scroll', 'scroll'],
             "should ask to scroll when switching pages");
 
         // change the limit (should not ask to scroll)
-        await cpHelpers.setPagerValue(list, '1-2');
+        await testUtils.controlPanel.setPagerValue(list, '1-2');
         await testUtils.nextTick();
-        assert.strictEqual(cpHelpers.getPagerValue(list), '1-2');
+        assert.strictEqual(testUtils.controlPanel.getPagerValue(list), '1-2');
         assert.verifySteps([], "should not ask to scroll when changing the limit");
 
         // switch pages again (should still ask to scroll)
-        await cpHelpers.pagerNext(list);
+        await testUtils.controlPanel.pagerNext(list);
 
         assert.verifySteps(['scroll'], "this is still working after a limit change");
 
@@ -9828,7 +9828,7 @@ QUnit.module('Views', {
         assert.containsNone(list, '.o_data_row');
         assert.containsOnce(list, '.o_pager'); // has a pager
 
-        await cpHelpers.pagerNext(list); // switch to page 2
+        await testUtils.controlPanel.pagerNext(list); // switch to page 2
 
         assert.containsN(list, '.o_group_header', 1); // page 2
         assert.containsNone(list, '.o_data_row');
@@ -9935,7 +9935,7 @@ QUnit.module('Views', {
             ]
         );
 
-        await cpHelpers.pagerNext(list); // switch to page 2
+        await testUtils.controlPanel.pagerNext(list); // switch to page 2
 
         assert.containsN(list, '.o_group_header', 7); // page 2
         assert.containsN(list, '.o_data_row', 7);
@@ -10840,8 +10840,8 @@ QUnit.module('Views', {
             },
         });
 
-        await cpHelpers.toggleGroupByMenu(list);
-        await cpHelpers.toggleMenuItem(list, 0);
+        await cpHelpers.toggleGroupByMenu(list.el);
+        await cpHelpers.toggleMenuItem(list.el, 0);
         // expand group
         await testUtils.dom.click(list.el.querySelector('th.o_group_name'));
         await testUtils.dom.click(list.el.querySelector('td.o_group_field_row_add a'));

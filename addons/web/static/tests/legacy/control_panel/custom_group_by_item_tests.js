@@ -26,18 +26,18 @@ odoo.define('web.groupby_menu_generator_tests', function (require) {
             });
 
             assert.strictEqual(cgi.el.innerText.trim(), "Add Custom Group");
-            assert.hasClass(cgi.el, 'o_generator_menu');
+            assert.hasClass(cgi.el, 'o_add_custom_group_menu');
             assert.strictEqual(cgi.el.children.length, 1);
 
-            await testUtils.dom.click(cgi.el.querySelector('.o_generator_menu span.o_add_custom_group_by'));
+            await testUtils.dom.click(cgi.el.querySelector('.o_add_custom_group_menu .o_dropdown_toggler'));
 
             // Single select node with a single option
-            assert.containsOnce(cgi, 'div > select.o_group_by_selector');
-            assert.strictEqual(cgi.el.querySelector('div > select.o_group_by_selector option').innerText.trim(),
+            assert.containsOnce(cgi, 'li > select');
+            assert.strictEqual(cgi.el.querySelector('li > select option').innerText.trim(),
                 "Super Date");
 
             // Button apply
-            assert.containsOnce(cgi, 'button.o_apply_group_by');
+            assert.containsOnce(cgi, 'li > button.btn.btn-primary');
 
             cgi.destroy();
         });
@@ -61,12 +61,12 @@ odoo.define('web.groupby_menu_generator_tests', function (require) {
                 env: { searchModel },
             });
 
-            await testUtils.dom.click(cgi.el.querySelector('.o_generator_menu span.o_add_custom_group_by'));
-            await testUtils.dom.click(cgi.el.querySelector('.o_generator_menu button.o_apply_group_by'));
+            await testUtils.dom.click(cgi.el.querySelector('.o_add_custom_group_menu .o_dropdown_toggler'));
+            await testUtils.dom.click(cgi.el.querySelector('li > button.btn.btn-primary'));
 
             // The only thing visible should be the button 'Add Custome Group';
             assert.strictEqual(cgi.el.children.length, 1);
-            assert.containsOnce(cgi, 'span.o_add_custom_group_by');
+            assert.containsOnce(cgi, '.o_dropdown_toggler');
 
             cgi.destroy();
         });

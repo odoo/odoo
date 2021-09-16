@@ -3,10 +3,12 @@ odoo.define('web.CustomFilterItem', function (require) {
 
     const { DatePicker, DateTimePicker } = require('web.DatePickerOwl');
     const Domain = require('web.Domain');
-    const DropdownMenuItem = require('web.DropdownMenuItem');
     const { FIELD_OPERATORS, FIELD_TYPES } = require('web.searchUtils');
     const field_utils = require('web.field_utils');
     const { useModel } = require('web.Model');
+
+    const { Component, hooks } = owl;
+    const { useState } = hooks;
 
     /**
      * Filter generator menu
@@ -39,16 +41,14 @@ odoo.define('web.CustomFilterItem', function (require) {
      *                         [date_field, '>=', x],
      *                         [date_field, '<=', y],
      *                     ]
-     * @extends DropdownMenuItem
      */
-    class CustomFilterItem extends DropdownMenuItem {
+    class CustomFilterItem extends Component {
         constructor() {
             super(...arguments);
 
             this.model = useModel('searchModel');
 
-            this.canBeOpened = true;
-            this.state.conditions = [];
+            this.conditions = useState([]);
             // Format, filter and sort the fields props
             this.fields = Object.values(this.props.fields)
                 .filter(field => this._validateField(field))
@@ -61,7 +61,7 @@ odoo.define('web.CustomFilterItem', function (require) {
             this.FIELD_TYPES = FIELD_TYPES;
 
             // Add first condition
-            this._addNewCondition();
+            this.addNewCondition();
         }
 
         //---------------------------------------------------------------------
@@ -75,8 +75,8 @@ odoo.define('web.CustomFilterItem', function (require) {
          * - a null or empty array value
          * @private
          */
-        _addNewCondition() {
-            const lastCondition = [...this.state.conditions].pop();
+        addNewCondition() {
+            const lastCondition = [...this.conditions].pop();
             const condition = lastCondition
                 ? Object.assign({}, lastCondition)
                 : {
@@ -84,7 +84,7 @@ odoo.define('web.CustomFilterItem', function (require) {
                     operator: 0,
                 };
             this._setDefaultValue(condition);
-            this.state.conditions.push(condition);
+            this.conditions.push(condition);
         }
 
         /**
@@ -148,8 +148,8 @@ odoo.define('web.CustomFilterItem', function (require) {
          * Convert all conditions to prefilters.
          * @private
          */
-        _onApply() {
-            const preFilters = this.state.conditions.map(condition => {
+        onApply() {
+            const preFilters = this.conditions.map(condition => {
                 const field = this.fields[condition.field];
                 const type = this.FIELD_TYPES[field.type];
                 const operator = this.OPERATORS[type][condition.operator];
@@ -191,10 +191,10 @@ odoo.define('web.CustomFilterItem', function (require) {
 
             this.model.dispatch('createNewFilters', preFilters);
 
-            // Reset state
-            this.state.open = false;
-            this.state.conditions = [];
-            this._addNewCondition();
+            // remove conditions
+            this.conditions.splice(0, this.conditions.length);
+
+            this.addNewCondition();
         }
 
         /**
@@ -203,7 +203,7 @@ odoo.define('web.CustomFilterItem', function (require) {
          * @param {number} valueIndex
          * @param {OwlEvent} ev
          */
-        _onDateChanged(condition, valueIndex, ev) {
+        onDateChanged(condition, valueIndex, ev) {
             condition.value[valueIndex] = ev.detail.date;
         }
 
@@ -212,7 +212,7 @@ odoo.define('web.CustomFilterItem', function (require) {
          * @param {Object} condition
          * @param {Event} ev
          */
-        _onFieldSelect(condition, ev) {
+        onFieldSelect(condition, ev) {
             Object.assign(condition, {
                 field: ev.target.selectedIndex,
                 operator: 0,
@@ -225,7 +225,7 @@ odoo.define('web.CustomFilterItem', function (require) {
          * @param {Object} condition
          * @param {Event} ev
          */
-        _onOperatorSelect(condition, ev) {
+        onOperatorSelect(condition, ev) {
             condition.operator = ev.target.selectedIndex;
             this._setDefaultValue(condition);
         }
@@ -234,8 +234,8 @@ odoo.define('web.CustomFilterItem', function (require) {
          * @private
          * @param {Object} condition
          */
-        _onRemoveCondition(conditionIndex) {
-            this.state.conditions.splice(conditionIndex, 1);
+        onRemoveCondition(conditionIndex) {
+            this.conditions.splice(conditionIndex, 1);
         }
 
         /**
@@ -243,7 +243,7 @@ odoo.define('web.CustomFilterItem', function (require) {
          * @param {Object} condition
          * @param {Event} ev
          */
-        _onValueInput(condition, ev) {
+        onValueChange(condition, ev) {
             if (!ev.target.value) {
                 return this._setDefaultValue(condition);
             }
@@ -268,10 +268,8 @@ odoo.define('web.CustomFilterItem', function (require) {
     }
 
     CustomFilterItem.components = { DatePicker, DateTimePicker };
-    CustomFilterItem.props = {
-        fields: Object,
-    };
-    CustomFilterItem.template = 'web.Legacy.CustomFilterItem';
+    CustomFilterItem.props = { fields: Object };
+    CustomFilterItem.template = "web.CustomFilterItem";
 
     return CustomFilterItem;
 });

@@ -19,6 +19,7 @@ import { makeView } from "./helpers";
 import {
     applyGroup,
     editFavoriteName,
+    setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
     toggleAddCustomGroup,
     toggleComparisonMenu,
@@ -183,6 +184,7 @@ QUnit.module("Views", (hooks) => {
                 },
             },
         };
+        setupControlPanelFavoriteMenuRegistry();
         setupControlPanelServiceRegistry();
         serviceRegistry.add("dialog", dialogService);
         serviceRegistry.add("localization", makeFakeLocalizationService());

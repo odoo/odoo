@@ -11,6 +11,7 @@ import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import {
     editFavoriteName,
     saveFavorite,
+    setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
     switchView,
     toggleFavoriteMenu,
@@ -273,6 +274,7 @@ QUnit.module("Views", (hooks) => {
             },
         };
         setupControlPanelServiceRegistry();
+        setupControlPanelFavoriteMenuRegistry();
         serviceRegistry.add("dialog", dialogService);
     });
 

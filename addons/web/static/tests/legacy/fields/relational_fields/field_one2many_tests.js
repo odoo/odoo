@@ -17,7 +17,7 @@ const { patch, unpatch } = require('web.utils');
 
 const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy_env_utils');
 
-const cpHelpers = testUtils.controlPanel;
+const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 const { FieldOne2Many } = relationalFields;
 
@@ -1845,14 +1845,14 @@ QUnit.module('fields', {}, function () {
             // move to record 2, which has 3 related records (and shouldn't contain the
             // related records of record 1 anymore). Two additional RPCs should have
             // been done
-            await cpHelpers.pagerNext(form);
+            await testUtils.controlPanel.pagerNext(form);
             assert.strictEqual(count, 4, 'two RPCs should have been done');
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 3,
                 'one2many kanban should contain 3 cards for record 2');
 
             // move back to record 1, which should contain again its first 40 related
             // records
-            await cpHelpers.pagerPrevious(form);
+            await testUtils.controlPanel.pagerPrevious(form);
             assert.strictEqual(count, 6, 'two RPCs should have been done');
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 40,
                 'one2many kanban should contain 40 cards for record 1');
@@ -1865,14 +1865,14 @@ QUnit.module('fields', {}, function () {
                 'one2many kanban should contain 2 cards for record 1 at page 2');
 
             // move to record 2 again and check that everything is correctly updated
-            await cpHelpers.pagerNext(form);
+            await testUtils.controlPanel.pagerNext(form);
             assert.strictEqual(count, 9, 'two RPCs should have been done');
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 3,
                 'one2many kanban should contain 3 cards for record 2');
 
             // move back to record 1 and move to page 2 again: all data should have
             // been correctly reloaded
-            await cpHelpers.pagerPrevious(form);
+            await testUtils.controlPanel.pagerPrevious(form);
             assert.strictEqual(count, 11, 'two RPCs should have been done');
             await testUtils.dom.click(form.$('.o_x2m_control_panel .o_pager_next'));
             assert.strictEqual(count, 12, 'one RPC should have been done');

@@ -4,7 +4,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
     const FormView = require('web.FormView');
     const testUtils = require('web.test_utils');
 
-    const cpHelpers = testUtils.controlPanel;
+    const cpHelpers = require('@web/../tests/search/helpers');
     const { createControlPanel, createView, mock } = testUtils;
     const { patchDate } = mock;
 
@@ -39,7 +39,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
             await cpHelpers.toggleFavoriteMenu(controlPanel);
             assert.containsNone(controlPanel, '.dropdown-divider');
             assert.containsOnce(controlPanel, '.o_add_favorite');
-            assert.strictEqual(controlPanel.el.querySelector('.o_add_favorite > span').innerText.trim(),
+            assert.strictEqual(controlPanel.el.querySelector('.o_add_favorite > button span').innerText.trim(),
                 "Save current search");
 
             await cpHelpers.toggleSaveFavorite(controlPanel);
@@ -281,14 +281,14 @@ odoo.define('web.favorite_menu_tests', function (require) {
             const { domain } = controlPanel.getQuery();
             assert.deepEqual(domain, [["foo", "=", "qsdf"]]);
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), ["My favorite"]);
-            assert.hasClass(controlPanel.el.querySelector('.o_favorite_menu .o_menu_item > a'), 'selected');
+            assert.hasClass(controlPanel.el.querySelector('.o_favorite_menu .o_menu_item'), 'selected');
 
             await cpHelpers.deleteFavorite(controlPanel, 0);
 
             // confirm deletion
             await testUtils.dom.click(document.querySelector('div.o_dialog footer button'));
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), []);
-            const itemEls = controlPanel.el.querySelectorAll('.o_favorite_menu .o_menu_item');
+            const itemEls = controlPanel.el.querySelectorAll('.o_favorite_menu .o_dropdown_item');
             assert.deepEqual([...itemEls].map(e => e.innerText.trim()), ["Save current search"]);
 
             controlPanel.destroy();
@@ -492,7 +492,6 @@ odoo.define('web.favorite_menu_tests', function (require) {
             // second try: should succeed
             await cpHelpers.editFavoriteName(controlPanel, "My favorite 2");
             await cpHelpers.saveFavorite(controlPanel);
-            await cpHelpers.toggleSaveFavorite(controlPanel);
 
             // third try: should fail
             await cpHelpers.editFavoriteName(controlPanel, "My favorite 2");
@@ -559,18 +558,19 @@ odoo.define('web.favorite_menu_tests', function (require) {
 
             assert.containsN(document.body, 'tr.o_data_row', 9, "should display 9 records");
 
-            await cpHelpers.toggleFilterMenu('.modal');
-            await cpHelpers.toggleAddCustomFilter('.modal');
+            const modal = document.body.querySelector(".modal");
+            await cpHelpers.toggleFilterMenu(modal);
+            await cpHelpers.toggleAddCustomFilter(modal);
             assert.strictEqual(document.querySelector('.o_filter_condition select.o_generator_menu_field').value,
                 'date_field',
                 "date field should be selected");
-            await cpHelpers.applyFilter('.modal');
+            await cpHelpers.applyFilter(modal);
 
             assert.containsNone(document.body, 'tr.o_data_row', "should display 0 records");
 
             // Save this search
-            await cpHelpers.toggleFavoriteMenu('.modal');
-            await cpHelpers.toggleSaveFavorite('.modal');
+            await cpHelpers.toggleFavoriteMenu(modal);
+            await cpHelpers.toggleSaveFavorite(modal);
 
             const filterNameInput = document.querySelector('.o_add_favorite input[type="text"]');
             assert.isVisible(filterNameInput, "should display an input field for the filter name");
