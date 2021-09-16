@@ -149,8 +149,11 @@ if __name__ == "__main__":
     databases = cursor.fetchall()
 
     for database in databases:
-        _logger.info(f"WORKING ON DATABASE {database[0]}")
-        target_db_connection = ProductSync(database[0])
-        target_db_connection.handle_vendors()
-        target_db_connection.handle_products()
-        target_db_connection.handle_payment_methods()
+        try:
+            _logger.info(f"WORKING ON DATABASE {database[0]}")
+            target_db_connection = ProductSync(database[0])
+            target_db_connection.handle_vendors()
+            target_db_connection.handle_products()
+            target_db_connection.handle_payment_methods()
+        except Exception as exc1:
+            print(exc1)
