@@ -463,6 +463,50 @@ def call_kw(model, name, args, kwargs):
     return result
 
 
+class EnvironmentModels():
+    """ Proxy class for Environment models """
+
+    def __init__(self, transaction, args):
+        self.transaction = transaction
+        self.registry = transaction.registry
+        self.args = args
+
+    def __hasattr__(self, name):
+        """ Add the models to the attributes already present """
+        if super(EnvironmentModels, self).__hasattr__(name):
+            return True
+        return name in [x.replace(".", "_") for x in self.registry]
+
+    def __getattr__(self, name):
+        """ Return the models as attributes """
+
+        sup = super(EnvironmentModels, self)
+        if hasattr(sup, name):
+            return getattr(sup, name)
+
+        # Find the environment with the same args as this EnvironmentModel
+        found_env = None
+        for current_env in self.transaction.envs:
+            if current_env.args == self.args:
+                found_env = current_env
+                break
+        if not found_env:
+            raise AttributeError('Correct environment not found')
+
+        # Look for the model inside the registry, and return an empty recordset on it
+        for key in self.registry:
+            if key.replace(".", "_") == name:
+                return self.registry[key]._browse(found_env, (), ())
+        raise AttributeError("'EnvironmentModels' has no attribute '%s'" % name)
+
+    def _get_model_keys(self):
+        """ Filter some non-model from the keys of the Environment """
+        return [x.replace(".", "_") for x in list(set(self.registry.keys()))]
+
+    def __dir__(self):
+        """ List the attributes from _get_model_keys() """
+        return sorted(super(EnvironmentModels, self).__dir__() + self._get_model_keys())
+
 class Environment(Mapping):
     """ An environment wraps data for ORM records:
 
@@ -518,6 +562,11 @@ class Environment(Mapping):
         self._cache_key = {}                    # memo {field: cache_key}
         self._protected = transaction.protected
         transaction.envs.add(self)
+
+        # self.env.models.<model_name> is TAB-completable in the IPython shell environment
+        # while self.env["<model_name>"] is not.
+        self.models = EnvironmentModels(self.transaction, self.args)
+
         return self
 
     #
