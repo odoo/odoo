@@ -1,0 +1,83 @@
+<odoo>
+    <template id="index_plan_snippet" inherit_id="website.snippets"
+              name="index_tab">
+        <xpath expr="//div[@id='snippet_feature']/div[hasclass('o_panel_body')]"
+               position="inside">
+            <t t-snippet="theme_aumet_landing_pages.index_plan"
+               t-thumbnail="/theme_aumet_landing_pages/static/src/images/snippets/contact-details.png"
+            />
+        </xpath>
+    </template>
+    <template id="index_plan" name="Index Plan snippet">
+        <section class="plan">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 text-center">
+                        <h1 class="header">
+                            Plans
+                        </h1>
+                        <p class="content">
+                            Our plans are designed to work with your business
+                        </p>
+                        <div class="row text-center">
+                            <div class="col-lg-4 col-md-4 col-sm-12 plan1">
+                                <h6 class="header">Core</h6>
+                                <p class="content">Core option blurb</p>
+                                <p>
+                                    <span class="price">0</span>
+                                    <sup>$</sup>
+                                    <sub>Per Month</sub>
+                                </p>
+                                <ul class="plan-feature">
+                                    <li>Pricing Feature</li>
+                                    <li>Pricing Feature</li>
+                                    <li>Pricing Feature</li>
+                                    <li>Pricing Feature</li>
+                                    <li>Pricing Feature</li>
+                                </ul>
+                                <button class="plan-order">Order Now</button>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-12 plan2">
+                                <h6 class="header">ESSENTIALS</h6>
+                                <p class="content">Essentials option blurb</p>
+                                <p>
+                                    <span class="price">10</span>
+                                    <sup>$</sup>
+                                    <sub>Per Month</sub>
+
+                                </p>
+                                <ul class="plan-feature">
+                                    <li>Pricing Feature</li>
+                                    <li>Pricing Feature</li>
+                                    <li>Pricing Feature</li>
+                                    <li>Pricing Feature</li>
+                                    <li>Pricing Feature</li>
+                                </ul>
+                                <button class="plan-order">Order Now</button>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-12 plan3">
+                                <h6 class="header">Chain</h6>
+                                <p class="content">Chain option blurb</p>
+                                <p>
+                                    <span class="price">99</span>
+                                    <sup>$</sup>
+                                    <sub>Per Month</sub>
+
+                                </p>
+                                <ul class="plan-feature">
+                                    <li>Pricing Feature</li>
+                                    <li>Pricing Feature</li>
+                                    <li>Pricing Feature</li>
+                                    <li>Pricing Feature</li>
+                                    <li>Pricing Feature</li>
+                                </ul>
+                                <button class="plan-order">Order Now</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

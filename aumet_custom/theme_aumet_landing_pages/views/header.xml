@@ -1,80 +1,69 @@
 <odoo>
     <template id="header_splash" inherit_id="website.layout" active="True" name="Header">
-        <xpath expr="//header//nav" position="replace">
-            <header>
-                <section class="navigation">
-                    <!--Navbar-->
-                    <div class="nav-wrapper">
-                        <nav class="navbar navbar-expand-lg navbar-dark scrolling-navbar"
-                             id="new">
+        <xpath expr="//header" position="replace">
+            <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+                <div class="container">
+                    <a class="navbar-brand">
+                        <t t-call="website.placeholder_header_brand">
+                            <t t-set="_link_class" t-value="'mr-auto'"/>
+                        </t>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                            aria-label="Toggle navigation">
+                        Menu
+                        <i class="fa fa-bars ms-1"></i>
+                    </button>
 
-                            <!-- Navbar brand -->
-                            <a class="navbar-brand">
-                                <t t-call="website.placeholder_header_brand">
-                                    <t t-set="_link_class" t-value="'mr-auto'"/>
-                                </t>
-                            </a>
+                    <div class="collapse navbar-collapse" id="navbarResponsive">
 
-                            <!-- Collapse button -->
-                            <button class="navbar-toggler" type="button"
-                                    data-toggle="collapse"
-                                    data-target="#basicExampleNav"
-                                    aria-controls="basicExampleNav"
-                                    aria-expanded="false"
-                                    aria-label="Toggle navigation">
-                                <span class=" fa fa-bars"></span>
-                                <span></span>
-                            </button>
-
-                            <!-- Collapsible content -->
-                            <div class="collapse navbar-collapse"
-                                 id="basicExampleNav">
-
-                                <!-- Links -->
-                                <ul class="navbar-nav mr-auto">
-                                    <t t-foreach="website.menu_id.child_id"
-                                       t-as="submenu">
-                                        <li class="nav-item active"
-                                            t-call="website.submenu">
-                                            <a class="nav-link"
-                                               t-set="item_class"
-                                               t-value="'nav-item'"/>
-                                            <span class="sr-only">(current)
-                                            </span>
-                                            <a t-set="link_class"
-                                               t-value="'nav-link'"/>
-                                        </li>
-                                    </t>
-                                </ul>
-                                <!-- Links -->
-                                <div class="nav navbar-nav navbar-expand">
-                                    <!-- Sign In -->
-                                    <t t-call="portal.placeholder_user_sign_in">
-                                        <t t-set="_item_class"
-                                           t-value="'nav-item ml-lg-3'"/>
-                                        <t t-set="_link_class"
-                                           t-value="'nav-link'"/>
-                                    </t>
-                                    <!-- User Dropdown -->
-                                    <t t-call="portal.user_dropdown">
-                                        <t t-set="_user_name" t-value="True"/>
-                                        <t t-set="_item_class"
-                                           t-value="'nav-item dropdown ml-lg-3'"/>
-                                        <t t-set="_link_class"
-                                           t-value="'nav-link font-weight-bold'"/>
-                                    </t>
-                                </div>
-
-                                <div class="quote">
-                                    <a href="/contactus" >
-                                        Contact Us
-                                    </a>
-                                </div>
-                            </div>
-                        </nav>
+                        <!-- Links -->
+                        <ul class="navbar-nav ml-auto">
+                            <t t-foreach="website.menu_id.child_id"
+                               t-as="submenu">
+                                <li class="nav-item active"
+                                    t-call="website.submenu">
+                                    <a class="nav-link"
+                                       t-set="item_class"
+                                       t-value="'nav-item'"/>
+                                    <span class="sr-only">(current)
+                                    </span>
+                                    <a t-set="link_class"
+                                       t-value="'nav-link'"/>
+                                </li>
+                            </t>
+                            <t t-call="portal.placeholder_user_sign_in">
+                                <t t-set="_item_class"
+                                   t-value="'nav-item ml-lg-3'"/>
+                                <t t-set="_link_class"
+                                   t-value="'nav-link'"/>
+                            </t>
+                            <!-- User Dropdown -->
+                            <t t-call="portal.user_dropdown">
+                                <t t-set="_user_name" t-value="True"/>
+                                <t t-set="_item_class"
+                                   t-value="'nav-item dropdown ml-lg-3'"/>
+                                <t t-set="_link_class"
+                                   t-value="'nav-link font-weight-bold'"/>
+                            </t>
+                        </ul>
                     </div>
-                </section>
+
+                </div>
+            </nav>
+            <!-- Masthead-->
+            <header class="masthead">
+                <div class="container">
+                    <div class="masthead-subheading">Aumet Pharmacy does the hard work for you</div>
+                    <div class="masthead-heading text-uppercase">Aumet Phamracy POS system can revolutionise your
+                        pharmacy
+                    </div>
+                    <a class="btn btn-primary btn-xl text-uppercase" href="#services">Watch the demo</a>
+                </div>
             </header>
+            <script src="/theme_aumet_landing_pages/static/src/js/bootstrap.bundle.js"></script>
+            <script src="/theme_aumet_landing_pages/static/src/js/script.js"></script>
+
         </xpath>
     </template>
 </odoo>
