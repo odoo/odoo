@@ -4,8 +4,6 @@ odoo.define('google_drive.gdrive_integration', function (require) {
     const FormView = require('web.FormView');
     const testUtils = require('web.test_utils');
 
-    const cpHelpers = testUtils.controlPanel;
-
     QUnit.module('Google Drive Integration', {
         beforeEach() {
             this.data = {
@@ -62,12 +60,12 @@ odoo.define('google_drive.gdrive_integration', function (require) {
                     hasActionMenus: true,
                 },
             });
-            await cpHelpers.toggleActionMenu(form);
+            await testUtils.controlPanel.toggleActionMenu(form);
 
             assert.containsOnce(form, '.oe_share_gdoc_item',
                 "The button to the google action should be present");
 
-            await cpHelpers.toggleMenuItem(form, "Cyberdyne Systems");
+            await testUtils.controlPanel.toggleMenuItem(form, "Cyberdyne Systems");
 
             form.destroy();
         });
@@ -139,14 +137,14 @@ odoo.define('google_drive.gdrive_integration', function (require) {
                 },
             });
 
-            await cpHelpers.toggleActionMenu(form);
-            await cpHelpers.toggleMenuItem(form, "Cyberdyne Systems");
+            await testUtils.controlPanel.toggleActionMenu(form);
+            await testUtils.controlPanel.toggleMenuItem(form, "Cyberdyne Systems");
 
             currentRecordId = 2;
-            await cpHelpers.pagerNext(form);
+            await testUtils.controlPanel.pagerNext(form);
 
-            await cpHelpers.toggleActionMenu(form);
-            await cpHelpers.toggleMenuItem(form, "Cyberdyne Systems");
+            await testUtils.controlPanel.toggleActionMenu(form);
+            await testUtils.controlPanel.toggleMenuItem(form, "Cyberdyne Systems");
 
             form.destroy();
         });

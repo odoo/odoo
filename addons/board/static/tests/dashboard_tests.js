@@ -7,21 +7,30 @@ var ListController = require('web.ListController');
 var testUtils = require('web.test_utils');
 var ListRenderer = require('web.ListRenderer');
 var pyUtils = require('web.py_utils');
-const registry = require("@web/core/registry");
+const { registry } = require("@web/core/registry");
 const { makeFakeUserService } = require("@web/../tests/helpers/mock_services");
 const {
+    applyFilter,
+    applyGroup,
+    editConditionValue,
+    toggleAddCustomFilter,
+    toggleAddCustomGroup,
     toggleFilterMenu,
+    toggleGroupByMenu,
     toggleMenuItem,
     toggleMenuItemOption,
     toggleComparisonMenu,
     toggleFavoriteMenu,
 } = require("@web/../tests/search/helpers");
+const LegacyFavoriteMenu = require("web.FavoriteMenu");
+const LegacyAddToBoard = require("board.AddToBoardMenu");
+const { AddToBoard } = require('@board/add_to_board/add_to_board');
 
-const cpHelpers = testUtils.controlPanel;
 const { createWebClient, doAction } = require("@web/../tests/webclient/helpers");
 var createView = testUtils.createView;
 
 const patchDate = testUtils.mock.patchDate;
+const favoriteMenuRegistry = registry.category("favoriteMenu");
 
 let serverData;
 QUnit.module('Dashboard', {
@@ -59,6 +68,12 @@ QUnit.module('Dashboard', {
             },
         };
 
+        LegacyFavoriteMenu.registry.add('add-to-board-menu', LegacyAddToBoard, 10);
+        favoriteMenuRegistry.add("add-to-board", {
+            Component: AddToBoard,
+            groupNumber: 4,
+            isDisplayed: ({ searchModel }) => searchModel.action.type === "ir.actions.act_window",
+        }, { sequence: 10 });
         serverData = { models: this.data };
     },
 });
@@ -771,16 +786,16 @@ QUnit.test("save actions to dashboard", async function (assert) {
     await testUtils.dom.click($(".o_column_sortable"));
 
     // Group It
-    await cpHelpers.toggleGroupByMenu(webClient);
-    await cpHelpers.toggleAddCustomGroup(webClient);
-    await cpHelpers.applyGroup(webClient);
+    await toggleGroupByMenu(webClient);
+    await toggleAddCustomGroup(webClient);
+    await applyGroup(webClient);
 
     // add this action to dashboard
-    await cpHelpers.toggleFavoriteMenu(webClient);
+    await toggleFavoriteMenu(webClient);
 
-    await testUtils.dom.click($(".o_add_to_board > button"));
+    await testUtils.dom.click($(".o_add_to_board button.o_dropdown_toggler"));
     await testUtils.fields.editInput($(".o_add_to_board input"), "a name");
-    await testUtils.dom.click($(".o_add_to_board div button"));
+    await testUtils.dom.click($(".o_add_to_board .o_dropdown_menu button"));
 
     testUtils.mock.unpatch(ListController);
 });
@@ -827,34 +842,28 @@ QUnit.test("save two searches to dashboard", async function (assert) {
 
     var filter_count = 0;
     // Add a first filter
-    await cpHelpers.toggleFilterMenu(webClient);
-    await cpHelpers.toggleAddCustomFilter(webClient);
-    await testUtils.fields.editInput(
-        webClient.el.querySelector(".o_generator_menu_value .o_input"),
-        "a"
-    );
-    await cpHelpers.applyFilter(webClient);
+    await toggleFilterMenu(webClient);
+    await toggleAddCustomFilter(webClient);
+    await editConditionValue(webClient, 0, "a");
+    await applyFilter(webClient);
 
     // Add it to dashboard
-    await cpHelpers.toggleFavoriteMenu(webClient);
-    await testUtils.dom.click($(".o_add_to_board > button"));
-    await testUtils.dom.click($(".o_add_to_board div button"));
+    await toggleFavoriteMenu(webClient);
+    await testUtils.dom.click($(".o_add_to_board button.o_dropdown_toggler"));
+    await testUtils.dom.click($(".o_add_to_board .o_dropdown_menu button"));
 
     // Remove it
     await testUtils.dom.click(webClient.el.querySelector(".o_facet_remove"));
 
     // Add the second filter
-    await cpHelpers.toggleFilterMenu(webClient);
-    await cpHelpers.toggleAddCustomFilter(webClient);
-    await testUtils.fields.editInput(
-        webClient.el.querySelector(".o_generator_menu_value .o_input"),
-        "b"
-    );
-    await cpHelpers.applyFilter(webClient);
+    await toggleFilterMenu(webClient);
+    await toggleAddCustomFilter(webClient);
+    await editConditionValue(webClient, 0, "b");
+    await applyFilter(webClient);
     // Add it to dashboard
-    await cpHelpers.toggleFavoriteMenu(webClient);
-    await testUtils.dom.click(webClient.el.querySelector(".o_add_to_board > button"));
-    await testUtils.dom.click(webClient.el.querySelector(".o_add_to_board div button"));
+    await toggleFavoriteMenu(webClient);
+    await testUtils.dom.click(webClient.el.querySelector(".o_add_to_board button.o_dropdown_toggler"));
+    await testUtils.dom.click(webClient.el.querySelector(".o_add_to_board .o_dropdown_menu button"));
 });
 
 QUnit.test("save a action domain to dashboard", async function (assert) {
@@ -890,18 +899,15 @@ QUnit.test("save a action domain to dashboard", async function (assert) {
     });
 
     // Add a filter
-    await cpHelpers.toggleFilterMenu(webClient);
-    await cpHelpers.toggleAddCustomFilter(webClient);
-    await testUtils.fields.editInput(
-        webClient.el.querySelector(".o_generator_menu_value .o_input"),
-        "b"
-    );
-    await cpHelpers.applyFilter(webClient);
+    await toggleFilterMenu(webClient);
+    await toggleAddCustomFilter(webClient);
+    await editConditionValue(webClient, 0, "b");
+    await applyFilter(webClient);
     // Add it to dashboard
-    await cpHelpers.toggleFavoriteMenu(webClient);
-    await testUtils.dom.click(webClient.el.querySelector(".o_add_to_board > button"));
+    await toggleFavoriteMenu(webClient);
+    await testUtils.dom.click(webClient.el.querySelector(".o_add_to_board button.o_dropdown_toggler"));
     // add
-    await testUtils.dom.click(webClient.el.querySelector(".o_add_to_board div button"));
+    await testUtils.dom.click(webClient.el.querySelector(".o_add_to_board .o_dropdown_menu button"));
 });
 
 QUnit.test("Views should be loaded in the user's language", async function (assert) {
@@ -1123,7 +1129,7 @@ QUnit.skip(
         // add the view to the dashboard
         await toggleFavoriteMenu(webClient);
 
-        await testUtils.dom.click($(".o_add_to_board > button"));
+        await testUtils.dom.click($(".o_add_to_board button.o_dropdown_toggler"));
         await testUtils.fields.editInput($(".o_add_to_board input"), "a name");
         await testUtils.dom.click($(".o_add_to_board div button"));
 

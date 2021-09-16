@@ -10,7 +10,7 @@ var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
-const cpHelpers = testUtils.controlPanel;
+const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 
 QUnit.module('fields', {}, function () {
@@ -569,11 +569,13 @@ QUnit.module('fields', {}, function () {
 
             assert.strictEqual($('tr.o_data_row').length, 9, "should display 9 records");
 
-            await cpHelpers.toggleFilterMenu('.modal');
-            await cpHelpers.toggleAddCustomFilter('.modal');
-            assert.strictEqual(document.querySelector('.modal .o_generator_menu_field').value, 'datetime',
+            const modal = document.body.querySelector(".modal");
+
+            await cpHelpers.toggleFilterMenu(modal);
+            await cpHelpers.toggleAddCustomFilter(modal);
+            assert.strictEqual(modal.querySelector('.o_generator_menu_field').value, 'datetime',
                 "datetime field should be selected");
-            await cpHelpers.applyFilter('.modal');
+            await cpHelpers.applyFilter(modal);
 
             assert.strictEqual($('tr.o_data_row').length, 0, "should display 0 records");
             form.destroy();
@@ -874,8 +876,9 @@ QUnit.module('fields', {}, function () {
             assert.ok(!$('.modal .modal-footer .o_select_button').length,
                 "there should be no 'Select' button in the footer");
             assert.ok($('.modal tbody tr').length > 10, "list should contain more than 10 records");
-            await cpHelpers.editSearch('.modal', "P");
-            await cpHelpers.validateSearch('.modal');
+            const modal = document.body.querySelector(".modal");
+            await cpHelpers.editSearch(modal, "P");
+            await cpHelpers.validateSearch(modal);
             assert.strictEqual($('.modal tbody tr').length, 10,
                 "list should be restricted to records containing a P (10 records)");
             // choose a record
@@ -3126,18 +3129,18 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click(document.querySelector(`${filterMenuCss} > .o_dropdown_toggler`));
 
             assert.hasClass(document.querySelector(filterMenuCss), 'show');
-            assert.isVisible(document.querySelector(`${filterMenuCss} > .dropdown-menu`),
+            assert.isVisible(document.querySelector(`${filterMenuCss} > .o_dropdown_menu`),
                 "the filter dropdown menu should be visible");
             assert.doesNotHaveClass(document.querySelector(groupByMenuCss), 'show');
-            assert.isNotVisible(document.querySelector(`${groupByMenuCss} > .dropdown-menu`),
+            assert.isNotVisible(document.querySelector(`${groupByMenuCss} > .o_dropdown_menu`),
                 "the Group by dropdown menu should be not visible");
 
             await testUtils.dom.click(document.querySelector(`${groupByMenuCss} > .o_dropdown_toggler`));
             assert.hasClass(document.querySelector(groupByMenuCss), 'show');
-            assert.isVisible(document.querySelector(`${groupByMenuCss} > .dropdown-menu`),
+            assert.isVisible(document.querySelector(`${groupByMenuCss} > .o_dropdown_menu`),
                 "the group by dropdown menu should be visible");
             assert.doesNotHaveClass(document.querySelector(filterMenuCss), 'show');
-            assert.isNotVisible(document.querySelector(`${filterMenuCss} > .dropdown-menu`),
+            assert.isNotVisible(document.querySelector(`${filterMenuCss} > .o_dropdown_menu`),
                 "the filter dropdown menu should be not visible");
 
             $fakeDialog.remove();

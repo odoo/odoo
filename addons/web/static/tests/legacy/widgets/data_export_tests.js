@@ -6,7 +6,6 @@ const framework = require('web.framework');
 const ListView = require('web.ListView');
 const testUtils = require('web.test_utils');
 
-const cpHelpers = testUtils.controlPanel;
 const createView = testUtils.createView;
 
 QUnit.module('widgets', {
@@ -114,8 +113,8 @@ QUnit.module('widgets', {
 
         await testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
 
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, 'Export');
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, 'Export');
 
         assert.strictEqual($('.modal').length, 1, "a modal dialog should be open");
         assert.strictEqual($('div.o_tree_column:contains(Activities)').length, 1,
@@ -168,8 +167,8 @@ QUnit.module('widgets', {
         };
         await testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
 
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, 'Export');
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, 'Export');
 
         assert.containsOnce(document.body, '.modal');
 
@@ -183,8 +182,8 @@ QUnit.module('widgets', {
         };
         await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
 
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, 'Export');
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, 'Export');
 
         assert.containsOnce(document.body, '.modal');
 
@@ -217,8 +216,8 @@ QUnit.module('widgets', {
 
         await testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
 
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, 'Export');
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, 'Export');
 
         list.destroy();
     });
@@ -248,8 +247,8 @@ QUnit.module('widgets', {
 
         // Open the export modal
         await testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, 'Export');
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, 'Export');
 
         assert.strictEqual($('.modal').length, 1,
             "a modal dialog should be open");
@@ -291,8 +290,8 @@ QUnit.module('widgets', {
 
         // Open the export modal
         await testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
-        await cpHelpers.toggleActionMenu(list);
-        await cpHelpers.toggleMenuItem(list, 'Export');
+        await testUtils.controlPanel.toggleActionMenu(list);
+        await testUtils.controlPanel.toggleMenuItem(list, 'Export');
 
         assert.strictEqual($('.modal .o_export_tree_item:visible').length, 2, "There should be only two items visible");
         await testUtils.dom.click($('.modal .o_export_search_input'));

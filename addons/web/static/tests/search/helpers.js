@@ -7,11 +7,13 @@ import { registry } from "@web/core/registry";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
+import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, triggerEvent } from "../helpers/utils";
 
 const serviceRegistry = registry.category("services");
+const favoriteMenuRegistry = registry.category("favoriteMenu");
 
 const { Component, mount } = owl;
 
@@ -21,6 +23,14 @@ export const setupControlPanelServiceRegistry = () => {
     serviceRegistry.add("notification", notificationService);
     serviceRegistry.add("orm", ormService);
     serviceRegistry.add("view", viewService);
+};
+
+export const setupControlPanelFavoriteMenuRegistry = () => {
+    favoriteMenuRegistry.add(
+        "custom-favorite-item",
+        { Component: CustomFavoriteItem, groupNumber: 3 },
+        { sequence: 0 }
+    );
 };
 
 export const makeWithSearch = async (params) => {
@@ -122,6 +132,11 @@ export const applyFilter = async (el) => {
 export const addCondition = async (el) => {
     await click(findItem(el, `.o_add_custom_filter_menu .o_dropdown_menu button.o_add_condition`));
 };
+
+export async function removeCondition(el, index) {
+    const condition = findItem(el, `.o_filter_condition`, index);
+    await click(findItem(condition, ".o_generator_menu_delete"));
+}
 
 /** Group by menu */
 
