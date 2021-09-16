@@ -59,6 +59,8 @@
                     domain="[('holiday_status_id.active', '=', True)]" help="Active Time Off"/>
                 <filter name="archive" string="Archived Time Off"
                     domain="[('holiday_status_id.active', '=', False)]" help="Archived Time Off"/>
+                <separator/>
+                <filter name="archived_leaves" string="Deleted Time Off" domain="[('active', '=', False)]" />
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
@@ -196,19 +198,23 @@
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <form string="Time Off Request">
+            <field name="active" invisible="1"/>
             <field name="can_reset" invisible="1"/>
             <field name="can_approve" invisible="1"/>
+            <field name="can_cancel" invisible="1"/>
             <field name="holiday_allocation_id" invisible="1" force_save="1"/>
             <header>
-                <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                <button string="Approve" name="action_approve" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
+                <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('active', '=', False)]}"/>
+                <button string="Approve" name="action_approve" type="object" class="oe_highlight" attrs="{'invisible': ['|', '|', ('active', '=', False), ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
                 <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
-                <button string="Refuse" name="action_refuse" type="object" attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', 'not in', ('confirm','validate1','validate'))]}"/>
+                <button string="Refuse" name="action_refuse" type="object" attrs="{'invisible': ['|', '|', ('active', '=', False), ('can_approve', '=', False), ('state', 'not in', ('confirm','validate1','validate'))]}"/>
+                <button string="Cancel" name="action_cancel" type="object" attrs="{'invisible': ['|', ('active', '=', False), ('can_cancel', '=', False)]}" />
                 <button string="Mark as Draft" name="action_draft" type="object"
                         attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate"/>
             </header>
             <sheet>
+                <widget name="web_ribbon" title="Canceled" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                 <div class="alert alert-info" role="alert" attrs="{'invisible': ['|', ('request_unit_hours', '=', False), '|', ('tz_mismatch', '=', False), ('holiday_type', '=', 'category')]}">
                     <span attrs="{'invisible': [('holiday_type', '!=', 'employee')]}">
                         The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone
@@ -380,6 +386,7 @@
                 <field name="state" invisible="1"/>
                 <field name="is_hatched" invisible="1" />
                 <field name="is_striked" invisible="1"/>
+                <field name="can_cancel" invisible="1"/>
             </calendar>
         </field>
     </record>
@@ -394,6 +401,7 @@
                 <field name="state" invisible="1"/>
                 <field name="is_hatched" invisible="1" />
                 <field name="is_striked" invisible="1"/>
+                <field name="can_cancel" invisible="1"/>
             </calendar>
         </field>
     </record>
