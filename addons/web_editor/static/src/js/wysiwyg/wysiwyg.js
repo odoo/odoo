@@ -221,8 +221,12 @@ const Wysiwyg = Widget.extend({
         const modelName = collaborationChannel.collaborationModelName;
         const fieldName = collaborationChannel.collaborationFieldName;
         const resId = collaborationChannel.collaborationResId;
+        const channelName = `editor_collaboration:${modelName}:${fieldName}:${resId}`;
 
-        if (!(modelName && fieldName && resId)) {
+        if (
+            !(modelName && fieldName && resId) ||
+            Wysiwyg.activeCollaborationChannelNames.has(channelName)
+        ) {
             return;
         }
 
@@ -231,7 +235,8 @@ const Wysiwyg = Widget.extend({
         // No need for secure random number.
         const currentClientId = Math.floor(Math.random() * Math.pow(2, 52)).toString();
 
-        this._collaborationChannelName = `editor_collaboration:${modelName}:${fieldName}:${resId}`;
+        this._collaborationChannelName = channelName;
+        Wysiwyg.activeCollaborationChannelNames.add(channelName);
 
         this.call('bus_service', 'onNotification', this, (notifications) => {
             for (const [channel, busData] of notifications) {
@@ -433,6 +438,10 @@ const Wysiwyg = Widget.extend({
      * @override
      */
     destroy: function () {
+        if (this._collaborationChannelName) {
+            Wysiwyg.activeCollaborationChannelNames.delete(this._collaborationChannelName);
+        }
+
         if (this.odooEditor) {
             this.odooEditor.destroy();
         }
@@ -1804,6 +1813,7 @@ const Wysiwyg = Widget.extend({
         }
     },
 });
+Wysiwyg.activeCollaborationChannelNames = new Set();
 //--------------------------------------------------------------------------
 // Public helper
 //--------------------------------------------------------------------------
