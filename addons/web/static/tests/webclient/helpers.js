@@ -16,7 +16,7 @@ import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
 import { effectService } from "@web/core/effects/effect_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
-import { menuService } from "@web/webclient/menu_service";
+import { menuService } from "@web/webclient/menus/menu_service";
 import { WebClient } from "@web/webclient/webclient";
 // This import is needed because of it's sideeffects, for exemple :
 // web.test_utils easyload xml templates at line : 124:130.
@@ -43,7 +43,7 @@ import Widget from "web.Widget";
 import { userService } from "@web/core/user_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { ClientActionAdapter, ViewAdapter } from "@web/legacy/action_adapters";
-import { commandService } from "@web/webclient/commands/command_service";
+import { commandService } from "@web/core/commands/command_service";
 
 const { Component, mount, tags } = owl;
 

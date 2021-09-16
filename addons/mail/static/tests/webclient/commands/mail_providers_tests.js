@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { afterEach, afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
+import { editSearchBar } from '@web/../tests/core/commands/command_service_tests';
 import { click, nextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
-import { editSearchBar } from '@web/../tests/webclient/commands/command_service_tests';
 import { browser } from '@web/core/browser/browser';
+import { commandService } from "@web/core/commands/command_service";
 import { registry } from "@web/core/registry";
-import { commandService } from "@web/webclient/commands/command_service";
 
 const serviceRegistry = registry.category("services");
 

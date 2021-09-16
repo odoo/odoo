@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useCommand } from "@web/core/commands/command_hook";
 import { useService } from "@web/core/utils/hooks";
-import { useCommand } from "@web/webclient/commands/command_hook";
 import { useEnvDebugContext } from "./debug_context";
 
 const { Component } = owl;
