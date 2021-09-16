@@ -183,7 +183,7 @@ tour.register('edit_link_popover', {
     // FIXME this step shouldnt be needed but click not working as real click
     {
         content: "REMOVEME",
-        trigger: '.o_edit_menu_popover',
+        trigger: 'html', // Do not block if popover already hidden
         run: (actions) => {
             $('.o_edit_menu_popover').popover('hide');
         },
