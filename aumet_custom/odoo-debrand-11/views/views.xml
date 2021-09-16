@@ -1,0 +1,135 @@
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">Debranding Configuration</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block"
+                     data-string="Debrand"
+                     string="Debrand"
+                     data-key="odoo-debrand-11"
+                >
+                    <field name="website_id" invisible="1"/>
+                    <h2>Debranding Configurations</h2>
+                    <div class="row mt16 o_settings_container" id="debrand_settings">
+                        <div class="col-12 col-lg-6 o_setting_box" id="company_logo">
+                            <div class="o_setting_right_pane">
+                            <label for="company_logo" string="Company Logo"/>
+                            <div id="company_logo" class="mt8">
+                                <field name="company_logo"
+                                       widget="image"
+                                       class="w-25 mt-2" />
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="favicon">
+                            <div class="o_setting_right_pane">
+                            <label for="favicon" string="Favicon"/>
+                                <div id="favicon" class="oe_inline">
+                                    <field name="favicon"
+                                           widget="image"
+                                           class="float-left oe_avatar" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="company_name">
+                            <div class="o_setting_right_pane">
+                            <label for="company_name" string="Company Name"/>
+                                <div id="company_name" class="oe_inline">
+                                    <field name="company_name"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="company_website">
+                            <div class="o_setting_right_pane">
+                            <label for="company_website" string="Company Website"/>
+                            <div id="company_website" class="mt8">
+                                <field name="company_website"/>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="button_error">
+                            <div class="o_setting_right_pane">
+<!--                            <label for="check_error" string="Check Error Dialogue"/>-->
+                            <div id="check_error" class="mt8">
+                                <button name="error"
+                                        id="error"
+                                        type="object"
+                                        string="error"
+                                        class="btn-danger" />
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="button_warning">
+                            <div class="o_setting_right_pane">
+<!--                            <label for="checkwarning" string="Check Warning Dialogue"/>-->
+                            <div id="check_warning" class="mt8">
+                                <button name="warning"
+                                        id="warning"
+                                        type="object"
+                                        string="warning"
+                                        class="btn-warning" />
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <!-- Branding Login Layout -->
+    <template id="login_layout_extend_11" name="Login Layout Extend" inherit_id="web.login_layout">
+        <xpath position="replace" expr="//div[1]">
+            <div class="container py-5">
+
+                <t t-set="website_id" t-value="request.env['website'].sudo().search([])"/>
+                <div t-attf-class="card border-0 mx-auto bg-100 {{login_card_classes}} o_database_list" style="max-width: 300px;">
+                    <div class="card-body">
+                        <div t-attf-class="text-center pb-3 border-bottom {{'mb-3' if form_small else 'mb-4'}}"
+                             t-if="website_id and website_id[0] and website_id[0].company_logo">
+
+                        <img t-att-src="'data:image/png;base64,%s' % to_text(website_id[0].company_logo or '')"
+                        style="max-height:120px; max-width: 100%; width:auto"/>
+                        </div>
+                        <t t-raw="0"/>
+                        <div class="text-center small mt-4 pt-3 border-top" t-if="not disable_footer">
+                            <t t-if="not disable_database_manager">
+                                <a class="border-right pr-2 mr-1" href="/web/database/manager">Manage Databases</a>
+                            </t>
+                            <t>
+                            <a t-att-href="website_id and website_id[0] and website_id[0].company_website or ''"
+                               target="_blank">Powered by
+                            <span t-esc="website_id and website_id[0] and website_id[0].company_name or ''"/></a>
+                        </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!--put the company logo or the fav icons path here in href-->
+    <template id="web_layout_extend" inherit_id="web.layout">
+        <xpath expr="//html/head/title" position="replace">
+            <t t-set="website_id" t-value="request.env['website'].sudo().search([])"/>
+            <title><t t-esc="(title or '') + ' ' + str(website_id and website_id[0] and website_id[0].company_name)"/></title>
+        </xpath>
+        <xpath position="attributes" expr="//html/head/link[@rel='shortcut icon']">
+            <attribute name="t-att-href">"'data:image/png;base64,%s' % to_text(website_id and website_id[0] and website_id[0].favicon or '')"</attribute>
+        </xpath>
+    </template>
+
+    <!-- Debrand Assets -->
+    <template id="title_extend" name="Extend Title" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/odoo-debrand-11/static/src/js/title.js"/>
+<!--            <script type="text/javascript" src="/odoo-debrand-11/static/src/components/notificationExtend.js"/>-->
+        </xpath>
+    </template>
+    <!--Modify brand promotion details-->
+    <template id="brand_promo_extend" inherit_id="website.brand_promotion">
+        <xpath expr="//div[hasclass('o_brand_promotion')]" position="replace">
+        </xpath>
+    </template>
+</odoo>
