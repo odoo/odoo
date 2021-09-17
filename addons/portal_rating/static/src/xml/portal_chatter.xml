@@ -35,12 +35,12 @@
     </t>
 
     <t t-extend="portal.Chatter">
-        <t t-jquery="t[t-call='portal.chatter_message_count']" t-operation="replace">
+        <t t-jquery="t[t-call='portal.chatter_attachment_summary']" t-operation="replace">
             <t t-if="widget.options['display_rating']">
                 <t t-call="portal_rating.rating_card"/>
             </t>
-            <t t-if="!widget.options['display_rating']">
-                <t t-call="portal.chatter_message_count"/>
+            <t t-else="">
+                <t t-call="portal.chatter_attachment_summary"/>
             </t>
         </t>
     </t>
@@ -51,7 +51,7 @@
     <t t-name="portal_rating.chatter_rating_publisher">
         <div class="o_wrating_publisher_container">
             <button t-if="is_publisher"
-                t-attf-class="btn px-2 mb-2 btn-sm border o_wrating_js_publisher_comment_btn {{ rating.publisher_comment !== '' ? 'd-none' : '' }}"
+                t-attf-class="btn px-2 mt-1 mb-2 btn-sm border o_wrating_js_publisher_comment_btn {{ rating.publisher_comment !== '' ? 'd-none' : '' }}"
                 t-att-data-mes_index="rating.mes_index">
                 <i class="fa fa-comment text-muted mr-1"/>Comment
             </button>
@@ -65,10 +65,10 @@
         <div class="media o_portal_chatter_message">
             <img class="o_portal_chatter_avatar" t-att-src="rating.publisher_avatar" alt="avatar"/>
             <div class="media-body">
-                <div class="o_portal_chatter_message_title">
-                    <div class="d-inline-block">
-                        <h5 class="mb-1"><t t-esc="rating.publisher_name"/></h5>
-                    </div>
+                <div class="o_portal_chatter_message_title row mb-1 mx-0">
+                    <h5 class="mb-1"><t t-esc="rating.publisher_name"/></h5>
+                    <p class="mx-2 pt-1">-</p>
+                    <p class="o_portal_chatter_published_date pt-1" t-att-title="rating.publisher_datetime"><t t-esc="rating.publisher_date_ago"/></p>
                     <div t-if="is_publisher" class="dropdown d-inline-block">
                         <button class="btn py-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-ellipsis-v"/>
@@ -82,7 +82,6 @@
                             </button>
                         </div>
                     </div>
-                    <p>Published on <t t-esc="rating.publisher_datetime"/></p>
                 </div>
                 <t t-out="rating.publisher_comment"/>
             </div>
@@ -94,7 +93,7 @@
             <div class="media-body">
                 <div class="o_portal_chatter_message_title">
                     <h5 class='mb-1'><t t-esc="rating.publisher_name"/></h5>
-                    <p>Published on <t t-esc="rating.publisher_datetime"/></p>
+                    <p t-if="rating.publisher_datetime">Published on <t t-esc="rating.publisher_datetime"/></p>
                 </div>
                 <textarea rows="3" class="form-control o_portal_rating_comment_input"><t t-esc="rating.publisher_comment"/></textarea>
                 <div>

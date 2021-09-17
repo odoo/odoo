@@ -464,15 +464,11 @@ form label {
         margin-bottom: 15px;
     }
 
-    .o_portal_chatter_composer {
-        margin-bottom: 15px;
-    }
-
     .o_portal_chatter_messages {
         margin-bottom: 15px;
 
         .o_portal_chatter_message {
-            div.media-body > p:not(.o_portal_chatter_puslished_date):last-of-type {
+            div.media-body > p:not(.o_portal_chatter_published_date):last-of-type {
                 margin-bottom: 5px;
             }
         }
@@ -510,18 +506,33 @@ form label {
             opacity: 1;
         }
     }
+}
 
-    .o_portal_message_internal_off {
-        .btn-danger {
-            display: none;
-        }
-    }
+.o_portal_chatter_separator {
+    display: flex;
+    align-items: center;
+    padding: map-get($spacers, 0) map-get($spacers, 0);
+    flex: 0 0 auto;
+}
 
-    .o_portal_message_internal_on {
-        .btn-success {
-            display: none;
-        }
+.o_portal_chatter_separator_line {
+    flex: 1 1 auto;
+    width: auto;
+}
+
+.o_portal_chatter_separator_label {
+    padding: map-get($spacers, 0) map-get($spacers, 3);
+}
+
+.o_portal_outline {
+    border: 1px solid rgba($black, .125);
+    &:focus-within {
+        box-shadow: 0 0 0 2pt rgba($o-brand-primary, .3) !important;
     }
+}
+
+.o_portal_border:focus {
+    box-shadow: none !important;
 }
 
 .o_portal_security_body {

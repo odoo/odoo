@@ -63,25 +63,6 @@ PortalChatter.include({
     //--------------------------------------------------------------------------
 
     /**
-     * Update the messages format
-     *
-     * @param {Array<Object>} messages
-     * @returns {Array}
-     */
-    preprocessMessages: function (messages) {
-        var self = this;
-        messages = this._super.apply(this, arguments);
-        if (this.options['display_rating']) {
-            _.each(messages, function (m, i) {
-                m.rating_value = self.roundToHalf(m['rating_value']);
-                m.rating = self._preprocessCommentData(m.rating, i);
-            });
-        }
-        // save messages in the widget to process correctly the publisher comment templates
-        this.messages = messages;
-        return messages;
-    },
-    /**
      * Round the given value with a precision of 0.5.
      *
      * Examples:
@@ -180,10 +161,23 @@ PortalChatter.include({
             publisher_id: this.options.partner_id,
             publisher_avatar: _.str.sprintf('/web/image/res.partner/%s/avatar_128/50x50', this.options.partner_id),
             publisher_name: _t("Write your comment"),
+            publisher_date_ago: '',
             publisher_datetime: '',
             publisher_comment: '',
         };
-    }, 
+    },
+
+    /**
+     * Update the messages format
+     * @param {Object} message
+     */
+     _preprocessMessage: function (message, messageIndex) {
+        this._super.apply(this, arguments);
+        if (this.options.display_rating) {
+            message.rating_value = this.roundToHalf(message.rating_value);
+            message.rating = this._preprocessCommentData(message.rating, messageIndex);
+        }
+    },
 
      /**
      * preprocess the rating data comming from /website/rating/comment or the chatter_init
@@ -192,10 +186,12 @@ PortalChatter.include({
      * @returns {JSON} the process rating data
      */
     _preprocessCommentData: function (rawRating, messageIndex) {
+        var publisher_datetime_moment = rawRating.publisher_datetime ? moment(time.str_to_datetime(rawRating.publisher_datetime)) : "";
         var ratingData = {
             id: rawRating.id,
             mes_index: messageIndex,
-            publisher_datetime: rawRating.publisher_datetime ? moment(time.str_to_datetime(rawRating.publisher_datetime)).format('MMMM Do YYYY, h:mm:ss a') : "",
+            publisher_date_ago: publisher_datetime_moment ? publisher_datetime_moment.fromNow() : "",
+            publisher_datetime: publisher_datetime_moment ? publisher_datetime_moment.format(time.getLangDatetimeFormat()) : "",
             publisher_comment: rawRating.publisher_comment ? rawRating.publisher_comment : '',
         };
 

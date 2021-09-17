@@ -161,9 +161,10 @@ class PortalChatter(http.Controller):
         if kwargs.get('allow_composer'):
             display_composer = kwargs.get('token') or not is_user_public
         return {
-            'messages': message_data['messages'],
+            'messages': message_data['messages'], # 'grouped_messages': message_data['grouped_messages'],
             'options': {
                 'message_count': message_data['message_count'],
+                'attachment_ids': message_data['attachment_ids'],
                 'is_user_public': is_user_public,
                 'is_user_employee': request.env.user.has_group('base.group_user'),
                 'is_user_publisher': request.env.user.has_group('website.group_website_publisher'),
@@ -171,6 +172,26 @@ class PortalChatter(http.Controller):
                 'partner_id': request.env.user.partner_id.id
             }
         }
+
+    def _prepare_portal_message_fetch_all_attachments(self, messages, message_next_attachments_ids):
+        """This function will compute a list of all attachments of the current messages thread.
+        Some of them are already formatted (along with the displayed messages on the current page)
+        For each non-displayed message with attachments (message_next_attachment_ids), we have to
+        extract, format, and add an access token (if necessary) to those attachments
+        """
+        attachment_ids = []
+        for message in messages:
+            attachment_ids.extend(message['attachment_ids'])
+
+        IrAttachmentSudo = request.env['ir.attachment'].sudo()
+        for message in message_next_attachments_ids:
+            new_attachments = message.attachment_ids._attachment_format()
+            for attachment in new_attachments:
+                if not attachment.get('access_token'):
+                    attachment['access_token'] = IrAttachmentSudo.browse(attachment['id']).generate_access_token()[0]
+            attachment_ids.extend(new_attachments)
+
+        return sorted(attachment_ids, key=lambda attachment: attachment.get('id', 0), reverse=True)
 
     @http.route('/mail/chatter_fetch', type='json', auth='public', website=True)
     def portal_message_fetch(self, res_model, res_id, domain=False, limit=10, offset=0, **kw):
@@ -193,9 +214,16 @@ class PortalChatter(http.Controller):
             if not request.env['res.users'].has_group('base.group_user'):
                 domain = expression.AND([Message._get_search_domain_share(), domain])
             Message = request.env['mail.message'].sudo()
+
+        message_ids = Message.search(domain, limit=limit, offset=offset, order='date desc')
+        messages = message_ids.portal_message_format()
+        domain_next_attachment_ids = ['&', ('attachment_ids', '!=', False), ('id', 'not in', message_ids.ids)]
+        message_next_attachments_ids = Message.search(expression.AND([domain_next_attachment_ids, domain]))
+
         return {
-            'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(),
-            'message_count': Message.search_count(domain)
+            'messages': messages, # 'grouped_messages': self._prepare_portal_message_fetch_group_by_day(messages, message_ids),
+            'message_count': Message.search_count(domain),
+            'attachment_ids': self._prepare_portal_message_fetch_all_attachments(messages, message_next_attachments_ids)
         }
 
     @http.route(['/mail/update_is_internal'], type='json', auth="user", website=True)
