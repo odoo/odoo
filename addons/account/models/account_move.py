@@ -4589,6 +4589,7 @@ class AccountMoveLine(models.Model):
             # Log changes to move lines on each move
             for move_id, modified_lines in move_initial_values.items():
                 for line in self.filtered(lambda l: l.move_id.id == move_id):
+<<<<<<< HEAD
                     tracking_value_ids = line._mail_track(ref_fields, modified_lines)[1]
                     if tracking_value_ids:
                         msg = f"{html_escape(_('Journal Item'))} <a href=# data-oe-model=account.move.line data-oe-id={line.id}>#{line.id}</a> {html_escape(_('updated'))}"
@@ -4596,6 +4597,36 @@ class AccountMoveLine(models.Model):
                             body=msg,
                             tracking_value_ids=tracking_value_ids
                         )
+=======
+                    changes, tracking_value_ids = line._mail_track(ref_fields, modified_lines)  # Return a tuple like (changed field, ORM command)
+                    if tracking_value_ids:
+                        for value in tracking_value_ids:
+                            selected_field = value[2]  # Get the last element of the tuple in the list of ORM command. (changed, [(0, 0, THIS)])
+                            tmp_move[move_id].append({
+                                'line_id': line.id,
+                                **{'field_name': selected_field.get('field_desc')},
+                                **self._get_formated_values(selected_field)
+                            })
+                    elif changes:
+                        for change in changes:
+                            field_name = line._fields[change].string  # Get the field name
+                            tmp_move[move_id].append({
+                                'line_id': line.id,
+                                'error': True,
+                                'field_error': field_name,
+                            })
+                    else:
+                        continue
+                if len(tmp_move[move_id]) > 0:
+                    tracking_values.update(tmp_move)
+
+            # Write in the chatter.
+            for move in self.mapped('move_id'):
+                fields = tracking_values.get(move.id, [])
+                if len(fields) > 0:
+                    msg = self._get_tracking_field_string(tracking_values.get(move.id))
+                    move.message_post(body=msg)  # Write for each concerned move the message in the chatter
+>>>>>>> 96f1004e2b1... temp
 
         return result
 
