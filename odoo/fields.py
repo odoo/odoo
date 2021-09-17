@@ -2636,7 +2636,7 @@ class Domain(Field):
                 active_ids=record.ids,
                 context=record.env.context,
             )
-            domain = value if not isinstance(value, str) else safe_eval(value, eval_ctx)
+            domain = value if not isinstance(value, str) else safe_eval(value or "[]", eval_ctx)
             if domain:
                 model_name = self.domain_model if self.domain_model else record[self.model_field]
                 if isinstance(model_name, type(record.env["ir.model"])):
