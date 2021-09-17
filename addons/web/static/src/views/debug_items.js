@@ -73,7 +73,13 @@ export function editSearchView({ accessRights, component, env }) {
     let { searchViewId } = component.props.info || {}; // fallback is there for legacy
     if ("viewParams" in component.props) {
         //legacy
-        searchViewId = component.props.viewParams.action.controlPanelFieldsView.view_id;
+        if (component.props.viewParams.withControlPanel && component.props.viewParams.action.controlPanelFieldsView) {
+            searchViewId = component.props.viewParams.action.controlPanelFieldsView.view_id;
+        }
+    }
+    // allow to edit 'ControlPanelView' only if there is a controlPanel and it's searchView
+    if (!searchViewId) {
+        return null;
     }
     const description = env._t("Edit ControlPanelView");
     return {

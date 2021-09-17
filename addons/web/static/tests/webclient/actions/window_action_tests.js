@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { editView } from "@web/views/debug_items";
+import { editSearchView, editView } from "@web/views/debug_items";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
 import AbstractView from "web.AbstractView";
 import FormView from "web.FormView";
@@ -2295,6 +2295,34 @@ QUnit.module("ActionManager", (hooks) => {
             ".o_debug_manager .o_dropdown_item:contains('Edit View: Kanban')"
         );
     });
+
+    QUnit.test(
+        "debugManage for (legacy) views without controlPanel in viewDialog works correctly",
+        async function (assert) {
+            assert.expect(3);
+            registry.category("debug").category("view").add("editView", editView);
+            registry.category("debug").category("view").add("editSearchViewItem", editSearchView);
+            patchWithCleanup(odoo, { debug: true });
+            const mockRPC = async (route) => {
+                if (route.includes("check_access_rights")) {
+                    return true;
+                }
+            };
+            const webClient = await createWebClient({ serverData, mockRPC });
+            // Open Partner form view
+            await doAction(webClient, 3, { viewType: "form" });
+            // Open dialog
+            await doAction(webClient, 5);
+            await legacyExtraNextTick();
+            assert.containsOnce(webClient, ".o_dialog");
+            assert.containsOnce(webClient, ".o_dialog .o_act_window .o_view_controller");
+            await click(webClient.el.querySelector(".modal .o_debug_manager .o_dropdown_toggler"));
+            assert.containsOnce(
+                webClient,
+                ".modal li.o_debug_manager.show",
+                "Should open the debug manager drop-down in view dialog without traceback");
+        }
+    );
 
     QUnit.test("reload a view via the view switcher keep state", async function (assert) {
         assert.expect(6);
