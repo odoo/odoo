@@ -211,12 +211,12 @@ QUnit.test('add an emoji', async function (assert) {
         document.querySelector('.o_Composer_buttonEmojis').click()
     );
     await afterNextRender(() =>
-        document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
+        document.querySelector('.o_EmojisPopover_emojiSprite[data-unicode="🐖"]').click()
     );
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
-        "😊",
-        "emoji should be inserted in the composer text input"
+        ":pig:", // valid until the composer can deal html content
+        "emoji source should be inserted in the composer text input"
     );
     // ensure popover is closed
     await nextAnimationFrame();
@@ -248,11 +248,11 @@ QUnit.test('add an emoji after some text', async function (assert) {
 
     await afterNextRender(() => document.querySelector('.o_Composer_buttonEmojis').click());
     await afterNextRender(() =>
-        document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
+        document.querySelector('.o_EmojisPopover_emojiSprite[data-unicode="🐖"]').click()
     );
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
-        "Blabla😊",
+        "Blabla:pig:",
         "emoji should be inserted after the text"
     );
     // ensure popover is closed
@@ -290,11 +290,11 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
     // select emoji
     await afterNextRender(() => document.querySelector('.o_Composer_buttonEmojis').click());
     await afterNextRender(() =>
-        document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
+        document.querySelector('.o_EmojisPopover_emojiSprite[data-unicode="🐖"]').click()
     );
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
-        "😊",
+        ":pig:",
         "whole text selection should have been replaced by emoji"
     );
     // ensure popover is closed
@@ -510,11 +510,11 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
         document.querySelector('.o_Composer_buttonEmojis').click()
     );
     await afterNextRender(() =>
-        document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
+        document.querySelector('.o_EmojisPopover_emojiSprite[data-unicode="🐖"]').click()
     );
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
-        "Hello! How are you? 😊",
+        "Hello! How are you? :pig:",
         "text content of composer should have previous canned response substitution and selected emoji just after"
     );
     // ensure popover is closed
@@ -713,11 +713,11 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
         document.querySelector('.o_Composer_buttonEmojis').click()
     );
     await afterNextRender(() =>
-        document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
+        document.querySelector('.o_EmojisPopover_emojiSprite[data-unicode="🐖"]').click()
     );
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
-        "#General 😊",
+        "#General :pig:",
         "text content of composer should have previous channel mention and selected emoji just after"
     );
     // ensure popover is closed
@@ -949,11 +949,11 @@ QUnit.test('add an emoji after a command', async function (assert) {
         document.querySelector('.o_Composer_buttonEmojis').click()
     );
     await afterNextRender(() =>
-        document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
+        document.querySelector('.o_EmojisPopover_emojiSprite[data-unicode="🐖"]').click()
     );
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
-        "/who 😊",
+        "/who :pig:",
         "text content of composer should have previous command and selected emoji just after"
     );
     // ensure popover is closed
@@ -1205,11 +1205,11 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
         document.querySelector('.o_Composer_buttonEmojis').click()
     );
     await afterNextRender(() =>
-        document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
+        document.querySelector('.o_EmojisPopover_emojiSprite[data-unicode="🐖"]').click()
     );
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
-        "@TestPartner 😊",
+        "@TestPartner :pig:",
         "text content of composer should have previous mention and selected emoji just after"
     );
     // ensure popover is closed

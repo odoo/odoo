@@ -296,7 +296,7 @@ export class Composer extends Component {
     _onEmojiSelection(ev) {
         ev.stopPropagation();
         this._textInputRef.comp.saveStateInStore();
-        this.composer.insertIntoTextInput(ev.detail.unicode);
+        this.composer.insertIntoTextInput(ev.detail.source);
         if (!this.env.device.isMobile) {
             this.focus();
         }

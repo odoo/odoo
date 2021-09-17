@@ -2367,6 +2367,9 @@ function factory(dependencies) {
          */
         pendingSeenMessageId: attr(),
         public: attr(),
+        /**
+         * Currently search terms to search through the thread's messages
+         */
         searchedText: attr({
             default: "",
         }),

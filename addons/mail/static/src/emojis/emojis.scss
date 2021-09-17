@@ -1,0 +1,10 @@
+$emoji-sprite-size: 72;
+
+@mixin baseEmojiClass($scale-factor, $translation-y: 0) {
+    display: inline-block;
+    transform: scale($scale-factor) translateY($translation-y + 0px);
+    transform-origin: left bottom;
+    margin-top: - ceil($emoji-sprite-size - ($scale-factor * $emoji-sprite-size)) + 2 + 0px;
+    margin-right: - ceil($emoji-sprite-size - ($scale-factor * $emoji-sprite-size)) + 2 + 0px;
+    min-height: ceil($scale-factor * $emoji-sprite-size) + 0px !important;
+}

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import emojis from '@mail/js/emojis';
+import { legacyEmojis } from '@mail/emojis/emojis';
 import MailEmojisMixin from '@mail/js/emojis_mixin';
 
 import basicFields from 'web.basic_fields';
@@ -20,7 +20,7 @@ var FieldEmojiCommon = {
     init: function () {
         this._super.apply(this, arguments);
         this._triggerOnchange = _.debounce(this._triggerOnchange, 2000);
-        this.emojis = emojis;
+        this.emojis = legacyEmojis;
     },
 
     /**

@@ -3,8 +3,8 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { clear, create, insert, insertAndReplace, link, replace, unlinkAll } from '@mail/model/model_field_command';
-import emojis from '@mail/js/emojis';
 import { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } from '@mail/js/utils';
+import { matchUnicodeEmojiPattern, isUnicodeInOdooEmojisSelection, getEmoji, getEmojiClassName } from '@mail/emojis/emojis';
 
 import { session } from '@web/session';
 import { escapeRegExp } from "@web/core/utils/strings"
@@ -285,7 +285,7 @@ function factory(dependencies) {
             if (!isSafe) {
                 content = _.escape(content);
             }
-            content = this._wrapEmojisForFormatting(content)
+            content = this._parseUnicodeEmojis(content)
             if (this._isThreadCurrentlyBeingSearched()) {
                 content = this._highlightBasedOnThreadSearch(content);
             }
@@ -807,38 +807,31 @@ function factory(dependencies) {
         }
 
         /**
-         * Wraps emojis with a span to give them a class for formatting. 
+         * Parse unicode emojis to change them to span to assign them a css sprite. 
          * 
          * @private
          * @param {String} content
          * @returns {String}
          */
-        _wrapEmojisForFormatting(content) {
-            let processedContent;
-            for (const emoji of emojis) {
-                const { unicode } = emoji;
-                const regexp = new RegExp(
-                    `(?:^|\\s|<[a-z]*>)(${unicode})(?=\\s|$|</[a-z]*>)`,
-                    "g"
-                );
-                processedContent = content.replace(
-                    regexp,
-                    ` <span class="o_mail_emoji">${unicode}</span> `
-                );
-                // Idiot-proof limit. If the user had the amazing idea of
-                // copy-pasting thousands of emojis, the image rendering can lead
-                // to memory overflow errors on some browsers (e.g. Chrome). Set an
-                // arbitrary limit to 200 from which we simply don't replace them
-                // (anyway, they are already replaced by the unicode counterpart).
-                if (_.str.count(processedContent, "o_mail_emoji") > 200) {
-                    processedContent = content;
-                }
-            }
-            return processedContent;
+        _parseUnicodeEmojis(content) {
+            content = content.replace(
+                matchUnicodeEmojiPattern,
+                (match) => {
+                    if (isUnicodeInOdooEmojisSelection(match)) {
+                        const emoji = getEmoji(match);
+                        return ` <span class="o_Message_emoji ${getEmojiClassName(emoji)}" data-unicode="${emoji.unicode}"></span> `
+                    }
+                    // It is possible that a user copy/paste a unicode emoji from an external source that we don't 
+                    // have an image for. In this case, we simply leave it as the unicode value and hope other users
+                    // will have a brower / system able to see it. 
+                    return match;
+                } 
+            )
+           return content
         }
 
     }
-
+    
     Message.fields = {
         actionList: one2one('mail.message_action_list', {
             default: create(),

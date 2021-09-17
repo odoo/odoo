@@ -2,12 +2,81 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.EmojisPopover" owl="1">
-        <div class="o_EmojisPopover">
-            <t t-foreach="emojis" t-as="emoji" t-key="emoji.unicode">
-                <span class="o_EmojisPopover_emoji" t-on-click="_onClickEmoji" t-att-title="emoji.description" t-att-data-source="emoji.sources[0]" t-att-data-unicode="emoji.unicode">
-                    <t t-esc="emoji.unicode"/>
-                </span>
+        <div t-att-class="env.device.isMobile ? 'o_EmojisPopoverMobile' : 'o_EmojisPopover'">
+            
+            <div class="o_EmojisPopover_container">
+                <input t-model="state.search" class="o_EmojisPopover_searchInput" t-att-placeholder="EMOJI_SEARCH_PLACEHOLDER" autofocus="true"/>
+            </div>
+
+            <div class="o_EmojisPopover_separation"></div>
+
+            <t t-if="!state.search">
+                <div t-att-class="{ 'o_EmojisPopover_categories': !env.device.isMobile, 'o_EmojisPopover_categoriesMobile': env.device.isMobile }">
+                        <t t-foreach="emojisAllCategories" t-as="category" t-key="category">
+                        <div t-on-click="_onClickEmojisCategory(category)" t-att-class="{ 'o_EmojisPopover_categoryIsActive': state.activeCategory === category, 'o_EmojisPopover_categoryWrapper': !env.device.isMobile, 'o_EmojisPopover_categoryWrapperMobile' : env.device.isMobile  }" t-att-title="category" t-att-data-source="category" >
+                            <span  t-att-class="{ 'o_EmojisPopover_category': !env.device.isMobile, 'o_EmojisPopover_categoryMobile': env.device.isMobile }" >
+                                <span class="o_EmojisPopover_emojiSpriteCategory" t-att-class="getEmojiClassName(emojisByCategory(category)[0])" data-unicode="emojisByCategory(category)[0].unicode"></span>
+                            </span>
+                        </div>
+                        </t>
+                </div>
+                <div class="o_EmojisPopover_separation"></div>
             </t>
+
+            <div class="o_EmojisPopover_scollableContent">
+            
+            <div t-if="!state.search and !state.activeCategory and recentlyUsedEmojis.length" class="o_EmojisPopover_container">
+                <div class="o_EmojisPopover_sectionHeader">
+                    <t t-esc="RECENTLY_USED" />
+                </div>
+                <div class="o_EmojisPopover_emojisGrid">
+                    <t t-foreach="recentlyUsedEmojis" t-as="emoji" t-key="emoji.unicode">
+                    <div class="o_EmojisPopover_emojiWrapper" t-on-click="_onClickEmoji" t-att-title="emoji.sources[0]" t-att-data-source="emoji.sources[0]" t-att-data-unicode="emoji.unicode">
+                        <span t-att-class="env.device.isMobile ? 'o_EmojisPopover_emojiMobile' : 'o_EmojisPopover_emoji'" >
+                            <span class="o_EmojisPopover_emojiSprite" t-att-class="getEmojiClassName(emoji)" t-att-data-unicode="emoji.unicode"></span>
+                        </span>
+                    </div>
+                    </t>
+                </div>
+                <div class="o_EmojisPopover_separation"></div>
+            </div>
+
+                <t t-if="!state.search">
+                    <t t-foreach="emojisCategories" t-as="category" t-key="category">
+                        <div class="o_EmojisPopover_sectionHeader">
+                            <t t-esc="category"/>
+                        </div>
+                        <div class="o_EmojisPopover_emojisGrid">
+                            <t t-foreach="emojisByCategory(category)" t-as="emoji" t-key="emoji.unicode">
+                            <div class="o_EmojisPopover_emojiWrapper" t-on-click="_onClickEmoji" t-att-title="emoji.sources[0]" t-att-data-source="emoji.sources[0]" t-att-data-unicode="emoji.unicode">
+                                <span t-att-class="env.device.isMobile ? 'o_EmojisPopover_emojiMobile' : 'o_EmojisPopover_emoji'" >
+                                    <span class="o_EmojisPopover_emojiSprite" t-att-class="getEmojiClassName(emoji)" t-att-data-unicode="emoji.unicode"></span>
+                                </span>
+                            </div>
+                            </t>
+                        </div>
+                        <div class="o_EmojisPopover_separation"></div>
+                    </t>
+                </t>
+
+                <t t-else="">
+                    <t t-if="filteredEmojis.length">
+                    <div class="o_EmojisPopover_emojisGrid">
+                        <t t-foreach="filteredEmojis" t-as="emoji" t-key="emoji.unicode">
+                        <div class="o_EmojisPopover_emojiWrapper" t-on-click="_onClickEmoji" t-att-title="emoji.sources[0]" t-att-data-source="emoji.sources[0]" t-att-data-unicode="emoji.unicode">
+                            <span t-att-class="env.device.isMobile ? 'o_EmojisPopover_emojiMobile' : 'o_EmojisPopover_emoji'" >
+                                <span class="o_EmojisPopover_emojiSprite" t-att-class="getEmojiClassName(emoji)" t-att-data-unicode="emoji.unicode"></span>
+                            </span>
+                        </div>
+                        </t>
+                    </div>
+                    <div class="o_EmojisPopover_separation"></div>
+                    </t>
+                    <t t-else="">
+                        <span class="o_EmojisPopover_emptySearchResult" t-esc="NO_EMOJIS_FOUND_AFTER_SEARCH"></span>
+                    </t>
+                </t>
+            </div>
         </div>
     </t>
 

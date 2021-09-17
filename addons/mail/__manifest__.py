@@ -71,13 +71,14 @@
             'web/static/src/webclient/webclient.scss',
             'web/static/src/webclient/webclient_extra.scss',
             'web/static/src/core/utils/*.scss',
+            'mail/static/src/emojis/*.scss',
             # Dependency of notification_group, notification_request, thread_needaction_preview and thread_preview
             'mail/static/src/components/notification_list/notification_list_item.scss',
             'mail/static/src/component_hooks/*/*.js',
             'mail/static/src/components/*/*',
             # Unused by guests and depends on ViewDialogs, better to remove it instead of pulling the whole view dependency tree
             ('remove', 'mail/static/src/components/composer_suggested_recipient/*'),
-            'mail/static/src/js/emojis.js',
+            'mail/static/src/emojis/*.js',
             'mail/static/src/js/utils.js',
             'mail/static/src/model/*.js',
             'mail/static/src/models/*/*.js',
@@ -113,6 +114,7 @@
             'mail/static/src/scss/variables/derived_variables.scss',
             # defines mixins and variables used by multiple components
             'mail/static/src/components/notification_list/notification_list_item.scss',
+            'mail/static/src/emojis/emojis.scss', # defines a few things required by some mail scss
             'mail/static/src/js/**/*.js',
             'mail/static/src/utils/*/*.js',
             'mail/static/src/utils/messaging_component.js',
@@ -127,6 +129,8 @@
             'mail/static/src/webclient/commands/*.js',
             'mail/static/src/widgets/*/*.js',
             'mail/static/src/widgets/*/*.scss',
+            'mail/static/src/emojis/*.js',
+            'mail/static/src/emojis/*.scss',
         ],
         'web.assets_backend_prod_only': [
             'mail/static/src/main.js',

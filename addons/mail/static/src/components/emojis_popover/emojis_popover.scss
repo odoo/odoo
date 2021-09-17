@@ -1,22 +1,145 @@
-// ------------------------------------------------------------------
-// Layout
-// ------------------------------------------------------------------
 
 .o_EmojisPopover {
     display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 600px;
+}
+
+.o_EmojisPopoverMobile {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 500px;
+}
+
+.o_EmojisPopover_scollableContent {
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.o_EmojisPopover_emojisGrid {
+    display: flex;
     flex-flow: row wrap;
-    max-width: 200px;
 }
 
-.o_EmojisPopover_emoji {
-    font-size: 1.1em;
-    margin: map-get($spacers, 1);
-}
-
-// ------------------------------------------------------------------
-// Style
-// ------------------------------------------------------------------
-
-.o_EmojisPopover_emoji {
+.o_EmojisPopover_emojiWrapper {
     cursor: pointer;
+    border-radius: 0.5rem;
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:hover {
+        background-color: rgb(240, 240, 240);
+    }
+}
+
+.o_EmojisPopover_emoji {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.o_EmojisPopover_emojiMobile {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.o_EmojisPopover_container {
+    width: 100%;
+}
+
+.o_EmojisPopover_searchInput {
+    width: 100%;
+    padding: 6px 4px 4px 6px;
+    border: none;
+    outline: lightgray;
+    border-radius: 2px;
+    background-color: rgb(240, 240, 240);
+    margin-top: 4px;
+}
+
+.o_EmojisPopover_categories {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border: 1px lightgray solid;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+.o_EmojisPopover_categoriesMobile {
+    @extend .o_EmojisPopover_categories;
+    padding: 4px;
+}
+
+.o_EmojisPopover_sectionHeader {
+    width: 100%;
+    font-size: 1rem;
+    color: gray;
+    margin-left: 0.5rem;
+}
+
+.o_EmojisPopover_categoryWrapper {
+    @extend .o_EmojisPopover_emojiWrapper;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.o_EmojisPopover_category {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.o_EmojisPopover_categoryMobile {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.o_EmojisPopover_categoryIsActive {
+    background-color:rgba($color: #017e84, $alpha: 0.2);
+    &:hover {
+        background-color: rgba($color: #017e84, $alpha: 0.3);
+    }
+}
+
+.o_EmojisPopover_emptySearchResult {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    color: gray;
+}
+
+.o_EmojisPopover_separation {
+    width: 100%;
+    height: 1.5rem;
+}
+
+.o_EmojisPopoverContainerMobile {
+    width: 100%;
+    left: 0 !important;
+    right: 0 !important;
+}
+
+.o_EmojisPopover_emojiSprite {
+    @include baseEmojiClass(0.4)
+}
+
+.o_EmojisPopover_emojiSpriteCategory {
+    @include baseEmojiClass(0.3)
 }

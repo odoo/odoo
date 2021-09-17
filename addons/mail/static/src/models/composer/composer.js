@@ -4,7 +4,8 @@ import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
 import { clear, create, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
-import emojis from '@mail/js/emojis';
+import { emojis, setLastUsedEmoji } from '@mail/emojis/emojis';
+import { escapeRegExp } from "@web/core/utils/strings"
 import {
     addLink,
     escapeAndCompactTextContent,
@@ -672,14 +673,14 @@ function factory(dependencies) {
          */
         _generateEmojisOnHtml(htmlString) {
             for (const emoji of emojis) {
-                for (const source of emoji.sources) {
-                    const escapedSource = String(source).replace(
-                        /([.*+?=^!:${}()|[\]/\\])/g,
-                        '\\$1');
-                    const regexp = new RegExp(
-                        '(\\s|^)(' + escapedSource + ')(?=\\s|$)',
-                        'g');
-                    htmlString = htmlString.replace(regexp, '$1' + emoji.unicode);
+                for (let source of emoji.sources) {
+                    if (htmlString.includes(source)) {
+                        setLastUsedEmoji(this.env, emoji.unicode)
+                        source = escapeRegExp(source);
+                        // This regex avoid wrong match, like mathing :p instead of :plouf:
+                        const pattern = new RegExp(`${source}(?![a-zA-Z1-9_]+:)`, 'g')
+                        htmlString = htmlString.replaceAll(pattern, emoji.unicode);
+                    }
                 }
             }
             return htmlString;

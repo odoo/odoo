@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import emojis from '@mail/js/emojis';
+import { legacyEmojis } from '@mail/emojis/emojis';
 
 /**
  * This mixin gathers a few methods that are used to handle emojis.
@@ -76,7 +76,8 @@ export default {
      * @param {String} message
      */
     _wrapEmojis: function (message) {
-        emojis.forEach(function (emoji) {
+        console.log("hello")
+        legacyEmojis.forEach(function (emoji) {
             message = message.replace(
                 new RegExp(emoji.unicode.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
                 '<span class="o_mail_emoji">' + emoji.unicode + '</span>'
