@@ -26,13 +26,6 @@ class StockMove(models.Model):
         distinct_fields += ['purchase_line_id', 'created_purchase_line_id']
         return distinct_fields
 
-    @api.model
-    def _prepare_merge_move_sort_method(self, move):
-        move.ensure_one()
-        keys_sorted = super(StockMove, self)._prepare_merge_move_sort_method(move)
-        keys_sorted += [move.purchase_line_id.id, move.created_purchase_line_id.id]
-        return keys_sorted
-
     def _get_price_unit(self):
         """ Returns the unit price for the move"""
         self.ensure_one()

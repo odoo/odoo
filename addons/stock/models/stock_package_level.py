@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from itertools import groupby
 from operator import itemgetter
 from collections import defaultdict
 
 from odoo import _, api, fields, models
+from odoo.tools.misc import groupby
 
 
 class StockPackageLevel(models.Model):
@@ -165,19 +165,15 @@ class StockPackageLevel(models.Model):
         """ should compare in good uom """
         all_in = True
         pack_move_lines = self.move_line_ids
-        keys = ['product_id', 'lot_id']
-
-        def sorted_key(object):
-            object.ensure_one()
-            return [object.product_id.id, object.lot_id.id]
+        groupby_keys = ('product_id', 'lot_id')
 
         grouped_quants = {}
-        for k, g in groupby(sorted(package.quant_ids, key=sorted_key), key=itemgetter(*keys)):
-            grouped_quants[k] = sum(self.env['stock.quant'].concat(*list(g)).mapped('quantity'))
+        for k, g in groupby(package.quant_ids, key=itemgetter(*groupby_keys)):
+            grouped_quants[k] = sum(self.env['stock.quant'].concat(*g).mapped('quantity'))
 
         grouped_ops = {}
-        for k, g in groupby(sorted(pack_move_lines, key=sorted_key), key=itemgetter(*keys)):
-            grouped_ops[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped(field))
+        for k, g in groupby(pack_move_lines, key=itemgetter(*groupby_keys)):
+            grouped_ops[k] = sum(self.env['stock.move.line'].concat(*g).mapped(field))
         if any(grouped_quants.get(key, 0) - grouped_ops.get(key, 0) != 0 for key in grouped_quants) \
                 or any(grouped_ops.get(key, 0) - grouped_quants.get(key, 0) != 0 for key in grouped_ops):
             all_in = False

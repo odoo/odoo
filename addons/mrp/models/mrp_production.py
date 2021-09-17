@@ -1668,12 +1668,6 @@ class MrpProduction(models.Model):
 
     def _log_downside_manufactured_quantity(self, moves_modification, cancel=False):
 
-        def _keys_in_sorted(move):
-            """ sort by picking and the responsible for the product the
-            move.
-            """
-            return (move.picking_id.id, move.product_id.responsible_id.id)
-
         def _keys_in_groupby(move):
             """ group by picking and the responsible for the product the
             move.
@@ -1689,7 +1683,7 @@ class MrpProduction(models.Model):
             }
             return self.env.ref('mrp.exception_on_mo')._render(values=values)
 
-        documents = self.env['stock.picking']._log_activity_get_documents(moves_modification, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+        documents = self.env['stock.picking']._log_activity_get_documents(moves_modification, 'move_dest_ids', 'DOWN', _keys_in_groupby)
         documents = self.env['stock.picking']._less_quantities_than_expected_add_documents(moves_modification, documents)
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)
 

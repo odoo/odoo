@@ -5,7 +5,6 @@ import json
 import time
 from ast import literal_eval
 from datetime import date, timedelta
-from itertools import groupby
 from operator import attrgetter, itemgetter
 from collections import defaultdict
 
@@ -13,9 +12,8 @@ from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime, format_date, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
-from odoo.tools.misc import format_date
 
 
 class PickingType(models.Model):
@@ -835,17 +833,16 @@ class Picking(models.Model):
         """ This method checks that all product of the package (quant) are well present in the move_line_ids of the picking. """
         all_in = True
         pack_move_lines = self.move_line_ids.filtered(lambda ml: ml.package_id == package)
-        keys = ['product_id', 'lot_id']
-        keys_ids = ["{}.id".format(fname) for fname in keys]
         precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        groupby_keys = ('product_id', 'lot_id')
 
         grouped_quants = {}
-        for k, g in groupby(sorted(package.quant_ids, key=attrgetter(*keys_ids)), key=itemgetter(*keys)):
-            grouped_quants[k] = sum(self.env['stock.quant'].concat(*list(g)).mapped('quantity'))
+        for k, g in groupby(package.quant_ids, key=itemgetter(*groupby_keys)):
+            grouped_quants[k] = sum(self.env['stock.quant'].concat(*g).mapped('quantity'))
 
         grouped_ops = {}
-        for k, g in groupby(sorted(pack_move_lines, key=attrgetter(*keys_ids)), key=itemgetter(*keys)):
-            grouped_ops[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('product_qty'))
+        for k, g in groupby(pack_move_lines, key=itemgetter(*groupby_keys)):
+            grouped_ops[k] = sum(self.env['stock.move.line'].concat(*g).mapped('product_qty'))
         if any(not float_is_zero(grouped_quants.get(key, 0) - grouped_ops.get(key, 0), precision_digits=precision_digits) for key in grouped_quants) \
                 or any(not float_is_zero(grouped_ops.get(key, 0) - grouped_quants.get(key, 0), precision_digits=precision_digits) for key in grouped_ops):
             all_in = False
@@ -1127,7 +1124,7 @@ class Picking(models.Model):
                 backorders |= backorder_picking
         return backorders
 
-    def _log_activity_get_documents(self, orig_obj_changes, stream_field, stream, sorted_method=False, groupby_method=False):
+    def _log_activity_get_documents(self, orig_obj_changes, stream_field, stream, groupby_method=False):
         """ Generic method to log activity. To use with
         _log_activity method. It either log on uppermost
         ongoing documents or following documents. This method
@@ -1147,8 +1144,8 @@ class Picking(models.Model):
             - 'UP' if we want to log on the upper most ongoing
             documents.
             - 'DOWN' if we want to log on following documents.
-        :param sorted_method method, groupby_method: Only need when
-        stream is 'DOWN', it should sort/group by tuple(object on
+        :param groupby_method: Only need when
+        stream is 'DOWN', it should group by tuple(object on
         which the activity is log, the responsible for this object)
         """
         if self.env.context.get('skip_activity'):
@@ -1162,10 +1159,10 @@ class Picking(models.Model):
         #  '(delivery_picking_2, admin)': stock.move(3)}
         visited_documents = {}
         if stream == 'DOWN':
-            if sorted_method and groupby_method:
-                grouped_moves = groupby(sorted(origin_objects.mapped(stream_field), key=sorted_method), key=groupby_method)
+            if groupby_method:
+                grouped_moves = groupby(origin_objects.mapped(stream_field), key=groupby_method)
             else:
-                raise UserError(_('You have to define a groupby and sorted method and pass them as arguments.'))
+                raise AssertionError('You have to define a groupby method and pass them as arguments.')
         elif stream == 'UP':
             # When using upstream document it is required to define
             # _get_upstream_documents_and_responsibles on
@@ -1181,13 +1178,12 @@ class Picking(models.Model):
                         visited_documents[(document, responsible)] = visited
             grouped_moves = grouped_moves.items()
         else:
-            raise UserError(_('Unknown stream.'))
+            raise AssertionError('Unknown stream.')
 
         documents = {}
         for (parent, responsible), moves in grouped_moves:
             if not parent:
                 continue
-            moves = list(moves)
             moves = self.env[moves[0]._name].concat(*moves)
             # Get the note
             rendering_context = {move: (orig_object, orig_obj_changes[orig_object]) for move in moves for orig_object in move_to_orig_object_rel[move]}
@@ -1233,12 +1229,6 @@ class Picking(models.Model):
         :param dict moves: a dict with a move as key and tuple with
         new and old quantity as value. eg: {move_1 : (4, 5)}
         """
-        def _keys_in_sorted(move):
-            """ sort by picking and the responsible for the product the
-            move.
-            """
-            return (move.picking_id.id, move.product_id.responsible_id.id)
-
         def _keys_in_groupby(move):
             """ group by picking and the responsible for the product the
             move.
@@ -1260,7 +1250,7 @@ class Picking(models.Model):
             }
             return self.env.ref('stock.exception_on_picking')._render(values=values)
 
-        documents = self._log_activity_get_documents(moves, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+        documents = self._log_activity_get_documents(moves, 'move_dest_ids', 'DOWN', _keys_in_groupby)
         documents = self._less_quantities_than_expected_add_documents(moves, documents)
         self._log_activity(_render_note_exception_quantity, documents)
 

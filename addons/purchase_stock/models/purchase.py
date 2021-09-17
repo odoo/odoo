@@ -151,12 +151,6 @@ class PurchaseOrder(models.Model):
 
     def _log_decrease_ordered_quantity(self, purchase_order_lines_quantities):
 
-        def _keys_in_sorted(move):
-            """ sort by picking and the responsible for the product the
-            move.
-            """
-            return (move.picking_id.id, move.product_id.responsible_id.id)
-
         def _keys_in_groupby(move):
             """ group by picking and the responsible for the product the
             move.
@@ -175,7 +169,7 @@ class PurchaseOrder(models.Model):
             }
             return self.env.ref('purchase_stock.exception_on_po')._render(values=values)
 
-        documents = self.env['stock.picking']._log_activity_get_documents(purchase_order_lines_quantities, 'move_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+        documents = self.env['stock.picking']._log_activity_get_documents(purchase_order_lines_quantities, 'move_ids', 'DOWN', _keys_in_groupby)
         filtered_documents = {}
         for (parent, responsible), rendering_context in documents.items():
             if parent._name == 'stock.picking':
