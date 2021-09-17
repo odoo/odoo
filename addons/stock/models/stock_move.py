@@ -4,14 +4,13 @@
 
 from collections import defaultdict
 from datetime import timedelta
-from itertools import groupby
 from operator import itemgetter
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
-from odoo.tools.misc import clean_context, OrderedSet
+from odoo.tools.misc import clean_context, OrderedSet, groupby
 
 PROCUREMENT_PRIORITIES = [('0', 'Normal'), ('1', 'Urgent')]
 
@@ -805,15 +804,6 @@ class StockMove(models.Model):
             'product_packaging_id',
         ]
 
-    @api.model
-    def _prepare_merge_move_sort_method(self, move):
-        move.ensure_one()
-        return [
-            move.product_id.id, move.price_unit, move.procure_method, move.location_id, move.location_dest_id,
-            move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id,
-            move.package_level_id.id, move.propagate_cancel, move.description_picking or ""
-        ]
-
     def _clean_merged(self):
         """Cleanup hook used when merging moves"""
         self.write({'propagate_cancel': False})
@@ -842,7 +832,7 @@ class StockMove(models.Model):
         for candidate_moves in candidate_moves_list:
             # First step find move to merge.
             candidate_moves = candidate_moves.with_context(prefetch_fields=False)
-            for k, g in groupby(sorted(candidate_moves, key=self._prepare_merge_move_sort_method), key=itemgetter(*distinct_fields)):
+            for __, g in groupby(candidate_moves, key=itemgetter(*distinct_fields)):
                 moves = self.env['stock.move'].concat(*g).filtered(lambda m: m.state not in ('done', 'cancel', 'draft'))
                 # If we have multiple records we will merge then in a single one.
                 if len(moves) > 1:
@@ -994,7 +984,7 @@ class StockMove(models.Model):
 
     def _key_assign_picking(self):
         self.ensure_one()
-        return self.group_id, self.location_id, self.location_dest_id, self.picking_type_id
+        return (self.group_id, self.location_id, self.location_dest_id, self.picking_type_id)
 
     def _search_picking_for_assignation_domain(self):
         return [('group_id', '=', self.group_id.id),
@@ -1017,9 +1007,9 @@ class StockMove(models.Model):
         type (moves should already have them identical). Otherwise, create a new
         picking to assign them to. """
         Picking = self.env['stock.picking']
-        grouped_moves = groupby(sorted(self, key=lambda m: [f.id for f in m._key_assign_picking()]), key=lambda m: [m._key_assign_picking()])
+        grouped_moves = groupby(self, key=lambda m: m._key_assign_picking())
         for group, moves in grouped_moves:
-            moves = self.env['stock.move'].concat(*list(moves))
+            moves = self.env['stock.move'].concat(*moves)
             new_picking = False
             # Could pass the arguments contained in group but they are the same
             # for each move that why moves[0] is acceptable
@@ -1345,13 +1335,12 @@ class StockMove(models.Model):
 
         def _get_available_move_lines(move):
             move_lines_in = move.move_orig_ids.filtered(lambda m: m.state == 'done').mapped('move_line_ids')
-            keys_in_groupby = ['location_dest_id', 'lot_id', 'result_package_id', 'owner_id']
 
-            def _keys_in_sorted(ml):
-                return (ml.location_dest_id.id, ml.lot_id.id, ml.result_package_id.id, ml.owner_id.id)
+            def _keys_in_groupby(ml):
+                return (ml.location_dest_id, ml.lot_id, ml.result_package_id, ml.owner_id)
 
             grouped_move_lines_in = {}
-            for k, g in groupby(sorted(move_lines_in, key=_keys_in_sorted), key=itemgetter(*keys_in_groupby)):
+            for k, g in groupby(move_lines_in, key=_keys_in_groupby):
                 qty_done = 0
                 for ml in g:
                     qty_done += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
@@ -1365,19 +1354,18 @@ class StockMove(models.Model):
             moves_out_siblings_to_consider = moves_out_siblings & (StockMove.browse(assigned_moves_ids) + StockMove.browse(partially_available_moves_ids))
             reserved_moves_out_siblings = moves_out_siblings.filtered(lambda m: m.state in ['partially_available', 'assigned'])
             move_lines_out_reserved = (reserved_moves_out_siblings | moves_out_siblings_to_consider).mapped('move_line_ids')
-            keys_out_groupby = ['location_id', 'lot_id', 'package_id', 'owner_id']
 
-            def _keys_out_sorted(ml):
+            def _keys_out_groupby(ml):
                 return (ml.location_id.id, ml.lot_id.id, ml.package_id.id, ml.owner_id.id)
 
             grouped_move_lines_out = {}
-            for k, g in groupby(sorted(move_lines_out_done, key=_keys_out_sorted), key=itemgetter(*keys_out_groupby)):
+            for k, g in groupby(move_lines_out_done, key=_keys_out_groupby):
                 qty_done = 0
                 for ml in g:
                     qty_done += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
                 grouped_move_lines_out[k] = qty_done
-            for k, g in groupby(sorted(move_lines_out_reserved, key=_keys_out_sorted), key=itemgetter(*keys_out_groupby)):
-                grouped_move_lines_out[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('product_qty'))
+            for k, g in groupby(move_lines_out_reserved, key=_keys_out_groupby):
+                grouped_move_lines_out[k] = sum(self.env['stock.move.line'].concat(*g).mapped('product_qty'))
             available_move_lines = {key: grouped_move_lines_in[key] - grouped_move_lines_out.get(key, 0) for key in grouped_move_lines_in}
             # pop key if the quantity available amount to 0
             return dict((k, v) for k, v in available_move_lines.items() if v)
