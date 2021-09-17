@@ -585,6 +585,32 @@
             </we-button>
         </we-row>
     </we-customizeblock-option>
+    <we-customizeblock-option t-name="wysiwyg.widgets.imageLinkTools">
+        <we-row t-attf-class="{{widget.needLabel ? '' : 'd-none'}}">
+            <we-title>⌙ Link Label</we-title>
+            <we-input class="o_we_user_value_widget">
+                <div>
+                    <input name="label" id="o_link_dialog_label_input" t-att-value="widget.data.content" type="text"/>
+                </div>
+            </we-input>
+        </we-row>
+        <we-row id="url_row">
+            <we-input class="o_we_user_value_widget w-100">
+                <div class="o_url_input w-100">
+                    <input name="url" id="o_link_dialog_url_input" type="text" placeholder="Your URL"/>
+                </div>
+            </we-input>
+        </we-row>
+
+        <we-row t-if="!widget.options.forceNewWindow">
+            <we-button class="o_we_user_value_widget o_we_checkbox_wrapper">
+                <we-title class="o_long_title w-75">⌙ Open in new window</we-title>
+                    <div class="o_switch w-25">
+                        <we-checkbox name="is_new_window" t-att-checked="widget.data.isNewWindow ? 'checked' : undefined"/>
+                    </div>
+            </we-button>
+        </we-row>
+    </we-customizeblock-option>
 
     <!-- ImageCropWidget controls (allows to crop images on the page) -->
     <div t-name="wysiwyg.widgets.crop" class="o_we_crop_widget" contenteditable="false">

@@ -2,6 +2,7 @@ odoo.define('mass_mailing.snippets.options', function (require) {
 "use strict";
 
 var options = require('web_editor.snippets.options');
+var ImageLinkTools = require('wysiwyg.widgets.ImageLinkTools');
 
 // Snippet option for resizing  image and column width inline like excel
 options.registry.mass_mailing_sizing_x = options.Class.extend({
@@ -137,6 +138,22 @@ options.registry.BackgroundImage = options.registry.BackgroundImage.extend({
             }
         }
     }
+});
+
+// Adding compatibility for Image tools.
+ImageLinkTools.include({
+    destroy: function () {
+        this.$link.removeClass('oe_edited_link');
+        const $contents = this.$link.contents();
+        if (!this.$link.attr('href')) {
+            $contents.unwrap();
+        }
+        this.$button.removeClass('active');
+        this.options.wysiwyg.odooEditor.observerActive();
+        this.applyLinkToDom(this._getData());
+        this.options.wysiwyg.odooEditor.historyStep();
+        this._super(...arguments);
+    },
 });
 
 });

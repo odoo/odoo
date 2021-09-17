@@ -85,6 +85,7 @@ const Link = Widget.extend({
             this.data.content = encodedText;
             this.data.images = images;
             this.data.url = this.$link.attr('href') || '';
+            this.data.isNewWindow = this.$link[0] && this.$link[0].getAttribute("target");
         } else {
             this.data.content = this.data.content ? this.data.content.replace(/[ \t\r\n]+/g, ' ') : '';
         }
@@ -128,6 +129,11 @@ const Link = Widget.extend({
             var match = /mailto:(.+)/.exec(this.data.url);
             this.$('input[name="url"]').val(match ? match[1] : this.data.url);
             this._onURLInput();
+        }
+        if (this.data.isNewWindow) {
+            if (document.getElementsByName("is_new_window").length) {
+                document.getElementsByName("is_new_window")[0].closest('.o_we_checkbox_wrapper').classList.toggle('active');
+            }
         }
 
         this._updateOptionsUI();
