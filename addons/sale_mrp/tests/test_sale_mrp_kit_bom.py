@@ -164,3 +164,69 @@ class TestSaleMrpKitBom(TransactionCase):
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.expense_account)
         self.assertAlmostEqual(cogs_aml.debit, 2.53)
         self.assertEqual(cogs_aml.credit, 0)
+
+    def test_reset_avco_kit(self):
+        """
+        Test a specific use case : One product with 2 variant, each variant has its own BoM with either component_1 or
+        component_2. Create a SO for one of the variant, confirm, cancel, reset to draft and then change the product of
+        the SO -> There should be no traceback
+        """
+        component_1 = self.env['product.product'].create({'name': 'compo 1'})
+        component_2 = self.env['product.product'].create({'name': 'compo 2'})
+
+        product_category = self.env['product.category'].create({
+            'name': 'test avco kit',
+            'property_cost_method': 'average'
+        })
+        attributes = self.env['product.attribute'].create({'name': 'Legs'})
+        steel_legs = self.env['product.attribute.value'].create({'attribute_id': attributes.id, 'name': 'Steel'})
+        aluminium_legs = self.env['product.attribute.value'].create(
+            {'attribute_id': attributes.id, 'name': 'Aluminium'})
+
+        product = self.env['product.product'].create({
+            'name': 'test product',
+            'categ_id': product_category.id,
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attributes.id,
+                'value_ids': [(6, 0, [steel_legs.id, aluminium_legs.id])]
+            })]
+        })
+        product_variant_ids = product.product_variant_ids.search([('id', '!=', product.id)])
+        product_variant_ids[0].categ_id.property_cost_method = 'average'
+        product_variant_ids[1].categ_id.property_cost_method = 'average'
+        # BoM 1 with component_1
+        self.env['mrp.bom'].create({
+            'product_id': product_variant_ids[0].id,
+            'product_tmpl_id': product_variant_ids[0].product_tmpl_id.id,
+            'product_qty': 1.0,
+            'consumption': 'flexible',
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {'product_id': component_1.id, 'product_qty': 1})]
+        })
+        # BoM 2 with component_2
+        self.env['mrp.bom'].create({
+            'product_id': product_variant_ids[1].id,
+            'product_tmpl_id': product_variant_ids[1].product_tmpl_id.id,
+            'product_qty': 1.0,
+            'consumption': 'flexible',
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {'product_id': component_2.id, 'product_qty': 1})]
+        })
+        partner = self.env['res.partner'].create({'name': 'Testing Man'})
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+        })
+        # Create the order line
+        self.env['sale.order.line'].create({
+            'name': "Order line",
+            'product_id': product_variant_ids[0].id,
+            'order_id': so.id,
+        })
+        so.action_confirm()
+        so.action_cancel()
+        so.action_draft()
+        with Form(so) as so_form:
+            with so_form.order_line.edit(0) as order_line_change:
+                # The actual test, there should be no traceback here
+                order_line_change.product_id = product_variant_ids[1]
+
