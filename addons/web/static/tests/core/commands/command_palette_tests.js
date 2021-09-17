@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { makeDeferred } from "@mail/utils/deferred/deferred";
 import { browser } from "@web/core/browser/browser";
 import { CommandPaletteDialog } from "@web/core/commands/command_palette_dialog";
 import { commandService } from "@web/core/commands/command_service";
@@ -9,7 +8,14 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { click, getFixture, nextTick, patchWithCleanup, triggerHotkey } from "../../helpers/utils";
+import {
+    click,
+    getFixture,
+    makeDeferred,
+    nextTick,
+    patchWithCleanup,
+    triggerHotkey,
+} from "../../helpers/utils";
 import { editSearchBar } from "./command_service_tests";
 
 const { Component, mount, tags } = owl;
