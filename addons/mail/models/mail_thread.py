@@ -53,7 +53,7 @@ class MailThread(models.AbstractModel):
         Options:
             - _mail_flat_thread: if set to True, all messages without parent_id
                 are automatically attached to the first message posted on the
-                ressource. If set to False, the display of Chatter is done using
+                resource. If set to False, the display of Chatter is done using
                 threads, and no parent_id is automatically set.
 
     MailThread features can be somewhat controlled through context keys :
@@ -71,7 +71,7 @@ class MailThread(models.AbstractModel):
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
-    _mail_flat_thread = True  # flatten the discussino history
+    _mail_flat_thread = True  # flatten the discussion history
     _mail_post_access = 'write'  # access required on the document to post on it
     _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
 
@@ -453,49 +453,13 @@ class MailThread(models.AbstractModel):
             return self.with_context(lang=self.env.user.lang)
         return self
 
-    # ------------------------------------------------------
-    # WRAPPERS AND TOOLS
-    # ------------------------------------------------------
-
-    def message_change_thread(self, new_thread, new_parent_message=False):
-        """
-        Transfer the list of the mail thread messages from an model to another
-
-        :param id : the old res_id of the mail.message
-        :param new_res_id : the new res_id of the mail.message
-        :param new_model : the name of the new model of the mail.message
-
-        Example :   my_lead.message_change_thread(my_project_task)
-                    will transfer the context of the thread of my_lead to my_project_task
-        """
-        self.ensure_one()
-        # get the subtype of the comment Message
-        subtype_comment = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
-
-        # get the ids of the comment and not-comment of the thread
-        # TDE check: sudo on mail.message, to be sure all messages are moved ?
-        MailMessage = self.env['mail.message']
-        msg_comment = MailMessage.search([
-            ('model', '=', self._name),
-            ('res_id', '=', self.id),
-            ('message_type', '!=', 'user_notification'),
-            ('subtype_id', '=', subtype_comment)])
-        msg_not_comment = MailMessage.search([
-            ('model', '=', self._name),
-            ('res_id', '=', self.id),
-            ('message_type', '!=', 'user_notification'),
-            ('subtype_id', '!=', subtype_comment)])
-
-        # update the messages
-        msg_vals = {"res_id": new_thread.id, "model": new_thread._name}
-        if new_parent_message:
-            msg_vals["parent_id"] = new_parent_message.id
-        msg_comment.write(msg_vals)
-
-        # other than comment: reset subtype
-        msg_vals["subtype_id"] = None
-        msg_not_comment.write(msg_vals)
-        return True
+    def _check_can_update_message_content(self, message):
+        """" Checks that the current user can update the content of the message. """
+        note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+        if not message.subtype_id.id == note_id:
+            raise exceptions.UserError(_("Only logged notes can have their content updated on model '%s'", self._name))
+        if message.tracking_value_ids:
+            raise exceptions.UserError(_("Messages with tracking values cannot be modified"))
 
     # ------------------------------------------------------
     # TRACKING / LOG
@@ -551,13 +515,13 @@ class MailThread(models.AbstractModel):
     @tools.ormcache('self.env.uid', 'self.env.su')
     def _get_tracked_fields(self):
         """ Return the set of tracked fields names for the current model. """
-        fields = {
+        model_fields = {
             name
             for name, field in self._fields.items()
             if getattr(field, 'tracking', None) or getattr(field, 'track_visibility', None)
         }
 
-        return fields and set(self.fields_get(fields))
+        return model_fields and set(self.fields_get(model_fields))
 
     def _message_track_post_template(self, changes):
         if not changes:
@@ -1643,7 +1607,7 @@ class MailThread(models.AbstractModel):
         return result
 
     # ------------------------------------------------------
-    # MESSAGE POST API
+    # MESSAGE POST MAIN
     # ------------------------------------------------------
 
     def _message_post_process_attachments(self, attachments, attachment_ids, message_values):
@@ -1888,25 +1852,8 @@ class MailThread(models.AbstractModel):
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
 
-    def _message_update_content_after_hook(self, message):
-        """ Hook to add custom behavior after having updated the message content. """
-
-    def _message_add_reaction_after_hook(self, message, content):
-        """ Hook to add custom behavior after having added a reaction to a message. """
-
-    def _message_remove_reaction_after_hook(self, message, content):
-        """ Hook to add custom behavior after having removed a reaction from a message. """
-
-    def _check_can_update_message_content(self, message):
-        """" Checks that the current user can update the content of the message. """
-        note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
-        if not message.subtype_id.id == note_id:
-            raise exceptions.UserError(_("Only logged notes can have their content updated on model '%s'", self._name))
-        if message.tracking_value_ids:
-            raise exceptions.UserError(_("Messages with tracking values cannot be modified"))
-
     # ------------------------------------------------------
-    # MESSAGE POST TOOLS
+    # MESSAGE POST API / WRAPPERS
     # ------------------------------------------------------
 
     def _message_compose_with_view(self, views_or_xmlid, message_log=False, **kwargs):
@@ -2805,6 +2752,63 @@ class MailThread(models.AbstractModel):
         for (template, lang), pids in notify_data.items():
             self.with_context(lang=lang)._message_auto_subscribe_notify(pids, template)
 
+        return True
+
+    # ------------------------------------------------------
+    # DISCORDUSS API
+    # ------------------------------------------------------
+
+    def _message_update_content_after_hook(self, message):
+        """ Hook to add custom behavior after having updated the message content. """
+
+    def _message_add_reaction_after_hook(self, message, content):
+        """ Hook to add custom behavior after having added a reaction to a message. """
+
+    def _message_remove_reaction_after_hook(self, message, content):
+        """ Hook to add custom behavior after having removed a reaction from a message. """
+
+    # ------------------------------------------------------
+    # WRAPPERS AND TOOLS
+    # ------------------------------------------------------
+
+    def message_change_thread(self, new_thread, new_parent_message=False):
+        """
+        Transfer the list of the mail thread messages from an model to another
+
+        :param id : the old res_id of the mail.message
+        :param new_res_id : the new res_id of the mail.message
+        :param new_model : the name of the new model of the mail.message
+
+        Example :   my_lead.message_change_thread(my_project_task)
+                    will transfer the context of the thread of my_lead to my_project_task
+        """
+        self.ensure_one()
+        # get the subtype of the comment Message
+        subtype_comment = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+
+        # get the ids of the comment and not-comment of the thread
+        # TDE check: sudo on mail.message, to be sure all messages are moved ?
+        MailMessage = self.env['mail.message']
+        msg_comment = MailMessage.search([
+            ('model', '=', self._name),
+            ('res_id', '=', self.id),
+            ('message_type', '!=', 'user_notification'),
+            ('subtype_id', '=', subtype_comment)])
+        msg_not_comment = MailMessage.search([
+            ('model', '=', self._name),
+            ('res_id', '=', self.id),
+            ('message_type', '!=', 'user_notification'),
+            ('subtype_id', '!=', subtype_comment)])
+
+        # update the messages
+        msg_vals = {"res_id": new_thread.id, "model": new_thread._name}
+        if new_parent_message:
+            msg_vals["parent_id"] = new_parent_message.id
+        msg_comment.write(msg_vals)
+
+        # other than comment: reset subtype
+        msg_vals["subtype_id"] = None
+        msg_not_comment.write(msg_vals)
         return True
 
     # ------------------------------------------------------
