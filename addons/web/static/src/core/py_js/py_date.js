@@ -362,6 +362,21 @@ export class PyDateTime {
     toJSON() {
         return this.strftime("%Y-%m-%d %H:%M:%S");
     }
+
+    to_utc() {
+        const d = new Date(this.year, this.month, this.day, this.hour, this.minute, this.second);
+        const offset = d.getTimezoneOffset();
+        // previous implementation did use timedelta
+        const s = tmxxx(
+            this.year,
+            this.month,
+            this.day,
+            this.hour,
+            this.minute,
+            this.second + 60 * offset
+        );
+        return new PyDateTime(s.year, s.month, s.day, s.hour, s.minute, s.second);
+    }
 }
 
 export class PyTime extends PyDate {
