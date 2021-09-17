@@ -2,6 +2,7 @@
 
 import { patchDate } from "@web/../tests/helpers/utils";
 import { makeWithSearch, setupControlPanelServiceRegistry } from "./helpers";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 const { Component, tags } = owl;
 const { xml } = tags;
@@ -776,5 +777,37 @@ QUnit.module("Search", (hooks) => {
             },
         ]);
         assert.deepEqual(model.groupBy, ["date_field:month"]);
+    });
+
+    QUnit.test("dynamic domains evaluation", async function (assert) {
+        patchDate(2021, 8, 17, 10, 0, 0);
+
+        patchWithCleanup(Date.prototype, {
+            getTimezoneOffset() {
+                return -120;
+            },
+        });
+
+        const searchViewArch = `
+            <search>
+                <filter name="filter_0" domain="[('datetime', '=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()))]"/>
+                <filter name="filter_1" domain="[('date', '=',  context_today() + relativedelta(days=-365))]"/>
+                <filter name="filter_2" domain="[('create_date', '&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+            </search>
+        `;
+
+        const evaluatedDomains = [
+            [["datetime", "=", "2021-09-16 22:00:00"]],
+            [["date", "=", "2020-09-17 00:00:00"]],
+            [["create_date", ">", "2021-09-16"]],
+        ];
+
+        const model = await makeSearchModel({ serverData, searchViewArch });
+
+        for (let i = 0; i < evaluatedDomains.length; i++) {
+            model.toggleSearchItem(i + 1);
+            assert.deepEqual(model.domain, evaluatedDomains[i]);
+            model.toggleSearchItem(i + 1);
+        }
     });
 });

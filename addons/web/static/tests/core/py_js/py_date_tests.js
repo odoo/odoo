@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { evaluateExpr } from "@web/core/py_js/py";
+import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("py", {}, () => {
     QUnit.module("date stuff", () => {
@@ -53,6 +54,20 @@ QUnit.module("py", {}, () => {
             const expr3 =
                 "datetime.datetime(day=3,month=4,second=12, year=2001,minute=32).strftime('%Y-%m-%d %H:%M:%S')";
             assert.strictEqual(evaluateExpr(expr3), "2001-04-03 00:32:12");
+        });
+
+        QUnit.test("to_utc", (assert) => {
+            patchDate(2021, 8, 17, 10, 0, 0);
+            patchWithCleanup(Date.prototype, {
+                getTimezoneOffset() {
+                    return -360;
+                },
+            });
+
+            const expr =
+                "datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()";
+
+            assert.strictEqual(JSON.stringify(evaluateExpr(expr)), `"2021-09-16 18:00:00"`);
         });
 
         QUnit.test("datetime.datetime.combine", (assert) => {
