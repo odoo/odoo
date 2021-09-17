@@ -154,3 +154,15 @@ export function sections(array) {
     }
     return sections;
 }
+
+/**
+ * Returns an array containing all elements of the given
+ * array but without duplicates.
+ *
+ * @template T
+ * @param {T[]} array
+ * @returns {T[]}
+ */
+export function unique(array) {
+    return Array.from(new Set(array));
+}

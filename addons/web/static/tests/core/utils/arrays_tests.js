@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { cartesian, groupBy, sortBy } from "@web/core/utils/arrays";
+import { cartesian, groupBy, sortBy, unique } from "@web/core/utils/arrays";
 
 QUnit.module("utils", () => {
     QUnit.module("Arrays");
@@ -219,5 +219,10 @@ QUnit.module("utils", () => {
 
     QUnit.test("cartesian product of four arrays", function (assert) {
         assert.deepEqual(cartesian([1], [2], [3], [4]), [[1, 2, 3, 4]]);
+    });
+
+    QUnit.test("unique array", function (assert) {
+        assert.deepEqual(unique([1, 2, 3, 2, 4, 3, 1, 4]), [1, 2, 3, 4]);
+        assert.deepEqual(unique("a d c a b c d b".split(" ")), "a d c b".split(" "));
     });
 });
