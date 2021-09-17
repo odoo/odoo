@@ -379,13 +379,14 @@ def call_kw(model, name, args, kwargs):
     """ Invoke the given method ``name`` on the recordset ``model``. """
     method = getattr(type(model), name)
     api = getattr(method, '_api', None)
+    context = kwargs.get('context')
     if api == 'model':
         result = _call_kw_model(method, model, args, kwargs)
     elif api == 'model_create':
         result = _call_kw_model_create(method, model, args, kwargs)
     else:
         result = _call_kw_multi(method, model, args, kwargs)
-    model.flush()
+    model.with_context(context or {}).flush()
     return result
 
 
