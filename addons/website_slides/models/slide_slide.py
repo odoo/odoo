@@ -160,7 +160,7 @@ class Slide(models.Model):
     html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True, sanitize_attributes=False, sanitize_form=False)
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
-    date_published = fields.Datetime('Publish Date', readonly=True, tracking=1)
+    date_published = fields.Datetime('Publish Date', readonly=True, tracking=False)
     likes = fields.Integer('Likes', compute='_compute_user_info', store=True, compute_sudo=False)
     dislikes = fields.Integer('Dislikes', compute='_compute_user_info', store=True, compute_sudo=False)
     user_vote = fields.Integer('User vote', compute='_compute_user_info', compute_sudo=False)
@@ -183,6 +183,8 @@ class Slide(models.Model):
     nbr_webpage = fields.Integer("Number of Webpages", compute='_compute_slides_statistics', store=True)
     nbr_quiz = fields.Integer("Number of Quizs", compute="_compute_slides_statistics", store=True)
     total_slides = fields.Integer(compute='_compute_slides_statistics', store=True)
+    is_published = fields.Boolean(tracking=1)
+    website_published = fields.Boolean(tracking=False)
 
     _sql_constraints = [
         ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
