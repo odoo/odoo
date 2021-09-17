@@ -2074,10 +2074,10 @@ class AccountMove(models.Model):
         '''
         self.ensure_one()
 
-        for line in self.line_ids:
-            # Do something only on invoice lines.
-            if line.exclude_from_invoice_tab:
-                continue
+        invoice_lines = self.line_ids.filtered(lambda x: not x.exclude_from_invoice_tab and not x.display_type and not x._origin)
+        cached_vals_list = [dict(x._cache) for x in invoice_lines]
+
+        for cached_vals, line in zip(cached_vals_list, invoice_lines):
 
             # Shortcut to load the demo data.
             # Doing line.account_id triggers a default_get(['account_id']) that could returns a result.
@@ -2096,10 +2096,15 @@ class AccountMove(models.Model):
             # Ensure related fields are well copied.
             if line.partner_id != self.partner_id.commercial_partner_id:
                 line.partner_id = self.partner_id.commercial_partner_id
+
             line.date = self.date
             line.recompute_tax_line = True
             line.currency_id = self.currency_id
 
+            for k, v in cached_vals.items():
+                field = line._fields[k]
+                if field.compute and not field.readonly:
+                    line[k] = v
 
         self.line_ids._onchange_price_subtotal()
         self._recompute_dynamic_lines(recompute_all_taxes=True)
@@ -2174,7 +2179,12 @@ class AccountMove(models.Model):
 
         vals['line_ids'] = vals.pop('invoice_line_ids')
         for invoice in self:
-            invoice_new = invoice.with_context(default_move_type=invoice.move_type, default_journal_id=invoice.journal_id.id).new(origin=invoice)
+            invoice_new = invoice.with_context(
+                default_move_type=invoice.move_type,
+                default_journal_id=invoice.journal_id.id,
+                default_partner_id=invoice.partner_id.id,
+                default_currency_id=invoice.currency_id.id,
+            ).new(origin=invoice)
             invoice_new.update(vals)
             values = invoice_new._move_autocomplete_invoice_lines_values()
             values.pop('invoice_line_ids', None)

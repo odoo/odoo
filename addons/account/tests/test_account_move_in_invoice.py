@@ -4,7 +4,7 @@ from freezegun import freeze_time
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
-from odoo import fields
+from odoo import fields, Command
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -1396,9 +1396,19 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.pay_terms_a.id,
             'invoice_line_ids': [
-                (0, None, self.product_line_vals_1),
-                (0, None, self.product_line_vals_2),
-            ]
+                Command.create({
+                    'product_id': self.product_line_vals_1['product_id'],
+                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'price_unit': self.product_line_vals_1['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
+                }),
+                Command.create({
+                    'product_id': self.product_line_vals_2['product_id'],
+                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'price_unit': self.product_line_vals_2['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
+                }),
+            ],
         })
 
         self.assertInvoiceValues(move, [
@@ -1446,13 +1456,23 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.pay_terms_a.id,
             'invoice_line_ids': [
-                (0, None, self.product_line_vals_1),
-            ]
+                Command.create({
+                    'product_id': self.product_line_vals_1['product_id'],
+                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'price_unit': self.product_line_vals_1['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
+                }),
+            ],
         })
         move.write({
             'invoice_line_ids': [
-                (0, None, self.product_line_vals_2),
-            ]
+                Command.create({
+                    'product_id': self.product_line_vals_2['product_id'],
+                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'price_unit': self.product_line_vals_2['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
+                }),
+            ],
         })
 
         self.assertInvoiceValues(move, [
@@ -1508,9 +1528,19 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.pay_terms_a.id,
             'invoice_line_ids': [
-                (0, None, self.product_line_vals_1),
-                (0, None, self.product_line_vals_2),
-            ]
+                Command.create({
+                    'product_id': self.product_line_vals_1['product_id'],
+                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'price_unit': self.product_line_vals_1['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
+                }),
+                Command.create({
+                    'product_id': self.product_line_vals_2['product_id'],
+                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'price_unit': self.product_line_vals_2['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
+                }),
+            ],
         })
         move.action_switch_invoice_into_refund_credit_note()
 
@@ -1558,10 +1588,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_in_invoice_switch_in_refund_2(self):
         # Test creating an account_move with an in_invoice_type and switch it in an in_refund and a negative quantity.
-        modified_product_line_vals_1 = self.product_line_vals_1.copy()
-        modified_product_line_vals_1.update({'quantity': -modified_product_line_vals_1['quantity']})
-        modified_product_line_vals_2 = self.product_line_vals_2.copy()
-        modified_product_line_vals_2.update({'quantity': -modified_product_line_vals_2['quantity']})
         move = self.env['account.move'].create({
             'move_type': 'in_invoice',
             'partner_id': self.partner_a.id,
@@ -1569,9 +1595,21 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.pay_terms_a.id,
             'invoice_line_ids': [
-                (0, None, modified_product_line_vals_1),
-                (0, None, modified_product_line_vals_2),
-            ]
+                Command.create({
+                    'product_id': self.product_line_vals_1['product_id'],
+                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'price_unit': self.product_line_vals_1['price_unit'],
+                    'quantity': -self.product_line_vals_1['quantity'],
+                    'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
+                }),
+                Command.create({
+                    'product_id': self.product_line_vals_2['product_id'],
+                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'price_unit': self.product_line_vals_2['price_unit'],
+                    'quantity': -self.product_line_vals_2['quantity'],
+                    'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
+                }),
+            ],
         })
 
         self.assertInvoiceValues(move, [

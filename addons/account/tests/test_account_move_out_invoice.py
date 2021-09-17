@@ -3,7 +3,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
-from odoo import fields
+from odoo import fields, Command
 from odoo.exceptions import UserError
 
 from unittest.mock import patch
@@ -2066,9 +2066,19 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.pay_terms_a.id,
             'invoice_line_ids': [
-                (0, None, self.product_line_vals_1),
-                (0, None, self.product_line_vals_2),
-            ]
+                Command.create({
+                    'product_id': self.product_line_vals_1['product_id'],
+                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'price_unit': self.product_line_vals_1['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
+                }),
+                Command.create({
+                    'product_id': self.product_line_vals_2['product_id'],
+                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'price_unit': self.product_line_vals_2['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
+                }),
+            ],
         })
 
         self.assertEqual(partner_a_child.id, move.partner_id.id, 'Keep child partner on the account move record')
@@ -2083,13 +2093,23 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.pay_terms_a.id,
             'invoice_line_ids': [
-                (0, None, self.product_line_vals_1),
-            ]
+                Command.create({
+                    'product_id': self.product_line_vals_1['product_id'],
+                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'price_unit': self.product_line_vals_1['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
+                }),
+            ],
         })
         move.write({
             'invoice_line_ids': [
-                (0, None, self.product_line_vals_2),
-            ]
+                Command.create({
+                    'product_id': self.product_line_vals_2['product_id'],
+                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'price_unit': self.product_line_vals_2['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
+                }),
+            ],
         })
 
         self.assertInvoiceValues(move, [
@@ -2168,9 +2188,19 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'currency_id': self.currency_data['currency'].id,
                 'invoice_payment_term_id': self.pay_terms_a.id,
                 'invoice_line_ids': [
-                    (0, None, self.product_line_vals_1),
-                    (0, None, self.product_line_vals_2),
-                ]
+                    Command.create({
+                        'product_id': self.product_line_vals_1['product_id'],
+                        'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                        'price_unit': self.product_line_vals_1['price_unit'],
+                        'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
+                    }),
+                    Command.create({
+                        'product_id': self.product_line_vals_2['product_id'],
+                        'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                        'price_unit': self.product_line_vals_2['price_unit'],
+                        'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
+                    }),
+                ],
             })
 
             # Remove the invoice_date to check:
@@ -2359,9 +2389,19 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.pay_terms_a.id,
             'invoice_line_ids': [
-                (0, None, self.product_line_vals_1),
-                (0, None, self.product_line_vals_2),
-            ]
+                Command.create({
+                    'product_id': self.product_line_vals_1['product_id'],
+                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'price_unit': self.product_line_vals_1['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
+                }),
+                Command.create({
+                    'product_id': self.product_line_vals_2['product_id'],
+                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'price_unit': self.product_line_vals_2['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
+                }),
+            ],
         })
         move.action_switch_invoice_into_refund_credit_note()
 
@@ -2409,10 +2449,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_out_invoice_switch_out_refund_2(self):
         # Test creating an account_move with an out_invoice_type and switch it in an out_refund and a negative quantity.
-        modified_product_line_vals_1 = self.product_line_vals_1.copy()
-        modified_product_line_vals_1.update({'quantity': -modified_product_line_vals_1['quantity']})
-        modified_product_line_vals_2 = self.product_line_vals_2.copy()
-        modified_product_line_vals_2.update({'quantity': -modified_product_line_vals_2['quantity']})
         move = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
@@ -2420,9 +2456,21 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.pay_terms_a.id,
             'invoice_line_ids': [
-                (0, None, modified_product_line_vals_1),
-                (0, None, modified_product_line_vals_2),
-            ]
+                Command.create({
+                    'product_id': self.product_line_vals_1['product_id'],
+                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'price_unit': self.product_line_vals_1['price_unit'],
+                    'quantity': -self.product_line_vals_1['quantity'],
+                    'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
+                }),
+                Command.create({
+                    'product_id': self.product_line_vals_2['product_id'],
+                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'price_unit': self.product_line_vals_2['price_unit'],
+                    'quantity': -self.product_line_vals_2['quantity'],
+                    'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
+                }),
+            ],
         })
 
         self.assertInvoiceValues(move, [
