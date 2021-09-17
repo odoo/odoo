@@ -2643,7 +2643,7 @@ class Domain(Field):
                     model_name = model_name.model
                 expression.expression(domain, record.env[model_name])
 
-        return ustr(value).strip()
+        return ustr(value).strip() or None
 
 class _Relational(Field):
     """ Abstract class for relational fields. """
