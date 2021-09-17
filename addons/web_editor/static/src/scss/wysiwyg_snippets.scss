@@ -2308,6 +2308,33 @@ we-select.o_we_shape_menu {
         max-width: 0;
     }
 }
+
+// Add average resolutions for the category "Devices" in image shapes.
+we-button[data-img-size] {
+    position: relative;
+
+    &::before, &::after {
+        padding: 0 6px;
+        background: $o-we-color-success;
+        color: white;
+        text-align: center;
+    }
+    &::before {
+        font-family: "FontAwesome" !important;
+        content: "\f065";
+        @include o-position-absolute(0, 0, inherit, inherit);
+    }
+    &::after {
+        content: attr(data-img-size);
+        @include o-position-absolute(0, 0, inherit, 0);
+        transform: translateX(100%);
+        transition: 0.2s ease all;
+    }
+    &:hover::after {
+        transform: translateX(0%);
+    }
+}
+
 we-button:hover .o_we_shape_animated_label > span {
     max-width: 150px;
     transition: max-width 0.5s ease 0s;
