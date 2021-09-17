@@ -17,6 +17,7 @@ import {
     toggleGroupByMenu,
     toggleMenu,
     toggleMenuItem,
+    toggleMenuItemOption,
     toggleSaveFavorite,
 } from "@web/../tests/search/helpers";
 
@@ -3421,5 +3422,56 @@ QUnit.module("Views", (hooks) => {
             label: "Count",
         });
         checkModeIs(assert, graph, "bar");
+    });
+
+    QUnit.test("only process most recent data for concurrent groupby", async function (assert) {
+        assert.expect(6);
+
+        let def;
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph>
+                    <field name="product_id" type="row"/>
+                    <field name="foo" type="measure"/>
+                </graph>
+            `,
+            searchViewArch: `
+                <search>
+                    <filter name="group_by_color" string="Color" context="{ 'group_by': 'color_id' }"/>
+                    <filter name="group_by_date" string="Date" context="{ 'group_by': 'date' }"/>
+                </search>
+            `,
+            mockRPC() {
+                return Promise.resolve(def);
+            },
+        });
+
+        checkLabels(assert, graph, ["xphone", "xpad"]);
+        checkDatasets(assert, graph, "data", { data: [82, 157] });
+
+        def = makeDeferred();
+        await toggleGroupByMenu(graph);
+        await toggleMenuItem(graph, "Color");
+        await toggleMenuItem(graph, "Color");
+        await toggleMenuItem(graph, "Date");
+        await toggleMenuItemOption(graph, "Date", "Month");
+
+        checkLabels(assert, graph, ["xphone", "xpad"]);
+        checkDatasets(assert, graph, "data", { data: [82, 157] });
+
+        def.resolve();
+        await nextTick();
+
+        checkLabels(assert, graph, [
+            "January 2016",
+            "March 2016",
+            "May 2016",
+            "Undefined",
+            "April 2016",
+        ]);
+        checkDatasets(assert, graph, "data", { data: [56, 26, 4, 105, 48] });
     });
 });
