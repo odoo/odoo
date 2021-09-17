@@ -822,6 +822,9 @@ function factory(dependencies) {
                 }
             }
             this.mailRtc && this.mailRtc.filterCallees(this.rtcSessions);
+            if (this.mailRtc && !this.mailRtc.currentRtcSession) {
+                this.endCall();
+            }
         }
 
         /**
