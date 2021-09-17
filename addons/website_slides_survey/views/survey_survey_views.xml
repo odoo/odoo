@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="survey_view_tree_slides" model="ir.ui.view">
+        <field name="name">survey.view.tree.slides</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <field name="title" position="attributes">
+                <attribute name="string">Certification Title</attribute>
+            </field>
+            <field name="answer_count" position="replace"/>
+            <field name="success_ratio" position="attributes">
+                <attribute name="string">Success Ratio (%)</attribute>
+            </field>
+            <field name="answer_score_avg" position="attributes">
+                <attribute name="string">Avg Score (%)</attribute>
+            </field>
+            <button name="certification" position="replace"/>
+        </field>
+    </record>
+
     <record id="survey_survey_inherit_view_search" model="ir.ui.view">
         <field name="name">survey.survey.search.inherit.website_slides</field>
         <field name="model">survey.survey</field>
@@ -7,24 +28,6 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr='//filter[@name="certification"]' position="replace"/>
-        </field>
-    </record>
-
-    <record id="survey_survey_action_slides" model="ir.actions.act_window">
-        <field name="name">Certifications</field>
-        <field name="res_model">survey.survey</field>
-        <field name="view_mode">kanban,tree,pivot,graph,form</field>
-        <field name="domain">[('certification', '=', True)]</field>
-        <field name="search_view_id" ref="survey_survey_inherit_view_search"/>
-        <field name="context">{'default_certification': True, 'default_scoring_type': 'scoring_with_answers'}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a Certification
-            </p>
-            <p>
-                Assess the level of understanding of your attendees
-                <br/>and send them a document if they pass the test.
-            </p>
         </field>
     </record>
 
@@ -45,4 +48,40 @@
             </xpath>
         </field>
     </record>
+
+    <record id="survey_survey_action_slides" model="ir.actions.act_window">
+        <field name="name">Certifications</field>
+        <field name="res_model">survey.survey</field>
+        <field name="view_mode">kanban,tree,pivot,graph,form</field>
+        <field name="domain">[('certification', '=', True)]</field>
+        <field name="search_view_id" ref="survey_survey_inherit_view_search"/>
+        <field name="context">{'default_certification': True, 'default_scoring_type': 'scoring_with_answers'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Certification
+            </p>
+            <p>
+                Assess the level of understanding of your attendees
+                <br/>and send them a document if they pass the test.
+            </p>
+        </field>
+    </record>
+    <record id="survey_survey_action_slides_view_kanban" model="ir.actions.act_window.view">
+         <field name="sequence" eval="0"/>
+         <field name="view_mode">kanban</field>
+         <field name="view_id" ref="survey.survey_kanban"/>
+         <field name="act_window_id" ref="survey_survey_action_slides"/>
+     </record>
+     <record id="survey_survey_action_slides_view_tree" model="ir.actions.act_window.view">
+         <field name="sequence" eval="1"/>
+         <field name="view_mode">tree</field>
+         <field name="view_id" ref="survey_view_tree_slides"/>
+         <field name="act_window_id" ref="survey_survey_action_slides"/>
+     </record>
+     <record id="survey_survey_action_slides_view_form" model="ir.actions.act_window.view">
+         <field name="sequence" eval="4"/>
+         <field name="view_mode">form</field>
+         <field name="view_id" ref="survey.survey_form"/>
+         <field name="act_window_id" ref="survey_survey_action_slides"/>
+     </record>
 </odoo>
