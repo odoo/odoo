@@ -66,7 +66,7 @@ class ChannelPartner(models.Model):
         return super(ChannelPartner, self).write(vals)
 
     def unlink(self):
-        self.sudo().rtc_session_ids.unlink()
+        self.sudo().rtc_session_ids._disconnect()
         return super().unlink()
 
     @api.model
