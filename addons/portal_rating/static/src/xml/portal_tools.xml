@@ -27,7 +27,6 @@
                     <t t-call="portal_rating.rating_stars_static">
                         <t t-set="val" t-value="widget.get('rating_card_values')['avg'] || 0"/>
                     </t>
-                    <t t-call="portal.chatter_message_count"/>
                 </div>
             </div>
             <div t-attf-class="#{two_columns and 'col-lg-12' or 'col-lg-6'}" t-if="!_.isEmpty(widget.get('rating_card_values'))">

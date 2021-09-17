@@ -4,13 +4,15 @@
 from werkzeug import urls
 from werkzeug.exceptions import NotFound, Forbidden
 
-from odoo import http, _
+from odoo import fields, http, _
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import consteq, plaintext2html
 from odoo.addons.mail.controllers import mail
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.exceptions import AccessError, MissingError, UserError
+
+from functools import reduce
 
 
 def _check_special_access(res_model, res_id, token='', _hash='', pid=False):
@@ -161,9 +163,10 @@ class PortalChatter(http.Controller):
         if kwargs.get('allow_composer'):
             display_composer = kwargs.get('token') or not is_user_public
         return {
-            'messages': message_data['messages'],
+            'grouped_messages': message_data['grouped_messages'],
             'options': {
                 'message_count': message_data['message_count'],
+                'attachment_ids': message_data['attachment_ids'],
                 'is_user_public': is_user_public,
                 'is_user_employee': request.env.user.has_group('base.group_user'),
                 'is_user_publisher': request.env.user.has_group('website.group_website_publisher'),
@@ -171,6 +174,39 @@ class PortalChatter(http.Controller):
                 'partner_id': request.env.user.partner_id.id
             }
         }
+
+    def _prepare_portal_message_fetch_group_by_day(self, messages, message_ids):
+        today = fields.Date.context_today(message_ids)
+        def add_message_to_grouped_list(msg_groups, message):
+            message_id = message_ids.browse(message['id'])
+            message_date = message_id.date.date()
+            if message_date not in msg_groups.keys():
+                msg_groups[message_date] = {
+                    'label': _("Today") if message_date == today else message_date.strftime("%B %-d, %Y"),
+                    'date': message_date,
+                    'messages': [message]
+                }
+            else:
+                msg_groups[message_date]['messages'].append(message)
+            return msg_groups
+        return list(reduce(add_message_to_grouped_list, messages, {}).values())
+
+    def _prepare_portal_message_fetch_all_attachments(self, messages, message_next_attachments_ids):
+        def extract_attachments(attachments, message):
+            attachments.extend(message['attachment_ids'])
+            return attachments
+        attachment_ids = reduce(extract_attachments, messages, [])
+
+        IrAttachmentSudo = request.env['ir.attachment'].sudo()
+        def format_attachments(attachments, message_id):
+            new_attachments = message_id.attachment_ids._attachment_format()
+            for attachment in new_attachments:
+                if not attachment.get('access_token'):
+                    attachment['access_token'] = IrAttachmentSudo.browse(attachment['id']).generate_access_token()[0]
+            attachments.extend(new_attachments)
+            return attachments
+        attachment_ids = reduce(format_attachments, message_next_attachments_ids, attachment_ids)
+        return sorted(attachment_ids, key=lambda attachment: attachment.get('id', 0), reverse=True)
 
     @http.route('/mail/chatter_fetch', type='json', auth='public', website=True)
     def portal_message_fetch(self, res_model, res_id, domain=False, limit=10, offset=0, **kw):
@@ -193,9 +229,16 @@ class PortalChatter(http.Controller):
             if not request.env['res.users'].has_group('base.group_user'):
                 domain = expression.AND([Message._get_search_domain_share(), domain])
             Message = request.env['mail.message'].sudo()
+
+        message_ids = Message.search(domain, limit=limit, offset=offset, order='date desc')
+        messages = message_ids.portal_message_format()
+        domain_next_attachment_ids = ['&', ('attachment_ids', '!=', False), ('id', 'not in', message_ids.ids)]
+        message_next_attachments_ids = Message.search(expression.AND([domain_next_attachment_ids, domain]))
+
         return {
-            'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(),
-            'message_count': Message.search_count(domain)
+            'grouped_messages': self._prepare_portal_message_fetch_group_by_day(messages, message_ids),
+            'message_count': Message.search_count(domain),
+            'attachment_ids': self._prepare_portal_message_fetch_all_attachments(messages, message_next_attachments_ids)
         }
 
     @http.route(['/mail/update_is_internal'], type='json', auth="user", website=True)

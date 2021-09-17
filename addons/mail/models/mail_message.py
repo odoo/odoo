@@ -898,6 +898,7 @@ class Message(models.Model):
                 'tracking_value_ids': tracking_value_ids,
                 'messageReactionGroups': reaction_groups,
                 'record_name': record_name,
+                'internal': message_sudo.subtype_id.internal if message_sudo.subtype_id else False
             })
 
         return vals_list

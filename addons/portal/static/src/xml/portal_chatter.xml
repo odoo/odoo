@@ -1,17 +1,29 @@
 <templates id="template" xml:space="preserve">
 
-    <t t-name="portal.chatter_message_count">
-        <t t-set="count" t-value="widget.get('message_count')"/>
-        <div class="o_message_counter">
-            <t t-if="count">
-                <span class="fa fa-comments" />
-                <span class="o_message_count"> <t t-esc="count"/></span>
-                <t t-if="count == 1">comment</t>
-                <t t-else="">comments</t>
+    <t t-name="portal.chatter_attachment_summary">
+        <t t-set="attachment_count" t-value="widget.get('attachment_ids').length"/>
+        <t t-set="attachments" t-value="widget.get('attachment_ids')"/>
+        <div class="o_attachment_summary">
+            <t t-call="portal.chatter_attachments_link"/>
+        </div>
+    </t>
+
+    <t t-name="portal.chatter_attachments_link">
+        <div class="o_attachment_counter">
+            <t t-if="attachment_count">
+                <a href="#" class="o_portal_chatter_attachments_link">
+                    <span class="fa fa-paperclip" />
+                    <span class="o_attachment_count"> <t t-esc="attachment_count"/></span>
+                    <t t-if="attachment_count == 1">attachment</t>
+                    <t t-else="">attachments</t>
+                </a>
             </t>
             <t t-else="">
-                There are no comments for now.
+                There is no attachment for now.
             </t>
+        </div>
+        <div class="o_portal_chatter_attachments" style="display:none">
+            <t t-call="portal.Chatter.Attachments"/>
         </div>
     </t>
 
@@ -37,14 +49,24 @@
                     <div class="media-body">
                         <div class="o_portal_chatter_composer_input">
                             <div class="o_portal_chatter_composer_body mb32">
-                                <textarea rows="4" name="message" class="form-control" placeholder="Write a message..."></textarea>
-                                <div class="o_portal_chatter_attachments mt-3"/>
-                                <div class="mt8">
-                                    <button t-attf-data-action="/mail/chatter_post" class="o_portal_chatter_composer_btn btn btn-primary" type="submit">Send</button>
-                                    <button class="o_portal_chatter_attachment_btn btn btn-secondary" type="button" title="Add attachment">
-                                        <i class="fa fa-paperclip"/>
-                                    </button>
-                                </div>
+                                <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column rounded o_portal_outline">
+                                    <li class="list-group-item flex-grow-1 p-0 rounded-top border-bottom-0">
+                                        <textarea rows="4" name="message" class="form-control border-0 o_portal_border" placeholder="Write a message..."></textarea>
+                                    </li>
+                                    <li class="list-group-item flex-grow-1 p-1 rounded-bottom col-12">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="o_portal_chatter_attachments flex-fill"/>
+                                            <div class="ml-1">
+                                                <button class="o_portal_chatter_attachment_btn btn btn-secondary rounded-circle py-0 px-2" type="button" title="Add attachment">
+                                                    <i class="fa fa-paperclip"/>
+                                                </button>
+                                            </div>
+                                            <div class="ml-1">
+                                                <button t-attf-data-action="/mail/chatter_post" class="o_portal_chatter_composer_btn btn btn-primary py-0 px-2" type="submit">Send</button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                         <div class="d-none">
@@ -57,9 +79,9 @@
     </t>
 
     <t t-name="portal.Chatter.Attachments">
-        <div t-if="attachments.length" class="row">
-            <div t-foreach="attachments" t-as="attachment" class="col-lg-2 col-md-3 col-sm-6">
-                <div class="o_portal_chatter_attachment mb-2 position-relative text-center" t-att-data-id="attachment.id">
+        <div t-if="attachments.length" class="row m-0">
+            <div t-foreach="attachments" t-as="attachment" class="p-2 o_portal_chatter_attachment_size">
+                <div class="o_portal_chatter_attachment position-relative text-center" t-att-data-id="attachment.id">
                     <button t-if="showDelete and attachment.state == 'pending'" class="o_portal_chatter_attachment_delete btn btn-sm btn-outline-danger" title="Delete">
                         <i class="fa fa-times"/>
                     </button>
@@ -78,38 +100,52 @@
 
     <t t-name="portal.chatter_messages">
         <div class="o_portal_chatter_messages">
-            <t t-foreach="widget.get('messages') || []" t-as="message">
-                <div class="media o_portal_chatter_message" t-att-id="'message-' + message.id">
-                    <img class="o_portal_chatter_avatar" t-att-src="message.author_avatar_url" alt="avatar"/>
-                    <div class="media-body">
-                        <t t-call="portal.chatter_internal_toggle" t-if="widget.options['is_user_employee']"/>
-
-                        <div class="o_portal_chatter_message_title">
-                            <h5 class='mb-1'><t t-esc="message.author_id[1]"/></h5>
-                            <p class="o_portal_chatter_puslished_date"><t t-esc="message.published_date_str"/></p>
-                        </div>
-                        <t t-out="message.body"/>
-
-                        <div class="o_portal_chatter_attachments">
-                            <t t-call="portal.Chatter.Attachments">
-                                <t t-set="attachments" t-value="message.attachment_ids"/>
-                            </t>
+            <t t-foreach="widget.get('grouped_messages') || []" t-as="msg_group">
+                <div class="o_portal_chatter_separator py-4">
+                    <hr class="o_portal_chatter_separator_line"/>
+                    <span class="o_portal_chatter_separator_label" t-att-title="msg_group['date']"><t t-esc="msg_group['label']"/></span>
+                    <hr class="o_portal_chatter_separator_line"/>
+                </div>
+                <t t-foreach="msg_group['messages'] || []" t-as="message">
+                    <div class="media o_portal_chatter_message mt-2" t-att-id="'message-' + message.id">
+                        <img class="o_portal_chatter_avatar" t-att-src="message.author_avatar_url" alt="avatar"/>
+                        <div class="media-body">
+                            <div class="o_portal_chatter_message_title row mb-1 mx-0">
+                                <h5 class='mb-0'><t t-esc="message.author_id[1]"/></h5>
+                                <p class="mx-2 pt-1">-</p>
+                                <p class="o_portal_chatter_published_date pt-1" t-att-title="message.published_date_str"><t t-esc="message.date_ago"/></p>
+                                <t t-call="portal.chatter_internal_toggle" t-if="widget.options['is_user_employee']"/>
+                            </div>
+                            <t t-out="message.body"/>
+                            <div t-if="message.attachment_ids.length" class="o_portal_chatter_attachments">
+                                <t t-call="portal.chatter_attachments_link">
+                                    <t t-set="attachments" t-value="message.attachment_ids"/>
+                                    <t t-set="attachment_count" t-value="message.attachment_ids.length"/>
+                                </t>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </t>
             </t>
         </div>
     </t>
 
     <!-- Chatter: internal toggle widget -->
     <t t-name="portal.chatter_internal_toggle">
-        <div t-attf-class="float-right o_portal_chatter_js_is_internal #{message.is_internal and 'o_portal_message_internal_on' or 'o_portal_message_internal_off'}"
+        <div t-attf-class="float-right o_boolean_toggle custom-control custom-checkbox ml-auto #{!message.internal ? 'o_portal_chatter_js_is_internal' : ''}"
                 t-att-data-message-id="message.id"
                 t-att-data-is-internal="message.is_internal">
-            <button class="btn btn-danger"
-                title="Currently restricted to internal employees, click to make it available to everyone viewing this document.">Employees Only</button>
-            <button class="btn btn-success"
-                title="Currently available to everyone viewing this document, click to restrict to internal employees.">Visible</button>
+            <input type="checkbox" t-att-id="'message_' + message.id" class="custom-control-input"
+                t-att-checked="(!message.is_internal and !message.internal and 'checked') or undefined"
+                t-att-disabled="message.internal or undefined"/>
+            <label t-att-for="'message_' + message.id" class="custom-control-label">
+                &#8203;
+                <i t-att-class="'fa fa-times-circle'"
+                    t-att-title="message.internal and 'Log note, only available to internal employees.'
+                                 or 'Currently restricted to internal employees, click to make it available to everyone viewing this document.'"></i>
+                <i t-att-class="'fa fa-check-circle'"
+                    title="Currently available to everyone viewing this document, click to restrict to internal employees."></i>
+            </label>
         </div>
     </t>
 
@@ -138,12 +174,11 @@
         <div t-attf-class="o_portal_chatter p-0 #{two_columns and 'row' or ''}">
             <div t-attf-class="#{two_columns and 'col-lg-5' or ''}">
                 <div class="o_portal_chatter_header">
-                    <t t-call="portal.chatter_message_count"/>
+                    <t t-call="portal.chatter_attachment_summary"/>
                 </div>
                 <hr t-if="widget.options['allow_composer']"/>
                 <div class="o_portal_chatter_composer"/>
             </div>
-            <hr t-if="!two_columns"/>
             <div t-attf-class="#{two_columns and 'offset-lg-1 col-lg-6' or ''}">
                 <t t-call="portal.chatter_messages"/>
                 <div class="o_portal_chatter_footer">

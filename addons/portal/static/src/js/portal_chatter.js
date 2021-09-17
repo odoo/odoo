@@ -23,6 +23,7 @@ var PortalChatter = publicWidget.Widget.extend({
     xmlDependencies: ['/portal/static/src/xml/portal_chatter.xml'],
     events: {
         'click .o_portal_chatter_pager_btn': '_onClickPager',
+        'click .o_portal_chatter_attachments_link': '_onClickAttachmentsLink',
         'click .o_portal_chatter_js_is_internal': 'async _onClickUpdateIsInternal',
     },
 
@@ -38,6 +39,7 @@ var PortalChatter = publicWidget.Widget.extend({
 
         this.set('messages', []);
         this.set('message_count', this.options['message_count']);
+        this.set('attachment_ids', this.options['attachment_ids']);
         this.set('pager', {});
         this.set('domain', this.options['domain']);
         this._currentPage = this.options['pager_start'];
@@ -56,16 +58,17 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     start: function () {
         // bind events
-        this.on("change:messages", this, this._renderMessages);
-        this.on("change:message_count", this, function () {
-            this._renderMessageCount();
+        this.on("change:grouped_messages", this, this._renderMessages);
+        this.on("change:attachment_ids", this, function () {
+            this._renderAttachmentSummary();
             this.set('pager', this._pager(this._currentPage));
         });
         this.on("change:pager", this, this._renderPager);
         this.on("change:domain", this, this._onChangeDomain);
         // set options and parameters
         this.set('message_count', this.options['message_count']);
-        this.set('messages', this.preprocessMessages(this.result['messages']));
+        this.set('attachment_ids', this.options['attachment_ids']);
+        this.set('grouped_messages', this.preprocessMessages(this.result['grouped_messages']));
         // bind bus event: this (portal.chatter) and 'portal.rating.composer' in portal_rating
         // are separate and sibling widgets, this event is to be triggered from portal.rating.composer,
         // hence bus event is bound to achieve usage of the event in another widget.
@@ -91,24 +94,43 @@ var PortalChatter = publicWidget.Widget.extend({
             route: '/mail/chatter_fetch',
             params: self._messageFetchPrepareParams(),
         }).then(function (result) {
-            self.set('messages', self.preprocessMessages(result['messages']));
+            self.set('grouped_messages', self.preprocessMessages(result['grouped_messages']));
             self.set('message_count', result['message_count']);
+            self.set('attachment_ids', result['attachment_ids']);
             return result;
         });
     },
     /**
-     * Update the messages format
+     * Update the messages format and store messages as a list
      *
-     * @param {Array<Object>} messages
+     * @param {Array<Object>} grouped_messages each item is a group of messages sent the same day.
+     *                                         accessible keys are 'label':{str}, 'date':{Date}, 'messages':{Array<Object>}
      * @returns {Array}
      */
-    preprocessMessages(messages) {
-        _.each(messages, function (m) {
-            m['author_avatar_url'] = _.str.sprintf('/web/image/%s/%s/author_avatar/50x50', 'mail.message', m.id);
-            m['published_date_str'] = _.str.sprintf(_t('Published on %s'), moment(time.str_to_datetime(m.date)).format('MMMM Do YYYY, h:mm:ss a'));
-            m['body'] = Markup(m.body);
+    preprocessMessages: function (grouped_messages) {
+        var messages = [];
+        var index = 0;
+        const self = this;
+        grouped_messages.forEach(msg_group => {
+            msg_group.date = moment(time.str_to_date(msg_group.date)).format('MMMM Do YYYY');
+            messages.push(...msg_group.messages);
+            msg_group.messages.forEach(function (m) {
+                self._preprocessMessage(m, index++);
+            });
         });
-        return messages;
+        this.messages = messages;
+        return grouped_messages;
+    },
+
+    /**
+     * @param {Object} message
+     */
+    _preprocessMessage: function (message) {
+        message.author_avatar_url = _.str.sprintf('/web/image/%s/%s/author_avatar/50x50', 'mail.message', message.id);
+        var published_date = moment(time.str_to_datetime(message.date));
+        message.published_date_str = published_date.format('MMMM Do YYYY, h:mm:ss a');
+        message.date_ago = published_date.fromNow();
+        message.body = Markup(message.body);
     },
 
     //--------------------------------------------------------------------------
@@ -127,6 +149,7 @@ var PortalChatter = publicWidget.Widget.extend({
             'display_composer': false,
             'csrf_token': odoo.csrf_token,
             'message_count': 0,
+            'attachment_ids': [],
             'pager_step': 10,
             'pager_scope': 5,
             'pager_start': 1,
@@ -266,8 +289,8 @@ var PortalChatter = publicWidget.Widget.extend({
     _renderMessages: function () {
         this.$('.o_portal_chatter_messages').html(qweb.render("portal.chatter_messages", {widget: this}));
     },
-    _renderMessageCount: function () {
-        this.$('.o_message_counter').replaceWith(qweb.render("portal.chatter_message_count", {widget: this}));
+    _renderAttachmentSummary: function () {
+        this.$('.o_attachment_summary').replaceWith(qweb.render("portal.chatter_attachment_summary", {widget: this}));
     },
     _renderPager: function () {
         this.$('.o_portal_chatter_pager').replaceWith(qweb.render("portal.pager", {widget: this}));
@@ -293,6 +316,15 @@ var PortalChatter = publicWidget.Widget.extend({
         var page = $(ev.currentTarget).data('page');
         this._changeCurrentPage(page);
     },
+    /**
+     *
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onClickAttachmentsLink: function (ev) {
+        ev.preventDefault();
+        $(ev.currentTarget).closest('.o_attachment_counter').next('.o_portal_chatter_attachments').toggle();
+    },
 
     /**
      * Toggle is_internal state of message. Update both node data and
@@ -313,11 +345,9 @@ var PortalChatter = publicWidget.Widget.extend({
         }).then(function (result) {
             $elem.data('is-internal', result);
             if (result === true) {
-                $elem.addClass('o_portal_message_internal_on');
-                $elem.removeClass('o_portal_message_internal_off');
+                $elem.children('input').prop('checked', false);
             } else {
-                $elem.addClass('o_portal_message_internal_off');
-                $elem.removeClass('o_portal_message_internal_on');
+                $elem.children('input').prop('checked', true);
             }
         });
     },
