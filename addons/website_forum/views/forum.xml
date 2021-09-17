@@ -32,10 +32,10 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="website_id" groups="website.group_multi_website"/>
-                    <field name="total_posts"/>
-                    <field name="total_views"/>
-                    <field name="total_answers"/>
-                    <field name="total_favorites"/>
+                    <field name="total_posts" sum="Total Posts"/>
+                    <field name="total_views" sum="Total Views"/>
+                    <field name="total_answers" optional="hide"/>
+                    <field name="total_favorites" optional="hide"/>
                     <field name="active" invisible="1"/>
                 </tree>
             </field>
@@ -187,11 +187,13 @@
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="forum_id"/>
-                    <field name="views" sum="Total Views"/>
-                    <field name="child_count" sum="Total Answers"/>
-                    <field name="favourite_count" sum="Total Favorites"/>
-                    <field name="website_id" groups="website.group_multi_website"/>
-                    <field name="state"/>
+                    <field name="views" string="# Views" sum="Total Views"/>
+                    <field name="child_count" string="# Answers" sum="Total Answers"/>
+                    <field name="state" widget="badge"
+                        decoration-success="state == 'active'"
+                        decoration-danger="state == 'close'"
+                        decoration-warning="state not in ('active', 'close')"/>
+                    <field name="website_id" groups="website.group_multi_website" optional="hide"/>
                 </tree>
             </field>
         </record>
