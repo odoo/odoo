@@ -29,7 +29,7 @@ export function formatTraceback(error) {
         //     _onOpenFormView@http://localhost:8069/web/content/425-baf33f1/web.assets.js:1064:30
         //     ...
         traceback = `${errorName}: ${error.message}\n${error.stack}`.replace(/\n/g, "\n    ");
-    } else {
+    } else if (error.stack) {
         // Chromium stack starts with the error's name but the name is "Error" by default
         // so we replace it to have the error type name
         traceback = error.stack.replace(/^[^:]*/g, errorName);
