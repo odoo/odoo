@@ -13,6 +13,7 @@
         'report/sale_report_views.xml',
         'views/website_slides_menu_views.xml',
         'views/slide_channel_views.xml',
+        'views/website_sale_templates.xml',
         'views/website_slides_templates.xml',
     ],
     'demo': [
