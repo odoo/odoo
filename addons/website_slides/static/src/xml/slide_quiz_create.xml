@@ -9,7 +9,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text o_wslides_quiz_question_sequence"><t t-esc="widget.sequence"/></span>
                         </div>
-                        <input type="text" name="question-name" class="form-control col-11" placeholder="Enter your question"
+                        <input type="text" name="question-name" class="form-control col-11" placeholder='e.g. "Which animal cannot fly?"'
                             t-att-value="widget.question.text"/>
                     </div>
                 </div>
@@ -23,8 +23,8 @@
                         </t>
                     </t>
                     <t t-else="" >
-                        <t t-foreach="[1, 2, 3]">
-                            <t t-call="slide.quiz.answer.line" />
+                        <t t-foreach="['A giraffe', 'A bird', 'A fly']" t-as="placeholder">
+                            <t t-call="slide.quiz.answer.line"/>
                         </t>
                     </t>
                 </div>
@@ -39,7 +39,7 @@
             <div class="col ml-3 ml-md-5">
                 <div class="row align-items-center">
                     <div class="input-group col-9 p-0">
-                        <input type="text" class="o_wslides_js_quiz_answer_value form-control" placeholder="Enter your answer" t-attf-value="#{answer ? answer.text_value : ''}"/>
+                        <input type="text" class="o_wslides_js_quiz_answer_value form-control" t-attf-placeholder='e.g. "{{placeholder || "another animal"}}"' t-attf-value="#{answer ? answer.text_value : ''}"/>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <a class="o_wslides_js_quiz_is_correct" title="This is the correct answer">

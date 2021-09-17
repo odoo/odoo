@@ -68,7 +68,6 @@ tour.register('slides_tour', {
     position: 'bottom',
 }, {
     trigger: 'a[name="o_wslides_list_slide_add_quizz"]',
-    extra_trigger: '.o_wslides_slides_list_slide:hover',
     content: Markup(_t("If you want to be sure that attendees have understood and memorized the content, you can add a Quiz on the lesson. Click on <b>Add Quiz</b>.")),
 }, {
     trigger: 'input[name="question-name"]',
@@ -106,6 +105,10 @@ tour.register('slides_tour', {
 }, {
     trigger: 'a.o_wslides_js_slides_list_slide_link',
     content: Markup(_t("Congratulations, you've created your first course.<br/>Click on the title of this content to see it in fullscreen mode.")),
+    position: 'bottom',
+}, {
+    trigger: '.o_wslides_fs_toggle_sidebar',
+    content: Markup(_t("Finally you can click here to enjoy your content in fullscreen")),
     position: 'bottom',
 }]);
 

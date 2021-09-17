@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<odoo><data>
+
+<template id="website_sale_confirmation_slide" inherit_id="website_sale.confirmation">
+    <xpath expr="//div[@id='oe_structure_website_sale_confirmation_2']" position="after">
+        <t t-call="website_sale_slides.course_purchased_confirmation_message"/>
+    </xpath>
+</template>
+
+<template id="course_purchased_confirmation_message">
+    <div>
+        <h4>You have gained access to the following course(s):</h4>
+    </div>
+    <div class="mt-2">
+        <t t-foreach="order.order_line" t-as="line">
+            <t t-foreach="line.product_id.channel_ids" t-as="course">
+                <table class="table pb-32 border">
+                    <tr>
+                        <td class="w-50">
+                            <span t-if="course.image_1920" class="w-75" t-field="course.image_1920" t-options="{'widget': 'image'}"/>
+                            <img t-else="" class="img img-responsive w-75" src="/website_slides/static/src/img/channel-training-default.jpg"/>
+                        </td>
+                        <td>
+                            <h3 t-esc="course.name" class="m-2"/>
+                            <div t-field="course.description_short" class="font-weight-light o_wslides_desc_truncate_3 pb-2 ml-2"/>
+                            <a role="button" class="btn btn-primary ml-2" t-attf-href="/slides/#{slug(course)}">
+                                Start Learning
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </t>
+        </t>
+    </div>
+</template>
+
+</data></odoo>
