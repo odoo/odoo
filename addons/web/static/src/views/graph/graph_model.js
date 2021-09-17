@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { sortBy } from "@web/core/utils/arrays";
-import { KeepLast } from "@web/core/utils/concurrency";
+import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { rankInterval } from "@web/search/utils/dates";
 import { getGroupBy } from "@web/search/utils/group_by";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
@@ -85,7 +85,13 @@ export class GraphModel extends Model {
      * @override
      */
     setup(params) {
+        // concurrency management
         this.keepLast = new KeepLast();
+        this.race = new Race();
+        const _fetchDataPoints = this._fetchDataPoints.bind(this);
+        this._fetchDataPoints = (...args) => {
+            return this.race.add(_fetchDataPoints(...args));
+        };
 
         this.initialGroupBy = null;
 
@@ -126,9 +132,7 @@ export class GraphModel extends Model {
             metaData.additionalMeasures
         );
 
-        await this._fetchDataPoints(metaData);
-
-        this._prepareData();
+        return this._fetchDataPoints(metaData);
     }
 
     /**
@@ -144,17 +148,13 @@ export class GraphModel extends Model {
      * @param {Object} params
      */
     async updateMetaData(params) {
-        const metaData = Object.assign({}, this.metaData, params);
-
         if ("measure" in params) {
-            await this._fetchDataPoints(metaData);
+            await this._fetchDataPoints(Object.assign({}, this.metaData, params));
         } else {
-            await this.keepLast.add(Promise.resolve());
-            this.metaData = metaData;
+            await this.race.getCurrentProm();
+            this.metaData = Object.assign({}, this.metaData, params);
+            this._prepareData();
         }
-
-        this._prepareData();
-
         this.notify();
     }
 
@@ -171,6 +171,7 @@ export class GraphModel extends Model {
     async _fetchDataPoints(metaData) {
         this.dataPoints = await this.keepLast.add(this._loadDataPoints(metaData));
         this.metaData = metaData;
+        this._prepareData();
     }
 
     /**
