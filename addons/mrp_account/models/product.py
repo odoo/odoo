@@ -57,6 +57,8 @@ class ProductProduct(models.Model):
         bom_lines = {line: data for line, data in bom_lines}
         value = 0
         for move in stock_moves:
+            if move.state == 'cancel':
+                continue
             bom_line = move.bom_line_id
             if bom_line:
                 bom_line_data = bom_lines[bom_line]
