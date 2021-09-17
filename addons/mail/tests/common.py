@@ -84,6 +84,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
 
     @classmethod
     def _init_mail_gateway(cls):
+        # main company alias parameters
         cls.alias_domain = 'test.mycompany.com'
         cls.alias_catchall = 'catchall.test'
         cls.alias_bounce = 'bounce.test'
@@ -92,6 +93,16 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         cls.env['ir.config_parameter'].set_param('mail.catchall.domain', cls.alias_domain)
         cls.env['ir.config_parameter'].set_param('mail.catchall.alias', cls.alias_catchall)
         cls.env['ir.config_parameter'].set_param('mail.default.from', cls.default_from)
+
+        # ensure global alias domain for tests
+        cls.env['mail.alias.domain'].search([]).write({'sequence': 9999})
+        cls.mail_alias_domain = cls.env['mail.alias.domain'].create({
+            'bounce': cls.alias_bounce,
+            'catchall': cls.alias_catchall,
+            'company_ids': [(4, cls.user_admin.company_id.id)],
+            'name': cls.alias_domain,
+            'sequence': 1,
+        })
 
         # mailer daemon email preformatting
         cls.mailer_daemon_email = formataddr(('MAILER-DAEMON', '%s@%s' % (cls.alias_bounce, cls.alias_domain)))
@@ -1167,8 +1178,20 @@ class MailCommon(common.TransactionCase, MailCase):
         """ Create another company, add it to admin and create an user that
         belongs to that new company. It allows to test flows with users from
         different companies. """
+        # alias domain specific to new company
+        cls.alias_bounce_c2 = 'bounce.c2'
+        cls.alias_catchall_c2 = 'catchall.c2'
+        cls.alias_domain_c2_name = 'test.mycompany2.com'
+        cls.mail_alias_domain_c2 = cls.env['mail.alias.domain'].create({
+            'bounce': cls.alias_bounce_c2,
+            'catchall': cls.alias_catchall_c2,
+            'name': cls.alias_domain_c2_name,
+            'sequence': 2,
+        })
+
         # new company
         cls.company_2 = cls.env['res.company'].create({
+            'alias_domain_id': cls.mail_alias_domain_c2.id,
             'currency_id': cls.env.ref('base.CAD').id,
             'email': 'company_2@test.example.com',
             'name': 'Company 2',

@@ -49,6 +49,30 @@ class TestMailAlias(TestMailAliasCommon):
             self.assertEqual(self.env['ir.config_parameter'].get_param('mail.catchall.domain.allowed'), expected)
 
     @users('admin')
+    def test_alias_domain_name_unique(self):
+        """ Test alias domain bounce / catchall should not clash with existing
+        aliases, as you may have catchall@mydomain.com being already used as an
+        alias. """
+        alias_domain = self.mail_alias_domain.with_env(self.env)
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            alias_domain.write({'bounce': 'test.alias'})
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            alias_domain.write({'catchall': 'test.alias'})
+
+    @users('admin')
+    def test_alias_domain_name_sanitize(self):
+        """ Test sanitizer  """
+        alias_domain = self.mail_alias_domain.with_env(self.env)
+        alias_domain.write({
+            'bounce': 'b4r+_#_R3wl$$...éè',
+            'catchall': 'b4r+_#_R3wl$$...éè',
+        })
+        self.assertEqual(alias_domain.bounce, 'b4r+_-_r3wl-.ee',
+                         'Should replace invalid characters by hyphens, lowerise, unaccent')
+        self.assertEqual(alias_domain.catchall, 'b4r+_-_r3wl-.ee',
+                         'Should replace invalid characters by hyphens, lowerise, unaccent')
+
+    @users('admin')
     def test_alias_name_unique(self):
         alias_model_id = self.env['ir.model']._get('mail.test.gateway').id
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.alias')
@@ -98,12 +122,6 @@ class TestMailAlias(TestMailAliasCommon):
         # cannot batch update, would create duplicates
         with self.assertRaises(exceptions.UserError):
             (copy_1 + copy_2).write({'alias_name': 'test.alias.other'})
-
-        # cannot set catchall / bounce to used alias
-        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
-            self.env['ir.config_parameter'].sudo().set_param('mail.catchall.alias', new_mail_alias.alias_name)
-        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
-            self.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', new_mail_alias.alias_name)
 
     @users('admin')
     def test_alias_name_sanitize(self):

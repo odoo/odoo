@@ -68,6 +68,81 @@ class TestMailMCCommon(MailCommon, TestRecipients):
         self.flush_tracking()
 
 
+@tagged('multi_company', 'mail_alias')
+class TestAliasMultiCompany(TestMailMCCommon):
+
+    @mute_logger('odoo.models.unlink')
+    @users('erp_manager')
+    def test_alias_domain_setup(self):
+        """ Test synchronization of alias domain with companies when adding /
+        updating / removing alias domains """
+        self.assertEqual(self.company_admin.alias_domain_id, self.mail_alias_domain)
+        self.assertEqual(self.company_2.alias_domain_id, self.mail_alias_domain_c2)
+
+        # remove alias domain of first company, should not impact second company
+        self.mail_alias_domain.unlink()
+        self.assertFalse(self.company_admin.alias_domain_id)
+        self.assertFalse(self.company_admin.alias_domain_ids)
+        self.assertEqual(self.company_2.alias_domain_id, self.mail_alias_domain_c2)
+        self.assertEqual(self.company_2.alias_domain_ids, self.mail_alias_domain_c2)
+
+        # create a new alias domain for both companies
+        alias_domain_new = self.env['mail.alias.domain'].create({
+            'bounce': 'bounce.new',
+            'catchall': 'catchall.new',
+            'company_ids': [(4, self.company_admin.id), (4, self.company_2.id)],
+            'name': 'test.global.bitnurk.com',
+        })
+        self.assertEqual(self.company_admin.alias_domain_id, alias_domain_new,
+                         'MC Alias: from no domain to new domain')
+        self.assertEqual(self.company_admin.alias_domain_ids, alias_domain_new)
+        self.assertEqual(self.company_admin.catchall_email, 'catchall.new@test.global.bitnurk.com')
+        self.assertEqual(self.company_2.alias_domain_id, self.mail_alias_domain_c2,
+                         'MC Alias: should take alias domain with lower sequence')
+        self.assertEqual(self.company_2.alias_domain_ids, self.mail_alias_domain_c2 + alias_domain_new)
+
+        # manual update
+        self.company_2.alias_domain_id = alias_domain_new.id
+        self.assertEqual(self.company_2.alias_domain_id, alias_domain_new)
+        self.assertEqual(self.company_2.alias_domain_ids, self.mail_alias_domain_c2 + alias_domain_new)
+        self.assertEqual(self.company_2.catchall_email, 'catchall.new@test.global.bitnurk.com')
+
+    def test_assert_initial_values(self):
+        """ Test initial setup values """
+        self.assertEqual(self.company_admin.alias_domain_id, self.mail_alias_domain)
+        self.assertEqual(self.company_admin.alias_domain_ids, self.mail_alias_domain)
+        self.assertEqual(self.company_admin.catchall_email, f'{self.alias_catchall}@{self.alias_domain}')
+        self.assertEqual(
+            self.company_admin.catchall_formatted,
+            formataddr((self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}'))
+        )
+        self.assertEqual(self.company_2.alias_domain_id, self.mail_alias_domain_c2)
+        self.assertEqual(self.company_2.alias_domain_ids, self.mail_alias_domain_c2)
+        self.assertEqual(self.company_2.catchall_email, f'{self.alias_catchall_c2}@{self.alias_domain_c2_name}')
+
+    @users('erp_manager')
+    def test_res_company_creation_alias_domain(self):
+        """ Test alias domain configuration when creating new companies """
+        company = self.env['res.company'].create({
+            'email': '"Super Company" <super.company@test3.mycompany.com>',
+            'name': 'Super Company',
+        })
+        company.flush_recordset()
+        self.assertEqual(company.alias_domain_id, self.mail_alias_domain)
+        self.assertEqual(company.alias_domain_ids, self.mail_alias_domain)
+
+        company = self.env['res.company'].create({
+            'alias_domain_ids': [
+                (0, 0, {'name': 'test.embed.mycompany.com'})
+            ],
+            'email': '"Yet Another Company" <yet.another.company@test.embed.mycompany.com>',
+            'name': 'Yet Another Company',
+        })
+        self.assertNotIn(company.alias_domain_id, self.mail_alias_domain + self.mail_alias_domain_c2)
+        self.assertEqual(company.alias_domain_id.name, 'test.embed.mycompany.com')
+        self.assertEqual(company.alias_domain_ids, company.alias_domain_id)
+
+
 @tagged('multi_company')
 class TestMultiCompanySetup(TestMailMCCommon):
 

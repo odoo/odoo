@@ -2,7 +2,7 @@
 
 {
     'name': 'Discuss',
-    'version': '1.14',
+    'version': '1.15',
     'category': 'Productivity/Discuss',
     'sequence': 145,
     'summary': 'Chat, mail gateway and private channels',
@@ -99,6 +99,7 @@ For more specific needs, you may also assign custom-defined actions
         'security/mail_security.xml',
         'security/ir.model.access.csv',
         'views/discuss_public_templates.xml',
+        'views/mail_alias_domain_views.xml',
         'views/mail_alias_views.xml',
         'views/mail_gateway_allowed_views.xml',
         'views/mail_guest_views.xml',
@@ -112,12 +113,14 @@ For more specific needs, you may also assign custom-defined actions
         'views/res_partner_views.xml',
         'views/mail_blacklist_views.xml',
         'views/mail_menus.xml',
+        'views/res_company_views.xml',
     ],
     'demo': [
         'data/discuss_channel_demo.xml',
     ],
     'installable': True,
     'application': True,
+    'post_init_hook': '_mail_post_init',
     'assets': {
         'web._assets_primary_variables': [
             'mail/static/src/**/primary_variables.scss',
