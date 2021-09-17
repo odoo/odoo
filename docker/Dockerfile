@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # variables & locales
 ENV TZ=Europe/Berlin
@@ -32,8 +32,9 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
     && rm -rf /var/lib/apt/lists/*
 
 # wkhtmltopdf
-RUN wget -O /tmp/wkhtmltox.deb https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.bionic_amd64.deb \
-    && dpkg -i /tmp/wkhtmltox.deb \
+RUN wget -O /tmp/wkhtmltox.deb https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.focal_amd64.deb \
+    && echo 'ae4e85641f004a2097621787bf4381e962fb91e1 /tmp/wkhtmltox.deb' | sha1sum -c - \
+    && apt-get install -y --no-install-recommends /tmp/wkhtmltox.deb \
     && rm -rf /tmp/wkhtmltox.deb
 
 # ghostscript
@@ -68,7 +69,7 @@ RUN wget -O /tmp/phantomjs-1.9.8-linux-x86_64.tar.bz2 https://bitbucket.org/ariy
 COPY requirements.txt /tmp/requirements.txt
 # 2to3 was removed from setuptools v58.0.0 which will break the build
 # https://setuptools.readthedocs.io/en/latest/history.html#breaking-changes
-RUN pip3 install --no-cache-dir setuptools==57.5.0 --upgrade \
+RUN pip3 install --no-cache-dir setuptools --upgrade \
     && pip3 install --no-cache-dir --upgrade pip \
     && pip3 install --no-cache-dir -r /tmp/requirements.txt \
     && rm -rf /tmp/requirements.txt
