@@ -4287,22 +4287,24 @@ class AccountMoveLine(models.Model):
                 tmp_move = {move_id: []}
                 for line in self.filtered(lambda l: l.move_id.id == move_id):
                     changes, tracking_value_ids = line._mail_track(ref_fields, modified_lines)  # Return a tuple like (changed field, ORM command)
-                    tmp = {'line_id': line.id}
                     if tracking_value_ids:
-                        selected_field = tracking_value_ids[0][2]  # Get the last element of the tuple in the list of ORM command. (changed, [(0, 0, THIS)])
-                        tmp.update({
-                            **{'field_name': selected_field.get('field_desc')},
-                            **self._get_formated_values(selected_field)
-                        })
+                        for value in tracking_value_ids:
+                            selected_field = value[2]  # Get the last element of the tuple in the list of ORM command. (changed, [(0, 0, THIS)])
+                            tmp_move[move_id].append({
+                                'line_id': line.id,
+                                **{'field_name': selected_field.get('field_desc')},
+                                **self._get_formated_values(selected_field)
+                            })
                     elif changes:
-                        field_name = line._fields[changes.pop()].string  # Get the field name
-                        tmp.update({
-                            'error': True,
-                            'field_error': field_name
-                        })
+                        for change in changes:
+                            field_name = line._fields[change].string  # Get the field name
+                            tmp_move[move_id].append({
+                                'line_id': line.id,
+                                'error': True,
+                                'field_error': field_name,
+                            })
                     else:
                         continue
-                    tmp_move[move_id].append(tmp)
                 if len(tmp_move[move_id]) > 0:
                     tracking_values.update(tmp_move)
 
