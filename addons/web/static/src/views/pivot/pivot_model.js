@@ -2,7 +2,7 @@
 
 import { Domain } from "@web/core/domain";
 import { cartesian, sections, sortBy, symmetricalDifference } from "@web/core/utils/arrays";
-import { KeepLast } from "@web/core/utils/concurrency";
+import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { computeVariation } from "@web/core/utils/numbers";
 import { DEFAULT_INTERVAL } from "@web/search/utils/dates";
 import { Model } from "@web/views/helpers/model";
@@ -338,7 +338,13 @@ export class PivotModel extends Model {
      * @param {Object} [params.data] previously exported data
      */
     setup(params) {
+        // concurrency management
         this.keepLast = new KeepLast();
+        this.race = new Race();
+        const _loadData = this._loadData.bind(this);
+        this._loadData = (...args) => {
+            return this.race.add(_loadData(...args));
+        };
 
         let sortedColumn = params.metaData.sortedColumn || null;
         if (!sortedColumn && params.metaData.defaultOrder) {
@@ -373,9 +379,6 @@ export class PivotModel extends Model {
         this.metaData = this._buildMetaData(metaData);
 
         this.reload = false; // used to discriminate between the first load and subsequent reloads
-        // loadProm ensures that loadData always returns a promise that resolves when
-        // the final data is loaded (in case several load requests arrive consecutively)
-        this.loadProm = null;
         this.nextActiveMeasures = null; // allows to toggle several measures consecutively
     }
 
@@ -394,7 +397,7 @@ export class PivotModel extends Model {
      * @param {string} [params.interval]
      */
     async addGroupBy(params) {
-        if (this.loadProm) {
+        if (this.race.getCurrentProm()) {
             return; // we are currently reloaded the table
         }
 
@@ -435,7 +438,7 @@ export class PivotModel extends Model {
      * @param {'row'|'col'} type
      */
     closeGroup(groupId, type) {
-        if (this.loadProm) {
+        if (this.race.getCurrentProm()) {
             return; // we are currently reloading the table
         }
 
@@ -507,7 +510,7 @@ export class PivotModel extends Model {
      * @param {'row'|'col'} type
      */
     async expandGroup(groupId, type) {
-        if (this.loadProm) {
+        if (this.race.getCurrentProm()) {
             return; // we are currently reloaded the table
         }
 
@@ -598,7 +601,7 @@ export class PivotModel extends Model {
      * flipping the axes. This method is thus async.
      */
     async flip() {
-        await Promise.resolve(this.loadProm);
+        await this.race.getCurrentProm();
 
         // swap the data: the main column and the main row
         let temp = this.data.rowGroupTree;
@@ -719,7 +722,7 @@ export class PivotModel extends Model {
      * @param {number[]} sortedColumn.groupId
      */
     sortRows(sortedColumn) {
-        if (this.loadProm) {
+        if (this.race.getCurrentProm()) {
             return; // we are currently reloaded the table
         }
 
@@ -745,7 +748,7 @@ export class PivotModel extends Model {
             // actually reload a lesser amount of information (but still, we need
             // to wait in case there is a pending load)
             metaData.activeMeasures.splice(index, 1);
-            await Promise.resolve(this.loadProm);
+            await Promise.resolve(this.race.getCurrentProm());
             this.metaData = metaData;
         } else {
             metaData.activeMeasures.push(fieldName);
@@ -1347,15 +1350,6 @@ export class PivotModel extends Model {
      * @param {Config} config
      */
     async _loadData(config, prune = true) {
-        if (!this.loadProm) {
-            this.loadProm = new Promise((resolve) => {
-                this.resolveLoadProm = () => {
-                    this.loadProm = null;
-                    resolve();
-                };
-            });
-        }
-
         config.data = {}; // data will be completely recomputed
         const { data, metaData } = config;
         data.rowGroupTree = { root: { labels: [], values: [] }, directSubTrees: new Map() };
@@ -1372,33 +1366,25 @@ export class PivotModel extends Model {
         const rightDivisors = sections(metaData.fullColGroupBys);
         const divisors = cartesian(leftDivisors, rightDivisors);
 
-        this._subdivideGroup(group, divisors.slice(0, 1), config)
-            .then(() => {
-                return this._subdivideGroup(group, divisors.slice(1), config);
-            })
-            .then(async () => {
-                // keep folded groups folded after the reload if the structure of the table is the same
-                if (prune && this._hasData(data) && this._hasData(this.data)) {
-                    if (
-                        symmetricalDifference(metaData.rowGroupBys, this.metaData.rowGroupBys)
-                            .length === 0
-                    ) {
-                        this._pruneTree(data.rowGroupTree, this.data.rowGroupTree);
-                    }
-                    if (
-                        symmetricalDifference(metaData.colGroupBys, this.metaData.colGroupBys)
-                            .length === 0
-                    ) {
-                        this._pruneTree(data.colGroupTree, this.data.colGroupTree);
-                    }
-                }
+        await this._subdivideGroup(group, divisors.slice(0, 1), config);
+        await this._subdivideGroup(group, divisors.slice(1), config);
 
-                this.data = config.data;
-                this.metaData = config.metaData;
-                this.resolveLoadProm();
-            });
+        // keep folded groups folded after the reload if the structure of the table is the same
+        if (prune && this._hasData(data) && this._hasData(this.data)) {
+            if (
+                symmetricalDifference(metaData.rowGroupBys, this.metaData.rowGroupBys).length === 0
+            ) {
+                this._pruneTree(data.rowGroupTree, this.data.rowGroupTree);
+            }
+            if (
+                symmetricalDifference(metaData.colGroupBys, this.metaData.colGroupBys).length === 0
+            ) {
+                this._pruneTree(data.colGroupTree, this.data.colGroupTree);
+            }
+        }
 
-        return this.loadProm;
+        this.data = config.data;
+        this.metaData = config.metaData;
     }
     /**
      * Extract the information in the read_group results (groupSubdivisions)
