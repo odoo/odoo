@@ -97,16 +97,6 @@
             </field>
         </record>
 
-        <record id="stock_picking_type_menu_action" model="ir.actions.server">
-            <field name="name">Overview</field>
-            <field name="model_id" ref="stock.model_stock_picking_type"/>
-            <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
-            <field name="state">code</field>
-            <field name="code">
-                action = model.action_view_picking_type()
-            </field>
-        </record>
-
         <record id="action_picking_type_list" model="ir.actions.act_window">
             <field name="name">Operations Types</field>
             <field name="res_model">stock.picking.type</field>
@@ -123,7 +113,7 @@
         </record>
 
         <menuitem
-            action="stock_picking_type_menu_action"
+            action="stock_picking_type_action"
             id="stock_picking_type_menu"
             parent="menu_stock_root" sequence="0"
             name="Overview"/>
