@@ -206,16 +206,6 @@ class PickingType(models.Model):
         if self.show_operations and self.code != 'incoming':
             self.show_reserved = True
 
-    @api.model
-    def action_view_picking_type(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_picking_type_action")
-        if self.user_has_groups('stock.group_stock_multi_locations'):
-            context = literal_eval(action['context'])
-            context['search_default_groupby_warehouse_id'] = True
-            action['context'] = context
-
-        return action
-
     def _get_action(self, action_xmlid):
         action = self.env["ir.actions.actions"]._for_xml_id(action_xmlid)
         if self:
