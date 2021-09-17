@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { BORDER_WHITE, DEFAULT_BG } from "@web/views/graph/colors";
-import { click, triggerEvent } from "@web/../tests/helpers/utils";
+import { click, makeDeferred, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
@@ -3308,4 +3308,118 @@ QUnit.module("Views", (hooks) => {
             ]);
         }
     );
+
+    QUnit.test(
+        "concurrent reloads: add a filter, and directly toggle a measure",
+        async function (assert) {
+            let def;
+            const graph = await makeView({
+                serverData,
+                type: "graph",
+                resModel: "foo",
+                arch: `
+                    <graph type="line">
+                        <field name="product_id"/>
+                    </graph>`,
+                searchViewArch: `
+                    <search>
+                        <filter name="my_filter" string="My Filter" domain="[('id', '&lt;', 2)]"/>
+                    </search>`,
+                mockRPC: function (route, args) {
+                    if (args.method === "web_read_group") {
+                        return Promise.resolve(def);
+                    }
+                },
+            });
+
+            checkDatasets(assert, graph, ["data", "label"], {
+                data: [4, 4],
+                label: "Count",
+            });
+
+            // Set a domain (this reload is delayed)
+            def = makeDeferred();
+            await toggleFilterMenu(graph);
+            await toggleMenuItem(graph, "My Filter");
+
+            checkDatasets(assert, graph, ["data", "label"], {
+                data: [4, 4],
+                label: "Count",
+            });
+
+            // Toggle a measure
+            await toggleMenu(graph, "Measures");
+            await toggleMenuItem(graph, "Foo");
+
+            checkDatasets(assert, graph, ["data", "label"], {
+                data: [4, 4],
+                label: "Count",
+            });
+
+            def.resolve();
+            await nextTick();
+
+            checkDatasets(assert, graph, ["data", "label"], {
+                data: [82, 157],
+                label: "Foo",
+            });
+        }
+    );
+
+    QUnit.test("change graph mode while loading a filter", async function (assert) {
+        let def;
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph type="line">
+                    <field name="product_id"/>
+                </graph>`,
+            searchViewArch: `
+                <search>
+                    <filter name="my_filter" string="My Filter" domain="[('id', '&lt;', 2)]"/>
+                </search>`,
+            mockRPC: function (route, args) {
+                if (args.method === "web_read_group") {
+                    return Promise.resolve(def);
+                }
+            },
+        });
+
+        checkDatasets(assert, graph, ["data", "label"], {
+            data: [4, 4],
+            label: "Count",
+        });
+        checkModeIs(assert, graph, "line");
+
+        // Set a domain (this reload is delayed)
+        def = makeDeferred();
+        await toggleFilterMenu(graph);
+        await toggleMenuItem(graph, "My Filter");
+
+        checkDatasets(assert, graph, ["data", "label"], {
+            data: [4, 4],
+            label: "Count",
+        });
+        checkModeIs(assert, graph, "line");
+
+        // Change graph mode
+        await selectMode(graph, "bar");
+
+        checkDatasets(assert, graph, ["data", "label"], {
+            data: [4, 4],
+            label: "Count",
+        });
+        checkModeIs(assert, graph, "line");
+
+        def.resolve();
+        await nextTick();
+
+        checkDatasets(assert, graph, ["data", "label"], {
+            data: [1],
+            label: "Count",
+        });
+        checkModeIs(assert, graph, "bar");
+    });
 });
