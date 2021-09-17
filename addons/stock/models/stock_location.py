@@ -262,7 +262,7 @@ class Location(models.Model):
             for values in quant_data:
                 qty_by_location[values['location_id'][0]] += values['quantity']
 
-        putaway_location = putaway_rules._get_putaway_location(product, quantity, package, qty_by_location)
+        putaway_location = putaway_rules._get_putaway_location(product, quantity, package, packaging, qty_by_location)
         if not putaway_location:
             putaway_location = locations[0] if locations and self.usage == 'view' else self
 
