@@ -12,6 +12,24 @@ $o-wslides-color-dark2: #1f262d;
 $o-wslides-color-dark3: #101216;
 $o-wslides-fs-side-width: 300px;
 
+// Truncate text descriptions to a specific number of lines.
+// If '-webkit-line-clamp' is not supported, a less effective
+// 'line-height' fallback will be used instead.
+$truncate-limits: 2, 3, 10;
+
+@each $limit in $truncate-limits {
+    .o_wslides_desc_truncate_#{$limit} {
+        $line-height: 1.3;
+        max-height: $limit * $line-height * 1.2em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        line-height: $line-height;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: $limit;
+    }
+}
 
 // Common to new slides pages
 // **************************************************
@@ -185,24 +203,6 @@ $o-wslides-fs-side-width: 300px;
         min-height: 1px;
     }
 
-    // Truncate text descriptions to a specific number of lines.
-    // If '-webkit-line-clamp' is not supported, a less effective
-    // 'line-height' fallback will be used instead.
-    $truncate-limits: 2, 3, 10;
-
-    @each $limit in $truncate-limits {
-        .o_wslides_desc_truncate_#{$limit} {
-            $line-height: 1.3;
-            max-height: $limit * $line-height * 1.2em;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: normal;
-            line-height: $line-height;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: $limit;
-        }
-    }
 }
 
 // New home page
