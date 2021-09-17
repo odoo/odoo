@@ -340,7 +340,7 @@ class MailThread(models.AbstractModel):
         that adds alias information. """
         model = self._context.get('empty_list_help_model')
         res_id = self._context.get('empty_list_help_id')
-        catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
+        catchall_domain = self._alias_get_catchall_domain()
         document_name = self._context.get('empty_list_help_document_name', _('document'))
         nothing_here = is_html_empty(help_message)
         alias = None
@@ -669,7 +669,7 @@ class MailThread(models.AbstractModel):
         bounce_from = self.env['ir.mail_server']._get_default_bounce_address()
         if bounce_from:
             bounce_mail_values['email_from'] = tools.formataddr(('MAILER-DAEMON', bounce_from))
-        elif self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias") not in message['To']:
+        elif self._alias_get_catchall_alias() not in message['To']:
             bounce_mail_values['email_from'] = tools.decode_message_header(message, 'To')
         else:
             bounce_mail_values['email_from'] = tools.formataddr(('MAILER-DAEMON', self.env.user.email_normalized))
@@ -1504,7 +1504,7 @@ class MailThread(models.AbstractModel):
             we also need to verify if the message come from "mailer-daemon"
         """
         # detection based on email_to
-        bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
+        bounce_alias = self._alias_get_bounce_alias()
         email_to = message_dict['to']
         email_to_localparts = [
             e.split('@', 1)[0].lower()
@@ -1785,7 +1785,7 @@ class MailThread(models.AbstractModel):
         if not normalized_email:
             return self.env['res.users']
 
-        catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
+        catchall_domain = self._alias_get_catchall_domain()
         if catchall_domain:
             left_part = normalized_email.split('@')[0] if normalized_email.split('@')[1] == catchall_domain.lower() else False
             if left_part:
@@ -1842,7 +1842,7 @@ class MailThread(models.AbstractModel):
             followers = records.mapped('message_partner_ids')
         else:
             followers = self.env['res.partner']
-        catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
+        catchall_domain = self._alias_get_catchall_domain()
 
         # first, build a normalized email list and remove those linked to aliases to avoid adding aliases as partners
         normalized_emails = [tools.email_normalize(contact) for contact in emails if tools.email_normalize(contact)]

@@ -360,11 +360,9 @@ class MailMail(models.Model):
 
         # headers
         headers = {}
-        ICP = self.env['ir.config_parameter'].sudo()
-        bounce_alias = ICP.get_param("mail.bounce.alias")
-        catchall_domain = ICP.get_param("mail.catchall.domain")
-        if bounce_alias and catchall_domain:
-            headers['Return-Path'] = f'{bounce_alias}@{catchall_domain}'
+        bounce_email = self._alias_get_bounce_email()
+        if bounce_email:
+            headers['Return-Path'] = bounce_email
         if self.headers:
             try:
                 headers.update(ast.literal_eval(self.headers))

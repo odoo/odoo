@@ -26,22 +26,19 @@ class IrMailServer(models.Model):
     def _get_default_bounce_address(self):
         """ Compute the default bounce address. Try to use mail-defined config
         parameter if they are set. """
-        ICP = self.env['ir.config_parameter'].sudo()
-        bounce_alias = ICP.get_param('mail.bounce.alias')
-        domain = ICP.get_param('mail.catchall.domain')
-        if bounce_alias and domain:
-            return f'{bounce_alias}@{domain}'
+        bounce_email = self._alias_get_bounce_email()
+        if bounce_email:
+            return bounce_email
         return super()._get_default_from_address()
 
     @api.model
     def _get_default_from_address(self):
         """ Compute the default from address. If no complete default from is
         already defined, try to use mail-define config parameters. """
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        email_from = get_param("mail.default.from")
+        email_from = self.env['ir.config_parameter'].sudo().get_param("mail.default.from")
         if email_from and "@" in email_from:
             return email_from
-        domain = get_param("mail.catchall.domain")
-        if email_from and domain:
-            return f"{email_from}@{domain}"
+        catchall_domain = self._alias_get_catchall_domain()
+        if email_from and catchall_domain:
+            return f'{email_from}@{catchall_domain}'
         return super()._get_default_from_address()

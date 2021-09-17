@@ -27,7 +27,7 @@ class RecruitmentSource(models.Model):
                 'alias_parent_thread_id': source.job_id.id,
                 'alias_model_id': self.env['ir.model']._get('hr.applicant').id,
                 'alias_parent_model_id': self.env['ir.model']._get('hr.job').id,
-                'alias_name': "%s+%s" % (source.job_id.alias_name or source.job_id.name, source.name),
+                'alias_name': f"{source.job_id.alias_name or source.job_id.name}+{source.name}",
                 'alias_defaults': {
                     'job_id': source.job_id.id,
                     'campaign_id': campaign.id,

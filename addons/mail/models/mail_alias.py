@@ -118,10 +118,9 @@ class Alias(models.Model):
 
     @api.depends('alias_domain', 'alias_name')
     def _compute_display_name(self):
-        """Return the mail alias display alias_name, including the implicit
-           mail catchall domain if exists from config otherwise "New Alias".
-           e.g. `jobs@mail.odoo.com` or `jobs` or 'New Alias'
-        """
+        """ Return the mail alias display alias_name, including the catchall
+        domain if found otherwise "Inactive Alias". e.g.`jobs@mail.odoo.com`
+        or `jobs` or 'Inactive Alias' """
         for record in self:
             if record.alias_name and record.alias_domain:
                 record.display_name = f"{record.alias_name}@{record.alias_domain}"
@@ -132,7 +131,7 @@ class Alias(models.Model):
 
     @api.depends('alias_name')
     def _compute_alias_domain(self):
-        self.alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+        self.alias_domain = self._alias_get_catchall_domain()
 
     @api.depends('alias_contact', 'alias_defaults', 'alias_model_id')
     def _compute_alias_status(self):
@@ -187,14 +186,14 @@ class Alias(models.Model):
         name already exists an UserError is raised. """
         sanitized_names = [self._sanitize_alias_name(name) for name in names]
 
-        catchall_alias = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.alias')
-        bounce_alias = self.env['ir.config_parameter'].sudo().get_param('mail.bounce.alias')
-        alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+        catchall_alias = self._alias_get_catchall_alias()
+        bounce_alias = self._alias_get_bounce_alias()
+        alias_domain = self._alias_get_catchall_domain()
 
         # matches catchall or bounce alias
         for sanitized_name in sanitized_names:
             if sanitized_name in [catchall_alias, bounce_alias]:
-                matching_alias_name = '%s@%s' % (sanitized_name, alias_domain) if alias_domain else sanitized_name
+                matching_alias_name = f'{sanitized_name}@{alias_domain}' if alias_domain else sanitized_name
                 raise UserError(
                     _('The e-mail alias %(matching_alias_name)s is already used as %(alias_duplicate)s alias. Please choose another alias.',
                       matching_alias_name=matching_alias_name,

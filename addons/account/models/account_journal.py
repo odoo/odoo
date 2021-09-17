@@ -398,7 +398,7 @@ class AccountJournal(models.Model):
 
     @api.depends('name')
     def _compute_alias_domain(self):
-        self.alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+        self.alias_domain = self._alias_get_catchall_domain()
 
     @api.depends('alias_id', 'alias_id.alias_name')
     def _compute_alias_name(self):

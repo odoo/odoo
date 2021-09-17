@@ -24,12 +24,10 @@ class Company(models.Model):
 
     @api.depends('name')
     def _compute_catchall(self):
-        ConfigParameter = self.env['ir.config_parameter'].sudo()
-        alias = ConfigParameter.get_param('mail.catchall.alias')
-        domain = ConfigParameter.get_param('mail.catchall.domain')
-        if alias and domain:
+        catchall_email = self._alias_get_catchall_email()
+        if catchall_email:
             for company in self:
-                company.catchall_email = '%s@%s' % (alias, domain)
+                company.catchall_email = catchall_email
                 company.catchall_formatted = tools.formataddr((company.name, company.catchall_email))
         else:
             for company in self:
