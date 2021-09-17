@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
-from itertools import groupby
 
 from odoo import api, fields, models
+from odoo.tools import groupby
 from odoo.tools.float_utils import float_round, float_is_zero
 
 
@@ -257,7 +257,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if not product_template_attribute_value_ids:
             return True
-        for _, iter_ptav in groupby(product_template_attribute_value_ids.sorted('attribute_line_id'), lambda ptav: ptav.attribute_line_id):
+        for _, iter_ptav in groupby(product_template_attribute_value_ids, lambda ptav: ptav.attribute_line_id):
             if not any(ptav in self.product_template_attribute_value_ids for ptav in iter_ptav):
                 return False
         return True

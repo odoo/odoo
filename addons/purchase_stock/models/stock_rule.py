@@ -4,10 +4,10 @@
 from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from itertools import groupby
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.addons.stock.models.stock_rule import ProcurementException
+from odoo.tools import groupby
 
 
 class StockRule(models.Model):
@@ -115,9 +115,9 @@ class StockRule(models.Model):
             procurements = self._merge_procurements(procurements_to_merge)
 
             po_lines_by_product = {}
-            grouped_po_lines = groupby(po.order_line.filtered(lambda l: not l.display_type and l.product_uom == l.product_id.uom_po_id).sorted(lambda l: l.product_id.id), key=lambda l: l.product_id.id)
+            grouped_po_lines = groupby(po.order_line.filtered(lambda l: not l.display_type and l.product_uom == l.product_id.uom_po_id), key=lambda l: l.product_id.id)
             for product, po_lines in grouped_po_lines:
-                po_lines_by_product[product] = self.env['purchase.order.line'].concat(*list(po_lines))
+                po_lines_by_product[product] = self.env['purchase.order.line'].concat(*po_lines)
             po_line_values = []
             for procurement in procurements:
                 po_lines = po_lines_by_product.get(procurement.product_id.id, self.env['purchase.order.line'])
@@ -177,12 +177,6 @@ class StockRule(models.Model):
             (procurement.values.get('orderpoint_id') and not procurement.values.get('move_dest_ids')) and procurement.values['orderpoint_id']
 
     @api.model
-    def _get_procurements_to_merge_sorted(self, procurement):
-        return procurement.product_id.id, procurement.product_uom.id, procurement.values['propagate_cancel'],\
-            procurement.values.get('product_description_variants'),\
-            (procurement.values.get('orderpoint_id') and not procurement.values.get('move_dest_ids')) and procurement.values['orderpoint_id']
-
-    @api.model
     def _get_procurements_to_merge(self, procurements):
         """ Get a list of procurements values and create groups of procurements
         that would use the same purchase order line.
@@ -190,11 +184,7 @@ class StockRule(models.Model):
         sorted).
         return list: procurements requests grouped by their product_id.
         """
-        procurements_to_merge = []
-
-        for k, procurements in groupby(sorted(procurements, key=self._get_procurements_to_merge_sorted), key=self._get_procurements_to_merge_groupby):
-            procurements_to_merge.append(list(procurements))
-        return procurements_to_merge
+        return [pro_g for __, pro_g in groupby(procurements, key=self._get_procurements_to_merge_groupby)]
 
     @api.model
     def _merge_procurements(self, procurements_to_merge):

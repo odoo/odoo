@@ -399,12 +399,6 @@ class StockMove(models.Model):
         res['cost_share'] = sum(self.mapped('cost_share'))
         return res
 
-    @api.model
-    def _prepare_merge_move_sort_method(self, move):
-        keys_sorted = super()._prepare_merge_move_sort_method(move)
-        keys_sorted += [move.created_production_id.id, move.cost_share]
-        return keys_sorted
-
     def _compute_kit_quantities(self, product_id, kit_qty, kit_bom, filters):
         """ Computes the quantity delivered or received when a kit is sold or purchased.
         A ratio 'qty_processed/qty_needed' is computed for each component, and the lowest one is kept
