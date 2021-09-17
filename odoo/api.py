@@ -424,26 +424,24 @@ def model_create_multi(method):
 
 
 def _call_kw_model(method, self, args, kwargs):
-    context, args, kwargs = split_context(method, args, kwargs)
-    recs = self.with_context(context or {})
-    _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
-    result = method(recs, *args, **kwargs)
-    return downgrade(method, result, recs, args, kwargs)
+    # self is already aware of the context
+    _logger.debug("call %s.%s(%s)", self, method.__name__, Params(args, kwargs))
+    result = method(self, *args, **kwargs)
+    return downgrade(method, result, self, args, kwargs)
 
 
 def _call_kw_model_create(method, self, args, kwargs):
+    # self is already aware of the context
     # special case for method 'create'
-    context, args, kwargs = split_context(method, args, kwargs)
-    recs = self.with_context(context or {})
-    _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
-    result = method(recs, *args, **kwargs)
+    _logger.debug("call %s.%s(%s)", self, method.__name__, Params(args, kwargs))
+    result = method(self, *args, **kwargs)
     return result.id if isinstance(args[0], Mapping) else result.ids
 
 
 def _call_kw_multi(method, self, args, kwargs):
+    # self is already aware of the context
     ids, args = args[0], args[1:]
-    context, args, kwargs = split_context(method, args, kwargs)
-    recs = self.with_context(context or {}).browse(ids)
+    recs = self.browse(ids)
     _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
     result = method(recs, *args, **kwargs)
     return downgrade(method, result, recs, args, kwargs)
@@ -453,6 +451,8 @@ def call_kw(model, name, args, kwargs):
     """ Invoke the given method ``name`` on the recordset ``model``. """
     method = getattr(type(model), name)
     api = getattr(method, '_api', None)
+    context, args, kwargs = split_context(method, args, kwargs)
+    model = model.with_context(**(context or {}))
     if api == 'model':
         result = _call_kw_model(method, model, args, kwargs)
     elif api == 'model_create':
