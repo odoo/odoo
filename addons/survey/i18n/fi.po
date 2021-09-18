@@ -26,8 +26,8 @@
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2020
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2021
-# Miika Nissi <miika.nissi@tawasta.fi>, 2021
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
+# Miika Nissi <miika.nissi@tawasta.fi>, 2021
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:34+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021\n"
+"Last-Translator: Miika Nissi <miika.nissi@tawasta.fi>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -296,6 +296,30 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hei ${object.partner_id.name or 'osallistuja'}<br/><br/>\n"
+"        % if object.survey_id.certification:\n"
+"            Sinut on kutsuttu suorittamaan uusi sertifiointi.\n"
+"        % else:\n"
+"            Teemme kyselyä ja arvostaisimme vastaustasi.\n"
+"        % endif\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${(object.get_start_url()) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                % if object.survey_id.certification:\n"
+"                    Aloita sertifiointi\n"
+"                % else:\n"
+"                    Aloita kysely\n"
+"                % endif\n"
+"            </a>\n"
+"        </div>\n"
+"        % if object.deadline:\n"
+"            Vastaa kyselyyn ${format_date(object.deadline)} mennessä.<br/><br/>\n"
+"        % endif\n"
+"        Kiitos osallistumisestasi.\n"
+"    </p>\n"
+"</div>\n"
+"           "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -477,22 +501,22 @@ msgstr "<p>Muutama kysymys yrityksestämme. Tunnetko todella meidät?</p>"
 #. module: survey
 #: model:survey.question,description:survey.vendor_certification_page_3
 msgid "<p>Test your knowledge of our policies.</p>"
-msgstr ""
+msgstr "<p>Testaa tietosi käytännöistämme.</p>"
 
 #. module: survey
 #: model:survey.question,description:survey.vendor_certification_page_2
 msgid "<p>Test your knowledge of our prices.</p>"
-msgstr ""
+msgstr "<p>Testaa tietosi hinnoistamme.</p>"
 
 #. module: survey
 #: model:survey.question,description:survey.vendor_certification_page_1
 msgid "<p>Test your knowledge of your products!</p>"
-msgstr ""
+msgstr "<p>Testaa tietosi tuotteistasi!</p>"
 
 #. module: survey
 #: model:survey.survey,description:survey.vendor_certification
 msgid "<p>Test your vendor skills!</p>"
-msgstr ""
+msgstr "<p>Testaa myyjätaitosi!</p>"
 
 #. module: survey
 #: model:survey.question,description:survey.survey_feedback_p1
@@ -500,11 +524,13 @@ msgid ""
 "<p>This section is about general information about you. Answering them helps"
 " qualifying your answers.</p>"
 msgstr ""
+"<p>Tämä osio käsittelee yleisiä tietoja sinusta. Niihin vastaaminen auttaa "
+"tilastoimaan vastauksesi.</p>"
 
 #. module: survey
 #: model:survey.question,description:survey.survey_feedback_p2
 msgid "<p>This section is about our eCommerce experience itself.</p>"
-msgstr ""
+msgstr "<p>Tämä osio käsittelee verkkokauppakokemustamme.</p>"
 
 #. module: survey
 #: model:survey.survey,description:survey.survey_demo_quiz
@@ -512,6 +538,8 @@ msgid ""
 "<p>This small quiz will test your knowledge about our Company. Be prepared "
 "!</p>"
 msgstr ""
+"<p>Tämä pieni tietokilpailu testaa tietosi yrityksestämme. Ole valmiina "
+"!</p>"
 
 #. module: survey
 #: model:survey.survey,description:survey.survey_feedback
@@ -519,11 +547,13 @@ msgid ""
 "<p>This survey allows you to give a feedback about your experience with our products.\n"
 "    Filling it helps us improving your experience.</p>"
 msgstr ""
+"<p>Tämän kyselyn avulla voit antaa palautetta tuotteistamme.\n"
+"Sen täyttäminen auttaa meitä parantamaan kokemustasi.</p>"
 
 #. module: survey
 #: model:survey.question,description:survey.survey_demo_quiz_p5
 msgid "<p>We may be interested by your input.</p>"
-msgstr ""
+msgstr "<p>Saatamme olla kiinnostuneita mielipiteistänne.</p>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -605,6 +635,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&lt;', 2)]}\">Certifications</span>\n"
 "                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&gt;', 1)]}\">Certification</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&lt;', 2)]}\">Sertifioinnit</span>\n"
+"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&gt;', 1)]}\">Sertifiointi</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
@@ -612,6 +644,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&lt;', 2)]}\">Certifications</span>\n"
 "                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&gt;', 1)]}\">Certification</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&lt;', 2)]}\">Sertifioinnit</span>\n"
+"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&gt;', 1)]}\">Sertiointi</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -648,7 +682,7 @@ msgstr "<span class=\"text-muted\">Onnistuminen</span>"
 msgid ""
 "<span class=\"text-muted\">The code is found on the screen in front of "
 "you</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Koodi löytyy edessäsi olevasta näytöstä</span>"
 
 #. module: survey
 #: model:survey.question,description:survey.survey_demo_quiz_p3_q1
@@ -737,6 +771,8 @@ msgid ""
 "A positive score indicates a correct choice; a negative or null score "
 "indicates a wrong answer"
 msgstr ""
+"Positiivinen pistemäärä osoittaa oikean valinnan; negatiivinen tai nolla "
+"pistemäärä osoittaa väärän vastauksen"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
@@ -747,17 +783,17 @@ msgstr "Ongelmatilanne"
 #: code:addons/survey/models/survey_user.py:0
 #, python-format
 msgid "A question can either be skipped or answered, not both."
-msgstr ""
+msgstr "Kysymyksen voi joko ohittaa tai vastata, ei molempia."
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2
 msgid "About our ecommerce"
-msgstr ""
+msgstr "Tietoja verkkokaupastamme"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1
 msgid "About you"
-msgstr ""
+msgstr "Tietoja sinusta"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_access_mode

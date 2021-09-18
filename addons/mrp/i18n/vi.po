@@ -11,10 +11,10 @@
 # Dung Nguyen Thi <dungnt@trobz.com>, 2020
 # Dao Nguyen <trucdao.uel@gmail.com>, 2020
 # Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2020
-# Duy BQ <duybq86@gmail.com>, 2020
 # Tien Nguyen <tienkt05@gmail.com>, 2020
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
+# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
 # Trần Hà <tranthuha13590@gmail.com>, 2021
+# Duy BQ <duybq86@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -406,6 +406,8 @@ msgstr "Một lệnh sản xuất đã xong hoặc đã bị hủy."
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
+"Một sản phẩm với định mức nguyên liệu theo bộ thì không thể có quy tắc cung "
+"ứng."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -894,7 +896,7 @@ msgstr "Cấu trúc BoM"
 #: model:ir.actions.client,name:mrp.action_report_mrp_bom
 #, python-format
 msgid "BoM Structure & Cost"
-msgstr "Cấu trúc BoM & Chi phí"
+msgstr "Cấu trúc & Chi phí BoM"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -1077,7 +1079,7 @@ msgstr "Thành phần đang có"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
 msgid "Component of Draft MO"
-msgstr ""
+msgstr "Thành phần dự thảo của MO"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_raw_ids
@@ -1377,6 +1379,8 @@ msgid ""
 "Define the components and finished products you wish to use in\n"
 "                bill of materials and manufacturing orders."
 msgstr ""
+"Hãy định nghĩa Thành phần và Thành phẩm mà bạn muốn dùng trong\n"
+"                Định mức nguyên liệu và Lệnh sản xuất."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__resource_calendar_id
@@ -2739,7 +2743,7 @@ msgstr "Không tạo phần dở dang"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid "No bill of materials found. Let's create one!"
-msgstr ""
+msgstr "Không có định mức nguyên liệu. Chúng ta hãy cùng tạo mới nào!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -2756,7 +2760,7 @@ msgstr "Chưa có dữ liệu nào!"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "No manufacturing order found. Let's create one."
-msgstr ""
+msgstr "Không tìm thấy lệnh sản xuất nào. Hãy cùng tạo mới nhé."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
@@ -2771,7 +2775,7 @@ msgstr "Không có dữ liệu sản xuất hao hụt cho thiết bị này"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "No unbuild order found"
-msgstr ""
+msgstr "Không tìm thấy Lệnh tháo dỡ nào"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -3140,7 +3144,7 @@ msgstr "Ngày theo Kế hoạch"
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Planned at the same time as other workorder(s) at %s"
-msgstr ""
+msgstr "Kế hoạch tại cùng một thời điểm cho nhiều Lệnh làm việc tại %s"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.mrp_planning_menu_root
@@ -3163,7 +3167,7 @@ msgstr "Gỗ nhựa"
 #: code:addons/mrp/models/stock_move.py:0
 #, python-format
 msgid "Please delete the Manufacture Order first."
-msgstr ""
+msgstr "Hãy xóa Lệnh sản xuất trước."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_wood_ply
@@ -3394,7 +3398,7 @@ msgstr "Khu vực sản xuất"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
 msgid "Production of Draft MO"
-msgstr ""
+msgstr "Lệnh sản xuất dự thảo"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -4311,6 +4315,10 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"Trường này được sử dụng để tính toán thời gian dự kiến của một Lệnh làm việc"
+" tại khu vực làm việc này. Ví dụ, nếu một Lệnh làm việc mất một giờ và hệ số"
+" hiệu quả là 100%, thì thời lượng dự kiến sẽ là một giờ. Tuy nhiên, nếu hệ "
+"số hiệu quả là 200% thì thời lượng dự kiến sẽ là 30 phút. "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
@@ -4399,6 +4407,8 @@ msgid ""
 "Time in minutes:- In manual mode, time used- In automatic mode, supposed "
 "first time when there aren't any work orders yet"
 msgstr ""
+"Thời gian tính bằng phút: - Ở chế độ thủ công, thời gian được sử dụng- Ở chế"
+" độ tự động, lần đầu tiên khi chưa từng thực hiện Lệnh làm việc"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tz
@@ -5148,6 +5158,8 @@ msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
 msgstr ""
+"Bạn không thể tạo Định mức nguyên liệu theo bộ cho sản phẩm khi nó đã tồn "
+"tại một qui tắc cung ứng."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
