@@ -3,16 +3,15 @@
 # 	* pad
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,58 +25,21 @@ msgid "API Key"
 msgstr "Ключ API "
 
 #. module: pad
-#: model:ir.model,name:pad.model_res_company
-msgid "Companies"
-msgstr "Компанії"
-
-#. module: pad
 #: model:ir.model,name:pad.model_res_config_settings
 msgid "Config Settings"
 msgstr "Налаштування"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_pad_common__display_name
-msgid "Display Name"
-msgstr "Назва для відображення"
-
-#. module: pad
-#: model:ir.model.fields,help:pad.field_res_company__pad_key
-#: model:ir.model.fields,help:pad.field_res_config_settings__pad_key
-msgid "Etherpad lite api key."
-msgstr "Ключ Etherpad lite api."
-
-#. module: pad
-#: model:ir.model.fields,help:pad.field_res_company__pad_server
-#: model:ir.model.fields,help:pad.field_res_config_settings__pad_server
-msgid "Etherpad lite server. Example: beta.primarypad.com"
-msgstr "Сервер Etherpad lite. Наприклад: beta.primarypad.com"
-
-#. module: pad
-#: model:ir.model.fields,field_description:pad.field_pad_common__id
-msgid "ID"
-msgstr "ID"
-
-#. module: pad
-#: model:ir.model.fields,field_description:pad.field_pad_common____last_update
-msgid "Last Modified on"
-msgstr "Останні зміни на"
-
-#. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:149
+#: code:addons/pad/static/src/js/pad.js:0
 #, python-format
 msgid "Loading"
 msgstr "Завантаження"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_company__pad_key
-msgid "Pad Api Key"
-msgstr "Ключ Api панелі"
-
-#. module: pad
 #: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_key
-msgid "Pad Api Key *"
-msgstr "Ключ Api панелі *"
+msgid "Pad API Key"
+msgstr "Ключ Pad API "
 
 #. module: pad
 #: model:ir.model,name:pad.model_pad_common
@@ -85,17 +47,12 @@ msgid "Pad Common"
 msgstr "Загальна панель"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_company__pad_server
+#: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_server
 msgid "Pad Server"
 msgstr "Сервер панелі"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_server
-msgid "Pad Server *"
-msgstr "Сервер панелі *"
-
-#. module: pad
-#: code:addons/pad/models/pad.py:58
+#: code:addons/pad/models/pad.py:0
 #, python-format
 msgid ""
 "Pad creation failed, either there is a problem with your pad server URL or "
@@ -106,14 +63,10 @@ msgstr ""
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:6
+#: code:addons/pad/static/src/xml/pad.xml:0
 #, python-format
-msgid ""
-"Please enter your Etherpad credentials through the menu 'Settings > General "
-"Settings'."
-msgstr ""
-"Будь ласка, введіть у ваші реєстраційні дані Etherpad в меню  'Налаштування "
-"> Загальні параметри'."
+msgid "Please, enter your Etherpad credentials through the Settings."
+msgstr "Введіть облікові дані Etherpad через Налаштування."
 
 #. module: pad
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
@@ -122,21 +75,22 @@ msgstr "Сервер"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:14
+#: code:addons/pad/static/src/xml/pad.xml:0
+#: code:addons/pad/static/src/xml/pad.xml:0
 #, python-format
 msgid "Switch pad"
 msgstr "Switch pad"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:168
+#: code:addons/pad/static/src/js/pad.js:0
 #, python-format
 msgid "This pad will be initialized on first edit"
 msgstr "Ця панель буде ініціалізована при першому редагуванні"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:162
+#: code:addons/pad/static/src/js/pad.js:0
 #, python-format
 msgid "Unable to load pad"
 msgstr "Не вдається завантажити панель"

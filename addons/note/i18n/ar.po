@@ -3,27 +3,15 @@
 # 	* note
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
-# Mustafa J. Kadhem <safi2266@gmail.com>, 2019
-# Sadig Adam <sadig41@gmail.com>, 2019
-# Akram Alfusayal <akram_ma@hotmail.com>, 2019
-# amrnegm <amrnegm.01@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Ali zuaby <ali@zuaby.net>, 2019
-# Osoul <baruni@osoul.ly>, 2019
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2019
-# Zuhair Hammadi <zuhair12@gmail.com>, 2019
-# Shaima Safar <shaima.safar@open-inside.com>, 2019
-# Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2019
-# Nisrine Tagri <nta@odoo.com>, 2019
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Nisrine Tagri <nta@odoo.com>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,14 +30,14 @@ msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed
 msgstr "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"مغلق\" title=\"مغلق\"/>"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action"
+msgstr "إجراء"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
 msgid "Action Needed"
 msgstr "إجراء مطلوب"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
-msgid "Action to Perform"
-msgstr ""
 
 #. module: note
 #: model:ir.model.fields,help:note.field_mail_activity_type__category
@@ -57,6 +45,8 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"قد تؤدي الإجراءات إلى سلوك معين مثل فتح طريقة عرض التقويم أو وضع علامة "
+"\"تم\" عليها تلقائيًا عند تحميل مستند"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
@@ -77,7 +67,7 @@ msgstr "النشاط"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "زخرفة استثناء النشاط"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_state
@@ -90,6 +80,11 @@ msgid "Activity Type"
 msgstr "نوع النشاط"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "أيقونة نوع النشاط"
+
+#. module: note
 #: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid "Add a new personal note"
 msgstr "إضافة ملاحظة شخصية جديدة"
@@ -97,7 +92,7 @@ msgstr "إضافة ملاحظة شخصية جديدة"
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.note_tag_action
 msgid "Add a new tag"
-msgstr "إضافة وسم جديد"
+msgstr "اضافة وسم جديد"
 
 #. module: note
 #. openerp-web
@@ -144,7 +139,7 @@ msgstr "معرف اللون"
 #. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
 msgid "Configuration"
-msgstr "إعداد"
+msgstr "إعدادات التكوين"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__create_uid
@@ -183,11 +178,6 @@ msgid "Dropdown menu"
 msgstr "القائمة المنسدلة"
 
 #. module: note
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
-msgid "Exception Activities"
-msgstr ""
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
 msgid "Folded by Default"
 msgstr "مطوي افتراضيًا"
@@ -203,14 +193,14 @@ msgid "Followers"
 msgstr "المتابعون"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "المتابعون (القنوات)"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "المتابعون (الشركاء)"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome icon e.g. fa-tasks"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -221,6 +211,11 @@ msgstr "الأنشطة المستقبلية"
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "تجميع حسب"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__has_message
+msgid "Has Message"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__id
@@ -237,7 +232,7 @@ msgstr "الأيقونة"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "الأيقونة للإشارة إلى استثناء النشاط"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction
@@ -302,9 +297,19 @@ msgid "Messages"
 msgstr "الرسائل"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "جديد"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
@@ -352,8 +357,8 @@ msgstr "وسم الملاحظة"
 #: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_02
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #, python-format
 msgid "Notes"
 msgstr "الملاحظات"
@@ -441,6 +446,7 @@ msgstr "المسلسل"
 
 #. module: note
 #. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
 #: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Set date and time"
@@ -537,7 +543,7 @@ msgstr "المطلوب تنفيذه"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "نوع النشاط الاستثنائي المسجل."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_unread

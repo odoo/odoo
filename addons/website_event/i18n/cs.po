@@ -3,18 +3,20 @@
 # 	* website_event
 # 
 # Translators:
-# Chris <krystof.reklamy13@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Michal Veselý <michal@veselyberanek.net>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Martin Trigaux, 2021
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2021
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2021
+# Michal Veselý <michal@veselyberanek.net>, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# trendspotter <jirka.p@volny.cz>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:42+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:27+0000\n"
+"Last-Translator: trendspotter <jirka.p@volny.cz>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,29 +25,51 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid "<b>Event registration is closed.</b>"
+#: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_count
+msgid "# Registrations"
+msgstr "# Registrace"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "'. Showing results for '"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "(Ref:"
+msgstr "(Ref:"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid "<b>Event registration not yet started.</b>"
-msgstr ""
+msgid "(only"
+msgstr "(pouze"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.snippet_options
+msgid ", .oe_country_events, .s_speaker_bio"
+msgstr ", .oe_country_events, .s_speaker_bio"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "<b>Drag and Drop</b> this snippet below the event title."
+msgstr "<b>Přetáhněte</b> tento úryvek pod název události."
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<b>End</b>"
+msgstr "<b>Konec</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<b>Start</b>"
-msgstr ""
+msgstr "<b>Začátek</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events_list
 msgid "<b>View all</b>"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "<br/> <b>End</b>"
-msgstr ""
+msgstr "<b>Zobrazit vše</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_quotes
@@ -53,17 +77,31 @@ msgid ""
 "<em>Write here a quote from one of your attendees. It gives confidence in "
 "your events.</em>"
 msgstr ""
+"<em>Sem napište nabídku jednoho z vašich účastníků. Dodává důvěru ve vaše "
+"události.</em>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.template_intro
+msgid ""
+"<font style=\"font-size: 62px;\" "
+"class=\"o_default_snippet_text\">Introduction</font>"
+msgstr "<font style=\"font-size: 62px;\" class=\"o_default_snippet_text\">Úvod</font>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "<i class=\"fa fa-ban mr-2\"/>Sold Out"
+msgstr "<i class=\"fa fa-ban mr-2\"/>Vyprodáno"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<i class=\"fa fa-ban mr-2\"/>Unpublished"
-msgstr ""
+msgstr "<i class=\"fa fa-ban mr-2\"/>Nepublikováno"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<i class=\"fa fa-check mr-2\"/>Registered"
-msgstr ""
+msgstr "<i class=\"fa fa-check mr-2\"/>Registrován"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -71,32 +109,41 @@ msgid ""
 "<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" "
 "title=\"Facebook\"/>"
 msgstr ""
+"<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" "
+"title=\"Facebook\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events_list
 msgid "<i class=\"fa fa-flag mr-2\"/>Events:"
-msgstr ""
+msgstr "<i class=\"fa fa-flag mr-2\"/>Události:"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-fw fa-calendar\"/> Add to Google Calendar"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-calendar\"/> Přidat do Google kalendáře"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-fw fa-calendar\"/> Add to iCal/Outlook"
+msgstr "<i class=\"fa fa-fw fa-calendar\"/> Přidat do iCal / Outlooku"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
+msgid ""
+"<i class=\"fa fa-gear mr-1\" role=\"img\" aria-label=\"Configure\" "
+"title=\"Configure event tickets\"/><em>Configure Tickets</em>"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events_list
 #: model_terms:ir.ui.view,arch_db:website_event.s_country_events
 msgid "<i class=\"fa fa-globe mr-2\"/>Upcoming Events"
-msgstr ""
+msgstr "<i class=\"fa fa-globe mr-2\"/>Připravované akce"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -104,6 +151,8 @@ msgid ""
 "<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" "
 "title=\"Instagram\"/>"
 msgstr ""
+"<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" "
+"title=\"Instagram\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -111,23 +160,24 @@ msgid ""
 "<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" "
 "title=\"LinkedIn\"/>"
 msgstr ""
+"<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" "
+"title=\"LinkedIn\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.layout
-msgid "<i class=\"fa fa-long-arrow-left text-primary mr-2\"/>All Events"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid ""
-"<i class=\"fa fa-pencil mr-2\" role=\"img\" aria-label=\"Create\" "
-"title=\"Create\"/><em>Configure Event Registration</em>"
+"<i class=\"fa fa-long-arrow-left text-primary mr-2\"/>\n"
+"                            <span>All Events</span>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-left text-primary mr-2\"/>\n"
+"                            <span>Všechny události</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "<i class=\"fa fa-twitter text-twitter\" aria-label=\"Twitter\" title=\"Twitter\"/>"
 msgstr ""
+"<i class=\"fa fa-twitter text-twitter\" aria-label=\"Twitter\" "
+"title=\"Twitter\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -135,6 +185,8 @@ msgid ""
 "<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
 "title=\"Youtube\"/>"
 msgstr ""
+"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
+"title=\"Youtube\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -142,41 +194,70 @@ msgid ""
 "<span class=\"badge badge-secondary text-uppercase "
 "o_wevent_badge\">Speaker</span>"
 msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.ticket
-msgid "<span class=\"font-weight-bold align-middle pr-2\">Qty</span>"
-msgstr ""
+"<span class=\"badge badge-secondary text-uppercase "
+"o_wevent_badge\">Řečník</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "<span class=\"navbar-brand h4 my-0 mr-4\">Events</span>"
+msgid "<span class=\"navbar-brand h4 my-0 mr-auto\">Events</span>"
+msgstr "<span class=\"navbar-brand h4 my-0 mr-auto\">Události</span>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
+msgid ""
+"<span class=\"o_countdown_remaining o_timer_days pr-1\">0</span><span "
+"class=\"o_countdown_metric pr-1\">days</span>"
+msgstr ""
+"<span class=\"o_countdown_remaining o_timer_days pr-1\">0</span><span "
+"class=\"o_countdown_metric pr-1\">dnů</span>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
+msgid ""
+"<span class=\"o_countdown_remaining o_timer_hours\">00</span><span "
+"class=\"o_countdown_metric\">:</span>"
+msgstr ""
+"<span class=\"o_countdown_remaining o_timer_hours\">00</span><span "
+"class=\"o_countdown_metric\">:</span>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
+msgid ""
+"<span class=\"o_countdown_remaining o_timer_minutes\">00</span><span "
+"class=\"o_countdown_metric\">:</span>"
+msgstr ""
+"<span class=\"o_countdown_remaining o_timer_minutes\">00</span><span "
+"class=\"o_countdown_metric\">:</span>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
+msgid ""
+"<span class=\"o_countdown_remaining o_timer_seconds\">00</span><span "
+"class=\"o_countdown_metric\"/>"
+msgstr ""
+"<span class=\"o_countdown_remaining o_timer_seconds\">00</span><span "
+"class=\"o_countdown_metric\"/>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "<span class=\"py-2 o_wevent_registration_title text-left\">Tickets</span>"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
-msgid "<span content=\"0\" class=\"font-weight-bold text-uppercase\">Free</span>"
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "<span class=\"text-dark font-weight-bold align-middle px-2\">Qty</span>"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid ""
-"<span content=\"0\" itemprop=\"price\" class=\"font-weight-bold text-"
-"uppercase\">Free</span>"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.ticket
-msgid ""
 "<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" class=\"text-danger\">\n"
-"                        <i class=\"fa fa-ban mr-2\"/>Sold Out\n"
-"                    </span>"
+"                                    <i class=\"fa fa-ban mr-2\"/>Sold Out\n"
+"                                </span>"
 msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "<span>&amp;times;</span>"
-msgstr ""
+"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" class=\"text-danger\">\n"
+"                                    <i class=\"fa fa-ban mr-2\"/>Vyprodáno\n"
+"                                </span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
@@ -184,9 +265,27 @@ msgid "<span>Online Events</span>"
 msgstr "<span>Online události</span>"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid ""
+"<span>Tickets</span>\n"
+"                        <span class=\"btn p-0 close d-none\">×</span>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "<span>×</span>"
+msgstr "<span>×</span>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "<strong> You ordered more tickets than available seats</strong>"
+msgstr ""
+"<strong> Objednali jste si více vstupenek, než je volných míst</strong>"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
 msgid "A past event"
-msgstr ""
+msgstr "Minulá událost"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_about_us
@@ -196,14 +295,7 @@ msgstr "O nás"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Add to Calendar"
-msgstr ""
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:0
-#: model_terms:ir.ui.view,arch_db:website_event.event_category
-#, python-format
-msgid "All Categories"
-msgstr "Všechny kategorie"
+msgstr "Přidat do kalendáře"
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:0
@@ -214,7 +306,19 @@ msgstr "Všechny země"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
 msgid "All countries"
+msgstr "Všechny země"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event__website_menu
+msgid "Allows to display and manage event-specific menus on website."
 msgstr ""
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:0
+#, python-format
+msgid "Apply"
+msgstr "Použít"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
@@ -229,6 +333,10 @@ msgid ""
 "founded TinyERP. This was the first phase of OpenERP which would later "
 "became Odoo, the most installed open-source business software worldwide."
 msgstr ""
+"V pouhých 13 letech začal John DOE vyvíjet své první obchodní aplikace pro "
+"zákazníky. Po zvládnutí stavebnictví založil TinyERP. Jednalo se o první "
+"fázi OpenERP, která se později stala Odoo, celosvětově nejinstalovanějším "
+"open-source podnikovým softwarem."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -241,54 +349,39 @@ msgid "Author"
 msgstr "Autor"
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__can_publish
+#: model:ir.model.fields,field_description:website_event.field_event_tag_category__can_publish
+msgid "Can Publish"
+msgstr "Může publikovat"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+#, python-format
 msgid "Cancel"
 msgstr "Zrušit"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_categories
-msgid "Categories"
-msgstr "Kategorie"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form_inherit_website
-msgid ""
-"Check this option to have menus for your event on the\n"
-"                                website: registrations, schedule, map, ..."
-msgstr ""
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/tours/website_event.js:0
-#, python-format
-msgid "Click <em>Continue</em> to create the event."
-msgstr "Klepnutím na <em>Pokračovat</em> vytvořte událost."
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/tours/website_event.js:0
-#, python-format
-msgid "Click here to create a new event."
-msgstr ""
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/tours/website_event.js:0
-#, python-format
-msgid "Click here to customize your event further."
-msgstr "Kliknutím sem můžete další událost přizpůsobit."
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/tours/website_event.js:0
-#, python-format
-msgid "Click to publish your event."
-msgstr "Klepnutím zveřejníte událost."
-
-#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Close"
 msgstr "Zavřít"
+
+#. module: website_event
+#: code:addons/website_event/models/event_event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
+#, python-format
+msgid "Community"
+msgstr "Komunita"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__community_menu
+#: model:ir.model.fields,field_description:website_event.field_event_type__community_menu
+#: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__community
+msgid "Community Menu"
+msgstr "Nabídka Komunita"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -303,24 +396,38 @@ msgstr "Pokračovat"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__cover_properties
 msgid "Cover Properties"
-msgstr ""
+msgstr "Vlastnosti Úvodní strany"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/tours/website_event.js:0
+#: code:addons/website_event/static/src/js/website_event.editor.js:0
 #, python-format
-msgid ""
-"Create a name for your new event and click <em>\"Continue\"</em>. e.g: "
-"Technical Training"
+msgid "Create"
+msgstr "Vytvořit"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:0
+#, python-format
+msgid "Create \"%s\""
 msgstr ""
 
 #. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event__website_menu
-msgid ""
-"Creates menus Introduction, Location and Register on the page  of the event "
-"on the website."
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__create_uid
+msgid "Created by"
+msgstr "Vytvořeno od"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__create_date
+msgid "Created on"
+msgstr "Vytvořeno"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:0
+#, python-format
+msgid "Custom Range"
 msgstr ""
-"Vytváří nabídky Úvod, Umístění a Registrace na stránce události na webu."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -328,9 +435,31 @@ msgid "Date &amp; Time"
 msgstr "Datum a čas"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
-msgid "Dedicated Menu"
-msgstr "Speciální nabídka"
+#: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
+msgid "Date (new to old)"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
+msgid "Date (old to new)"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
+msgid "Description"
+msgstr "Popis"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:0
+#, python-format
+msgid "Discard"
+msgstr "Zrušit"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__display_name
+msgid "Display Name"
+msgstr "Zobrazované jméno"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_type__website_menu
@@ -338,41 +467,43 @@ msgid "Display a dedicated menu on Website"
 msgstr "Zobrazit speciální nabídku na webu"
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/tours/website_event.js:0
-#, python-format
-msgid "Drag this block and drop it in your page."
-msgstr "Přetáhněte tento blok na svou stránku."
+#: model:ir.model.fields,help:website_event.field_event_event__community_menu
+#: model:ir.model.fields,help:website_event.field_event_type__community_menu
+msgid "Display community tab on website"
+msgstr "Zobrazení karty komunity na webových stránkách"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "E-mail"
-msgstr "E-mail"
+#. openerp-web
+#: code:addons/website_event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "Don't forget to click <b>save</b> when you're done."
+msgstr "Po dokončení nezapomeňte kliknout na tlačítko <b>uložit</b>."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Email"
-msgstr "E-mail"
+msgstr "E-mail "
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "End -"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid "End on"
-msgstr ""
+msgstr "Konec -"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__event_id
 msgid "Event"
 msgstr "Událost"
 
 #. module: website_event
-#: model:ir.model,name:website_event.model_event_type
-msgid "Event Category"
-msgstr "Kategorie události"
+#: model:ir.model.fields,field_description:website_event.field_event_event__community_menu_ids
+msgid "Event Community Menus"
+msgstr "Nabídka komunitní události"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
+msgid "Event Date"
+msgstr "Datum události"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.template_location
@@ -382,25 +513,59 @@ msgstr "Místo události"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__menu_id
 msgid "Event Menu"
-msgstr ""
+msgstr "Nabídka události"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website_event.editor.js:0
+#: code:addons/website_event/static/src/xml/event_create.xml:0
 #, python-format
 msgid "Event Name"
-msgstr "Název události"
+msgstr "Jméno události"
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_event_registration
+msgid "Event Registration"
+msgstr "Registrace události"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_ids
+msgid "Event Registrations"
+msgstr "Registrace na akci"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/xml/customize_options.xml:0
+#, python-format
+msgid "Event Specific"
+msgstr "Specifické události"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/xml/customize_options.xml:0
+#, python-format
+msgid "Event Sub-menu"
+msgstr "Podnabídka události"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
 msgid "Event Subtitle"
-msgstr ""
+msgstr "Podtitul události"
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_event_tag_category
+msgid "Event Tag Category"
+msgstr "Kategorie tagu události"
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_event_type
+msgid "Event Template"
+msgstr "Šablona události"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
 msgid "Event Title"
-msgstr ""
+msgstr "Jméno události"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
@@ -420,9 +585,24 @@ msgid "Event unpublished"
 msgstr "Událost nebyla publikována"
 
 #. module: website_event
+#: code:addons/website_event/models/website.py:0
 #: model:website.menu,name:website_event.menu_events
+#: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
+#, python-format
 msgid "Events"
 msgstr "Události"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Expired"
+msgstr "Vypršelo"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__menu_register_cta
+#: model:ir.model.fields,field_description:website_event.field_event_type__menu_register_cta
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+msgid "Extra Register Button"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -430,33 +610,60 @@ msgid ""
 "Find out what people see and say about this event, and join the "
 "conversation."
 msgstr ""
+"Zjistěte, co lidé o této události vidí a říkají, a připojte se ke "
+"konverzaci."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "Follow Us"
-msgstr ""
+msgstr "Sledujte nás"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.layout
+msgid "Following content will appear on all events."
+msgstr "U všech událostí se zobrazí následující obsah."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Get the direction"
-msgstr ""
+msgstr "Získejte směr"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Hashtag:"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__id
+msgid "ID"
+msgstr "ID"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:0
-#: model_terms:ir.ui.view,arch_db:website_event.template_intro
+#: code:addons/website_event/models/event_event.py:0
+#: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__introduction
 #, python-format
 msgid "Introduction"
 msgstr "Úvod"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__introduction_menu
+msgid "Introduction Menu"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__introduction_menu_ids
+msgid "Introduction Menus"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__is_done
+msgid "Is Done"
+msgstr "Je dokončeno"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__is_ongoing
+msgid "Is Ongoing"
+msgstr "Probíhá"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_participating
@@ -464,16 +671,86 @@ msgid "Is Participating"
 msgstr "Účastní se"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
-msgid "John DOE"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event.field_event_event__is_published
+#: model:ir.model.fields,field_description:website_event.field_event_tag_category__is_published
+msgid "Is Published"
+msgstr "Je publikováno"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
+msgid "John DOE"
+msgstr "John DOE"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu____last_update
+msgid "Last Modified on"
+msgstr "Naposled změněno"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__write_uid
+msgid "Last Updated by"
+msgstr "Naposledy upraveno od"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__write_date
+msgid "Last Updated on"
+msgstr "Naposled upraveno"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/models/event_event.py:0
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__location
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 #, python-format
 msgid "Location"
 msgstr "Místo"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__location_menu
+msgid "Location Menu"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__location_menu_ids
+msgid "Location Menus"
+msgstr ""
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid ""
+"Looking great! Let's now <b>publish</b> this page so that it becomes "
+"<b>visible</b> on your website!"
+msgstr ""
+"Vypadá to skvěle! Nyní tuto stránku <b>zveřejníme</b>, aby byla "
+"<b>viditelná</b> na vašem webu!"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.website_visitor_view_search
+msgid "Main Contact"
+msgstr "Hlavní kontakt"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_website_visitor__parent_id
+msgid "Main identity"
+msgstr "Hlavní identita"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__menu_id
+msgid "Menu"
+msgstr "Menu"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__menu_type
+msgid "Menu Type"
+msgstr "Typ nabídky"
+
+#. module: website_event
+#: model:ir.actions.act_window,name:website_event.website_event_menu_action
+msgid "Menus"
+msgstr "Nabídky"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -482,51 +759,53 @@ msgstr "Není dostupné"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Name"
-msgstr "Název"
+msgstr "Jméno"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:0
 #: code:addons/website_event/static/src/js/website_event.editor.js:0
 #, python-format
 msgid "New Event"
 msgstr "Nová událost"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:0
-#: model_terms:ir.ui.view,arch_db:website_event.event_time
+#: code:addons/website_event/models/website.py:0
 #, python-format
 msgid "Next Events"
 msgstr "Další události"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:0
-#, python-format
-msgid "Next Week"
-msgstr "Příští týden"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:0
-#, python-format
-msgid "Next month"
-msgstr "Příští měsíc"
+#: model_terms:ir.actions.act_window,help:website_event.website_event_menu_action
+msgid "No Website Menu Items yet!"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "No events found."
+msgstr "Nebyly nalezeny žádné události."
+
+#. module: website_event
+#: model_terms:ir.actions.act_window,help:website_event.event_registration_action_from_visitor
+msgid "No registration linked to this visitor"
+msgstr "S tímto návštěvníkem není spojena žádná registrace"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "No results found for '"
 msgstr ""
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/tours/website_event.js:0
+#: code:addons/website_event/static/src/xml/event_create.xml:0
 #, python-format
-msgid "Once you click on save, your event is updated."
-msgstr "Po kliknutí na tlačítko Uložit se událost aktualizuje."
+msgid "On Site"
+msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#. openerp-web
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#, python-format
 msgid "Online"
 msgstr "Online"
 
@@ -536,34 +815,38 @@ msgid "Organizer"
 msgstr "Organizátor"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
-msgid "Organizer:"
-msgstr ""
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
 msgid "Our Trainings"
 msgstr "Naše školení"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:0
+#: model:ir.model.fields,field_description:website_event.field_website_visitor__parent_id
+msgid "Parent"
+msgstr "Nadřazený"
+
+#. module: website_event
+#: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "Past Events"
 msgstr "Minulé události"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Phone"
-msgstr "Telefon"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Phone <small>(Optional)</small>"
-msgstr ""
+msgstr "Telefon <small>(volitelně)</small>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
 msgid "Photos"
+msgstr "Fotky"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#, python-format
+msgid "Please fill in this field"
 msgstr ""
 
 #. module: website_event
@@ -574,36 +857,95 @@ msgid "Please select at least one ticket."
 msgstr "Zvolte prosím alespoň jednu vstupenku."
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
-msgid "Preview Badges"
-msgstr ""
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
 msgid "Questions"
 msgstr "Otázky"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Reference"
-msgstr "Reference"
+msgid "Ref:"
+msgstr "Ref:"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:0
-#: model_terms:ir.ui.view,arch_db:website_event.ticket
+#. openerp-web
+#: code:addons/website_event/models/event_event.py:0
+#: code:addons/website_event/static/src/js/register_toaster_widget.js:0
+#: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__register
+#: model_terms:ir.ui.view,arch_db:website_event.layout
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
 #, python-format
 msgid "Register"
 msgstr "Registrovat"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
+msgid "Register Button"
+msgstr "Tlačítko registrace"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__register_menu
+msgid "Register Menu"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__register_menu_ids
+msgid "Register Menus"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registered_ids
+msgid "Registered Events"
+msgstr "Registrované události"
+
+#. module: website_event
+#: code:addons/website_event/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#, python-format
 msgid "Registration"
 msgstr "Registrace"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Registration confirmed!"
-msgstr ""
+msgstr "Registrace potvrzena!"
+
+#. module: website_event
+#: model:ir.actions.act_window,name:website_event.event_registration_action_from_visitor
+#: model_terms:ir.ui.view,arch_db:website_event.website_visitor_view_form
+msgid "Registrations"
+msgstr "Registrace"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Registrations Closed"
+msgstr "Registrace uzavřeny"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Registrations are <b>closed</b>"
+msgstr "Registrace jsou <b>uzavřeny</b>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Registrations not yet open"
+msgstr "Registrace ještě nejsou otevřeny"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__start_remaining
+msgid "Remaining before start"
+msgstr "Zbývající čas do zahájení"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event__start_remaining
+msgid "Remaining time before event starts (minutes)"
+msgstr "Zbývající čas do zahájení akce (minuty)"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event__website_id
+msgid "Restrict publishing to this website."
+msgstr "Omezit publikování na této webstránce."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
@@ -611,14 +953,58 @@ msgid "Return to the event list."
 msgstr "Zpět do seznamu událostí."
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__is_seo_optimized
+msgid "SEO optimized"
+msgstr "SEO optimalizováno"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "SHARE"
-msgstr ""
+msgstr "SDÍLET"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Sales end on"
+msgstr "Slevy končí"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Sales start on"
+msgstr "Slevy začínají v "
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_search_box_input
+msgid "Search an event..."
+msgstr "Vyhledat událost..."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events_list
 msgid "See all events from"
+msgstr "Zobrazit všechny události z"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#, python-format
+msgid "Select Venue"
 msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__seo_name
+msgid "Seo name"
+msgstr "SEO jméno"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
+#: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_tree
+msgid "Show on Website"
+msgstr "Zobrazit na webu"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Sold Out"
+msgstr "Vyprodáno"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
@@ -628,27 +1014,66 @@ msgstr "Je nám líto, požadovaná událost již není k dispozici."
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Start -"
+msgstr "Začátek - "
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__start_today
+msgid "Start Today"
+msgstr "Od dnes"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#, python-format
+msgid "Start 🠖 End"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:0
-#, python-format
-msgid "This Week"
-msgstr "Tento týden"
+#: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
+msgid "Starts <span/>"
+msgstr "Začíná <span/>"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:0
+#: model:ir.model.fields,help:website_event.field_event_event__website_url
+#: model:ir.model.fields,help:website_event.field_event_tag_category__website_url
+msgid "The full URL to access the document through the website."
+msgstr "Celá adresa URL pro přístup k dokumentu prostřednictvím webstránky."
+
+#. module: website_event
+#: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "This month"
 msgstr "Tento měsíc"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "Ticket #"
+#. openerp-web
+#: code:addons/website_event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "This shortcut will bring you right back to the event form."
+msgstr "Tato zkratka vás přenese zpět do formuláře události."
+
+#. module: website_event
+#: model_terms:ir.actions.act_window,help:website_event.website_event_menu_action
+msgid "This technical menu displays all event sub-menu items."
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Ticket #"
+msgstr "Číslo vstupenky"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Ticket Sales starting on"
+msgstr "Slevové kupony začínají v"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Tickets for this Event are <b>Sold Out</b>"
+msgstr "Vstupenky na tuto událost jsou <b>vyprodané</b>"
+
+#. module: website_event
+#: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "Today"
 msgstr "Dnes"
@@ -664,19 +1089,86 @@ msgid "Unpublished"
 msgstr "Nepublikovaný"
 
 #. module: website_event
+#: code:addons/website_event/models/event_event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event.event_time
+#, python-format
+msgid "Upcoming Events"
+msgstr "Připravované události"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "Use the top button '<b>+ New</b>' to create an event."
+msgstr "Pomocí horního tlačítka '<b>+ nový</b>' vytvořte událost."
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "Use this <b>shortcut</b> to easily access your event web page."
 msgstr ""
+"Pomocí této <b>zkratky</b> se snadno dostanete na webovou stránku události."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_about_us
 msgid "Use this paragrah to write a short text about your events or company."
 msgstr ""
+"V tomto odstavci můžete napsat krátký text o svých událostech nebo "
+"společnosti."
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_website_event_menu__view_id
+msgid "Used when not being an url based menu"
+msgstr ""
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#, python-format
+msgid "Venue"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__view_id
+msgid "View"
+msgstr "Pohled"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_published
+#: model:ir.model.fields,field_description:website_event.field_event_tag_category__website_published
 msgid "Visible on current website"
-msgstr "Viditelné na aktuálním webu"
+msgstr "Viditelné na aktuální webstránce"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_registration__visitor_id
+msgid "Visitor"
+msgstr "Návštěvník"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid ""
+"Want to change your event configuration? Let's go back to the event form."
+msgstr ""
+"Chcete změnit konfiguraci události? Vraťme se zpět do formuláře události."
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_website
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_id
+msgid "Website"
+msgstr "Webstránka"
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_website_event_menu
+#: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_form
+msgid "Website Event Menu"
+msgstr "Nabídka událostí na webu"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_search
+#: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_tree
+msgid "Website Event Menus"
+msgstr "Nabídky událostí na webu"
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
@@ -684,21 +1176,85 @@ msgid "Website Home"
 msgstr "Domovská stránka webu"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
+#: model:ir.model,name:website_event.model_website_menu
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
 msgid "Website Menu"
-msgstr "Menu webové strany"
+msgstr "Menu webstránky"
+
+#. module: website_event
+#: model:ir.ui.menu,name:website_event.menu_website_event_menu
+msgid "Website Menus"
+msgstr "Nabídky webu"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
+msgid "Website Submenu"
+msgstr "Podnabídky webu"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_url
+#: model:ir.model.fields,field_description:website_event.field_event_tag_category__website_url
+msgid "Website URL"
+msgstr "URL webové stránky"
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_website_visitor
+msgid "Website Visitor"
+msgstr "Návštěvník webstránky"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_description
+msgid "Website meta description"
+msgstr "Meta-popis webových stránek"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Meta-klíčová slova webových stránek"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_title
+msgid "Website meta title"
+msgstr "Meta-název webových stránek"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_og_img
+msgid "Website opengraph image"
+msgstr "Opengraph obrázek webových stránek"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event__is_ongoing
+msgid "Whether event has begun"
+msgstr "Zda byla událost zahájena"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event__is_done
+msgid "Whether event is finished"
+msgstr "Pokud je událost ukončena"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event__start_today
+msgid "Whether event is going to start today if still not ongoing"
+msgstr "Zda bude akce zahájena dnes, pokud ještě neprobíhá"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid ""
+"With the Edit button, you can <b>customize</b> the web page visitors will "
+"see when registering."
+msgstr ""
+"Pomocí tlačítka Upravit můžete <b>přizpůsobit</b> webovou stránku, která se "
+"návštěvníkům zobrazí při registraci."
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "available)"
+msgstr "k dispozici)"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "iCal/Outlook"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "o_wevent_sidebar_social mx-n1"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "o_wevent_social_link"
-msgstr ""
+msgstr "iCal/Outlook"

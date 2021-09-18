@@ -3,21 +3,17 @@
 # 	* mass_mailing
 # 
 # Translators:
-# Cas Vissers <casvissers@brahoo.nl>, 2019
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
-# Martin Trigaux, 2019
-# Maxim Vandenbroucke <mxv@odoo.com>, 2019
-# Charles Vervaecke <cvk@odoo.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Martin Trigaux, 2021
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:11+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:23+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,15 +32,36 @@ msgid "$20"
 msgstr "$20"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "% of recipients"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "% of recipients."
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "% receive one of the"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
+msgid "%Click (Total)"
+msgstr "%Klikken (Totaal)"
+
+#. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
+#: code:addons/mass_mailing/models/mailing_list.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mailing.py:0
+#: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 #, python-format
-msgid "%s Traces"
+msgid "%s Mailing Contacts have been added. "
 msgstr ""
 
 #. module: mass_mailing
@@ -59,34 +76,39 @@ msgstr "&amp;nbsp;"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
 msgid ""
 "&amp;nbsp;\n"
-"                                        <span class=\"fa fa-compass fa-2x text-delta\" role=\"img\" aria-label=\"Choose\" title=\"Choose\"/>\n"
+"                                        <span class=\"fa fa-compass fa-2x text-o-color-4\" role=\"img\" aria-label=\"Choose\" title=\"Choose\"/>\n"
 "                                        &amp;nbsp;"
 msgstr ""
 "&amp;nbsp;\n"
-"                                        <span class=\"fa fa-compass fa-2x text-delta\" role=\"img\" aria-label=\"Kies\" title=\"Kies\"/>\n"
+"                                        <span class=\"fa fa-compass fa-2x text-o-color-4\" role=\"img\" aria-label=\"Kies\" title=\"Kies\"/>\n"
 "                                        &amp;nbsp;"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
 msgid ""
 "&amp;nbsp;\n"
-"                                        <span class=\"fa fa-credit-card fa-2x text-delta\" role=\"img\" aria-label=\"Order\" title=\"Order\"/>\n"
+"                                        <span class=\"fa fa-credit-card fa-2x text-o-color-4\" role=\"img\" aria-label=\"Order\" title=\"Order\"/>\n"
 "                                        &amp;nbsp;"
 msgstr ""
 "&amp;nbsp;\n"
-"                                        <span class=\"fa fa-credit-card fa-2x text-delta\" role=\"img\" aria-label=\"Order\" title=\"Order\"/>\n"
+"                                        <span class=\"fa fa-credit-card fa-2x text-o-color-4\" role=\"img\" aria-label=\"Bestel\" title=\"Bestel\"/>\n"
 "                                        &amp;nbsp;"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
 msgid ""
 "&amp;nbsp;\n"
-"                                        <span class=\"fa fa-smile-o fa-2x text-delta\" role=\"img\" aria-label=\"Enjoy\" title=\"Enjoy\"/>\n"
+"                                        <span class=\"fa fa-smile-o fa-2x text-o-color-4\" role=\"img\" aria-label=\"Enjoy\" title=\"Enjoy\"/>\n"
 "                                        &amp;nbsp;"
 msgstr ""
 "&amp;nbsp;\n"
-"                                        <span class=\"fa fa-smile-o fa-2x text-delta\" role=\"img\" aria-label=\"Enjoy\" title=\"Enjoy\"/>\n"
+"                                        <span class=\"fa fa-smile-o fa-2x text-o-color-4\" role=\"img\" aria-label=\"Veel plezier\" title=\"Veel plezier\"/>\n"
 "                                        &amp;nbsp;"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid ", and"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
@@ -99,36 +121,52 @@ msgid "21 Jul"
 msgstr "21 Jul"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
-msgid "<i class=\"fa fa-angle-double-down\"/> Footers"
-msgstr "<i class=\"fa fa-angle-double-down\"/> Footers"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
-msgid "<i class=\"fa fa-angle-double-up\"/> Headers"
-msgstr "<i class=\"fa fa-angle-double-up\"/> Headers"
+#: code:addons/mass_mailing/models/mailing.py:0
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "24H Stats of %(mailing_type)s \"%(mailing_name)s\""
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_form
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_form
 msgid ""
-"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
-" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"This email is "
+"blacklisted for mass mailings\" aria-label=\"Blacklisted\" "
 "attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 msgstr ""
-"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"Deze "
-"e-mail staat op de blacklist voor bulkmailing\" aria-label=\"Op blacklist\" "
+"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"Deze e-mail staat op"
+" de zwarte lijst voor bulk-mailings\" aria-label=\"Op de zwarte lijst\" "
 "attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
-msgid "<i class=\"fa fa-clone\"/> Body"
-msgstr "<i class=\"fa fa-clone\"/> Body"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<i class=\"fa fa-bar-chart\"/> Compare Version"
+msgstr ""
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_kanban
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<i class=\"fa fa-copy\"/> Create an Alternative"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"<i class=\"fa fa-envelope\"/> <span name=\"ab_test_manual\" attrs=\"{'invisible': [('ab_testing_winner_selection', '!=', 'manual')]}\">\n"
+"                                                    Send this version to remaining recipients\n"
+"                                                </span> <span name=\"ab_test_auto\" attrs=\"{'invisible': [('ab_testing_winner_selection', '=', 'manual')]}\">\n"
+"                                                    Send Winner Now\n"
+"                                                </span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<i class=\"fa fa-envelope\"/> Send this as winner"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_kanban
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"Warning\" "
 "title=\"Warning\"/>"
@@ -137,19 +175,12 @@ msgstr ""
 "label=\"Waarschuwing\" title=\"Waarschuwing\"/>"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
-msgid "<i class=\"fa fa-eyedropper\"/> Background Color"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" attrs=\"{'invisible': ['|', ('reply_to_mode', '=', 'update'), ('mailing_model_name', 'in', ['mailing.contact', 'res.partner', 'mailing.list'])],}\">\n"
+"                                                    To track replies, this address must belong to this database.\n"
+"                                                </small>"
 msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
-msgid "<i class=\"fa fa-plus\"/> Marketing Content"
-msgstr "<i class=\"fa fa-plus\"/> Marketing inhoud"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
-msgid "<i class=\"fa fa-user\" role=\"img\" aria-label=\"Contacts\" title=\"Contacts\"/>"
-msgstr "<i class=\"fa fa-user\" role=\"img\" aria-label=\"Contacten\" title=\"Contacten\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
@@ -190,16 +221,97 @@ msgid ""
 "<span attrs=\"{'invisible': "
 "[('mailing_model_name','!=','mailing.list')]}\">Mailing Contact</span>"
 msgstr ""
+"<span attrs=\"{'invisible': "
+"[('mailing_model_name','!=','mailing.list')]}\">Mailing contact</span>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid ""
+"<span class=\"fa fa-calendar-check-o mr-2 small my-auto\" aria-label=\"Sent "
+"date\"/>"
+msgstr ""
+"<span class=\"fa fa-calendar-check-o mr-2 small my-auto\" aria-"
+"label=\"Verzonden datum\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
 msgid ""
 "<span class=\"fa fa-copyright\" role=\"img\" aria-label=\"Copyright\" "
-"title=\"Copyright\"/> 2016 All Rights Reserved"
+"title=\"Copyright\"/>"
 msgstr ""
 "<span class=\"fa fa-copyright\" role=\"img\" aria-label=\"Copyright\" "
-"title=\"Copyright\"/> 2016 alle rechten voorbehouden"
+"title=\"Copyright\"/>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid ""
+"<span class=\"fa fa-hourglass-half mr-2 small my-auto\" aria-"
+"label=\"Scheduled date\"/>"
+msgstr ""
+"<span class=\"fa fa-hourglass-half mr-2 small my-auto\" aria-"
+"label=\"Geplande datum\"/>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid ""
+"<span class=\"fa fa-hourglass-o mr-2 small my-auto\" aria-label=\"Scheduled date\"/>\n"
+"                                            <span class=\"align-self-baseline\">Next Batch</span>"
+msgstr ""
+"<span class=\"fa fa-hourglass-o mr-2 small my-auto\" aria-label=\"Scheduled date\"/>\n"
+"                                            <span class=\"align-self-baseline\">Volgende batch</span>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
+msgid "<span class=\"o_stat_text\">Blacklist</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
+msgid "<span class=\"o_stat_text\">Bounce</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
+msgid "<span class=\"o_stat_text\">Opt-out</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
+msgid "<span class=\"o_stat_value\">%</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
+msgid "<span class=\"text-muted\">Blacklist</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
+msgid "<span class=\"text-muted\">Bounce</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
+msgid "<span class=\"text-muted\">Mailings</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
+msgid "<span class=\"text-muted\">Opt-out</span>"
+msgstr "<span class=\"text-muted\">Opt-out</span>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"<span name=\"canceled_text\">emails have been canceled and will not be "
+"sent.</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
+msgid "<span name=\"failed_text\">email(s) not sent.</span>"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -208,14 +320,12 @@ msgstr "<span name=\"failed_text\">e-mails konden niet verzonden worden.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid ""
-"<span name=\"ignored_text\">emails have been ignored and will not be "
-"sent.</span>"
-msgstr ""
+msgid "<span name=\"next_departure_text\">This mailing is scheduled for </span>"
+msgstr "<span name=\"next_departure_text\">Deze mailing is gepland voor </span>"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<span name=\"next_departure_text\">This mailing is scheduled for </span>"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
+msgid "<span name=\"scheduled_text\">email(s) scheduled for </span>"
 msgstr ""
 
 #. module: mass_mailing
@@ -224,29 +334,50 @@ msgid ""
 "<span name=\"scheduled_text\">emails are in queue and will be sent "
 "soon.</span>"
 msgstr ""
+"<span name=\"scheduled_text\"> e-mails staan in de wachtrij en worden "
+"binnenkort verzonden. </span>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<span name=\"sent\">emails have been sent.</span>"
+msgstr "<span name=\"sent\">e-mails zijn verzonden.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
 msgid ""
 "<span style=\"line-height: 30px;\"><small>CODE: </small></span><strong "
-"class=\"o_code h3\">45A9E77DGW8455</strong>"
+"class=\"o_code h3 oe_unremovable\">45A9E77DGW8455</strong>"
 msgstr ""
-"<span style=\"line-height: 30px;\"><small>CODE: </small></span><strong "
-"class=\"o_code h3\">45A9E77DGW8455</strong>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
+msgid "<span widget=\"statinfo\">Open Recipient</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
+msgid "<span>%</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
+msgid "<span>Contacts</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "<span>Select a template</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
+msgid "<span>Valid Email Recipients</span>"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
 msgid "<strong>24/7 Support</strong>"
 msgstr "<strong>24/7 support</strong>"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
-msgid ""
-"<strong><span name=\"trace_type_name_mail\">This email</span>\n"
-"                            <span attrs=\"{'invisible': [('exception', '=', False)]}\"> could not be sent</span>\n"
-"                            <span attrs=\"{'invisible': [('bounced', '=', False)]}\"> appears to be invalid</span>\n"
-"                            </strong>"
-msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
@@ -264,10 +395,23 @@ msgid "<strong>Total</strong> management"
 msgstr "<strong>Totaal</strong> management"
 
 #. module: mass_mailing
-#: model:ir.model.constraint,message:mass_mailing.constraint_mailing_contact_list_rel_unique_contact_list
-msgid "A contact cannot be subscribed multiple times to the same list!"
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "A campaign should be set when A/B test is enabled"
 msgstr ""
-"Een contact kan niet meerdere keren op dezelfde lijst worden geabonneerd!"
+
+#. module: mass_mailing
+#: model:ir.model.constraint,message:mass_mailing.constraint_mailing_contact_list_rel_unique_contact_list
+msgid ""
+"A mailing contact cannot subscribe to the same mailing list multiple times."
+msgstr ""
+"Een mailingcontact kan zich niet meerdere keren op dezelfde mailinglijst "
+"abonneren."
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "A sample of"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_three_cols
@@ -280,9 +424,61 @@ msgid "A unique value"
 msgstr "Een unieke waarde"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__contact_ab_pc
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
+msgid "A/B Test"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_mailings_count
+#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__ab_testing_mailings_count
+msgid "A/B Test Mailings #"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.action_ab_testing_open_winner_mailing
+msgid "A/B Test Winner"
+msgstr ""
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "A/B Test: %s"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_completed
+#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__ab_testing_completed
+msgid "A/B Testing Campaign Finished"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_description
+msgid "A/B Testing Description"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_pc
 msgid "A/B Testing percentage"
 msgstr "A/B testpercentage"
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mailing.py:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
+#, python-format
+msgid "A/B Tests"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
+msgid "A/B Tests to review"
+msgstr ""
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "A/B test option has not been enabled"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_event
@@ -309,7 +505,7 @@ msgstr "Activiteiten"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activiteit Uitzondering Decoratie"
+msgstr "Activiteit uitzondering decoratie"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_state
@@ -317,14 +513,55 @@ msgid "Activity State"
 msgstr "Activiteitsfase"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__unique_ab_testing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Activiteitensoort icoon"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
+msgid "Add"
+msgstr "Toevoegen"
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_mailing_contact_to_list
+msgid "Add Contacts to Mailing List"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.mailing_contact_to_list_action
+msgid "Add Selected Contacts to a Mailing List"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
+msgid "Add and Send Mailing"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
+msgid "Add to List"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "Advanced"
+msgstr "Geavanceerd"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
+#: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
+msgid "All Rights Reserved"
+msgstr "Alle rechten voorbehouden"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_enabled
 msgid "Allow A/B Testing"
 msgstr "A/B testing toestaan"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Allow recipients to blacklist themselves"
-msgstr ""
+msgstr "Sta ontvangers toe om zichzelf te blacklisten"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__show_blacklist_buttons
@@ -332,8 +569,8 @@ msgid ""
 "Allow the recipient to manage himself his state in the blacklist via the "
 "unsubscription page."
 msgstr ""
-"Sta de ontvanger toe om zelf zijn staat in de zwarte lijst te beheren via de"
-" pagina voor afmelding."
+"Sta de ontvanger toe om zelf zijn staat in de blacklist te beheren via de "
+"pagina voor afmelding."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
@@ -344,8 +581,8 @@ msgid ""
 "                                   The 'come Back' button will always be "
 "visible in any case to allow leads and partners to re-subscribe."
 msgstr ""
-"Sta de ontvanger toe om zelf zijn staat in de zwarte lijst te beheren via de"
-" pagina voor afmelding. Als de optie actief is, is de knop 'Blacklist mij' "
+"Sta de ontvanger toe om zelf zijn staat in de blacklist te beheren via de "
+"pagina voor afmelding. Als de optie actief is, is de knop 'Blacklist mij' "
 "verborgen op de pagina voor afmelding. De knop 'Kom terug' is in elk geval "
 "altijd zichtbaar zodat leads en relaties zich opnieuw kunnen abonneren."
 
@@ -372,35 +609,46 @@ msgstr ""
 #, python-format
 msgid "An error occurred. Your changes have not been saved, try again later."
 msgstr ""
-"Er is een fout opgetreden, uw wijzigingen zijn niet opgeslagen, probeer het "
-"later opnieuw."
+"Er is een fout opgetreden, jouw wijzigingen zijn niet opgeslagen, probeer "
+"het later opnieuw."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_tag_line
 msgid "Apps That Help You Grow Your Business"
-msgstr "Apps die u helpen uw business te doen groeien"
+msgstr "Apps die je helpen jouw business te doen groeien"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_sub
 msgid "Apps That Help You Grow Your Business!"
-msgstr "Apps die u helpen uw business te doen groeien!"
+msgstr "Apps die je helpen jouw business te doen groeien!"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Archive"
-msgstr "Archief"
+msgstr "Archiveren"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__archive_src_lists
 msgid "Archive source mailing lists"
-msgstr "Archiveer bron mailing lijst"
+msgstr "Archiveer bron mailinglijst"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Archived"
 msgstr "Gearchiveerd"
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mailing_list.py:0
+#, python-format
+msgid ""
+"At least one of the mailing list you are trying to archive is used in an "
+"ongoing mailing campaign."
+msgstr ""
+"Minstens één van de maillijsten die je wilt archiveren wordt gebruikt in een"
+" mail campagne die nog in uitvoering is."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -419,6 +667,11 @@ msgid "Attachments"
 msgstr "Bijlagen"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
+msgid "Background Color"
+msgstr "Achtergrondkleur"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
 msgid "Basic features"
 msgstr "Basis mogelijkheden"
@@ -429,32 +682,59 @@ msgid "Basic management"
 msgstr "Basis beheer"
 
 #. module: mass_mailing
+#. openerp-web
+#: code:addons/mass_mailing/static/src/js/mass_mailing_snippets.js:0
+#, python-format
+msgid "Be aware that this option may not work on many mail clients"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__is_blacklisted
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__is_blacklisted
-#: model:ir.ui.menu,name:mass_mailing.mail_blacklist_mm_menu
 msgid "Blacklist"
 msgstr "Blacklist"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
+msgid "Blacklist (%s)"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribed
 msgid "Blacklist Me"
-msgstr "Blacklist Mij"
+msgstr "Blacklist mij"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__show_blacklist_buttons
 msgid "Blacklist Option when Unsubscribing"
+msgstr "Blacklist optie bij uitschrijven"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
+msgid "Blacklisted"
+msgstr "Geblacklist"
+
+#. module: mass_mailing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_bl
+msgid "Blacklisted Address"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.ui.menu,name:mass_mailing.mail_blacklist_mm_menu
+msgid "Blacklisted Email Addresses"
+msgstr "Blacklisted e-mail adressen"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__body_arch
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Body"
 msgstr "Inhoud"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__body_html
-msgid "Body converted to be send by mail"
-msgstr "Inhoud geconverteerd om te verzenden via e-mail"
+msgid "Body converted to be sent by mail"
+msgstr "Body geconverteerd voor verzending per post"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_bounce
@@ -463,16 +743,25 @@ msgid "Bounce"
 msgstr "Bounce"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
+msgid "Bounce (%)"
+msgstr "Bounce (%)"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__bounced
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__bounced
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__bounced
-#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__bounced
-#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__state__bounced
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__bounce
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Bounced"
 msgstr "Niet verzonden"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
+msgid "Bounced (%)"
+msgstr "Bounced (%)"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__bounced_ratio
@@ -481,8 +770,36 @@ msgid "Bounced Ratio"
 msgstr "Bounced ratio"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "Business Benefits on %(expected)i %(mailing_type)s Sent"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
+msgid "Button Label"
+msgstr "Knop omschrijving"
+
+#. module: mass_mailing
+#. openerp-web
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#, python-format
+msgid "By using the <b>Breadcrumb</b>, you can navigate back to the overview."
+msgstr ""
+"Door gebruik te maken van <b>Het kruimelpad</b> navigeer je terug naar het "
+"overzicht."
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__calendar_date
+msgid "Calendar Date"
+msgstr "Kalenderdatum"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__campaign_id
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Campaign"
 msgstr "Campagne"
 
@@ -507,8 +824,11 @@ msgstr "Campagnes"
 msgid ""
 "Campaigns are the perfect tool to track results across multiple mailings."
 msgstr ""
+"Campagnes zijn de perfecte tool om de resultaten van meerdere mailings op te"
+" volgen."
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
@@ -516,11 +836,40 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__canceled
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__canceled
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__cancel
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
+msgid "Canceled"
+msgstr "Geannuleerd"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing_test__email_to
+msgid "Carriage-return-separated list of email addresses."
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__preview
+msgid ""
+"Catchy preview sentence that encourages recipients to open this email.\n"
+"In most inboxes, this is displayed next to the subject.\n"
+"Keep it empty if you prefer the first characters of your email content to appear instead."
+msgstr ""
+"Pakkende voorbeeldzin die ontvangers aanmoedigt om deze e-mail te openen.\n"
+"In de meeste inboxen wordt dit weergegeven naast het onderwerp.\n"
+"Houd het leeg als je liever de eerste tekens van jouw e-mailinhoud wilt weergeven."
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
+msgid "Chat"
+msgstr "Chat"
+
+#. module: mass_mailing
 #. openerp-web
-#: code:addons/mass_mailing/static/src/xml/mass_mailing.xml:0
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
-msgid "Change Style"
-msgstr "Verander stijl"
+msgid "Check the email address and click send."
+msgstr "Controleer het e-mailadres en klik op verzenden."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_sub
@@ -533,17 +882,43 @@ msgid "Choose"
 msgstr "Kies"
 
 #. module: mass_mailing
+#. openerp-web
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#, python-format
+msgid "Choose this <b>theme</b>."
+msgstr "Kies dit <b>thema</b>."
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
 msgid "Choose your mailing subscriptions"
-msgstr "Kies uw mailing aanmeldingen."
+msgstr "Kies jouw mailing aanmeldingen."
+
+#. module: mass_mailing
+#. openerp-web
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#, python-format
+msgid "Click on this paragraph to edit it."
+msgstr "Klik op deze alinea om deze te bewerken."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__clicked
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__clicked
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__clicked
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Clicked"
 msgstr "Geklikt"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
+msgid "Clicked (%)"
+msgstr "Geklikt (%)"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__links_click_datetime
+msgid "Clicked On"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -572,9 +947,9 @@ msgid "Come Back"
 msgstr "Kom terug"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing_test__email_to
-msgid "Comma-separated list of email addresses."
-msgstr "Lijst van e-mailadressen gescheiden door komma's."
+#: model:ir.model,name:mass_mailing.model_res_company
+msgid "Companies"
+msgstr "Bedrijven"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__company_name
@@ -602,11 +977,19 @@ msgid "Configure Email Server"
 msgstr "Configureer e-mail server"
 
 #. module: mass_mailing
-#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__smtp
+#. openerp-web
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#, python-format
+msgid "Congratulations, I love your first mailing. :)"
+msgstr "Gefeliciteerd, ik ben dol op je eerste mailing. :)"
+
+#. module: mass_mailing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_smtp
 msgid "Connection failed (outgoing mail server problem)"
 msgstr "Connectie mislukt (uitgaande e-mailserver probleem)"
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_res_partner
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__contact_id
 msgid "Contact"
 msgstr "Contact"
@@ -616,6 +999,16 @@ msgstr "Contact"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form_simplified
 msgid "Contact List"
 msgstr "Contactenlijst"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
+msgid "Contact Name"
+msgstr "Naam contactpersoon"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__contact_ids
+msgid "Contacts"
+msgstr "Contacten"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.layout
@@ -634,7 +1027,7 @@ msgid "Country"
 msgstr "Land"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form_simplified
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form_simplified_footer
 msgid "Create"
 msgstr "Aanmaken"
 
@@ -644,41 +1037,41 @@ msgid "Create a"
 msgstr "Maak een"
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,name:mass_mailing.open_create_mass_mailing_list
-msgid "Create a Mass Mailing List"
-msgstr "Maak een bulkmailing lijst"
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_mailing_action_mail
+msgid "Create a Mailing"
+msgstr ""
 
 #. module: mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.link_tracker_action_mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.link_tracker_action_mass_mailing_campaign
-msgid "Create a link tracker"
-msgstr "Maak een linktraceerder"
+#: model:ir.actions.act_window,name:mass_mailing.open_create_mass_mailing_list
+#: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
+msgid "Create a Mailing List"
+msgstr "Maak een mailinglijst"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_utm_campaigns
 msgid "Create a mailing campaign"
-msgstr ""
+msgstr "Maak een mailcampagne"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
 msgid "Create a mailing contact"
-msgstr ""
+msgstr "Maak een mailingcontact"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_create_mass_mailings_from_campaign
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
-#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_mailing_action_mail
 msgid "Create a new mailing"
 msgstr "Maak een nieuwe mailing"
 
 #. module: mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
-msgid "Create a new mailing list"
-msgstr "Maak een nieuwe mailing lijst aan"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "Create an Alternative Version"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__create_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__create_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__create_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__create_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__create_uid
@@ -691,6 +1084,7 @@ msgstr "Aangemaakt door"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__create_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__create_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__create_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__create_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__create_date
@@ -701,7 +1095,7 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Creation Date"
 msgstr "Aanmaakdatum"
 
@@ -730,57 +1124,33 @@ msgid "DEFAULT"
 msgstr "STANDAARD"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_trace__exception
-msgid "Date of technical error leading to the email not being sent"
-msgstr "Datum van de technische fout waardoor de e-mail niet is verstuurd"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
+msgid "Date"
+msgstr "Datum"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_trace__clicked
-msgid "Date when customer clicked on at least one tracked link"
-msgstr "Datum dat klant op ten minste één getraceerde link heeft geklikt"
-
-#. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_trace__scheduled
-msgid "Date when the email has been created"
-msgstr "Datum waarop de e-mail is aangemaakt."
-
-#. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_trace__ignored
-msgid ""
-"Date when the email has been invalidated. Invalid emails are blacklisted, "
-"opted-out or invalid email format"
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__calendar_date
+msgid "Date at which the mailing was or will be sent."
 msgstr ""
-"Datum waarop de e-mail ongeldig is geworden. Ongeldige e-mails worden op de "
-"zwarte lijst gezet, zijn niet aangemeld of hebben een ongeldige "
-"e-mailindeling"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_trace__opened
-msgid "Date when the email has been opened the first time"
-msgstr "Datum waarop de e-mail voor het eerst is geopend"
-
-#. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_trace__sent
-msgid "Date when the email has been sent"
-msgstr "Datum waarop de e-mail is verstuurd"
-
-#. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_trace__replied
-msgid "Date when this email has been replied for the first time."
-msgstr "Datum waarop de e-mail voor het eerst is beantwoord."
-
-#. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_trace__bounced
-msgid "Date when this email has bounced."
-msgstr "Datum waarop de e-mail is teruggekaatst."
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__ab_testing_schedule_datetime
+#: model:ir.model.fields,help:mass_mailing.field_utm_campaign__ab_testing_schedule_datetime
+msgid ""
+"Date that will be used to know when to determine and send the winner mailing"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__mass_mailing_outgoing_mail_server
 msgid "Dedicated Server"
-msgstr ""
+msgstr "Dedicated server"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__null_value
+msgid "Default Value"
+msgstr "Standaardwaarde"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delete"
 msgstr "Verwijder"
@@ -788,21 +1158,20 @@ msgstr "Verwijder"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__delivered
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__delivered
-#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__delivered
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
 msgid "Delivered"
 msgstr "Geleverd"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid "Delivered to"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
+msgid "Delivered (%)"
+msgstr "Afgeleverd (%)"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__medium_id
-msgid "Delivery method: Email"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid "Delivered to"
+msgstr "Geleverd aan"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
@@ -810,12 +1179,17 @@ msgid "Demo Signature"
 msgstr "Demo handtekening"
 
 #. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_mailing_action_mail
+msgid "Design a striking email, define recipients and track its results."
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__dest_list_id
 msgid "Destination Mailing List"
 msgstr "Bestemming mailinglijst"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form_simplified
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form_simplified_footer
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
 msgid "Discard"
 msgstr "Negeren"
@@ -823,6 +1197,7 @@ msgstr "Negeren"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__display_name
@@ -834,11 +1209,6 @@ msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
-msgid "Document"
-msgstr "Document"
-
-#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__res_id
 msgid "Document ID"
 msgstr "Document ID"
@@ -846,12 +1216,26 @@ msgstr "Document ID"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__model
 msgid "Document model"
-msgstr "Document model"
+msgstr "Documentmodel"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_domain
 msgid "Domain"
 msgstr "Domein"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "Don't forget to send your prefered version"
+msgstr ""
+
+#. module: mass_mailing
+#. openerp-web
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#, python-format
+msgid "Don't worry, the mailing contact we created is an internal user."
+msgstr ""
+"Maak je geen zorgen, het mailingcontact dat we hebben gemaakt, is een "
+"interne gebruiker."
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__draft
@@ -860,7 +1244,6 @@ msgid "Draft"
 msgstr "Concept"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Dropdown menu"
 msgstr "Dropdown menu"
@@ -871,34 +1254,40 @@ msgid "Duplicate"
 msgstr "Dupliceer"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
-msgid "Edit"
-msgstr "Wijzig"
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_dup
+msgid "Duplicated Email"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "Dynamic Placeholder Generator"
+msgstr "Dynamische bladwijzer generator"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__email
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__email
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__mailing_type__mail
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_type__mail
 msgid "Email"
 msgstr "E-mail"
 
 #. module: mass_mailing
-#: model:ir.ui.menu,name:mass_mailing.mass_mailing_menu_root
-#: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
-msgid "Email Marketing"
-msgstr "E-mail marketing"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
+msgid "Email Blacklisted"
+msgstr "E-mail op de zwarte lijst"
 
 #. module: mass_mailing
-#: model:ir.actions.server,name:mass_mailing.ir_cron_mass_mailing_queue_ir_actions_server
-#: model:ir.cron,cron_name:mass_mailing.ir_cron_mass_mailing_queue
-#: model:ir.cron,name:mass_mailing.ir_cron_mass_mailing_queue
-msgid "Email Marketing: Process queue"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "Email Content"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_mail_template
-msgid "Email Templates"
-msgstr "E-mail-sjablonen"
+#: code:addons/mass_mailing/models/res_users.py:0
+#: model:ir.ui.menu,name:mass_mailing.mass_mailing_menu_root
+#: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
+#, python-format
+msgid "Email Marketing"
+msgstr "E-mail marketing"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_thread
@@ -906,19 +1295,26 @@ msgid "Email Thread"
 msgstr "E-mail discussie"
 
 #. module: mass_mailing
-#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__bounce
-msgid "Email address rejected by destination"
-msgstr "E-mailadres geweigerd door bestemmeling"
-
-#. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_compose_message
 msgid "Email composition wizard"
 msgstr "Wizard e-mail opstellen"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "Emails"
+msgstr "E-mails"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_trace_ids
 msgid "Emails Statistics"
 msgstr "E-mail statistieken"
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "Engagement on %(expected)i %(mailing_type)s Sent"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
@@ -931,18 +1327,22 @@ msgid "Enjoy,"
 msgstr "Geniet ervan,"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__exception
-#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__state__exception
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__error
+msgid "Error"
+msgstr "Fout"
+
+#. module: mass_mailing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__error
 msgid "Exception"
 msgstr "Fout"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Exclude Blacklisted Emails"
-msgstr ""
+msgstr "Blacklisted e-mails uitsluiten"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Exclude Opt Out"
 msgstr "Opt Out uitsluiten"
 
@@ -959,11 +1359,15 @@ msgstr "Uitgebreide filters..."
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
 msgid "FROM YOUR NEXT ORDER!"
-msgstr "VANAF UW VOLGENDE ORDER!"
+msgstr "VANAF JOUW VOLGENDE ORDER!"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.social_links
+msgid "Facebook"
+msgstr "Facebook"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__failed
-#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__failed
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "Failed"
 msgstr "Mislukt"
@@ -976,8 +1380,22 @@ msgstr "Soort mislukking"
 #. module: mass_mailing
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
-msgid "Feedback from %s: %s"
-msgstr "Feedback van %s: %s"
+msgid "Feedback from %(email)s: %(feedback)s"
+msgstr "Feedback van %(email)s: %(feedback)s"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__model_object_field
+msgid "Field"
+msgstr "Veld"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__copyvalue
+msgid ""
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
+msgstr ""
+"Uiteindelijke tijdelijke aanduiding expressie, om te kopiëren en plakken in "
+"het gewenste sjabloon veld."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_follower_ids
@@ -986,21 +1404,30 @@ msgid "Followers"
 msgstr "Volgers"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_channel_ids
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Volgers (Kanalen)"
-
-#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_partner_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Volgers (Relaties)"
 
 #. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome icoon bijv. fa-tasks"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Footers"
+msgstr "Voetteksten"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__email_from
 msgid "From"
 msgstr "Van"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Fullscreen"
+msgstr "Volledig scherm"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_image_text
@@ -1012,9 +1439,9 @@ msgstr ""
 "(E-commerce), winkel verkopen (Kassa) en marktplaatsen zoals eBay en Amazon."
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Group By"
 msgstr "Groepeer op"
@@ -1025,8 +1452,35 @@ msgid "Group By..."
 msgstr "Groepeer op..."
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__has_message
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__has_message
+msgid "Has Message"
+msgstr "Heeft bericht"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Headers"
+msgstr "Kopteksten"
+
+#. module: mass_mailing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__utm_campaign__ab_testing_winner_selection__clicks_ratio
+msgid "Highest Click Rate"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__utm_campaign__ab_testing_winner_selection__opened_ratio
+msgid "Highest Open Rate"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__utm_campaign__ab_testing_winner_selection__replied_ratio
+msgid "Highest Reply Rate"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__id
@@ -1044,9 +1498,9 @@ msgid ""
 "related mail_mail can be deleted separately from its statistics. However the"
 " ID is needed for several action and controllers."
 msgstr ""
-"ID van de bijbehorende mail_mail. Dit veld is een integer veld omdat de "
-"bijbehorende mail_mail apart verwijderd kan worden van de statistieken. Maar"
-" de ID is nodig voor diverse acties en controllers."
+"ID van de bijbehorende mail_mail. Dit veld is een geheel getal veld omdat de"
+" bijbehorende mail_mail apart verwijderd kan worden van de statistieken. "
+"Maar de ID is nodig voor diverse acties en controllers."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_exception_icon
@@ -1064,23 +1518,25 @@ msgstr "Icoon om uitzondering op activiteit aan te geven."
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_needaction
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+msgstr "Indien aangevinkt vragen nieuwe berichten jouw aandacht."
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__unique_ab_testing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__ab_testing_enabled
 msgid ""
 "If checked, recipients will be mailed only once for the whole campaign. This"
 " lets you send different mailings to randomly selected recipients and test "
 "the effectiveness of the mailings, without causing duplicate messages."
 msgstr ""
 "Indien aangevinkt zullen ontvangers eenmalig worden gemaild voor de gehele "
-"campagne. Dit geeft u de mogelijkheid om meerdere e-mails te versturen naar "
-"willekeurig geselecteerde ontvangers en test de effectiviteit van de mails, "
-"zonder dubbele berichten te veroorzaken."
+"campagne. Dit geeft je de mogelijkheid om meerdere e-mails te versturen naar"
+" willekeurig geselecteerde ontvangers en test de effectiviteit van de mails,"
+" zonder dubbele berichten te veroorzaken."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_has_error
+#: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_has_sms_error
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_has_error
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "indien aangevinkt hebben sommige leveringen een fout."
 
@@ -1095,11 +1551,7 @@ msgstr ""
 "bulkmailingen ontvangen, van geen enkele lijst."
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ignored
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__ignored
-#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__ignored
-#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__state__ignored
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
 msgid "Ignored"
 msgstr "Genegeerd"
 
@@ -1109,9 +1561,19 @@ msgid "In Queue"
 msgstr "In wachtrij"
 
 #. module: mass_mailing
-#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__recipient
+#: model_terms:ir.ui.view,arch_db:mass_mailing.social_links
+msgid "Instagram"
+msgstr "Instagram"
+
+#. module: mass_mailing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_email_invalid
 msgid "Invalid email address"
 msgstr "Foutief e-mailadres"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__is_body_empty
+msgid "Is Body Empty"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_is_follower
@@ -1122,7 +1584,12 @@ msgstr "Is een volger"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__is_public
 msgid "Is Public"
-msgstr "Is publiek"
+msgstr "Is openbaar"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__kpi_mail_required
+msgid "KPI mail required"
+msgstr "KPI-mail vereist"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__keep_archives
@@ -1135,8 +1602,14 @@ msgid "LOGIN"
 msgstr "LOGIN"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__lang
+msgid "Language"
+msgstr "Taal"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact____last_update
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription____last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list____last_update
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list____last_update
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge____last_update
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing____last_update
@@ -1155,6 +1628,7 @@ msgstr "Laatste statusupdate"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__write_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__write_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__write_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__write_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__write_uid
@@ -1167,6 +1641,7 @@ msgstr "Laatst bijgewerkt door"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__write_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__write_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__write_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__write_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__write_date
@@ -1177,9 +1652,12 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_trace__state_update
-msgid "Last state update of the mail"
-msgstr "Laatste statusupdate van de mail"
+#. openerp-web
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#, python-format
+msgid "Let's try the Email Marketing app."
+msgstr "Laten we de e-mailmarketing-app proberen."
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_link_tracker
@@ -1193,13 +1671,17 @@ msgid "Link Tracker Click"
 msgstr "Opvolging links klik"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.social_links
+msgid "LinkedIn"
+msgstr "LinkedIn"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__links_click_ids
 msgid "Links click"
 msgstr "Links klikken"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__mail_mail_id
-#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_type__mail
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace_report__mailing_type__mail
 msgid "Mail"
 msgstr "E-mail"
@@ -1210,9 +1692,33 @@ msgid "Mail Body"
 msgstr "Berichttekst"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
+msgid "Mail ID"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__mail_mail_id_int
 msgid "Mail ID (tech)"
 msgstr "E-mail ID (tech)"
+
+#. module: mass_mailing
+#: model:ir.actions.server,name:mass_mailing.ir_cron_mass_mailing_ab_testing_ir_actions_server
+#: model:ir.cron,cron_name:mass_mailing.ir_cron_mass_mailing_ab_testing
+#: model:ir.cron,name:mass_mailing.ir_cron_mass_mailing_ab_testing
+msgid "Mail Marketing: A/B Testing"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.server,name:mass_mailing.ir_cron_mass_mailing_queue_ir_actions_server
+#: model:ir.cron,cron_name:mass_mailing.ir_cron_mass_mailing_queue
+#: model:ir.cron,name:mass_mailing.ir_cron_mass_mailing_queue
+msgid "Mail Marketing: Process queue"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_mail_render_mixin
+msgid "Mail Render Mixin"
+msgstr "E-mail Render Mixin"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mail_server_id
@@ -1221,18 +1727,29 @@ msgid "Mail Server"
 msgstr "Mailserver"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mail_server_available
+msgid "Mail Server Available"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mail_mail_statistics_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click__mailing_trace_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_tree
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_graph
 msgid "Mail Statistics"
 msgstr "E-mail statistieken"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_tree_mail
+msgid "Mail Traces"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__mass_mailing_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__mass_mailing_id
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_graph
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
@@ -1240,7 +1757,7 @@ msgid "Mailing"
 msgstr "Mailing"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__campaign
 msgid "Mailing Campaign"
 msgstr "Mail campagne"
 
@@ -1252,12 +1769,19 @@ msgstr "Mailing campagnes"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact
 msgid "Mailing Contact"
+msgstr "Mailing contact"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_model__is_mailing_enabled
+msgid "Mailing Enabled"
 msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_list
+#: model:ir.model.fields,field_description:mass_mailing.field_account_invoice_send__mailing_list_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mailing_list_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__list_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__mailing_list_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__name
 msgid "Mailing List"
 msgstr "Mailinglijst"
@@ -1265,24 +1789,24 @@ msgstr "Mailinglijst"
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts
 #: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailing_contacts
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_form
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_graph
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_pivot
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_tree
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_graph
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_pivot
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "Mailing List Contacts"
 msgstr "Mailinglijst contacten"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_form
 msgid "Mailing List Subscription"
-msgstr ""
+msgstr "Mailinglijst abonnement"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_tree
 msgid "Mailing List Subscriptions"
-msgstr ""
+msgstr "Mailinglijst abonnees"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_lists
@@ -1316,8 +1840,9 @@ msgstr "Testmail"
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_trace_action
 #: model:ir.ui.menu,name:mass_mailing.menu_email_statistics
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_tree
 msgid "Mailing Traces"
-msgstr ""
+msgstr "Mail tracering"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_type
@@ -1325,29 +1850,39 @@ msgid "Mailing Type"
 msgstr "Soort mailing"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_type_description
+msgid "Mailing Type Description"
+msgstr ""
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/wizard/mailing_mailing_test.py:0
+#, python-format
+msgid "Mailing addresses incorrect: %s"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
 msgid ""
 "Mailing contacts allow you to separate your marketing audience from your "
 "business contact directory."
 msgstr ""
+"Met mailingcontacten kun je jouw marketingpubliek scheiden van jouw "
+"zakelijke contactenlijst."
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_create_mass_mailings_from_campaign
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailings_from_campaign
 #: model:ir.actions.act_window,name:mass_mailing.mailing_mailing_action_mail
-#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_items
 #: model:ir.ui.menu,name:mass_mailing.mass_mailing_menu
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_calendar
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_kanban
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Mailings"
 msgstr "Mailings"
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_clicked
-msgid "Mailings Clicked"
-msgstr "Mailings geklikt"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
@@ -1367,14 +1902,23 @@ msgstr "Beheer bulkmailing campagnes"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
-msgid "Manage mass mailing campaigns"
+msgid "Manage campaigns and A/B test your mailings"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__utm_campaign__ab_testing_winner_selection__manual
+msgid "Manual"
+msgstr "Handmatig"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Marketing"
 msgstr "Marketing"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Marketing Content"
+msgstr "Marketing inhoud"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__name
@@ -1382,12 +1926,8 @@ msgid "Mass Mail"
 msgstr "Bulkmail"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__campaign
-msgid "Mass Mail Campaign"
-msgstr "Bulkmailing campagne"
-
-#. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_account_invoice_send__mass_mailing_id
 #: model:ir.model.fields,field_description:mass_mailing.field_link_tracker__mass_mailing_id
 #: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click__mass_mailing_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_id
@@ -1406,41 +1946,34 @@ msgid "Mass Mailing Analysis"
 msgstr "Bulkmail analyse"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_account_invoice_send__campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__campaign_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 msgid "Mass Mailing Campaign"
 msgstr "Bulkmailing campagne"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_account_invoice_send__mass_mailing_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_name
 msgid "Mass Mailing Name"
 msgstr "Bulkmailing naam"
-
-#. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_mailing_mailing_schedule_date
-msgid "Mass Mailing Scheduling"
-msgstr "Bulkmailing schema"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_trace_report
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_graph
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_pivot
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_tree
 msgid "Mass Mailing Statistics"
 msgstr "Bulkmailing analyses"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_trace_report_action_mail
 msgid ""
-"Mass Mailing Statistics allows you to check different mailing related "
-"information like number of bounced mails, opened mails, replied mails. You "
-"can sort out your analysis by different groups to get accurate grained "
-"analysis."
+"Mass Mailing Statistics allows you to check different mailing related information\n"
+"    like number of bounced mails, opened mails, replied mails. You can sort out\n"
+"    your analysis by different groups to get accurate grained analysis."
 msgstr ""
-"Bulkmailing analyses geeft u de mogelijkheid om verschillende mailingen te "
-"controleren, zoals aantal gebounchde e-mails, geopende e-mails of "
-"beantwoorde e-mails. U kunt u analyses sorteren op verschillende groepen "
-"voor het verkrijgen van de juiste analyse."
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact_subscription
@@ -1448,17 +1981,20 @@ msgid "Mass Mailing Subscription Information"
 msgstr "Bulk-mailing abonnement informatie"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__mailing_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_mail_ids
 msgid "Mass Mailings"
 msgstr "Bulk mailingen"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__medium_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__medium_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Medium"
-msgstr "Gemiddeld"
+msgstr "Medium"
 
 #. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.mailing_list_merge_action
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
 msgid "Merge"
 msgstr "Samenvoegen"
@@ -1467,17 +2003,12 @@ msgstr "Samenvoegen"
 #: model:ir.model,name:mass_mailing.model_mailing_list_merge
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
 msgid "Merge Mass Mailing List"
-msgstr "Bulkmailing lijst samenvoegen"
+msgstr "Bulkmailinglijst samenvoegen"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__merge_options
 msgid "Merge Option"
 msgstr "Samenvoeg optie"
-
-#. module: mass_mailing
-#: model:ir.actions.act_window,name:mass_mailing.mailing_list_merge_action
-msgid "Merge Selected Mailing Lists"
-msgstr "Geselecteerde bulkmailing lijsten samenvoegen"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_list_merge__merge_options__new
@@ -1507,12 +2038,29 @@ msgid "Messages"
 msgstr "Berichten"
 
 #. module: mass_mailing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_email_missing
+msgid "Missing email address"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_model
+msgid "Models"
+msgstr "Modellen"
+
+#. module: mass_mailing
+#: model:mailing.mailing,sms_subject:mass_mailing.mass_mail_1
+msgid "Monthly Newsletter"
+msgstr "Maandelijkse nieuwsbrief"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
 msgid "More"
 msgstr "Meer"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mailing.py:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_event
+#, python-format
 msgid "More Info"
 msgstr "Meer info"
 
@@ -1520,6 +2068,11 @@ msgstr "Meer info"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_tag_line
 msgid "My Account"
 msgstr "Mijn account"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Mijn activiteit deadline"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_text_social
@@ -1538,7 +2091,7 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Name / Email"
 msgstr "Naam / E-mail"
 
@@ -1546,6 +2099,22 @@ msgstr "Naam / E-mail"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__new_list_name
 msgid "New Mailing List Name"
 msgstr "Nieuwe mailinglijst naam"
+
+#. module: mass_mailing
+#: model:utm.campaign,name:mass_mailing.mass_mail_campaign_1
+msgid "Newsletter"
+msgstr "Nieuwsbrief"
+
+#. module: mass_mailing
+#: model:mailing.mailing,name:mass_mailing.mass_mail_1
+#: model:utm.source,name:mass_mailing.utm_source_0
+msgid "Newsletter 1"
+msgstr "Nieuwsbrief 1"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Volgende activiteitenafspraak"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_date_deadline
@@ -1568,14 +2137,50 @@ msgid "No customization"
 msgstr "Geen personalisering"
 
 #. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mail_mail_statistics_mailing
+msgid "No data yet!"
+msgstr "Nog geen gegevens!"
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "No mailing campaign has been found"
+msgstr ""
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid ""
+"No mailing for this A/B testing campaign has been sent yet! Send one first "
+"and try again later."
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
+msgid ""
+"No need to import mailing lists, you can send mailings to contacts saved in "
+"other Odoo apps."
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
 msgid "No support"
 msgstr "Geen ondersteuning"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "No template picked yet."
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__email_normalized
 msgid "Normalized Email"
 msgstr "Genormaliseerde e-mail"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_trace__email
+msgid "Normalized email address"
+msgstr "Genormaliseerd e-mailadres"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_needaction_counter
@@ -1584,18 +2189,38 @@ msgid "Number of Actions"
 msgstr "Aantal acties"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_count_blacklisted
+msgid "Number of Blacklisted"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__clicks_ratio
 msgid "Number of Clicks"
 msgstr "Aantal klikken"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_nbr
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_count
 msgid "Number of Contacts"
 msgstr "Aantal contacten"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_count_email
+msgid "Number of Emails"
+msgstr "Aantal e-mails"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__mailing_count
+msgid "Number of Mailing"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_mail_count
 msgid "Number of Mass Mailing"
+msgstr "Aantal bulk mailingen"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_count_opt_out
+msgid "Number of Opted-out"
 msgstr ""
 
 #. module: mass_mailing
@@ -1604,14 +2229,9 @@ msgid "Number of Recipients"
 msgstr "Aantal ontvangers"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_kanban
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_kanban
 msgid "Number of bounced email."
 msgstr "Aantal van e-mails bounced."
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_clicks_ratio
-msgid "Number of clicks"
-msgstr "Aantal klikken"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_has_error_counter
@@ -1645,7 +2265,13 @@ msgstr "UIT"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
 msgid "OFF YOUR NEXT ORDER!"
-msgstr " VAN UW VOLGENDE ORDER!"
+msgstr " VAN JOUW VOLGENDE ORDER!"
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "OPENED (%i)"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.layout
@@ -1658,22 +2284,43 @@ msgid "Omnichannel sales"
 msgstr "Omnichannel verkopen"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid ""
+"Once the best version is identified, we will send the best one to the "
+"remaining recipients."
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "Open Date"
 msgstr "Datum openen"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_tree
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_tree_mail
+msgid "Open Recipient"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__opened
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__opened
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__opened
-#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__opened
-#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__state__opened
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__open
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Opened"
 msgstr "Geopend"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
+msgid "Opened (%)"
+msgstr "Geopend (%)"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__open_datetime
+msgid "Opened On"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__opened_ratio
@@ -1698,12 +2345,45 @@ msgstr ""
 "mailinglijstcontext."
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
+msgid "Opt-out (%)"
+msgstr "Opt-out (%)"
+
+#. module: mass_mailing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_optout
+msgid "Opted Out"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
+msgid "Opted-out"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
+msgstr ""
+"Optionele vertaling (ISO code) welke je kunt selecteren bij het versturen "
+"van een e-mail. Indien niet ingesteld, wordt de Engelse versie gebruikt. "
+"Normaliter is dit een bladwijzer welke de juiste taal aangeeft. Bijv.: "
+"${object.partner_id.lang}."
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__null_value
+msgid "Optional value to use if the target field is empty"
+msgstr "Optioneel veld om te gebruiken als het doel veld leeg is"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
 msgid "Order"
 msgstr "Order"
 
 #. module: mass_mailing
-#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__state__outgoing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__outgoing
 msgid "Outgoing"
 msgstr "Uitgaand"
 
@@ -1718,25 +2398,65 @@ msgid "PRO"
 msgstr "PRO"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__contact_ab_pc
-msgid ""
-"Percentage of the contacts that will be mailed. Recipients will be taken "
-"randomly."
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_pct_blacklisted
+msgid "Percentage of Blacklisted"
 msgstr ""
-"Percentage van de contacten dat gemaild wordt. Ontvangers worden willekeurig"
-" gekozen."
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/wizard/mailing_mailing_schedule_date.py:0
-#, python-format
-msgid "Please select a date equal/or greater than the current date."
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_pct_bounce
+msgid "Percentage of Bouncing"
 msgstr ""
-"U dient een datum gelijk aan of groter dan de huidige datum te selecteren."
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_pct_opt_out
+msgid "Percentage of Opted-out"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__ab_testing_pc
+msgid ""
+"Percentage of the contacts that will be mailed. Recipients will be chosen "
+"randomly."
+msgstr ""
+
+#. module: mass_mailing
+#. openerp-web
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#, python-format
+msgid "Pick the <b>email subject</b>."
+msgstr "Kies het </b>e-mailonderwerp</b>."
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__copyvalue
+msgid "Placeholder Expression"
+msgstr "Tijdelijke aanduiding expressie"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__reply_to
 msgid "Preferred Reply-To Address"
 msgstr "Voorkeur adres om te beantwoorden"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__preview
+msgid "Preview"
+msgstr "Voorbeeld"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "Preview Text"
+msgstr "Voorbeeldtekst"
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "RECEIVED (%i)"
+msgstr "ONTVANGEN (%i)"
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "REPLIED (%i)"
+msgstr "BEANTWOORD (%i)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_image_text
@@ -1745,6 +2465,13 @@ msgstr "Voorkeur adres om te beantwoorden"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_two_cols
 msgid "Read More..."
 msgstr "Lees meer..."
+
+#. module: mass_mailing
+#. openerp-web
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#, python-format
+msgid "Ready for take-off!"
+msgstr "Klaar voor de start!"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1758,19 +2485,26 @@ msgid "Received Ratio"
 msgstr "Ontvangen ratio"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_calendar
 msgid "Recipient"
 msgstr "Ontvanger"
 
 #. module: mass_mailing
-#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__reply_to_mode__thread
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
+msgid "Recipient Address"
+msgstr "Adres ontvanger"
+
+#. module: mass_mailing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__reply_to_mode__update
 msgid "Recipient Followers"
 msgstr "Volgers"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__email_to
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Recipients"
 msgstr "Ontvangers"
 
@@ -1800,17 +2534,30 @@ msgid "Registration"
 msgstr "Inschrijving"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__render_model
+msgid "Rendering Model"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__replied
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__replied
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__replied
-#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__replied
-#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__state__replied
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__reply
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Replied"
 msgstr "Beantwoord"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
+msgid "Replied (%)"
+msgstr "Beantwoord (%)"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__reply_datetime
+msgid "Replied On"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__replied_ratio
@@ -1867,7 +2614,6 @@ msgid "Responsible User"
 msgstr "Verantwoordelijke gebruiker"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Restore"
 msgstr "Terugzetten"
@@ -1878,20 +2624,26 @@ msgid "Retry"
 msgstr "Opnieuw proberen"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_has_sms_error
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS fout bij versturen"
+
+#. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_mailing_test
 msgid "Sample Mail Wizard"
 msgstr "Voorbeeld e-mail wizard"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__schedule_type
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Schedule"
-msgstr "Plannen"
+msgstr "Inplannen"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__scheduled
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__scheduled
-#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__scheduled
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__scheduled
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "Scheduled"
 msgstr "Gepland"
@@ -1900,6 +2652,11 @@ msgstr "Gepland"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__scheduled_date
 msgid "Scheduled Date"
 msgstr "Geplande datum"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_tree
+msgid "Scheduled On"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
@@ -1915,20 +2672,25 @@ msgstr "Geplande datum"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__schedule_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_schedule_date__schedule_date
 msgid "Scheduled for"
-msgstr ""
+msgstr "Gepland voor"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mailing_contact.py:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid "Scheduled on #{record.next_departure.value}"
+msgstr "Gepland op #{record.next_departure.value}"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid "Scheduled on #{record.schedule_date.value}"
+msgstr "Gepland op #{record.schedule_date.value}"
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/ir_model.py:0
 #, python-format
 msgid ""
-"Search opt out cannot be executed without a unique and valid active mailing "
-"list context."
+"Searching Mailing Enabled models supports only direct search using '='' or "
+"'!='."
 msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
-msgid "Select a template"
-msgstr "Selecteer een sjabloon"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1941,32 +2703,48 @@ msgid "Select mailing lists:"
 msgstr "Selecteer mail lijst:"
 
 #. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__model_object_field
+msgid ""
+"Select target field from the related document model.\n"
+"If it is a relationship field you will be able to select a target field at the destination of the relationship."
+msgstr ""
+"Selecteer doelveld van het gerelateerde documenten model.\n"
+"Als het een relatieveld is dan kun je een doelveld selecteren op de bestemming van de relatie."
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__ab_testing_winner_selection
+#: model:ir.model.fields,help:mass_mailing.field_utm_campaign__ab_testing_winner_selection
+msgid "Selection to determine the winner mailing that will be sent."
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send"
 msgstr "Verzenden"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_schedule_datetime
+#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__ab_testing_schedule_datetime
+msgid "Send Final On"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__email_from
 msgid "Send From"
-msgstr ""
+msgstr "Verzend vanuit"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
-msgid "Send Sample Mail"
-msgstr "Verstuur voorbeeldmail"
-
-#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send a Sample Mail"
-msgstr "Verstuur een voorbeeldmail"
+msgstr "Verzend een voorbeeldmail"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
-msgid "Send a sample email for testing purpose to the address below."
+msgid "Send a sample mailing for testing purpose to the address below."
 msgstr ""
-"Verstuur een voorbeeld e-mail voor test doeleinden naar het onderstaande "
-"adres."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
@@ -1974,9 +2752,15 @@ msgid "Send new Mailing"
 msgstr "Verzend nieuwe bulkmailing"
 
 #. module: mass_mailing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__schedule_type__now
+msgid "Send now"
+msgstr "Verzend nu"
+
+#. module: mass_mailing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__schedule_type__scheduled
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
 msgid "Send on"
-msgstr ""
+msgstr "Verzend op"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__sending
@@ -1985,13 +2769,12 @@ msgstr "verzenden"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__sent
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__sent
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__done
-#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__state__sent
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__sent
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace_report__state__done
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Sent"
 msgstr "Verzonden"
 
@@ -2007,14 +2790,25 @@ msgid "Sent Date"
 msgstr "Verstuurdatum"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__sent
-msgid "Sent Emails"
-msgstr "Verstuur e-mails"
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "Sent Mailings"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__sent_datetime
+msgid "Sent On"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Sent Period"
 msgstr "Verzonden periode"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid "Sent on #{record.sent_date.value}"
+msgstr "Verstuurd op #{record.sent_date.value}"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_mass_mailing_configuration
@@ -2025,6 +2819,7 @@ msgstr "Instellingen"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__source_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__source_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Source"
 msgstr "Bron"
@@ -2035,21 +2830,27 @@ msgid "Source Name"
 msgstr "Naam van bron"
 
 #. module: mass_mailing
-#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__reply_to_mode__email
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__reply_to_mode__new
 msgid "Specified Email Address"
 msgstr "Aangegeven e-mailadres"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__state
+#. openerp-web
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#, python-format
+msgid "Start by creating your first <b>Mailing</b>."
+msgstr "Begin met het maken van jouw eerste <b>mailing</b>."
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "Start editing your mailing to design something awesome."
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "State"
-msgstr "Provincie / Staat"
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__state_update
-msgid "State Update"
-msgstr "Status update"
+msgstr "Status"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail__mailing_trace_ids
@@ -2057,14 +2858,10 @@ msgid "Statistics"
 msgstr "Statistieken"
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,name:mass_mailing.link_tracker_action_mass_mailing
-#: model:ir.actions.act_window,name:mass_mailing.link_tracker_action_mass_mailing_campaign
-msgid "Statistics of Clicks"
-msgstr "Statistieken van de klikken"
-
-#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__state
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__trace_status
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__state
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Status"
 msgstr "Status"
@@ -2083,6 +2880,21 @@ msgstr ""
 "Gepland: Toekomstige activiteiten."
 
 #. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_trace__links_click_datetime
+msgid "Stores last click datetime in case of multi clicks."
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__sub_model_object_field
+msgid "Sub-field"
+msgstr "Sub-veld"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__sub_object
+msgid "Sub-model"
+msgstr "Sub-model"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__subject
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Subject"
@@ -2090,8 +2902,8 @@ msgstr "Onderwerp"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__subject
-msgid "Subject of emails to send"
-msgstr "Onderwerp van te versturen e-mails"
+msgid "Subject of your Mailing"
+msgstr "Onderwerp van jouw mailing"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__subscription_list_ids
@@ -2101,6 +2913,7 @@ msgstr "Abonnement informatie"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__tag_ids
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 msgid "Tags"
 msgstr "Labels"
 
@@ -2108,6 +2921,23 @@ msgstr "Labels"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
 msgid "Take Future Schedule Date"
 msgstr "Neem toekomstig geplande datum"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_trace__message_id
+msgid "Technical field for the email Message-ID (RFC 2392)"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__is_body_empty
+msgid "Technical field used to determine if the mail body is empty"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__mail_server_available
+msgid ""
+"Technical field used to know if the user has activated the outgoing mail "
+"server option in the settings"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -2121,6 +2951,25 @@ msgid "Test Mailing"
 msgstr "Test mailing"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/wizard/mailing_mailing_test.py:0
+#, python-format
+msgid "Test mailing could not be sent to %s:<br>%s"
+msgstr ""
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/wizard/mailing_mailing_test.py:0
+#, python-format
+msgid "Test mailing successfully sent to %s"
+msgstr ""
+
+#. module: mass_mailing
+#. openerp-web
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#, python-format
+msgid "Test this mailing by sending a copy to yourself."
+msgstr "Test deze mailing door een kopie naar uzelf te sturen."
+
+#. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace_report__state__test
 msgid "Tested"
 msgstr "Getest"
@@ -2128,19 +2977,29 @@ msgstr "Getest"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
 msgid "Thank you for joining us!"
-msgstr "Bedankt dat u bij ons aangesloten bent!"
+msgstr "Bedankt dat je bij ons aangesloten bent!"
 
 #. module: mass_mailing
 #. openerp-web
 #: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
 #, python-format
 msgid "Thank you! Your feedback has been sent successfully!"
-msgstr "Danku! Uw feedback is succesvol verzonden!"
+msgstr "Bedankt! Jouw feedback is succesvol verzonden!"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
 msgid "That way, Odoo evolves much faster than any other solution."
 msgstr "Daarom ontwikkeld Odoo zich veel sneller dan andere oplossingen."
+
+#. module: mass_mailing
+#: model:ir.model.constraint,message:mass_mailing.constraint_mailing_mailing_percentage_valid
+msgid "The A/B Testing Percentage needs to be between 0 and 100%"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "The actual"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact_subscription__opt_out
@@ -2193,10 +3052,49 @@ msgstr ""
 "De ontvanger <strong>heeft zich afgemeld %s</strong>voor mailinglist(en)"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/utm.py:0
+#, python-format
+msgid ""
+"The total percentage for an A/B testing campaign should be less than 100%"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid ""
+"The winner has already been sent. Use <b>Compare Version</b> to get an "
+"overview of this A/B testing campaign."
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "Then on"
+msgstr ""
+
+#. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
-msgid "There is no recipients selected."
+msgid "There are no recipients selected."
 msgstr "Er zijn geen ontvangers geselecteerd."
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "This"
+msgstr "Deze"
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid ""
+"This email from can not be used with this mail server.\n"
+"Your emails might be marked as spam on the mail clients."
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
+msgid "This email is blacklisted for mass mailings. Click to unblacklist."
+msgstr ""
+"Deze e-mail staat op de zwarte lijst voor mass-mailings. Klik om deze van de"
+" zwarte lijst te verwijderen."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__email_normalized
@@ -2204,11 +3102,12 @@ msgid ""
 "This field is used to search on email address as the primary email field can"
 " contain more than strictly an email address."
 msgstr ""
-"Aangezien het primaire emailveld meer dan alleen een emailadres kan "
-"bevatten, wordt dit veld gebruikt om te zoeken op emailadres."
+"Aangezien het primaire e-mailveld meer dan alleen een e-mailadres kan "
+"bevatten, wordt dit veld gebruikt om te zoeken op e-mailadres."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__source_id
+#: model:ir.model.fields,help:mass_mailing.field_mailing_trace__source_id
 msgid ""
 "This is the link source, e.g. Search Engine, another domain, or name of "
 "email list"
@@ -2221,7 +3120,7 @@ msgstr ""
 msgid ""
 "This is useful if your marketing campaigns are composed of several emails"
 msgstr ""
-"Dit is bruikbaar wanneer uw marketing campagnes bestaan uit meerdere "
+"Dit is bruikbaar wanneer jouw marketing campagnes bestaan uit meerdere "
 "e-mails."
 
 #. module: mass_mailing
@@ -2229,7 +3128,7 @@ msgstr ""
 msgid ""
 "This is useful if your marketing campaigns are composed of several emails."
 msgstr ""
-"Dit is bruikbaar wanneer uw marketing campagnes bestaan uit meerdere "
+"Dit is bruikbaar wanneer jouw marketing campagnes bestaan uit meerdere "
 "e-mails."
 
 #. module: mass_mailing
@@ -2238,7 +3137,7 @@ msgid ""
 "This tool is advised if your marketing campaign is composed of several "
 "emails."
 msgstr ""
-"Deze tool is handig als uw marketingcampagne is opgebouwd uit meerdere "
+"Deze tool is handig als jouw marketingcampagne is opgebouwd uit meerdere "
 "e-mails."
 
 #. module: mass_mailing
@@ -2246,7 +3145,16 @@ msgstr ""
 msgid ""
 "This will send the email to all recipients. Do you still want to proceed ?"
 msgstr ""
-"Dit verzend de e-mail naar alle ontvangers. Wilt u nog steeds verder gaan?"
+"Dit verzend de e-mail naar alle ontvangers. Wil je nog steeds verder gaan?"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__reply_to_mode
+msgid ""
+"Thread: replies go to target document. Email: replies are routed to a given "
+"email."
+msgstr ""
+"Discussie: antwoorden gaan naar doeldocument. E-mail: antwoorden worden "
+"doorgestuurd naar een bepaalde e-mail."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__title_id
@@ -2254,20 +3162,48 @@ msgid "Title"
 msgstr "Titel"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid ""
+"To send the winner mailing the campaign should not have been completed."
+msgstr ""
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid ""
+"To send the winner mailing the same campaign should be used by the mailings"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__total
-#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__total
 msgid "Total"
 msgstr "Totaal"
 
 #. module: mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.link_tracker_action_mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.link_tracker_action_mass_mailing_campaign
-msgid ""
-"Trackers are used to collect count stat about click on links and generate "
-"short URLs."
+#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__ab_testing_total_pc
+msgid "Total A/B test percentage"
 msgstr ""
-"Traceerders wordt gebruikt om klik statistieken te verzamelen en korte URL's"
-" te genereren."
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
+msgid "Total Bounces"
+msgstr "Totaal Bounces"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "Tracking"
+msgstr "Traceren"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "Try different variations in the campaign to compare their"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.social_links
+msgid "Twitter"
+msgstr "Twitter"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__trace_type
@@ -2278,13 +3214,19 @@ msgstr "Soort"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Type van activiteit uitzondering op dossier."
+msgstr "Type van activiteit uitzondering op record."
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_utm_campaign
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__campaign_id
 msgid "UTM Campaign"
 msgstr "UTM-campagne"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__medium_id
+#: model:ir.model.fields,help:mass_mailing.field_mailing_trace__medium_id
+msgid "UTM Medium: delivery method (email, sms, ...)"
+msgstr "UTM Medium: verzendwijze (e-mail, sms, ...)"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__unknown
@@ -2332,13 +3274,6 @@ msgid "Update my subscriptions"
 msgstr "Mijn abonnementen bijwerken"
 
 #. module: mass_mailing
-#. openerp-web
-#: code:addons/mass_mailing/static/src/xml/mass_mailing.xml:0
-#, python-format
-msgid "Upgrade theme"
-msgstr "Thema bijwerken"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
 msgid ""
 "Usability improvements made on Odoo will automatically apply to all\n"
@@ -2355,7 +3290,7 @@ msgstr "Gebruik deze promo code VOOR 1 augustus"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Use a dedicated server for mailings"
-msgstr ""
+msgstr "Gebruik een dedicated server voor mailings"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__mail_server_id
@@ -2381,8 +3316,28 @@ msgid "User"
 msgstr "Gebruiker"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
+#: model:ir.model,name:mass_mailing.model_res_users
+msgid "Users"
+msgstr "Gebruikers"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Valid Email Recipients"
+msgstr "Geldige e-mail ontvangers"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_view
+msgid "View Online"
+msgstr "Bekijk online"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__warning_message
+msgid "Warning Message"
+msgstr "Waarschuwingsberichten"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__warning_message
+msgid "Warning message displayed in the mailing form view"
 msgstr ""
 
 #. module: mass_mailing
@@ -2393,10 +3348,10 @@ msgid ""
 " back please accept this 20% discount on you next purchase by clicking the "
 "button."
 msgstr ""
-"Wie blijven groeien en we willen niet dat u hier geen deel van uitmaakt! We "
-"hebben onze winkeluren verlengd en hebben veel nieuwe merken beschikbaar. "
-"Door op de onderstaande knop te klikken krijgt u een korting van 20% op uw "
-"volgende aankoop om u terug welkom te heten."
+"Wie blijven groeien en we willen niet dat je hier geen deel van uitmaakt! We"
+" hebben onze winkeluren verlengd en hebben veel nieuwe merken beschikbaar. "
+"Door op de onderstaande knop te klikken krijg je een korting van 20% op jouw"
+" volgende aankoop om je terug welkom te heten."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
@@ -2404,7 +3359,7 @@ msgid ""
 "We want to take this opportunity to welcome you to our ever-growing "
 "community!<br/>"
 msgstr ""
-"We willen van deze gelegenheid gebruik om u te verwelkomen in ons steeds "
+"We willen van deze gelegenheid gebruik om je te verwelkomen in ons steeds "
 "verder groeiende gemeenschap!<br/>"
 
 #. module: mass_mailing
@@ -2413,13 +3368,56 @@ msgid ""
 "We would appreciate if you provide feedback about why you updated<br/>your "
 "subscriptions"
 msgstr ""
-"We zouden het op prijs stellen als u feedback geeft over waarom u uw "
+"We zouden het op prijs stellen als je feedback geeft over waarom je jouw "
 "inschrijvingen<br/>hebt bijgewerkt"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__website_message_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__website_message_ids
+msgid "Website Messages"
+msgstr "Websiteberichten"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_contact__website_message_ids
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__website_message_ids
+msgid "Website communication history"
+msgstr "Website communicatie geschiedenis"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__sub_model_object_field
+msgid ""
+"When a relationship field is selected as first field, this field lets you "
+"select the target field within the destination document model (sub-model)."
+msgstr ""
+"Wanneer een relatie veld is geselecteerd als eerste veld, dan kun je een "
+"doelveld selecteren binnen de bestemming documentmodel (sub-model)."
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__sub_object
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
+msgstr ""
+"Wanneer een relatieveld wordt gekozen als eerste veld, dan toont dit veld "
+"het document-model van het relatieveld waar het heen gaat."
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_mailing_schedule_date_action
 msgid "When do you want to send your mailing?"
-msgstr "Wanneer wilt u uw mailing verzenden?"
+msgstr "Wanneer wil je jouw mailing verzenden?"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_ir_model__is_mailing_enabled
+msgid ""
+"Whether this model supports marketing mailing capabilities (notably email "
+"and SMS)."
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_winner_selection
+#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__ab_testing_winner_selection
+msgid "Winner Selection"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
@@ -2446,9 +3444,9 @@ msgid ""
 "                                    services or a specific feature. To be successful\n"
 "                                    your content needs to be useful to your readers."
 msgstr ""
-"Schrijf één alinea over uw product\n"
-"of diensten Om succesvol te zijn dient uw\n"
-"inhoud nuttig te zijn voor uw lezers."
+"Schrijf één alinea over jouw product\n"
+"of diensten Om succesvol te zijn dient jouw\n"
+"inhoud nuttig te zijn voor jouw lezers."
 
 #. module: mass_mailing
 #. openerp-web
@@ -2458,42 +3456,42 @@ msgstr ""
 #: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
 #, python-format
 msgid "You are not authorized to do this!"
-msgstr "U bent hiervoor niet gemachtigd!"
+msgstr "Je bent hiervoor niet gemachtigd!"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
 msgid "You are not subscribed to any of our mailing list."
-msgstr "U bent niet ingeschreven voor een van onze nieuwsbrieven."
+msgstr "Je bent niet ingeschreven voor een van onze nieuwsbrieven."
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/wizard/mailing_list_merge.py:0
+#, python-format
+msgid "You can only apply this action from Mailing Lists."
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_create_mass_mailings_from_campaign
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
-#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_mailing_action_mail
 msgid ""
 "You don't need to import your mailing lists, you can easily\n"
 "                send emails<br> to any contact saved in other Odoo apps."
 msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
-msgid ""
-"You don't need to import your mailing lists, you can easily\n"
-"            send emails<br> to any contact saved in other Odoo apps."
-msgstr ""
+"Je hoeft jouw mailinglijsten niet te importeren, dat kan eenvoudig\n"
+"stuur e-mails naar <br>elk contact dat is opgeslagen in andere Odoo-apps."
 
 #. module: mass_mailing
 #. openerp-web
 #: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
 #, python-format
 msgid "You have been <strong>successfully unsubscribed from %s</strong>."
-msgstr "U bent <strong>succesvol uitgeschreven van %s</strong>."
+msgstr "Je bent <strong>succesvol uitgeschreven van %s</strong>."
 
 #. module: mass_mailing
 #. openerp-web
 #: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
 #, python-format
 msgid "You have been <strong>successfully unsubscribed</strong>."
-msgstr "U bent <strong> succesvol uitgeschreven</strong>."
+msgstr "Je bent <strong> succesvol uitgeschreven</strong>."
 
 #. module: mass_mailing
 #. openerp-web
@@ -2503,8 +3501,8 @@ msgid ""
 "You have been successfully <strong>added to our blacklist</strong>. You will"
 " not be contacted anymore by our services."
 msgstr ""
-"Je bent succesvol toegevoegd <strong>aan onze zwarte lijst</strong>. U zult "
-"niet meer gecontacteerd worden door onze diensten."
+"Je bent succesvol toegevoegd <strong>aan onze blacklist</strong>. Je zult "
+"niet meer benaderd worden door onze diensten."
 
 #. module: mass_mailing
 #. openerp-web
@@ -2514,13 +3512,13 @@ msgid ""
 "You have been successfully <strong>removed from our blacklist</strong>. You "
 "are now able to be contacted by our services."
 msgstr ""
-"Je bent succesvol verwijderd <strong>van onze zwarte lijst</strong>. U kunt "
-"nu gecontacteerd worden door onze diensten."
+"Je bent succesvol verwijderd <strong>van onze blacklist</strong>. Je kunt nu"
+" benaderd worden door onze diensten."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribed
 msgid "You have been successfully <strong>unsubscribed</strong>!"
-msgstr "U bent succesvol <strong>uitgeschreven</strong>!"
+msgstr "Je bent succesvol <strong>uitgeschreven</strong>!"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribed
@@ -2528,37 +3526,20 @@ msgid ""
 "You were still subscribed to those newsletters. You will not receive any "
 "news from them anymore:"
 msgstr ""
-"U was nog geabonneerd op andere nieuwsbrieven. U ontvangt geen nieuws meer "
-"van ze:"
+"Je was nog geabonneerd op andere nieuwsbrieven. Je ontvangt geen nieuws meer"
+" van ze:"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_banner
-msgid "Your Banner Image"
-msgstr "Uw banner afbeelding"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_logo
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_social
-#: model_terms:ir.ui.view,arch_db:mass_mailing.theme_default_template
 msgid "Your Logo"
-msgstr "Uw logo"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_event
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_image
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_image_text
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_text_image
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_three_cols
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_two_cols
-msgid "Your Picture"
-msgstr "Uw afbeelding"
+msgstr "Jouw logo"
 
 #. module: mass_mailing
 #. openerp-web
 #: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
 #, python-format
 msgid "Your changes have been saved."
-msgstr "Uw wijzigingen zijn opgeslagen."
+msgstr "Jouw wijzigingen zijn opgeslagen."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
@@ -2566,14 +3547,19 @@ msgid ""
 "Your platform is ready for work. It will help you reduce the costs of "
 "digital signage, attract new customers and increase sales."
 msgstr ""
-"Uw platform is klaar voor het werk. Het zal u helpen om de kosten van de "
+"Jouw platform is klaar voor het werk. Het zal je helpen om de kosten van de "
 "digitale marketing te verminderen, nieuwe klanten aan te trekken en de omzet"
 " te verhogen."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
 msgid "and save $20 on your next order!"
-msgstr "en bespaar € 20 op uw volgende order!"
+msgstr "en bespaar € 20 op jouw volgende order!"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "e.g. Check it out before it's too late!"
+msgstr "Bijv. Bekijk het voordat het te laat is!"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
@@ -2582,14 +3568,83 @@ msgid "e.g. Consumer Newsletter"
 msgstr "bv. klanten nieuwsbrief"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 msgid "e.g. John Smith"
 msgstr "b.v. John Smith"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "e.g. New Sale on all T-shirts"
+msgstr "bijv. Nieuwe uitverkoop op alle T-shirts"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
+msgid ""
+"email1@example.com\n"
+"email2@example.com"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.layout
 msgid "free website"
 msgstr "gratis website"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "from the same campaign."
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "having the"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid ""
+"is the winner of the A/B testing campaign and has been sent to all remaining"
+" recipients."
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "on"
+msgstr "op"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "other versions"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_mailing_mailing_schedule_date
+msgid "schedule a mailing"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "the"
+msgstr "de"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "to the remaining"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "will be sent"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "will be sent to the remaining recipients."
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "will receive this"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.layout

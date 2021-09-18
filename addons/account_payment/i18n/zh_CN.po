@@ -3,21 +3,15 @@
 # 	* account_payment
 # 
 # Translators:
-# 黎伟杰 <674416404@qq.com>, 2019
-# Martin Trigaux, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
-# bower Guo <124358678@qq.com>, 2019
-# KWOKYUK CHEUNG <cheungkwokyuk@gmail.com>, 2019
-# neter ji <jifuyi@qq.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:19+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,14 +20,9 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
-msgid "&amp;times;"
-msgstr "&amp;次数;"
-
-#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid "<b>Communication: </b>"
-msgstr "<b>交流： </b>"
+msgstr "<b>订单号： </b>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -64,7 +53,7 @@ msgstr "<i class=\"fa fa-fw fa-check-circle\"/>待定"
 msgid ""
 "<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
 "to be able to use them."
-msgstr "登记你的信用卡之后你就可以登录后并使用"
+msgstr "<i class=\"fa fa-info\"/> 登记你的信用卡之后你就可以登录后并使用."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -106,11 +95,32 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid ""
+"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Reversed</span></span>"
+msgstr ""
+"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\">‎反‎</span></span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
 "<span class=\"badge badge-pill badge-warning\"><span class=\"d-none d-md-"
 "inline\"> Pending</span></span>"
 msgstr ""
 "<span class=\"badge badge-pill badge-warning\"><span class=\"d-none d-md-"
 "inline\">待定</span></span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid ""
+"<strong>No suitable payment option could be found.</strong><br/>\n"
+"                                If you believe that it is an error, please contact the website administrator."
+msgstr ""
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Close"
+msgstr "关闭"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
@@ -120,25 +130,9 @@ msgid ""
 msgstr "已完成，您的在线付款已成功处理完毕。 感谢您的订购。"
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:53
-#, python-format
-msgid ""
-"If we store your payment information on our server, subscription payments "
-"will be made automatically."
-msgstr "如果我们在服务器存储你的支付信息,订阅支付将自动执行。"
-
-#. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:50
-#, python-format
-msgid "Pay & Confirm"
-msgstr "支付&确认"
-
-#. module: account_payment
-#: code:addons/account_payment/models/payment.py:21
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
-#, python-format
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Pay Now"
-msgstr "立即付款"
+msgstr "立即支付"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -148,22 +142,17 @@ msgstr "立即支付"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "Pay with"
-msgstr "支付 使用"
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_payment_transaction
-msgid "Payment Transaction"
-msgstr "付款交易"
+msgstr "支付方式"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Status"
-msgstr "省份"
+msgstr "状态"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
-msgstr "您有一个付款的错误：无效发票。"
+msgstr "您有一个付款的错误：无效结算单。"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error

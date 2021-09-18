@@ -3,22 +3,15 @@
 # 	* website_links
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
-# v2exerer <9010446@qq.com>, 2019
-# 苏州远鼎 <tiexinliu@126.com>, 2019
-# Liping Wang <lynn.config@gmail.com>, 2019
-# 湘子 南 <1360857908@qq.com>, 2019
-# bf2549c5415a9287249cba2b8a5823c7, 2019
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:12+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: bf2549c5415a9287249cba2b8a5823c7, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2021-09-14 12:28+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,8 +42,8 @@ msgstr "# 点击"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.share_page_menu
-msgid "<span title=\"Track this page to count clicks\">Track this Page</span>"
-msgstr "<span title=\"Track this page to count clicks\">跟踪此页面</span>"
+msgid "<span title=\"Track this page to count clicks\">Link Tracker</span>"
+msgstr "<span title=\"Track this page to count clicks\">统计</span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -105,7 +98,7 @@ msgstr ""
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "Copied"
-msgstr "复制"
+msgstr "已复制"
 
 #. module: website_links
 #. openerp-web
@@ -117,6 +110,7 @@ msgstr "复制"
 
 #. module: website_links
 #. openerp-web
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
@@ -183,6 +177,13 @@ msgid "Newest"
 msgstr "最新"
 
 #. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#, python-format
+msgid "No data"
+msgstr "无数据"
+
+#. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Recently Used"
 msgstr "最近使用"
@@ -226,7 +227,7 @@ msgstr "统计数据"
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 #, python-format
 msgid "The code cannot be left empty"
-msgstr ""
+msgstr "密码不能为空"
 
 #. module: website_links
 #. openerp-web
@@ -243,7 +244,7 @@ msgstr "没有数据显示"
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 #, python-format
 msgid "This code is already taken"
-msgstr ""
+msgstr "该密码已被使用"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -255,7 +256,7 @@ msgstr "这些跟踪器可以被谷歌分析去跟踪点击和访问，或者在
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "URL"
-msgstr "网址"
+msgstr "URL"
 
 #. module: website_links
 #. openerp-web
@@ -275,7 +276,7 @@ msgstr "未定义的"
 #: code:addons/website_links/models/link_tracker.py:0
 #, python-format
 msgid "Visit Webpage Statistics"
-msgstr ""
+msgstr "访问网页统计"
 
 #. module: website_links
 #. openerp-web
@@ -332,8 +333,8 @@ msgstr "例如：搜索引擎，网站页面，..."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "e.g. https://www.odoo.com/page/contactus"
-msgstr "例如：https://www.odoo.com/page/contactus"
+msgid "e.g. https://www.odoo.com/contactus"
+msgstr ""
 
 #. module: website_links
 #. openerp-web

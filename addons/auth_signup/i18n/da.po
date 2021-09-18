@@ -3,19 +3,15 @@
 # 	* auth_signup
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +33,11 @@ msgstr ""
 #, python-format
 msgid "%s connected"
 msgstr "%s Forbundet"
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
+msgid "<i title=\"Close\" class=\"small fa fa-times\"/>"
+msgstr ""
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -99,6 +100,45 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                 % set invited_users = ctx['invited_users']\n"
+"                <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        Afventende invitationer\n"
+"                    </span><br/><br/>\n"
+"                </td>\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Kære ${object.name or ''},<br/> <br/>\n"
+"                        Du tilføjede følgende bruger(e), men de har ikke registreret sig endnu:\n"
+"                        <ul>\n"
+"                            % for invited_user in invited_users:\n"
+"                                <li>${invited_user}</li>\n"
+"                            % endfor\n"
+"                        </ul>\n"
+"                        Følg op på dem så de kan tilgå din database og påbegynde deres arbejde med dig.\n"
+"                        <br/><br/>\n"
+"                        Hav en dejlig dag!<br/>\n"
+"                        --<br/>${object.company_id.name} Holdet\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -137,10 +177,10 @@ msgid ""
 "                                Accept invitation\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        % set website_url = object.env['ir.config_parameter'].sudo().get_param('web.base.url')\n"
+"                        % set website_url = object.get_base_url()\n"
 "                        Your Odoo domain is: <b><a href=\"${website_url}\">${website_url}</a></b><br/>\n"
 "                        Your sign in email is: <b><a href=\"/web/login?login=${object.email}\" target=\"_blank\">${object.email}</a></b><br/><br/>\n"
-"                        Never heard of Odoo? It’s an all-in-one business software loved by 3+ million users. It will considerably improve your experience at work and increase your productivity.\n"
+"                        Never heard of Odoo? It’s an all-in-one business software loved by 7+ million users. It will considerably improve your experience at work and increase your productivity.\n"
 "                        <br/><br/>\n"
 "                        Have a look at the <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo Tour</a> to discover the tool.\n"
 "                        <br/><br/>\n"
@@ -228,8 +268,11 @@ msgid ""
 "                            </a>\n"
 "                        </div>\n"
 "                        If you do not expect this, you can safely ignore this email.<br/><br/>\n"
-"                        Thanks,<br/>\n"
-"                        ${user.signature | safe}<br/>\n"
+"                        Thanks,\n"
+"                        % if user.signature:\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
+"                        % endif\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -389,12 +432,15 @@ msgid ""
 "                        Your login is <strong>${object.email}</strong><br/>\n"
 "                        To gain access to your account, you can use the following link:\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                            <a href=\"/web/login?${ctx['auth_login']}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            <a href=\"/web/login?auth_login=${object.email}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                Go to My Account\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        Thanks,<br/><br/>\n"
-"                        ${user.signature | safe}<br/>\n"
+"                        Thanks,<br/>\n"
+"                        % if user.signature:\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
+"                        % endif\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -538,6 +584,26 @@ msgstr ""
 "Der er allerede oprettet en anden bruger ved brug af denne email adresse."
 
 #. module: auth_signup
+#: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
+msgid "Auth Signup: Odoo Account Created"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.set_password_email
+msgid "Auth Signup: Odoo Connection"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.reset_password_email
+msgid "Auth Signup: Reset Password"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
+msgid "Auth Signup: Unregistered Users"
+msgstr ""
+
+#. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Authentication Failed."
@@ -620,7 +686,7 @@ msgstr "Tillad nulstilling af adgangskode fra login siden."
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2c
 msgid "Free sign up"
-msgstr ""
+msgstr "Gratis oprettelse"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
@@ -652,7 +718,7 @@ msgstr "Ingen login angivet."
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2b
 msgid "On invitation"
-msgstr ""
+msgstr "På invitation"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -678,7 +744,7 @@ msgstr "Adgangskoderne matcher ikke; prøv venligst igen."
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
 msgid "Reminder for unregistered users"
-msgstr ""
+msgstr "Påmindelse for ikke-registrerede brugere"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
@@ -692,9 +758,10 @@ msgid "Reset password: invalid username or email"
 msgstr "Nulstil adgangskode: ugyldigt brugernavn eller e-mail"
 
 #. module: auth_signup
+#: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
-msgid "Send Reset Password Instructions"
-msgstr "Send instruktioner til at nulstille adgangskode "
+msgid "Send Password Reset Instructions"
+msgstr "Send Kodeord Nulstillings Instruktioner"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -791,8 +858,8 @@ msgstr "Formularen blev ikke korrekt udfyldt."
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
-msgid "This is his first connection. Wish him welcome"
-msgstr "Dette er hans første forbindelse. Ønsk ham velkommen"
+msgid "This is their first connection. Wish them luck."
+msgstr ""
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -815,12 +882,18 @@ msgstr "Brugere"
 #: model:ir.cron,cron_name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder
 #: model:ir.cron,name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder
 msgid "Users: Notify About Unregistered Users"
-msgstr ""
+msgstr "Brugere: Underret om ikke-registrerede brugere"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to ${object.company_id.name}!"
 msgstr "Velkommen til ${object.company_id.name}!"
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "You cannot perform this action on an archived user."
+msgstr "Du kan ikke udføre denne handling på en arkiveret bruger."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
