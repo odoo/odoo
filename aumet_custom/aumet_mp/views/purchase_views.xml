@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_form_aumet_mp" model="ir.ui.view">
+        <field name="name">purchase.order.form.aumet_mp</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <button name="action_rfq_send" position="attributes">
+                <attribute name="states">draft,mp_sent</attribute>
+            </button>
+            <button name="print_quotation" position="attributes">
+                <attribute name="states">draft,mp_sent</attribute>
+            </button>
+            <button name="button_confirm" position="attributes">
+                <attribute name="states">draft,mp_sent</attribute>
+            </button>
+            <button name="button_cancel" position="attributes">
+                <attribute name="states">draft,to approve,sent,purchase,mp_sent</attribute>
+            </button>
+        </field>
+    </record>
+</odoo>
