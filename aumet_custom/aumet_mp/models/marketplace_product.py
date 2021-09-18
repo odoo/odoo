@@ -56,7 +56,7 @@ class MarketplaceProduct(models.Model):
             'payment_method_id': payment_method['paymentMethodId'],
             'name': payment_method['paymentMethodName'],
             'discount': payment_method['paymentMethodDiscount'],
-            'discount_expire_date': payment_method['discountExpireDate'],
+            # 'discount_expire_date': payment_method['discountExpireDate'],
             'unit_price': payment_method['unitPrice'],
         }
 
