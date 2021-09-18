@@ -4,13 +4,13 @@
   <t t-name="web.Dropdown" owl="1">
     <t
       t-tag="rootTag"
-      class="o_dropdown"
+      class="o_dropdown dropdown"
       t-att-class="{ show: state.open, o_dropdown_item: hasParentDropdown and rootTag === 'li' }"
       t-on-dropdown-item-selected="onItemSelected"
     >
       <button
         t-if="props.toggler !== 'parent'"
-        t-attf-class="o_dropdown_toggler {{ props.togglerClass || '' }}"
+        t-attf-class="o_dropdown_toggler dropdown-toggle {{ props.togglerClass || '' }}"
         t-on-click="onTogglerClick"
         t-on-mouseenter="onTogglerMouseEnter"
         t-att-title="props.title"
@@ -21,7 +21,7 @@
           <t t-slot="toggler" />
         </span>
       </button>
-      <ul t-if="state.open" class="o_dropdown_menu d-block" t-att-class="props.menuClass" t-ref="menuRef">
+      <ul t-if="state.open" class="o_dropdown_menu dropdown-menu d-block" t-att-class="props.menuClass" t-ref="menuRef">
         <t t-slot="default" />
       </ul>
     </t>

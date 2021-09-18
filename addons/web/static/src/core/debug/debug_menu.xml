@@ -13,8 +13,8 @@
             <t t-foreach="elements" t-as="element" t-key="element_index">
                 <t t-if="element.type == 'item'">
                     <DropdownItem t-on-dropdown-item-selected.stop="element.callback">
-                        <a t-if="element.href" t-att-href="element.href" t-esc="element.description" t-on-click.prevent=""/>
-                        <span t-else="" t-esc="element.description"/>
+                        <a class="dropdown-item" t-if="element.href" t-att-href="element.href" t-esc="element.description" t-on-click.prevent=""/>
+                        <span class="dropdown-item" t-else="" t-esc="element.description"/>
                     </DropdownItem>
                 </t>
                 <li t-if="element.type == 'separator'" role="separator" class="dropdown-divider"/>

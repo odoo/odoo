@@ -55,7 +55,7 @@
         t-att-class="{ focus: menuService.getCurrentApp() === app }"
         payload="app"
       >
-        <a t-att-href="getMenuItemHref(app)" t-esc="app.name" t-on-click.prevent="" />
+        <a t-att-href="getMenuItemHref(app)" class="dropdown-item" t-esc="app.name" t-on-click.prevent="" />
       </MenuItem>
     </Dropdown>
   </t>
@@ -115,19 +115,19 @@
 
   <t t-name="web.NavBar.SectionsMenu.Dropdown.MenuSlot" owl="1">
     <t t-foreach="items" t-as="item" t-key="item.id">
-      <MenuItem t-if="!item.childrenTree.length" payload="item">
-        <a t-att-href="getMenuItemHref(item)" t-esc="item.name" t-on-click.prevent="" />
+      <MenuItem t-if="!item.childrenTree.length" payload="item" class="o_dropdown_item">
+        <a class="dropdown-item" t-att-href="getMenuItemHref(item)" t-esc="item.name" t-on-click.prevent=""/>
       </MenuItem>
 
       <t t-else="">
-        <div class="o_dropdown_menu_group" t-esc="item.name" />
+        <div class="o_dropdown_menu_group dropdown-header" t-esc="item.name" />
         <MenuItem
           t-foreach="item.childrenTree"
           t-as="subItem"
           t-key="subItem.id"
-          class="o_dropdown_menu_group_entry"
+          class="o_dropdown_menu_group_entry o_dropdown_item"
           payload="subItem">
-          <a t-att-href="getMenuItemHref(subItem)" t-esc="subItem.name" t-on-click.prevent="" />
+          <a class="dropdown-item" t-att-href="getMenuItemHref(subItem)" t-esc="subItem.name" t-on-click.prevent="" />
         </MenuItem>
       </t>
     </t>
@@ -147,7 +147,7 @@
         </t>
         <t t-else="">
           <div
-            class="o_more_dropdown_section o_more_dropdown_section_group bg-200 font-weight-bold"
+            class="o_more_dropdown_section o_more_dropdown_section_group dropdown-header bg-100"
             t-esc="section.name"
           />
           <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
