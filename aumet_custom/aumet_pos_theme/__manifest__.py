@@ -19,7 +19,7 @@
 
     # always loaded
     'data': [
-        'views/templates.xml',
+        'views/assets.xml',
     ],
 
     'qweb': [
@@ -27,12 +27,18 @@
         'static/src/xml/Screens/Chrome.xml',
         'static/src/xml/Screens/ProductScreen/ProductItem.xml',
         'static/src/xml/Screens/ProductScreen/OrderWidget.xml',
+        'static/src/xml/Screens/ProductScreen/Orderline.xml',
         'static/src/xml/Screens/ProductScreen/ProductScreen.xml',
         'static/src/xml/Screens/ProductScreen/ActionpadWidget.xml',
         'static/src/xml/Screens/ProductScreen/ProductsWidgetControlPanel.xml',
-        'static/src/xml/ChromeWidgets/HeaderLockButton.xml',
+        'static/src/xml/Screens/ProductScreen/CustomControlButtons/MiddleCustomControlButton.xml',
+        'static/src/xml/ChromeWidgets/TicketButton.xml',
+        'static/src/xml/ChromeWidgets/OpenDetailButton.xml',
+        'static/src/xml/ChromeWidgets/PharmacyDetailSidebar.xml',
+
         'static/src/xml/Screens/PaymentScreen/PaymentScreen.xml',
         'static/src/xml/Screens/PaymentScreen/PaymentScreenStatus.xml',
+
     ],
     "auto_install": False,
     "installable": True,

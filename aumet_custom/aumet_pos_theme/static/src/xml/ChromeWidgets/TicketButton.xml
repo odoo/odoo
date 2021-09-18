@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="TicketButton" t-inherit="point_of_sale.TicketButton" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('with-badge')]" position="replace">
+            <div class="with-badge" t-att-badge="count">
+                <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+            </div>
+        </xpath>
+    </t>
+
+</templates>
