@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrderlineInh" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
+
+        <xpath expr="//img[@src='/flexipharmacy/static/src/img/scale.png']" position="replace"/>
+        <xpath expr="//span[hasclass('product-name')]" position="replace">
+            <span class="line" style="display:inline-flex;">
+                <span class="name"><t t-esc="props.line.get_full_product_name()"/></span>
+                <span class="product-name">
+                    <span style="float: right;">
+                        <ProductPurchaseHistoryButton
+                                t-if="env.pos.config.is_customer_purchase_history and env.pos.user.access_purchase_history"/>
+                        <t t-if="env.pos.config.enable_active_ingredients">
+                            <img t-on-click="showIngredientPopup(props.line)"
+                                 style="height: 20px;width: 22px;margin-left: 5px;"
+                                 src="/flexipharmacy/static/src/img/ingredient.png"/>
+                        </t>
+                        <t t-if="props.line.get_product().tracking!=='none'">
+                            <t t-if="props.line.has_valid_product_lot()">
+                            <i t-on-click.stop="lotIconClicked"
+                               class="oe_link_icon fa fa-list oe_icon line-lot-icon"
+                               aria-label="Valid product lot"
+                               role="img"
+                               title="Valid product lot"
+                            />
+                                <i t-on-click="onClickDelete(props.line)"
+                                   t-attf-class="oe_link_icon fa fa-trash oe_icon oe_del"/>
+                                <i t-if="env.pos.config.enable_multi_uom and !env.pos.get_order().get_refund_order() and env.pos.user.access_multi_uom"
+                                   t-attf-class="fa fa-balance-scale"
+                                   t-on-click="trigger('click-uom-button', {uom: props.line.get_unit().id})"
+                                />
+
+                        </t>
+                            <t t-else="">
+                            <i t-on-click.stop="lotIconClicked"
+                               class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_red"
+                               aria-label="Invalid product lot"
+                               role="img"
+                               title="Invalid product lot"
+                            />
+                        </t>
+                    </t>
+                    </span>
+
+
+            </span>
+            </span>
+        </xpath>
+    </t>
+</templates>
