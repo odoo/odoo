@@ -37,6 +37,7 @@
 # Yazeed Dandashi <lay@odoo.com>, 2019
 # MOHAMMAD IBRAHIM <m.moamir@outlook.com>, 2020
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2021
+# Samir Sellami <samorcool@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -44,7 +45,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Mustafa J. Kadhem <safi2266@gmail.com>, 2021\n"
+"Last-Translator: Samir Sellami <samorcool@gmail.com>, 2021\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4218,7 +4219,7 @@ msgstr "الفرق بين الرصيد الختامي المحسوب والرص�
 #: code:addons/account/models/account_move.py:408
 #, python-format
 msgid "Difference debit - credit: "
-msgstr ""
+msgstr "الفرق الخصم - الائتمان:"
 
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
@@ -9852,7 +9853,7 @@ msgstr "عرض إجمالي بند السعر شامل الضريبة"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_tax_signed
 msgid "Tax in Invoice Currency"
-msgstr ""
+msgstr "الضريبة بعملة الفاتورة"
 
 #. module: account
 #: sql_constraint:account.tax:0 sql_constraint:account.tax.template:0
@@ -9997,6 +9998,7 @@ msgid ""
 "Technical field indicating if the registering payment will generate multiple"
 " payments or not."
 msgstr ""
+"الحقل الفني يشير إلى ما إذا كان تسجيل الدفع سينتج عنه دفعات متعددة أم لا."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund__refund_only
@@ -11391,7 +11393,7 @@ msgstr "المبلغ بدون ضرائب بعملة المؤسسة"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_untaxed_invoice_signed
 msgid "Untaxed Amount in Invoice Currency"
-msgstr ""
+msgstr "المبلغ غير الخاضع للضريبة بعملة الفاتورة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
@@ -11850,6 +11852,8 @@ msgid ""
 "Wrong credit or debit value in accounting entry! Credit and debit should be "
 "positive."
 msgstr ""
+"قيمة الائتمان أو الخصم خاطئة في القيد المحاسبي! يجب أن يكون الائتمان والخصم "
+"موجبين."
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -11857,6 +11861,8 @@ msgid ""
 "Wrong credit or debit value in accounting entry! Credit or debit should be "
 "zero."
 msgstr ""
+"قيمة الائتمان أو الخصم خاطئة في القيد المحاسبي! يجب أن يكون الائتمان أو "
+"الخصم صفرًا."
 
 #. module: account
 #: code:addons/account/models/account_move.py:944
@@ -11899,14 +11905,6 @@ msgid ""
 msgstr ""
 "لا ينبغي أن يحدث تداخل بين سنتين ماليتين، برجاء تصحيح تواريخ بدء و/أو انتهاء"
 " سنواتك المالية."
-
-#. module: account
-#: code:addons/account/models/partner.py:441
-#, python-format
-msgid ""
-"You can't change the company of a partner if the latter already has some "
-"invoices."
-msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1784
@@ -11971,6 +11969,8 @@ msgid ""
 "You cannot change the type of an invoice line. Instead you should delete the"
 " current line and create a new line of the proper type."
 msgstr ""
+"لا يمكنك تغيير نوع بند الفاتورة. بدلاً من ذلك ، يجب حذف السطر الحالي وإنشاء "
+"سطر جديد من النوع المناسب."
 
 #. module: account
 #: code:addons/account/models/account_move.py:703

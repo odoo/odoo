@@ -9,7 +9,8 @@
 # Andrey Samorukov <andrey.samorukov@me.com>, 2018
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Collex100, 2019
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2020
+# Диляра Дельтаева <dilya.kz93@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
+"Last-Translator: Диляра Дельтаева <dilya.kz93@gmail.com>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,6 +72,36 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Здравствуйте, ${object.partner_id.name},<br/><br/>\n"
+"        Рады сообщить вам, что ваш заказ отправлен.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            Ваша ссылка для отслеживания -\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                % set multiple_carrier_tracking = object.get_multiple_carrier_tracking()\n"
+"                %if multiple_carrier_tracking:\n"
+"                    % for line in multiple_carrier_tracking:\n"
+"                        <br/><a href=\"${line[1]}\" target=\"_blank\">${line[0]}</a>\n"
+"                    % endfor\n"
+"                %else:\n"
+"                    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"                %endif\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        Пожалуйста, найдите ваш заказ на доставку для более подробной информации.<br/><br/>\n"
+"        Спасибо,<br/>\n"
+"        % if user and user.signature:\n"
+"          ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
