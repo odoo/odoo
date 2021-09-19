@@ -125,7 +125,7 @@
                                         <field name="invoice_reference_model" attrs="{'invisible': [('invoice_reference_type', '=', 'none')]}"/>
                                     </group>
                                     <group string="Follow Customer Payments" attrs="{'invisible': [('type', '!=', 'sale')]}">
-                                        <field name="sale_activity_type_id"/>
+                                        <field name="sale_activity_type_id" domain="['|', ('res_model_id', '=', False), ('res_model_id.model', '=', 'account.move')]"/>
                                         <field name="sale_activity_user_id" attrs="{'invisible': [('sale_activity_type_id', '=', False)]}"/>
                                         <field name="sale_activity_note" placeholder="e.g. Give a phone call, check with others , ..."  attrs="{'invisible': [('sale_activity_type_id', '=', False)]}"/>
                                     </group>
