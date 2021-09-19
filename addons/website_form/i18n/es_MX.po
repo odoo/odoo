@@ -38,7 +38,7 @@ msgstr "‘%s’ no es una fecha y hora correcta"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid ", .s_website_form"
-msgstr ""
+msgstr ", .s_website_form"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
@@ -53,11 +53,13 @@ msgid ""
 "<span class=\"fa fa-check-circle\"/>\n"
 "                                            <span>Your message has been sent <b>successfully</b></span>"
 msgstr ""
+"<span class=\"fa fa-check-circle\"/>\n"
+"                                            <span>Se ha enviado su mensaje con <b>éxito</b></span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Email To</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Correo electrónico a</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -65,6 +67,8 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Email</span>\n"
 "                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Correo electrónico</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -91,40 +95,40 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Your Name</span>\n"
 "                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
-"<span class=\"s_website_form_label_content\">Tu Nombre</span>\n"
-"<span class=\"s_website_form_mark\"> *</span>"
+"<span class=\"s_website_form_label_content\">Su nombre</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Your Question</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Su pregunta</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Add a new field after this one"
-msgstr ""
+msgstr "Añada un nuevo campo después de este"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Add a new field at the end"
-msgstr ""
+msgstr "Añada un nuevo campo al final"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
 msgid "Allowed to use in forms"
-msgstr "Permitido el uso de formularios"
+msgstr "Se permite su uso en formularios"
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "An error has occured, the form has not been sent."
-msgstr "Ha ocurrido un error, el formulario no se ha enviado."
+msgstr "Se ha producido un error que ha impedido el envío del formulario."
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklist this field for web forms"
-msgstr "Lista negra de este campo para formularios web"
+msgstr "Poner este campo en la lista negra de los formularios web"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_fields__website_form_blacklisted
@@ -134,7 +138,7 @@ msgstr "Lista negra en formularios web"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Button Position"
-msgstr ""
+msgstr "Posición del botón"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -144,12 +148,12 @@ msgstr "Centro"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Checkbox"
-msgstr "Casilla de verificación"
+msgstr "Casilla de selección"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Custom field"
-msgstr ""
+msgstr "Campo personalizado"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -159,24 +163,24 @@ msgstr "Fecha"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Date &amp; Time"
-msgstr "Fecha y Hora"
+msgstr "Fecha &amp; hora"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Decimal Number"
-msgstr "Número Decimal"
+msgstr "Número decimal"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Display"
-msgstr "Mostrar en pantalla"
+msgstr "Mostrar"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__display_name
 #: model:ir.model.fields,field_description:website_form.field_ir_model_fields__display_name
 #: model:ir.model.fields,field_description:website_form.field_website__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre en pantalla"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -191,8 +195,7 @@ msgstr "Correo electrónico"
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_access
 msgid "Enable the form builder feature for this model."
-msgstr ""
-"Habilitar la característica de constructor del formulario para este modelo."
+msgstr "Habilitar la función de creación de formularios para este modelo."
 
 #. module: website_form
 #. openerp-web
@@ -205,7 +208,7 @@ msgstr "Error"
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_default_field_id
 msgid "Field for custom form data"
-msgstr "Campo de datos de formulario personalizado"
+msgstr "Campo para datos de formularios personalizados"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model_fields
@@ -223,8 +226,8 @@ msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
 msgstr ""
-"Etiqueta de la acción del formulario. Ex: rm.lead podría ser ‘Correo "
-"electrónico’ y project.issue podría ser ‘Crear algo’."
+"Etiqueta de acción del formulario. Por ejemplo: crm.lead podría ser \"Enviar"
+" un correo electrónico\" y project.issue podría ser \"Crear un ticket\"."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -258,32 +261,32 @@ msgstr "ID"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "In the meantime we invite you to visit our"
-msgstr ""
+msgstr "Mientras tanto, le invitamos a visitar nuestro"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Input Aligned"
-msgstr ""
+msgstr "Alineación de entrada"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Input Placeholder"
-msgstr ""
+msgstr "Entrada de texto"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Input Type"
-msgstr ""
+msgstr "Tipo de entrada"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Label Name"
-msgstr ""
+msgstr "Nombre de la etiqueta"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Label Position"
-msgstr ""
+msgstr "Posición de la etiqueta"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
@@ -293,7 +296,7 @@ msgstr "Etiqueta de acción del formulario"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Labels Width"
-msgstr ""
+msgstr "Ancho de las etiquetas"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model____last_update
@@ -310,17 +313,17 @@ msgstr "Izquierda"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Long Text"
-msgstr "Texto Largo"
+msgstr "Texto largo"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Mark Text"
-msgstr ""
+msgstr "Marcar texto"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Marked Fields"
-msgstr ""
+msgstr "Campos marcados"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
@@ -336,7 +339,7 @@ msgstr "Modelos"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Multiple Checkboxes"
-msgstr "Múltiples Casillas de Verificación "
+msgstr "Múltiples casillas"
 
 #. module: website_form
 #. openerp-web
@@ -344,7 +347,7 @@ msgstr "Múltiples Casillas de Verificación "
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "No matching record !"
-msgstr "No hay coincidencias!"
+msgstr "No hay registros que coincidan."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -364,7 +367,7 @@ msgstr "Número"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "On Success"
-msgstr ""
+msgstr "Éxito"
 
 #. module: website_form
 #. openerp-web
@@ -399,21 +402,21 @@ msgstr "Opcional"
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Other Information:"
-msgstr "Otra Información:"
+msgstr "Otra información:"
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Our team will message you back as soon as possible."
-msgstr ""
+msgstr "Nuestro equipo le responderá lo antes posible."
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "Please fill in the form correctly."
-msgstr "Por favor, llene el formulario correctamente."
+msgstr "Por favor, complete el formulario correctamente."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -425,12 +428,12 @@ msgstr "Botones de opción"
 #: code:addons/website_form/static/src/js/website_form_editor_registry.js:0
 #, python-format
 msgid "Recipient Email"
-msgstr "Correo del Destinatario"
+msgstr "Correo electrónico del destinatario"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Redirect"
-msgstr "Redirigir"
+msgstr "Redireccionar"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -452,7 +455,7 @@ msgstr "Selección"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Separate email addresses with a comma."
-msgstr ""
+msgstr "Separe las direcciones de correo electrónico con una coma."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -469,8 +472,8 @@ msgstr "Mostrar la política de reCaptcha"
 msgid ""
 "Specify the field which will contain meta and custom form fields datas."
 msgstr ""
-"Especifique el campo que contendrá metadatos y datos de campos de "
-"formularios personalizados."
+"Especifique el campo que contendrá los datos de los campos meta y "
+"personalizados del formulario."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -484,7 +487,7 @@ msgstr "Enviar"
 #: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "Success"
-msgstr "Aceptada"
+msgstr "Éxito"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
@@ -495,7 +498,7 @@ msgstr "Actividad sospechosa detectada por Google reCaptcha."
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Telephone"
-msgstr ""
+msgstr "Teléfono"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -507,7 +510,7 @@ msgstr "Texto"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Thank You For Your Feedback"
-msgstr ""
+msgstr "Gracias por su retroalimentación"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
@@ -520,19 +523,19 @@ msgstr "¡Gracias!"
 #: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "The form has been sent successfully."
-msgstr "El formulario ha sido enviado correctamente."
+msgstr "Se ha enviado el formulario con éxito."
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "The form's specified model does not exist"
-msgstr ""
+msgstr "El modelo especificado de formulario no existe"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "This message has been posted on your website!"
-msgstr "Este mensaje se ha publicado en tu sitio web!"
+msgstr "Se ha publicado este mensaje en su sitio web."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -557,7 +560,7 @@ msgstr "URL"
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_key
 msgid "Used in FormBuilder Registry"
-msgstr "Usado en el Registro del Constructor de Formularios"
+msgstr "Se utilizó en el registro de FormBuilder"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -568,7 +571,7 @@ msgstr "Vertical"
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
 #: model_terms:website.page,arch_db:website_form.contactus_thanks
 msgid "We will get back to you shortly."
-msgstr "Le contestaremos en breve."
+msgstr "Nos pondremos en contacto con usted lo antes posible."
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_website
@@ -578,45 +581,46 @@ msgstr "Sitio web"
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_key
 msgid "Website Form Key"
-msgstr "Llave del Formulario para el Sitio Web"
+msgstr "Clave del formulario del sitio web"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.ir_model_view
 msgid "Website Forms"
-msgstr "Formularios de página web"
+msgstr "Formularios del sitio web"
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You can't duplicate a model field."
-msgstr "No puede duplicar un campo del modelo."
+msgstr "No se puede duplicar un campo del modelo."
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You can't duplicate the submit button of the form."
-msgstr ""
+msgstr "No se puede duplicar el botón de envío del formulario."
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You can't remove a field that is required by the model itself."
-msgstr "No puede eliminar un campo requerido por el modelo mismo."
+msgstr ""
+"No se puede eliminar un campo que sea necesario para el propio modelo."
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You can't remove the submit button of the form"
-msgstr ""
+msgstr "No se puede eliminar el botón de envío del formulario"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "rows"
-msgstr ""
+msgstr "filas"
 
 #. module: website_form
 #. openerp-web

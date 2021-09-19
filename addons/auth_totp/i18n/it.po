@@ -3,14 +3,14 @@
 # 	* auth_totp
 # 
 # Translators:
-# Léonie Bouchat <lbo@odoo.com>, 2020
+# Léonie Bouchat <lbo@odoo.com>, 2021
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2021-08-19 09:43+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -19,6 +19,12 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: auth_totp
+#: code:addons/auth_totp/controllers/home.py:0
+#, python-format
+msgid "%(browser)s on %(platform)s"
+msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -41,6 +47,13 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-check-circle\"/>\n"
 "                                Autenticazione a due fattori abilitata"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid ""
+"<i class=\"fa fa-question-circle text-primary\" title=\"If checked, you "
+"won't be asked for two-factor authentication codes with this device.\"/>"
+msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -78,11 +91,23 @@ msgstr ""
 "                        </span>"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Added On"
+msgstr ""
+
+#. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid ""
 "After scanning the barcode, the app will display a 6-digit code that you\n"
 "                                should enter below. Don't worry if the code changes in the app,\n"
 "                                it stays valid a bit longer."
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"Are you sure? Two-factor authentication will be required again on all your "
+"devices"
 msgstr ""
 
 #. module: auth_totp
@@ -92,6 +117,7 @@ msgstr "Codice di autenticazione (6 cifre)"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cancel"
 msgstr "Annulla"
@@ -107,6 +133,11 @@ msgid "Created on"
 msgstr "Data creazione"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Device Name"
+msgstr "Nome dispositivo"
+
+#. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable TOTP on users"
 msgstr ""
@@ -117,6 +148,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__display_name
 msgid "Display Name"
 msgstr "Nome visualizzato"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Don't ask again for this device"
+msgstr "Non chiedere di nuovo per questo dispositivo"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
@@ -181,6 +217,16 @@ msgid "Qrcode"
 msgstr "Codice QR"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Revoke"
+msgstr "Revocare"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Revoke All"
+msgstr ""
+
+#. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid ""
 "Scan the image below with the authenticator app on your phone.<br/>\n"
@@ -209,6 +255,17 @@ msgstr "Il codice di verifica deve contenere solo numeri"
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
 msgid "Totp Secret"
 msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Trusted Device"
+msgstr "Dispositivo fidato"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Trusted Devices"
+msgstr "Dispositivi fidati"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard

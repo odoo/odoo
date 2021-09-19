@@ -60,7 +60,7 @@ msgstr "%s%% di sconto sull'importo totale"
 #: code:addons/coupon/wizard/coupon_generate.py:0
 #, python-format
 msgid "%s, a coupon has been generated for you"
-msgstr "%s, ti è stato generato un buono sconto"
+msgstr "%s, è stato generato un buono sconto per te"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -238,7 +238,7 @@ msgid ""
 " example, a retailer might tell frequent customers to enter the promotion "
 "code 'THX001' to receive a 10%% discount on their whole order."
 msgstr ""
-"Un codice promozionale è un codice associato ad uno sconto di marketing. Ad "
+"Un codice promozionale è un codice associato a uno sconto commerciale. Ad "
 "esempio, un rivenditore può dire ai clienti abituali di inserire il codice "
 "promozionale \"THX001\" per ricevere uno sconto del 10%% sull'intero ordine."
 
@@ -277,12 +277,12 @@ msgstr "Applicazione sconto"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_current_order
 msgid "Apply On Current Order"
-msgstr "Applicare sull'ordine attuale"
+msgstr "Applicare all'ordine attuale"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Apply on First"
-msgstr "Applicare sul primo"
+msgstr "Applicare ai primi"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -302,8 +302,8 @@ msgid ""
 "Automatically Applied - No code is required, if the program rules are met, the reward is applied (Except the global discount or the free shipping rewards which are not cumulative)\n"
 "Use a code - If the program rules are met, a valid code is mandatory for the reward to be applied\n"
 msgstr ""
-"Applicato automaticamente - Non è richiesto alcun codice, se le regole del programma sono rispettate, il premio è applicato (ad eccezione degli sconti globali o dei premi di spedizione gratuita che non sono cumulativi)\n"
-"Usare un codice - Se le regole del programma sono rispettate, un codice valido è obbligatorio per l'applicazione del premio.\n"
+"Applicato automaticamente - Non è richiesto alcun codice. Se le regole del programma sono rispettate, viene applicato il riconoscimento (ad eccezione degli sconti globali o delle spedizioni gratuite, che non sono cumulativi)\n"
+"Utilizzo di un codice - Se le regole del programma sono rispettate, per applicare il riconoscimento è obbligatorio un codice valido.\n"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -1016,12 +1016,12 @@ msgstr "Seleziona prodotti"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Select reward product"
-msgstr "Seleziona un prodotto premio"
+msgstr "Seleziona prodotto riconoscimento"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_next_order
 msgid "Send a Coupon"
-msgstr ""
+msgstr "Inviare un buono sconto"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
@@ -1165,7 +1165,8 @@ msgstr "Il tuo codice buono sconto"
 #: model:mail.template,subject:coupon.mail_template_sale_coupon
 msgid "Your reward coupon from ${object.program_id.company_id.name} "
 msgstr ""
-"Il tuo buono sconto di ricompensa di ${object.program_id.company_id.name} "
+"Ti è stato riconosciuto un buono sconto da "
+"${object.program_id.company_id.name}"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon

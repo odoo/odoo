@@ -81,7 +81,7 @@ msgstr "확인"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_expiry_picking_confirmation
 msgid "Confirm Expiry"
-msgstr ""
+msgstr "유효기간 승인"
 
 #. module: product_expiry
 #: code:addons/product_expiry/models/stock_picking.py:0
@@ -240,6 +240,8 @@ msgid ""
 "stock after production) after which the goods may become dangerous and must "
 "not be consumed. It will be computed on the lot/serial number."
 msgstr ""
+"품목이 위험해질 수 있고 반드시 소모할 품목이 아닐 경우 품목을 입고할 기간(공급업체 또는 생산 후의 재고)입니다. Lot/시리얼 번호에"
+" 계산됩니다."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
@@ -285,22 +287,22 @@ msgstr "조달 그룹"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_product
 msgid "Product"
-msgstr "상품"
+msgstr "품목"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "Product Expiry Alert"
-msgstr "상품 만료 경고"
+msgstr "품목 만료 경고"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "상품 이동 (재고 이동 명세)"
+msgstr "품목 이동 (재고 이동 상세)"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
 msgid "Product Template"
-msgstr "상품 양식"
+msgstr "품목 양식"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
@@ -389,7 +391,7 @@ msgid ""
 "When this box is ticked, you have the possibility to specify dates to manage"
 " product expiration, on the product and on the corresponding lot/serial "
 "numbers"
-msgstr ""
+msgstr "체크박스가 선택되면, 품목과 관련된 lot/시리얼 번호에 품목이 유효기간을 관리할 특정날짜가 생성됩니다."
 
 #. module: product_expiry
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
@@ -398,6 +400,8 @@ msgid ""
 "You are going to deliver some product expired lots.\n"
 "Do you confirm you want to proceed ?"
 msgstr ""
+"유효기간이 만료된 품목을 배송하려고 합니다.\n"
+"정말 승인하시겠습니까?"
 
 #. module: product_expiry
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
@@ -406,3 +410,5 @@ msgid ""
 "You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
 "Do you confirm you want to proceed ?"
 msgstr ""
+"%(lot_name)s의 유효기간이 만료된, %(product_name)s품목을 출고하려고 합니다.\n"
+"정말 승인하시겠습니까?"

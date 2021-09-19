@@ -707,3 +707,60 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             'is_reconciled': True,
             'is_matched': True,
         }])
+
+    def test_payment_name(self):
+        AccountPayment = self.env['account.payment']
+        AccountPayment.search([]).unlink()
+
+        payment = AccountPayment.create({
+            'journal_id': self.company_data['default_journal_bank'].id,
+        })
+        self.assertRegex(payment.name, 'BNK1/\d{4}/\d{2}/0001')
+
+        with Form(AccountPayment.with_context(default_move_journal_types=('bank', 'cash'))) as payment_form:
+            self.assertEqual(payment_form._values['name'], '/')
+            payment_form.journal_id = self.company_data['default_journal_cash']
+            self.assertRegex(payment_form._values['name'], 'CSH1/\d{4}/\d{2}/0001')
+            payment_form.journal_id = self.company_data['default_journal_bank']
+        payment = payment_form.save()
+        self.assertEqual(payment.name, '/')
+        payment.action_post()
+        self.assertRegex(payment.name, 'BNK1/\d{4}/\d{2}/0002')
+
+    def test_payment_form_onchange_journal(self):
+        pay_form = Form(self.env['account.payment'])
+        pay_form.journal_id = self.company_data['default_journal_bank']
+        pay_form.partner_id = self.partner_a
+        pay_form.name = '/'
+        pay_form.amount = 123
+        pay = pay_form.save()
+
+        self.assertRecordValues(pay.line_ids.sorted('balance'), [
+            {
+                'debit': 0.0,
+                'credit': 123.0,
+                'account_id': self.company_data['default_account_receivable'].id,
+            },
+            {
+                'debit': 123.0,
+                'credit': 0.0,
+                'account_id': self.company_data['default_journal_bank'].payment_debit_account_id.id,
+            },
+        ])
+
+        with Form(pay) as pay_form:
+            pay_form.journal_id = self.company_data['default_journal_cash']
+            pay_form.name = '/'
+
+        self.assertRecordValues(pay.line_ids.sorted('balance'), [
+            {
+                'debit': 0.0,
+                'credit': 123.0,
+                'account_id': self.company_data['default_account_receivable'].id,
+            },
+            {
+                'debit': 123.0,
+                'credit': 0.0,
+                'account_id': self.company_data['default_journal_cash'].payment_debit_account_id.id,
+            },
+        ])

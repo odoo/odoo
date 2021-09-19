@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import time
+from xmlrpc.client import Binary
 
 from odoo.exceptions import AccessDenied, AccessError
 from odoo.http import _request_stack
@@ -79,6 +80,13 @@ class TestXMLRPC(common.HttpCase):
                 'args': args
             }
         })
+
+    def test_xmlrpc_attachment_raw(self):
+        ids = self.env['ir.attachment'].create({'name': 'n', 'raw': b'\x01\02\03'}).ids
+        [att] = self.xmlrpc_object.execute(
+            common.get_db_name(), self.admin_uid, 'admin',
+            'ir.attachment', 'read', ids, ['raw'])
+        self.assertEqual(att['raw'], '', "actual binary data should be blanked out on read")
 
 # really just for the test cursor
 @common.tagged('post_install', '-at_install')

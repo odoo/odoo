@@ -127,6 +127,8 @@ class ProductProduct(models.Model):
         bom_kits = self.env['mrp.bom']._get_product2bom(self, bom_type='phantom')
         kits = self.filtered(lambda p: bom_kits.get(p))
         res = super(ProductProduct, self - kits)._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
+        qties = self.env.context.get("mrp_compute_quantities", {})
+        qties.update(res)
         for product in bom_kits:
             boms, bom_sub_lines = bom_kits[product].explode(product, 1)
             ratios_virtual_available = []
@@ -135,17 +137,17 @@ class ProductProduct(models.Model):
             ratios_outgoing_qty = []
             ratios_free_qty = []
             for bom_line, bom_line_data in bom_sub_lines:
-                component = bom_line.product_id
+                component = bom_line.product_id.with_context(mrp_compute_quantities=qties)
                 if component.type != 'product' or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
                     # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
                     # to avoid a division by zero. The same logic is applied to non-storable products as those
                     # products have 0 qty available.
                     continue
                 uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
+                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False, raise_if_failure=False)
                 if not qty_per_kit:
                     continue
-                component_res = res.get(component.id, {
+                component_res = qties.get(component.id, {
                     "virtual_available": component.virtual_available,
                     "qty_available": component.qty_available,
                     "incoming_qty": component.incoming_qty,

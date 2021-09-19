@@ -681,6 +681,31 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
+    QUnit.test('only process most recent data for concurrent groupby', async function (assert) {
+        assert.expect(4);
+
+        const graph = await createView({
+            View: GraphView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <graph>
+                    <field name="product_id" type="row"/>
+                    <field name="foo" type="measure"/>
+                </graph>`,
+        });
+
+        assert.checkLabels(graph, [['xphone'], ['xpad']]);
+        assert.checkDatasets(graph, 'data', {data: [82, 157]});
+
+        testUtils.graph.reload(graph, {groupBy: ['color_id']});
+        await testUtils.graph.reload(graph, {groupBy: ['date:month']});
+        assert.checkLabels(graph, [['January 2016'], ['March 2016'], ['May 2016'], ['Undefined'], ['April 2016']]);
+        assert.checkDatasets(graph, 'data', {data: [56, 26, 4, 105, 48]});
+
+        graph.destroy();
+    });
+
     QUnit.test('use a many2one as a measure should work (without groupBy)', async function (assert) {
         assert.expect(4);
 
