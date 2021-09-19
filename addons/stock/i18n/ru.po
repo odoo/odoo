@@ -17,7 +17,8 @@
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Андрей Гусев <gaussgss@gmail.com>, 2019
 # Константин Коровин <korovin74@gmail.com>, 2019
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2020
+# Диляра Дельтаева <dilya.kz93@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
+"Last-Translator: Диляра Дельтаева <dilya.kz93@gmail.com>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -749,7 +750,7 @@ msgstr "Доступные продукты"
 #: code:addons/stock/models/product.py:581
 #, python-format
 msgid "Available quantity should be set to zero before changing type"
-msgstr ""
+msgstr "Перед изменением типа доступное количество необходимо обнулить."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -4193,7 +4194,7 @@ msgstr "Добавьте несколько элементов для перем
 #: code:addons/stock/models/stock_quant.py:92
 #, python-format
 msgid "Please check the following serial number (name, id): "
-msgstr ""
+msgstr "Проверьте следующий серийный номер (имя, идентификатор):"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:132
@@ -6868,6 +6869,8 @@ msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
 "the default route when products pass through this warehouse."
 msgstr ""
+"Если для этого маршрута выбран склад, этот маршрут следует рассматривать как"
+" маршрут по умолчанию, когда продукты проходят через этот склад."
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -6880,11 +6883,15 @@ msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
 "Product form."
 msgstr ""
+"Если этот флажок установлен, маршрут будет доступен для выбора во вкладке "
+"«Инвентарь» формы «Продукт»."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
 msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
+"Если этот флажок установлен, маршрут будет доступен для выбора в Категории "
+"Продуктов."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:113
@@ -7418,4 +7425,4 @@ msgstr "⇒ Установить количество в 0"
 #: code:addons/stock/models/stock_move_line.py:223
 #, python-format
 msgid "Changing the product is only allowed in 'Draft' state."
-msgstr ""
+msgstr "Изменение продукта разрешено только в состоянии «Черновик»."
