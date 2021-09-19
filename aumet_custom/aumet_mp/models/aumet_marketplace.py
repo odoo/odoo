@@ -14,6 +14,12 @@ class AumetMarketPlace(models.Model):
     api_key = fields.Char(string='Api Key', required=True)
     description = fields.Text()
 
+    def get_profile_info(self, company_id, token):
+        headers = self.get_header(company_id)
+        headers.update({"x-access-token": token})
+        response = requests.get(f"{self.base_url}/v1/users/profile", headers=headers)
+        return response.json()
+
     def get_header(self, company_id):
         return {
             'Content-Type': 'application/json',
@@ -34,6 +40,10 @@ class AumetMarketPlace(models.Model):
             return False, response.json()
         cookie = 'PHPSESSID=%s' % response.cookies.get('PHPSESSID')
         json_res = response.json()
+        data = json_res["data"]
+        profile_info = self.get_profile_info(json_res["data"]["id"], json_res["data"]["accessToken"])
+        data.update({"id": list(profile_info["data"]["entityList"].keys())[0]})
+        json_res.update({"data": data})
         json_res['cookie'] = cookie
         return True, json_res
 
@@ -57,7 +67,7 @@ class AumetMarketPlace(models.Model):
         header = self.get_header(company_id.id)
         header['Cookie'] = company_id.mp_cookie
         header['x-access-token'] = company_id.mp_access_token
-        entity_id = pol.order_id.partner_id.mp_entity_id
+        entity_id = company_id.pharmacy_id
         supplierinfo_id = \
             pol.product_id.seller_ids.filtered(lambda seller: seller.name.id == pol.order_id.partner_id.id)[0]
         data = {
