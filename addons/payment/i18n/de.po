@@ -33,6 +33,7 @@
 # Ermin Trevisan <trevi@twanda.com>, 2021
 # Robert Förster <hello@suppliot.eu>, 2021
 # Martin Trigaux, 2021
+# Andreas Schmidt <schmigo@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -40,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Andreas Schmidt <schmigo@gmail.com>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,7 +76,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr ""
+msgstr " Abgerufene Daten"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -94,6 +95,8 @@ msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
+"<h3>Bitte überweisen Sie an </h3><ul><li>Bank %s</li><li>Kontonummer "
+"%s</li><li>Kontoinhaber %s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -122,7 +125,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span class=\"fa fa-arrow-right\"> Get my Stripe keys</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-right\"> Meine Stripe-Schlüssel erhalten</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -130,6 +133,8 @@ msgid ""
 "<span class=\"fa fa-arrow-right\"> How to configure your PayPal "
 "account</span>"
 msgstr ""
+"<span class=\"fa fa-arrow-right\"> So konfigurieren Sie Ihr PayPal-"
+"Konto</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -142,6 +147,9 @@ msgid ""
 "<span>Start selling directly without an account; an email will be sent by "
 "Paypal to create your new account and collect your payments.</span>"
 msgstr ""
+"<span>Starten Sie den Verkauf direkt ohne ein Konto; eine E-Mail wird von "
+"Paypal gesendet, um Ihr neues Konto zu erstellen und Ihre Zahlungen zu "
+"sammeln.</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
@@ -344,7 +352,7 @@ msgstr "Autorisationsmechanismus unterstützt"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__auth_msg
 msgid "Authorize Message"
-msgstr ""
+msgstr "Meldung autorisieren"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
@@ -619,22 +627,22 @@ msgstr "Kreditkart (angetrieben durch Adyen)"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_alipay
 msgid "Credit Card (powered by Alipay)"
-msgstr ""
+msgstr "Kreditkarte (powered by Alipay)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_authorize
 msgid "Credit Card (powered by Authorize)"
-msgstr ""
+msgstr "Kreditkarte (powered by Authorize)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_buckaroo
 msgid "Credit Card (powered by Buckaroo)"
-msgstr ""
+msgstr "Kreditkarte (powered by Buckaroo)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_odoo
 msgid "Credit Card (powered by Odoo Payments)"
-msgstr ""
+msgstr "Kreditkarte (powered by Odoo Payments)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_ogone
@@ -644,22 +652,22 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_payulatam
 msgid "Credit Card (powered by PayU Latam)"
-msgstr ""
+msgstr "Kreditkarte (powered by PayU Latam)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_payumoney
 msgid "Credit Card (powered by PayUmoney)"
-msgstr ""
+msgstr "Kreditkarte (powered by PayUmoney)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_sips
 msgid "Credit Card (powered by Sips)"
-msgstr ""
+msgstr "Kreditkarte (powered by Sips)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_stripe
 msgid "Credit Card (powered by Stripe)"
-msgstr ""
+msgstr "Kreditkarte (powered by Stripe)"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__stripe
@@ -875,6 +883,7 @@ msgstr "Wenn nicht festgelegt, wird der Name des Zahlungsanbieters verwendet."
 #, python-format
 msgid "If the payment hasn't been confirmed you can contact us."
 msgstr ""
+"Sollte die Zahlung nicht bestätigt worden sein, können Sie uns kontaktieren."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
@@ -1036,7 +1045,7 @@ msgstr "Manuell"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
 msgid "Merchant Account ID"
-msgstr ""
+msgstr "Verkäufer Account ID"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
@@ -1082,6 +1091,8 @@ msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Acquirer menu."
 msgstr ""
+"Es konnte keine manuelle Zahlungsmethode für diese Firma gefunden werden. "
+"Bitte erstellen Sie eine aus dem Menü Payment Acquirer."
 
 #. module: payment
 #. openerp-web
@@ -1200,12 +1211,12 @@ msgstr "Andere"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__other
 msgid "Other payment acquirer"
-msgstr ""
+msgstr "Anderer Zahlungserwerber"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "PDT-Identitäts-Token"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_id
@@ -1235,7 +1246,7 @@ msgstr "PayPal"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payulatam
 msgid "PayU Latam"
-msgstr ""
+msgstr "PayU Latam"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payumoney
@@ -1268,12 +1279,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
 msgid "Payment Followup"
-msgstr ""
+msgstr "Zahlungsnachverfolgung"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
 msgid "Payment Form"
-msgstr ""
+msgstr "Zahlungsformular"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_icon
@@ -1360,12 +1371,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer_onboarding_wizard
 msgid "Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Assistent für die Zahlungserfassung Onboarding"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Payment method set!"
-msgstr ""
+msgstr "Zahlungsart eingestellt!"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -1390,7 +1401,7 @@ msgstr "eingegangene Zahlungen"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_user_type
 msgid "Paypal User Type"
-msgstr ""
+msgstr "Paypal-Benutzertyp"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__pending
@@ -1529,7 +1540,7 @@ msgstr "Wählen Sie Länder aus. Lassen Sie es leer, um überall zu benutzen."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
 msgid "Selected onboarding payment method"
-msgstr ""
+msgstr "Ausgewählte Onboarding-Zahlungsmethode"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__sequence
@@ -1615,7 +1626,7 @@ msgstr "Status"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
 msgid "State of the onboarding payment acquirer step"
-msgstr ""
+msgstr "Zustand des Onboarding-Zahlungserfassers Schritt"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
@@ -1849,7 +1860,7 @@ msgstr ""
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "The value of the payment amount must be positive."
-msgstr ""
+msgstr "Der Wert des Zahlungsbetrags muss positiv sein."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -1882,6 +1893,9 @@ msgid ""
 "This partner has no email, which may cause issues with some payment "
 "acquirers. Setting an email for this partner is advised."
 msgstr ""
+"Dieser Partner hat keine E-Mail, was bei einigen Zahlungserfassern zu "
+"Problemen führen kann. Es wird empfohlen, eine E-Mail für diesen Partner "
+"einzurichten."
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -2097,6 +2111,8 @@ msgstr "Sie müssen ein Journal für Ihren Zahlungsempfänger einrichten %s."
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
 msgstr ""
+"Sie sollten in wenigen Minuten eine E-Mail zur Bestätigung Ihrer Zahlung "
+"erhalten."
 
 #. module: payment
 #. openerp-web
@@ -2165,7 +2181,7 @@ msgstr "Ihre Zahlung wurde genehmigt."
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_transfer
 #, python-format
 msgid "Your payment has been cancelled."
-msgstr ""
+msgstr "Ihre Zahlung wurde storniert."
 
 #. module: payment
 #. openerp-web
@@ -2193,6 +2209,8 @@ msgstr "Ihre Zahlung wurde empfangen, muss jedoch manuell bestätigt werden."
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
 msgstr ""
+"Ihre Zahlung wurde erfolgreich verarbeitet, wartet aber noch auf die "
+"Freigabe."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -2212,7 +2230,7 @@ msgstr ""
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_transfer
 #, python-format
 msgid "Your payment has been successfully processed. Thank you!"
-msgstr ""
+msgstr "Ihre Zahlung wurde erfolgreich verarbeitet. Wir danken Ihnen!"
 
 #. module: payment
 #. openerp-web

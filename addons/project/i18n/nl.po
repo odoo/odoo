@@ -110,18 +110,18 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "(+ %(child_count)s tasks)"
-msgstr ""
+msgstr "(+ %(child_count)s taken)"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "(+ 1 task)"
-msgstr ""
+msgstr "(+ 1 taak)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "(due on"
-msgstr ""
+msgstr "(te laat op"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -131,7 +131,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "- reached on"
-msgstr ""
+msgstr "- behaald op"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -469,6 +469,9 @@ msgid ""
 "                                    Milestones\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Milestones\n"
+"                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -477,6 +480,9 @@ msgid ""
 "                                Burndown Chart\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Burndown Chart\n"
+"                            </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -557,7 +563,7 @@ msgstr "<strong>Gerapporteerd door</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "=&gt;"
-msgstr ""
+msgstr "=&gt;"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_defaults
@@ -575,6 +581,8 @@ msgid ""
 "A sub-task cannot be a recurring task. Please consider making its parent "
 "task, a recurring task."
 msgstr ""
+"Een subtaak kan geen terugkerende taak zijn. Overweeg om van de "
+"bovenliggende taak een terugkerende taak te maken."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -637,7 +645,7 @@ msgstr "Soorten activiteiten"
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #, python-format
 msgid "Add Milestone"
-msgstr ""
+msgstr "Voeg milestone toe"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -842,7 +850,7 @@ msgstr "Datum toewijzing"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__at_risk
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__at_risk
 msgid "At Risk"
-msgstr ""
+msgstr "In gevaar"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -850,6 +858,8 @@ msgid ""
 "At each stage, employees can block tasks or mark them as ready for the next step.\n"
 "                                    You can customize here the labels for each state."
 msgstr ""
+"In elke fase kunnen medewerkers taken blokkeren of markeren als gereed voor de volgende stap.\n"
+"                                     Je kunt hier de labels voor elke fase aanpassen."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -862,7 +872,7 @@ msgstr "Aantal bijlagen"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachments that don't come from a message."
-msgstr ""
+msgstr "Bijlagen die niet uit een bericht komen."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__august
@@ -893,6 +903,9 @@ msgid ""
 " * Good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Wijzig automatisch de kanbanstatus wanneer de klant reageert op de feedback voor deze fase.\n"
+"  * Goede feedback van de klant zal de kanbanstatus updaten naar ‘klaar voor de nieuwe fase’ (groene stip).\n"
+"  * Neutrale of slechte feedback stelt de kanban-status in op ‘geblokkeerd’ (rode stip).\n"
 
 #. module: project
 #. openerp-web
@@ -914,7 +927,7 @@ msgstr "Geblokkeerd"
 #: model:ir.model.fields,field_description:project.field_project_task__depend_on_ids
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocked By"
-msgstr ""
+msgstr "Geblokkeerd door"
 
 #. module: project
 #. openerp-web
@@ -931,7 +944,7 @@ msgstr "Brainstorm"
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Burndown Chart"
-msgstr ""
+msgstr "Burndown Chart"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -946,7 +959,7 @@ msgstr "Controleer of de relatie een bedrijf is, anders is het een persoon."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__child_text
 msgid "Child Text"
-msgstr ""
+msgstr "Onderliggende tekst"
 
 #. module: project
 #. openerp-web
@@ -956,6 +969,8 @@ msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
 "     of a product, of a team, of a construction site, etc.</i>"
 msgstr ""
+"Kies een <b>naam</b> voor het project. <i>Het kan van alles zijn: de naam van een klant,\n"
+"      van een product, van een team, van een bouwplaats, enz.</i>"
 
 #. module: project
 #. openerp-web
@@ -1070,7 +1085,7 @@ msgstr "Contact"
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "Continue Recurrence"
-msgstr ""
+msgstr "Doorgaan met herhaling"
 
 #. module: project
 #. openerp-web
@@ -1262,7 +1277,7 @@ msgstr "Datum"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_group_by
 msgid "Date Group By"
-msgstr ""
+msgstr "Datum groeperen op"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_month__date
@@ -1363,7 +1378,7 @@ msgstr "Verwijder"
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #, python-format
 msgid "Delete Milestone"
-msgstr ""
+msgstr "Milestone verwijderen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1408,7 +1423,7 @@ msgstr "Ontwerp"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Determine the order in which to perform tasks"
-msgstr ""
+msgstr "Bepaal de volgorde waarin taken moeten worden uitgevoerd"
 
 #. module: project
 #. openerp-web
@@ -1465,7 +1480,7 @@ msgstr "Schermnaam"
 #: model:ir.model.fields,field_description:project.field_project_task__display_project_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__display_project_id
 msgid "Display Project"
-msgstr ""
+msgstr "Project weergeven"
 
 #. module: project
 #: code:addons/project/models/digest.py:0
@@ -1570,12 +1585,14 @@ msgstr "Einddatum"
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "Error! Project start date must be before project end date."
 msgstr ""
+"Fout! De startdatum van het project moet vóór de einddatum van het project "
+"liggen."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Error! You cannot create a recursive hierarchy of tasks."
-msgstr ""
+msgstr "Fout! U kunt geen recursieve hiërarchie van taken maken."
 
 #. module: project
 #. openerp-web
@@ -1719,6 +1736,8 @@ msgid ""
 "Get a snapshot of the status of your project and share its progress with key"
 " stakeholders."
 msgstr ""
+"Krijg een momentopname van de status van uw project en deel de voortgang met"
+" de belangrijkste belanghebbenden."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1792,7 +1811,7 @@ msgstr "Blij gezicht"
 #: model:ir.model.fields,field_description:project.field_project_task__has_message
 #: model:ir.model.fields,field_description:project.field_project_update__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Heeft bericht"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__2
@@ -1813,6 +1832,11 @@ msgid ""
 "\n"
 "Don't forget to set up the email templates on the stages for which you want to get customer feedback."
 msgstr ""
+"Hoe feedback van klanten krijgen?\n"
+"- Beoordeling bij verandering van fase: er wordt een e-mail verzonden wanneer een taak naar een andere fase wordt verplaatst.\n"
+"- Periodieke beoordeling: er wordt periodiek een e-mail verzonden.\n"
+"\n"
+"Vergeet niet de e-mailsjablonen in te stellen op de fasen waarvoor je feedback van klanten wilt krijgen."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1905,6 +1929,8 @@ msgid ""
 "If set, an email will be sent to the customer when the task or issue reaches"
 " this step."
 msgstr ""
+"Indien ingesteld, wordt er een e-mail naar de klant gestuurd wanneer de taak"
+" deze stap bereikt."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_bounced_content
@@ -1978,12 +2004,12 @@ msgstr "Uitgenodigde werknemers"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_exceeded
 msgid "Is Deadline Exceeded"
-msgstr ""
+msgstr "Deadline is overschreden"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_future
 msgid "Is Deadline Future"
-msgstr ""
+msgstr "Deadline is in toekomst"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
@@ -2008,7 +2034,7 @@ msgstr "Issue versie"
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "It seems that some tasks are part of a recurrence."
-msgstr ""
+msgstr "Het lijkt erop dat sommige taken deel uitmaken van een herhaling."
 
 #. module: project
 #. openerp-web
@@ -2016,7 +2042,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "It seems that this task is part of a recurrence."
-msgstr ""
+msgstr "Het lijkt erop dat deze taak onderdeel is van een herhaling."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__january
@@ -2119,12 +2145,12 @@ msgstr "Laatst bijgewerkt"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_color
 msgid "Last Update Color"
-msgstr ""
+msgstr "Laatst kleur bijgewerkt"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_status
 msgid "Last Update Status"
-msgstr ""
+msgstr "Laatst status bijgewerkt"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
@@ -2169,12 +2195,12 @@ msgstr "Late taken"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Dissatisfied"
-msgstr ""
+msgstr "Laatste beoordeling: Ontevreden"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Okay"
-msgstr ""
+msgstr "Laatste beoordeling: Oké"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -2204,6 +2230,8 @@ msgid ""
 "Let's go back to the <b>kanban view</b> to have an overview of your next "
 "tasks."
 msgstr ""
+"Laten we teruggaan naar de <b>kanban-weergave</b> voor een overzicht van uw "
+"volgende taken."
 
 #. module: project
 #. openerp-web
@@ -2330,12 +2358,12 @@ msgstr "Berichten"
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_ids
 #, python-format
 msgid "Milestone"
-msgstr ""
+msgstr "Milestone"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_count
 msgid "Milestone Count"
-msgstr ""
+msgstr "Milestone Count"
 
 #. module: project
 #. openerp-web
@@ -2344,7 +2372,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 #, python-format
 msgid "Milestones"
-msgstr ""
+msgstr "Milestones"
 
 #. module: project
 #. openerp-web
@@ -2408,12 +2436,12 @@ msgstr "Naam"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__name_cropped
 msgid "Name Cropped"
-msgstr ""
+msgstr "Naam bijgesneden"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks"
-msgstr ""
+msgstr "Naam van de taak"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -2433,7 +2461,7 @@ msgstr "Nieuw"
 #: code:addons/project/static/src/js/right_panel/project_utils.js:0
 #, python-format
 msgid "New Milestone"
-msgstr ""
+msgstr "Nieuwe milstoe"
 
 #. module: project
 #. openerp-web
@@ -2473,7 +2501,7 @@ msgstr "Volgende activiteiten"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
 #: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Volgende activiteitenafspraak"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
@@ -2497,7 +2525,7 @@ msgstr "Volgende activiteit type"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Next Occurrences:"
-msgstr ""
+msgstr "Volgende herhalingen:"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__next_recurrence_date
@@ -2529,7 +2557,7 @@ msgstr "Nog geen gegevens!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_milestone_all
 msgid "No milestones found. Let's create one!"
-msgstr ""
+msgstr "Geen milestones gevonden. Laten we er een maken!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -2557,7 +2585,7 @@ msgstr "Geen taken gevonden. Maak er één aan!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
 msgid "No updates found. Let's create one!"
-msgstr ""
+msgstr "Geen updates gevonden. Laten we er een maken!"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -2594,12 +2622,12 @@ msgstr "Aantal herhalingen"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__tasks_count
 msgid "Number of Tasks"
-msgstr ""
+msgstr "Aantal taken"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__recurrence_left
 msgid "Number of Tasks Left to Create"
-msgstr ""
+msgstr "Aantal resterende taken om te maken"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_close
@@ -2609,7 +2637,7 @@ msgstr "Aantal werkdagen tot openen taak"
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_open
 msgid "Number of Working Days to open the task"
-msgstr ""
+msgstr "Aantal werkdagen om de taak te openen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__doc_count
@@ -2658,7 +2686,7 @@ msgstr "Oktober"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__off_track
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__off_track
 msgid "Off Track"
-msgstr ""
+msgstr "Niet op schema"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -2682,7 +2710,7 @@ msgstr "In wachtstand"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_track
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_track
 msgid "On Track"
-msgstr ""
+msgstr "Op schema"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
@@ -2700,7 +2728,7 @@ msgstr "Open taken"
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Open tasks"
-msgstr ""
+msgstr "Open taken"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
@@ -2745,6 +2773,9 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection when the task or issue is in that stage."
 msgstr ""
+"Overschrijf de standaardwaarde die wordt weergegeven voor de geblokkeerde "
+"status voor kanbanselectie wanneer de taak of het probleem zich in die fase "
+"bevindt."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_done
@@ -2753,6 +2784,9 @@ msgid ""
 "Override the default value displayed for the done state for kanban selection"
 " when the task or issue is in that stage."
 msgstr ""
+"Overschrijf de standaardwaarde die wordt weergegeven voor de status Gereed "
+"voor kanbanselectie wanneer de taak of het probleem zich in die fase "
+"bevindt."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_normal
@@ -2761,6 +2795,9 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection when the task or issue is in that stage."
 msgstr ""
+"Overschrijf de standaardwaarde die wordt weergegeven voor de normale status "
+"voor kanbanselectie wanneer de taak of het probleem zich in die fase "
+"bevindt."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_user_id
@@ -2816,7 +2853,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "Periodic rating"
-msgstr ""
+msgstr "Periodieke beoordeling"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__partner_phone
@@ -2978,7 +3015,7 @@ msgstr "Projectbeheerder"
 #. module: project
 #: model:ir.model,name:project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "Project Milestone"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3008,13 +3045,13 @@ msgstr "Projecttaken"
 #: model:ir.model,name:project.model_project_update
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "Project Update"
-msgstr ""
+msgstr "Projectupdate"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_update_all_action
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban_inherit_project
 msgid "Project Updates"
-msgstr ""
+msgstr "Projectupdates"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
@@ -3421,7 +3458,7 @@ msgstr "Zoek project"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Search Update"
-msgstr ""
+msgstr "Zoek update"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3512,7 +3549,7 @@ msgstr "Delen"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
 msgid "Show Project on Dashboard"
-msgstr ""
+msgstr "Toon project op dashboard"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -3650,12 +3687,12 @@ msgstr ""
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "Stop Recurrence"
-msgstr ""
+msgstr "Herhaling stoppen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_count
 msgid "Sub-task Count"
-msgstr ""
+msgstr "Aantal sub-taken"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allow_subtasks
@@ -3676,6 +3713,9 @@ msgid ""
 "Sum of the time planned of all the sub-tasks linked to this task. Usually "
 "less than or equal to the initially planned time of this task."
 msgstr ""
+"Som van de geplande tijd van alle deeltaken die aan deze taak zijn "
+"gekoppeld. Meestal minder dan of gelijk aan de aanvankelijk geplande tijd "
+"van deze taak."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__sun
@@ -3749,7 +3789,7 @@ msgstr "Taak teller"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count_with_subtasks
 msgid "Task Count With Subtasks"
-msgstr ""
+msgstr "Aantal taken met subtaken"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -3763,7 +3803,7 @@ msgstr "Taak aangemaakt"
 #: model:ir.model.fields,field_description:project.field_project_task__allow_task_dependencies
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_task_dependencies
 msgid "Task Dependencies"
-msgstr ""
+msgstr "Taakafhankelijkheden"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
@@ -3834,12 +3874,12 @@ msgstr "Taak is klaar voor volgende fase"
 #. module: project
 #: model:mail.template,name:project.rating_project_request_email_template
 msgid "Task: Rating Request"
-msgstr ""
+msgstr "Taak: beoordelingsverzoek"
 
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
 msgid "Task: Reception Acknowledgment"
-msgstr ""
+msgstr "Taak: Ontvangstbevestiging"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -3983,7 +4023,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "There are no more occurrences."
-msgstr ""
+msgstr "Er zijn geen herhalingen meer."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -4097,7 +4137,7 @@ msgstr "Titel"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "Title of the Update"
-msgstr ""
+msgstr "Titel van de update"
 
 #. module: project
 #. openerp-web
@@ -4141,11 +4181,13 @@ msgstr "Volg klanttevredenheid op taken"
 #, python-format
 msgid "Track major progress points that must be reached to achieve success."
 msgstr ""
+"Houd belangrijke voortgangspunten bij die moeten worden bereikt om succes te"
+" behalen."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Track the progress of your tasks from their creation to their closing."
-msgstr ""
+msgstr "Volg de voortgang van uw taken vanaf het maken tot het sluiten."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -4228,7 +4270,7 @@ msgstr "Bijwerken"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Updated (Last 30 Days)"
-msgstr ""
+msgstr "Bijgewerkt (afgelopen 30 dagen)"
 
 #. module: project
 #. openerp-web
@@ -4240,7 +4282,7 @@ msgstr "Gebruik <b>activiteiten</b> om je dagelijkse werk te organiseren."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_enabled
 msgid "Use Email Alias"
-msgstr ""
+msgstr "E-mailalias gebruiken"
 
 #. module: project
 #: model:res.groups,name:project.group_project_rating
@@ -4260,7 +4302,7 @@ msgstr "Gebruik subtaken"
 #. module: project
 #: model:res.groups,name:project.group_project_task_dependencies
 msgid "Use Task Dependencies"
-msgstr ""
+msgstr "Taakafhankelijkheden gebruiken"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
@@ -4282,6 +4324,8 @@ msgid ""
 "Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \n"
 "    Add new people to the followers' list to make them aware of the main changes about this task."
 msgstr ""
+"Gebruik de chatter om <b>e-mails te verzenden</b> en efficiënt met je klanten te communiceren.\n"
+"     Voeg nieuwe mensen toe aan de lijst met volgers om hen op de hoogte te stellen van de belangrijkste wijzigingen met betrekking tot deze taak."
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -4296,7 +4340,7 @@ msgstr "Gebruikers e-mail"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "View Task"
-msgstr ""
+msgstr "Taak bekijken"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
@@ -4375,22 +4419,22 @@ msgstr "Of dit project getoond moet worden op uw dashboard of niet."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
 msgid "Working Days to Assign"
-msgstr ""
+msgstr "Werkdagen om toe te wijzen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_close
 msgid "Working Days to Close"
-msgstr ""
+msgstr "Werkdagen om te sluiten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
 msgid "Working Hours to Assign"
-msgstr ""
+msgstr "Werkuren om toe te wijzen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
 msgid "Working Hours to Close"
-msgstr ""
+msgstr "Werkuren om te sluiten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
@@ -4441,6 +4485,7 @@ msgstr ""
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr ""
+"Je kunt terugkerende taken niet archiveren. Schakel eerst de herhaling uit."
 
 #. module: project
 #: code:addons/project/models/analytic_account.py:0
@@ -4449,12 +4494,14 @@ msgid ""
 "You cannot change the company of an analytic account if it is related to a "
 "project."
 msgstr ""
+"Je kunt het bedrijf van een kostenplaats niet wijzigen als deze is "
+"gerelateerd aan een project."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot create cyclic dependency."
-msgstr ""
+msgstr "U kunt geen cyclische afhankelijkheid creëren."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -4472,6 +4519,7 @@ msgstr ""
 msgid ""
 "You cannot delete recurring tasks. Please disable the recurrence first."
 msgstr ""
+"Je kunt terugkerende taken niet verwijderen. Schakel eerst de herhaling uit."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -4494,7 +4542,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. New Design"
-msgstr ""
+msgstr "bijv. Nieuw ontwerp"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified

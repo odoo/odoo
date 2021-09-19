@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-07-12 15:19+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2021\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,12 +24,12 @@ msgstr ""
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
-msgstr ""
+msgstr "Account EDI-proxygebruiker"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_res_company__account_edi_proxy_client_ids
 msgid "Account Edi Proxy Client"
-msgstr ""
+msgstr "Account EDI-proxyclient"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__active
@@ -79,7 +79,7 @@ msgstr "EDI formaat"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
 msgid "Edi Identification"
-msgstr ""
+msgstr "EDI identificatie"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id
@@ -89,7 +89,7 @@ msgstr "Id"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id_client
 msgid "Id Client"
-msgstr ""
+msgstr "Id Client"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user____last_update
@@ -119,7 +119,7 @@ msgstr "Vernieuw token"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__private_key
 msgid "The key to encrypt all the user's data"
-msgstr ""
+msgstr "De sleutel om alle gegevens van de gebruiker te versleutelen"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
@@ -127,6 +127,8 @@ msgid ""
 "The unique id that identifies this user for on the edi format, typically the"
 " vat"
 msgstr ""
+"De unieke id die deze gebruiker identificeert in het edi-formaat, meestal "
+"het btw-nummer"
 
 #. module: account_edi_proxy_client
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
@@ -134,6 +136,8 @@ msgstr ""
 msgid ""
 "The url that this service does not exist. The url it tried to contact was %s"
 msgstr ""
+"De url dat deze service niet bestaat. De URL waarmee contact werd gezocht, "
+"was %s"
 
 #. module: account_edi_proxy_client
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
@@ -142,6 +146,8 @@ msgid ""
 "The url that this service requested returned an error. The url it tried to "
 "contact was %s"
 msgstr ""
+"De URL die door deze service is aangevraagd, heeft een fout geretourneerd. "
+"De URL waarmee contact werd gezocht, was %s"
 
 #. module: account_edi_proxy_client
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
@@ -150,13 +156,15 @@ msgid ""
 "The url that this service requested returned an error. The url it tried to "
 "contact was %s. %s"
 msgstr ""
+"De URL die door deze service is aangevraagd, heeft een fout geretourneerd. "
+"De URL waarmee contact werd gezocht, was %s. %s"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_edi_identification_per_format
 msgid "This edi identification is already assigned to a user"
-msgstr ""
+msgstr "Deze edi-identificatie is al toegewezen aan een gebruiker"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_id_client
 msgid "This id_client is already used on another user."
-msgstr ""
+msgstr "Deze id_client wordt al gebruikt door een andere gebruiker."
