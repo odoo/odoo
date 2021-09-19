@@ -1,3 +1,39 @@
+@keyframes r {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(45deg);
+    }
+}
+
+#side_menus .sidebar-nav {
+    position: inherit !important;
+    top: unset !important;
+    width: 100% !important;
+}
+
+#splash {
+    transition: all .3s linear
+}
+
+#splash.hidden {
+    opacity: 0;
+    z-index: -1;
+    visibility: hidden;
+}
+
+svg.gear {
+    animation: r .5s infinite linear;
+}
+
+#sidebar-wrapper {
+    margin-top: 0 !important;
+    left: 350px !important;
+    width: 349px !important;
+    margin-left: -350px !important;
+}
+
 .pos {
     background-color: #ffffff;
     color: #000000;
@@ -138,13 +174,19 @@
 
 .pos .leftpane {
     background: #ffffff;
+    max-width: 25% !important;
+    border-right: 1px solid #5F5955;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0;
 }
 
 .pos .leftpane .pads {
     border-top: 0;
-    width: 80% !important;
+    width: 100% !important;
     margin: auto;
-    padding-bottom: 10px !important;
+    flex: 0 0 55% !important;
 }
 
 
@@ -153,15 +195,61 @@
     width: 100%;
     padding: 0 !important;
     margin: 0 !important;
+    height: 50% !important;
+
 }
 
+.pos .order-container {
+    flex: 0 0 45%;
+}
+
+.pos .order {
+    background: #FFFFFF !important;
+}
+
+.pos .order .order-empty {
+    margin: 0 !important;
+}
+
+.pos .order .orderline {
+    background: #FFFFFF !important;
+    border-bottom: 1px solid rgba(189, 189, 189, 0.5);
+}
+
+.pos .order .orderline .line {
+    width: 75% !important;
+}
+
+.pos .order .orderline .name {
+    width: 60% !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pos .order .orderline .product-name {
+    width: 40% !important;
+}
+
+.pos .order .orderline .info-list, .pos .order .orderline .info-list em {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 19px;
+    color: #000000 !important;
+}
+
+.pos .ticket-button {
+    background: #1FBBA6 !important;
+}
 
 /*  ********* The control buttons ********* */
 .pos .control-buttons {
-    margin: 0 !important;
-    width: 100% !important;
-    padding-left: 0 !important;
-
+    margin: auto !important;
+    width: 80% !important;
+    padding: 0 !important;
+    flex-shrink: 1 !important;
+    height: 15% !important;
 
 }
 
@@ -171,6 +259,13 @@
     margin-bottom: 0 !important;
     border-radius: 10px 10px 0 0 !important;
     background: #E2E2E2;
+    height: 100% !important;
+}
+
+
+.pos .product-screen .numpad {
+    height: 100% !important;
+
 }
 
 .pos .control-button:active {
@@ -188,13 +283,15 @@
 .pos .actionpad {
     padding: 0 !important;
     margin: auto !important;
-    width: 100%;
+    width: 80% !important;
     text-align: center;
     vertical-align: top;
     border: none !important;
     border-radius: 0 !important;
     flex-grow: 1;
     display: flex;
+    height: 15% !important;
+    max-width: 80% !important;
 }
 
 
@@ -211,33 +308,47 @@
     background: #efefef;
 }
 
+.pos .actionpad .button.set-customer {
+    padding: 0 !important
+}
+
 .pos .pay {
     color: #ffffff;
     background-color: #1FBBA6;
     border-radius: 10px 10px 10px 10px !important;
     font-weight: 500;
     font-size: 18px;
-    margin: auto;
-    margin-top: 10% !important;
-    height: 56px;
-    width: 100%;
-    max-width: 100%;
+    height: 15%;
+    width: 70%;
+    max-width: 70%;
+    margin: 8px;
 }
 
 .pos .pay:hover {
     opacity: 0.9;
 }
 
-@media screen and (max-width: 768px) {
-    .pos .actionpad .button.set-customer {
-        padding-left: 0px;
-        padding-right: 0px;
-    }
+.pos .actionpad .button.set-customer {
+    height: 100% !important;
+}
 
-    .pos .actionpad .button.set-customer.decentered {
-        padding-left: 0px;
-        padding-right: 0px;
-    }
+.pos .middel {
+    border-right: 1px solid #787878 !important;
+    width: 6% !important;
+    margin-left: 3px;
+
+}
+
+.middle-component-buttons {
+    width: 100% !important;
+    margin-left: 0 !important;
+}
+
+.middle-component .custom-control-button {
+    width: 59px !important;
+    height: 59px !important;
+    background: #E5E5E5 !important;
+    border-radius: 7px;
 }
 
 /*  ********* The Numpad ********* */
@@ -246,13 +357,13 @@
     text-align: center;
     border: 0 !important;
     margin: auto !important;
-    width: 100% !important;
-    min-width: 100% !important;
+    width: 80% !important;
+    min-width: 80% !important;
 }
 
 .pos .product-screen .numpad button {
     float: left;
-    height: 54px;
+    height: 25%;
     width: 25% !important;
     font-weight: bold;
     vertical-align: middle;
@@ -601,6 +712,7 @@
         padding-top: 0 !important;
     }
 }
+
 /*--------------------End-Payment-Screen---------------------------*/
 /*--------------------Receipt-Screen-------------------------------*/
 .pos .receipt-screen {
