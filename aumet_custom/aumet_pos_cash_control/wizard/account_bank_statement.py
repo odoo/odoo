@@ -18,10 +18,8 @@ class AccountBankStmtCashWizard(models.Model):
 
     @api.model
     def default_get(self, fields):
-        print("default_getdefault_getdefault_getdefault_get", fields)
         # record_ids = self._context.get('active_ids')
         result = super(AccountBankStmtCashWizard, self).default_get(fields)
-        print("result", result)
 
         # if 'cashbox_lines_ids' in fields:
         cashbox_lines_ids = [
@@ -40,5 +38,5 @@ class AccountBankStmtCashWizard(models.Model):
                                 }),
                             ]
         result['cashbox_lines_ids'] = cashbox_lines_ids
-        print("result222222222", result)
+
         return result

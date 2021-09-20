@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Aumet",
+    'name': "Aumet(DEPRECATED)",
 
     'summary': """
                 Marketplace Integration""",
@@ -15,24 +15,13 @@
 
     'author': "Ahmad Da'na",
     'website': "http://www.aumet.com",
-    'category': 'Apps',
     'version': '0.1',
 
-    'depends': ['base', 'product', 'base_setup', 'point_of_sale', 'purchase'],
-
-    'data': [
-        'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/res_company_views.xml',
-        'views/assets.xml'
-    ],
-
-    'images': ['static/description/icon.png'],
 
     'qweb': [
         'views/templates.xml'
     ],
 
-    'installable': True,
-    'application': True
+    'installable': False,
+    'application': False
 }

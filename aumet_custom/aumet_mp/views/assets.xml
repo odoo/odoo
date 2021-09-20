@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="aumet_assets" name="Aumet Assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/aumet_mp/static/src/css/aumet.css"/>
+        </xpath>
+    </template>
+
+    <template id="aumet_assets_front" name="Aumet Assets" inherit_id="point_of_sale.assets">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/aumet_mp/static/src/css/aumet.css"/>
+        </xpath>
+    </template>
+
+    <template id="assets_backend" name="helpdesk assets" inherit_id="web.assets_backend">
+        <xpath expr="//script[last()]" position="after">
+            <link rel="stylesheet" href="/aumet_mp/static/src/css/aumet.css"/>
+        </xpath>
+    </template>
+
+</odoo>
