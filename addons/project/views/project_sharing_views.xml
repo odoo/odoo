@@ -71,7 +71,8 @@
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <div class="dropdown-menu" role="menu">
-                                        <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
+                                        <!-- [XBO] TODO: remove me in master -->
+                                        <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item d-none" data-field="displayed_image_id">Set Cover Image</a>
                                         <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
                                         <div role="separator" class="dropdown-divider"></div>
                                         <ul class="oe_kanban_colorpicker" data-field="color"/>
