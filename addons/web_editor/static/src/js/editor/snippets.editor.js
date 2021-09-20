@@ -207,8 +207,8 @@ var SnippetEditor = Widget.extend({
                     for (var i in editor.styles) {
                         editor.styles[i].onRemove();
                     }
-                    resolve();
                 },
+                onSuccess: resolve,
             });
         });
 
@@ -337,7 +337,7 @@ var SnippetEditor = Widget.extend({
         }
 
         this.$target.after($clone);
-        this.trigger_up('call_for_each_child_snippet', {
+        this.trigger_up('call_for_each_child_snippet', { // FIXME should be awaited
             $snippet: $clone,
             callback: function (editor, $snippet) {
                 for (var i in editor.styles) {
@@ -1651,7 +1651,10 @@ var SnippetsMenu = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onCallForEachChildSnippet: function (ev) {
-        this._callForEachChildSnippet(ev.data.$snippet, ev.data.callback);
+        const prom = this._callForEachChildSnippet(ev.data.$snippet, ev.data.callback);
+        if (ev.data.onSuccess) {
+            prom.then(() => ev.data.onSuccess());
+        }
     },
     /**
      * Called when asked to clean the DOM for save. Should technically not be
