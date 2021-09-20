@@ -19,6 +19,7 @@ This module provides the core of the Odoo Web Client.
         'views/report_templates.xml',
         'views/base_document_layout_views.xml',
         'views/speedscope_template.xml',
+        'views/lazy_assets.xml',
         'data/report_layout.xml',
     ],
     'assets': {
@@ -184,6 +185,19 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/env.js',
             'web/static/src/legacy/js/model.js',
             'web/static/src/legacy/js/owl_compatibility.js',
+            ("remove", 'web/static/src/legacy/js/views/graph/**/*'),
+            ("remove", 'web/static/src/legacy/scss/graph_view.scss'),
+            ("remove", 'web/static/src/legacy/js/views/pivot/**/*'),
+        ],
+        "web.assets_backend_legacy_lazy": [
+            ("include", "web._assets_helpers"),
+            ('include', 'web._assets_backend_helpers'),
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            # graph
+            'web/static/src/legacy/js/views/graph/**/*',
+            'web/static/src/legacy/scss/graph_view.scss',
+            # pivot
+            'web/static/src/legacy/js/views/pivot/**/*',
         ],
         'web.assets_frontend_minimal': [
             'web/static/src/legacy/js/public/lazyloader.js',
@@ -472,6 +486,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/scss/_variables.scss',
 
             ('include', 'web.frontend_legacy'),
+            ("include", "web.assets_backend_legacy_lazy"),
         ],
         'web.qunit_suite_tests': [
             'base/static/tests/base_settings_tests.js',
