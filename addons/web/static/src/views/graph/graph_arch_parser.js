@@ -5,15 +5,15 @@ import { GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { XMLParser } from "@web/core/utils/xml";
 import { archParseBoolean } from "../helpers/utils";
 
-export const MODES = ["bar", "line", "pie"];
-export const ORDERS = ["ASC", "DESC", null];
+const MODES = ["bar", "line", "pie"];
+const ORDERS = ["ASC", "DESC", null];
 
 export class GraphArchParser extends XMLParser {
     parse(arch, fields = {}) {
         const archInfo = { fields, fieldAttrs: {}, groupBy: [] };
         this.visitXML(arch, (node) => {
             switch (node.tagName) {
-                case "graph":
+                case "graph": {
                     if (node.hasAttribute("disable_linking")) {
                         archInfo.disableLinking = archParseBoolean(
                             node.getAttribute("disable_linking")
@@ -35,7 +35,8 @@ export class GraphArchParser extends XMLParser {
                         archInfo.title = title;
                     }
                     break;
-                case "field":
+                }
+                case "field": {
                     let fieldName = node.getAttribute("name"); // exists (rng validation)
                     if (fieldName === "id") {
                         break;
@@ -73,6 +74,7 @@ export class GraphArchParser extends XMLParser {
                         }
                     }
                     break;
+                }
             }
         });
         return archInfo;
