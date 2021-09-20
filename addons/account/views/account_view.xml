@@ -906,7 +906,7 @@
                                     <field name="amount" class="oe_inline"/>
                                     <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}">%</span>
                                 </div>
-                                <field name="journal_id" domain="[('type', '!=', 'general'), ('company_id', '=', company_id)]" widget="selection"
+                                <field name="journal_id" domain="[('type', '=', 'general'), ('company_id', '=', company_id)]" widget="selection"
                                        attrs="{'invisible': [('rule_type', '!=', 'writeoff_button')]}"/>
                             </group>
                         </group>
