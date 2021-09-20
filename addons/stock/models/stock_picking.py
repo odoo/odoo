@@ -5,7 +5,6 @@ import json
 import time
 from ast import literal_eval
 from datetime import date, timedelta
-from operator import attrgetter, itemgetter
 from collections import defaultdict
 
 from odoo import SUPERUSER_ID, _, api, fields, models
@@ -830,23 +829,7 @@ class Picking(models.Model):
         return move_ids_without_package.filtered(lambda move: not move.scrap_ids)
 
     def _check_move_lines_map_quant_package(self, package):
-        """ This method checks that all product of the package (quant) are well present in the move_line_ids of the picking. """
-        all_in = True
-        pack_move_lines = self.move_line_ids.filtered(lambda ml: ml.package_id == package)
-        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        groupby_keys = ('product_id', 'lot_id')
-
-        grouped_quants = {}
-        for k, g in groupby(package.quant_ids, key=itemgetter(*groupby_keys)):
-            grouped_quants[k] = sum(self.env['stock.quant'].concat(*g).mapped('quantity'))
-
-        grouped_ops = {}
-        for k, g in groupby(pack_move_lines, key=itemgetter(*groupby_keys)):
-            grouped_ops[k] = sum(self.env['stock.move.line'].concat(*g).mapped('product_qty'))
-        if any(not float_is_zero(grouped_quants.get(key, 0) - grouped_ops.get(key, 0), precision_digits=precision_digits) for key in grouped_quants) \
-                or any(not float_is_zero(grouped_ops.get(key, 0) - grouped_quants.get(key, 0), precision_digits=precision_digits) for key in grouped_ops):
-            all_in = False
-        return all_in
+        return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml: ml.package_id == package), 'product_qty')
 
     def _get_entire_pack_location_dest(self, move_line_ids):
         location_dest_ids = move_line_ids.mapped('location_dest_id')
