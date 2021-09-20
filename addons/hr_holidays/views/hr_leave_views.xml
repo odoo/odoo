@@ -48,9 +48,9 @@
                 <filter domain="[('state', '=', 'validate1')]" string="Need Second Approval" name="second_approval"/>
                 <filter string="Approved Time Off" domain="[('state', '=', 'validate')]" name="validated"/>
                 <separator/>
-                <filter string="My Department Time Off" name="department" domain="['|', ('department_id.member_ids.user_id', '=', uid), ('employee_id.user_id', '=', uid)]" help="My Department Time Off"/>
-                <filter string="People I Manage" name="managed_people" domain="[('employee_id.leave_manager_id', '=', uid)]" help="Time off of people you are manager of"/>
                 <filter string="My Time Off" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
+                <filter string="My Team" name="my_team" domain="['|', ('employee_id.leave_manager_id', '=', uid), ('employee_id.user_id', '=', uid)]" help="Time off of people you are manager of"/>
+                <filter string="My Department" name="department" domain="['|', ('department_id.member_ids.user_id', '=', uid), ('employee_id.user_id', '=', uid)]" help="My Department"/>
                 <separator/>
                 <filter string="Active Employee" name="active_employee" domain="[('active_employee','=',True)]"/>
                 <filter name="filter_date_from" date="date_from"/>
@@ -387,6 +387,20 @@
         </field>
     </record>
 
+    <record id="hr_leave_employee_view_dashboard" model="ir.ui.view">
+        <field name="name">hr.leave.view.dashboard</field>
+        <field name="model">hr.leave</field>
+        <field name="arch" type="xml">
+            <calendar string="Time Off Request" js_class="time_off_employee_calendar" form_view_id="%(hr_holidays.hr_leave_view_form_dashboard_new_time_off)d" event_open_popup="true" date_start="date_from" date_stop="date_to" mode="year" quick_add="False" show_unusual_days="True" color="color" hide_time="True">
+                <field name="display_name"/>
+                <field name="holiday_status_id" filters="1" invisible="1" color="color"/>
+                <field name="state" invisible="1"/>
+                <field name="is_hatched" invisible="1" />
+                <field name="is_striked" invisible="1"/>
+            </calendar>
+        </field>
+    </record>
+
     <record id="hr_leave_view_form_manager" model="ir.ui.view">
         <field name="name">hr.leave.view.form.manager</field>
         <field name="model">hr.leave</field>
@@ -527,7 +541,7 @@
             <xpath expr="//filter[@name='department']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//filter[@name='managed_people']" position="attributes">
+            <xpath expr="//filter[@name='my_team']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//filter[@name='active_employee']" position="attributes">
@@ -646,7 +660,7 @@
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_manager"/>
         <field name="context">{
             'search_default_approve': 1,
-            'search_default_managed_people': 2,
+            'search_default_my_team': 2,
             'search_default_active_employee': 3,
             'search_default_active_time_off': 4,
             'hide_employee_name': 1}
