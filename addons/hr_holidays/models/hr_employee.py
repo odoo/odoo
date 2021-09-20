@@ -4,7 +4,7 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.tools.float_utils import float_round
 
 
@@ -246,3 +246,19 @@ class HrEmployee(models.Model):
 
     def _get_user_m2o_to_empty_on_archived_employees(self):
         return super()._get_user_m2o_to_empty_on_archived_employees() + ['leave_manager_id']
+
+    def action_time_off_dashboard(self):
+        domain = []
+        if self.env.context.get('active_ids'):
+            domain = [('employee_id', 'in', self.env.context.get('active_ids', []))]
+
+        return {
+            'name': _('Time Off Dashboard'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.leave',
+            'views': [[self.env.ref('hr_holidays.hr_leave_employee_view_dashboard').id, 'calendar']],
+            'domain': domain,
+            'context': {
+                'employee_id': self.ids,
+            },
+        }
