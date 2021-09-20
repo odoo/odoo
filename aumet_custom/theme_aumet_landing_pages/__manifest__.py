@@ -9,7 +9,7 @@
     'data': [
         'views/footer.xml',
         'views/contact_us.xml',
-        'views/header.xml',
+        # 'views/header.xml',
         'views/views.xml',
         'views/snippets/index/index_headline.xml',
         'views/snippets/index/index_partner.xml',
