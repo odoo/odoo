@@ -2950,8 +2950,9 @@ const SnippetOptionWidget = Widget.extend({
      * Called when the associated snippet is about to be removed from the DOM.
      *
      * @abstract
+     * @returns {Promise|undefined}
      */
-    onRemove: function () {},
+    onRemove: async function () {},
     /**
      * Called when the target is shown, only meaningful if the target was hidden
      * at some point (typically used for 'invisible' snippets).
