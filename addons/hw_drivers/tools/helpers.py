@@ -134,16 +134,34 @@ def get_img_name():
     return 'iotboxv%s_%s.zip' % (major, minor)
 
 def get_ip():
-    try:
-        return netifaces.ifaddresses('eth0')[netifaces.AF_INET][0]['addr']
-    except:
-        return netifaces.ifaddresses('wlan0')[netifaces.AF_INET][0]['addr']
+    while True:
+        try:
+            return netifaces.ifaddresses('eth0')[netifaces.AF_INET][0]['addr']
+        except KeyError:
+            pass
+
+        try:
+            return netifaces.ifaddresses('wlan0')[netifaces.AF_INET][0]['addr']
+        except KeyError:
+            pass
+
+        _logger.warning("Couldn't get IP, sleeping and retrying.")
+        time.sleep(5)
 
 def get_mac_address():
-    try:
-        return netifaces.ifaddresses('eth0')[netifaces.AF_LINK][0]['addr']
-    except:
-        return netifaces.ifaddresses('wlan0')[netifaces.AF_LINK][0]['addr']
+    while True:
+        try:
+            return netifaces.ifaddresses('eth0')[netifaces.AF_LINK][0]['addr']
+        except KeyError:
+            pass
+
+        try:
+            return netifaces.ifaddresses('wlan0')[netifaces.AF_LINK][0]['addr']
+        except KeyError:
+            pass
+
+        _logger.warning("Couldn't get MAC address, sleeping and retrying.")
+        time.sleep(5)
 
 def get_ssid():
     ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd']) # if service is active return 0 else inactive
