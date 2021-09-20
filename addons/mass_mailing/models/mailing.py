@@ -11,6 +11,7 @@ import threading
 import werkzeug.urls
 from ast import literal_eval
 from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
 from werkzeug.urls import url_join
 
 from odoo import api, fields, models, tools, _
@@ -544,12 +545,19 @@ class MassMailing(models.Model):
 
     def action_view_clicked(self):
         model_name = self.env['ir.model']._get('link.tracker').display_name
+        recipient = self.env['ir.model']._get(self.mailing_model_real).display_name
+        helper_header = _("No %s clicked your mailing yet!", recipient)
+        helper_message = _("Link Trackers will measure how many times each link is clicked as well as "
+                           "the proportion of %s who clicked at least once in your mailing.", recipient)
         return {
             'name': model_name,
             'type': 'ir.actions.act_window',
             'view_mode': 'tree',
             'res_model': 'link.tracker',
             'domain': [('mass_mailing_id.id', '=', self.id)],
+            'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
+                helper_header, helper_message,
+            ),
             'context': dict(self._context, create=False)
         }
 
@@ -566,28 +574,45 @@ class MassMailing(models.Model):
         return self._action_view_documents_filtered('delivered')
 
     def _action_view_documents_filtered(self, view_filter):
-        if view_filter in ('reply', 'bounce'):
+        model_name = self.env['ir.model']._get(self.mailing_model_real).display_name
+        helper_header = None
+        helper_message = None
+        if view_filter == 'reply':
             found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status == view_filter)
+            helper_header = _("No %s replied to your mailing yet!", model_name)
+            helper_message = _("To track how many replies this mailing gets, make sure "
+                               "its reply-to address belongs to this database.")
+        elif view_filter == 'bounce':
+            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status == view_filter)
+            helper_header = _("No %s address bounced yet!", model_name)
+            helper_message = _("Bounce happens when a mailing cannot be delivered (fake address, "
+                               "server issues, ...). Check each record to see what went wrong.")
         elif view_filter == 'open':
             found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status in ('open', 'reply'))
-        elif view_filter == 'click':
-            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.links_click_datetime)
+            helper_header = _("No %s opened your mailing yet!", model_name)
+            helper_message = _("Come back once your mailing has been sent to track who opened your mailing.")
         elif view_filter == 'delivered':
             found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status in ('sent', 'open', 'reply'))
+            helper_header = _("No %s received your mailing yet!", model_name)
+            helper_message = _("Wait until your mailing has been sent to check how many recipients you managed to reach.")
         elif view_filter == 'sent':
             found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.sent_datetime)
         else:
             found_traces = self.env['mailing.trace']
         res_ids = found_traces.mapped('res_id')
-        model_name = self.env['ir.model']._get(self.mailing_model_real).display_name
-        return {
+        action = {
             'name': model_name,
             'type': 'ir.actions.act_window',
             'view_mode': 'tree',
             'res_model': self.mailing_model_real,
             'domain': [('id', 'in', res_ids)],
-            'context': dict(self._context, create=False)
+            'context': dict(self._context, create=False),
         }
+        if helper_header and helper_message:
+            action['help'] = Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
+                helper_header, helper_message,
+            ),
+        return action
 
     def update_opt_out(self, email, list_ids, value):
         if len(list_ids) > 0:
