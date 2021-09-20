@@ -1,24 +1,16 @@
 odoo.define('stock.ReplenishReport', function (require) {
 "use strict";
 
+const { loadLegacyViews } = require("@web/legacy/legacy_views");
+
 const clientAction = require('report.client_action');
 const core = require('web.core');
 const dom = require('web.dom');
-const GraphRenderer = require("web/static/src/js/views/graph/graph_renderer");
-const GraphView = require('web.GraphView');
 
 const qweb = core.qweb;
 const _t = core._t;
 
-class StockReportGraphRenderer extends GraphRenderer {}
-
-StockReportGraphRenderer.template = "stock.GraphRenderer";
-
-const StockReportGraphView = GraphView.extend({
-    config: Object.assign({}, GraphView.prototype.config, {
-        Renderer: StockReportGraphRenderer,
-    }),
-});
+const viewRegistry = require("web.view_registry");
 
 const ReplenishReport = clientAction.extend({
     /**
@@ -56,7 +48,8 @@ const ReplenishReport = clientAction.extend({
         });
         return Promise.all([
             this._super.apply(this, arguments),
-            loadWarehouses
+            loadWarehouses,
+            loadLegacyViews({ rpc: this._rpc.bind(this) }),
         ]);
     },
 
@@ -125,9 +118,24 @@ const ReplenishReport = clientAction.extend({
             noContentHelp: _t("Try to add some incoming or outgoing transfers."),
             withControlPanel: false,
         };
-        const graphView = new StockReportGraphView(viewInfo, params);
+        const GraphView = viewRegistry.get("graph");
+        const graphView = new GraphView(viewInfo, params);
         const graphController = await graphView.getController(this);
         await graphController.appendTo(document.createDocumentFragment());
+
+        // Since we render the container in a fragment, we may endup in this case:
+        // https://github.com/chartjs/Chart.js/issues/2210#issuecomment-204984449
+        // so, the canvas won't be resizing when it is relocated in the iframe.
+        // Also, since the iframe's position is absolute, chartJS reiszing may not work
+        //  (https://www.chartjs.org/docs/2.9.4/general/responsive.html -- #Important Note)
+        // Finally, we do want to set a height for the canvas rendering in chartJS.
+        // We do this via the chartJS API, that is legacy/graph_renderer.js:@_prepareOptions
+        //  (maintainAspectRatio = false) and with the *attribute* height (not the style).
+        //  (https://www.chartjs.org/docs/2.9.4/general/responsive.html -- #Responsive Charts)
+        // Luckily, the chartJS is not fully rendered, so changing the height here is relevant.
+        // It wouldn't be if we were after GraphRenderer@mounted.
+        graphController.el.querySelector(".o_graph_canvas_container canvas").height = "300";
+
         return graphController;
     },
 
