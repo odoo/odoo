@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models
 from odoo.osv import expression
-
+from odoo.tools.date_utils import add
 
 class ProductTemplate(models.Model):
     _name = 'product.template'
@@ -66,6 +66,52 @@ class ProductProduct(models.Model):
             product = self.env['product.product'].browse(group['product_id'][0])
             uom = self.env['uom.uom'].browse(group['product_uom'][0])
             product_qty = uom._compute_quantity(group['product_qty'], product.uom_id, round=False)
+
             qty_by_product_location[(product.id, location.id)] += product_qty
             qty_by_product_wh[(product.id, location.get_warehouse().id)] += product_qty
+
+        po_lines_after_date_planned = self.env['purchase.order.line']
+        for product in self:
+            # Add delivery linked to purchase order validated after the scheduled date
+            po_domain = [
+                ('state', '=', 'purchase'),
+                ('product_id', '=', product.id)
+            ]
+            for warehouse_id in warehouse_ids:
+                warehouse_loc = self.env['stock.warehouse'].browse(warehouse_id).lot_stock_id
+                lead_days = product._get_rules_from_location(warehouse_loc).with_context(
+                    bypass_delay_description=True)._get_lead_days(product)[0]
+                po_wh_domain = expression.AND([po_domain, [
+                    ('date_planned', '>', add(fields.datetime.now(), days=lead_days)),
+                    '|',
+                        ('order_id.picking_type_id.warehouse_id', '=', warehouse_id),
+                        '&',
+                            ('move_dest_ids', '=', False),
+                            ('orderpoint_id.warehouse_id', '=', warehouse_id)
+                ]])
+                po_lines_after_date_planned |= self.env['purchase.order.line'].search(
+                    po_wh_domain)
+            for loc in location_ids:
+                lead_days = product._get_rules_from_location(self.env['stock.location'].browse(loc)).with_context(
+                    bypass_delay_description=True)._get_lead_days(product)[0]
+                po_loc_domain = expression.AND([po_domain, [
+                    ('date_planned', '>', add(fields.datetime.now(), days=lead_days)),
+                    '|',
+                        ('order_id.picking_type_id.default_location_dest_id', 'in', location_ids),
+                        '&',
+                            ('move_dest_ids', '=', False),
+                            ('orderpoint_id.location_id', 'in', location_ids)
+                ]])
+                po_lines_after_date_planned |= self.env['purchase.order.line'].search(
+                    po_loc_domain)
+        for po_line in po_lines_after_date_planned:
+            if po_line.orderpoint_id:
+                location = po_line.orderpoint_id.location_id
+            else:
+                location = po_line.order_id.picking_type_id.default_location_dest_id
+            qty_by_product_location[(
+                po_line.product_id.id, location.id)] += po_line.product_uom_qty
+            qty_by_product_wh[(
+                po_line.product_id.id, location.get_warehouse().id)] += po_line.product_uom_qty
+
         return qty_by_product_location, qty_by_product_wh
