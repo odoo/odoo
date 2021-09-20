@@ -68,10 +68,9 @@ export class GraphView extends Component {
     }
 
     /**
-     * @param {CustomEvent} ev
+     * @param {string} domain the domain of the clicked area
      */
-    onInspectDomainRecords(ev) {
-        const { domain } = ev.detail;
+    onGraphClicked(domain) {
         const { context, resModel, title } = this.model.metaData;
 
         const views = {};
