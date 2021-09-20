@@ -577,7 +577,7 @@
             </we-select>
         </we-row>
         <we-row  t-if="!widget.isButton &amp;&amp; !widget.options.forceNewWindow">
-            <we-button class="o_we_user_value_widget o_we_checkbox_wrapper">
+            <we-button t-attf-class="o_we_user_value_widget o_we_checkbox_wrapper #{widget.data.isNewWindow ? 'active' : ''}">
                 <we-title class="o_long_title">⌙ Open in new window</we-title>
                     <div class="o_switch">
                         <we-checkbox name="is_new_window" t-att-checked="widget.data.isNewWindow ? 'checked' : undefined"/>

@@ -58,6 +58,7 @@ const Link = Widget.extend({
             range.selectNodeContents(link);
             this.data.range = range;
             this.$link = $(link);
+            this.linkEl = link;
         } else {
             const selection = editable && editable.ownerDocument.getSelection();
             this.data.range = selection && selection.rangeCount && selection.getRangeAt(0);
@@ -65,6 +66,7 @@ const Link = Widget.extend({
 
         if (this.data.range) {
             this.$link = this.$link || $(OdooEditorLib.getInSelection(this.editable.ownerDocument, 'a'));
+            this.linkEl = this.$link[0];
             this.data.iniClassName = this.$link.attr('class') || '';
             this.colorCombinationClass = false;
             let $node = this.$link;
@@ -85,6 +87,10 @@ const Link = Widget.extend({
             this.data.url = this.$link.attr('href') || '';
         } else {
             this.data.content = this.data.content ? this.data.content.replace(/[ \t\r\n]+/g, ' ') : '';
+        }
+
+        if (this.linkEl) {
+            this.data.isNewWindow = this.data.isNewWindow || this.linkEl.target === '_blank';
         }
 
         const allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;
