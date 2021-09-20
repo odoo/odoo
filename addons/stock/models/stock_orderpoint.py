@@ -280,7 +280,6 @@ class StockWarehouseOrderpoint(models.Model):
         self.ensure_one()
         return {
             'location': self.location_id.id,
-            'to_date': datetime.combine(self.lead_days_date, time.max)
         }
 
     def _get_orderpoint_action(self):
