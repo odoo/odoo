@@ -451,9 +451,9 @@ var SnippetEditor = Widget.extend({
         await new Promise(resolve => {
             this.trigger_up('call_for_each_child_snippet', {
                 $snippet: this.$target,
-                callback: function (editor, $snippet) {
+                callback: async function (editor, $snippet) {
                     for (var i in editor.styles) {
-                        editor.styles[i].onRemove();
+                        await editor.styles[i].onRemove();
                     }
                 },
                 onSuccess: resolve,
