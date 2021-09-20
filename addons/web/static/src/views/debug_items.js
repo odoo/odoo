@@ -73,7 +73,13 @@ export function editSearchView({ accessRights, component, env }) {
     let { searchViewId } = component.props.info || {}; // fallback is there for legacy
     if ("viewParams" in component.props) {
         //legacy
+        if (!component.props.viewParams.action.controlPanelFieldsView) {
+            return null;
+        }
         searchViewId = component.props.viewParams.action.controlPanelFieldsView.view_id;
+    }
+    if (searchViewId === undefined) {
+        return null;
     }
     const description = env._t("Edit ControlPanelView");
     return {
