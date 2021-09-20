@@ -45,7 +45,6 @@ Master Data:
         "l10n_latam_invoice_document",
         "l10n_latam_base",
     ],
-<<<<<<< HEAD
     "data": [
         # Chart of Accounts
         "data/account_chart_template_data.xml",
@@ -72,16 +71,6 @@ Master Data:
         "views/l10n_ec_sri_payment.xml",
         "views/account_journal_view.xml",
         "security/ir.model.access.csv",
-=======
-    'data': [
-        'data/l10n_ec_chart_data.xml',
-        'data/account.account.template.csv',
-        'data/l10n_ec_chart_post_data.xml',
-        'data/account_tax_group.xml',
-        'data/account_tax_data.xml',
-        'data/account_chart_template_data.xml',
-        'data/res.country.state.csv',
->>>>>>> 88cb241ef6a... temp
     ],
     "demo": [
         "demo/demo_company.xml",

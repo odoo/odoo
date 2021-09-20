@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-<<<<<<< HEAD
 from odoo.tests import tagged
-=======
->>>>>>> 88cb241ef6a... temp
 from odoo.tests.common import Form, TransactionCase
 
 
