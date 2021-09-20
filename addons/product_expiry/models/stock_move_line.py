@@ -33,4 +33,4 @@ class StockMoveLine(models.Model):
 
     def _assign_production_lot(self, lot):
         super()._assign_production_lot(lot)
-        self.lot_id._update_date_values(self.expiration_date)
+        self.lot_id._update_date_values(self[0].expiration_date)
