@@ -144,3 +144,4 @@ export class PivotRenderer extends Component {
 }
 PivotRenderer.template = "web.PivotRenderer";
 PivotRenderer.components = { PivotGroupByMenu };
+PivotRenderer.props = ["model", "onCellClicked"];

@@ -9,7 +9,7 @@ export class BurndownChartRenderer extends GraphRenderer {
      */
     getLineChartData() {
         const data = super.getLineChartData();
-        const { stacked } = this.props.metaData;
+        const { stacked } = this.model.metaData;
         if (stacked) {
             for (const dataset of data.datasets) {
                 dataset.backgroundColor = hexToRGBA(dataset.borderColor, 0.4);
@@ -23,7 +23,7 @@ export class BurndownChartRenderer extends GraphRenderer {
      */
     getElementOptions() {
         const elementOptions = super.getElementOptions();
-        const { mode, stacked } = this.props.metaData;
+        const { mode, stacked } = this.model.metaData;
         if (mode === "line") {
             elementOptions.line.fill = stacked;
         }
@@ -35,7 +35,7 @@ export class BurndownChartRenderer extends GraphRenderer {
      */
     getScaleOptions() {
         const { xAxes, yAxes } = super.getScaleOptions();
-        const { mode, stacked } = this.props.metaData;
+        const { mode, stacked } = this.model.metaData;
         if (mode === "line") {
             for (const y of yAxes) {
                 y.stacked = stacked;
