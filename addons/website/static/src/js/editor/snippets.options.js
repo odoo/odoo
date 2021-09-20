@@ -1262,6 +1262,78 @@ options.registry.BackgroundVideo = options.Class.extend({
     },
 });
 
+options.registry.WebsiteLevelColor = options.Class.extend({
+    specialCheckAndReloadMethodsNames: options.Class.prototype.specialCheckAndReloadMethodsNames
+        .concat(['customizeWebsiteLayer2Color']),
+    /**
+     * @constructor
+     */
+    init() {
+        this._super(...arguments);
+        this._rpc = options.serviceCached(rpc);
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    async customizeWebsiteLayer2Color(previewMode, widgetValue, params) {
+        if (previewMode) {
+            return;
+        }
+        params.color = params.layerColor;
+        params.variable = params.layerGradient;
+        let color = undefined;
+        let gradient = undefined;
+        if (weUtils.isColorGradient(widgetValue)) {
+            color = '';
+            gradient = widgetValue;
+        } else {
+            color = widgetValue;
+            gradient = '';
+        }
+        await this.customizeWebsiteVariable(previewMode, gradient, params);
+        params.noBundleReload = false;
+        return this.customizeWebsiteColor(previewMode, color, params);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        if (methodName === 'customizeWebsiteLayer2Color') {
+            params.variable = params.layerGradient;
+            const gradient = await this._computeWidgetState('customizeWebsiteVariable', params);
+            if (gradient) {
+                return gradient.substring(1, gradient.length - 1); // Unquote
+            }
+            params.color = params.layerColor;
+            return this._computeWidgetState('customizeWebsiteColor', params);
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        const _super = this._super.bind(this);
+        if (
+            [
+                "footer_language_selector_label_opt",
+                "footer_language_selector_opt",
+            ].includes(widgetName)
+        ) {
+            this._languages = await this._rpc.call("/website/get_languages");
+            if (this._languages.length === 1) {
+                return false;
+            }
+        }
+        return _super(...arguments);
+    },
+});
+
 options.registry.OptionsTab = options.Class.extend({
     GRAY_PARAMS: {EXTRA_SATURATION: "gray-extra-saturation", HUE: "gray-hue"},
 
@@ -2201,78 +2273,6 @@ options.registry.collapse = options.Class.extend({
         const panelId = setUniqueId($panel, 'myCollapseTab');
         $tab.attr('data-bs-target', '#' + panelId);
         $tab.data('bs-target', '#' + panelId);
-    },
-});
-
-options.registry.WebsiteLevelColor = options.Class.extend({
-    specialCheckAndReloadMethodsNames: options.Class.prototype.specialCheckAndReloadMethodsNames
-        .concat(['customizeWebsiteLayer2Color']),
-    /**
-     * @constructor
-     */
-    init() {
-        this._super(...arguments);
-        this._rpc = options.serviceCached(rpc);
-    },
-    /**
-     * @see this.selectClass for parameters
-     */
-    async customizeWebsiteLayer2Color(previewMode, widgetValue, params) {
-        if (previewMode) {
-            return;
-        }
-        params.color = params.layerColor;
-        params.variable = params.layerGradient;
-        let color = undefined;
-        let gradient = undefined;
-        if (weUtils.isColorGradient(widgetValue)) {
-            color = '';
-            gradient = widgetValue;
-        } else {
-            color = widgetValue;
-            gradient = '';
-        }
-        await this.customizeWebsiteVariable(previewMode, gradient, params);
-        params.noBundleReload = false;
-        return this.customizeWebsiteColor(previewMode, color, params);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async _computeWidgetState(methodName, params) {
-        if (methodName === 'customizeWebsiteLayer2Color') {
-            params.variable = params.layerGradient;
-            const gradient = await this._computeWidgetState('customizeWebsiteVariable', params);
-            if (gradient) {
-                return gradient.substring(1, gradient.length - 1); // Unquote
-            }
-            params.color = params.layerColor;
-            return this._computeWidgetState('customizeWebsiteColor', params);
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    async _computeWidgetVisibility(widgetName, params) {
-        const _super = this._super.bind(this);
-        if (
-            [
-                "footer_language_selector_label_opt",
-                "footer_language_selector_opt",
-            ].includes(widgetName)
-        ) {
-            this._languages = await this._rpc.call("/website/get_languages");
-            if (this._languages.length === 1) {
-                return false;
-            }
-        }
-        return _super(...arguments);
     },
 });
 
