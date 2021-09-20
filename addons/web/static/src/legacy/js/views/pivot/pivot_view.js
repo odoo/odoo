@@ -14,6 +14,7 @@
     import PivotRenderer from './pivot_renderer';
     import RendererWrapper from 'web.RendererWrapper';
     import { sortBy } from 'web.utils';
+    import viewRegistry from "web.view_registry";
 
     const _t = core._t;
     const _lt = core._lt;
@@ -159,5 +160,6 @@
             return new RendererWrapper(parent, this.config.Renderer, state);
         },
     });
+    viewRegistry.add("pivot", PivotView);
 
     export default PivotView;

@@ -13,6 +13,7 @@ var FormView = require('web.FormView');
 var pyUtils = require('web.py_utils');
 var session  = require('web.session');
 var viewRegistry = require('web.view_registry');
+const { loadLegacyViews } = require("@web/legacy/legacy_views");
 
 var _t = core._t;
 var _lt = core._lt;
@@ -32,6 +33,12 @@ var BoardController = FormController.extend({
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
         this.customViewID = params.customViewID;
+    },
+
+    async willStart() {
+        const _super = this._super.bind(this, ...arguments);
+        await loadLegacyViews({ rpc: this._rpc.bind(this) });
+        return _super();
     },
 
     //--------------------------------------------------------------------------

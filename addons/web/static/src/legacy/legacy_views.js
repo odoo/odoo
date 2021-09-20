@@ -14,6 +14,7 @@ import {
 } from "./backend_utils";
 import { setScrollPosition } from "../core/utils/scrolling";
 import { registry } from "@web/core/registry";
+import { loadPublicAsset } from "@web/core/assets";
 
 const viewRegistry = registry.category("views");
 
@@ -159,3 +160,15 @@ for (const [name, action] of Object.entries(legacyViewRegistry.entries())) {
     registerView(name, action);
 }
 legacyViewRegistry.onAdd(registerView);
+
+export async function loadLegacyViews({ orm, rpc }) {
+    if (!orm && rpc) {
+        orm = {
+            call: (...callArgs) => {
+                const [model, method, args = [], kwargs = {}] = callArgs;
+                return rpc({ model, method, args, kwargs });
+            },
+        };
+    }
+    await loadPublicAsset("web.assets_backend_legacy_lazy", orm);
+}

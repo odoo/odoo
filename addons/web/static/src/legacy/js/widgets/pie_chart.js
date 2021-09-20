@@ -10,6 +10,7 @@ var Domain = require('web.Domain');
 var viewRegistry = require('web.view_registry');
 var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
+const { loadLegacyViews } = require("@web/legacy/legacy_views");
 
 var qweb = core.qweb;
 
@@ -66,9 +67,11 @@ var PieChart = Widget.extend({
      *
      * @override
      */
-    willStart: function () {
+    willStart: async function () {
         var self = this;
-        var def1 = this._super.apply(this, arguments);
+        const _super = this._super.bind(this, ...arguments);
+        await loadLegacyViews({ rpc: this._rpc.bind(this) });
+        var def1 = _super();
 
         var SubView = viewRegistry.get('graph');
         var subView = new SubView(this.viewInfo, this.subViewParams);

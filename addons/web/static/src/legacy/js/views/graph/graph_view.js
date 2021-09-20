@@ -13,6 +13,7 @@ var GraphModel = require('web.GraphModel');
 var Controller = require('web.GraphController');
 const GraphRenderer = require("web/static/src/js/views/graph/graph_renderer");
 const RendererWrapper = require("web.RendererWrapper");
+const viewRegistry = require("web.view_registry");
 
 var _t = core._t;
 var _lt = core._lt;
@@ -168,6 +169,7 @@ var GraphView = AbstractView.extend({
     },
 });
 
+viewRegistry.add("graph", GraphView);
 return GraphView;
 
 });
