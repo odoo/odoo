@@ -4,37 +4,48 @@
 
 <template id="report_generic_barcode">
     <t t-call="web.html_container">
-        <t t-set='nRows' t-value='8'/>
-        <t t-set='nCols' t-value='3'/>
-        <div t-foreach="[docs[x:x + nRows * nCols] for x in range(0, len(docs), nRows * nCols)]" t-as="page_docs" class="page article">
-        <t t-if="title">
-          <h2 style="text-align: center; font-size: 3em"><t t-esc="title"/></h2>
-        </t>
-        <table>
-            <t t-foreach="range(nRows)" t-as="row">
-                <tr>
-                    <t t-foreach="range(nCols)" t-as="col">
-                        <t t-set="barcode_index" t-value="(row * nCols + col)"/>
-                        <t t-if="barcode_index &lt; len(page_docs)">
-                            <t t-set="o" t-value="page_docs[barcode_index]"/>
-                        </t>
-                        <t t-else="">
-                            <t t-set="o" t-value="page_docs[0]"/>
-                        </t>
-                        <td t-att-style="barcode_index &gt;= len(page_docs) and 'visibility:hidden'">
-                            <div style="text-align: center; font-size: 2em"><span t-esc="o.name"/></div>
-                            <div t-if="o.barcode" t-field="o.barcode" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 400, 'height': 100}"/>
-                        </td>
+        <t t-set="barcode_size" t-value="'width:40mm;height:12mm'"/>
+        <t t-set='nRows' t-value='7'/>
+        <t t-set='nCols' t-value='4'/>
+        <t t-foreach="[docs[x:x + nRows * nCols] for x in range(0, len(docs), nRows * nCols)]" t-as="page_docs" class="page article">
+            <div class="o_label_sheet" style="page-break-before: always;">
+                <table>
+                    <t t-foreach="range(nRows)" t-as="row">
+                        <tr>
+                            <t t-foreach="range(nCols)" t-as="col">
+                                <t t-set="barcode_index" t-value="(row * nCols + col)"/>
+                                <t t-if="barcode_index &lt; len(page_docs)">
+                                    <t t-set="o" t-value="page_docs[barcode_index]"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="o" t-value="page_docs[0]"/>
+                                </t>
+                                <td t-att-style="barcode_index &gt;= len(page_docs) and 'visibility:hidden'">
+                                    <div style="width:2rem; display: inline-table; height:8rem; padding: 0mm 8mm;" >
+                                        <table class="table table-bordered" style="border: 1px solid;">
+                                            <tr style="background-color:#f8f9fa">
+                                                <th style="height: 3.5rem;">
+                                                    <strong t-field="o.name"/>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div t-if="o.barcode" t-field="o.barcode" t-options="{'widget': 'barcode', 'humanreadable': 1, 'img_style': barcode_size}"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                            </t>
+                        </tr>
                     </t>
-                </tr>
-            </t>
-        </table>
-      </div>
+                </table>
+            </div>
+        </t>
     </t>
 </template>
 
 <template id="report_location_barcode">
-    <t t-set="title">Locations</t>
     <t t-call="stock.report_generic_barcode"/>
 </template>
 </data>
