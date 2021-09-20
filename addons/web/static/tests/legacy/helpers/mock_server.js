@@ -1940,83 +1940,83 @@ var MockServer = Class.extend({
      *          promise should either be rejected or the call should throw an
      *          exception (@see performRpc for error handling).
      */
-    _performRpc: function (route, args) {
+    async _performRpc(route, args) {
         switch (route) {
             case '/web/dataset/call_button':
-                return Promise.resolve(this._mockCallButton(args));
+                return this._mockCallButton(args);
             case '/web/action/load':
-                return Promise.resolve(this._mockLoadAction(args));
+                return this._mockLoadAction(args);
 
             case '/web/dataset/search_read':
-                return Promise.resolve(this._mockSearchReadController(args));
+                return this._mockSearchReadController(args);
 
             case '/web/dataset/resequence':
-                return Promise.resolve(this._mockResequence(args));
+                return this._mockResequence(args);
         }
         if (route.indexOf('/web/image') >= 0 || _.contains(['.png', '.jpg'], route.substr(route.length - 4))) {
-            return Promise.resolve();
+            return;
         }
         switch (args.method) {
             case 'copy':
-                return Promise.resolve(this._mockCopy(args.model, args.args[0]));
+                return this._mockCopy(args.model, args.args[0]);
 
             case 'create':
-                return Promise.resolve(this._mockCreate(args.model, args.args[0]));
+                return this._mockCreate(args.model, args.args[0]);
 
             case 'fields_get':
-                return Promise.resolve(this._mockFieldsGet(args.model, args.args));
+                return this._mockFieldsGet(args.model, args.args);
 
             case 'search_panel_select_range':
-                return Promise.resolve(this._mockSearchPanelSelectRange(args.model, args.args, args.kwargs));
+                return this._mockSearchPanelSelectRange(args.model, args.args, args.kwargs);
 
             case 'search_panel_select_multi_range':
-                return Promise.resolve(this._mockSearchPanelSelectMultiRange(args.model, args.args, args.kwargs));
+                return this._mockSearchPanelSelectMultiRange(args.model, args.args, args.kwargs);
 
             case 'load_views':
-                return Promise.resolve(this._mockLoadViews(args.model, args.kwargs));
+                return this._mockLoadViews(args.model, args.kwargs);
 
             case 'name_get':
-                return Promise.resolve(this._mockNameGet(args.model, args.args));
+                return this._mockNameGet(args.model, args.args);
 
             case 'name_create':
-                return Promise.resolve(this._mockNameCreate(args.model, args.args));
+                return this._mockNameCreate(args.model, args.args);
 
             case 'name_search':
-                return Promise.resolve(this._mockNameSearch(args.model, args.args, args.kwargs));
+                return this._mockNameSearch(args.model, args.args, args.kwargs);
 
             case 'onchange':
-                return Promise.resolve(this._mockOnchange(args.model, args.args, args.kwargs));
+                return this._mockOnchange(args.model, args.args, args.kwargs);
 
             case 'read':
-                return Promise.resolve(this._mockRead(args.model, args.args, args.kwargs));
+                return this._mockRead(args.model, args.args, args.kwargs);
 
             case 'read_group':
-                return Promise.resolve(this._mockReadGroup(args.model, args.kwargs));
+                return this._mockReadGroup(args.model, args.kwargs);
 
             case 'web_read_group':
-                return Promise.resolve(this._mockWebReadGroup(args.model, args.kwargs));
+                return this._mockWebReadGroup(args.model, args.kwargs);
 
             case 'read_progress_bar':
-                return Promise.resolve(this._mockReadProgressBar(args.model, args.kwargs));
+                return this._mockReadProgressBar(args.model, args.kwargs);
 
             case 'search':
-                return Promise.resolve(this._mockSearch(args.model, args.args, args.kwargs));
+                return this._mockSearch(args.model, args.args, args.kwargs);
 
             case 'search_count':
-                return Promise.resolve(this._mockSearchCount(args.model, args.args));
+                return this._mockSearchCount(args.model, args.args);
 
             case 'search_read':
-                return Promise.resolve(this._mockSearchRead(args.model, args.args, args.kwargs));
+                return this._mockSearchRead(args.model, args.args, args.kwargs);
 
             case 'unlink':
-                return Promise.resolve(this._mockUnlink(args.model, args.args));
+                return this._mockUnlink(args.model, args.args);
 
             case 'write':
-                return Promise.resolve(this._mockWrite(args.model, args.args));
+                return this._mockWrite(args.model, args.args);
         }
         var model = this.data[args.model];
         if (model && typeof model[args.method] === 'function') {
-            return Promise.resolve(this.data[args.model][args.method](args.args, args.kwargs));
+            return this.data[args.model][args.method](args.args, args.kwargs);
         }
 
         throw new Error("Unimplemented route: " + route);
