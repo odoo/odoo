@@ -279,7 +279,17 @@ var InputField = DebouncedField.extend({
         this.$input = $input || $("<input/>");
         this.$input.addClass('o_input');
 
-        var inputAttrs = { placeholder: this.attrs.placeholder || "" };
+        let placeholder = this.attrs.placeholder || "";
+        const placeholderField = this.attrs['placeholder_field'];
+        if (placeholderField) {
+            const placeholderValue = placeholderField && this.record.data[placeholderField];
+            const formatOptions = {
+                escape: true,
+            };
+            const field = this.record.fields[placeholderField];
+            placeholder = field_utils.format[field.type](placeholderValue, field, formatOptions);
+        }
+        let inputAttrs = { placeholder: placeholder };
         var inputVal;
         if (this.nodeOptions.isPassword) {
             inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: this.attrs.autocomplete || 'new-password' });

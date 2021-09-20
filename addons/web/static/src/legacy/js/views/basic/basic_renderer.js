@@ -476,7 +476,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         if (node.attrs.style) {
             $el.attr('style', node.attrs.style);
         }
-        if (node.attrs.placeholder) {
+        if (node.attrs.placeholder && node.tag !== 'field') {
             $el.attr('placeholder', node.attrs.placeholder);
         }
     },
