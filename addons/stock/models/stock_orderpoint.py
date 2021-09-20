@@ -323,36 +323,6 @@ class StockWarehouseOrderpoint(models.Model):
         if not to_refill:
             return action
 
-        # Recompute the forecasted quantity for missing product today but at this time
-        # with their real lead days.
-        key_to_remove = []
-
-        # group product by lead_days and warehouse in order to read virtual_available
-        # in batch
-        pwh_per_day = defaultdict(list)
-        for (product, warehouse), quantity in to_refill.items():
-            product = self.env['product.product'].browse(product).with_prefetch(all_product_ids)
-            warehouse = self.env['stock.warehouse'].browse(warehouse).with_prefetch(all_warehouse_ids)
-            rules = product._get_rules_from_location(warehouse.lot_stock_id)
-            lead_days = rules.with_context(bypass_delay_description=True)._get_lead_days(product)[0]
-            pwh_per_day[(lead_days, warehouse)].append(product.id)
-        for (days, warehouse), p_ids in pwh_per_day.items():
-            products = self.env['product.product'].browse(p_ids)
-            qties = products.with_context(
-                warehouse=warehouse.id,
-                to_date=fields.datetime.now() + relativedelta.relativedelta(days=days)
-            ).read(['virtual_available'])
-            for qty in qties:
-                if float_compare(qty['virtual_available'], 0, precision_rounding=product.uom_id.rounding) >= 0:
-                    key_to_remove.append((qty['id'], warehouse.id))
-                else:
-                    to_refill[(qty['id'], warehouse.id)] = qty['virtual_available']
-
-        for key in key_to_remove:
-            del to_refill[key]
-        if not to_refill:
-            return action
-
         # Remove incoming quantity from other origin than moves (e.g RFQ)
         product_ids, warehouse_ids = zip(*to_refill)
         dummy, qty_by_product_wh = self.env['product.product'].browse(product_ids)._get_quantity_in_progress(warehouse_ids=warehouse_ids)
