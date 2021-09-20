@@ -861,7 +861,7 @@ ListRenderer.include({
      * @returns {string} record dataPoint id
      */
     _getRecordID: function (rowIndex) {
-        var $tr = this.$('table.o_list_table > tbody tr').eq(rowIndex);
+        var $tr = this.$('table.o_list_table > tbody > tr').eq(rowIndex);
         return $tr.data('id');
     },
     /**
