@@ -1957,6 +1957,9 @@ var MockServer = Class.extend({
             return;
         }
         switch (args.method) {
+            case "render_public_asset": {
+                return true;
+            }
             case 'copy':
                 return this._mockCopy(args.model, args.args[0]);
 
