@@ -452,7 +452,10 @@ class SaleOrderLine(models.Model):
         outgoing_moves = self.env['stock.move']
         incoming_moves = self.env['stock.move']
 
-        for move in self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped and self.product_id == r.product_id):
+        # The last condition is for kits, either it is not a kit and therefore product must match, or it's a kit
+        def kit_check(a_move, a_product):
+            return any(a_move.product_id == pr for pr in a_product.bom_ids.bom_line_ids.product_id)
+        for move in self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped and ((self.product_id.bom_ids.type == 'phantom' and kit_check(r, self.product_id)) or self.product_id == r.product_id)):
             if move.location_dest_id.usage == "customer":
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
                     outgoing_moves |= move

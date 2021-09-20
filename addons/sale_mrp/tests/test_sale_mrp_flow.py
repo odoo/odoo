@@ -1504,3 +1504,43 @@ class TestSaleMrpFlow(common.SavepointCase):
         mo = self.env['mrp.production'].search([('product_id', '=', finished_product.id)])
 
         self.assertTrue(mo, 'Manufacturing order created.')
+
+    def test_15_reconfirm_cancelled_kit(self):
+        product = self.env['product.product'].create({
+            'name': 'Kit Product',
+            'type': 'product'
+        })
+        component = self.env['product.product'].create({
+            'name': 'Kit Component',
+            'type': 'product'
+        })
+        bom_kit = self.env['mrp.bom'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom'
+        })
+        self.env['mrp.bom.line'].create({
+            'product_id': component.id,
+            'product_qty': 1.0,
+            'bom_id': bom_kit.id
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_1').id,
+            'order_line': [
+                (0, 0, {
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 1.0,
+                    'price_unit': 1.0,
+                })
+            ],
+        })
+        so.action_confirm()
+        old_nb_pickings = len(so.picking_ids)
+        so.picking_ids.move_lines.write({'quantity_done': 1.0})
+        so.picking_ids.button_validate()
+        so.action_cancel()
+        so.action_draft()
+        so.action_confirm()
+        self.assertEqual(old_nb_pickings, len(so.picking_ids), "The product was already delivered, no need to re-create a delivery order")
