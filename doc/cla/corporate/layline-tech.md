@@ -8,9 +8,9 @@ declaration.
 
 Signed,
 
-Hed Shefer had@laylinetech.com https://github.com/hedshefer
+Hed Shefer hed@laylinetech.com https://github.com/hedshefer
 
 List of contributors:
 
-Hed Shefer had@laylinetech.com https://github.com/hedshefer
+Hed Shefer hed@laylinetech.com https://github.com/hedshefer
 Uriel Ehrman  uriel@laylinetech.com https://github.com/UrielLaylineTech
