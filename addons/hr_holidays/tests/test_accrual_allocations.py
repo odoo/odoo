@@ -89,22 +89,36 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'holiday_status_id': self.leave_type.id,
             'number_of_days': 0,
             'allocation_type': 'accrual',
+            'date_from': '2021-09-03',
         })
+        freezer = freeze_time(datetime.date(2021, 9, 5))
+        freezer.start()
         allocation.action_confirm()
         allocation.action_validate()
         self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
         self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
         allocation._update_accrual()
-        nextWeek = self.env['hr.leave.accrual.level']._get_next_weekday(datetime.date.today(), 'mon')
+        nextWeek = allocation.date_from + relativedelta(days=1, weekday=0)
         self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet. The accrual starts tomorrow.')
+        freezer.stop()
 
         freezer = freeze_time(nextWeek)
         freezer.start()
         allocation._update_accrual()
-        nextWeek = self.env['hr.leave.accrual.level']._get_next_weekday(datetime.date.today(), 'mon')
-        self.assertEqual(allocation.number_of_days, 1, 'There should be 1 day allocated.')
+        nextWeek = datetime.date.today() + relativedelta(days=1, weekday=0)
+        #Prorated
+        self.assertAlmostEqual(allocation.number_of_days, 0.2857, 4, 'There should be 0.2857 day allocated.')
         self.assertEqual(allocation.nextcall, nextWeek, 'The next call date of the cron should be in 2 weeks')
         freezer.stop()
+
+        freezer = freeze_time(nextWeek)
+        freezer.start()
+        allocation._update_accrual()
+        nextWeek = datetime.date.today() + relativedelta(days=1, weekday=0)
+        self.assertAlmostEqual(allocation.number_of_days, 1.2857, 4, 'There should be 1.2857 day allocated.')
+        self.assertEqual(allocation.nextcall, nextWeek, 'The next call date of the cron should be in 2 weeks')
+        freezer.stop()
+
 
     def test_frequency_bimonthly(self):
         freezer = freeze_time('2021-09-01')
@@ -129,6 +143,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'holiday_status_id': self.leave_type.id,
             'number_of_days': 0,
             'allocation_type': 'accrual',
+            'date_from': '2021-09-03',
         })
         self.setAllocationCreateDate(allocation.id, '2021-09-01 00:00:00')
         allocation.action_confirm()
@@ -144,8 +159,16 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         freezer.start()
         next_date = datetime.date(2021, 10, 1)
         allocation._update_accrual()
-        self.assertEqual(allocation.number_of_days, 1, 'There should be 1 day allocated.')
+        #Prorated
+        self.assertAlmostEqual(allocation.number_of_days, 0.7857, 4, 'There should be 0.7857 day allocated.')
         self.assertEqual(allocation.nextcall, next_date, 'The next call date of the cron should be October 1st')
+        freezer.stop()
+
+        freezer = freeze_time(next_date)
+        freezer.start()
+        allocation._update_accrual()
+        #Not Prorated
+        self.assertAlmostEqual(allocation.number_of_days, 1.7857, 4, 'There should be 1.7857 day allocated.')
         freezer.stop()
 
     def test_frequency_monthly(self):
@@ -169,6 +192,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'holiday_status_id': self.leave_type.id,
             'number_of_days': 0,
             'allocation_type': 'accrual',
+            'date_from': '2021-08-31',
         })
         self.setAllocationCreateDate(allocation.id, '2021-09-01 00:00:00')
         allocation.action_confirm()
@@ -184,6 +208,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         freezer.start()
         next_date = datetime.date(2021, 11, 1)
         allocation._update_accrual()
+        # Prorata = 1 since a whole month passed
         self.assertEqual(allocation.number_of_days, 1, 'There should be 1 day allocated.')
         self.assertEqual(allocation.nextcall, next_date, 'The next call date of the cron should be November 1st')
         freezer.stop()
@@ -225,8 +250,16 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         freezer.start()
         next_date = datetime.date(2022, 7, 1)
         allocation._update_accrual()
-        self.assertEqual(allocation.number_of_days, 1, 'There should be 1 day allocated.')
+        # Prorated
+        self.assertAlmostEqual(allocation.number_of_days, 0.6576, 4, 'There should be 0.6576 day allocated.')
         self.assertEqual(allocation.nextcall, next_date, 'The next call date of the cron should be July 1st')
+        freezer.stop()
+
+        freezer = freeze_time(next_date)
+        freezer.start()
+        allocation._update_accrual()
+        # Not Prorated
+        self.assertAlmostEqual(allocation.number_of_days, 1.6576, 4, 'There should be 1.6576 day allocated.')
         freezer.stop()
 
     def test_frequency_yearly(self):
@@ -266,8 +299,14 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         freezer.start()
         next_date = datetime.date(2023, 1, 1)
         allocation._update_accrual()
-        self.assertEqual(allocation.number_of_days, 1, 'There should be 1 day allocated.')
+        self.assertAlmostEqual(allocation.number_of_days, 0.3315, 4, 'There should be 0.3315 day allocated.')
         self.assertEqual(allocation.nextcall, next_date, 'The next call date of the cron should be January 1st 2023')
+        freezer.stop()
+
+        freezer = freeze_time(next_date)
+        freezer.start()
+        allocation._update_accrual()
+        self.assertAlmostEqual(allocation.number_of_days, 1.3315, 4, 'There should be 1.3315 day allocated.')
         freezer.stop()
 
     def test_check_gain(self):
@@ -362,9 +401,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         freezer.start()
         # next_date = datetime.date(2021, 9, 13)
         self.env['hr.leave.allocation']._update_accrual()
-        self.assertEqual(allocation_not_worked_time.number_of_days, 5, 'There should be 5 days allocated.')
+        # Prorated
+        self.assertAlmostEqual(allocation_not_worked_time.number_of_days, 4.2857, 4, 'There should be 4.2857 days allocated.')
         # 3.75 -> starts 1 day after allocation date -> 31/08-3/09 => 4 days - 1 days time off => (3 / 4) * 5 days
-        self.assertEqual(allocation_worked_time.number_of_days, 3.75, 'There should be 5 days allocated.')
+        # ^ result without prorata
+        # Prorated
+        self.assertAlmostEqual(allocation_worked_time.number_of_days, 3.42857, 4, 'There should be 3.42857 days allocated.')
         self.assertEqual(allocation_not_worked_time.nextcall, datetime.date(2021, 9, 13), 'The next call date of the cron should be the September 13th')
         self.assertEqual(allocation_worked_time.nextcall, datetime.date(2021, 9, 13), 'The next call date of the cron should be the September 13th')
         freezer.stop()
@@ -373,9 +415,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         freezer.start()
         next_date = datetime.date(2021, 9, 20)
         self.env['hr.leave.allocation']._update_accrual()
-        self.assertEqual(allocation_not_worked_time.number_of_days, 10, 'There should be 10 days allocated.')
+        self.assertAlmostEqual(allocation_not_worked_time.number_of_days, 9.2857, 4, 'There should be 9.2857 days allocated.')
         self.assertEqual(allocation_not_worked_time.nextcall, next_date, 'The next call date of the cron should be September 20th')
-        self.assertEqual(allocation_worked_time.number_of_days, 8.75, 'There should be 9 days allocated.')
+        self.assertAlmostEqual(allocation_worked_time.number_of_days, 8.42857, 4, 'There should be 8.42857 days allocated.')
         self.assertEqual(allocation_worked_time.nextcall, next_date, 'The next call date of the cron should be September 20th')
         freezer.stop()
 
@@ -455,7 +497,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         allocation.action_validate()
         next_date = datetime.date.today() + relativedelta(days=11)
         second_level = self.env['hr.leave.accrual.level'].search([('accrual_plan_id', '=', accrual_plan.id), ('start_count', '=', 10)])
-        self.assertEqual(allocation._get_current_accrual_plan_level_id(next_date), second_level, 'The second level should be selected')
+        self.assertEqual(allocation._get_current_accrual_plan_level_id(next_date)[0], second_level, 'The second level should be selected')
 
     def test_accrual_transition_after_period(self):
         # 1 accrual with 2 levels and level transition after
@@ -490,7 +532,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         allocation.action_validate()
         next_date = datetime.date.today() + relativedelta(days=11)
         second_level = self.env['hr.leave.accrual.level'].search([('accrual_plan_id', '=', accrual_plan.id), ('start_count', '=', 10)])
-        self.assertEqual(allocation._get_current_accrual_plan_level_id(next_date), second_level, 'The second level should be selected')
+        self.assertEqual(allocation._get_current_accrual_plan_level_id(next_date)[0], second_level, 'The second level should be selected')
 
     def test_unused_accrual_lost(self):
         #1 accrual with 2 levels and level transition immediately

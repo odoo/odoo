@@ -150,7 +150,7 @@ class HrLeave(models.Model):
     def create(self, vals_list):
         start_dates = [v.get('date_from') for v in vals_list if v.get('date_from')]
         stop_dates = [v.get('date_to') for v in vals_list if v.get('date_to')]
-        if any(vals.get('holiday_type', 'employee') == 'employee' and not vals.get('employee_id', False) for vals in vals_list):
+        if any(vals.get('holiday_type', 'employee') == 'employee' and not vals.get('multi_employee', False) and not vals.get('employee_id', False) for vals in vals_list):
             raise ValidationError(_("There is no employee set on the time off. Please make sure you're logged in the correct company."))
         with self.env['hr.work.entry']._error_checking(start=min(start_dates, default=False), stop=max(stop_dates, default=False)):
             return super().create(vals_list)

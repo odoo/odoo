@@ -168,7 +168,7 @@
                 <field name="employee_ids" widget="many2many_tags"
                     groups="hr_holidays.group_hr_holidays_user"
                     attrs="{'required': [('holiday_type', '=', 'employee'), ('state', 'in', ('draft', 'cancel', 'confirm'))],
-                    'invisible': ['|', ('holiday_type', '!=', 'employee'), ('state', 'not in', ('draft', 'cancel', 'confirm'))]}"/>
+                    'invisible': ['|', ('holiday_type', '!=', 'employee'), '&amp;', ('state', 'not in', ('draft', 'cancel', 'confirm')), ('employee_id', '!=', False)]}"/>
             </xpath>
             <xpath expr="//field[@name='employee_id']" position="after">
                 <field name="category_id"

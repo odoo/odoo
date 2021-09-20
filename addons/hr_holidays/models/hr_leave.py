@@ -471,7 +471,9 @@ class HolidaysRequest(models.Model):
         for holiday in self:
             if holiday.holiday_type == 'employee':
                 if not holiday.employee_ids:
-                    holiday.employee_ids = self.env.user.employee_id
+                    # This handles the case where a request is made with only the employee_id
+                    # but does not need to be recomputed on employee_id changes
+                    holiday.employee_ids = holiday.employee_id or self.env.user.employee_id
                 holiday.mode_company_id = False
                 holiday.category_id = False
             elif holiday.holiday_type == 'company':
@@ -487,7 +489,7 @@ class HolidaysRequest(models.Model):
                 holiday.employee_ids = False
                 holiday.mode_company_id = False
             else:
-                holiday.employee_ids = self.env.context.get('default_employee_id') or self.env.user.employee_id
+                holiday.employee_ids = self.env.context.get('default_employee_id') or holiday.employee_id or self.env.user.employee_id
 
     @api.depends('employee_id')
     def _compute_from_employee_id(self):
@@ -781,7 +783,8 @@ class HolidaysRequest(models.Model):
     @api.constrains('holiday_allocation_id')
     def _check_allocation_id(self):
         for leave in self:
-            if leave.holiday_status_id.requires_allocation == 'yes' and not leave.holiday_allocation_id:
+            if leave.holiday_type == 'employee' and not leave.multi_employee and\
+                leave.holiday_status_id.requires_allocation == 'yes' and not leave.holiday_allocation_id:
                 raise ValidationError(_(
                     'Could not find an allocation of type %(leave_type)s for the requested time period.',
                     leave_type=leave.holiday_status_id.display_name,
@@ -1024,6 +1027,7 @@ class HolidaysRequest(models.Model):
             'number_of_days': work_days_data[employee.id]['days'],
             'parent_id': self.id,
             'employee_id': employee.id,
+            'employee_ids': employee,
             'state': 'validate',
         } for employee in employees if work_days_data[employee.id]['days']]
 
