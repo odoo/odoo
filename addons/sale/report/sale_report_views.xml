@@ -76,7 +76,10 @@
                     <filter name="status" string="Status" context="{'group_by':'state'}"/>
                     <filter string="Company" name="company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <separator/>
-                    <filter string="Order Date" name="date" context="{'group_by':'date'}"/>
+                    <filter string="Order Date" name="date" context="{'group_by':'date'}"
+                            invisible="context.get('sale_report_view_hide_date')"/>
+                    <filter string="Order Date" name="group_by_date_day" context="{'group_by':'date:day'}"
+                            invisible="not context.get('sale_report_view_hide_date')"/>
                 </group>
             </search>
         </field>

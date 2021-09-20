@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
+from markupsafe import Markup
 from odoo import api, fields, models, _, tools
 from odoo.osv import expression
 
@@ -10,64 +10,77 @@ class MassMailing(models.Model):
     _name = 'mailing.mailing'
     _inherit = 'mailing.mailing'
 
-    sale_quotation_count = fields.Integer('Quotation Count', groups='sales_team.group_sale_salesman', compute='_compute_sale_quotation_count')
-    sale_invoiced_amount = fields.Integer('Invoiced Amount', groups='sales_team.group_sale_salesman', compute='_compute_sale_invoiced_amount')
+    sale_quotation_count = fields.Integer('Quotation Count', compute='_compute_sale_quotation_count')
+    sale_invoiced_amount = fields.Integer('Invoiced Amount', compute='_compute_sale_invoiced_amount')
 
     @api.depends('mailing_domain')
     def _compute_sale_quotation_count(self):
-        has_so_access = self.env['sale.order'].check_access_rights('read', raise_exception=False)
-        if not has_so_access:
-            self.sale_quotation_count = 0
-            return
+        quotation_data = self.env['sale.order'].sudo().read_group(
+            [('source_id', 'in', self.source_id.ids)],
+            ['source_id'], ['source_id'],
+        )
+        mapped_data = {datum['source_id'][0]: datum['source_id_count'] for datum in quotation_data}
         for mass_mailing in self:
-            mass_mailing.sale_quotation_count = self.env['sale.order'].search_count(mass_mailing._get_sale_utm_domain())
+            mass_mailing.sale_quotation_count = mapped_data.get(mass_mailing.source_id.id, 0)
 
     @api.depends('mailing_domain')
     def _compute_sale_invoiced_amount(self):
-        if not self.user_has_groups('sales_team.group_sale_salesman') or not self.user_has_groups('account.group_account_invoice'):
-            self.sale_invoiced_amount = 0
-            return
+        domain = expression.AND([
+            [('source_id', 'in', self.source_id.ids)],
+            [('state', 'not in', ['draft', 'cancel'])]
+        ])
+        moves_data = self.env['account.move'].sudo().read_group(
+            domain, ['source_id', 'amount_untaxed_signed'], ['source_id'],
+        )
+        mapped_data = {datum['source_id'][0]: datum['amount_untaxed_signed'] for datum in moves_data}
         for mass_mailing in self:
-            domain = expression.AND([
-                mass_mailing._get_sale_utm_domain(),
-                [('state', 'not in', ['draft', 'cancel'])]
-            ])
-            moves = self.env['account.move'].search_read(domain, ['amount_untaxed_signed'])
-            mass_mailing.sale_invoiced_amount = sum(i['amount_untaxed_signed'] for i in moves)
+            mass_mailing.sale_invoiced_amount = mapped_data.get(mass_mailing.source_id.id, 0)
 
     def action_redirect_to_quotations(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_quotations_with_onboarding")
-        action['domain'] = self._get_sale_utm_domain()
-        action['context'] = {'create': False}
-        return action
+        helper_header = _("No Quotations yet!")
+        helper_message = _("Quotations will appear here once your customers add "
+                           "products to their Carts or when your sales reps assign this mailing.")
+        return {
+            'context': {
+                'create': False,
+                'search_default_group_by_date_day': True,
+                'sale_report_view_hide_date': True,
+            },
+            'domain': [('source_id', '=', self.source_id.id)],
+            'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
+                helper_header, helper_message,
+            ),
+            'name': _("Sales Analysis"),
+            'res_model': 'sale.report',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'graph,pivot,tree,form',
+        }
 
     def action_redirect_to_invoiced(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
-        moves = self.env['account.move'].search(self._get_sale_utm_domain())
-        action['context'] = {
-            'create': False,
-            'edit': False,
-            'view_no_maturity': True
+        domain = expression.AND([
+            [('source_id', '=', self.source_id.id)],
+            [('state', 'not in', ['draft', 'cancel'])]
+        ])
+        moves = self.env['account.move'].search(domain)
+        helper_header = _("No Revenues yet!")
+        helper_message = _("Revenues will appear here once orders are turned into invoices.")
+        return {
+            'context': {
+                'create': False,
+                'edit': False,
+                'view_no_maturity': True,
+                'search_default_group_by_invoice_date_week': True,
+                'invoice_report_view_hide_invoice_date': True,
+            },
+            'domain': [('move_id', 'in', moves.ids)],
+            'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
+                helper_header, helper_message,
+            ),
+            'name': _("Invoices Analysis"),
+            'res_model': 'account.invoice.report',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'graph,pivot,tree,form',
         }
-        action['domain'] = [
-            ('id', 'in', moves.ids),
-            ('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')),
-            ('state', 'not in', ['draft', 'cancel'])
-        ]
-        action['context'] = {'create': False}
-        return action
-
-    def _get_sale_utm_domain(self):
-        res = []
-        if self.campaign_id:
-            res.append(('campaign_id', '=', self.campaign_id.id))
-        if self.source_id:
-            res.append(('source_id', '=', self.source_id.id))
-        if self.medium_id:
-            res.append(('medium_id', '=', self.medium_id.id))
-        if not res:
-            res.append((0, '=', 1))
-        return res
 
     def _prepare_statistics_email_values(self):
         self.ensure_one()
