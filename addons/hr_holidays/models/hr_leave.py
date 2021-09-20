@@ -783,7 +783,8 @@ class HolidaysRequest(models.Model):
     @api.constrains('holiday_allocation_id')
     def _check_allocation_id(self):
         for leave in self:
-            if leave.holiday_status_id.requires_allocation == 'yes' and not leave.holiday_allocation_id:
+            if leave.holiday_type == 'employee' and not leave.multi_employee and\
+                leave.holiday_status_id.requires_allocation == 'yes' and not leave.holiday_allocation_id:
                 raise ValidationError(_(
                     'Could not find an allocation of type %(leave_type)s for the requested time period.',
                     leave_type=leave.holiday_status_id.display_name,
