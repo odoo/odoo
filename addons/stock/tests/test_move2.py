@@ -9,7 +9,6 @@ from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tools import float_is_zero, float_compare
 
-from odoo.tests.common import Form
 
 class TestPickShip(TestStockCommon):
     def create_pick_ship(self):
