@@ -190,5 +190,10 @@ QUnit.module("py", {}, () => {
         QUnit.test("now", (assert) => {
             assert.ok(check("now", formatDateTime));
         });
+
+        QUnit.test("current_date", (assert) => {
+            patchDate(2021, 8, 20, 10, 0, 0);
+            assert.deepEqual(evaluateExpr("current_date"), "2021-09-20");
+        });
     });
 });

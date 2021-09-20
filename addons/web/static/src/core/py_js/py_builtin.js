@@ -31,6 +31,11 @@ export const BUILTINS = {
         return PyDate.today();
     },
 
+    get current_date() {
+        // deprecated: today should be prefered
+        return this.today;
+    },
+
     get today() {
         return PyDate.today().strftime("%Y-%m-%d");
     },
