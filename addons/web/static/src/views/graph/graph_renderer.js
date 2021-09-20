@@ -41,6 +41,8 @@ function shortenLabel(label) {
 
 export class GraphRenderer extends Component {
     setup() {
+        this.model = this.props.model;
+
         this.canvasRef = useRef("canvas");
         this.containerRef = useRef("container");
 
@@ -195,8 +197,8 @@ export class GraphRenderer extends Component {
      */
     getBarChartData() {
         // style data
-        const { domains, stacked } = this.props.metaData;
-        const { data } = this.props;
+        const { domains, stacked } = this.model.metaData;
+        const data = this.model.data;
         for (let index = 0; index < data.datasets.length; ++index) {
             const dataset = data.datasets[index];
             // used when stacked
@@ -215,7 +217,7 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getChartConfig() {
-        const { mode } = this.props.metaData;
+        const { mode } = this.model.metaData;
         let data;
         switch (mode) {
             case "bar":
@@ -237,7 +239,7 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getElementOptions() {
-        const { mode } = this.props.metaData;
+        const { mode } = this.model.metaData;
         const elementOptions = {};
         if (mode === "bar") {
             elementOptions.rectangle = { borderWidth: 1 };
@@ -251,8 +253,8 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getLegendOptions() {
-        const { mode } = this.props.metaData;
-        const { data } = this.props;
+        const { mode } = this.model.metaData;
+        const data = this.model.data;
         const refLength = mode === "pie" ? data.labels.length : data.datasets.length;
         const legendOptions = {
             display: refLength <= 20,
@@ -313,8 +315,8 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getLineChartData() {
-        const { groupBy, domains } = this.props.metaData;
-        const { data } = this.props;
+        const { groupBy, domains } = this.model.metaData;
+        const data = this.model.data;
         for (let index = 0; index < data.datasets.length; ++index) {
             const dataset = data.datasets[index];
             if (groupBy.length <= 1 && domains.length > 1) {
@@ -358,8 +360,8 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getPieChartData() {
-        const { domains } = this.props.metaData;
-        const { data } = this.props;
+        const { domains } = this.model.metaData;
+        const data = this.model.data;
         // style/complete data
         // give same color to same groups from different origins
         const colors = data.labels.map((_, index) => getColor(index));
@@ -408,7 +410,7 @@ export class GraphRenderer extends Component {
             measure,
             measures,
             mode,
-        } = this.props.metaData;
+        } = this.model.metaData;
         if (mode === "pie") {
             return {};
         }
@@ -478,7 +480,7 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getTooltipOptions() {
-        const { data, metaData } = this.props;
+        const { data, metaData } = this.model;
         const { mode } = metaData;
         const tooltipOptions = {
             enabled: false,
@@ -503,8 +505,7 @@ export class GraphRenderer extends Component {
         const { _datasetIndex, _index } = activeElement;
         const { domains } = this.chart.data.datasets[_datasetIndex];
         if (domains) {
-            const domain = domains[_index];
-            this.trigger("inspect-domain-records", { domain });
+            this.props.onGraphClicked(domains[_index]);
         }
     }
 
@@ -569,7 +570,7 @@ export class GraphRenderer extends Component {
      * instantiate the chart.
      */
     prepareOptions() {
-        const { disableLinking, mode } = this.props.metaData;
+        const { disableLinking, mode } = this.model.metaData;
         const options = {
             maintainAspectRatio: false,
             scales: this.getScaleOptions(),
@@ -623,7 +624,4 @@ export class GraphRenderer extends Component {
 }
 
 GraphRenderer.template = "web.GraphRenderer";
-GraphRenderer.props = {
-    data: Object,
-    metaData: Object,
-};
+GraphRenderer.props = ["model", "onGraphClicked"];

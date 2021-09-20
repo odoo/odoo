@@ -60,10 +60,9 @@
                     </t>
                     <Renderer
                         class="o_renderer"
-                        data="model.data"
-                        metaData="model.metaData"
+                        model="model"
                         t-att-class="{ o_sample_data_disabled: model.useSampleModel }"
-                        t-on-inspect-domain-records="onInspectDomainRecords"
+                        onGraphClicked="(domain) => onGraphClicked(domain)"
                     />
                 </t>
                 <t t-else="" t-call="web.NoContentHelper">
