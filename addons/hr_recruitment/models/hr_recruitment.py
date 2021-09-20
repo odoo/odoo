@@ -7,6 +7,8 @@ from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
 
+from dateutil.relativedelta import relativedelta
+
 AVAILABLE_PRIORITIES = [
     ('0', 'Normal'),
     ('1', 'Good'),
@@ -315,7 +317,23 @@ class Applicant(models.Model):
             vals['date_open'] = fields.Datetime.now()
         if vals.get('email_from'):
             vals['email_from'] = vals['email_from'].strip()
-        return super(Applicant, self).create(vals)
+        res = super().create(vals)
+        # Record creation through calendar, creates the calendar event directly, it will also create the activity.
+        if 'default_activity_date_deadline' in self.env.context:
+            deadline = fields.Datetime.to_datetime(self.env.context.get('default_activity_date_deadline'))
+            partners = res.partner_id | res.user_id.partner_id | res.department_id.manager_id.user_id.partner_id
+
+            category = self.env.ref('hr_recruitment.categ_meet_interview')
+            self.env['calendar.event'].sudo().with_context(default_applicant_id=res.id).create({
+                'applicant_id': res.id,
+                'partner_ids': [(6, 0, partners.ids)],
+                'user_id': self.env.uid,
+                'name': res.name,
+                'categ_ids': [category.id],
+                'start': deadline,
+                'stop': deadline + relativedelta(minutes=30),
+            })
+        return res
 
     def write(self, vals):
         # user_id change: update date_open
