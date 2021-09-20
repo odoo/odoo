@@ -69,3 +69,30 @@ class AccountPaymentRegister(models.TransientModel):
         payment_vals = super()._create_payment_vals_from_wizard()
         payment_vals['payment_token_id'] = self.payment_token_id.id
         return payment_vals
+
+    def _init_payments(self, to_process, edit_mode=False):
+        # OVERRIDE
+        # Delay the reconciliation between payment & invoices when an electronic transaction is needed using a token.
+        for vals in to_process:
+            if vals['create_vals'].get('payment_token_id'):
+                invoices = vals['to_reconcile'].move_id.filtered(lambda x: x.is_invoice(include_receipts=True))
+                vals['transaction_invoices'] = invoices
+
+        return super()._init_payments(to_process, edit_mode=edit_mode)
+
+    def _post_payments(self, to_process, edit_mode=False):
+        # OVERRIDE
+        # Create a payment transaction for the newly created payments and link them to the related invoices.
+        for vals in to_process:
+            payment = vals['payment']
+            if payment.payment_token_id:
+                payment._create_payment_transaction({'invoice_ids': [(6, 0, vals['transaction_invoices'].ids)]})
+
+        return super()._post_payments(to_process, edit_mode=edit_mode)
+
+    def _reconcile_payments(self, to_process, edit_mode=False):
+        # OVERRIDE
+        # Don't reconcile payments for which the payment transactions failed.
+        to_process = [x for x in to_process if x['payment'].state == 'posted']
+
+        return super()._reconcile_payments(to_process, edit_mode=edit_mode)

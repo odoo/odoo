@@ -407,6 +407,8 @@ class AccountMove(models.Model):
             if accounting_date != self.date:
                 self.date = accounting_date
                 self._onchange_currency()
+            else:
+                self._onchange_recompute_dynamic_lines()
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
@@ -580,6 +582,10 @@ class AccountMove(models.Model):
         self.ensure_one()
         return -1 if self.move_type in ('out_invoice', 'in_refund', 'out_receipt') else 1
 
+    def _preprocess_taxes_map(self, taxes_map):
+        """ Useful in case we want to pre-process taxes_map """
+        return taxes_map
+
     def _recompute_tax_lines(self, recompute_tax_base_amount=False):
         ''' Compute the dynamic tax lines of the journal entry.
 
@@ -699,6 +705,9 @@ class AccountMove(models.Model):
                 taxes_map_entry['grouping_dict'] = grouping_dict
             if not recompute_tax_base_amount:
                 line.tax_exigible = tax_exigible
+
+        # ==== Pre-process taxes_map ====
+        taxes_map = self._preprocess_taxes_map(taxes_map)
 
         # ==== Process taxes_map ====
         for taxes_map_entry in taxes_map.values():
@@ -1928,13 +1937,14 @@ class AccountMove(models.Model):
             default['date'] = self.company_id._get_user_fiscal_lock_date() + timedelta(days=1)
         if self.move_type == 'entry':
             default['partner_id'] = False
-        invoice = super().copy(default)
+        move = super().copy(default)
 
-        # Make sure to recompute payment terms. This could be necessary if the date is different for example.
-        # Also, this is necessary when creating a credit note because the current invoice is copied.
-        invoice._recompute_payment_terms_lines()
+        if move.is_invoice(include_receipts=True):
+            # Make sure to recompute payment terms. This could be necessary if the date is different for example.
+            # Also, this is necessary when creating a credit note because the current invoice is copied.
+            move._recompute_payment_terms_lines()
 
-        return invoice
+        return move
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -2854,8 +2864,6 @@ class AccountMove(models.Model):
             move.write({'invoice_line_ids' : new_invoice_line_ids})
 
     def _get_report_base_filename(self):
-        if any(not move.is_invoice() for move in self):
-            raise UserError(_("Only invoices could be printed."))
         return self._get_move_display_name()
 
     def _get_name_invoice_report(self):
@@ -3693,7 +3701,7 @@ class AccountMoveLine(models.Model):
     def _onchange_amount_currency(self):
         for line in self:
             company = line.move_id.company_id
-            balance = line.currency_id._convert(line.amount_currency, company.currency_id, company, line.move_id.date)
+            balance = line.currency_id._convert(line.amount_currency, company.currency_id, company, line.move_id.date or fields.Date.context_today(line))
             line.debit = balance if balance > 0.0 else 0.0
             line.credit = -balance if balance < 0.0 else 0.0
 
