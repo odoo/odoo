@@ -994,7 +994,10 @@
                         <filter string="Medium" name="medium" domain="[]" context="{'group_by':'medium_id'}"/>
                         <filter string="Source" name="source" domain="[]" context="{'group_by':'source_id'}"/>
                         <separator orientation="vertical" />
-                        <filter string="Creation Date" context="{'group_by':'create_date:month'}" name="month"/>
+                        <filter string="Creation Date" name="month" context="{'group_by':'create_date:month'}"
+                                invisible="context.get('crm_lead_view_hide_month')"/>
+                        <filter string="Creation Date" name="group_by_create_date_day" context="{'group_by':'create_date:day'}"
+                                invisible="not context.get('crm_lead_view_hide_month')"/>
                         <filter string="Conversion Date" name="date_conversion" context="{'group_by': 'date_conversion'}" groups="crm.group_use_lead"/>
                         <filter string="Expected Closing" name="date_deadline" context="{'group_by':'date_deadline'}"/>
                         <filter string="Closed Date" name="date_closed" context="{'group_by':'date_closed'}"/>

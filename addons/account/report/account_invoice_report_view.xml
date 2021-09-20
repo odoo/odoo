@@ -117,7 +117,10 @@
                     <filter string="Status" name="status" context="{'group_by':'state'}"/>
                     <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical" />
-                    <filter string="Date" name="invoice_date" context="{'group_by':'invoice_date'}"/>
+                    <filter string="Date" name="invoice_date" context="{'group_by':'invoice_date'}"
+                            invisible="context.get('invoice_report_view_hide_invoice_date')"/>
+                    <filter string="Date" name="group_by_invoice_date_week" context="{'group_by':'invoice_date:week'}"
+                            invisible="not context.get('invoice_report_view_hide_invoice_date')"/>
                     <filter string="Due Date" name="duemonth" context="{'group_by':'invoice_date_due:month'}"/>
                 </group>
             </search>
