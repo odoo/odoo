@@ -793,6 +793,7 @@ QUnit.module("Search", (hooks) => {
                 <filter name="filter_0" domain="[('datetime', '=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()))]"/>
                 <filter name="filter_1" domain="[('date', '=',  context_today() + relativedelta(days=-365))]"/>
                 <filter name="filter_2" domain="[('create_date', '&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_3" domain="[('date_deadline', '&lt;', current_date)]"/>
             </search>
         `;
 
@@ -800,6 +801,7 @@ QUnit.module("Search", (hooks) => {
             [["datetime", "=", "2021-09-16 22:00:00"]],
             [["date", "=", "2020-09-17 00:00:00"]],
             [["create_date", ">", "2021-09-16"]],
+            [["date_deadline", "<", "2021-09-17"]],
         ];
 
         const model = await makeSearchModel({ serverData, searchViewArch });
