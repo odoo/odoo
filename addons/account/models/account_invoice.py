@@ -1220,13 +1220,13 @@ class AccountInvoice(models.Model):
                 if tax.include_base_amount:
                     affected_taxes = []
                     for invoice_line in tax_line.invoice_id.invoice_line_ids:
-                        if tax in invoice_line.invoice_line_tax_ids:
-                            following_taxes = invoice_line.invoice_line_tax_ids.filtered(lambda x: x.sequence > tax.sequence
-                                                                                                   or (x.sequence == tax.sequence and x.id > tax.id))
-                            affected_taxes += following_taxes.ids
-                            affected_taxes += following_taxes.mapped('children_tax_ids.id')
+                        if tax in invoice_line.invoice_line_tax_ids or tax in invoice_line.invoice_line_tax_ids.mapped('children_tax_ids'):
+                            all_taxes = invoice_line.invoice_line_tax_ids.filtered(lambda x: x.amount_type != 'group') \
+                                        + invoice_line.invoice_line_tax_ids.mapped('children_tax_ids')
+                            following_taxes = all_taxes.filtered(lambda x: x.sequence > tax.sequence
+                                                                           or (x.sequence == tax.sequence and x.id > tax.id))
 
-                    tax_line_vals['tax_ids'] = [(6, 0, affected_taxes)]
+                    tax_line_vals['tax_ids'] = [(6, 0, following_taxes.ids)]
 
                 res.append(tax_line_vals)
         return res
