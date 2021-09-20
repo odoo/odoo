@@ -416,6 +416,9 @@ export class MockServer {
             return;
         }
         switch (args.method) {
+            case "render_public_asset": {
+                return true;
+            }
             case "create":
                 return this.mockCreate(args.model, args.args[0]);
             case "fields_get":
