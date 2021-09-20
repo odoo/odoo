@@ -97,6 +97,7 @@ export class GraphModel extends Model {
 
         this.metaData = params;
         this.data = null;
+        this.searchParams = null;
     }
 
     //--------------------------------------------------------------------------
@@ -107,31 +108,11 @@ export class GraphModel extends Model {
      * @param {SearchParams} searchParams
      */
     async load(searchParams) {
-        const { comparison, domain, context, groupBy } = searchParams;
-        const metaData = Object.assign({}, this.metaData, { context });
-        if (comparison) {
-            metaData.domains = comparison.domains;
-            metaData.comparisonField = comparison.fieldName;
-        } else {
-            metaData.domains = [{ arrayRepr: domain, description: null }];
-        }
-        metaData.measure = context.graph_measure || metaData.measure;
-        metaData.mode = context.graph_mode || metaData.mode;
-
+        this.searchParams = searchParams;
         if (!this.initialGroupBy) {
-            this.initialGroupBy = context.graph_groupbys || this.metaData.groupBy; // = arch groupBy --> change that
+            this.initialGroupBy = searchParams.context.graph_groupbys || this.metaData.groupBy; // = arch groupBy --> change that
         }
-        metaData.groupBy = groupBy.length ? groupBy : this.initialGroupBy;
-
-        this._normalize(metaData);
-
-        metaData.measures = computeReportMeasures(
-            metaData.fields,
-            metaData.fieldAttrs,
-            [metaData.measure],
-            metaData.additionalMeasures
-        );
-
+        const metaData = this._buildMetaData();
         return this._fetchDataPoints(metaData);
     }
 
@@ -149,7 +130,8 @@ export class GraphModel extends Model {
      */
     async updateMetaData(params) {
         if ("measure" in params) {
-            await this._fetchDataPoints(Object.assign({}, this.metaData, params));
+            const metaData = this._buildMetaData(params);
+            await this._fetchDataPoints(metaData);
         } else {
             await this.race.getCurrentProm();
             this.metaData = Object.assign({}, this.metaData, params);
@@ -161,6 +143,37 @@ export class GraphModel extends Model {
     //--------------------------------------------------------------------------
     // Protected
     //--------------------------------------------------------------------------
+
+    /**
+     * @protected
+     * @param {Object} [params={}]
+     * @returns {Object}
+     */
+    _buildMetaData(params) {
+        const { comparison, domain, context, groupBy } = this.searchParams;
+
+        const metaData = Object.assign({}, this.metaData, { context });
+        if (comparison) {
+            metaData.domains = comparison.domains;
+            metaData.comparisonField = comparison.fieldName;
+        } else {
+            metaData.domains = [{ arrayRepr: domain, description: null }];
+        }
+        metaData.measure = context.graph_measure || metaData.measure;
+        metaData.mode = context.graph_mode || metaData.mode;
+        metaData.groupBy = groupBy.length ? groupBy : this.initialGroupBy;
+
+        this._normalize(metaData);
+
+        metaData.measures = computeReportMeasures(
+            metaData.fields,
+            metaData.fieldAttrs,
+            [metaData.measure],
+            metaData.additionalMeasures
+        );
+
+        return Object.assign(metaData, params);
+    }
 
     /**
      * Fetch the data points determined by the metaData. This function has

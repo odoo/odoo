@@ -3326,7 +3326,7 @@ QUnit.module("Views", (hooks) => {
                     </graph>`,
                 searchViewArch: `
                     <search>
-                        <filter name="my_filter" string="My Filter" domain="[('id', '&lt;', 2)]"/>
+                        <filter name="my_filter" string="My Filter" domain="[('id', '&lt;', 6)]"/>
                     </search>`,
                 mockRPC: function (route, args) {
                     if (args.method === "web_read_group") {
@@ -3363,7 +3363,7 @@ QUnit.module("Views", (hooks) => {
             await nextTick();
 
             checkDatasets(assert, graph, ["data", "label"], {
-                data: [82, 157],
+                data: [82, 4],
                 label: "Foo",
             });
         }
