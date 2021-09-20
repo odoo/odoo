@@ -24,13 +24,15 @@ var ThemePreviewKanbanController = KanbanController.extend(ThemePreviewControlle
             href: '/',
             innerHTML: '<i class="fa fa-close"></i>',
         });
-        const smallBreadcumb = Object.assign(document.createElement('small'), {
-            className: 'mx-2 text-muted',
-            innerHTML: _lt("Don't worry, you can switch later."),
-        });
+        if (!this.initialState.context.module) { // not coming from res.config.settings
+            const smallBreadcumb = Object.assign(document.createElement('small'), {
+                className: 'mx-2 text-muted',
+                innerHTML: _lt("Don't worry, you can switch later."),
+            });
+            this._controlPanelWrapper.el.querySelector('.o_cp_top li').appendChild(smallBreadcumb);
+            this._controlPanelWrapper.el.querySelector('.o_cp_top').appendChild(websiteLink);
+        }
         this._controlPanelWrapper.el.querySelector('.o_cp_top .breadcrumb li.active').classList.add('text-black-75');
-        this._controlPanelWrapper.el.querySelector('.o_cp_top').appendChild(websiteLink);
-        this._controlPanelWrapper.el.querySelector('.o_cp_top li').appendChild(smallBreadcumb);
     },
     /**
      * Called when user click on any button in kanban view.
