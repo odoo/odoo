@@ -87,6 +87,7 @@ const STANDARD_PROPS = new Set([
     "noContentHelp",
 
     "breadcrumbs",
+    "display",
     "viewSwitcherEntries",
 
     "globalState",
