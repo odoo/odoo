@@ -8,6 +8,7 @@ from psycopg2 import Error, OperationalError
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
+from odoo.tools import groupby
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 _logger = logging.getLogger(__name__)
@@ -1020,5 +1021,22 @@ class QuantPackage(models.Model):
         action['domain'] = [('id', 'in', pickings.ids)]
         return action
 
-    def _get_contained_quants(self):
-        return self.env['stock.quant'].search([('package_id', 'in', self.ids)])
+    def _check_move_lines_map_quant(self, move_lines, field):
+        """ This method checks that all product (quants) of self (package) are well present in the `move_line_ids`. """
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+
+        def _keys_groupby(record):
+            return record.product_id, record.lot_id
+
+        grouped_quants = {}
+        for k, g in groupby(self.quant_ids, key=_keys_groupby):
+            grouped_quants[k] = sum(self.env['stock.quant'].concat(*g).mapped('quantity'))
+
+        grouped_ops = {}
+        for k, g in groupby(move_lines, key=_keys_groupby):
+            grouped_ops[k] = sum(self.env['stock.move.line'].concat(*g).mapped(field))
+
+        if any(not float_is_zero(grouped_quants.get(key, 0) - grouped_ops.get(key, 0), precision_digits=precision_digits) for key in grouped_quants) \
+                or any(not float_is_zero(grouped_ops.get(key, 0) - grouped_quants.get(key, 0), precision_digits=precision_digits) for key in grouped_ops):
+            return False
+        return True
