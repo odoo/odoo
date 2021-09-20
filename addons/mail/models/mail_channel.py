@@ -582,6 +582,9 @@ class Channel(models.Model):
                 self._action_unfollow(p)
         return super(Channel, self)._message_receive_bounce(email, partner)
 
+    def _message_compute_author(self, author_id=None, email_from=None, raise_exception=False):
+        return super()._message_compute_author(author_id=author_id, email_from=email_from, raise_exception=False)
+
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
         self.filtered(lambda channel: channel.is_chat).mapped('channel_last_seen_partner_ids').sudo().write({
