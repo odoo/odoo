@@ -282,12 +282,9 @@ var InputField = DebouncedField.extend({
         let placeholder = this.attrs.placeholder || "";
         const placeholderField = this.attrs['placeholder_field'];
         if (placeholderField) {
-            const placeholderValue = placeholderField && this.record.data[placeholderField];
-            const formatOptions = {
-                escape: true,
-            };
+            const placeholderValue = this.record.data[placeholderField];
             const field = this.record.fields[placeholderField];
-            placeholder = field_utils.format[field.type](placeholderValue, field, formatOptions);
+            placeholder = placeholderValue && field_utils.format[field.type](placeholderValue, field, { escape: true }) || placeholder;
         }
         let inputAttrs = { placeholder: placeholder };
         var inputVal;

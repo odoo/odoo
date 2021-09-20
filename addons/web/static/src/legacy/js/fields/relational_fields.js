@@ -22,6 +22,7 @@ var Dialog = require('web.Dialog');
 var dialogs = require('web.view_dialogs');
 var dom = require('web.dom');
 const Domain = require('web.Domain');
+const field_utils = require('web.field_utils');
 var KanbanRecord = require('web.KanbanRecord');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
@@ -119,6 +120,13 @@ var FieldMany2One = AbstractField.extend({
         });
         this.noOpen = 'noOpen' in options ? options.noOpen : this.nodeOptions.no_open;
         this.m2o_value = this._formatValue(this.value);
+        this.placeholder = this.attrs.placeholder;
+        const placeholderField = this.attrs['placeholder_field'];
+        if (placeholderField) {
+            const placeholderValue = this.record.data[placeholderField];
+            const field = this.record.fields[placeholderField];
+            this.placeholder = placeholderValue && field_utils.format[field.type](placeholderValue, field, { escape: true }) || this.placeholder;
+        }
         // 'recordParams' is a dict of params used when calling functions
         // 'getDomain' and 'getContext' on this.record
         this.recordParams = {fieldName: this.name, viewType: this.viewType};
@@ -249,11 +257,11 @@ var FieldMany2One = AbstractField.extend({
     _bindAutoComplete: function () {
         var self = this;
         // avoid ignoring autocomplete="off" by obfuscating placeholder, see #30439
-        if ($.browser.chrome && this.$input.attr('placeholder')) {
-            this.$input.attr('placeholder', function (index, val) {
-                return val.split('').join('\ufeff');
-            });
-        }
+        // if ($.browser.chrome && this.$input.attr('placeholder')) {
+        //     this.$input.attr('placeholder', function (index, val) {
+        //         return val.split('').join('\ufeff');
+        //     });
+        // }
         this.$input.autocomplete({
             source: function (req, resp) {
                 self.suggestions = [];

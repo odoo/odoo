@@ -378,6 +378,50 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.only('placeholder_field attribute on field', async function (assert) {
+        assert.expect(4);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                `<form string="Partners">
+                    <field name="display_name" placeholder="Ravi Teja" placeholder_field="foo"/>
+                    <field name="foo" placeholder="Thalapathy Vijay" placeholder_field="display_name"/>
+                    <field name="product_id" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="trululu" placeholder_field="product_id"/>
+                    <field name="timmy" widget="many2many_tags" placeholder_field="state"/>
+                </form>`,
+            viewOptions: {
+                context: {
+                    default_foo: "Allu Arjun",
+                    default_product_id: 37,
+                    default_state: 'ab',
+                },
+            },
+            debug: true,
+        });
+
+        await testUtils.nextTick();
+
+        // placeholder_field has more precedence if field give in placeholder_field has value
+        assert.containsOnce(form, 'input[name="display_name"][placeholder="Allu Arjun"]');
+        // placeholder value is set to default if  placeholder_field has no value
+        assert.containsOnce(form, 'input[name="foo"][placeholder="Thalapathy Vijay"]');
+        const trululuInput = form.$('div[name="trululu"] .o_input[placeholder="xphone"]');
+        debugger;
+        assert.strictEqual(trululuInput.attr('placeholder'), "xphone",
+            "should have trululu input with xphone placeholder");
+
+        const timmyInput = form.$('div[name="timmy"] .o_input');
+        assert.strictEqual(timmyInput.attr('placeholder'), "AB",
+            "should have trululu input with AB placeholder");
+
+        form.destroy();
+    });
+
     QUnit.test('decoration works on widgets', async function (assert) {
         assert.expect(2);
 
