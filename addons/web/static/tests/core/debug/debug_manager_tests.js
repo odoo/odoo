@@ -424,4 +424,29 @@ QUnit.module("DebugMenu", (hooks) => {
             "293"
         );
     });
+
+    QUnit.test(
+        "cannot edit the control panel of a form view contained in a dialog without control panel.",
+        async (assert) => {
+            const mockRPC = async (route, args) => {
+                if (args.method === "check_access_rights") {
+                    return Promise.resolve(true);
+                }
+            };
+            prepareRegistriesWithCleanup();
+
+            patchWithCleanup(odoo, {
+                debug: true,
+            });
+            registry.category("debug").category("view").add("editSearchViewItem", editSearchView);
+
+            const serverData = getActionManagerServerData();
+
+            const webClient = await createWebClient({ serverData, mockRPC });
+            // opens a form view in a dialog without a control panel.
+            await doAction(webClient, 5);
+            await click(webClient.el.querySelector(".o_dialog .o_debug_manager button"));
+            assert.containsNone(webClient, ".o_debug_manager .o_dropdown_item");
+        }
+    );
 });
