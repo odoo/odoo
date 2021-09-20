@@ -251,12 +251,11 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getLegendOptions() {
-        const { display, mode } = this.props.metaData;
+        const { mode } = this.props.metaData;
         const { data } = this.props;
         const refLength = mode === "pie" ? data.labels.length : data.datasets.length;
-        const displayLegend = "legend" in display ? display.legend : true;
         const legendOptions = {
-            display: refLength <= 20 && displayLegend,
+            display: refLength <= 20,
             position: "top",
             onHover: this.onlegendHover.bind(this),
             onLeave: this.onLegendLeave.bind(this),
@@ -403,7 +402,7 @@ export class GraphRenderer extends Component {
     getScaleOptions() {
         const {
             allIntegers,
-            display,
+            displayScaleLabels,
             fields,
             groupBy,
             measure,
@@ -413,7 +412,6 @@ export class GraphRenderer extends Component {
         if (mode === "pie") {
             return {};
         }
-        const displayScaleLabels = "scaleLabels" in display ? display.scaleLabels : true;
         const xAxe = {
             type: "category",
             scaleLabel: {

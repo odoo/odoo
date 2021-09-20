@@ -8,7 +8,7 @@
                 <t t-set="activeMeasures" t-value="[model.metaData.measure]"/>
             </t>
         </div>
-        <t t-if="props.display and props.display['bottom-right'] === false">
+        <t t-if="props.displayGroupByMenu">
             <div class="btn-group" role="toolbar" aria-label="Group By">
                 <GroupByMenu showCaretDown="true"/>
             </div>

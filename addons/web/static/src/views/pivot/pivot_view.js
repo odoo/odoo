@@ -45,7 +45,7 @@ export class PivotView extends Component {
                 fieldAttrs: archInfo.fieldAttrs,
                 resModel: this.props.resModel,
                 rowGroupBys: archInfo.rowGroupBys,
-                title: this.props.title || archInfo.title || this.env._t("Untitled"),
+                title: archInfo.title || this.env._t("Untitled"),
                 widgets: archInfo.widgets,
             };
         }
@@ -162,12 +162,9 @@ PivotView.components = { ControlPanel, SearchPanel, Renderer: PivotRenderer };
 PivotView.props = {
     ...standardViewProps,
     additionalMeasures: { type: Array, elements: String, optional: 1 },
-    display: { type: Object, optional: 1 },
-    title: { type: String, optional: 1 },
 };
 PivotView.defaultProps = {
     additionalMeasures: [],
-    display: {},
 };
 
 PivotView.Model = PivotModel;

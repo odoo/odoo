@@ -398,7 +398,6 @@ QUnit.module("Views", (hooks) => {
         patchWithCleanup(session, {
             user_context: { userContextKey: true },
         });
-
         const fakeActionService = {
             start() {
                 return {
@@ -432,12 +431,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch: `
-                <pivot>
+                <pivot string="Partners">
                     <field name="product_id" type="row"/>
                     <field name="foo" type="measure"/>
                 </pivot>`,
             context: { someKey: true, search_default_test: 3 },
-            title: "Partners", // FIXME props ignored
             views: [
                 [2, "form"],
                 [5, "kanban"],
@@ -666,7 +664,6 @@ QUnit.module("Views", (hooks) => {
                     <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
                 </search>`,
             context: { search_default_date_filter: true },
-            title: "Partners",
         });
 
         assert.hasClass(
@@ -715,7 +712,6 @@ QUnit.module("Views", (hooks) => {
                         <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
                     </search>`,
                 context: { search_default_date_filter: true },
-                title: "Partners",
             });
 
             await toggleComparisonMenu(pivot);

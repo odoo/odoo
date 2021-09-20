@@ -3,7 +3,7 @@
 import { _lt } from "@web/core/l10n/translation";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
-import { GraphArchParser, MODES, ORDERS } from "./graph_arch_parser";
+import { GraphArchParser } from "./graph_arch_parser";
 import { GraphModel } from "./graph_model";
 import { GraphRenderer } from "./graph_renderer";
 import { GroupByMenu } from "@web/search/group_by_menu/group_by_menu";
@@ -17,37 +17,31 @@ const viewRegistry = registry.category("views");
 
 const { Component } = owl;
 
-const KEYS = [
-    "additionalMeasures",
-    "disableLinking",
-    "display",
-    "fields",
-    "fieldAttrs",
-    "groupBy",
-    "measure",
-    "mode",
-    "order",
-    "resModel",
-    "stacked",
-    "title",
-];
-
 export class GraphView extends Component {
     setup() {
         this.actionService = useService("action");
 
         let modelParams;
-        if (this.props.state && this.props.state.metaData) {
-            // check this (dashboard testss)
+        if (this.props.state) {
             modelParams = this.props.state.metaData;
         } else {
             const { arch, fields } = this.props;
             const parser = new this.constructor.ArchParser();
             const archInfo = parser.parse(arch, fields);
-            modelParams = {};
-            for (const key of KEYS) {
-                modelParams[key] = key in archInfo ? archInfo[key] : this.props[key];
-            }
+            modelParams = {
+                additionalMeasures: this.props.additionalMeasures,
+                disableLinking: Boolean(archInfo.disableLinking),
+                displayScaleLabels: this.props.displayScaleLabels,
+                fieldAttrs: archInfo.fieldAttrs,
+                fields: this.props.fields,
+                groupBy: archInfo.groupBy,
+                measure: archInfo.measure || "__count",
+                mode: archInfo.mode || "bar",
+                order: archInfo.order || null,
+                resModel: this.props.resModel,
+                stacked: "stacked" in archInfo ? archInfo.stacked : true,
+                title: archInfo.title || this.env._t("Untitled"),
+            };
         }
 
         this.model = useModel(this.constructor.Model, modelParams);
@@ -142,24 +136,15 @@ GraphView.components = { ControlPanel, GroupByMenu, Renderer: GraphRenderer, Sea
 
 GraphView.defaultProps = {
     additionalMeasures: [],
-    disableLinking: false,
-    display: {},
-    measure: "__count",
-    mode: "bar",
-    order: null,
-    stacked: true,
+    displayGroupByMenu: false,
+    displayScaleLabels: true,
 };
 
 GraphView.props = {
     ...standardViewProps,
     additionalMeasures: { type: Array, elements: String, optional: true },
-    disableLinking: { type: Boolean, optional: true },
-    display: { type: Object, optional: true },
-    measure: { type: String, optional: true },
-    mode: { validate: (m) => MODES.includes(m), optional: true },
-    order: { validate: (o) => ORDERS.includes(o), optional: true },
-    stacked: { type: Boolean, optional: true },
-    title: { type: String, optional: true },
+    displayGroupByMenu: { type: Boolean, optional: true },
+    displayScaleLabels: { type: Boolean, optional: true },
 };
 
 GraphView.type = "graph";
