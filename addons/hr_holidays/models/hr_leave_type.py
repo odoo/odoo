@@ -327,7 +327,8 @@ class HolidaysType(models.Model):
         employee_id = self._get_contextual_employee_id()
 
         if employee_id:
-            data_days = self.get_employees_days([employee_id])[employee_id]
+            data_days = (self.get_employees_days(employee_id)[employee_id[0]] if isinstance(employee_id, list) else
+                         self.get_employees_days([employee_id])[employee_id])
 
         for holiday_status in self:
             result = data_days.get(holiday_status.id, {})

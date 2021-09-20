@@ -8,6 +8,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
     var CalendarRenderer = require("web.CalendarRenderer");
     var CalendarModel = require("web.CalendarModel");
     var CalendarView = require("web.CalendarView");
+    var dialogs = require('web.view_dialogs');
     var viewRegistry = require('web.view_registry');
 
     var _t = core._t;
@@ -82,12 +83,32 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
          * @private
          */
         _onNewTimeOff: function () {
-            var self = this;
-            //use formViewId for this view?
-            this.do_action('hr_holidays.hr_leave_action_my_request', {
-                on_close: function () {
-                    self.reload();
-                }
+            let self = this;
+
+            let domain = [
+                ['name', '=', 'hr.leave.view.form.dashboard.new.time.off'],
+                ['model', '=', 'hr.leave']
+            ];
+
+            self._rpc({
+                model: 'ir.ui.view',
+                method: 'search',
+                args: [domain],
+            }).then(function(ids) {
+                self.timeOffDialog = new dialogs.FormViewDialog(self, {
+                    res_model: "hr.leave",
+                    view_id: ids,
+                    context: {
+                        'default_date_from': moment().format('YYYY-MM-DD'),
+                        'default_date_to': moment().add(1, 'days').format('YYYY-MM-DD'),
+                    },
+                    title: _t("New time off"),
+                    disable_multiple_selection: true,
+                    on_saved: function() {
+                        self.reload();
+                    },
+                });
+                self.timeOffDialog.open();
             });
         },
 
@@ -97,18 +118,32 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
          * @private
          */
         _onNewAllocation: function () {
-            var self = this;
-            this.do_action({
-                type: 'ir.actions.act_window',
-                res_model: 'hr.leave.allocation',
-                name: 'New Allocation Request',
-                views: [[false,'form']],
-                context: {'form_view_ref': 'hr_holidays.hr_leave_allocation_view_form_dashboard'},
-                target: 'new',
-            }, {
-                on_close: function () {
-                    self.reload();
-                }
+            let self = this;
+
+            let domain = [
+                ['name', '=', 'hr.leave.view.form.dashboard'],
+                ['model', '=', 'hr.leave.allocation']
+            ];
+
+            self._rpc({
+                model: 'ir.ui.view',
+                method: 'search',
+                args: [domain],
+            }).then(function(ids) {
+                self.allocationDialog = new dialogs.FormViewDialog(self, {
+                    res_model: "hr.leave.allocation",
+                    view_id: ids,
+                    context: {
+                        'default_employee_ids': self.context.employee_id,
+                        'default_state': 'confirm',
+                    },
+                    title: _t("New Allocation"),
+                    disable_multiple_selection: true,
+                    on_saved: function() {
+                        self.reload();
+                    },
+                });
+                self.allocationDialog.open();
             });
         },
 

@@ -53,7 +53,7 @@
                                 attrs="{
                                 'invisible': [('leave_validation_type', 'in', ['no_validation', 'manager']), '|', ('requires_allocation', '=', 'no'), ('allocation_validation_type', '=', 'officer')]}"/>
                             <field name="request_unit" widget="radio-inline"/>
-                            <field name="support_document"/>
+                            <field name="support_document" string="Allow To Join Supporting Document" />
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group name="allocation_validation" id="allocation_requests">
@@ -65,11 +65,14 @@
                     </group>
                     <group>
                         <group id="payroll">
-                            
                         </group>
-                        <group name="visual" id="visual">
-                            <h2>Visual</h2>
-                            <field name="color" widget="color_picker"/>
+                    </group>
+                    <group name="visual" id="visual" >
+                        <group colspan="4">
+                            <h2>Display Option</h2>
+                        </group>
+                        <group colspan="4">
+                            <field name="color" widget="color_picker" />
                             <field class="d-flex flex-wrap" name="icon_id" widget="radio_image" options="{'horizontal': true}"/>
                         </group>
                     </group>
