@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tax template for sale and purchase Tax 0% -->
+        <record id="tax_group_0" model="account.tax.group">
+            <field name="name">Tax 0%</field>
+        </record>
+
+         <!-- Tax template for sale and purchase Tax 1% -->
+        <record id="tax_group_1" model="account.tax.group">
+            <field name="name">Tax 1%</field>
+        </record>
+
+
+        <!-- Tax template for sale and purchase  Tax 4%-->
+        <record id="tax_group_4" model="account.tax.group">
+            <field name="name">Tax 4%</field>
+        </record>
+
+        <!-- Tax template for sale and purchase  Tax 16% -->
+        <record id="tax_group_16" model="account.tax.group">
+            <field name="name">Tax 16%</field>
+        </record>
+
+    </data>
+    <!-- Chart Template -->
+    <record id="account_arabic_coa_general" model="account.chart.template">
+        <field name="property_account_receivable_id" ref="110201001_account_aumet"/>
+        <field name="property_account_payable_id" ref="210101001_account_aumet"/>
+        <field name="property_account_expense_categ_id" ref="520103001_account_aumet"/>
+        <field name="property_account_income_categ_id" ref="410103001_account_aumet"/>
+        <field name="income_currency_exchange_account_id" ref="410103001_account_aumet"/>
+        <field name="expense_currency_exchange_account_id" ref="410103001_account_aumet"/>
+        <field name="property_account_expense_id" ref="510101001_account_aumet"/>
+        <field name="property_account_income_id" ref="410103001_account_aumet"/>
+        <field name="default_pos_receivable_account_id" ref="410103001_account_aumet"/>
+        <field name="property_stock_valuation_account_id" ref="110801001_account_aumet"/>
+        <field name="property_stock_account_input_categ_id" ref="110801004_account_aumet"/>
+        <field name="property_stock_account_output_categ_id" ref="110801002_account_aumet"/>
+        <field name="property_stock_journal" ref="110801005_account_aumet"/>
+
+    </record>
+
+     <!--Product Categories-->
+    <record id="product_category_cosmetics" model="product.category">
+        <field name="name">Cosmetics</field>
+    </record>
+
+    <record id="product_category_medicines" model="product.category">
+        <field name="name">Medicines</field>
+        <field name="removal_strategy_id" ref="product_expiry.removal_fefo"/>
+         <field name="property_cost_method">average</field>
+        <field name="property_valuation">real_time</field>
+        <field name="property_account_expense_categ_id" ref="520103001_account_aumet"/>
+        <field name="property_account_income_categ_id" ref="410103001_account_aumet"/>
+        <field name="property_stock_account_input_categ_id" ref="110801004_account_aumet"/>
+        <field name="property_stock_account_output_categ_id" ref="110801002_account_aumet"/>
+        <field name="property_stock_valuation_account_id" ref="110801001_account_aumet"/>
+        <field name="property_stock_journal" ref="110801005_account_aumet"/>
+
+    </record>
+
+    <!--Point OF Sales  Category-->
+    <record id="pos_category_cosmetics" model="pos.category">
+        <field name="name">Cosmetics</field>
+    </record>
+    <record id="pos_category_medical_supply" model="pos.category">
+        <field name="name">Medical Supply</field>
+    </record>
+    <record id="pos_category_medicine" model="pos.category">
+        <field name="name">Medicine</field>
+    </record>
+
+
+    <!-- Tax template for sale and purchase  Tax 0%-->
+    <record id="sale_tax_template_0" model="account.tax.template">
+        <field name="chart_template_id" ref="account_arabic_coa_general"/>
+        <field name="name">Sales Tax 0%</field>
+        <field name="description">Tax 0%</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('210201005_account_aumet'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('210201005_account_aumet'),
+            }),
+        ]"/>
+    </record>
+    <record id="purchase_tax_template_0" model="account.tax.template">
+        <field name="chart_template_id" ref="account_arabic_coa_general"/>
+        <field name="name">Purchase Tax 0%</field>
+        <field name="description">Tax 0%</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('210201005_account_aumet'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('210201005_account_aumet'),
+            }),
+        ]"/>
+    </record>
+
+
+     <!-- Tax template for sale and purchase  Tax 1%-->
+    <record id="sale_tax_template_1" model="account.tax.template">
+        <field name="chart_template_id" ref="account_arabic_coa_general"/>
+        <field name="name">Sales Tax 1%</field>
+        <field name="description">Tax 1%</field>
+        <field name="amount">1</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_1"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('210201005_account_aumet'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('210201005_account_aumet'),
+            }),
+        ]"/>
+    </record>
+    <record id="purchase_tax_template_1" model="account.tax.template">
+        <field name="chart_template_id" ref="account_arabic_coa_general"/>
+        <field name="name">Purchase Tax 1%</field>
+        <field name="description">Tax 1%</field>
+        <field name="amount">1</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_1"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('210201005_account_aumet'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('210201005_account_aumet'),
+            }),
+        ]"/>
+    </record>
+
+
+    <!-- Tax template for sale and purchase  Tax 4%-->
+    <record id="sale_tax_template_4" model="account.tax.template">
+        <field name="chart_template_id" ref="account_arabic_coa_general"/>
+        <field name="name">Sales Tax 4%</field>
+        <field name="description">Tax 4%</field>
+        <field name="amount">4</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_4"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('210201005_account_aumet'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('210201005_account_aumet'),
+            }),
+        ]"/>
+    </record>
+    <record id="purchase_tax_template_4" model="account.tax.template">
+        <field name="chart_template_id" ref="account_arabic_coa_general"/>
+        <field name="name">Purchase Tax 4%</field>
+        <field name="description">Tax 4%</field>
+        <field name="amount">4</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_4"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('210201005_account_aumet'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('210201005_account_aumet'),
+            }),
+        ]"/>
+    </record>
+
+
+    <!-- Tax template for sale and purchase  Tax 16%-->
+    <record id="sale_tax_template_16" model="account.tax.template">
+        <field name="chart_template_id" ref="account_arabic_coa_general"/>
+        <field name="name">Sales Tax 16%</field>
+        <field name="description">Tax 16%</field>
+        <field name="amount">16</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_16"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('210201005_account_aumet'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('210201005_account_aumet'),
+            }),
+        ]"/>
+    </record>
+    <record id="purchase_tax_template_16" model="account.tax.template">
+        <field name="chart_template_id" ref="account_arabic_coa_general"/>
+        <field name="name">Purchase Tax 16%</field>
+        <field name="description">Tax 16%</field>
+        <field name="amount">16</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_16"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('210201005_account_aumet'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('210201005_account_aumet'),
+            }),
+        ]"/>
+    </record>
+
+
+
+</odoo>
