@@ -58,7 +58,7 @@ const dynamicSnippetOptions = options.Class.extend({
         await this._super(...arguments);
         const template = this._getCurrentTemplate();
         const groupingMessage = this.el.querySelector('.o_grouping_message');
-        groupingMessage.classList.toggle('d-none', !!template.numOfEl && !!template.numOfElSm);
+        groupingMessage.classList.toggle('d-none', template && !!template.numOfEl && !!template.numOfElSm);
     },
 
     //--------------------------------------------------------------------------
@@ -85,15 +85,18 @@ const dynamicSnippetOptions = options.Class.extend({
         }
 
         if (widgetName === 'number_of_elements_opt') {
-            return !this._getCurrentTemplate().numOfEl;
+            const template = this._getCurrentTemplate();
+            return template && !template.numOfEl;
         }
 
         if (widgetName === 'number_of_elements_small_devices_opt') {
-            return !this._getCurrentTemplate().numOfElSm;
+            const template = this._getCurrentTemplate();
+            return template && !template.numOfElSm;
         }
 
         if (widgetName === 'number_of_records_opt') {
-            return !this._getCurrentTemplate().numOfElFetch;
+            const template = this._getCurrentTemplate();
+            return template && !template.numOfElFetch;
         }
 
         return this._super.apply(this, arguments);
