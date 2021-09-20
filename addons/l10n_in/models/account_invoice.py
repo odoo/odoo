@@ -105,7 +105,7 @@ class AccountMove(models.Model):
                     company_name=company_unit_partner.name,
                     company_id=company_unit_partner.id
                 ))
-            elif self.journal_id.type == 'purchase':
+            elif move.journal_id.type == 'purchase':
                 move.l10n_in_state_id = company_unit_partner.state_id
 
             shipping_partner = move._l10n_in_get_shipping_partner()
@@ -119,7 +119,7 @@ class AccountMove(models.Model):
                     partner_id=shipping_partner.id,
                     name=gst_treatment_name_mapping.get(move.l10n_in_gst_treatment)
                 ))
-            if self.journal_id.type == 'sale':
+            if move.journal_id.type == 'sale':
                 move.l10n_in_state_id = self._l10n_in_get_indian_state(shipping_partner)
                 if not move.l10n_in_state_id:
                     move.l10n_in_state_id = self._l10n_in_get_indian_state(move.partner_id)
