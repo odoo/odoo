@@ -33,13 +33,20 @@ class Company(models.Model):
                 ('company_id', '=', company.id),
                 ('country_id', '=', company.account_fiscal_country_id.id),
                 ('tax_group_id', 'not in', oss_tax_groups.mapped('res_id'))])
-            for country in eu_countries - company.account_fiscal_country_id:
+
+            multi_tax_reports_countries_fpos = self.env['account.fiscal.position'].search([
+                ('company_id', '=', company.id),
+                ('foreign_vat', '!=', False),
+            ])
+            oss_countries = eu_countries - company.account_fiscal_country_id - multi_tax_reports_countries_fpos.country_id
+            for country in oss_countries:
                 mapping = []
                 fpos = self.env['account.fiscal.position'].search([
                             ('country_id', '=', country.id),
                             ('company_id', '=', company.id),
                             ('auto_apply', '=', True),
-                            ('vat_required', '=', False)], limit=1)
+                            ('vat_required', '=', False),
+                            ('foreign_vat', '=', False)], limit=1)
                 if not fpos:
                     fpos = self.env['account.fiscal.position'].create({
                         'name': 'OSS B2C %s' % country.name,
