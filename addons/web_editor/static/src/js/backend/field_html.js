@@ -327,6 +327,11 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                         return;
                     }
                     var cwindow = self.$iframe[0].contentWindow;
+                    try {
+                        cwindow.document;
+                    } catch (e) {
+                        return;
+                    }
                     cwindow.document
                         .open("text/html", "replace")
                         .write(
