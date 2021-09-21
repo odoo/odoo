@@ -188,7 +188,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
                 return self._rpc({
                     model: 'hr.leave.type',
                     method: 'get_days_all_request',
-                    context: self.context,
+                    context: self.state.context,
                 });
             }).then(function (result) {
                 self.$el.parent().find('.o_calendar_mini').hide();
