@@ -308,7 +308,7 @@ class Project(models.Model):
         ('to_define', 'Set Status'),
     ], default='to_define', compute='_compute_last_update_status', store=True, readonly=False, required=True)
     last_update_color = fields.Integer(compute='_compute_last_update_color')
-    milestone_ids = fields.One2many('project.milestone', 'project_id')
+    milestone_ids = fields.One2many('project.milestone', 'project_id', copy=True)
     milestone_count = fields.Integer(compute='_compute_milestone_count')
 
     _sql_constraints = [
@@ -1994,7 +1994,8 @@ class Task(models.Model):
             'name': msg.get('subject') or _("No Subject"),
             'email_from': msg.get('from'),
             'planned_hours': 0.0,
-            'partner_id': msg.get('author_id')
+            'partner_id': msg.get('author_id'),
+            'description': msg.get('body'),
         }
         defaults.update(custom_values)
 
