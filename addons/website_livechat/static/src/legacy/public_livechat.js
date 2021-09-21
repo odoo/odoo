@@ -7,7 +7,7 @@ var LivechatButton = require('im_livechat.legacy.im_livechat.im_livechat').Livec
 
 
 LivechatButton.include({
-    className: `${LivechatButton.prototype.className} o_bottom_fixed_element`,
+    className: `${LivechatButton.prototype.className} o_bottom_fixed_element o_bottom_fixed_element_move_up o_website_livechat_button fa fa-commenting`,
 
     /**
      * @override
@@ -26,11 +26,20 @@ LivechatButton.include({
     /**
      * @override
      */
-     start() {
+    async start() {
         // We trigger a resize to launch the event that checks if this element hides
         // a button when the page is loaded.
         $(window).trigger('resize');
-        return this._super(...arguments);
+        await this._super(...arguments);
+        this.el.innerHTML = "";
+        if (this.options.button_text) {
+            this.el.dataset.content = this.options.button_text;
+            this.el.dataset.toggle = "popover";
+            this.el.dataset.trigger = "hover";
+            this.$el.popover({
+                animation: true,
+            });
+        }
     },
 
     //--------------------------------------------------------------------------
