@@ -57,7 +57,6 @@ svg.gear {
 
 .pos .pos-topheader {
     width: 100%;
-    height: 60px;
     color: #ffffff;
     background: #1FBBA6;
 }
@@ -105,14 +104,14 @@ svg.gear {
     justify-content: space-between;
 }
 
-.pos .pos-rightheader {
-    flex-grow: 1;
-    flex-shrink: 1;
-    height: 100%;
-    overflow: hidden;
-    overflow-x: hidden;
-    padding-left: 200px;
-}
+/*.pos .pos-rightheader {*/
+/*    flex-grow: 1;*/
+/*    flex-shrink: 1;*/
+/*    height: 100%;*/
+/*    overflow: hidden;*/
+/*    overflow-x: hidden;*/
+/*    padding-left: 200px;*/
+/*}*/
 
 .pos .pos-rightheader > * {
     border-right: 0;
@@ -122,15 +121,15 @@ svg.gear {
 .pos .pos-rightheader .username {
     float: left;
     color: #ffffff;
-    font-size: 20px;
-    margin-right: 0;
-    line-height: 20px;
+    font-size: 18px;
+    /*margin-right: 0;*/
+    /*line-height: 20px;*/
     font-style: normal;
-    margin-left: 10px;
-    margin-top: 6px;
+    /*margin-left: 10px;*/
+    /*margin-top: 6px;*/
     vertical-align: middle;
-    display: flex;
-    justify-content: space-between;
+    /*display: flex;*/
+    /*justify-content: space-between;*/
 }
 
 
@@ -140,10 +139,10 @@ svg.gear {
 }
 
 .pos .pos-rightheader .header-button.lock-button {
-    width: 10%;
+    /*width: 10%;*/
     color: #ffffff !important;
     font-size: 20px;
-    line-height: 60px;
+    /*line-height: 60px;*/
     font-style: normal;
     margin: 0;
     vertical-align: middle;
@@ -159,6 +158,7 @@ svg.gear {
 
 .pos .pos-rightheader .header-button:last-child {
     border-left: 0 !important;
+    color: white;
 }
 
 .pos .pos-content {
@@ -241,6 +241,7 @@ svg.gear {
 
 .pos .ticket-button {
     background: #1FBBA6 !important;
+    padding-right: 70px !important;
 }
 
 /*  ********* The control buttons ********* */
@@ -280,56 +281,65 @@ svg.gear {
 /*  ********* The actionpad (payment, set customer) ********* */
 
 
+/*.pos .actionpad {*/
+/*    padding: 0 !important;*/
+/*    margin: auto !important;*/
+/*    width: 80% !important;*/
+/*    text-align: center;*/
+/*    vertical-align: top;*/
+/*    border: none !important;*/
+/*    border-radius: 0 !important;*/
+/*    flex-grow: 1;*/
+/*    display: flex;*/
+/*    height: 15% !important;*/
+/*    max-width: 80% !important;*/
+/*}*/
+
 .pos .actionpad {
-    padding: 0 !important;
-    margin: auto !important;
-    width: 80% !important;
-    text-align: center;
-    vertical-align: top;
-    border: none !important;
-    border-radius: 0 !important;
-    flex-grow: 1;
-    display: flex;
-    height: 15% !important;
-    max-width: 80% !important;
+    margin-right: 16px !important;
 }
 
-
-.pos .actionpad .button:first-child {
-    border-radius: 0 0 0 10px !important;
-}
-
-.pos .actionpad .button:last-child {
+.pos .actionpad .pay{
+    width: 50% !important;
+    height: 120px !important;
     border-radius: 0 0 10px 0 !important;
-
 }
+
+/*.pos .actionpad .button:first-child {*/
+/*    border-radius: 0 0 0 10px !important;*/
+/*}*/
+
+/*.pos .actionpad .button:last-child {*/
+/*    border-radius: 0 0 0 10px !important;*/
+
+/*}*/
 
 .pos .actionpad .button:hover {
     background: #efefef;
 }
 
 .pos .actionpad .button.set-customer {
-    padding: 0 !important
+    padding: 0 !important;
 }
 
-.pos .pay {
-    color: #ffffff;
-    background-color: #1FBBA6;
-    border-radius: 10px 10px 10px 10px !important;
-    font-weight: 500;
-    font-size: 18px;
-    height: 15%;
-    width: 70%;
-    max-width: 70%;
-    margin: 8px;
-}
+/*.pos .pay {*/
+/*    color: #ffffff;*/
+/*    background-color: #1FBBA6;*/
+/*    border-radius: 10px 10px 10px 10px !important;*/
+/*    font-weight: 500;*/
+/*    font-size: 18px;*/
+/*    height: 15%;*/
+/*    width: 70%;*/
+/*    max-width: 70%;*/
+/*    margin: 8px;*/
+/*}*/
 
 .pos .pay:hover {
     opacity: 0.9;
 }
 
 .pos .actionpad .button.set-customer {
-    height: 100% !important;
+    height: 60px !important;
 }
 
 .pos .middel {
@@ -759,6 +769,37 @@ svg.gear {
     flex: none !important;
     margin: auto;
     width: 431px !important;
+}
+
+.fa-custom-style{
+    font-size: 22px;
+}
+
+.pos .pos-logo {
+    visibility: hidden;
+}
+
+.search-bar-portal .search-box .icon {
+    color: #12B9A9 !important;
+}
+
+.search-bar-portal .search-box .clear-icon {
+    display: none;
+}
+
+.pos .pos-rightheader .header-button {
+    border-right: 0px !important;
+    border-left: 0px !important;
+}
+
+.vl {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    height: 30px;
+    margin-top: 9px;
+}
+
+.pos .leftpane .pads .subpads .numpad {
+    display: none;
 }
 
 /*--------------------End-Receipt-Screen---------------------------*/
