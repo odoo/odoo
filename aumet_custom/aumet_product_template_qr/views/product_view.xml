@@ -12,7 +12,7 @@
                 </field>
                 <field name="uom_id" position="after">
                     <field name="granular_unit"/>
-	            </field>
+                </field>
 
             </field>
         </record>
@@ -27,8 +27,76 @@
                 </field>
                 <field name="uom_id" position="after">
                     <field name="granular_unit"/>
-	            </field>
+                </field>
 
+            </field>
+        </record>
+        <record id="product_template_only_form_view_hide" model="ir.ui.view">
+            <field name="name">product.template.form.view.hide</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[8]" position="replace"/>
+            </field>
+        </record>
+        <record id="product_template_form_view_procurement_button_hide" model="ir.ui.view">
+            <field name="name">product.template.form.view.procurement.button.hide</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.product_template_form_view_procurement_button"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='group_lots_and_weight']" position="replace"/>
+                <xpath expr="//button[@name='action_view_stock_move_lines']" position="replace"/>
+            </field>
+        </record>
+
+        <record id="product_variant_easy_edit_view_hide" model="ir.ui.view">
+            <field name="name">product.variant.easy.edit.view.hide</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='weight']" position="replace"/>
+            </field>
+        </record>
+
+        <record id="product_template_form_hide_sales" model="ir.ui.view">
+            <field name="name">product.template.form.hide_sales</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='sales']" position="replace"/>
+                <xpath expr="//field[@name='to_weight']" position="replace"/>
+
+            </field>
+        </record>
+        <record id="product_template_form_hide_sales_product" model="ir.ui.view">
+            <field name="name">product.template.form.hide.sales.product</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='sales']" position="replace"/>
+                <xpath expr="//field[@name='to_weight']" position="replace"/>
+                <xpath expr="//button[@name='action_view_stock_move_lines']" position="replace"/>
+                <xpath expr="//group[@name='group_lots_and_weight']" position="replace"/>
+            </field>
+        </record>
+        <record id="purchase_purchase_order_form_hide" model="ir.ui.view">
+            <field name="name">purchase.purchase.order.form.hide</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='reminder']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_rfq_send']" position="replace"/>
+            </field>
+        </record>
+
+        <record id="package_product_template_form_view" model="ir.ui.view">
+            <field name="name">package.product.template.form.view.test</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="flexipharmacy.package_product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div/field[@name='is_packaging']" position="replace"/>
             </field>
         </record>
 

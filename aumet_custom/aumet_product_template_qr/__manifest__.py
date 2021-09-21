@@ -3,7 +3,7 @@
     'description': ' Aumet Product Template ',
     'category': 'Product',
     'author': 'Aumet - walaa khaled ',
-    'depends': ['product', 'point_of_sale'],
+    'depends': ['product', 'point_of_sale','flexipharmacy','stock','purchase','sale'],
     'data': [
         'views/product_view.xml',
     ],

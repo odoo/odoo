@@ -2,11 +2,10 @@
 
 from odoo import api, fields, models
 
-import json
-
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
+
 
 
     type = fields.Selection([
@@ -25,6 +24,19 @@ class ProductTemplate(models.Model):
         inverse='_set_default_code', store=True)
     granular_unit = fields.Char('Granular Unit')
     manufacturer = fields.Char('Manufacture')
+    invoice_policy = fields.Selection([
+        ('order', 'Ordered quantities'),
+        ('delivery', 'Delivered quantities')], string='Invoicing Policy',
+        help='Ordered Quantity: Invoice quantities ordered by the customer.\n'
+             'Delivered Quantity: Invoice quantities delivered to the customer.',
+        default='order')
+    expense_policy = fields.Selection(
+        [('no', 'No'), ('cost', 'At cost'), ('sales_price', 'Sales price')],
+        string='Re-Invoice Expenses',
+        default='no',
+        help="Expenses and vendor bills can be re-invoiced to a customer."
+             "With this option, a validated expense can be re-invoice to a customer at its cost or sales price.")
+
 
 
     def _set_default_code(self):
