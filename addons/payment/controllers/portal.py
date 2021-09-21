@@ -254,8 +254,8 @@ class PaymentPortal(portal.CustomerPortal):
                 and tokenization_required_or_requested
             )
         elif flow == 'token':  # Payment by token
-            token_sudo = request.env['payment.token'].sudo().browse(payment_option_id)
-            acquirer_sudo = token_sudo.acquirer_id
+            token = request.env['payment.token'].browse(payment_option_id)
+            acquirer_sudo = token.acquirer_id.sudo()
             token_id = payment_option_id
             tokenize = False
         else:
