@@ -43,7 +43,6 @@ class AccountMove(models.Model):
             domain += [('code', 'in', [])]
         return domain
 
-
     def _check_document_types_post(self):
         for rec in self.filtered(
                 lambda r: r.company_id.country_id.code == "CL" and
@@ -85,10 +84,6 @@ class AccountMove(models.Model):
                 if tax_payer_type == '4' or country_id.code != "CL":
                     raise ValidationError(_('You need a journal without the use of documents for foreign '
                                             'suppliers'))
-            if rec.journal_id.type == 'purchase' and not rec.journal_id.l10n_latam_use_documents:
-                if tax_payer_type != '4':
-                    raise ValidationError(_('This supplier should be defined as foreigner tax payer type and '
-                                            'the country should be different from Chile to register purchases.'))
 
     @api.onchange('journal_id')
     def _l10n_cl_onchange_journal(self):
