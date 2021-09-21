@@ -22,6 +22,7 @@ const makeTestEnvironment = require('web.test_env');
 const MockServer = require('web.MockServer');
 const RamStorage = require('web.RamStorage');
 const session = require('web.session');
+const { patchDate } = require("@web/../tests/helpers/utils");
 
 const DebouncedField = basic_fields.DebouncedField;
 
@@ -596,14 +597,15 @@ async function addMockEnvironment(widget, params) {
  * Usage:
  *
  *  ```
- *  var unpatchDate = testUtils.mock.patchDate(2018, 0, 10, 17, 59, 30)
+ *  testUtils.mock.patchDate(2018, 0, 10, 17, 59, 30)
  *  new window.Date(); // "Wed Jan 10 2018 17:59:30 GMT+0100 (Central European Standard Time)"
  *  ... // 5 hours delay
  *  new window.Date(); // "Wed Jan 10 2018 22:59:30 GMT+0100 (Central European Standard Time)"
- *  ...
- *  unpatchDate();
- *  new window.Date(); // actual current date time
  *  ```
+ *
+ * The returned function is there to preserve the former API. Before it was
+ * necessary to call that function to unpatch the date. Now the unpatch is
+ * done automatically via a call to registerCleanup.
  *
  * @param {integer} year
  * @param {integer} month index of the month, starting from zero.
@@ -611,66 +613,11 @@ async function addMockEnvironment(widget, params) {
  * @param {integer} hours the digits for hours (24h)
  * @param {integer} minutes
  * @param {integer} seconds
- * @returns {Function} a callback to unpatch window.Date.
+ * @returns {Function} callback function is now useless
  */
-function patchDate(year, month, day, hours, minutes, seconds) {
-    var RealDate = window.Date;
-    var actualDate = new RealDate();
-    var fakeDate = new RealDate(year, month, day, hours, minutes, seconds);
-    var timeInterval = actualDate.getTime() - (fakeDate.getTime());
-
-    Date = (function (NativeDate) {
-        function Date(Y, M, D, h, m, s, ms) {
-            var length = arguments.length;
-            if (arguments.length > 0) {
-                var date = length == 1 && String(Y) === Y ? // isString(Y)
-                    // We explicitly pass it through parse:
-                    new NativeDate(Date.parse(Y)) :
-                    // We have to manually make calls depending on argument
-                    // length here
-                    length >= 7 ? new NativeDate(Y, M, D, h, m, s, ms) :
-                    length >= 6 ? new NativeDate(Y, M, D, h, m, s) :
-                    length >= 5 ? new NativeDate(Y, M, D, h, m) :
-                    length >= 4 ? new NativeDate(Y, M, D, h) :
-                    length >= 3 ? new NativeDate(Y, M, D) :
-                    length >= 2 ? new NativeDate(Y, M) :
-                    length >= 1 ? new NativeDate(Y) :
-                                  new NativeDate();
-                // Prevent mixups with unfixed Date object
-                date.constructor = Date;
-                return date;
-            } else {
-                var date = new NativeDate();
-                var time = date.getTime();
-                time -= timeInterval;
-                date.setTime(time);
-                return date;
-            }
-        }
-
-        // Copy any custom methods a 3rd party library may have added
-        for (var key in NativeDate) {
-            Date[key] = NativeDate[key];
-        }
-
-        // Copy "native" methods explicitly; they may be non-enumerable
-        // exception: 'now' uses fake date as reference
-        Date.now = function () {
-            var date = new NativeDate();
-            var time = date.getTime();
-            time -= timeInterval;
-            return time;
-        };
-        Date.UTC = NativeDate.UTC;
-        Date.prototype = NativeDate.prototype;
-        Date.prototype.constructor = Date;
-
-        // Upgrade Date.parse to handle simplified ISO 8601 strings
-        Date.parse = NativeDate.parse;
-        return Date;
-    })(Date);
-
-    return function () { window.Date = RealDate; };
+function legacyPatchDate(year, month, day, hours, minutes, seconds) {
+    patchDate(year, month, day, hours, minutes, seconds);
+    return function () {}; // all calls to that function are now useless
 }
 
 var patches = {};
@@ -782,7 +729,7 @@ return {
     fieldsViewGet: fieldsViewGet,
     addMockEnvironmentOwl: addMockEnvironmentOwl,
     intercept: intercept,
-    patchDate: patchDate,
+    patchDate: legacyPatchDate,
     patch: patch,
     unpatch: unpatch,
     patchSetTimeout: patchSetTimeout,
