@@ -14,8 +14,8 @@ class ProjectMilestone(models.Model):
 
     name = fields.Char(required=True)
     project_id = fields.Many2one('project.project', required=True, default=_get_default_project_id)
-    deadline = fields.Date(tracking=True)
-    is_reached = fields.Boolean(string="Reached", default=False)
+    deadline = fields.Date(tracking=True, copy=False)
+    is_reached = fields.Boolean(string="Reached", default=False, copy=False)
     reached_date = fields.Date(compute='_compute_reached_date', store=True)
 
     # computed non-stored fields
