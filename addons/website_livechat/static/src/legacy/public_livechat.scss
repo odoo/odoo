@@ -5,3 +5,24 @@
         right: $o-we-sidebar-width !important;
     }
 }
+
+.o_website_livechat_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: filter 0.3s;
+    margin: 0 30px 30px 0;
+    box-shadow: $box-shadow;
+    border: none;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    font-size: 24px;
+    font-weight: normal;
+    text-shadow: none;
+
+    &:hover {
+        filter: brightness(90%);
+    }
+}
