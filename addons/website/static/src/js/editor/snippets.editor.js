@@ -35,8 +35,8 @@ weSnippetEditor.SnippetsMenu.include({
     /**
      * @override
      */
-    start() {
-        this._super(...arguments);
+    async start() {
+        await this._super(...arguments);
         this.$currentAnimatedText = $();
 
         this.__onSelectionChange = ev => {
