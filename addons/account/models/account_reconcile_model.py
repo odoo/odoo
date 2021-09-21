@@ -286,10 +286,10 @@ class AccountReconcileModel(models.Model):
         for tax_res in res['taxes']:
             tax = self.env['account.tax'].browse(tax_res['id'])
             balance = tax_res['amount']
-
+            name = ' '.join([x for x in [base_line_dict.get('name', ''), tax_res['name']] if x])
             new_aml_dicts.append({
                 'account_id': tax_res['account_id'] or base_line_dict['account_id'],
-                'name': tax_res['name'],
+                'name': name,
                 'partner_id': base_line_dict.get('partner_id'),
                 'balance': balance,
                 'debit': balance > 0 and balance or 0,
@@ -359,6 +359,7 @@ class AccountReconcileModel(models.Model):
                 'analytic_account_id': line.analytic_account_id.id,
                 'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                 'reconcile_model_id': self.id,
+                'journal_id': line.journal_id.id,
             }
             lines_vals_list.append(writeoff_line)
 
