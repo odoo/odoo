@@ -13,44 +13,46 @@
         <field name="model">stock.location</field>
         <field name="arch" type="xml">
             <form string="Stock Location" create="false">
-                <div class="oe_button_box" name="button_box">
-                    <button string="Current Stock"
-                            class="oe_stat_button"
-                            icon="fa-building-o" name="%(location_open_quants)d" type="action"/>
-                    <button string="Products"
-                            class="oe_stat_button"
-                            icon="fa-filter" name="%(act_product_location_open)d" type="action"
-                            context="{'location_id': active_id}"
-                            />
-                   <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                        <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                    </button>
-                </div>
-                <label for="name" class="oe_edit_only"/>
-                <h1><field name="name"/></h1>
-                <label for="location_id" class="oe_edit_only"/>
-                <h2><field name="location_id" options="{'no_create': True}"/></h2>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button string="Current Stock"
+                                class="oe_stat_button"
+                                icon="fa-building-o" name="%(location_open_quants)d" type="action"/>
+                        <button string="Products"
+                                class="oe_stat_button"
+                                icon="fa-filter" name="%(act_product_location_open)d" type="action"
+                                context="{'location_id': active_id}"
+                                />
+                    <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field name="name"/></h1>
+                    <label for="location_id" class="oe_edit_only"/>
+                    <h2><field name="location_id" options="{'no_create': True}"/></h2>
 
-                <group>
-                    <group string="Additional Information">
-                        <field name="usage"/>
-                        <field name="partner_id"/>
-                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                        <field name="scrap_location"/>
-                        <field name="return_location"/>
+                    <group>
+                        <group string="Additional Information">
+                            <field name="usage"/>
+                            <field name="partner_id"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="scrap_location"/>
+                            <field name="return_location"/>
+                        </group>
+                        <group string="Localization" name="localization">
+                            <field name="posx"/>
+                            <field name="posy"/>
+                            <field name="posz"/>
+                            <field name="barcode"/>
+                        </group>
+                        <group string="Logistics" groups="stock.group_adv_location">
+                            <field name="removal_strategy_id" options="{'no_create': True}"/>
+                            <field name="putaway_strategy_id" context="{'location_id': active_id}"/>
+                        </group>
                     </group>
-                    <group string="Localization" name="localization">
-                        <field name="posx"/>
-                        <field name="posy"/>
-                        <field name="posz"/>
-                        <field name="barcode"/>
-                    </group>
-                    <group string="Logistics" groups="stock.group_adv_location">
-                        <field name="removal_strategy_id" options="{'no_create': True}"/>
-                        <field name="putaway_strategy_id" context="{'location_id': active_id}"/>
-                    </group>
-                </group>
-                <field name="comment" placeholder="External note..."/>
+                    <field name="comment" placeholder="External note..."/>
+                </sheet>
             </form>
         </field>
     </record>
