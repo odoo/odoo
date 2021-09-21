@@ -89,8 +89,7 @@ class TimesheetCustomerPortal(CustomerPortal):
             'name': {'label': _('Description'), 'order': 'name'},
         }
 
-    @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='none', **kw):
+    def _prepare_portal_my_timesheets_values(self, request, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='none', **kw):
         Timesheet = request.env['account.analytic.line']
         domain = Timesheet._timesheet_get_portal_domain()
         Timesheet_sudo = Timesheet.sudo()
@@ -184,6 +183,11 @@ class TimesheetCustomerPortal(CustomerPortal):
             'filterby': filterby,
             'is_uom_day': request.env['account.analytic.line']._is_timesheet_encode_uom_day(),
         })
+        return values
+
+    @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
+    def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='none', **kw):
+        values = self._prepare_portal_my_timesheets_values(request, page=page, sortby=sortby, filterby=filterby, search=search, search_in=search_in, groupby=groupby, **kw)
         return request.render("hr_timesheet.portal_my_timesheets", values)
 
 class TimesheetProjectCustomerPortal(ProjectCustomerPortal):

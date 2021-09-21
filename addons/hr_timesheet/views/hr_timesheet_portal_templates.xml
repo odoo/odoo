@@ -3,6 +3,14 @@
 
     <template id="portal_layout" name="Portal layout: timesheet menu entry" inherit_id="portal.portal_breadcrumbs" priority="35">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <t t-if="bc_sale_order">
+                <li class="breadcrumb-item"><a href="/my/orders">Orders</a></li>
+                <li class="breadcrumb-item"><a t-att-href="'/my/orders/%s' % bc_sale_order.id"><span>Sale Order <t t-esc="bc_sale_order.name"/></span></a></li>
+            </t>
+            <t t-if="bc_invoice">
+                <li class="breadcrumb-item"><a href="/my/invoices">Invoices &amp; Bills</a></li>
+                <li class="breadcrumb-item"><a t-att-href="'/my/invoices/%s' % bc_invoice.id" t-esc="bc_invoice.name"><span>Invoice <t t-esc="bc_invoice.name"/></span></a></li>
+            </t>
             <li t-if="page_name == 'timesheet' or timesheet" t-attf-class="breadcrumb-item #{'active' if not timesheet else ''}">
                 <t>Timesheets</t>
             </li>

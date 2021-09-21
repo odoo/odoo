@@ -108,6 +108,28 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
                 pass
         return values
 
-    @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='sol', **kw):
-        return super().portal_my_timesheets(page, sortby, filterby, search, search_in, groupby, **kw)
+    def _prepare_portal_my_timesheets_values(self, request, **kw):
+        values = super()._prepare_portal_my_timesheets_values(request, **kw)
+        if 'bc_sale_order' in kw:
+            values['bc_sale_order'] = kw['bc_sale_order']
+        elif 'bc_invoice' in kw:
+            values['bc_invoice'] = kw['bc_invoice']
+        return values
+
+    @http.route(['/my/orders/<int:order_id>/timesheets'], type='http', auth='user', website=True)
+    def portal_order_timesheet_page(self, order_id, **kwargs):
+        sale_order = request.env['sale.order'].browse(order_id)
+        if 'search' not in kwargs and sale_order:
+            kwargs['search'] = sale_order.name
+            kwargs['search_in'] = 'so'
+            kwargs['bc_sale_order'] = sale_order
+        return self.portal_my_timesheets(**kwargs)
+
+    @http.route(['/my/invoices/<int:invoice_id>/timesheets'], type='http', auth='user', website=True)
+    def portal_invoice_timesheet_page(self, invoice_id, **kwargs):
+        invoice = request.env['account.move'].browse(invoice_id)
+        if 'search' not in kwargs and invoice:
+            kwargs['search'] = invoice.name
+            kwargs['search_in'] = 'invoice'
+            kwargs['bc_invoice'] = invoice
+        return self.portal_my_timesheets(**kwargs)

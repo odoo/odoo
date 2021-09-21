@@ -371,6 +371,8 @@ class ProjectCustomerPortal(CustomerPortal):
         searchbar_inputs = self._task_get_searchbar_inputs()
         searchbar_groupby = self._task_get_searchbar_groupby()
 
+        currency = request.env.company.currency_id
+
         # extends filterby criteria with project the customer has access to
         projects = request.env['project.project'].search([])
         for project in projects:
@@ -441,6 +443,7 @@ class ProjectCustomerPortal(CustomerPortal):
                 grouped_tasks.sort(key=lambda tasks: task_states.get(tasks[0].kanban_state))
 
         values.update({
+            'currency': currency,
             'date': date_begin,
             'date_end': date_end,
             'grouped_tasks': grouped_tasks,
