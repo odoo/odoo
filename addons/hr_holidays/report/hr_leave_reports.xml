@@ -6,6 +6,7 @@
         <field name="model">hr.leave.report</field>
         <field name="arch" type="xml">
             <search string="Search Time Off">
+                <field name="employee_id"/>
                 <field name="name"/>
                 <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
                 <filter string="Approved Requests" domain="[('state', '=', 'validate')]" name="validated"/>
@@ -21,7 +22,6 @@
                 <separator/>
                 <filter string="My Requests" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
-                <field name="employee_id"/>
                 <field name="department_id" operator="child_of"/>
                 <field name="holiday_status_id"/>
                 <group expand="0" string="Group By">

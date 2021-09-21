@@ -396,6 +396,7 @@ class HolidaysAllocation(models.Model):
         The goal of this method is to retroactively apply accrual plan levels and progress from nextcall to today
         """
         today = fields.Date.today()
+        first_allocation = _("""This allocation have already ran once, any modification won't be effective to the days allocated to the employee. If you need to change the configuration of the allocation, cancel and create a new one.""")
         for allocation in self:
             level_ids = allocation.accrual_plan_id.level_ids.sorted('sequence')
             if not level_ids:
@@ -408,6 +409,7 @@ class HolidaysAllocation(models.Model):
                     continue
                 allocation.lastcall = max(allocation.lastcall, first_level_start_date)
                 allocation.nextcall = first_level._get_next_date(allocation.lastcall)
+                allocation._message_log(body=first_allocation)
             days_added_per_level = defaultdict(lambda: 0)
             while allocation.nextcall <= today:
                 (current_level, current_level_idx) = allocation._get_current_accrual_plan_level_id(allocation.nextcall)
