@@ -293,6 +293,13 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o"
+                            attrs="{'invisible': [('invoice_count', '=', 0)]}">
+                            <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                        </button>
                         <button name="preview_sale_order"
                             type="object"
                             class="oe_stat_button"
@@ -301,13 +308,6 @@
                                 <span class="o_stat_text">Customer</span>
                                 <span class="o_stat_text">Preview</span>
                             </div>
-                        </button>
-                        <button name="action_view_invoice"
-                            type="object"
-                            class="oe_stat_button"
-                            icon="fa-pencil-square-o"
-                            attrs="{'invisible': [('invoice_count', '=', 0)]}">
-                            <field name="invoice_count" widget="statinfo" string="Invoices"/>
                         </button>
                     </div>
                     <div class="oe_title">
