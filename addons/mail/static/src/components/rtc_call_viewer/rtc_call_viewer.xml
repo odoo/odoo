@@ -5,8 +5,8 @@
     <div class="o_RtcCallViewer" t-att-class="{ 'o-fullScreen': rtcCallViewer and rtcCallViewer.isFullScreen, 'o-isMinimized': rtcCallViewer and rtcCallViewer.isMinimized }">
         <t t-if="rtcCallViewer">
 
-            <!-- used to make the template depend on window size -->
-            <t t-set="sizeChangeListener" t-value="windowSize"/>
+            <!-- Used to make the component depend on the window size and trigger an update when the window size changes. -->
+            <t t-set="dummy" t-value="messaging and messaging.device and messaging.device.globalWindowInnerHeight and messaging.device.globalWindowInnerWidth"/>
 
             <!-- Call members display -->
             <div class="o_RtcCallViewer_participantContainer" t-on-click="rtcCallViewer.onClick" t-on-mousemove="rtcCallViewer.onMouseMove">

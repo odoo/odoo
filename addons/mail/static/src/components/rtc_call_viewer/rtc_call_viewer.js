@@ -41,20 +41,6 @@ export class RtcCallViewer extends Component {
         return this.messaging.models['mail.rtc_call_viewer'].get(this.props.localId);
     }
 
-    /**
-     * Used to make the component depend on the window size and trigger an
-     * update when the window size changes.
-     *
-     * @returns {Object|undefined}
-     */
-    get windowSize() {
-        const device = this.messaging && this.messaging.device;
-        return device && {
-            innerHeight: device.globalWindowInnerHeight,
-            innerWidth: device.globalWindowInnerWidth,
-        };
-    }
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
