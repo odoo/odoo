@@ -258,6 +258,17 @@ const LinkTools = Link.extend({
         this.colorpickers[cssProperty] = colorpicker;
         colorpicker.appendTo($(ev.target).closest('.dropdown').find('.dropdown-menu'));
         colorpicker.on('custom_color_picked color_picked color_hover color_leave', this, (ev) => {
+            // Reset color styles in link content to make sure new color is not hidden.
+            // Only done when applied to avoid losing state during preview.
+            if (['custom_color_picked', 'color_picked'].includes(ev.name)) {
+                const selection = window.getSelection();
+                const range = document.createRange();
+                range.selectNodeContents(this.$link[0]);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                this.options.wysiwyg.odooEditor.execCommand('applyColor', '', 'color');
+                this.options.wysiwyg.odooEditor.execCommand('applyColor', '', 'backgroundColor');
+            }
             let color = ev.data.color;
             let gradientColor = '';
             if (cssProperty === 'background-color') {
