@@ -4,6 +4,8 @@
 import json
 from collections import defaultdict
 from datetime import datetime, timedelta
+from psycopg2 import IntegrityError
+from psycopg2.errorcodes import UNIQUE_VIOLATION
 
 from odoo import http
 from odoo.http import request
@@ -18,6 +20,30 @@ class DiscussController(http.Controller):
     # --------------------------------------------------------------------------
     # Public Pages
     # --------------------------------------------------------------------------
+
+    @http.route([
+        '/chat/<string:create_token>',
+        '/chat/<string:create_token>/<string:channel_name>',
+    ], methods=['GET'], type='http', auth='public')
+    def discuss_channel_from_token(self, create_token, channel_name=None, **kwargs):
+        if not request.env['ir.config_parameter'].sudo().get_param('mail.chat_from_token'):
+            raise NotFound()
+        channel_sudo = request.env['mail.channel'].sudo().search([('uuid', '=', create_token)])
+        if not channel_sudo:
+            try:
+                channel_sudo = channel_sudo.create({
+                    'uuid': create_token,
+                    'name': channel_name or create_token,
+                    'public': 'public',
+                })
+            except IntegrityError as e:
+                if e.pgcode != UNIQUE_VIOLATION:
+                    raise
+                # concurrent insert attempt: another request created the channel.
+                # commit the current transaction and get the channel.
+                request.env.cr.commit()
+                channel_sudo = channel_sudo.search([('uuid', '=', create_token)])
+        return request.redirect(f'/chat/{channel_sudo.id}/{channel_sudo.uuid}')
 
     @http.route('/chat/<int:channel_id>/<string:invitation_token>', methods=['GET'], type='http', auth='public')
     def discuss_channel_invitation(self, channel_id, invitation_token, **kwargs):
