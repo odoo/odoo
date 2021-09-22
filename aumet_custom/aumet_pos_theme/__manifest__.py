@@ -25,6 +25,7 @@
     'qweb': [
         'static/src/xml/*.xml',
         'static/src/xml/Screens/Chrome.xml',
+        'static/src/xml/Screens/DiscountButton.xml',
         'static/src/xml/Screens/ProductScreen/ProductItem.xml',
         'static/src/xml/Screens/ProductScreen/OrderWidget.xml',
         'static/src/xml/Screens/ProductScreen/Orderline.xml',

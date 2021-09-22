@@ -159,12 +159,13 @@ svg.gear {
 .pos .pos-rightheader .header-button:last-child {
     border-left: 0 !important;
     color: white;
+    font-size: 15px;
 }
 
 .pos .pos-content {
     width: 100%;
     position: absolute;
-    top: 60px;
+    /*top: 60px;*/
     bottom: 0;
     background: #ffffff;
 }
@@ -186,7 +187,7 @@ svg.gear {
     border-top: 0;
     width: 100% !important;
     margin: auto;
-    flex: 0 0 55% !important;
+    /*flex: 0 0 55% !important;*/
 }
 
 
@@ -208,7 +209,24 @@ svg.gear {
 }
 
 .pos .order .order-empty {
-    margin: 0 !important;
+    width: 80%;
+    min-width: 80%;
+    margin: auto !important;
+    margin-top: 50px !important;
+}
+
+.pos .order .order-empty h1{
+    font-size: 18px !important;
+    color: black;
+}
+
+.pos .order .order-empty p{
+    font-size: 16px !important;
+    color: black;
+}
+
+.pos .order .order-empty .fa{
+    font-size: 150px !important;
 }
 
 .pos .order .orderline {
@@ -266,7 +284,15 @@ svg.gear {
 
 .pos .product-screen .numpad {
     height: 100% !important;
+    order: 1;
+}
 
+.pos .product-screen .numpad .numpad-minus{
+    border-bottom-left-radius: 10px !important;
+}
+
+.pos .product-screen .numpad .numpad-minus{
+    border-bottom-left-radius: 10px !important;
 }
 
 .pos .control-button:active {
@@ -280,6 +306,15 @@ svg.gear {
 
 /*  ********* The actionpad (payment, set customer) ********* */
 
+.pos .actionpad {
+    display: table-footer-group !important;
+    margin: auto !important;
+    width: 80% !important;
+    min-width: 80% !important;
+    order: 2;
+    /*border-bottom-left-radius: 10px !important;*/
+    border-radius: 10px !important;
+}
 
 /*.pos .actionpad {*/
 /*    padding: 0 !important;*/
@@ -295,24 +330,25 @@ svg.gear {
 /*    max-width: 80% !important;*/
 /*}*/
 
-.pos .actionpad {
-    margin-right: 16px !important;
-}
+/*.pos .actionpad {*/
+/*    margin-right: 16px !important;*/
+/*}*/
 
 .pos .actionpad .pay{
     width: 50% !important;
     height: 120px !important;
-    border-radius: 0 0 10px 0 !important;
+    border-radius: 0 10px 10px 0 !important;
+    background: #1FBBA6 !important;
+    color: white;
 }
 
 /*.pos .actionpad .button:first-child {*/
 /*    border-radius: 0 0 0 10px !important;*/
 /*}*/
 
-/*.pos .actionpad .button:last-child {*/
-/*    border-radius: 0 0 0 10px !important;*/
-
-/*}*/
+.pos .actionpad .button:last-child {
+    border-bottom-left-radius: 10px;
+}
 
 .pos .actionpad .button:hover {
     background: #efefef;
@@ -369,6 +405,7 @@ svg.gear {
     margin: auto !important;
     width: 80% !important;
     min-width: 80% !important;
+    margin-bottom: 20px !important;
 }
 
 .pos .product-screen .numpad button {
@@ -408,13 +445,15 @@ svg.gear {
 .pos .numpad button:nth-child(1) {
     border-top-left-radius: 10px;
 }
-
+.pos .actionpad .button:first-child{
+    border-top-left-radius: 10px !important;
+}
 .pos .numpad button:nth-child(13) {
     border-bottom-left-radius: 10px;
 }
 
 .pos .numpad button:last-child {
-    border-bottom-right-radius: 10px;
+    border-bottom-right-radius: 10px !important;
 }
 
 .pos .input-button {
@@ -798,8 +837,23 @@ svg.gear {
     margin-top: 9px;
 }
 
-.pos .leftpane .pads .subpads .numpad {
-    display: none;
+/*.pos .leftpane .pads .subpads .numpad {*/
+/*    display: none;*/
+/*}*/
+
+
+.pos .leftpane .pads .subpads {
+    flex-direction: column;
 }
+
+.pos .actionpad .button.pay .pay-circle .fa {
+    top: -3px !important;
+    color: #12B9A9 !important;
+}
+
+.pos .actionpad .button.pay .pay-circle {
+    background: white !important;
+}
+
 
 /*--------------------End-Receipt-Screen---------------------------*/
