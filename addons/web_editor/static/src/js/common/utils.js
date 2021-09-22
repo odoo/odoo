@@ -317,6 +317,19 @@ function _isColorGradient(value) {
     // FIXME duplicated in odoo-editor/utils.js
     return value && value.includes('-gradient(');
 }
+/**
+ * Returns the class of the element that matches the specified prefix.
+ *
+ * @private
+ * @param {Element} el element from which to recover the color class
+ * @param {string[]} colorNames
+ * @param {string} prefix prefix of the color class to recover
+ * @returns {string} color class matching the prefix or an empty string
+ */
+function _getColorClass(el, colorNames, prefix) {
+    const prefixedColorNames = _computeColorClasses(colorNames, prefix);
+    return el.classList.value.split(' ').filter(cl => prefixedColorNames.includes(cl)).join(' ');
+}
 
 return {
     CSS_SHORTHANDS: CSS_SHORTHANDS,
@@ -335,5 +348,6 @@ return {
     getBgImageURL: _getBgImageURL,
     backgroundImageCssToParts: _backgroundImageCssToParts,
     backgroundImagePartsToCss: _backgroundImagePartsToCss,
+    getColorClass: _getColorClass,
 };
 });
