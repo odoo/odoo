@@ -60,6 +60,7 @@ PKGS_TO_INSTALL="
     python3-mock \
     python3-netifaces \
     python3-passlib \
+    python3-pikepdf \
     python3-pil \
     python3-pip \
     python3-psutil \

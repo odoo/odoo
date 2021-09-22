@@ -36,6 +36,7 @@ setup(
         'mock',
         'ofxparse',
         'passlib',
+        'pikepdf',
         'pillow',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'polib',
         'psutil',  # windows binary code.google.com/p/psutil/downloads/list
