@@ -35,8 +35,8 @@ class MailTemplatePreview(models.TransientModel):
     resource_ref = fields.Reference(string='Record', selection='_selection_target_model')
     lang = fields.Selection(_selection_languages, string='Template Preview Language')
     no_record = fields.Boolean('No Record', compute='_compute_no_record')
-    error_msg = fields.Char('Error Message', readonly=True)
     # Fields same than the mail.template model, computed with resource_ref and lang
+    error_msg = fields.Char('Error Message', compute='_compute_mail_template_fields')
     subject = fields.Char('Subject', compute='_compute_mail_template_fields')
     email_from = fields.Char('From', compute='_compute_mail_template_fields', help="Sender address")
     email_to = fields.Char('To', compute='_compute_mail_template_fields',
