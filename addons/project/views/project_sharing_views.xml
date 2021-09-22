@@ -43,6 +43,9 @@
                 <field name="active"/>
                 <field name="allow_subtasks"/>
                 <field name="child_text"/>
+                <field name="legend_blocked" invisible="1"/>
+                <field name="legend_normal" invisible="1"/>
+                <field name="legend_done" invisible="1"/>
                 <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "muted"}'/>
                 <templates>
                 <t t-name="kanban-box">
@@ -132,6 +135,9 @@
                 <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="kanban_state" widget="state_selection" optional="hide"/>
+                <field name="legend_blocked" invisible="1"/>
+                <field name="legend_normal" invisible="1"/>
+                <field name="legend_done" invisible="1"/>
                 <field name="stage_id" invisible="context.get('set_visible',False)" optional="show"/>
             </tree>
         </field>
@@ -161,6 +167,9 @@
                             <field name="priority" widget="priority" class="mr-3"/>
                             <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
                             <field name="kanban_state" widget="state_selection" class="ml-auto"/>
+                            <field name="legend_blocked" invisible="1"/>
+                            <field name="legend_normal" invisible="1"/>
+                            <field name="legend_done" invisible="1"/>
                         </h1>
                     </div>
                     <group>
