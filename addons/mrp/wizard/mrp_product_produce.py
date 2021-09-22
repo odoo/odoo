@@ -148,6 +148,9 @@ class MrpProductProduce(models.TransientModel):
             quantity = wizard.qty_producing
             if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
                 raise UserError(_("The production order for '%s' has no quantity specified.") % self.product_id.display_name)
+            quantity = wizard.product_uom_id._compute_quantity(quantity, wizard.production_id.product_uom_id)
+            if float_compare(quantity, wizard.production_id.product_qty, precision_rounding=self.product_uom_id.rounding) > 0:
+                wizard.production_id.write({'product_qty': quantity})
         self._update_finished_move()
         self._update_moves()
         self.production_id.filtered(lambda mo: mo.state == 'confirmed').write({
