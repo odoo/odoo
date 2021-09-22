@@ -7,17 +7,6 @@ const { Component } = owl;
 export class RtcActivityNotice extends Component {
 
     //--------------------------------------------------------------------------
-    // Getters / Setters
-    //--------------------------------------------------------------------------
-
-    /**
-     * @returns {mail.thread|undefined}
-     */
-    get thread() {
-        return this.messaging && this.messaging.mailRtc.channel;
-    }
-
-    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -26,7 +15,7 @@ export class RtcActivityNotice extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
-        this.thread.open();
+        this.messaging.mailRtc.channel.open();
     }
 
 }
