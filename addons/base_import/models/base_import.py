@@ -1007,6 +1007,26 @@ class Import(models.TransientModel):
                 'preview': preview,
             }
 
+    def validate_import(self, options, fields):
+        self.ensure_one()
+        file_length, rows = self._read_file(options)
+        if file_length <= 0:
+            raise ImportValidationError(_("Import file has no content or is corrupt"))
+
+        preview_warning = False
+        id_index = fields.index('id')
+        external_ids = [data[id_index] for data in rows[:100]]
+        rec_modules_dict = {}
+        for e_id in external_ids:
+            if '.' in e_id and not rec_modules_dict.get(e_id.split('.')[0]):
+                rec_modules_dict[e_id.split('.')[0]] = e_id
+        module = self.env['ir.module.module'].search([('name', 'in', list(rec_modules_dict.keys()))], limit=1)
+        if module:
+            e_id = rec_modules_dict[module.name]
+            preview_warning = '''We do not recommend prefixing your IDs with a module name and dot (e.g. %s), as the imported records might be overwritten or deleted at module upgrade.
+                To prevent this issue, simply use underscores instead of dots in IDs (e.g. %s).''' % (e_id, e_id.replace('.', '_'))
+        return preview_warning
+
     @api.model
     def _convert_import_data(self, fields, options):
         """ Extracts the input BaseModel and fields list (with
