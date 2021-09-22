@@ -11,7 +11,7 @@ addRecordMethods('Message', {
      * @returns {Deferred}
      */
     async cancelLetter() {
-        // the result will come from longpolling: message_notification_update
+        // the result will come from the bus: message_notification_update
         await this.messaging.rpc({
             model: 'mail.message',
             method: 'cancel_letter',
@@ -53,7 +53,7 @@ addRecordMethods('Message', {
      * Retries to send the 'snailmail.letter' corresponding to this message.
      */
     async resendLetter() {
-        // the result will come from longpolling: message_notification_update
+        // the result will come from the bus: message_notification_update
         await this.messaging.rpc({
             model: 'mail.message',
             method: 'send_letter',

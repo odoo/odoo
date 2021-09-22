@@ -133,7 +133,7 @@ registerModel({
         },
         /**
          * Mark provided messages as read. Messages that have been marked as
-         * read are acknowledged by server with response as longpolling
+         * read are acknowledged by server with response as bus.
          * notification of following format:
          *
          * [[dbname, 'res.partner', partnerId], { type: 'mark_as_read' }]

@@ -16,7 +16,6 @@ registerModel({
     lifecycleHooks: {
         _willDelete() {
             this.env.services['bus_service'].removeEventListener('notification', this._handleNotifications);
-            this.env.services['bus_service'].stopPolling();
         },
     },
     recordMethods: {
@@ -26,7 +25,6 @@ registerModel({
          */
         start() {
             this.env.services['bus_service'].addEventListener('notification', this._handleNotifications);
-            this.env.services['bus_service'].startPolling();
         },
         /**
          * @private

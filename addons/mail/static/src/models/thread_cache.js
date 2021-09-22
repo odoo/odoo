@@ -270,7 +270,7 @@ registerModel({
          * cache (@see messages field for that): it just contains list
          * of successive messages that have been explicitly fetched by this
          * cache. For all non-main caches, this corresponds to all messages.
-         * For the main cache, however, messages received from longpolling
+         * For the main cache, however, messages received from the bus
          * should be displayed on main cache but they have not been explicitly
          * fetched by cache, so they ARE NOT in this list (at least, not until a
          * fetch on this thread cache contains this message).
