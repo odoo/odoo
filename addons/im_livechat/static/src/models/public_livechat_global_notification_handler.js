@@ -12,7 +12,6 @@ registerModel({
     lifecycleHooks: {
         _created() {
             this.env.services['bus_service'].addChannel(this.messaging.publicLivechatGlobal.publicLivechat.uuid);
-            this.env.services['bus_service'].startPolling();
             this.env.services['bus_service'].addEventListener('notification', this._onNotification);
         },
     },

@@ -19,7 +19,6 @@ export const calendarNotificationService = {
                 }
             }
         });
-        bus_service.startPolling();
 
         /**
          * Displays the Calendar notification on user's screen

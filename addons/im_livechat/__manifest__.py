@@ -177,10 +177,12 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/legacy/js/services/ajax_service.js',
             'web/static/src/legacy/js/services/local_storage_service.js',
             # Bus, Mail, Livechat
-            'bus/static/src/longpolling_bus.js',
-            'bus/static/src/crosstab_bus.js',
-            'bus/static/src/services/bus_service.js',
+            'bus/static/src/im_status_service.js',
             'bus/static/src/multi_tab_service.js',
+            'bus/static/src/services/bus_service.js',
+            'bus/static/src/services/legacy/make_bus_service_to_legacy_env.js',
+            'bus/static/src/workers/websocket_worker.js',
+            'bus/static/src/workers/websocket_worker_utils.js',
             'mail/static/src/js/utils.js',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
 
@@ -202,9 +204,7 @@ Help your customers with this chat, and analyse their feedback.
             'mail/static/src/services/messaging_service.js',
             # Framework JS
             'bus/static/src/*.js',
-            'bus/static/src/services/bus_service.js',
             'bus/static/src/services/presence_service.js',
-            'bus/static/src/services/legacy/make_bus_service_to_legacy_env.js',
             'web/static/lib/luxon/luxon.js',
             'web/static/src/core/**/*',
             # FIXME: debug menu currently depends on webclient, once it doesn't we don't need to remove the contents of the debug folder

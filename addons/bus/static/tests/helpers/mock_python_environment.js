@@ -113,8 +113,8 @@ let pyEnv;
             getViews() {
                 return views;
             },
-            simulateConnectionLostAndRecovered() {
-                this.mockServer._simulateConnectionLostAndRecovered();
+            simulateConnectionLost(closeCode) {
+                this.mockServer._simulateConnectionLost(closeCode);
             },
             ...TEST_USER_IDS,
         },

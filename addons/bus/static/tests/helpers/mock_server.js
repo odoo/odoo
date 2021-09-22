@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
+import { patchWebsocketWorkerWithCleanup } from '@bus/../tests/helpers/mock_websocket';
 
 import { patch } from "@web/core/utils/patch";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
@@ -11,6 +12,7 @@ patch(MockServer.prototype, 'bus', {
     init() {
         this._super(...arguments);
         Object.assign(this, TEST_USER_IDS);
+        this.websocketWorker = patchWebsocketWorkerWithCleanup();
         this.pendingLongpollingPromise = null;
         this.notificationsToBeResolved = [];
     },
@@ -57,26 +59,21 @@ patch(MockServer.prototype, 'bus', {
         const values = [];
         for (const notification of notifications) {
             const [type, payload] = notification.slice(1, notification.length);
-            values.push({ message: { payload, type } });
+            values.push({ payload, type });
         }
-        if (this.pendingLongpollingPromise) {
-            this.pendingLongpollingPromise.resolve(values);
-            this.pendingLongpollingPromise = null;
-        } else {
-            this.notificationsToBeResolved.push(...values);
-        }
+        this.websocketWorker.broadcast('notification', values);
+
     },
 
     /**
-     * Simulate the lost of the connection by rejecting the pending
-     * promise with ConnectionLostError. If there is no pending promise,
-     * reject the next one.
+     * Simulate the lost of the connection by simulating a closeEvent on
+     * the worker websocket.
+     *
+     * @param {number} clodeCode the code to close the connection with.
      */
-    _simulateConnectionLostAndRecovered() {
-        if (this.pendingLongpollingPromise) {
-            this.pendingLongpollingPromise.reject(new ConnectionLostError());
-        } else {
-            this.hasLostConnection = true;
-        }
+    _simulateConnectionLost(closeCode) {
+        this.websocketWorker.websocket.dispatchEvent(new CloseEvent('close', {
+            code: closeCode,
+        }));
     },
 });

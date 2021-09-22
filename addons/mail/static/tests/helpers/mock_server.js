@@ -62,7 +62,7 @@ patch(MockServer.prototype, 'mail', {
      */
     async _performRPC(route, args) {
         // routes
-        if (route === '/longpolling/im_status') {
+        if (route === '/bus/im_status') {
             const { partner_ids } = args;
             return {
                 'partners': this.pyEnv['res.partner'].searchRead([['id', 'in', partner_ids]], { context: { 'active_test': false }, fields: ['im_status'] })

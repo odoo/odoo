@@ -37,11 +37,10 @@
 
     var commentRegExp = /(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/gm;
     var cjsRequireRegExp = /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g;
-
-    if (!window.odoo) {
-        window.odoo = {};
+    if (!globalThis.odoo) {
+        globalThis.odoo = {};
     }
-    var odoo = window.odoo;
+    var odoo = globalThis.odoo;
     var debug = odoo.debug;
 
     var didLogInfoResolve;
@@ -223,9 +222,9 @@
                 });
 
             if (debug || failed.length || unloaded.length) {
-                var log = window.console[
+                var log = globalThis.console[
                     !failed.length || !unloaded.length ? "info" : "error"
-                ].bind(window.console);
+                ].bind(globalThis.console);
                 log(
                     (failed.length ? "error" : unloaded.length ? "warning" : "info") +
                         ": Some modules could not be started"
@@ -360,7 +359,7 @@
     };
 
     // Automatically log errors detected when loading modules
-    window.addEventListener("load", function logWhenLoaded() {
+    globalThis.addEventListener("load", function logWhenLoaded() {
         const len = jobPromises.length;
         Promise.all(jobPromises).then(function () {
             if (len === jobPromises.length) {

@@ -397,7 +397,6 @@ const Wysiwyg = Widget.extend({
             }
         });
         this.call('bus_service', 'addChannel', this._collaborationChannelName);
-        this.call('bus_service', 'startPolling');
 
         // const syncHistory = async (fromClientId) => {
         // }
