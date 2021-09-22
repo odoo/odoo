@@ -188,7 +188,7 @@
                             <field name="description" type="html" options="{'collaborative': true}"/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
-                            <field name="child_ids" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': [(6, 0, [uid])], 'default_parent_id': id, 'default_partner_id': partner_id}">
+                            <field name="child_ids" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': [(6, 0, [uid])], 'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
                                 <tree editable="bottom">
                                     <field name="project_id" invisible="1"/>
                                     <field name="is_closed" invisible="1"/>
