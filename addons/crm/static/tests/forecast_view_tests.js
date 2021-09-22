@@ -57,7 +57,7 @@ QUnit.module("Views", (hooks) => {
                 "foo,false,graph": `<graph js_class="forecast_graph"/>`,
                 "foo,false,search": `
                     <search>
-                        <filter name="forecast_filter" string="Forecast Filter" context="{ 'forecast_filter': 1 }"/>
+                        <filter name="forecast_filter" string="Forecast Filter" context="{ 'forecast_field': 'date_field' }"/>
                         <filter name="group_by_bar" string="Bar" context="{ 'group_by': 'bar' }"/>
                         <filter name="group_by_date_field" string="Date Field" context="{ 'group_by': 'date_field' }"/>
                     </search>

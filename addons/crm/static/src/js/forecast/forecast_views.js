@@ -14,7 +14,7 @@ import viewRegistry from 'web.view_registry';
  * Graph view to be used for a Forecast @see ForecastSearchModel
  * requires:
  * - context key `forecast_field` on a date/datetime field
- * - special filter "Forecast" (which must set the `forecast_filter:1` context key)
+ * - special filter "Forecast" (which must set the `forecast_field:"date_field_name"` context key)
  */
 class ForecastGraphView extends GraphView {}
 ForecastGraphView.SearchModel = ForecastSearchModel;
@@ -28,7 +28,7 @@ registry.category("views").add("forecast_graph", ForecastGraphView);
  * @see ForecastKanbanColumnQuickCreate
  * requires:
  * - context key `forecast_field` on a date/datetime field
- * - special filter "Forecast" (which must set the `forecast_filter:1` context key)
+ * - special filter "Forecast" (which must set the `forecast_field:"date_field_name"` context key)
  */
 const ForecastKanbanView = KanbanView.extend({
     config: _.extend({}, KanbanView.prototype.config, {
@@ -51,7 +51,7 @@ viewRegistry.add('forecast_kanban', ForecastKanbanView);
  * List view to be used for a Forecast @see ForecastModelExtension
  * requires:
  * - context key `forecast_field` on a date/datetime field
- * - special filter "Forecast" (which must set the `forecast_filter:1` context key)
+ * - special filter "Forecast" (which must set the `forecast_field:"date_field_name"` context key)
  */
 const ForecastListView = ListView.extend({
     /**
@@ -69,7 +69,7 @@ viewRegistry.add('forecast_list', ForecastListView);
  * Pivot view to be used for a Forecast @see ForecastSearchModel
  * requires:
  * - context key `forecast_field` on a date/datetime field
- * - special filter "Forecast" (which must set the `forecast_filter:1` context key)
+ * - special filter "Forecast" (which must set the `forecast_field:"date_field_name"` context key)
  */
 class ForecastPivotView extends PivotView {}
 ForecastPivotView.SearchModel = ForecastSearchModel;

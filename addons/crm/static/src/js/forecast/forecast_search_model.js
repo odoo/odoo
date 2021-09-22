@@ -15,28 +15,16 @@ const DATE_FORMAT = {
 
 export class ForecastSearchModel extends SearchModel {
     /**
-     * @override
-     */
-    exportState() {
-        const state = super.exportState();
-        state.forecast = {
-            forecastField: this.forecastField,
-            forecastFilter: this.forecastFilter,
-            forecastStart: this.forecastStart,
-        };
-        return state;
-    }
-
-    /**
      * @protected
+     * @param {string} forecastField name of the date/time field related to the forecast
      * @returns {string}
      */
-    _getForecastStart() {
+    _getForecastStart(forecastField) {
         /** @todo stop using moment */
-        const type = this.searchViewFields[this.forecastField].type;
+        const type = this.searchViewFields[forecastField].type;
         let startMoment;
         const groupBy = this.groupBy;
-        const firstForecastGroupBy = groupBy.find((gb) => gb.includes(this.forecastField));
+        const firstForecastGroupBy = groupBy.find((gb) => gb.includes(forecastField));
         let granularity = "month";
         if (firstForecastGroupBy) {
             granularity = firstForecastGroupBy.split(":")[1] || "month";
@@ -53,53 +41,25 @@ export class ForecastSearchModel extends SearchModel {
 
     _getSearchItemDomain(activeItem) {
         const domain = super._getSearchItemDomain(...arguments);
-
-        const { forecast_field: forecastField } = this.globalContext;
         const searchItem = this.searchItems[activeItem.searchItemId];
 
-        if (forecastField && searchItem.type === "filter") {
+        if (searchItem.type === "filter") {
             const context = makeContext(searchItem.context || {});
-            if (!context.forecast_filter) {
+            if (!context.forecast_field) {
                 return domain;
             }
 
-            this.forecastField = forecastField;
-            this.forecastFilter = true;
-            if (!this.forecastStart) {
-                this.forecastStart = this._getForecastStart();
-            }
+            const forecastField = context.forecast_field;
+            const forecastStart = this._getForecastStart(forecastField);
 
             const forecastDomain = [
                 "|",
-                [this.forecastField, "=", false],
-                [this.forecastField, ">=", this.forecastStart],
+                [forecastField, "=", false],
+                [forecastField, ">=", forecastStart],
             ];
             return Domain.and([domain, forecastDomain]);
         }
 
         return domain;
-    }
-
-    /**
-     * @override
-     */
-    _importState(state) {
-        super._importState(...arguments);
-        if (state.Forecast) {
-            const { forecastField, forecastFilter, forecastStart } = state.forecast;
-            this.forecastField = forecastField;
-            this.forecastFilter = forecastFilter;
-            this.forecastStart = forecastStart;
-        }
-    }
-
-    /**
-     * @override
-     */
-    _reset() {
-        super._reset();
-        this.forecastField = null;
-        this.forecastFilter = false;
-        this.forecastStart = null;
     }
 }
