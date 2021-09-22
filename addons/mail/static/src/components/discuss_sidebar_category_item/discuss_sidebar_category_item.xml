@@ -31,7 +31,7 @@
                 </t>
             </div>
             <t t-if="categoryItem.channel and categoryItem.channel.rtcSessions.length">
-                <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_callIndicator fa fa-volume-up" t-att-class="{ 'o-isCalling': categoryItem.channel.mailRtc }"/>
+                <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_callIndicator fa fa-volume-up" t-att-class="{ 'o-isCalling': categoryItem.channel.rtc }"/>
             </t>
             <t t-if="categoryItem.counter > 0">
                 <div class="o_DiscussSidebarCategoryItem_counter o_DiscussSidebarCategoryItem_item badge badge-pill">

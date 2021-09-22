@@ -241,7 +241,7 @@ function factory(dependencies) {
          * @private
          */
         _onChangeFocusedRtcSession() {
-            this.mailRtc.filterIncomingVideoTraffic(this.focusedRtcSession && [this.focusedRtcSession.peerToken]);
+            this.rtc.filterIncomingVideoTraffic(this.focusedRtcSession && [this.focusedRtcSession.peerToken]);
         }
 
     }
@@ -345,11 +345,6 @@ function factory(dependencies) {
             isCausal: true,
             readonly: true,
         }),
-        mailRtc: one2one('mail.rtc', {
-            default: create(),
-            isCausal: true,
-            readonly: true,
-        }),
         /**
          * Determines after how much time in ms a "loading" indicator should be
          * shown. Useful to avoid flicker for almost instant loading.
@@ -394,6 +389,11 @@ function factory(dependencies) {
          */
         ringingThreads: many2many('mail.thread', {
             compute: '_computeRingingThreads',
+        }),
+        rtc: one2one('mail.rtc', {
+            default: create(),
+            isCausal: true,
+            readonly: true,
         }),
         soundEffects: one2one('mail.sound_effects', {
             default: create(),
