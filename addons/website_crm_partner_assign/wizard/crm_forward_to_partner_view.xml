@@ -10,7 +10,8 @@
                     </group>
                     <group>
                         <group>
-                            <field name="partner_id" attrs="{'invisible': [('forward_type', 'in', ['assigned',False])], 'required': [('forward_type', '=', 'single')]}"  />
+                            <field name="partner_id" attrs="{'invisible': [('forward_type', 'in', ['assigned',False])], 'required': [('forward_type', '=', 'single')]}"
+                                   domain="[('grade_id','!=',False)]" />
                         </group>
                         <group>
                         </group>
