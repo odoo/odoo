@@ -42,6 +42,8 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
                 'country_id': self.env.ref('base.be').id,
             })
 
+        self._init_mail_gateway()
+
         # patch registry to simulate a ready environment
         self.patch(self.env.registry, 'ready', True)
 
@@ -51,7 +53,11 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
     def test_message_sms_record_1_partner(self):
         record = self.test_record.with_user(self.env.user)
         pids = self.customer.ids
+<<<<<<< HEAD
         with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=23):  # test_mail_enterprise: 18
+=======
+        with self.mockSMSGateway(), self.assertQueryCount(employee=24):  # test_mail_enterprise: 24
+>>>>>>> 941a0abe205... temp
             messages = record._message_sms(
                 body='Performance Test',
                 partner_ids=pids,
@@ -66,7 +72,11 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
     def test_message_sms_record_10_partners(self):
         record = self.test_record.with_user(self.env.user)
         pids = self.partners.ids
+<<<<<<< HEAD
         with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=41):
+=======
+        with self.mockSMSGateway(), self.assertQueryCount(employee=42):  # test_mail_enterprise: 42
+>>>>>>> 941a0abe205... temp
             messages = record._message_sms(
                 body='Performance Test',
                 partner_ids=pids,
@@ -142,7 +152,11 @@ class TestSMSMassPerformance(BaseMailPerformance, sms_common.MockSMS):
             'mass_keep_log': False,
         })
 
+<<<<<<< HEAD
         with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=106):
+=======
+        with self.mockSMSGateway(), self.assertQueryCount(employee=106):
+>>>>>>> 941a0abe205... temp
                 composer.action_send_sms()
 
     @mute_logger('odoo.addons.sms.models.sms_sms')
@@ -159,5 +173,9 @@ class TestSMSMassPerformance(BaseMailPerformance, sms_common.MockSMS):
             'mass_keep_log': True,
         })
 
+<<<<<<< HEAD
         with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=157):
+=======
+        with self.mockSMSGateway(), self.assertQueryCount(employee=157):
+>>>>>>> 941a0abe205... temp
             composer.action_send_sms()
