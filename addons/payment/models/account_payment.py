@@ -111,6 +111,7 @@ class AccountPayment(models.Model):
 
     def action_post(self):
         # Post the payments "normally" if no transactions are needed.
+<<<<<<< HEAD
         # If not, let the acquirer update the state.
 
         payments_need_tx = self.filtered(
@@ -135,5 +136,36 @@ class AccountPayment(models.Model):
             lambda p: p.payment_transaction_id.state != 'done'
         )
         payments_tx_not_done.action_cancel()
+=======
+        # If not, let the acquirer updates the state.
+        #                                __________            ______________
+        #                               | Payments |          | Transactions |
+        #                               |__________|          |______________|
+        #                                  ||                      |    |
+        #                                  ||                      |    |
+        #                                  ||                      |    |
+        #  __________  no s2s required   __\/______   s2s required |    | s2s_do_transaction()
+        # |  Posted  |<-----------------|  post()  |----------------    |
+        # |__________|                  |__________|<-----              |
+        #                                                |              |
+        #                                               OR---------------
+        #  __________                    __________      |
+        # | Cancelled|<-----------------| cancel() |<-----
+        # |__________|                  |__________|
+
+        payments_need_trans = self.filtered(lambda pay: pay.payment_token_id and not pay.payment_transaction_id)
+        transactions = payments_need_trans._create_payment_transaction()
+
+        res = super(AccountPayment, self - payments_need_trans).action_post()
+
+        transactions.s2s_do_transaction()
+
+        # Post payments for issued transactions.
+        transactions._post_process_after_done()
+        payments_trans_done = payments_need_trans.filtered(lambda pay: pay.payment_transaction_id.state == 'done')
+        super(AccountPayment, payments_trans_done).action_post()
+        payments_trans_not_done = payments_need_trans.filtered(lambda pay: pay.payment_transaction_id.state != 'done')
+        payments_trans_not_done.action_cancel()
+>>>>>>> e4de9595c26... temp
 
         return res

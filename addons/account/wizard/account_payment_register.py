@@ -506,12 +506,21 @@ class AccountPaymentRegister(models.TransientModel):
 
         domain = [('account_internal_type', 'in', ('receivable', 'payable')), ('reconciled', '=', False)]
         for payment, lines in zip(payments, to_reconcile):
+<<<<<<< HEAD
 
             # When using the payment tokens, the payment could not be posted at this point (e.g. the transaction failed)
             # and then, we can't perform the reconciliation.
             if payment.state != 'posted':
                 continue
 
+=======
+
+            # When using the payment tokens, the payment could not be posted at this point (e.g. the transaction failed)
+            # and then, we can't perform the reconciliation.
+            if payment.state != 'posted':
+                continue
+
+>>>>>>> e4de9595c26... temp
             payment_lines = payment.line_ids.filtered_domain(domain)
             for account in payment_lines.account_id:
                 (payment_lines + lines)\
