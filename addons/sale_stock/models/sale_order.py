@@ -266,7 +266,6 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     qty_delivered_method = fields.Selection(selection_add=[('stock_move', 'Stock Moves')])
-    product_packaging = fields.Many2one( 'product.packaging', string='Package', default=False, check_company=True)
     route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)], ondelete='restrict', check_company=True,
                                readonly=True,
                                states={"draft": [("readonly", False)], "sent": [("readonly", False)]})
