@@ -1,10 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="ProductScreenInh" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension" owl="1">
-        <xpath expr="//div[hasclass('leftpane')]" position="after">
-            <div class="middel" t-if="!env.isMobile">
-                <MiddleCustomControlButton/>
+    <t t-name="CashBoxOpening" t-inherit="point_of_sale.CashBoxOpening" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div" position="replace">
+            <div class="openinigCashDiv">
+                <br/>
+                <h1>
+                <span>
+                    Pos closed.
+                </span>
+                    <br/>
+                    <span>
+                    Set a cash opening
+                </span>
+
+                </h1>
+                <h1>Opening amount:</h1>
+                <input name="cashBoxValue" class="cashbox-input" t-on-change="captureChange"
+                       t-att-value="defaultValue"/>
+                <span class="currencyCashBox" t-esc="symbol"/>
+
+                <h1>Notes:</h1>
+                <textarea name="notes" style="width: 51%" t-on-change="captureChange"/>
+                <br/>
+                <br/>
+
+                <span class="control-button"
+                      style="height: unset !important;border-radius: 0px 0px 0 0 !important;margin-bottom: 5px !important;"
+                      t-on-click="startSession()">Open</span>
             </div>
+        </xpath>
+    </t>
+
+    <t t-name="ProductScreenInh" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('leftpane')]//CashBoxOpening" position="replace">
+        </xpath>
+
+        <xpath expr="//div[hasclass('leftpane')]" position="after">
+            <t t-if="!state.cashControl">
+                <div class="middel" t-if="!env.isMobile">
+                    <MiddleCustomControlButton/>
+                </div>
+            </t>
         </xpath>
         <xpath expr="//div[hasclass('leftpane')]//OrderWidget" position="replace">
             <t t-if="state.serials">
@@ -16,6 +52,9 @@
         </xpath>
         <xpath expr="//div[hasclass('rightpane')]" position="replace">
             <div class="rightpane" t-if="!env.isMobile || mobile_pane === 'right'">
+                <t t-if="state.cashControl">
+                    <CashBoxOpening cashControl="state"/>
+                </t>
                 <t t-if="state.warehouse_mode and !state.alternate_product and !state.cross_selling_product">
                     <div class="flex-container">
                         <WarehouseScreen displayData="state.warehouseData" productName="state.title"/>

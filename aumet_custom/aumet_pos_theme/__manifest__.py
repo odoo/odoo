@@ -29,6 +29,7 @@
         'static/src/xml/Screens/ProductScreen/ProductItem.xml',
         'static/src/xml/Screens/ProductScreen/OrderWidget.xml',
         'static/src/xml/Screens/ProductScreen/Orderline.xml',
+        'static/src/xml/Screens/ProductScreen/CashBoxOpening.xml',
         'static/src/xml/Screens/ProductScreen/ProductScreen.xml',
         'static/src/xml/Screens/ProductScreen/ActionpadWidget.xml',
         'static/src/xml/Screens/ProductScreen/ProductsWidgetControlPanel.xml',
