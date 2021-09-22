@@ -466,6 +466,32 @@ class TestMailAPIPerformance(BaseMailPerformance):
             record.write({'field_%s' % (i): 'Field With Cache %s' % (i) for i in range(3)})
             record.flush()
 
+    @users('__system__', 'employee')
+    @warmup
+    def test_notification_reply_to_batch(self):
+        test_records_sudo = self.env['mail.test.container'].sudo().create([
+            {'alias_name': 'alias.test.%s.%d' % (self.env.user.name, index),
+             'customer_id': self.customer.id,
+             'name': 'Test_%d' % index,
+            } for index in range(10)
+        ])
+
+        with self.assertQueryCount(__system__=1, employee=1):
+            test_records = self.env['mail.test.container'].browse(test_records_sudo.ids)
+            reply_to = test_records._notify_get_reply_to(
+                default=self.env.user.email_formatted
+            )
+
+        for record in test_records:
+            self.assertEqual(
+                reply_to[record.id],
+                formataddr(
+                    ("%s %s" % (self.env.user.company_id.name, record.name),
+                     "%s@%s" % (record.alias_name, self.alias_domain)
+                    )
+                )
+            )
+
 
 @tagged('mail_performance')
 class TestMailComplexPerformance(BaseMailPerformance):
