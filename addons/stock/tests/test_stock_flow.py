@@ -1670,7 +1670,7 @@ class TestStockFlow(TestStockCommon):
         backorder_wizard.process_cancel_backorder()
 
         # Checking that no backorders were attached to the picking
-        self.assertFalse(picking.backorder_id)
+        self.assertFalse(picking.backorder_ids)
 
         # Checking that the original move is still in the same picking
         self.assertEqual(move_a.picking_id.id, picking.id)
@@ -1689,6 +1689,73 @@ class TestStockFlow(TestStockCommon):
 
         # Checking that the canceled move is in the original picking
         self.assertIn(move_canceled.id, picking.move_ids.mapped('id'))
+
+    def test_backorder_setting(self):
+        """Create 3 pickings with each has different backorder settings on its
+        picking type. Check the backorder behavior for each picking.
+        """
+        picking_type_ask = self.env['stock.picking.type'].browse(self.picking_type_in)
+        picking_type_ask.create_backorder = 'ask'
+        picking_type_always = picking_type_ask.copy({
+            'sequence_code': 'always',
+            'create_backorder': 'always',
+        })
+        picking_type_never = picking_type_ask.copy({
+            'sequence_code': 'never',
+            'create_backorder': 'never',
+        })
+
+        picking_ask = self.PickingObj.create({
+            'picking_type_id': picking_type_ask.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_ask.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+        picking_always = self.PickingObj.create({
+            'picking_type_id': picking_type_always.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_always.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+        picking_never = self.PickingObj.create({
+            'picking_type_id': picking_type_never.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_never.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+
+        pickings = picking_ask | picking_always | picking_never
+        pickings.action_confirm()
+        # Only 4 items are processed in each picking
+        pickings.move_ids.move_line_ids.qty_done = 4
+        res_dict = pickings.button_validate()
+        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(res_dict['context'])).save()
+
+        self.assertEqual(backorder_wizard.pick_ids, picking_ask, "Only ask backorder for picking with setting 'set'")
+        backorder_wizard.process_cancel_backorder()
+
+        self.assertEqual(pickings.mapped('state'), ['done', 'done', 'done'])
+        self.assertFalse(picking_ask.backorder_ids)
+        self.assertTrue(picking_always.backorder_ids, "Picking with setting 'always' should have backorder created")
+        self.assertFalse(picking_never.backorder_ids, "Picking with setting 'never' should have no backorder created")
 
     def test_transit_multi_companies(self):
         """ Ensure that inter company rules set the correct company on picking
