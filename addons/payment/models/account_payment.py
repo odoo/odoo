@@ -106,26 +106,18 @@ class AccountPayment(models.Model):
         # | Cancelled|<-----------------| cancel() |<-----
         # |__________|                  |__________|
 
-        # Create the missing payment transactions.
         payments_need_trans = self.filtered(lambda pay: pay.payment_token_id and not pay.payment_transaction_id)
-        payments_need_trans._create_payment_transaction()
+        transactions = payments_need_trans._create_payment_transaction()
 
-        # Process payment transactions directly.
-        payments_with_trans = self.filtered('payment_transaction_id')
-        transactions = payments_with_trans.payment_transaction_id
+        res = super(AccountPayment, self - payments_need_trans).action_post()
+
         transactions.s2s_do_transaction()
 
-        # Post payments.
-        payments_to_post = self.filtered(lambda pay: not pay.payment_transaction_id
-                                                     or pay.payment_transaction_id.state == 'done')
-        res = super(AccountPayment, payments_to_post).action_post()
-
-        # Post process transactions.
-        transactions = payments_need_trans.payment_transaction_id.filtered(lambda x: x.state == 'done')
+        # Post payments for issued transactions.
         transactions._post_process_after_done()
-
-        # Cancel payments if the payment transactions failed.
-        payments_to_cancel = payments_need_trans.payment_transaction_id.filtered(lambda x: x.state != 'done').payment_id
-        payments_to_cancel.action_cancel()
+        payments_trans_done = payments_need_trans.filtered(lambda pay: pay.payment_transaction_id.state == 'done')
+        super(AccountPayment, payments_trans_done).action_post()
+        payments_trans_not_done = payments_need_trans.filtered(lambda pay: pay.payment_transaction_id.state != 'done')
+        payments_trans_not_done.action_cancel()
 
         return res
