@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { insert } from '@mail/model/model_field_command';
+import { insert, link } from '@mail/model/model_field_command';
 import { MessagingService } from '@mail/services/messaging/messaging';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 
@@ -85,11 +85,14 @@ export async function boot() {
         }
     }
 
-    async function createWelcomeView(channelId) {
+    async function createWelcomeView(channelData) {
         const messaging = await owl.Component.env.services.messaging.get();
+        const channel = messaging.models['mail.thread'].insert(
+            messaging.models['mail.thread'].convertData(channelData)
+        );
         const WelcomeView = getMessagingComponent('WelcomeView');
         const welcomeView = messaging.models['mail.welcome_view'].create({
-            channelId,
+            channel: link(channel),
             isDoFocusGuestNameInput: true,
             pendingGuestName: messaging.currentGuest && messaging.currentGuest.name,
         });
@@ -97,6 +100,10 @@ export async function boot() {
             localId: welcomeView.localId,
         });
         await welcomeViewComponent.mount(document.body);
+        if (welcomeView.channel.defaultDisplayMode === 'video_full_screen') {
+            welcomeView.mediaPreview.enableMicrophone();
+            welcomeView.mediaPreview.enableVideo();
+        }
     }
 
     return { createThreadViewFromChannelData, createWelcomeView };
