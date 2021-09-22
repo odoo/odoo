@@ -66,6 +66,7 @@
             <field name="domain">[('website_published', '=', True)]</field>
             <field name="context">{'display_default_code': False}</field>
             <field name="sort">['create_date desc']</field>
+            <field name="action_id" ref="website.action_website"/>
         </record>
         <!-- Action Server for Dynamic Filter -->
         <record id="dynamic_snippet_latest_sold_products_action" model="ir.actions.server">
