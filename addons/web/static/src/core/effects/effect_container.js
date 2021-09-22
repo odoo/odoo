@@ -1,25 +1,24 @@
 /** @odoo-module **/
 
-import { RainbowMan } from "./rainbow_man";
-
 const { Component, tags } = owl;
 
 export class EffectContainer extends Component {
     setup() {
-        this.rainbowProps = {};
+        this.effect = null;
         this.props.bus.on("UPDATE", this, (effect) => {
-            this.rainbowProps = effect;
+            this.effect = effect;
             this.render();
         });
     }
-    closeRainbowMan() {
-        this.rainbowProps = {};
+    removeEffect() {
+        this.effect = null;
         this.render();
     }
 }
 
 EffectContainer.template = tags.xml`
   <div class="o_effects_manager">
-    <RainbowMan t-if="rainbowProps.id" t-props="rainbowProps" t-key="rainbowProps.id" t-on-close-rainbowman="closeRainbowMan"/>
+    <t t-if="effect">
+        <t t-component="effect.Component" t-props="effect.props" t-key="effect.id" close="() => removeEffect()"/>
+    </t>
   </div>`;
-EffectContainer.components = { RainbowMan };
