@@ -1780,23 +1780,16 @@ MockServer.include({
     _mockResPartner_GetChannelsAsMember(ids) {
         const partner = this._getRecords('res.partner', [['id', 'in', ids]])[0];
         const channels = this._getRecords('mail.channel', [
-            ['channel_type', '=', 'channel'],
+            ['channel_type', 'in', ['channel', 'group']],
             ['members', 'in', partner.id],
-            ['public', 'in', ['public', 'groups']],
         ]);
         const directMessages = this._getRecords('mail.channel', [
             ['channel_type', '=', 'chat'],
             ['is_pinned', '=', true],
             ['members', 'in', partner.id],
         ]);
-        const privateGroups = this._getRecords('mail.channel', [
-            ['channel_type', '=', 'channel'],
-            ['members', 'in', partner.id],
-            ['public', '=', 'private'],
-        ]);
         return [
             ...channels,
-            ...privateGroups,
             ...directMessages,
         ];
     },

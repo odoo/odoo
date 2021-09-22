@@ -1039,6 +1039,35 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
     );
 });
 
+QUnit.test('Group chat should be displayed inside the chat section of the messaging menu', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({
+        id: 11,
+        channel_type: 'group',
+        is_pinned: true,
+    });
+    await this.start();
+
+    await afterNextRender(() =>
+        document.querySelector('.o_MessagingMenu_toggler').click()
+    );
+    await afterNextRender(() =>
+        document.querySelector(`.o_MessagingMenu_tabButton[data-tab-id="chat"]`).click()
+    );
+
+    assert.strictEqual(
+        document.querySelectorAll(`
+            .o_MessagingMenu_dropdownMenu
+            .o_ThreadPreview[data-thread-local-id="${this.messaging.models['mail.thread'].findFromIdentifyingData({
+                id: 11,
+                model: 'mail.channel',
+             }).localId}"]`).length,
+        1,
+        "should have one preview of group"
+    );
+});
+
 });
 });
 });
