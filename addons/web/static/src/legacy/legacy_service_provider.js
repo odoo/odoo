@@ -11,10 +11,10 @@ export const legacyServiceProvider = {
     dependencies: ["effect", "action"],
     start({ services }) {
         browser.addEventListener("show-effect", (ev) => {
-            services.effect.add(ev.detail.type, ev.detail);
+            services.effect.add(ev.detail);
         });
         bus.on("show-effect", this, (payload) => {
-            services.effect.add(payload.type, payload);
+            services.effect.add(payload);
         });
 
         browser.addEventListener("do-action", (ev) => {
