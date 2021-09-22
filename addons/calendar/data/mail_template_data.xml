@@ -16,6 +16,7 @@
     <t t-set="customer" t-value=" object.event_id.find_partner_customer()"/>
     <t t-set="target_responsible" t-value="object.partner_id == object.event_id.partner_id"/>
     <t t-set="target_customer" t-value="object.partner_id == customer"/>
+    <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')"/>
 
     <p>
         Hello <t t-out="object.common_name or ''">Wood Corner</t>,<br/><br/>
@@ -144,6 +145,8 @@
     <t t-set="customer" t-value="object.event_id.find_partner_customer()"/>
     <t t-set="target_responsible" t-value="object.partner_id == object.event_id.partner_id"/>
     <t t-set="target_customer" t-value="object.partner_id == customer"/>
+     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')"/>
+
     <p>
         Hello <t t-out="object.common_name or ''">Ready Mat</t>,<br/><br/>
         <t t-if="is_online and target_responsible">
