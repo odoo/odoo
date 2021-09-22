@@ -958,9 +958,10 @@ class MailActivityMixin(models.AbstractModel):
                 'date_deadline': date_deadline,
                 'res_model_id': model_id,
                 'res_id': record.id,
-                'user_id': act_values.get('user_id') or activity_type.default_user_id.id or self.env.uid
             }
             create_vals.update(act_values)
+            if not create_vals.get('user_id'):
+                create_vals['user_id'] = activity_type.default_user_id.id or self.env.uid
             activities |= self.env['mail.activity'].create(create_vals)
         return activities
 
