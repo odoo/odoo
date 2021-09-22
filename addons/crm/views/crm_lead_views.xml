@@ -1004,7 +1004,7 @@
             <field name="priority">32</field>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='assigned_to_me']" position="before">
-                    <filter name="forecast" string="Upcoming Closings" context="{'forecast_filter':1}"/>
+                    <filter name="forecast" string="Upcoming Closings" context="{'forecast_field':'date_deadline'}"/>
                     <separator/>
                 </xpath>
                 <xpath expr="//filter[@name='date_deadline']" position="replace"/>

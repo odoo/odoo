@@ -3,10 +3,8 @@ import ActionModel from 'web.ActionModel';
 
 /**
  * This file contains the logic behind a special "Forecast" filter.
- * Any such filter should set the context key {forecast_filter: 1}
- * Another context key must also be set for the view using this model extension:
- * {forecast_field: "date_field_name"}, which represents the date/time field on which
- * the forecast should be applied
+ * Any such filter should set the context key {forecast_field: "date_field_name"}
+ * which represents the date/time field on which the forecast should be applied
  *
  * The main purpose is to be able to modify the domain depending on the groupby granularity
  * when the field is a `date/time` field and is the `forecast_field`. The domain should filter
@@ -35,69 +33,50 @@ class ForecastModelExtension extends ActionModel.Extension {
     }
 
     /**
-     * @override
-     */
-    prepareState() {
-        super.prepareState(...arguments);
-        Object.assign(this.state, {
-            forecastField: null,  // {string} forecast_field from the context (name)
-            forecastFilter: null,  // {boolean} if the "Forecast" filter is active
-            forecastStart: null,  // {string} limiting bound of the filter (if active)
-                                  // -> starting date before which records are filtered out
-        });
-    }
-
-    /**
-     * The state needs to be recomputed each time the parent model initiates a load action.
-     *
-     * @override
-     * @returns {Promise}
-     */
-    callLoad() {
-        // this is bad to do this always: if a state has been received and the view is loaded the
-        // first time, the state won't be used! to fix!
-        this._computeState();
-        return super.callLoad(...arguments);
-    }
-
-    /**
      * Adds a domain constraint to only get records from the start of the period containing "now",
      * only if the "Forecast" filter is active
      *
      * @returns {Array[]}
      */
     getDomain() {
-        return !this.state.forecastFilter ? null :
-            ['|', [this.state.forecastField, '=', false],
-             [this.state.forecastField, '>=', this.state.forecastStart]
+        const forecastField = this.config.context.forecast_field;
+        const forecastStart = this._getforecastStart();
+        return !forecastStart ? null :
+            ['|', [forecastField, '=', false],
+             [forecastField, '>=', forecastStart]
             ];
     }
 
     /**
-     * The state is mostly dependent on 2 context keys :
-     * forecast_field -> is a prerequisite for this extension to work
-     * forecast_filter -> a filter which applies this context key should be present and active in
-     * order to get the modified domain
+     * The forecastStart date/time is mostly dependent on a context key in the filter:
+     * forecast_field -> a custom filter with this context key in its own context should be present
+     * and active in order to get the modified domain
+     *
+     * And is also dependent on whether forecast_field is one of the groupby fields:
      * If the forecast_field is present in the groupby, the related granularity is used
      * If no granularity is specified, or if there is no groupby, the default is "month"
      * If there is a groupby, but not the forecast_field, "day" is used (the filter will get data
      * from 00:00:00 today, browser time)
      *
      * @private
+     * @returns {string}
      */
-    _computeState() {
-        this.prepareState();
-        if (!this.config.context.forecast_field) { return; }
-        this.state.forecastField = this.config.context.forecast_field;
-        const format = DATE_FORMAT[this.config.fields[this.state.forecastField].type];
+    _getforecastStart() {
         const filters = this.config.get('filters').flat();
-        this.state.forecastFilter = !!filters.filter(f => f.isActive && f.context &&
-            f.context.forecast_filter).length;
+        const forecastFilter = filters.find(f => f.context && f.context.forecast_field);
+        if (!forecastFilter) {
+            return undefined;
+        } else if (!forecastFilter.isActive) {
+            return null;
+        }
+        const forecastField = forecastFilter.context.forecast_field;
+        const type = this.config.fields[forecastField].type;
+        if (!forecastFilter) { return null; }
         const groupBy = this.config.get('groupBy').flat();
-        const forecastGroupBys = groupBy.filter(gb => gb.includes(this.state.forecastField));
+        const firstForecastGroupBy = groupBy.find(gb => gb.includes(forecastField));
         let granularity = "month";
-        if (forecastGroupBys.length > 0) {
-            [this.state.forecastField, granularity] = [...forecastGroupBys[0].split(":"), granularity];
+        if (firstForecastGroupBy) {
+            granularity = firstForecastGroupBy.split(":")[1] || "month";
         } else if (groupBy.length) {
             // there is a groupBy, but it is not the forecast_field
             granularity = "day";
@@ -105,10 +84,11 @@ class ForecastModelExtension extends ActionModel.Extension {
         let startMoment = moment().startOf(granularity);
         // The server needs a date/time in UTC, but to avoid a day shift in case
         // of date, we only need to consider it for datetime fields
-        if (this.config.fields[this.state.forecastField].type === "datetime") {
+        if (this.config.fields[forecastField].type === "datetime") {
             startMoment = moment.utc(startMoment);
         }
-        this.state.forecastStart = startMoment.format(format);
+        const format = DATE_FORMAT[type];
+        return startMoment.format(format);
     }
 }
 

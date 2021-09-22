@@ -19,7 +19,8 @@ QUnit.module('Crm Forecast Model Extension', {
             archs: {
                 "crm.lead,false,search": `
                     <search>
-                        <filter name="forecast" string="Forecast" context="{'forecast_filter':1}"/>
+                        <filter name="forecast_date_deadline" string="Forecast Date Deadline" context="{'forecast_field':'date_deadline'}"/>
+                        <filter name="forecast_date_closed" string="Forecast Date Closed" context="{'forecast_field':'date_closed'}"/>
                         <filter name='groupby_date_deadline' context="{'group_by':'date_deadline'}"/>
                         <filter name='groupby_date_closed' context="{'group_by':'date_closed'}"/>
                     </search>`
@@ -46,7 +47,7 @@ QUnit.module('Crm Forecast Model Extension', {
             View: ForecastKanbanView,
             viewOptions: {
                 context: {
-                    search_default_forecast: true,
+                    search_default_forecast_date_deadline: true,
                     search_default_groupby_date_deadline: true,
                     forecast_field: 'date_deadline',
                 },
@@ -61,9 +62,9 @@ QUnit.module('Crm Forecast Model Extension', {
     },
 
 }, function () {
-    QUnit.test("filter out every records before the start of the current month with forecast_filter for a date field", async function (assert) {
-        // the filter is used by the forecast model extension, and applies the forecast_filter context key,
-        // which adds a domain constraint on the field marked in the other context key forecast_field
+    QUnit.test("filter out every records before the start of the current month with a forecast filter for a date field", async function (assert) {
+        // the filter is used by the forecast model extension, and applies the forecast_field context key,
+        // which adds a domain constraint on the specified field.
         assert.expect(7);
 
         const kanban = await testUtils.createView(this.testKanbanView);
@@ -76,7 +77,7 @@ QUnit.module('Crm Forecast Model Extension', {
                         "2nd column March should contain 2 records");
 
         // remove the filter
-        await testUtils.dom.click($('.o_searchview_facet:contains("Forecast") .o_facet_remove'));
+        await testUtils.dom.click($('.o_searchview_facet:contains("Forecast Date Deadline") .o_facet_remove'));
 
         assert.containsN(kanban, '.o_kanban_group', 3, "There should be 3 columns");
         assert.containsN(kanban, '.o_kanban_group:nth-child(1) .o_kanban_record', 2,
@@ -88,14 +89,13 @@ QUnit.module('Crm Forecast Model Extension', {
         kanban.destroy();
     });
 
-    QUnit.test("filter out every records before the start of the current month with forecast_filter for a datetime field", async function (assert) {
+    QUnit.test("filter out every records before the start of the current month with a forecast filter for a datetime field", async function (assert) {
         // same tests as for the date field
         assert.expect(7);
 
         this.testKanbanView.viewOptions.context = {
-            search_default_forecast: true,
+            search_default_forecast_date_closed: true,
             search_default_groupby_date_closed: true,
-            forecast_field: 'date_closed',
         };
         this.testKanbanView.groupBy = ['date_closed'];
         const kanban = await testUtils.createView(this.testKanbanView);
@@ -108,7 +108,7 @@ QUnit.module('Crm Forecast Model Extension', {
                         "2nd column March should contain 2 records");
 
         // remove the filter
-        await testUtils.dom.click($('.o_searchview_facet:contains("Forecast") .o_facet_remove'));
+        await testUtils.dom.click($('.o_searchview_facet:contains("Forecast Date Closed") .o_facet_remove'));
 
         assert.containsN(kanban, '.o_kanban_group', 3, "There should be 3 columns");
         assert.containsN(kanban, '.o_kanban_group:nth-child(1) .o_kanban_record', 2,
@@ -141,7 +141,7 @@ QUnit.module('Crm Fill Temporal Service', {
             archs: {
                 "crm.lead,false,search": `
                     <search>
-                        <filter name="forecast" string="Forecast" context="{'forecast_filter':1}"/>
+                        <filter name="forecast" string="Forecast" context="{'forecast_field':'date_deadline'}"/>
                         <filter name='groupby_date_deadline' context="{'group_by':'date_deadline'}"/>
                     </search>`
             },
