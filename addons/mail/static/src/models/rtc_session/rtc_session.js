@@ -126,6 +126,9 @@ function factory(dependencies) {
             if (this.partner.volumeSetting) {
                 this.partner.volumeSetting.update({ volume });
             }
+            if (this.messaging.isCurrentUserGuest) {
+                return;
+            }
             this.messaging.userSetting.saveVolumeSetting(this.partner.id, volume);
         }
 
