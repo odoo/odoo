@@ -11,31 +11,30 @@
     margin: map-get($spacers, 1);
     padding: map-get($spacers, 4);
     display: flex;
+
+    &.o-isSmall {
+        padding: map-get($spacers, 3);
+    }
 }
 
-.o_RtcController_button_iconWrapper {
+.o_RtcController_buttonIconWrapper {
     display: flex;
     width: map-get($spacers, 4);
     height: map-get($spacers, 4);
     justify-content: center;
     flex-direction: column;
     align-items: center;
+
+    &.o-isSmall {
+        width: map-get($spacers, 3);
+        height: map-get($spacers, 3);
+    }
 }
 
 .o_RtcController_buttons {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-}
-
-.o-small {
-    .o_RtcController_button_iconWrapper {
-        width: map-get($spacers, 3);
-        height: map-get($spacers, 3);
-    }
-    .o_RtcController_button {
-        padding: map-get($spacers, 3);
-    }
 }
 
 // ------------------------------------------------------------------
@@ -54,7 +53,7 @@
         background-color: gray('700');
     }
 
-    &.o-active {
+    &.o-isActive {
         opacity: 1;
     }
 
@@ -70,7 +69,7 @@
         background-color: darken(theme-color('success'), 20%);
     }
 
-    &.o-active {
+    &.o-isActive {
         background-color: theme-color('danger');
 
         &:hover {
@@ -79,6 +78,6 @@
     }
 }
 
-.o_RtcController_videoButton.o-active {
+.o_RtcController_videoButton.o-isActive {
     color: theme-color('success');
 }
