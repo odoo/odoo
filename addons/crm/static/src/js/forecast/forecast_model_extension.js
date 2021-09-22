@@ -1,97 +1,89 @@
 /** @odoo-module */
-import ActionModel from 'web.ActionModel';
+
+import ActionModel from "web.ActionModel";
+import ControlPanelModelExtension from "web/static/src/js/control_panel/control_panel_model_extension.js";
+import { Domain } from "@web/core/domain";
+import { makeContext } from "@web/core/context";
 
 /**
- * This file contains the logic behind a special "Forecast" filter.
- * Any such filter should set the context key {forecast_field: "date_field_name"}
- * which represents the date/time field on which the forecast should be applied
+ * This files defines an extension of @see ControlPanelModelExtension.
+ * That extension specifies how forecast filters behave.
  *
- * The main purpose is to be able to modify the domain depending on the groupby granularity
- * when the field is a `date/time` field and is the `forecast_field`. The domain should filter
- * records from the period (granularity) containing "now", or those where the forecast_field
- * is not set.
- * example:
- *  today:          2021-04-21
- *  granularity:    month
- *  field name:     date_field
- *  -> the domain would be: ['&', ['date_field', '=', false], ['date_field', '>=', '2021-04-01']]
+ * A forecast filter is a filter that has a context containing a special key
+ * "forecast_filter" with value the name of a date/datetime field, e.g.
+ *
+ * <filter name="foo" string="Foo" context={'forecast_filter': 'date_field} />
+ *
+ * The domain of a forecast filter has a dynamic domain of the form
+ *
+ * ['&', ['date_field', '=', false], ['date_field', '>=', forecastStart]]
+ *
+ * where forecastStart is a date/datetime that depends on the active groupbys.
+ * The rough idea is to filter records for which the 'date_field' value is in
+ * the current "period" or in the future, where the current period is defined by
+ * some granularity, e.g. "month".
+ *
+ * For example, if the only groupby activated is 'date_field' and today is
+ * 2021-04-21, the domain of the above forecast filter will be
+ *
+ * ['&', ['date_field', '=', false], ['date_field', '>=', '2021-04-01']]
  */
 const DATE_FORMAT = {
     datetime: "YYYY-MM-DD HH:mm:ss",
     date: "YYYY-MM-DD",
 };
-class ForecastModelExtension extends ActionModel.Extension {
+class ForecastModelExtension extends ControlPanelModelExtension {
     /**
-     * @override
-     * @returns {any}
-     */
-    get(property) {
-        switch (property) {
-            case "domain": return this.getDomain();
-            default: return super.get(...arguments);
-        }
-    }
-
-    /**
-     * Adds a domain constraint to only get records from the start of the period containing "now",
-     * only if the "Forecast" filter is active
-     *
-     * @returns {Array[]}
-     */
-    getDomain() {
-        const forecastField = this.config.context.forecast_field;
-        const forecastStart = this._getforecastStart();
-        return !forecastStart ? null :
-            ['|', [forecastField, '=', false],
-             [forecastField, '>=', forecastStart]
-            ];
-    }
-
-    /**
-     * The forecastStart date/time is mostly dependent on a context key in the filter:
-     * forecast_field -> a custom filter with this context key in its own context should be present
-     * and active in order to get the modified domain
-     *
-     * And is also dependent on whether forecast_field is one of the groupby fields:
-     * If the forecast_field is present in the groupby, the related granularity is used
-     * If no granularity is specified, or if there is no groupby, the default is "month"
-     * If there is a groupby, but not the forecast_field, "day" is used (the filter will get data
-     * from 00:00:00 today, browser time)
-     *
+     * Returns a date (datetime) starting from a "forecast" field of type date (resp. datetime).
+     * The value returned depends on the active groubys.
      * @private
+     * @param {string} forecastField the name of a date/datetime field
      * @returns {string}
      */
-    _getforecastStart() {
-        const filters = this.config.get('filters').flat();
-        const forecastFilter = filters.find(f => f.context && f.context.forecast_field);
-        if (!forecastFilter) {
-            return undefined;
-        } else if (!forecastFilter.isActive) {
-            return null;
-        }
-        const forecastField = forecastFilter.context.forecast_field;
+    _getForecastStart(forecastField) {
         const type = this.config.fields[forecastField].type;
-        if (!forecastFilter) { return null; }
-        const groupBy = this.config.get('groupBy').flat();
-        const firstForecastGroupBy = groupBy.find(gb => gb.includes(forecastField));
+        let startMoment;
+        const groupBy = this.config.get("groupBy");
+        const firstForecastGroupBy = groupBy.find((gb) => gb.includes(forecastField));
         let granularity = "month";
         if (firstForecastGroupBy) {
             granularity = firstForecastGroupBy.split(":")[1] || "month";
         } else if (groupBy.length) {
-            // there is a groupBy, but it is not the forecast_field
             granularity = "day";
         }
-        let startMoment = moment().startOf(granularity);
-        // The server needs a date/time in UTC, but to avoid a day shift in case
-        // of date, we only need to consider it for datetime fields
-        if (this.config.fields[forecastField].type === "datetime") {
+        startMoment = moment().startOf(granularity);
+        if (type === "datetime") {
             startMoment = moment.utc(startMoment);
         }
         const format = DATE_FORMAT[type];
         return startMoment.format(format);
     }
+
+    /**
+     * @override
+     */
+    _getFilterDomain(filter) {
+        const domain = super._getFilterDomain(...arguments);
+
+        if (filter.type === "filter") {
+            const context = makeContext(filter.context || {});
+            if (!context.forecast_field) {
+                return domain;
+            }
+
+            const forecastField = context.forecast_field;
+            const forecastStart = this._getForecastStart(forecastField);
+
+            const forecastDomain = new Domain([
+                "|",
+                [forecastField, "=", false],
+                [forecastField, ">=", forecastStart],
+            ]);
+            return forecastDomain.toString();
+        }
+
+        return domain;
+    }
 }
 
 ActionModel.registry.add("forecast", ForecastModelExtension, 20);
-
-export default ForecastModelExtension;

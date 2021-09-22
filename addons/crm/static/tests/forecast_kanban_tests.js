@@ -49,7 +49,6 @@ QUnit.module('Crm Forecast Model Extension', {
                 context: {
                     search_default_forecast_date_deadline: true,
                     search_default_groupby_date_deadline: true,
-                    forecast_field: 'date_deadline',
                 },
             },
             groupBy: ['date_deadline'],
@@ -63,8 +62,6 @@ QUnit.module('Crm Forecast Model Extension', {
 
 }, function () {
     QUnit.test("filter out every records before the start of the current month with a forecast filter for a date field", async function (assert) {
-        // the filter is used by the forecast model extension, and applies the forecast_field context key,
-        // which adds a domain constraint on the specified field.
         assert.expect(7);
 
         const kanban = await testUtils.createView(this.testKanbanView);

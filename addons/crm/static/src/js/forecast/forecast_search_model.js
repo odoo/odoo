@@ -57,7 +57,7 @@ export class ForecastSearchModel extends SearchModel {
                 [forecastField, "=", false],
                 [forecastField, ">=", forecastStart],
             ];
-            return Domain.and([domain, forecastDomain]);
+            return forecastDomain;
         }
 
         return domain;
