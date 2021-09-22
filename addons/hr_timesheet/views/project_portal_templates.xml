@@ -48,6 +48,9 @@
             <t t-set="timesheet_ids" t-value="task.sudo().timesheet_ids"/>
             <t t-set="is_uom_day" t-value="timesheet_ids._is_timesheet_encode_uom_day()"/>
         </xpath>
+        <xpath expr="//thead/tr/t[@t-set='number_of_header']" position="attributes">
+            <attribute name="t-value">8</attribute>
+        </xpath>
         <xpath expr="//thead/tr/th[@name='project_portal_assignees']" position="after">
             <th t-if="is_uom_day">Days Spent</th>
             <th t-else="">Hours Spent</th>
