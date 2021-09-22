@@ -15,20 +15,20 @@
     user-select: none;
 }
 
-.o_RtcCallParticipantCard_avatar_image {
+.o_RtcCallParticipantCard_avatarImage {
     max-height: 100px;
     max-width: 100px;
     border: 5px solid gray('700');
 
-    &.o-is-talking {
+    &.o-isTalking {
         border: 5px solid darken($o-enterprise-primary-color, 5%);
     }
 
-    &.o-is-invitation:not(:hover) {
+    &.o-isInvitation:not(:hover) {
         animation: border-pulse 3s linear infinite;
     }
 
-    &.o-is-invitation:hover {
+    &.o-isInvitation:hover {
         border: 5px solid theme-color('danger');
     }
 }
@@ -57,7 +57,7 @@
     margin-inline-end: 5%;
     align-items: center;
 
-    &.o-minimized {
+    &.o-isMinimized {
         font-size: 0.7rem;
     }
 }
@@ -85,14 +85,14 @@
     top: 0%;
 }
 
-.o_RtcCallParticipantCard_overlayTop_element {
+.o_RtcCallParticipantCard_overlayTopElement {
     display: flex;
     justify-content: center;
     flex-direction: column;
     margin-inline-end: 5%;
     padding: map-get($spacers, 2);
 
-    &.o-minimized {
+    &.o-isMinimized {
         padding: map-get($spacers, 1);
     }
 }
@@ -110,11 +110,11 @@
 .o_RtcCallParticipantCard {
     border-radius: $o-mail-rounded-rectangle-border-radius-sm;
 
-    &.o-is-talking {
+    &.o-isTalking {
         box-shadow: inset 0 0 0 map-get($spacers, 2) darken($o-enterprise-primary-color, 5%);
     }
 
-    &.o-is-invitation {
+    &.o-isInvitation {
         opacity: 0.6;
     }
 }
@@ -126,11 +126,11 @@
 .o_RtcCallParticipantCard_container {
     border-radius: $o-mail-rounded-rectangle-border-radius-sm;
 
-    &.o-can-click {
+    &.o-canClick {
         cursor: pointer;
     }
 
-    &:not(.o-minimized) {
+    &:not(.o-isMinimized) {
         background-color: $o-brand-secondary;
     }
 }
@@ -149,12 +149,8 @@
     border-radius: $o-mail-rounded-rectangle-border-radius-sm;
 }
 
-.o_RtcCallParticipantCard_overlayTop_element {
+.o_RtcCallParticipantCard_overlayTopElement {
     color: white;
     border-radius: 50%;
     background-color: gray('900');
-}
-
-.o_RtcCallParticipantCard_video {
-    cursor: pointer;
 }
