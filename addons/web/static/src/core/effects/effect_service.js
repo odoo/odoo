@@ -2,28 +2,78 @@
 
 import { registry } from "../registry";
 import { EffectContainer } from "./effect_container";
+import { RainbowMan } from "./rainbow_man";
 
 const { EventBus } = owl.core;
 
-export function convertRainBowMessage(message) {
+const effectRegistry = registry.category("effects");
+
+// -----------------------------------------------------------------------------
+// RainbowMan effect
+// -----------------------------------------------------------------------------
+
+/**
+ * Handles effect of type "rainbow_man". If the effects aren't disabled, returns
+ * the RainbowMan component to instantiate and its props. If the effects are
+ * disabled, displays the message in a notification.
+ *
+ * @param {Object} env
+ * @param {Object} [params={}]
+ * @param {string} [params.message="Well Done"]
+ *    The message in the notice the rainbowman holds or the content of the notification if effects are disabled
+ *    Can be a simple a string
+ *    Can be a string representation of html (prefer component if you want interactions in the DOM)
+ * @param {boolean} [params.img_url="/web/static/img/smile.svg"]
+ *    The url of the image to display inside the rainbow
+ * @param {boolean} [params.messageIsHtml]
+ *    Set to true if the message encodes html, s.t. it will be correctly inserted into the DOM.
+ * @param {"slow"|"medium"|"fast"|"no"} [params.fadeout="medium"]
+ *    Delay for rainbowman to disappear
+ *    'fast' will make rainbowman dissapear quickly
+ *    'medium' and 'slow' will wait little longer before disappearing (can be used when options.message is longer)
+ *    'no' will keep rainbowman on screen until user clicks anywhere outside rainbowman
+ * @param {owl.Component} [params.Component=RainbowMan]
+ *    Component class to instantiate (if effects aren't disabled)
+ * @param {Object} [params.props]
+ *    If params.Component is given, its props can be passed with this argument
+ */
+function rainbowMan(env, params = {}) {
+    let message = params.message;
     if (message instanceof jQuery) {
         console.log(
-            "Providing jQuery to an effect is deprecated. Note that all event handlers will be lost."
+            "Providing a jQuery element to an effect is deprecated. Note that all event handlers will be lost."
         );
-        return message.html();
+        message = message.html();
     } else if (message instanceof Element) {
         console.log(
-            "Providing HTML to an effect is deprecated. Note that all event handlers will be lost."
+            "Providing an HTML element to an effect is deprecated. Note that all event handlers will be lost."
         );
-        return message.outerHTML;
-    } else if (typeof message === "string") {
-        return message;
+        message = message.outerHTML;
+    } else if (!message) {
+        message = env._t("well Done!");
     }
+    if (env.services.user.showEffect) {
+        return {
+            Component: params.Component || RainbowMan,
+            props: {
+                imgUrl: params.img_url || "/web/static/img/smile.svg",
+                fadeout: params.fadeout,
+                message,
+                messageIsHtml: params.messageIsHtml || false,
+                ...params.props,
+            },
+        };
+    }
+    env.services.notification.add(message);
 }
+effectRegistry.add("rainbow_man", rainbowMan);
+
+// -----------------------------------------------------------------------------
+// Effect service
+// -----------------------------------------------------------------------------
 
 export const effectService = {
-    dependencies: ["notification", "user"],
-    start(env, { notification, user }) {
+    start(env) {
         const bus = new EventBus();
         registry.category("main_components").add("EffectContainer", {
             Component: EffectContainer,
@@ -32,74 +82,15 @@ export const effectService = {
         let effectId = 0;
 
         /**
-         * This private method checks if the effects are disabled.
-         * If so, it makes a notification from the message attribute of an effect and
-         * doesn't trigger the effect at all.
-         * @param {Object} effect The effect to display
+         * @param {Object} params various params depending on the type of effect
+         * @param {string} [params.type="rainbow_man"] the effect to display
          */
-        function applyEffect(effect) {
-            if (!user.showEffect) {
-                notification.add(effect.message, { sticky: false });
-            } else {
-                bus.trigger("UPDATE", effect);
-            }
-        }
-
-        /**
-         * Display a rainbowman effect
-         *
-         * @param {Object} [params={}]
-         * @param {string|Function} [params.message="Well Done"]
-         *    The message in the notice the rainbowman holds or the content of the notification if effects are disabled
-         *    Can be a simple a string
-         *    Can be a string representation of html (prefer component if you want interactions in the DOM)
-         *    Can be a function returning a string (like _t)
-         * @param {boolean} [params.messageIsHtml]
-         *    The message can be a string representation of html but it needs to be marked as well
-         * @param {"slow"|"medium"|"fast"|"no"} [params.fadeout="medium"]
-         *    Delay for rainbowman to disappear
-         *    'fast' will make rainbowman dissapear quickly
-         *    'medium' and 'slow' will wait little longer before disappearing (can be used when options.message is longer)
-         *    'no' will keep rainbowman on screen until user clicks anywhere outside rainbowman
-         * @param {owl.Component} [params.Component]
-         *    Component class to instantiate
-         *    It this option is set, the message option is ignored unless effect are disbled
-         *    Then, the message param is used to display a notification
-         * @param {Object} [params.props]
-         *    If a component is used, its props can be passed with this argument
-         */
-        function rainbowMan(params = {}) {
-            const effect = Object.assign({
-                imgUrl: "/web/static/img/smile.svg",
-                fadeout: params.fadeout,
-                id: ++effectId,
-                message: convertRainBowMessage(params.message) || env._t("Well Done!"),
-                messageIsHtml: params.messageIsHtml || false,
-                Component: params.Component,
-                props: params.props,
-            });
-            applyEffect(effect);
-        }
-
-        /**
-         * Display an effect
-         * This is a dispatcher for the effect. Usefull if the request for effect comes
-         * from the server.
-         * In the weblient, use the more specific effect functions.
-         *
-         * @param {string} type
-         *    What effect to create
-         *      - rainbowman
-         * @param {Object} [params={}]
-         *    All the options for the effect.
-         *    The options get passed to the more specific effect methods.
-         */
-        function add(type, params = {}) {
-            switch (type.replace("_", "").toLowerCase()) {
-                case "rainbowman":
-                    return rainbowMan(params);
-                default:
-                    throw new Error("NON_IMPLEMENTED_EFFECT");
+        function add(params) {
+            const type = params.type || "rainbow_man";
+            const effect = effectRegistry.get(type);
+            const { Component, props } = effect(env, params) || {};
+            if (Component) {
+                bus.trigger("UPDATE", { Component, props, id: effectId++ });
             }
         }
 

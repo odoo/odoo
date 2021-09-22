@@ -27,7 +27,7 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 1);
         assert.containsOnce(webClient.el, ".o_kanban_view");
         assert.containsNone(webClient.el, ".o_reward");
-        webClient.env.services.effect.add("rainbowman", { message: "", fadeout: "no" });
+        webClient.env.services.effect.add({ type: "rainbow_man", message: "", fadeout: "no" });
         await nextTick();
         await legacyExtraNextTick();
         assert.containsOnce(webClient.el, ".o_reward");
@@ -36,7 +36,7 @@ QUnit.module("ActionManager", (hooks) => {
         await legacyExtraNextTick();
         assert.containsNone(webClient.el, ".o_reward");
         assert.containsOnce(webClient.el, ".o_kanban_view");
-        webClient.env.services.effect.add("rainbowman", { message: "", fadeout: "no" });
+        webClient.env.services.effect.add({ type: "rainbow_man", message: "", fadeout: "no" });
         await nextTick();
         await legacyExtraNextTick();
         assert.containsOnce(webClient.el, ".o_reward");
@@ -46,22 +46,6 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 3);
         assert.containsOnce(webClient.el, ".o_reward");
         assert.containsOnce(webClient.el, ".o_list_view");
-    });
-
-    QUnit.test("show effect notification instead of rainbow man", async function (assert) {
-        assert.expect(6);
-
-        const webClient = await createWebClient({ serverData });
-        await doAction(webClient, 1);
-        assert.containsOnce(webClient.el, ".o_kanban_view");
-        assert.containsNone(webClient.el, ".o_reward");
-        assert.containsNone(webClient.el, ".o_notification");
-        webClient.env.services.effect.add("rainbowman", { message: "", fadeout: "no" });
-        await nextTick();
-        await legacyExtraNextTick();
-        assert.containsOnce(webClient.el, ".o_kanban_view");
-        assert.containsNone(webClient.el, ".o_reward");
-        assert.containsOnce(webClient.el, ".o_notification");
     });
 
     QUnit.test("on close with effect from server", async function (assert) {
@@ -89,14 +73,14 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("on close with effect in xml", async function (assert) {
         assert.expect(2);
         serverData.views["partner,false,form"] = `
-    <form>
-      <header>
-        <button string="Call method" name="object" type="object"
-         effect="{'type': 'rainbow_man', 'message': 'rainBowInXML'}"
-        />
-      </header>
-      <field name="display_name"/>
-    </form>`;
+            <form>
+              <header>
+                <button string="Call method" name="object" type="object"
+                 effect="{'type': 'rainbow_man', 'message': 'rainBowInXML'}"
+                />
+              </header>
+              <field name="display_name"/>
+            </form>`;
         patchWithCleanup(session, { show_effect: true });
         const mockRPC = async (route) => {
             if (route === "/web/dataset/call_button") {
