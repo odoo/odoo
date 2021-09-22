@@ -3,7 +3,7 @@
 
 from unittest.mock import patch
 
-from odoo.addons.test_mail.tests.common import TestMailCommon, TestMailMultiCompanyCommon
+from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests.common import tagged
 from odoo.tests import Form
 
@@ -284,10 +284,12 @@ class TestTracking(TestMailCommon):
         ])
 
 @tagged('mail_track')
-class TestTrackingMonetary(TestMailMultiCompanyCommon):
+class TestTrackingMonetary(TestMailCommon):
 
     def setUp(self):
         super(TestTrackingMonetary, self).setUp()
+
+        self._activate_multi_company()
 
         record = self.env['mail.test.track.monetary'].with_user(self.user_employee).with_context(self._test_context).create({
             'company_id': self.user_employee.company_id.id,
