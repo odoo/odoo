@@ -3,6 +3,7 @@
 
 from odoo.tests.common import Form, TransactionCase
 from odoo.tests import Form
+from odoo import fields
 
 
 class TestSaleMrpFlow(TransactionCase):
@@ -484,4 +485,27 @@ class TestSaleMrpFlow(TransactionCase):
         ]).order_id
         self.assertTrue(purchase)
         self.assertEqual(purchase.order_line.product_qty, 5)
+
+    def test_01_purchase_mrp_kit_qty_change(self):
+        self.partner = self.env.ref('base.res_partner_1')
+
+        # Create a PO with one unit of the kit product
+        self.po = self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [(0, 0, {'name': self.kit_1.name, 'product_id': self.kit_1.id, 'product_qty': 1, 'product_uom': self.kit_1.uom_id.id, 'price_unit': 60.0, 'date_planned': fields.Datetime.now()})],
+        })
+        # Validate the PO
+        self.po.button_confirm()
+
+        # Check the component qty in the created picking
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[0].product_uom_qty,2, "The quantity of components must be created according to the BOM")
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[1].product_uom_qty,1, "The quantity of components must be created according to the BOM")
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[2].product_uom_qty,3, "The quantity of components must be created according to the BOM")
+
+        # Update the kit quantity in the PO
+        self.po.order_line[0].product_qty = 2
+        # Check the component qty after the update
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[0].product_uom_qty,4, "The amount of the kit components must be updated when changing the quantity of the kit.")
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[1].product_uom_qty,2, "The amount of the kit components must be updated when changing the quantity of the kit.")
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[2].product_uom_qty,6, "The amount of the kit components must be updated when changing the quantity of the kit.")
 
