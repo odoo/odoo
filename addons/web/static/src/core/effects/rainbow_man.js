@@ -50,7 +50,7 @@ export class RainbowMan extends Component {
     }
 
     closeRainbowMan() {
-        this.trigger("close-rainbowman");
+        this.props.close();
     }
 }
 RainbowMan.template = "web.RainbowMan";
