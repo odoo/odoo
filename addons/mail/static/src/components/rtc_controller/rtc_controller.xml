@@ -5,44 +5,44 @@
         <div class="o_RtcController">
             <t t-if="rtcController">
                 <div class="o_RtcController_buttons">
-                    <t t-if="rtcController.callViewer.threadView.thread.mailRtc and messaging.mailRtc.currentRtcSession">
-                        <t t-if="messaging.mailRtc.currentRtcSession.isMuted"><t t-set="microphoneTitle">Unmute</t></t>
+                    <t t-if="rtcController.callViewer.threadView.thread.rtc and messaging.rtc.currentRtcSession">
+                        <t t-if="messaging.rtc.currentRtcSession.isMuted"><t t-set="microphoneTitle">Unmute</t></t>
                         <t t-else=""><t t-set="microphoneTitle">Mute</t></t>
                         <button class="o_RtcController_button"
-                            t-att-class="{ 'o-isActive': !messaging.mailRtc.currentRtcSession.isMuted, 'o-isSmall': rtcController.isSmall }"
+                            t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isMuted, 'o-isSmall': rtcController.isSmall }"
                             t-att-aria-label="microphoneTitle"
                             t-att-title="microphoneTitle"
                             t-on-click="rtcController.onClickMicrophone">
                             <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
                                 <i class="fa" t-att-class="{
                                     'fa-lg': !rtcController.isSmall,
-                                    'fa-microphone': !messaging.mailRtc.currentRtcSession.isMuted,
-                                    'fa-microphone-slash': messaging.mailRtc.currentRtcSession.isMuted,
-                                    'text-danger': messaging.mailRtc.currentRtcSession.isMuted,
+                                    'fa-microphone': !messaging.rtc.currentRtcSession.isMuted,
+                                    'fa-microphone-slash': messaging.rtc.currentRtcSession.isMuted,
+                                    'text-danger': messaging.rtc.currentRtcSession.isMuted,
                                 }"/>
                             </div>
                         </button>
-                        <t t-if="messaging.mailRtc.currentRtcSession.isDeaf"><t t-set="headphoneTitle">Undeafen</t></t>
+                        <t t-if="messaging.rtc.currentRtcSession.isDeaf"><t t-set="headphoneTitle">Undeafen</t></t>
                         <t t-else=""><t t-set="headphoneTitle">Deafen</t></t>
                         <button class="o_RtcController_button"
-                            t-att-class="{ 'o-isActive': !messaging.mailRtc.currentRtcSession.isDeaf, 'o-isSmall': rtcController.isSmall }"
+                            t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isDeaf, 'o-isSmall': rtcController.isSmall }"
                             t-att-aria-label="headphoneTitle"
                             t-att-title="headphoneTitle"
                             t-on-click="rtcController.onClickDeafen">
                             <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
                                 <i class="fa" t-att-class="{
                                     'fa-lg': !rtcController.isSmall,
-                                    'fa-headphones': !messaging.mailRtc.currentRtcSession.isDeaf,
-                                    'fa-deaf': messaging.mailRtc.currentRtcSession.isDeaf,
-                                    'text-danger': messaging.mailRtc.currentRtcSession.isDeaf,
+                                    'fa-headphones': !messaging.rtc.currentRtcSession.isDeaf,
+                                    'fa-deaf': messaging.rtc.currentRtcSession.isDeaf,
+                                    'text-danger': messaging.rtc.currentRtcSession.isDeaf,
                                 }"/>
                             </div>
                         </button>
-                        <t t-if="messaging.mailRtc.sendUserVideo"><t t-set="cameraTitle">Stop camera</t></t>
+                        <t t-if="messaging.rtc.sendUserVideo"><t t-set="cameraTitle">Stop camera</t></t>
                         <t t-else=""><t t-set="cameraTitle">Turn camera on</t></t>
                         <button class="o_RtcController_button o_RtcController_videoButton"
                             t-att-class="{
-                                'o-isActive': messaging.mailRtc.sendUserVideo,
+                                'o-isActive': messaging.rtc.sendUserVideo,
                                 'o-isSmall': rtcController.isSmall,
                             }"
                             t-att-aria-label="cameraTitle"
@@ -52,11 +52,11 @@
                                 <i class="fa fa-video-camera" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
                             </div>
                         </button>
-                        <t t-if="messaging.mailRtc.sendDisplay"><t t-set="displayTitle">Stop screen sharing</t></t>
+                        <t t-if="messaging.rtc.sendDisplay"><t t-set="displayTitle">Stop screen sharing</t></t>
                         <t t-else=""><t t-set="displayTitle">Share screen</t></t>
                         <button class="o_RtcController_button o_RtcController_videoButton"
                             t-att-class="{
-                                'o-isActive': messaging.mailRtc.sendDisplay,
+                                'o-isActive': messaging.rtc.sendDisplay,
                                 'o-isSmall': rtcController.isSmall,
                             }"
                             t-att-aria-label="displayTitle"
@@ -81,7 +81,7 @@
                             </t>
                         </Popover>
                     </t>
-                    <t t-if="!rtcController.callViewer.threadView.thread.mailRtc">
+                    <t t-if="!rtcController.callViewer.threadView.thread.rtc">
                         <button class="o_RtcController_button o_RtcController_callToggle"
                             t-att-class="{ 'o-isSmall': rtcController.isSmall }"
                             aria-label="Join Video Call"
@@ -94,7 +94,7 @@
                         </button>
                     </t>
                     <t t-if="rtcController.callViewer.threadView.thread">
-                        <t t-if="rtcController.callViewer.threadView.thread.rtcInvitingSession and !rtcController.callViewer.threadView.thread.mailRtc">
+                        <t t-if="rtcController.callViewer.threadView.thread.rtcInvitingSession and !rtcController.callViewer.threadView.thread.rtc">
                             <button class="o_RtcController_button o_RtcController_callToggle o-isActive"
                                 t-att-class="{ 'o-isSmall': rtcController.isSmall }"
                                 aria-label="Reject"
@@ -106,11 +106,11 @@
                                 </div>
                             </button>
                         </t>
-                        <t t-if="rtcController.callViewer.threadView.thread.mailRtc"><t t-set="phoneTitle">Disconnect</t></t>
+                        <t t-if="rtcController.callViewer.threadView.thread.rtc"><t t-set="phoneTitle">Disconnect</t></t>
                         <t t-else=""><t t-set="phoneTitle">Join Call</t></t>
                         <button class="o_RtcController_button o_RtcController_callToggle"
                             t-att-aria-label="phoneTitle"
-                            t-att-class="{ 'o-isActive': !!rtcController.callViewer.threadView.thread.mailRtc, 'o-isSmall': rtcController.isSmall }"
+                            t-att-class="{ 'o-isActive': !!rtcController.callViewer.threadView.thread.rtc, 'o-isSmall': rtcController.isSmall }"
                             t-att-disabled="rtcController.callViewer.threadView.thread.hasPendingRtcRequest"
                             t-att-title="phoneTitle"
                             t-on-click="rtcController.onClickToggleAudioCall">
