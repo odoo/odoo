@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.RtcCallViewer" owl="1">
-    <div class="o_RtcCallViewer" t-att-class="{ 'o-fullScreen': rtcCallViewer and rtcCallViewer.isFullScreen, 'o-minimized': rtcCallViewer and rtcCallViewer.isMinimized }">
+    <div class="o_RtcCallViewer" t-att-class="{ 'o-fullScreen': rtcCallViewer and rtcCallViewer.isFullScreen, 'o-isMinimized': rtcCallViewer and rtcCallViewer.isMinimized }">
         <t t-if="rtcCallViewer">
 
             <!-- used to make the template depend on window size -->
@@ -21,8 +21,8 @@
                     <div
                         class="o_RtcCallViewer_grid"
                         t-att-class="{
-                            'o-dynamic-sizing': rtcCallViewer.layout === 'tiled',
-                            'o-sidebar': rtcCallViewer.layout === 'sidebar',
+                            'o-isTiled': rtcCallViewer.layout === 'tiled',
+                            'o-isSidebar': rtcCallViewer.layout === 'sidebar',
                         }"
                         t-ref="tileContainer"
                         t-attf-style="--height:{{state.tileHeight}}px; --width:{{state.tileWidth}}px; --columns:{{state.columnCount}};"
@@ -31,7 +31,7 @@
                             <t t-if="!rtcCallViewer.filterVideoGrid or (participantCard.rtcSession and participantCard.rtcSession.videoStream)">
                                 <!-- maybe filter focused partner out? -->
                                 <RtcCallParticipantCard
-                                    class="o_RtcCallViewer_participantCard o_RtcCallViewer_grid_tile"
+                                    class="o_RtcCallViewer_participantCard o_RtcCallViewer_gridTile"
                                     callParticipantCardLocalId="participantCard.localId"
                                 />
                             </t>
@@ -42,8 +42,8 @@
 
             <!-- Buttons -->
             <t t-if="rtcCallViewer.showOverlay or !rtcCallViewer.isControllerFloating">
-                <div class="o_RtcCallViewer_controls" t-att-class="{ 'o-floating': rtcCallViewer.isControllerFloating }">
-                    <div class="o_RtcCallViewer_controls_overlay_container" t-on-mousemove="rtcCallViewer.onMouseMoveOverlay">
+                <div class="o_RtcCallViewer_controls" t-att-class="{ 'o-isFloating': rtcCallViewer.isControllerFloating }">
+                    <div class="o_RtcCallViewer_controlsOverlayContainer" t-on-mousemove="rtcCallViewer.onMouseMoveOverlay">
                         <RtcController localId="rtcCallViewer.rtcController.localId"/>
                     </div>
                 </div>

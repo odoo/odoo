@@ -11,7 +11,7 @@
     height: 50%;
     min-height: 50%;
 
-    &.o-minimized {
+    &.o-isMinimized {
         height: 20%;
         min-height: 20%;
     }
@@ -32,7 +32,7 @@
     justify-content: center;
     padding-bottom: map-get($spacers, 1);
 
-    &.o-floating {
+    &.o-isFloating {
         position: absolute;
         padding-bottom: map-get($spacers, 3);
         bottom: 0;
@@ -51,7 +51,7 @@
         width: 0.3vw;
     }
 
-    &.o-dynamic-sizing {
+    &.o-isTiled {
         flex-direction: row;
         width: 100%;
         overflow-y: hidden;
@@ -66,13 +66,13 @@
         }
     }
 
-    &.o-sidebar {
+    &.o-isSidebar {
         width: 120px;
         min-width: 120px;
     }
 }
 
-.o_RtcCallViewer_grid_tile {
+.o_RtcCallViewer_gridTile {
     width: 100%;
     aspect-ratio: 16/9;
 }
