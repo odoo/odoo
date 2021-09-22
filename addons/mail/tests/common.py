@@ -923,8 +923,9 @@ class MailCommon(common.TransactionCase, MailCase):
         belongs to that new company. It allows to test flows with users from
         different companies. """
         cls.company_2 = cls.env['res.company'].create({
-            'name': 'Company 2',
+            'currency_id': cls.env.ref('base.CAD').id,
             'email': 'company_2@test.example.com',
+            'name': 'Company 2',
         })
         cls.user_admin.write({'company_ids': [(4, cls.company_2.id)]})
 
