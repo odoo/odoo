@@ -231,6 +231,8 @@ class PurchaseOrderLine(models.Model):
 
     @api.multi
     def write(self, values):
+        lines = self.filtered(lambda l: l.order_id.state == 'purchase')
+        previous_product_qty = {line.id: line.product_uom_qty for line in lines}
         result = super(PurchaseOrderLine, self).write(values)
         # Update expected date of corresponding moves
         if 'date_planned' in values:
@@ -238,7 +240,7 @@ class PurchaseOrderLine(models.Model):
                 ('purchase_line_id', 'in', self.ids), ('state', '!=', 'done')
             ]).write({'date_expected': values['date_planned']})
         if 'product_qty' in values:
-            self.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
+            lines.with_context(previous_product_qty=previous_product_qty)._create_or_update_picking()
         return result
 
     # --------------------------------------------------
@@ -304,10 +306,9 @@ class PurchaseOrderLine(models.Model):
         res = []
         if self.product_id.type not in ['product', 'consu']:
             return res
-        qty = 0.0
         price_unit = self._get_stock_move_price_unit()
-        for move in self.move_ids.filtered(lambda x: x.state != 'cancel' and not x.location_dest_id.usage == "supplier"):
-            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+        qty = self._get_qty_procurement()
+
         template = {
             # truncate to 2000 to avoid triggering index limit error
             # TODO: remove index in master?
@@ -346,6 +347,13 @@ class PurchaseOrderLine(models.Model):
             res.append(template)
         return res
 
+    def _get_qty_procurement(self):
+        self.ensure_one()
+        qty = 0.0
+        for move in self.move_ids.filtered(lambda x: x.state != 'cancel' and not x.location_dest_id.usage == "supplier"):
+            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+        return qty
+    
     @api.multi
     def _create_stock_moves(self, picking):
         values = []

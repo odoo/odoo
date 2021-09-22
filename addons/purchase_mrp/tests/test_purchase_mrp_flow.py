@@ -94,3 +94,48 @@ class TestPurchaseMrpFlow(common.TransactionCase):
         aml = self.invoice.move_id.line_ids
         aml_input = aml.filtered(lambda l: l.account_id.id == self.account_input.id)
         self.assertEqual(aml_input.debit, 180, "Cost of Good Sold entry missing or mismatching")
+
+    def test_01_purchase_mrp_kit_qty_change(self):
+        self.partner = self.env.ref('base.res_partner_1')
+        self.categ_unit = self.env.ref('uom.product_uom_categ_unit')
+        self.uom_unit = self.env['uom.uom'].search([('category_id', '=', self.categ_unit.id), ('uom_type', '=', 'reference')], limit=1)
+        Product = self.env['product.product']
+        self.kit_product = Product.create({
+                'name': 'product K',
+                'type': 'consu',
+                'uom_id': self.uom_unit.id,
+                })
+        self.component1 = Product.create({
+                'name': 'Component 1',
+                'type': 'product',})
+        self.component2 = Product.create({
+                'name': 'Component 2',
+                'type': 'product',})
+        self.bom = self.env['mrp.bom'].create({
+        'product_tmpl_id': self.kit_product.product_tmpl_id.id,
+        'product_qty': 1.0,
+        'type': 'phantom'})
+        BomLine = self.env['mrp.bom.line']
+        BomLine.create({
+                'product_id': self.component1.id,
+                'product_qty': 2.0,
+                'bom_id': self.bom.id})
+        BomLine.create({
+                'product_id': self.component2.id,
+                'product_qty': 1.0,
+                'bom_id': self.bom.id})
+        # Create a PO with one unit of the kit product
+        self.po = self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [(0, 0, {'name': self.kit_product.name, 'product_id': self.kit_product.id, 'product_qty': 1, 'product_uom': self.kit_product.uom_id.id, 'price_unit': 60.0, 'date_planned': fields.Datetime.now()})],
+        })
+        # Validate the PO
+        self.po.button_confirm()
+        # Check the component qty in the created picking
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[0].product_uom_qty,2, "The quantity of components must be created according to the BOM")
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[1].product_uom_qty,1, "The quantity of components must be created according to the BOM")
+        
+        # Update the quantity of the kit in the PO
+        self.po.order_line[0].product_qty = 2
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[0].product_uom_qty,4, "The amount of the kit components must be updated when changing the quantity of the kit.")
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[1].product_uom_qty,2, "The amount of the kit components must be updated when changing the quantity of the kit.")
