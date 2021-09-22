@@ -94,7 +94,7 @@ function factory(dependencies) {
          */
         _computeIsMinimized() {
             const callViewer = this.rtcCallViewerOfMainCard || this.rtcCallViewerOfTile;
-            return callViewer && callViewer.isMinimized;
+            return Boolean(callViewer && callViewer.isMinimized);
         }
 
         /**
@@ -110,7 +110,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsTalking() {
-            return this.rtcSession && this.rtcSession.isTalking && !this.rtcSession.isMuted;
+            return Boolean(this.rtcSession && this.rtcSession.isTalking && !this.rtcSession.isMuted);
         }
 
         /**
