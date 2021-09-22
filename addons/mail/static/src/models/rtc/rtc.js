@@ -76,8 +76,8 @@ function factory(dependencies) {
              * This is distinct from this._recoverConnection which tries to restores
              * connection that were established but failed or timed out.
              */
-            browser.setInterval(() => {
-                this.channel_id && this.currentRtcSession && this._callSessions();
+            this._intervalId = browser.setInterval(() => {
+                this.channel && this.currentRtcSession && this._callSessions();
             }, 30000); // 30 seconds
         }
 
@@ -88,6 +88,7 @@ function factory(dependencies) {
             browser.removeEventListener('beforeunload', this._onBeforeUnload);
             browser.removeEventListener('keydown', this._onKeyDown);
             browser.removeEventListener('keyup', this._onKeyUp);
+            browser.clearInterval(this._intervalId);
             return super._willDelete(...arguments);
         }
 
