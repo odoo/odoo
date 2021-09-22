@@ -60,3 +60,15 @@ class PurchaseOrderLine(models.Model):
 
     def _get_upstream_documents_and_responsibles(self, visited):
         return [(self.order_id, self.order_id.user_id, visited)]
+    
+    def _get_qty_procurement(self):
+        self.ensure_one()
+        # Specific case when we change the qty on a PO for a kit product.
+        # We don't try to be too smart and keep a simple approach: we compare the quantity before
+        # and after update, and return the difference. We don't take into account what was already
+        # sent, or any other exceptional case.
+        bom = self.env['mrp.bom'].sudo()._bom_find(product=self.product_id)
+        if bom and bom.type == 'phantom' and 'previous_product_qty' in self.env.context:
+            return self.env.context['previous_product_qty'].get(self.id, 0.0)
+        return super()._get_qty_procurement()
+
