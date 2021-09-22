@@ -88,6 +88,13 @@ class PickingType(models.Model):
     company_id = fields.Many2one(
         'res.company', 'Company', required=True,
         default=lambda s: s.env.company.id, index=True)
+    create_backorder = fields.Selection(
+        [('ask', 'Ask'), ('always', 'Always'), ('never', 'Never')],
+        'Create Backorder', required=True, default='ask',
+        help="When validating a transfer:\n"
+             " * Ask: users are asked to choose if they want to make a backorder for remaining products\n"
+             " * Always: a backorder is automatically created for the remaining products\n"
+             " * Never: remaining products are cancelled")
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1010,12 +1017,10 @@ class Picking(models.Model):
             return res
 
         # Call `_action_done`.
+        pickings_not_to_backorder = self.filtered(lambda p: p.picking_type_id.create_backorder == 'never')
         if self.env.context.get('picking_ids_not_to_backorder'):
-            pickings_not_to_backorder = self.browse(self.env.context['picking_ids_not_to_backorder'])
-            pickings_to_backorder = self - pickings_not_to_backorder
-        else:
-            pickings_not_to_backorder = self.env['stock.picking']
-            pickings_to_backorder = self
+            pickings_not_to_backorder |= self.browse(self.env.context['picking_ids_not_to_backorder'])
+        pickings_to_backorder = self - pickings_not_to_backorder
         pickings_not_to_backorder.with_context(cancel_backorder=True)._action_done()
         pickings_to_backorder.with_context(cancel_backorder=False)._action_done()
 
@@ -1106,6 +1111,8 @@ class Picking(models.Model):
         prec = self.env["decimal.precision"].precision_get("Product Unit of Measure")
         backorder_pickings = self.browse()
         for picking in self:
+            if picking.picking_type_id.create_backorder != 'ask':
+                continue
             quantity_todo = {}
             quantity_done = {}
             for move in picking.move_ids.filtered(lambda m: m.state != "cancel"):
