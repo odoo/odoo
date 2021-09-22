@@ -17,20 +17,6 @@ export class RtcController extends Component {
         return this.messaging && this.messaging.models['mail.rtc_controller'].get(this.props.localId);
     }
 
-    /**
-     * @returns {mail.thread}
-     */
-    get rtcSession() {
-        return this.messaging && this.messaging.mailRtc.currentRtcSession;
-    }
-
-    /**
-     * @returns {mail.thread|undefined}
-     */
-    get thread() {
-        return this.rtcController && this.rtcController.callViewer.threadView.thread;
-    }
-
 }
 
 Object.assign(RtcController, {

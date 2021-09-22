@@ -24,24 +24,6 @@ export class RtcConfigurationMenu extends Component {
     }
 
     //--------------------------------------------------------------------------
-    // Getters / Setters
-    //--------------------------------------------------------------------------
-
-    /**
-     * @returns {mail.configuration_menu}
-     */
-    get rtcConfigurationMenu() {
-        return this.messaging && this.messaging.userSetting.rtcConfigurationMenu;
-    }
-
-    /**
-     * @returns {mail.user_setting}
-     */
-    get userSetting() {
-        return this.messaging && this.messaging.userSetting;
-    }
-
-    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -50,7 +32,7 @@ export class RtcConfigurationMenu extends Component {
      * @param {Event} ev
      */
     _onChangeDelay(ev) {
-        this.rtcConfigurationMenu.onChangeDelay(ev.target.value);
+        this.messaging.rtcConfigurationMenu.onChangeDelay(ev.target.value);
     }
 
     /**
@@ -58,7 +40,7 @@ export class RtcConfigurationMenu extends Component {
      * @param {Event} ev
      */
     _onChangePushToTalk(ev) {
-        this.rtcConfigurationMenu.onChangePushToTalk();
+        this.messaging.rtcConfigurationMenu.onChangePushToTalk();
     }
 
     /**
@@ -66,7 +48,7 @@ export class RtcConfigurationMenu extends Component {
      * @param {Event} ev
      */
     _onChangeSelectAudioInput(ev) {
-        this.rtcConfigurationMenu.onChangeSelectAudioInput(ev.target.value);
+        this.messaging.rtcConfigurationMenu.onChangeSelectAudioInput(ev.target.value);
     }
 
     /**
@@ -74,7 +56,7 @@ export class RtcConfigurationMenu extends Component {
      * @param {Event} ev
      */
     _onChangeThreshold(ev) {
-        this.rtcConfigurationMenu.onChangeThreshold(ev.target.value);
+        this.messaging.rtcConfigurationMenu.onChangeThreshold(ev.target.value);
     }
 
     /**
@@ -82,7 +64,7 @@ export class RtcConfigurationMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickRegisterKeyButton() {
-        this.rtcConfigurationMenu.onClickRegisterKeyButton();
+        this.messaging.rtcConfigurationMenu.onClickRegisterKeyButton();
     }
 }
 

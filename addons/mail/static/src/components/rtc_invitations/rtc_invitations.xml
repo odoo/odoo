@@ -3,8 +3,8 @@
 
     <t t-name="mail.RtcInvitations" owl="1">
         <div class="o_RtcInvitations">
-            <t t-if="threads">
-                <t t-foreach="threads" t-as="thread" t-key="thread.localId">
+            <t t-if="messaging.ringingThreads">
+                <t t-foreach="messaging.ringingThreads" t-as="thread" t-key="thread.localId">
                     <RtcInvitationCard threadLocalId="thread.localId"/>
                 </t>
             </t>
