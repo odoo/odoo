@@ -83,6 +83,7 @@ class PickingType(models.Model):
     company_id = fields.Many2one(
         'res.company', 'Company', required=True,
         default=lambda s: s.env.company.id, index=True)
+    force_backorder = fields.Boolean(default=False, help="If active, backorders are automatically created when a transfer is validated.")
 
     @api.model
     def create(self, vals):
@@ -979,8 +980,11 @@ class Picking(models.Model):
 
         if not self.env.context.get('skip_backorder'):
             pickings_to_backorder = self._check_backorder()
-            if pickings_to_backorder:
-                return pickings_to_backorder._action_generate_backorder_wizard(show_transfers=self._should_show_transfers())
+            # Do not generate a backorder confirmation wizard for the pickings
+            # that are configurated to generate backorders automatically (i.e. force_backorder is True in its picking type)
+            pickings_backorder_to_confirm = pickings_to_backorder.filtered(lambda picking: not picking.picking_type_id.force_backorder)
+            if pickings_backorder_to_confirm:
+                return pickings_backorder_to_confirm._action_generate_backorder_wizard(show_transfers=self._should_show_transfers())
         return True
 
     def _should_show_transfers(self):
